@@ -1,0 +1,39 @@
+/**  
+* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.  
+*  
+* DESCRIPTION
+*	
+*
+* TO RUN:
+*	
+*
+* INPUT:
+*
+*/
+
+allprojects {
+    apply plugin: 'artifactory'
+    apply plugin: 'DevInfraPlugin' 
+}
+
+
+buildscript {
+
+        repositories {
+                mavenLocal()
+                maven {
+                        url = "${artifactory_contextUrl}" + '/repo'
+                        credentials {
+                                username = "${artifactory_user}"
+                                password = "${artifactory_password}"
+                        }
+                }
+                mavenCentral()
+        }
+
+        dependencies {
+			classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.1.0'
+                        classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
+        }
+}
+

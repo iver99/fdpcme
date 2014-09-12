@@ -1,0 +1,137 @@
+#
+# Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+#
+#    AUTHOR
+#      chandrashekhar.vaishnav@oracle.com
+#
+#    DESCRIPTION
+#	Specifies intentionally untracked files to ignore with git
+#
+#    NOTES
+#	File is maintained in two parts:
+#		(1) Files/File-pattern to ignore
+#		(2) Directories to ignore
+#	Keep the file in alphabetical order
+#
+
+##############################
+# Files/File-pattern to ignore
+##############################
+*.7z
+*.bak
+*.bz2
+*.bzip
+*.cab
+*.class
+*.com
+*.deb
+*.dll
+*.dmg
+*.ear
+*.egg
+*.exe
+*.gem
+*.gz
+*.idea
+*.iml
+*.ipr
+*.iso
+*.iws
+*.jar
+*.launch
+*.lck
+*.lzma
+*.msi
+*.msm
+*.msp
+*.o
+*.orig
+*.rar
+*.rej
+*.rpm
+*.so
+*.spec.mod
+*.sublime-*
+*.swp
+*.tar
+*.tmp
+*.un~
+*.war
+*.xpi
+*.xz
+*.zip
+*~
+*~.nib
+*.mf
+
+.buildpath
+.classpath
+.cproject
+.directory
+.DS_Store*
+.gradle
+.hidden
+.jslint.*
+.loadpath
+.m2
+.metadata
+.netrwhist
+.nfs*
+.project
+.svn
+.target
+.texlipse
+.#*
+
+
+atlassian-ide-plugin.xml
+create_plugin*.log
+DIFFS.txt
+distfiles
+ehthumbs.db
+gradle-app.setting
+hs_err_pid*
+Icon?
+local.properties
+make.state
+osp.err
+osp.log
+osp.properties
+OUTPUT.txt
+plugin_validation_report_*.xml
+rcu.log
+Session.vim
+Thumbs.db
+
+########################################
+# Directory/Directory pattern to ignore
+########################################
+.ade_path/
+.data/
+.DS_Store/
+.externalToolBuilders/
+.gradle/
+.hg/
+.hgtags/
+.mtj.tmp/
+.nb-gradle/
+.settings/
+.sonar/
+.svn/
+
+bin/
+build/
+classes/
+CVS/
+deploy/
+dist/
+generated/
+gitonly/sidekick/output/
+nbproject/
+test-coverage/
+test-output/
+test-reports/
+tmp/
+work/
+
+.chef
