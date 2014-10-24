@@ -1,0 +1,16 @@
+<?xml version="1.0"?> 
+ 
+<service-artifacts name="dashboardsService"> 
+    <file name='dashboards-ee/build/libs/emaas-applications-dashboards-ear' 
+            serviceName='DashboardsService'> 
+            <version>0.1</version> 
+            <extension>ear</extension> 
+            <destination>Applications</destination> 
+     </file> 
+      <file name='dashboards-schema/build/emaas-applications-dashboards-schema'
+            serviceName='DashboardsService'> 
+            <version>0.1</version> 
+            <extension>tgz</extension> 
+            <destination>Applications</destination> 
+     </file> 
+</service-artifacts> 

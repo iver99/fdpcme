@@ -1,0 +1,15 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+jar {
+	from('src/main/java/META-INF')
+	{ 
+		include '*.xml'
+		into('META-INF') 
+	}
+}
+
+dependencies {
+	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.0')
+	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') 
+}

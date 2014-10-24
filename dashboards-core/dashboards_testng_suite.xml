@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="dashboards-Core" parallel="tests">
+	<test name="dashboards Model">
+		<classes>
+		    <!-- class name="oracle.sysman.emaas.savedsearch.UtilTest" />
+		    <class name="oracle.sysman.emaas.savedsearch.JSONUtilTest" />
+		    <class name="oracle.sysman.emaas.savedsearch.EntityJsonUtilTest" />
+			<class name="oracle.sysman.emaas.savedsearch.CategoryTest" />
+			<class name="oracle.sysman.emaas.savedsearch.FolderManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.SearchParamTest" />
+			<class name="oracle.sysman.emaas.savedsearch.SearchTest" />
+			<class name="oracle.sysman.emaas.savedsearch.CategoryManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.SearchManagerTest" />
+			<class name="oracle.sysman.emaas.savedsearch.Cleanup" /-->
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->

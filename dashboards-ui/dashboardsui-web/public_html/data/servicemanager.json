@@ -1,0 +1,6 @@
+{
+    "version":"0.1",
+    "serviceName":"DashboardsUi",
+    "registryUrls":["http://slc04pxk.us.oracle.com:7001/registry/servicemanager/registry/v1"],
+    "serviceUrls":["http://slc04pxk.us.oracle.com:7001/registry/servicemanager/registry/v1"]
+}

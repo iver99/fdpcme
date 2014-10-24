@@ -1,0 +1,149 @@
+import org.gradle.api.plugins.jetty.internal.Monitor
+
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+
+// Directory where the restful API doc is generated
+ext.restDocRootDir = "${buildDir}/restdoc" 
+ext.restDocOutputDir = "${restDocRootDir}"
+
+configurations {
+	restDoc
+	enunciateCore
+	ftpAntTask
+}
+
+war.archiveName "dashboards-web.war"
+
+war {
+	from('src/main/java') { 
+		include '**/*.properties'
+		into('WEB-INF/classes') 
+	}
+        from('src/main/java') {
+                include '**/*.xsd'
+                into('WEB-INF/classes')
+        }
+	from('WebContent/WEB-INF') {
+                include '**/web.xml'
+                into('WEB-INF')
+        }
+
+}
+
+task runQATestSuite(type: Test){
+        useTestNG(){
+        dependsOn ':dashboards-ee:ear'
+        useDefaultListeners = true
+        outputDirectory = file("$buildDir/testngoutput")
+        suites file('testngsuite.xml')
+        }
+}
+
+/**
+ * Generates documentation for the REST service API
+ */  
+task restDoc {
+ 
+    // Configure task input and output to not generate the doc again when the 
+    // source file have not changed
+    inputs.files 'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/rest',  'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/navigation'
+    outputs.dir restDocOutputDir
+}
+restDoc << {
+    
+    // Declare the enunciate ant task
+    ant.taskdef (name: 'enunciate', 
+        classname: 'org.codehaus.enunciate.main.EnunciateTask',
+        classpath: configurations.enunciateCore.asPath)
+    
+    // Make the directory to store enunciate output
+    ant.mkdir(dir: "${restDocOutputDir}")
+
+    // Define classpath for running enunciate
+    ant.path(id:'enunciateRuntimePath') {
+        pathelement(path: configurations.restDoc.asPath)
+    }  
+
+    // Run the enunciate task
+    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/',
+            classpathRef: 'enunciateRuntimePath',
+            verbose: 'true', 
+            debug: 'true', 
+            configFile: 'enunciate.xml',
+            javacSourceVersion: '7') {
+        
+        include(name: '**/*.java')
+	exclude(name: '*/exception')
+        export(artifactId: 'docs', destination: restDocOutputDir)
+        javacArgument(argument: '-g')
+    }	
+}
+
+/**
+ * FTP the REST API document to the ftp server
+ */
+
+task ftpRestDoc << {
+		ant {
+			taskdef(name: 'ftp',
+                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+                classpath: configurations.ftpAntTask.asPath)
+			ftp(server: ftpserver, userid: username, password: password, remotedir: remote_restdoc_dir) {
+				fileset(dir: "${restDocOutputDir}")
+			}
+		}
+	}
+
+sourceSets {
+                            test{
+                                java {
+                                          srcDirs = ['src/test/java']
+                                }
+                                resources.srcDirs = ['src/test/java']
+                            }
+ }
+dependencies {
+	providedCompile project(':dashboards-entities')
+	providedCompile project(':dashboards-core')  
+	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5')
+	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0')
+	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
+	providedCompile(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1')
+	providedCompile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.1')
+	providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0')
+
+	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.1')
+	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')
+	providedCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')
+	
+	providedCompile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1')
+	providedCompile(group: 'org.hamcrest', name:'hamcrest-core', version: '1.3')
+	providedCompile(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1')
+	providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3')
+	providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1')
+	
+	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8')
+	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')
+	
+	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1')
+	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0')
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
+
+	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
+	restDoc(
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.28'],
+		[group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
+		[group: 'com.sun.jersey', name: 'jersey-server', version: '1.17'],
+		[group: 'com.sun.jersey', name: 'jersey-servlet', version: '1.17']		
+	)
+	ftpAntTask('org.apache.ant:ant-commons-net:1.8.4') {
+			module('commons-net:commons-net:1.4.1') {
+				dependencies 'oro:oro:2.0.8:jar'
+			}
+		}
+ }

@@ -1,0 +1,378 @@
+/*
+ QATools Code Coverage Gradle script.
+
+ This script enables Sonar reporting on the main project and its subprojects,
+ when in a multi-project build it should always be included (apply from)
+ from the MAIN build.gradle.
+
+ It also sets the jacoco exec file to be test.exec for all tasks of type Test
+
+ luis.echeverria@oracle.com, alba.magallanes@oracle.com,
+ mithun.shankar@oracle.com
+
+*/
+
+println "Applying codeCoverage.gradle... (#V: Wed Jul 09 2014#)"
+
+// Load configuration settings from settings.groovy, mostly settings used to
+// define the Sonar server to use.
+
+def loadCCConfiguration() {
+    def ccEnv = hasProperty('cc') ? cc : 'test'
+    setProperty 'ccEnv', ccEnv
+    def ccConfigFile = file("${project.ext.source_cc}/ccSettings.groovy")
+    def ccSettings = new ConfigSlurper(ccEnv).parse(ccConfigFile.toURL())
+    setProperty 'ccSettings', ccSettings
+}
+
+loadCCConfiguration()
+
+// Apply sonar-runner plugin to upload coverage data to a sonar server
+apply plugin: 'sonar-runner'
+
+def branch=System.getenv("GIT_BRANCH")
+def commit=System.getenv("GIT_COMMIT")
+
+// Get the git branch and commit number to use them as version in the sonar report
+task setGitInfo(){
+  if(System.getenv("GIT_BRANCH") == null || System.getenv("GIT_BRANCH").contains("Null")){
+    branch="git rev-parse --abbrev-ref HEAD".execute().text.trim()
+    commit="git rev-parse --short HEAD".execute().text
+  }
+  branch=branch.replaceAll("\\/","_")
+  commit=commit.take(7)
+  project.ext.set("branch_cc", branch)
+  project.ext.set("commit_cc", commit)
+}
+
+// Set Sonar general properties to the project
+sonarRunner {
+  def version=project.ext.branch_cc+" - "+project.ext.commit_cc
+  sonarProperties {
+    property "sonar.projectKey", "oracle:EMaas:$project.name"
+    property "sonar.projectName", "EMaas:$name"
+    property "sonar.projectVersion", "${version}"
+    property "sonar.host.url", "$ccSettings.sonarHost"
+    property "sonar.jdbc.url", "$ccSettings.sonarDB"
+    property "sonar.login", "$ccSettings.sonarLogin"
+    property "sonar.password", "$ccSettings.sonarPassword"
+    property "sonar.jdbc.username", "sonar"
+    property "sonar.jdbc.password", "sonar"
+    property "sonar.java.source", "1.7"
+    property "sonar.java.target", "1.7"
+    property "sonar.supportSourceFileDuplications", "true"
+    property "sonar.findbugs.timeout", "12000000"
+    property "sonar.dynamicAnalysis", "reuseReports"
+  }
+}
+
+//
+// Tasks and settings applied to all projects in the build.
+//
+allprojects {
+  // Set Sonar properties common to all projects in the build
+  sonarRunner {
+    sonarProperties {
+      property "sonar.junit.reportsPath", "${buildDir}/test-results"
+      property "sonar.language", "java"
+      property "sonar.java.coveragePlugin", "jacoco"
+      property "sonar.jacoco.reportPath", "${buildDir}/jacoco/test.exec"
+      property "sonar.jacoco.itReportPath" , "${buildDir}/jacoco/testInteg.exec"
+      property "sonar.sourceEncoding", "UTF-8"
+      property "sonar.exclusions", "**/package-info.java"
+    }
+  }
+
+  apply plugin: 'jacoco'
+
+  afterEvaluate {
+    // some tasks apply only to projects with java plugin applied.
+    if (project.plugins.hasPlugin('java')) {
+      jacocoTestReport {
+        executionData = fileTree(dir: "${buildDir}/jacoco", include: '**/*.exec')
+
+        reports {
+          xml.enabled true
+          csv.enabled true
+          html.destination "${buildDir}/reports/jacoco"
+        }
+      }
+
+      // Iterate on tasks of type test for this project
+      project.tasks.withType(Test) { task ->
+
+        // All test type tasks save jacoco data into a test.exec
+        task.jacoco {
+          destinationFile = file("${buildDir}/jacoco/test.exec")
+        }
+      }
+    }
+
+    // Remove sonar dependency on build/test so an existing report can be uploaded
+    // without rebuilding the code and running tests.
+    if (project.plugins.hasPlugin('sonar-runner')) {
+      tasks.sonarRunner.dependsOn = []
+    }
+  }
+} // end of allprojects
+
+subprojects{
+  //Task for update the jacoco html reports in the file server
+  task copyHtmlFiles (dependsOn: jacocoTestReport) {
+    doLast {
+      def today = new Date().format('yyMMdd')
+      def fileServerLocation = "/net/slc06pqa/scratch/uploadToServer/${project.branch_cc}/${today}/${project.commit_cc}/${project.getRootProject().name}/${project.name}"
+
+      String htmlSourceDir      = "${buildDir}/reports/jacoco"
+      String htmlDestinationDir = "${fileServerLocation}"
+
+      def folder = new File(htmlSourceDir)
+
+      if( !folder.exists() ) {
+        println "No coverage to upload at $htmlSourceDir"
+        return
+      }
+
+      def htmlFolder = new File(htmlDestinationDir)
+
+      if( !htmlFolder.exists() ) {
+        htmlFolder.mkdirs()
+      }
+
+      def ant = new org.gradle.api.internal.project.DefaultAntBuilder()
+
+      ant.copy(todir: htmlDestinationDir) {
+        fileset(dir: htmlSourceDir)
+      }
+    }
+  }
+}
+
+// Remote coverage utils: tasks and settings required to do remote
+// codecoverage, mostly on WLSs running on different machines for different
+// projects.
+def remoteServers = [:]
+
+if (rootProject.name == 'emcpdp') {
+  remoteServers = ['slc06qam.us.oracle.com':8035] // qasprint only to be used when in sprintX branch
+  //remoteServers = ['slc00apk.us.oracle.com':8030] // qamaster only to be used when in master branch
+}
+else if (rootProject.name == 'targetmodel') {
+  remoteServers = ['slc06mcr.us.oracle.com':8030]
+}
+else if (rootProject.name == 'emcpsm') {
+  remoteServers = ['slc06wtm.us.oracle.com':8035, 'slc00tak.us.oracle.com':8035]
+}
+else if (rootProject.name == 'clientservices') {
+  remoteServers = ['slc00azc.us.oracle.com':8035,'slc06qba.us.oracle.com':8035,'slc04rin.us.oracle.com':8035]
+}
+else if (rootProject.name == 'emcpssf') {
+  remoteServers = ['slc05zch.us.oracle.com':8035]
+}
+
+// Retrieves JaCoCo CC data from a remote WLS machine (jacoco agent must be
+// running in the remote machine)
+task dumpRemoteCC << {
+  if (remoteServers.size() == 0 ){
+    println "Unknown RemoteServer, could not retrieve code Coverage data."
+    return
+  }
+  ant {
+    taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask",classpath: configurations.jacocoAnt.asPath)
+    println "Dumping CC data from remote agent on $remoteServers"
+    remoteServers.each{
+      println "Server ${it.key}:${it.value}"
+      dump(address:"${it.key}", port:"${it.value}", dump:"true",destfile: "${buildDir}/jacoco/test.exec")
+    }
+  }
+}
+
+task resetRemoteCC << {
+  if (remoteServers.size() == 0 ){
+    println "Unknown RemoteServer, could not retrieve code Coverage data."
+    return
+  }
+  ant {
+    taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask",classpath: configurations.jacocoAnt.asPath)
+    println "Reseting CC data from remote agent on $remoteServers"
+    remoteServers.each{
+      println "Server ${it.key}:${it.value}"
+      try{
+        dump(address:"${it.key}", port:"${it.value}", dump:"false",reset: "true")
+      }
+      catch (e){
+        println "EXCEPTION $e"
+      }
+    }
+  }
+}
+
+project.tasks.withType(JacocoMerge) { task ->
+  task.destPath = new File(project.getBuildDir(), "/jacoco/${task.name}.exec")
+}
+
+
+/*
+  This task is used when a unified jacoco report is required. It gathers all
+  execution data and sourceSets into a single collection. Jacoco generates a
+  single report containing all existing jacoco data in every project.
+*/
+task configureCCoverageDataModel << {
+    def coverageTask = project.getTasksByName('ccoverageDataModel', false).iterator().next()
+    def Set<File> sourceDirectories = new HashSet<File>();
+    def Set<File> classDirectories  = new HashSet<File>();
+    def Set<File> executionData     = new HashSet<File>();
+
+    project.subprojects.each { Project p ->
+        if (p.hasProperty('sourceSets')) {
+            for ( s in p.sourceSets) {
+                if (s.name.startsWith('test')) {
+                    continue;
+                }
+
+                def javaFiles = s.allJava
+
+                if (!javaFiles.empty) {
+                    sourceDirectories.add(s.java.files)
+                    classDirectories.add(s.output.files)
+                }
+            }
+        }
+
+        // Gather jacoco execution data files
+        if (p.getPlugins().hasPlugin('jacoco')) {
+            for ( t in p.tasks ) {
+                JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
+
+                if (jacoco != null) {
+                    File execFile= t.jacoco.destinationFile
+
+                    if (execFile.exists()) {
+                        executionData.add(t.jacoco.destinationFile)
+                    }
+                }
+            }
+        }
+
+    }// End loop on subprojects
+
+    // Configure the coverage report class
+    coverageTask.setClassDirectories    project.files(classDirectories)
+    coverageTask.setSourceDirectories   project.files(sourceDirectories)
+    coverageTask.setExecutionData       project.files(executionData)
+    coverageTask.reports{
+      html.destination "${buildDir}/reports/jacoco"
+    }
+}
+
+task ccoverageDataModel(type: JacocoReport, dependsOn: configureCCoverageDataModel) {
+    description = "Generates code coverage report based on all existing tests"
+    println "* Using CC Sonar server: $ccSettings.sonarHost"
+}
+
+
+//
+// Task used to merge different jacoco exec files into a single exec file
+//
+task mergeCoverageData << {
+  def mergeTask = project.getTasksByName('mergeData', false).iterator().next()
+  def filePath  = new File("${buildDir}/jacoco/merged.exec")
+
+  def Set<File> jacocoExecFiles = new HashSet<File>()
+
+  allprojects.each { Project p ->
+    if (p.getPlugins().hasPlugin('jacoco')) {
+      for ( t in p.tasks ) {
+        JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
+
+        if (jacoco != null) {
+          File execFile= t.jacoco.destinationFile
+
+          if (execFile.exists()) {
+            jacocoExecFiles.add(execFile)
+          }
+        }
+      }
+    }
+  }
+  mergeTask.setExecutionData project.files(jacocoExecFiles)
+}
+
+//
+// Task to copy a merged exec file into every subproject using jacoco, this
+// allows Sonar to report codeCoverage from projects excercising other project's
+// code.
+//
+task copyMergedFile << {
+  def mergeTask = project.getTasksByName('mergeData', false).iterator().next()
+  def filePath  = new File("${buildDir}/jacoco/merged.exec")
+
+  mergeTask.executionData.each {
+    ant.copy(file: mergeTask.destinationFile, tofile: it)
+  }
+
+  allprojects.each { Project p ->
+    if (p.getPlugins().hasPlugin('jacoco')) {
+      for ( t in p.tasks ) {
+        JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
+
+        if (jacoco != null) {
+          File execFile= t.jacoco.destinationFile
+          ant.copy(file: mergeTask.destinationFile, tofile: execFile)
+        }
+        else {
+          def tmpJacoco = new File("${p.buildDir}/jacoco")
+
+          if ( !tmpJacoco.exists() ){
+            tmpJacoco.mkdirs()
+          }
+
+          def tmpFile = new File("${tmpJacoco}/test.exec")
+          ant.copy(file: mergeTask.destinationFile, tofile: tmpFile )
+        }
+      }
+    }
+  }
+}
+
+// Merge all test.exec into a single .exec file
+task mergeData(type: JacocoMerge , dependsOn: mergeCoverageData) {
+  destinationFile =  file("${rootProject.buildDir}/jacoco/test.exec")
+}
+
+mergeData.finalizedBy copyMergedFile
+
+/* Code Coverage Report Generator Final steps wrapper */
+task ccWrapper(dependsOn: ['ccoverageDataModel','mergeData','jacocoTestReport'])
+
+//Upload just one exec file to the project root location since all subprojects will have the same file.
+task copyExecFiles << {
+  def today              = new Date().format('yyMMdd')
+  def fileServerLocation = "/net/slc06pqa/scratch/uploadToServer/${project.branch_cc}/${today}/${project.commit_cc}/${project.getRootProject().name}"
+
+  String execSourceDir      = "${buildDir}/jacoco"
+  String execDestinationDir = "${fileServerLocation}/exec"
+
+  def folder = new File(execSourceDir)
+
+  if( !folder.exists() ) {
+    println "No coverage exec file to upload at $execSourceDir"
+    return
+  }
+
+  def execFolder = new File(execDestinationDir)
+
+  if ( !execFolder.exists() ){
+    execFolder.mkdirs()
+  }
+
+  def ant = new org.gradle.api.internal.project.DefaultAntBuilder()
+  ant.copy(todir: execDestinationDir) {
+    fileset(dir: execSourceDir)
+  }
+}
+
+/* Code Coverage Copy Wrapper: copy jacoco htmls and exec files to the local server */
+task ccUpload (dependsOn: subprojects.copyHtmlFiles) << { println "Copy HTML"}
+
+ccUpload.finalizedBy copyExecFiles

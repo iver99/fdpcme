@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="dashboards-ee">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="log4j-1.2.17.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-1.2.17.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registry-lookup-client-0.3.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-0.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="registry-client-0.4.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-0.4.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dashboards-core.jar" deploy-path="/lib" handle="module:/resource/dashboards-core/dashboards-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dashboards-web.war" deploy-path="/" handle="module:/resource/dashboards-web/dashboards-web">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dashboards-webutils.jar" deploy-path="/lib" handle="module:/resource/dashboards-webutils/dashboards-webutils">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dashboards-entities.jar" deploy-path="/lib" handle="module:/resource/dashboards-entities/dashboards-entities">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

@@ -1,0 +1,334 @@
+{
+    "name": "TIME",
+    "displayName": "Time Dimension",
+    "description": "Time Dimension",
+    "dimensionType": 1,
+    "status": 1,
+    "attributes": [{
+            "name": "DAYOFMONTH",
+            "displayName": "Day of month",
+            "description": "Day of month (1-31)",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": false,
+            "precision": 2,
+            "defaultLevel": "TIMELEVELDAYOFMONTH",
+            "defaultHierarchy": "TIMEHIERBYMONTHOFYEAR"
+        }, {
+            "name": "DAYOFWEEK",
+            "displayName": "Day of week",
+            "description": "Day of week (1-7), starting a Sunday",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": false,
+            "precision": 1,
+            "defaultLevel": "TIMELEVELDAYOFWEEK",
+            "defaultHierarchy": "TIMEHIERBYWEEK"
+        }, {
+            "name": "HOUROFDAY",
+            "displayName": "Hour",
+            "description": "Hour of day (0-23)",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": false,
+            "precision": 2,
+            "defaultLevel": "TIMELEVELHOUR",
+            "defaultHierarchy": "TIMEHIERBYMONTHOFYEAR"
+        }, {
+            "name": "MONTHOFQUARTER",
+            "displayName": "Month of quarter",
+            "description": "Month of quarter (1-3)",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": false,
+            "precision": 1,
+            "defaultLevel": "TIMELEVELMONTHOFQUARTER",
+            "defaultHierarchy": "TIMEHIERBYQUARTEROFYEAR"
+        }, {
+            "name": "MONTHOFYEAR",
+            "displayName": "Month of year",
+            "description": "Month of year (1-12)",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": false,
+            "precision": 2,
+            "defaultLevel": "TIMELEVELMONTHOFYEAR",
+            "defaultHierarchy": "TIMEHIERBYMONTHOFYEAR"
+        }, {
+            "name": "QUARTEROFYEAR",
+            "displayName": "Quarter",
+            "description": "Quarter of year (1-4)",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": false,
+            "precision": 1,
+            "defaultLevel": "TIMELEVELQUARTER",
+            "defaultHierarchy": "TIMEHIERBYQUARTEROFYEAR"
+        }, {
+            "name": "WEEKOFERA",
+            "displayName": "Week",
+            "description": "Week of era (Date at start of the week, starting at Sunday midnight)",
+            "dimensionName": "TIME",
+            "dataType": 2,
+            "disableGroupBy": false,
+            "precision": 0,
+            "defaultLevel": "TIMELEVELWEEK",
+            "defaultHierarchy": "TIMEHIERBYWEEK"
+        }, {
+            "name": "YEAROFERA",
+            "displayName": "Year",
+            "description": "Year of era (0-9999)",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": false,
+            "precision": 4,
+            "defaultLevel": "TIMELEVELYEAR",
+            "defaultHierarchy": "TIMEHIERBYMONTHOFYEAR"
+        }, {
+            "name": "TIME_ID",
+            "displayName": "Records",
+            "description": "All dimension records",
+            "dimensionName": "TIME",
+            "dataType": 3,
+            "disableGroupBy": true,
+            "precision": 16,
+            "countingAttribute": true
+        }],
+    "levels": [{
+            "name": "TIMELEVELDAYOFMONTH",
+            "displayName": "Day of Month",
+            "description": "Day of month",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "DAYOFMONTH",
+                    "levelName": "TIMELEVELDAYOFMONTH"
+                }]
+        }, {
+            "name": "TIMELEVELDAYOFWEEK",
+            "displayName": "Day of Week",
+            "description": "Day of week",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "DAYOFWEEK",
+                    "levelName": "TIMELEVELDAYOFWEEK"
+                }]
+        }, {
+            "name": "TIMELEVELHOUR",
+            "displayName": "Hour",
+            "description": "Hour",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "HOUROFDAY",
+                    "levelName": "TIMELEVELHOUR"
+                }]
+        }, {
+            "name": "TIMELEVELMONTHOFQUARTER",
+            "displayName": "Month of Quarter",
+            "description": "Month of quarter",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "MONTHOFQUARTER",
+                    "levelName": "TIMELEVELMONTHOFQUARTER"
+                }]
+        }, {
+            "name": "TIMELEVELMONTHOFYEAR",
+            "displayName": "Month of Year",
+            "description": "Month of year",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "MONTHOFYEAR",
+                    "levelName": "TIMELEVELMONTHOFYEAR"
+                }]
+        }, {
+            "name": "TIMELEVELQUARTER",
+            "displayName": "Quarter",
+            "description": "Quarter",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "QUARTEROFYEAR",
+                    "levelName": "TIMELEVELQUARTER"
+                }]
+        }, {
+            "name": "TIMELEVELWEEK",
+            "displayName": "Week",
+            "description": "Week",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "WEEKOFERA",
+                    "levelName": "TIMELEVELWEEK"
+                }]
+        }, {
+            "name": "TIMELEVELYEAR",
+            "displayName": "Year",
+            "description": "Year",
+            "dimensionName": "TIME",
+            "attributeReferences": [{
+                    "levelDescriptor": 1,
+                    "levelIdentifier": 1,
+                    "attributeName": "YEAROFERA",
+                    "levelName": "TIMELEVELYEAR"
+                }]
+        }],
+    "hierarchies": [{
+            "name": "TIMEHIERBYDAY",
+            "displayName": "By Day",
+            "description": "By Day (Day -> Hour of Day)",
+            "dimensionName": "TIME",
+            "type": 2,
+            "levels": [{
+                    "levelName": "TIMELEVELDAYOFMONTH",
+                    "hierarchyName": "TIMEHIERBYDAY",
+                    "levelOrder": 2,
+                    "includeParentIdentifiers": 0
+                }, {
+                    "levelName": "TIMELEVELHOUR",
+                    "hierarchyName": "TIMEHIERBYDAY",
+                    "levelOrder": 1,
+                    "includeParentIdentifiers": 1
+                }]
+        }, {
+            "name": "TIMEHIERBYMONTH",
+            "displayName": "By Month",
+            "description": "By Month (Month -> Day of Month -> Hour of Day of Month)",
+            "dimensionName": "TIME",
+            "type": 2,
+            "levels": [{
+                    "levelName": "TIMELEVELMONTHOFYEAR",
+                    "hierarchyName": "TIMEHIERBYMONTH",
+                    "levelOrder": 3,
+                    "includeParentIdentifiers": 0
+                }, {
+                    "levelName": "TIMELEVELDAYOFMONTH",
+                    "hierarchyName": "TIMEHIERBYMONTH",
+                    "levelOrder": 2,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELHOUR",
+                    "hierarchyName": "TIMEHIERBYMONTH",
+                    "levelOrder": 1,
+                    "includeParentIdentifiers": 1
+                }]
+        }, {
+            "name": "TIMEHIERBYMONTHOFYEAR",
+            "displayName": "By Month of year",
+            "description": "By Month of year (Year -> Month of Year -> Day of month of year -> Hour of day of month of year)",
+            "dimensionName": "TIME",
+            "type": 2,
+            "levels": [{
+                    "levelName": "TIMELEVELYEAR",
+                    "hierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                    "levelOrder": 4,
+                    "includeParentIdentifiers": 0
+                }, {
+                    "levelName": "TIMELEVELMONTHOFYEAR",
+                    "hierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                    "levelOrder": 3,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELDAYOFMONTH",
+                    "hierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                    "levelOrder": 2,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELHOUR",
+                    "hierarchyName": "TIMEHIERBYMONTHOFYEAR",
+                    "levelOrder": 1,
+                    "includeParentIdentifiers": 1
+                }]
+        }, {
+            "name": "TIMEHIERBYQUARTER",
+            "displayName": "By Quarter",
+            "description": "By Quarter (Quarter -> Month of Quarter -> Day of Month of Quarter -> Hour of Day of Month of Quarter)",
+            "dimensionName": "TIME",
+            "type": 2,
+            "levels": [{
+                    "levelName": "TIMELEVELQUARTER",
+                    "hierarchyName": "TIMEHIERBYQUARTER",
+                    "levelOrder": 4,
+                    "includeParentIdentifiers": 0
+                }, {
+                    "levelName": "TIMELEVELMONTHOFQUARTER",
+                    "hierarchyName": "TIMEHIERBYQUARTER",
+                    "levelOrder": 3,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELDAYOFMONTH",
+                    "hierarchyName": "TIMEHIERBYQUARTER",
+                    "levelOrder": 2,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELHOUR",
+                    "hierarchyName": "TIMEHIERBYQUARTER",
+                    "levelOrder": 1,
+                    "includeParentIdentifiers": 1
+                }]
+        }, {
+            "name": "TIMEHIERBYQUARTEROFYEAR",
+            "displayName": "By Quarter of year",
+            "description": "By Quarter of year (Year -> Quarter of Year -> Month of Quarter of Year -> Day of Month of Quarter of Year -> Hour of Day of Month of Quarter of Year)",
+            "dimensionName": "TIME",
+            "type": 2,
+            "levels": [{
+                    "levelName": "TIMELEVELYEAR",
+                    "hierarchyName": "TIMEHIERBYQUARTEROFYEAR",
+                    "levelOrder": 5,
+                    "includeParentIdentifiers": 0
+                }, {
+                    "levelName": "TIMELEVELQUARTER",
+                    "hierarchyName": "TIMEHIERBYQUARTEROFYEAR",
+                    "levelOrder": 4,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELMONTHOFQUARTER",
+                    "hierarchyName": "TIMEHIERBYQUARTEROFYEAR",
+                    "levelOrder": 3,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELDAYOFMONTH",
+                    "hierarchyName": "TIMEHIERBYQUARTEROFYEAR",
+                    "levelOrder": 2,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELHOUR",
+                    "hierarchyName": "TIMEHIERBYQUARTEROFYEAR",
+                    "levelOrder": 1,
+                    "includeParentIdentifiers": 1
+                }]
+        }, {
+            "name": "TIMEHIERBYWEEK",
+            "displayName": "By Week",
+            "description": "By Week (Week -> Day of Week -> Hour of Day of Week)",
+            "dimensionName": "TIME",
+            "type": 2,
+            "levels": [{
+                    "levelName": "TIMELEVELWEEK",
+                    "hierarchyName": "TIMEHIERBYWEEK",
+                    "levelOrder": 3,
+                    "includeParentIdentifiers": 0
+                }, {
+                    "levelName": "TIMELEVELDAYOFWEEK",
+                    "hierarchyName": "TIMEHIERBYWEEK",
+                    "levelOrder": 2,
+                    "includeParentIdentifiers": 1
+                }, {
+                    "levelName": "TIMELEVELHOUR",
+                    "hierarchyName": "TIMEHIERBYWEEK",
+                    "levelOrder": 1,
+                    "includeParentIdentifiers": 1
+                }]
+        }]
+}

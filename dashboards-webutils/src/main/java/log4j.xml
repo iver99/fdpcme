@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+        <appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
+                <param name="Threshold" value="ALL" />
+                <param name="File" value="/var/opt/ORCLemaas/logs/dashboardsService/dashboardsService.log" />
+                <param name="Append" value="true" />
+                <param name="DatePattern" value="'.'yyyy-MM-dd" />
+                <layout class="org.apache.log4j.PatternLayout">
+            	<param name="ConversionPattern" value="%d{ISO8601} %-5p [%t] - [%c{1}] %l %m%n" />
+                </layout>
+        </appender>
+
+        <appender name="ASYNC" class="org.apache.log4j.AsyncAppender">
+                <param name="Blocking" value="false" />
+                <appender-ref ref="FILE" />
+        </appender>
+
+        <!-- ================ -->
+        <!-- Limit categories -->
+        <!-- ================ -->
+
+        <!-- Savedsearch categories -->
+        <category name="oracle.sysman.emaas.platform.dashboards">
+                <priority value="INFO" />
+        </category>
+
+        <root>
+                <appender-ref ref="ASYNC" />
+        </root>
+</log4j:configuration>

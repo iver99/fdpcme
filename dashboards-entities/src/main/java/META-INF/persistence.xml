@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="DashboardsPU"
+		transaction-type="JTA">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<jta-data-source>jdbc/emaas_dashboards_ds</jta-data-source>
+		<!-- class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class-->
+
+		<properties>
+			<property name="eclipselink.logging.exceptions" value="true" />
+			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />
+			<property name="eclipselink.jdbc.cache-statements" value="true" />
+			<property name="eclipselink.weaving" value="true" />
+			<property name="eclipselink.jdbc.native-sql" value="true" />
+			<property name="eclipselink.logging.logger"
+				value="org.eclipse.persistence.logging.DefaultSessionLog" />
+			<property name="eclipselink.logging.level" value="INFO" />
+			<property name="eclipselink.jdbc.cache-statements.size"
+				value="65535" />
+			<property name="eclipselink.orm.validate.schema" value="true" />
+			<property name="eclipselink.weaving.fetchgroups" value="true" />
+			<property name="eclipselink.weaving.lazy" value="true" />
+			<property name="eclipselink.weaving.internal" value="true" />
+			<property name="eclipselink.weaving.eager" value="true" />
+			<property name="eclipselink.weaving.changetracking" value="true" />
+			<property name="eclipselink.orm.throw.exceptions" value="true" />
+			<property name="eclipselink.logging.session" value="true" />
+			<property name="eclipselink.logging.thread" value="true" />
+			<property name="eclipselink.logging.timestamp" value="true" />
+			<property name="eclipselink.session.include.descriptor.queries"
+				value="true" />
+			<property name="eclipselink.cache.size.default" value="65535" />			
+		</properties>
+	</persistence-unit>
+
+	<persistence-unit name="DashboardsTestPU"
+		transaction-type="RESOURCE_LOCAL">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<!-- class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
+		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class-->
+
+		<properties>
+			<property name="eclipselink.logging.exceptions" value="true" />
+			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />
+			<property name="eclipselink.jdbc.cache-statements" value="true" />
+			<property name="eclipselink.jdbc.native-sql" value="true" />
+			<property name="eclipselink.logging.logger"
+				value="org.eclipse.persistence.logging.DefaultSessionLog" />
+			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.jdbc.cache-statements.size"
+				value="65535" />
+			<property name="eclipselink.orm.validate.schema" value="true" />
+			<property name="eclipselink.orm.throw.exceptions" value="true" />
+			<property name="eclipselink.logging.session" value="true" />
+			<property name="eclipselink.logging.thread" value="true" />
+			<property name="eclipselink.logging.timestamp" value="true" />
+			<property name="eclipselink.session.include.descriptor.queries"
+				value="true" />
+			<property name="eclipselink.cache.size.default" value="65535" />			
+		</properties>
+	</persistence-unit>
+
+</persistence>

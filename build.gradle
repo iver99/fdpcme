@@ -1,39 +1,188 @@
-/**  
-* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.  
-*  
-* DESCRIPTION
-*	
-*
-* TO RUN:
-*	
-*
-* INPUT:
-*
-*/
+import java.util.logging.LogManager.Cleaner;  
 
-allprojects {
-    apply plugin: 'artifactory'
-    apply plugin: 'DevInfraPlugin' 
+//ext.distDir = "${rootDir}/../../dist" 
+ext.distDir = "${rootDir}/dist"  
+ext.artifactPrefix = 'emaas-applications-' 
+ext.projectVersion = '0.1-SNAPSHOT'  
+ext.appName="${artifactPrefix}dashboards-api" 
+ext.serviceName = "${artifactPrefix}dashboards" 
+ext.serviceInstallPath = "/opt/ORCLemaas/Applications/${serviceName}/${projectVersion}" 
+ext.serviceDistDir = "${distDir}${serviceInstallPath}" 
+
+apply plugin: 'java' 
+
+allprojects {  
+	apply plugin: 'artifactory' 
+	apply plugin: 'DevInfraPlugin' 
+	ext.dependenciesDir = new File(rootDir, 'common') 
+	repositories {  
+		mavenLocal()  
+		maven {  
+			url = "${artifactory_contextUrl}" + '/repo'  
+			credentials {  
+			username = "${artifactory_user}"  
+			password = "${artifactory_password}"  
+		} 
+	}  
+	mavenCentral()  
+	}  
 }
 
+artifactory { 
+	contextUrl = "${artifactory_contextUrl}" 
+	publish { 
+		repository { 
+			repoKey = 'em-libs-release-local' 
+			username = "${artifactory_user}" 
+			password = "${artifactory_password}" 
+			maven = true 
+		} 
+	} 
+	resolve {  
+		repository {  
+			repoKey = 'repo'  
+			username = "${artifactory_user}"  
+			password = "${artifactory_password}"  
+			maven = true  
+		} 
+	}  
+} 
 
-buildscript {
 
-        repositories {
-                mavenLocal()
-                maven {
-                        url = "${artifactory_contextUrl}" + '/repo'
-                        credentials {
-                                username = "${artifactory_user}"
-                                password = "${artifactory_password}"
-                        }
+subprojects { 
+	apply plugin: 'java' 
+	jar { manifest.attributes provider: 'Oracle EMaaS Applications' } 
+	ext.archiveBaseName = artifactPrefix + project.name  
+} 
+
+configurations {
+        prebuild_log4j { transitive = false }
+	prebuild_toplink { transitive = false }
+	prebuild_servicemanager { transitive = false } 
+	prebuild_web { transitive = false }
+	prebuild_junit { transitive = false }
+	prebuild_apacheHttp { transitive = false }
+	prebuild_jaxrs { transitive = false }
+	prebuild_testng { transitive = false }
+	prebuild_wlfullc { transitive = false }
+
+}
+
+dependencies {
+		
+	prebuild_log4j 'log4j:log4j:1.2.17'
+	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
+                         'org.eclipse.persistence:javax.persistence:2.0.0'
+	prebuild_servicemanager 'emaas.platform:registry-client:0.4',
+                                'emaas.platform:registry-lookup-client:0.3'
+	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
+				'com.oracle.weblogic:ojdbc6:12.1.2-0-0',
+				'javax.transaction:javax.transaction-api:1.2',
+				'javax:ejb:3.2.0',
+				'javax.servlet:servlet-api:2.5',
+				'javax.ws.rs:javax.ws.rs-api:2.0',
+				'commons-codec:commons-codec:1.6',
+				'commons-logging:commons-logging:1.1.1'
+	prebuild_junit 'org.hamcrest:hamcrest-core:1.3', 'junit:junit:4.11'
+	prebuild_apacheHttp 'org.apache.httpcomponents:httpclient:4.3.1',
+			    'org.apache.httpcomponents:httpcore:4.3',
+			    'org.apache.httpcomponents:httpmime:4.3.1'
+	prebuild_jaxrs  'org.codehaus.jackson:jackson-core-asl:1.9.1',
+			'org.codehaus.jackson:jackson-mapper-asl:1.9.12',
+			'org.codehaus.jackson:jackson-jaxrs:1.9.2', 
+			'org.codehaus.jackson:jackson-mapper-asl:1.9.2',
+			'org.codehaus.jackson:jackson-xc:1.9.2'	,		
+			'org.codehaus.jackson:jackson-core-asl:1.8.8',
+			'com.sun.jersey:jersey-core:1.17.1',
+			'com.sun.jersey:jersey-json:1.17.1', 
+			'com.sun.jersey:jersey-server:1.17.1', 
+			'com.sun.jersey:jersey-servlet:1.17.1',
+			'org.codehaus.jettison:jettison:1.1'
+	prebuild_testng 'org.testng:testng:6.8.8',
+			'com.sun.jersey:jersey-client:1.17',
+			'com.sun.jersey.contribs:jersey-multipart:1.17.1',
+			'org.codehaus.groovy:groovy-all:2.2.1',
+			'org.apache.commons:commons-lang3:3.1',
+			'com.jayway.restassured:json-path:1.8.1',
+			'com.jayway.restassured:xml-path:1.9.0',
+			'com.jayway.restassured:rest-assured-common:2.3.1',
+			'com.jayway.restassured:rest-assured:2.3.1'
+	prebuild_wlfullc 'test:wlfullclient:2.6'
+}
+
+// Copy downloaded 3rd party jars from Artifactory into the locations 
+// that we are using those jars from as of now.
+task preBuildCompile(type: Copy) {
+   ext.afDir = new File(rootDir, 'dependencies/artifactory')   
+   from configurations.prebuild_toplink
+   from configurations.prebuild_log4j
+   from configurations.prebuild_servicemanager
+   from configurations.prebuild_web
+   from configurations.prebuild_junit
+   from configurations.prebuild_apacheHttp
+   from configurations.prebuild_jaxrs
+   from configurations.prebuild_testng
+   from configurations.prebuild_wlfullc
+   into "$afDir"
+}
+
+compileJava.dependsOn preBuildCompile
+
+project(':dashboards-web'){
+	configurations {
+		ftpAntTask
+	}
+	javadoc {
+        	options {
+                  locale = 'en_US'
+                  encoding = 'UTF-8'
                 }
-                mavenCentral()
-        }
+        source = [sourceSets.main.allJava,fileTree(dir:'../dashboards-web/src/test'),fileTree(dir:'../dashboards-core/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../dashboards-entities/src',exclude:['**/*.xml','**/*.MF']),fileTree(dir:'../dashboards-webutils/src',exclude:['**/*.MF','**/*.properties'])]
+	}
 
-        dependencies {
-			classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.1.0'
-                        classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
-        }
+	task ftp<<{
+		ant{
+                	taskdef(name:'ftp',classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',classpath:configurations.ftpAntTask.asPath)
+                	ftp(server: ftpserver, userid: username, password: password, remotedir: remote_javadoc_dir){
+			fileset(dir:'build/docs')
+             		}	
+        	}
+	}
+	
+	dependencies{			
+		compile project(':dashboards-entities')
+		compile project(':dashboards-core')
+				
+		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
+    		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.3') 
+		compile(group: 'emaas.platform', name: 'registry-client', version: '0.4') 
+		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
+			module('commons-net:commons-net:1.4.1'){
+				dependencies 'oro:oro:2.0.8:jar'
+			}
+		}
+	}
 }
 
+buildscript {  
+	repositories {  
+		mavenLocal()  
+		maven {  
+			url = "${artifactory_contextUrl}" + '/repo' 
+			credentials {  
+			username = "${artifactory_user}"  
+			password = "${artifactory_password}"  
+			}  
+		} 
+		mavenCentral()  
+	}
+
+	dependencies {  
+		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.1.0'  
+		classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
+	}  
+}
+
+// Apply code coverage gradle file. Defines jacoco and sonar properties.
+project.ext.set("source_cc", "${rootDir}/codeCoverage")
+apply from: "${project.ext.source_cc}/codeCoverage.gradle" 

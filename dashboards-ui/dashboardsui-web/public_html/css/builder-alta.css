@@ -1,0 +1,197 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-8-29, 14:51:26
+    Author     : guobaochen
+*/
+
+body, html {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+#globalBody, .stretch-height {
+  height: 100%;
+}
+
+.tile-container {
+  max-width: none;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 100%;
+}
+
+iframe {
+  border: 0px inset;
+  overflow: auto;
+}
+
+.search-col {
+  border-right-style: solid;
+  border-right-color: #fff;
+  border-right-width: 1px;
+  box-shadow: 5px 0 5px -5px rgba(0,0,0,0.3);
+}
+
+.dbd-col-0 {
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
+  border-right-width: 0;
+}
+
+.dbd-col-0 .search-row {
+  display: none;
+}
+
+.search-col .ui-draggable:not(.ui-draggable-disabled) {
+  cursor: move;
+}
+
+.search-col .ui-draggable:not(.ui-draggable-disabled) .oj-tree-title {
+  cursor: move;
+}
+
+.search-collapser {
+  cursor: pointer;
+  position: absolute;
+  top: 61.8%;
+  margin-top: -13px;
+  width: 8px;
+  height: 26px;
+  background-color: #fff;
+  border-radius: 0px;
+  border: 1px solid #ddd;
+  z-index: 1000;
+  box-shadow: 1px 0px 4px rgba(0,0,0,.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  -webkit-box-shadow: 1px 0px 4px rgba(0,0,0,.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  -moz-box-shadow: 1px 0px 4px rgba(0,0,0,.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  margin-right: -10px;
+  right: 0%;
+}
+
+.dbd-col-0 .search-collapser {
+  left: -10px;
+}
+
+.search-collapser-caret {
+  border: 3px solid transparent;
+  width: 0px;
+  height: 0px;
+  margin-top: -3px;
+  position: relative;
+  top: 50%;
+  border-right: 3px solid black;
+  border-left: none;
+  left: 2px;
+}
+
+.dbd-col-0 .search-collapser-caret {
+  border-left: 3px solid black;
+  border-right: none;
+  left: 2px;
+}
+
+.dbd-column {
+  padding: 3em;
+  margin: 0px 50px;
+  overflow: auto;
+  height: 95%;
+}
+
+#tiles-row {
+  width: 100%;
+}
+
+.dbd-tile {
+  float: left;
+  padding: 3px 10px;
+}
+
+.dbd-tile-no-display {
+  display: none;
+}
+
+.dbd-tile-maximized {
+  width: 100%;
+  height: 90%;
+}
+
+.dbd-tile-dragging {
+  border: 1px solid #ddd;
+  height: 280px;
+}
+
+.dbd-tile-header {
+  color: #333;
+  background-color: #fff;
+  padding: 1px 8px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border: 1px solid;
+  border-bottom: 0px;
+  border-color: #ddd;
+  font-size: 14px;
+  cursor: move;
+  border-top: 2px solid #D8D6D6 !important;
+}
+
+.dbd-tile-maximized .dbd-tile-header {
+  cursor: default;
+}
+
+.dbd-pull-right {
+  float: right!important;
+}
+
+.dbd-btn-group {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dbd-tile-header .dbd-tile-title {
+  height: 2.34rem;
+  line-height: 2.34rem;
+}
+
+.dbd-tile-header .dbd-tile-action {
+  float: right;
+  display: block;
+  margin-bottom: 1px;
+}
+
+.dbd-tile-element {
+  border: 1px solid #d6dfe6;
+  /*overflow: auto;*/ 
+  height: 220px;
+  clear: right;
+}
+
+.dbd-tile-maximized .dbd-tile-element {
+  height: 90%;
+  margin-bottom: 5em;
+}
+
+.dbd-tile-header-placeholder {
+  border: 1px solid #d6dfe6;
+  background-color: #F0CAC4;
+  border-bottom: 1px solid #F0CAC4;
+  color: #F0CAC4;
+  border-top: 4px solid #F0CAC4 !important;
+}
+
+.dbd-tile-placeholder-inner {
+  border: 1px solid #d6dfe6;
+  background-color: #F0CAC4;
+  border-top: 1px solid #F0CAC4;
+  height: 231px;
+  overflow: auto;
+  border-top: 4px solid #F0CAC4 !important;
+}
