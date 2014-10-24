@@ -1,0 +1,51 @@
+apply plugin: 'artifactory' 
+ 
+// Override default artifactory ID for publishing through artifactory 
+ext.archivesBaseName = archiveBaseName 
+ 
+// SQL Source directories 
+ext.sqlDir = file('src/main/sql')
+version = '0.1'
+ 
+ext.schemaDistDir = "${serviceDistDir}/${archiveBaseName}" 
+ 
+// Default tasks 
+defaultTasks 'dist' 
+ 
+configurations { 
+    archives 
+} 
+ 
+/** 
+ * Copies the schema creation scripts to the gloabl emaas deployment directory 
+ */  
+task dist(type: Sync) {     
+    from 'src/main/sql', { 
+        include  '**/*.sql' 
+    }             
+		println "Files copied successfully to ${schemaDistDir}"  			
+    into "${schemaDistDir}" 
+} 
+ 
+/** 
+ * Builds a GZip archive that contains the schema creation scripts 
+ */   
+task buildZip(type:Tar) { 
+    dependsOn   dist 
+     
+    compression = 'gzip' 
+     
+    baseName = archiveBaseName 
+    version = project.version 
+     
+    from schemaDistDir, { 
+        into archiveBaseName 
+    } 
+     
+    destinationDir = buildDir 
+} 
+
+configurations.archives.artifacts.clear()
+artifacts { 
+    archives buildZip 
+} 
