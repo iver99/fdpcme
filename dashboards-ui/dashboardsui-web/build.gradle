@@ -5,8 +5,6 @@ apply plugin: 'war'
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'dependencies/oraclejet')
-//def File sourceCSSDestDir = new File(sourceWebappDir, 'css/libs')
-//def File sourceSCSSDestDir = new File(sourceWebappDir, 'scss')
 
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
@@ -34,35 +32,12 @@ project.task("unpackJETFromArtifactory") << {
             }
             // Copy each of the unzipped jet directories to
             // the appropriate source directories
-            // 1. build/jet/js/libs/ >> public_html/js/libs/ &&
-            // build/jet/buildnum >> public_html/js/libs/ (for tracking JET build#)
-            // build/jet/revnum >> public_html/js/libs/ (for tracking JET rev#)
-            def File jsLibSource = new File(buildJetUnzipDir.absolutePath, 'js/libs')
-            def File buildnumSource = new File(buildJetUnzipDir.absolutePath, 'buildnum')
-            def File revnumSource = new File(buildJetUnzipDir.absolutePath, 'revnum')
+            // 1. build/jet/ >> public_html/dependencies/oraclejet/
             project.copy {
                 from  buildJetUnzipDir
-                //from jsLibSource.absolutePath
-                //from buildnumSource.absolutePath
-                //from revnumSource.absolutePath
                 into sourceJetDestDir.absolutePath
             }
-            // 2. build/jet/css/libs/ >> public_html/css/libs/
-            // first time or if custom cleans removes it
-            //sourceCSSDestDir.mkdirs()
-            //def File cssLibSource = new File(buildJetUnzipDir.absolutePath, 'css/libs')
-            //project.copy {
-            //    from cssLibSource.absolutePath
-            //    into sourceCSSDestDir.absolutePath
-            //}
-            // 3. build/jet/scss/oj >> public_html/scss/oj
-            // first time or if custom cleans removes it
-            //sourceSCSSDestDir.mkdirs()
-            //def File scssLibSource = new File(buildJetUnzipDir.absolutePath, 'scss')
-            //project.copy {
-            //    from scssLibSource.absolutePath
-            //    into sourceSCSSDestDir.absolutePath
-            //}
+            
             //finally delete the build/jet directory
             project.delete(buildJetUnzipDir)
         }
@@ -71,11 +46,7 @@ project.task("unpackJETFromArtifactory") << {
 
 project.task("cleanJet") << {
     println 'Cleaning up jet directories ...'
-    //println 'scss dir: ' + sourceSCSSDestDir.absolutePath
-    //sourceSCSSDestDir.deleteDir()
-    //println 'css dir: ' + sourceCSSDestDir.absolutePath    
-    //sourceCSSDestDir.deleteDir()
-    println 'js dir: ' + sourceJetDestDir.absolutePath
+    println 'oraclejet dir: ' + sourceJetDestDir.absolutePath
     sourceJetDestDir.deleteDir()
 }
 
