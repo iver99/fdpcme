@@ -52,7 +52,7 @@ project.task("cleanJet") << {
 
 clean.dependsOn cleanJet
 
-war.archiveName "dashboards-web.war"
+war.archiveName "dashboardsui-web.war"
 
 war.dependsOn unpackJETFromArtifactory
 
