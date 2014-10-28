@@ -71,7 +71,6 @@ var defaultColumnsNumber = 4;
 require(['knockout',
     'jquery',
     'dashboards/dashboard-tile-model',
-    'dashboards/dashboard-search-model',
     'dashboards/dashboard-tile-view',
     
     'timeslider/time-slider-model',
@@ -96,7 +95,7 @@ require(['knockout',
     'ojs/ojdvt-base',
     'ojs/ojtree'
 ],
-        function(ko, $, dtm, dsm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
+        function(ko, $, dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {
             function FooterViewModel() {
                 var self = this;
@@ -196,7 +195,6 @@ require(['knockout',
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
             var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView);
-            var searchesViewMode = new dsm.DashboardSearchesViewModel();
 
         //
                 var HOUR = 60 * 60 * 1000;
@@ -273,17 +271,12 @@ require(['knockout',
                 ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
 
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-                ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);
-                ko.applyBindings(searchesViewMode, $('#searchContainer')[0]);      
+                ko.applyBindings(new dtv.ToolBarModel(), $('#head-bar-container')[0]);
+                ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
                 
                 $('#globalBody').show();
-                tilesView.searchTreeInit();
                 tilesView.enableDraggable();
-                $('#searchCollasper').click(function() {
-                    tilesViewMode.toggleViewWidth();
-                    searchesViewMode.toggleViewWidth();
-                });
             });
         }
 );

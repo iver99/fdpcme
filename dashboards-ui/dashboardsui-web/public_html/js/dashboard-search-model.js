@@ -20,52 +20,7 @@ define(['knockout',
             self.url = ko.observable(url);
             self.chartType = ko.observable(chartType);
         }
-
-        function DashboardSearchesViewModel() {
-            var self = this;
-            self.viewWidth = ko.observable(2);
-
-            self.searches = ko.observableArray([
-                new SearchObject("New Search (Bar)", "Create new tile from search (bar chart)", document.location.protocol + '//' + document.location.host + "/emcpdf/dataVisualization.html", "bar"),
-                new SearchObject("New Search (Line)", "Create new tile from search (line chart)", document.location.protocol + '//' + document.location.host + "/emcpdf/dataVisualization.html", "line")
-            ]);
-            
-            self.viewClass = ko.computed(function() {
-                if (self.viewWidth() > 0) {
-                    return "oj-md-" + self.viewWidth();
-                } else {
-                    return "dbd-col-0";
-                }
-            });
-            
-            self.toggleViewWidth = function() {
-                if (self.viewWidth() === 2)
-                    self.viewWidth(0);
-                else
-                    self.viewWidth(2);
-            };
-            
-            self.getJson = function(node, fn)       // get local json
-            {
-                    var data = [
-                        {
-                            "title": "All searches",
-                            "attr": {"id": "searches"},
-                            "children": [
-                                {"title": "New Search (Bar)",
-                                 "attr": {"id": "bar", "name": "New Search (Bar)", "url": document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "chartType": "bar"}
-                                },
-                                {"title": "New Search (Line)",
-                                 "attr": {"id": "line", "name": "New Search (Line)", "url": document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "chartType": "line"}
-                                }
-                            ]
-                        }
-                    ];
-
-                    fn(data);  // pass to ojTree using supplied function
-            };
-        }
         
-        return {"DashboardSearchesViewModel": DashboardSearchesViewModel};
+        return {};
     }
 );

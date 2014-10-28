@@ -9,7 +9,8 @@ define(['knockout',
         'ojs/ojcore',
         'ojs/ojtree',
         'ojs/ojvalidation',
-        'ojs/ojknockout-validation'
+        'ojs/ojknockout-validation',
+        'ojs/ojbutton'
     ],
     
     function(ko, $)
@@ -116,14 +117,6 @@ define(['knockout',
                     $(".tile-container .oj-tree-leaf a").draggable("enable");
                 }
             };
-            
-            self.searchTreeInit = function() {
-                $('#search-tree').ojTree({
-                    "hover": function(event, ui) {
-                        self.searchObject = ui.item[0];
-                    }
-                });
-            };
         }
         
         function TileUrlEditView() {
@@ -138,8 +131,6 @@ define(['knockout',
             };
             
             self.applyUrlChange = function() {
-//                self.originalUrl = self.url();
-                //self.tileToChange().url(self.url());
                 var trackerObj = ko.utils.unwrapObservable(self.tracker),
                     hasInvalidComponents = trackerObj["invalidShown"];
                 if (hasInvalidComponents) {
@@ -155,6 +146,17 @@ define(['knockout',
             };
         }
         
-        return {"DashboardTilesView": DashboardTilesView, "TileUrlEditView": TileUrlEditView};
+        function ToolBarModel() {
+            this.classNames = ko.observableArray(["oj-toolbars", 
+                                          "oj-toolbar-top-border", 
+                                          "oj-toolbar-bottom-border", 
+                                          "oj-button-half-chrome"]);
+
+            this.classes = ko.computed(function() {
+                return this.classNames().join(" ");
+            }, this);
+        }
+        
+        return {"DashboardTilesView": DashboardTilesView, "TileUrlEditView": TileUrlEditView, "ToolBarModel": ToolBarModel};
     }
 );
