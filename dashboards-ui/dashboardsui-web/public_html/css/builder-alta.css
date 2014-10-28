@@ -52,7 +52,8 @@ iframe {
   height: 50px;
   filter:alpha(opacity=50);  
   -moz-opacity:0.50; 
-  opacity:0.50;  
+  opacity:0.50; 
+  padding: 0 3em;
 }
 
 #new-tile .oj-button-text {
