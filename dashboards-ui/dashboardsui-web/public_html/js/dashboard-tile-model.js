@@ -60,7 +60,6 @@ define(['knockout',
         function DashboardTilesViewModel(tilesView, urlEditView) {
             var self = this;
             self.tilesView = tilesView;
-            self.viewWidth = ko.observable(10);
 
             self.tiles = ko.observableArray([
                 new DashboardTile("Search (Line Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line"),
@@ -68,17 +67,6 @@ define(['knockout',
                 new DashboardTile("Search (Bar Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar"),
                 new DashboardTile("Search (Line Chart)", "", 4, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line")
             ]);
-            
-            self.viewClass = ko.computed(function() {
-                return "oj-sm-" + self.viewWidth() + " oj-md-" + self.viewWidth() + " oj-lg-" + self.viewWidth() + " oj-xl-" + self.viewWidth();
-            });
-            
-            self.toggleViewWidth = function() {
-                if (self.viewWidth() === 10)
-                    self.viewWidth(12);
-                else
-                    self.viewWidth(10);
-            };
 
             self.removeTile = function(tile) {
                 self.tiles.remove(tile);
