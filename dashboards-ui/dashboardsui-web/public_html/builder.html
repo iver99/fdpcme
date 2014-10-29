@@ -98,10 +98,71 @@ role value for that section to represent the appropriate content type.
                 <div id="toolbar1" aria-label="Builder toolbar" 
                        data-bind="ojComponent: {component:'ojToolbar'}" class="oj-toolbar oj-component oj-component-initnode" role="toolbar">
                       <button id="new-tile" class="oj-button oj-default oj-button-half-chrome"
-                              data-bind="ojComponent: {
+                              data-bind="click:openAddWidgetDialog,ojComponent: {
                                     component:'ojButton', 
                                     label: '+'
                               }" title="Create"></button>
+                </div>
+                <div style="display:none;" id="addWidgetDialog"
+                    data-bind="ojComponent:{component: 'ojDialog', 
+                        initialVisibility: 'hide', cancelBehavior:'none',
+                        rootAttributes: { style: 'width: 800px; height:500px;background-color: #EAEAEA;'}}">   
+                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
+                        <div id="dialog-title-id" class="oj-dialog-title">
+                            <span style="font-size: x-large;font-weight: bold;"><font color="DimGray">Add a widget</font></span>
+                            <a href="#" data-bind="click:closeAddWidgetDialog" style="float:right;"><font color="#e371b2" size="1">CLOSE</font></a>
+                        </div>
+                    </div>
+                    <div class="oj-dialog-body" style="background-color:  #EAEAEA;">
+                      <div id="addAWidget">
+                          <div style="width:100%;font-weight: bold;"><font color="gray">
+                              WE HAVE 365 WIDGETS, SEARCH OR BROWSE THE ONES YOU NEED.</font>
+                            </div>
+                    </div>
+                      <div style="padding-top: 20px;" >
+                        <div style="float:left;" id="search_box">
+                            <div style="float:left">
+                            <input id="searchTxt" style="width:340px;height:40px;padding-top: 0;padding-left: 0;margin-left: 0;margin-top: 0;font-size: medium;font-weight: bold;" maxlength='100' 
+                                   placeholder="search here" data-bind="ojComponent:{component:'ojInputText',value:''}"/>
+                            </div>
+                            <div style="float:right;">
+                                <input type="image" src="css/images/search-icon-16.png" width="30" id="go" alt="Search" title="Search" style="margin: 5px;" /> 
+                            </div>
+                        </div>
+                          <div id="searchSelect" style="float:right;">
+                              <select id="categorySelect" class="oj-select-arrow" style="height:30px;float:right;alignment-baseline: central;" 
+                                    data-bind="ojComponent: {component: 'ojSelect',
+                                                                value: categoryValue,
+                                                                rootAttributes: {style:'max-width:383px;'}}">
+                                <option value="all">ALL CATEGORIES</option>
+                                <option value="la">LOG ANALYTICS</option>
+                                <option value="ta">TARGET ANALYTICS</option>
+                            </select>
+                        </div>
+                    </div>
+                        <div id="widgets" class="widget-summaries-container" style="float: right;">
+                        <!-- ko foreach: widgetList -->
+                        <div class=" widget-container">
+                            <div>
+                                <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="taimg" alt="Log" title="Log" 
+                                       style="padding-top: 24px;padding-right: 0px; "/>
+                                <span style="width:100%;font-weight: bold;font-size: large;margin: auto;"><font color="gray">Log Analytics</font>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- /ko -->
+                    </div>
+                  </div>     
+                    <div class="oj-dialog-footer" >        
+    <!--                                          <button data-bind="ojComponent: {component: 'ojButton', label: 'Add'}, click: addWidgetOK"> 
+                      </button> 
+                      <button data-bind="ojComponent: {component: 'ojButton', label: 'Cancel'}, click: addWidgetCancel"> 
+                      </button>-->
+                      <input type="image" src="css/images/navi-pre-temp.png" width="45" id="prePage" alt="Previous" title="Previous" 
+                             style="margin-right: 5px;"/> 
+                      <input type="image" src="css/images/navi-next-temp.png" width="45" id="nextPage" alt="Next" title="Next" 
+                             style="margin-right: 5px;"/> 
+                  </div>  
                 </div>
             </div>
             <div id="mainContainer" class="stretch-height">

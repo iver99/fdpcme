@@ -10,7 +10,8 @@ define(['knockout',
         'ojs/ojtree',
         'ojs/ojvalidation',
         'ojs/ojknockout-validation',
-        'ojs/ojbutton'
+        'ojs/ojbutton',
+        'ojs/ojselectcombobox'
     ],
     
     function(ko, $)
@@ -147,6 +148,8 @@ define(['knockout',
         }
         
         function ToolBarModel() {
+            var self = this;
+            
             this.classNames = ko.observableArray(["oj-toolbars", 
                                           "oj-toolbar-top-border", 
                                           "oj-toolbar-bottom-border", 
@@ -155,6 +158,24 @@ define(['knockout',
             this.classes = ko.computed(function() {
                 return this.classNames().join(" ");
             }, this);
+            
+            self.categoryValue=ko.observableArray();
+            var _widgetArray = [];
+            for (var _i = 0; _i < 12; _i++)
+            {
+                var _widget = {id: _i, name: 'Widget'+_i};
+                _widgetArray.push(_widget);
+            }
+
+            self.widgetList = ko.observableArray(_widgetArray);
+            
+            self.openAddWidgetDialog = function() {
+                $('#addWidgetDialog').ojDialog('open');
+            };
+            
+            self.closeAddWidgetDialog = function() {
+                $('#addWidgetDialog').ojDialog('close');
+            };
         }
         
         return {"DashboardTilesView": DashboardTilesView, "TileUrlEditView": TileUrlEditView, "ToolBarModel": ToolBarModel};
