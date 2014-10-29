@@ -141,3 +141,71 @@ iframe {
   overflow: auto;
   border-top: 4px solid #F0CAC4 !important;
 }
+
+#search_box { 
+    /*width: 201px; 
+    height: 31px; 
+    background: url(images/func_add-folder_16_ena.png); */
+    border:2px;
+    border-radius: 5px;
+    border-color:lightgray;
+    border-style:solid;
+    width:380px;
+    height: 40px; 
+    margin-bottom: 10px;
+    background-color: WhiteSmoke;
+    
+} 
+#search_box #searchTxt { 
+    float: left; 
+    padding: 0; 
+    margin: 6px 0 0 6px; 
+    border:0;
+    width: 340px; 
+    background: none; 
+    color:gray;
+} 
+#search_box #go { 
+    float: right; 
+    
+} 
+
+#searchSelect {
+    border:2px;
+    border-radius: 5px;
+    border-color:lightgray;
+    border-style:solid;
+    width:380px;
+    height: 40px; 
+    margin-bottom: 10px;
+    background-color: WhiteSmoke;
+}
+
+.widget-container {
+    width:  172px;
+    height: 80px;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align: top;
+    background-color: white;
+    border-color: #d6dfe6;
+    text-align: center;
+    vertical-align: middle;
+    line-height:80px;
+    border-radius: 5px;
+}
+
+.widget-container:hover {
+    background-color: #e371b2;
+}
+
+.widget-summaries-container {
+    /*background: #ffffff; */
+}
