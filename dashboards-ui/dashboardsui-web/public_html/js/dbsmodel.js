@@ -103,6 +103,23 @@ function(temp, tabmodel, oj, ko, $)
             var _tabId = "dbstab_1";
             $("#dtabs").dbsTabs("removeTab", _tabId);
         };
+        
+        self.createDashboardClicked = function()
+        {
+            $( "#cDsbDialog" ).ojDialog( "open" );
+        };
+        
+        self.confirmDashboardCreate = function()
+        {
+            //self.addTab();
+            $( "#cDsbDialog" ).ojDialog( "close" );
+            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
+        };
+        
+        self.cancelDashboardCreate = function()
+        {
+            $( "#cDsbDialog" ).ojDialog( "close" );
+        };
     };
             
     return {'ViewModel': ViewModel};
