@@ -34,6 +34,7 @@ iframe {
 
 .dbd-column {
   padding: 3em;
+  padding-top: 2em;
   margin: 0px 50px;
   overflow: auto;
   height: 95%;
@@ -49,15 +50,10 @@ iframe {
 }
 
 #head-bar-container {
-  height: 50px;
   filter:alpha(opacity=50);  
   -moz-opacity:0.50; 
   opacity:0.50; 
-  padding: 0 3em;
-}
-
-#new-tile .oj-button-text {
-  font-size: 3em;
+  padding: 0.5em 3em;
 }
 
 .dbd-tile-no-display {

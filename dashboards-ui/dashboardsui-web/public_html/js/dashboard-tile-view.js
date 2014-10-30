@@ -147,6 +147,24 @@ define(['knockout',
             };
         }
         
+        function TimeSliderDisplayModel() {
+            var self = this;
+            self.bindingExists = false;
+            
+            self.showOrHideTimeSlider = function(timeSliderModel, show) {
+                if (show) {
+                    $('#global-time-slider').show();
+                    if (!self.bindingExists) {
+                        ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
+                        self.bindingExists = true;
+                    }
+                }
+                else {
+                    $('#global-time-slider').hide();
+                }
+            };
+        }
+        
         function ToolBarModel() {
             var self = this;
             
@@ -176,8 +194,19 @@ define(['knockout',
             self.closeAddWidgetDialog = function() {
                 $('#addWidgetDialog').ojDialog('close');
             };
+            
+            self.handleSettingsDialogOpen = function() {
+                $('#settings-dialog').ojDialog('open');
+            };
+            
+            self.handleSettingsDialogOKClose = function() {
+                $("#settings-dialog").ojDialog("close");
+            };
         }
         
-        return {"DashboardTilesView": DashboardTilesView, "TileUrlEditView": TileUrlEditView, "ToolBarModel": ToolBarModel};
+        return {"DashboardTilesView": DashboardTilesView, 
+            "TileUrlEditView": TileUrlEditView, 
+            "TimeSliderDisplayModel": TimeSliderDisplayModel,
+            "ToolBarModel": ToolBarModel};
     }
 );

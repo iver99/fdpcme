@@ -95,18 +95,39 @@ role value for that section to represent the appropriate content type.
             </header>
             
             <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome">
-                <div id="toolbar1" aria-label="Builder toolbar" 
+                <div id="builder-toolbar" aria-label="Builder toolbar" 
                        data-bind="ojComponent: {component:'ojToolbar'}" class="oj-toolbar oj-component oj-component-initnode" role="toolbar">
-                      <button id="new-tile" class="oj-button oj-default oj-button-half-chrome"
+                      <button id="add-widget" class="oj-button oj-default oj-button-half-chrome"
                               data-bind="click:openAddWidgetDialog,ojComponent: {
+                                    component:'ojButton'
+                        }" title="Create">
+                        <img src="images/navi_add_24_ena.png" alt="computer image"/>
+                      </button>
+                      <button id="dashboard-settings" class="oj-button oj-default oj-button-half-chrome"
+                              data-bind="click:handleSettingsDialogOpen, ojComponent: {
                                     component:'ojButton', 
-                                    label: '+'
-                              }" title="Create"></button>
+                                    icons: {start:'dbd-toolbar-icon-settings'}
+                        }" title="Settings">
+                        <img src="images/navi_settings_24_ena.png" alt="computer image"/>
+                      </button>
+                </div>
+                <div style="display:none;" id="settings-dialog" title="Settings"
+                    data-bind="ojComponent:{component: 'ojDialog', 
+                        initialVisibility: 'hide', 
+                        rootAttributes: { style: 'width: 400px; height:200px;'}}">  
+                    <div class="oj-dialog-body">
+                        
+                    </div>
+                    <div class="oj-dialog-footer">
+                        <button id="okButton" data-bind="click: handleSettingsDialogOKClose, 
+                                ojComponent: {component: 'ojButton', label: 'OK'}"> 
+                        </button>
+                    </div>
                 </div>
                 <div style="display:none;" id="addWidgetDialog"
-                    data-bind="ojComponent:{component: 'ojDialog', 
-                        initialVisibility: 'hide', cancelBehavior:'none',
-                        rootAttributes: { style: 'width: 800px; height:500px;background-color: #EAEAEA;'}}">   
+                      data-bind="ojComponent:{component: 'ojDialog', 
+                          initialVisibility: 'hide', cancelBehavior:'none',
+                          rootAttributes: { style: 'width: 800px; height:500px;background-color: #EAEAEA;'}}">   
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div id="dialog-title-id" class="oj-dialog-title">
                             <span style="font-size: x-large;font-weight: bold;"><font color="DimGray">Add a widget</font></span>
@@ -193,12 +214,20 @@ role value for that section to represent the appropriate content type.
                         </div>
                     </div>
                     <!-- /ko -->
+                    <div id='show-hide-timeslider-checkbox-container'>
+                        <div data-bind="ojComponent: {component: 'ojCheckboxset'}">
+                            <span style="display:inline-block; padding-left: 3em; padding-top: 5px;">
+                                <input id="show-timeslider" type="checkbox" value="show">
+                                <label for="show-timeslider"> Show time slider</label>
+                            </span>
+                        </div>
+                    </div>
                     <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height">
                         <!-- ko stopBinding: true -->
                         <div id="global-time-slider" data-bind="
                              itaComponent: {
                                  component: 'time-slider',
-                                         timeSliderModel: timeSliderModel}" style="padding-left: 3em;">
+                                         timeSliderModel: timeSliderModel}" style="padding-left: 3em; display: none">
 
                         </div>
                         <!-- /ko -->
