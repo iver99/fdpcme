@@ -93,7 +93,8 @@ require(['knockout',
     'ojs/ojeditablevalue',
     'ojs/internal-deps/dvt/DvtChart',
     'ojs/ojdvt-base',
-    'ojs/ojtree'
+    'ojs/ojtree',
+    'ojs/ojcheckboxset'
 ],
         function(ko, $, dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {
@@ -268,7 +269,7 @@ require(['knockout',
                 };
                 ko.virtualElements.allowedBindings.stopBinding = true;
                 
-                ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
+                //ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
 
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new dtv.ToolBarModel(), $('#head-bar-container')[0]);
@@ -277,6 +278,12 @@ require(['knockout',
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
+                var timeSliderDisplayModel = new dtv.TimeSliderDisplayModel();
+                $("#show-timeslider").on({
+                    'ojoptionchange': function (event, data) {
+                        timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, data['value']);
+                    }
+                });
             });
         }
 );
