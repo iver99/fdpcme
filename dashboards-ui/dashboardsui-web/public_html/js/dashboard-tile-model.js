@@ -116,7 +116,15 @@ define(['knockout',
             };
         }
         
+        function DashboardViewModel() {
+            var self = this;
+            
+            self.name = observable("LaaS Dashboard");
+            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
+        }
+        
         return {"DashboardTile": DashboardTile, 
-            "DashboardTilesViewModel": DashboardTilesViewModel};
+            "DashboardTilesViewModel": DashboardTilesViewModel,
+            "DashboardViewModel": DashboardViewModel};
     }
 );

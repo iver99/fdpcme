@@ -96,27 +96,100 @@ role value for that section to represent the appropriate content type.
             
             <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome">
                 <div id="builder-toolbar" aria-label="Builder toolbar" 
-                       data-bind="ojComponent: {component:'ojToolbar'}" class="oj-toolbar oj-component oj-component-initnode" role="toolbar">
-                      <button id="add-widget" class="oj-button oj-default oj-button-half-chrome"
-                              data-bind="click:openAddWidgetDialog,ojComponent: {
-                                    component:'ojButton'
-                        }" title="Create">
-                        <img src="images/navi_add_24_ena.png" alt="computer image"/>
-                      </button>
-                      <button id="dashboard-settings" class="oj-button oj-default oj-button-half-chrome"
-                              data-bind="click:handleSettingsDialogOpen, ojComponent: {
-                                    component:'ojButton', 
-                                    icons: {start:'dbd-toolbar-icon-settings'}
-                        }" title="Settings">
-                        <img src="images/navi_settings_24_ena.png" alt="computer image"/>
-                      </button>
+                       data-bind="ojComponent: {component:'ojToolbar'}" 
+                       class="oj-toolbar oj-component oj-component-initnode" 
+                       role="toolbar">
+                    <div id="builder-toolbar-left" class="dbd-pull-left">
+                        <div id="builder-dbd-name">
+                            <div id="builder-dbd-name-display-area" class="dbd-display-area">
+                                <span data-bind="text: dashboardName, event: { dblclick: editDashboardName }"></span>
+                                <button id="builder-dbd-name-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
+                                          data-bind="click:editDashboardName,ojComponent: {
+                                                component:'ojButton'
+                                    }">
+                                    <img src="css/images/func_edit_16_ena.png" alt="Edit"/>
+                                </button>
+                            </div>
+                            <div id="builder-dbd-name-edit-area" class="dbd-edit-area">
+                                <input id="builder-dbd-name-input" placeholder="Name is required"
+                                       data-bind="ojComponent: {component: 'ojInputText', 
+                                               value: dashboardNameEditing, required: true, rootAttributes: {
+                                               style:'max-width:55em;'}}" maxlength="64">
+                                <button id="builder-dbd-name-ok" class="oj-button oj-default"
+                                          data-bind="click:okChangeDashboardName,ojComponent: {
+                                                component:'ojButton',
+                                                label: '√'
+                                    }" title="Ok">
+                                  </button>
+                                  <button id="builder-dbd-name-cancel" class="oj-button oj-default"
+                                          data-bind="click:cancelChangeDashboardName, ojComponent: {
+                                                component:'ojButton',
+                                                label: '✕'
+                                    }" title="Cancel">
+                                  </button>
+                              </div>
+                        </div>
+                        <div id="builder-dbd-description">
+                            <div id="builder-dbd-description-display-area" class="dbd-display-area">
+                                <span data-bind="text: dashboardDescription, event: { dblclick: editDashboardDescription }" 
+                                      class="dbd-display-area-text dbd-translucency"></span>
+                                <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
+                                          data-bind="click: editDashboardDescription,ojComponent: {
+                                                component:'ojButton'
+                                    }">
+                                    <img src="css/images/func_edit_16_ena.png" alt="Edit"/>
+                                </button>
+                            </div>
+                            <div id="builder-dbd-description-edit-area" class="dbd-edit-area">
+                                <input id="builder-dbd-description-input"
+                                       data-bind="ojComponent: {component: 'ojInputText', 
+                                               value: dashboardDescriptionEditing, rootAttributes: {
+                                               style:'max-width:55em;'}}" maxlength="264">
+                                <button id="builder-dbd-description-ok" class="oj-button oj-default"
+                                          data-bind="click:okChangeDashboardDescription,ojComponent: {
+                                                component:'ojButton',
+                                                label: '√'
+                                    }" title="Ok">
+                                  </button>
+                                  <button id="builder-dbd-name-cancel" class="oj-button oj-default"
+                                          data-bind="click:cancelChangeDashboardDescription, ojComponent: {
+                                                component:'ojButton',
+                                                label: '✕'
+                                    }" title="Cancel">
+                                  </button>
+                              </div>
+                        </div>
+                    </div>
+                    <div id="builder-toolbar-right" class="dbd-pull-right dbd-pull-middle" style="margin-top: 15px;">
+                        <button id="add-widget" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
+                                  data-bind="click:openAddWidgetDialog,ojComponent: {
+                                        component:'ojButton'
+                            }" title="Create">
+                            <img src="images/navi_add_24_ena.png" alt="computer image"/>
+                          </button>
+                          <button id="dashboard-settings" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
+                                  data-bind="click:handleSettingsDialogOpen, ojComponent: {
+                                        component:'ojButton', 
+                                        icons: {start:'dbd-toolbar-icon-settings'}
+                            }" title="Settings">
+                            <img src="images/navi_settings_24_ena.png" alt="computer image"/>
+                          </button>
+                          <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
+                              <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
+                          </button>
+                    </div>
                 </div>
-                <div style="display:none;" id="settings-dialog" title="Settings"
+                <div style="display:none;" id="settings-dialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
-                        initialVisibility: 'hide', 
+                        initialVisibility: 'hide', cancelBehavior:'none',
                         rootAttributes: { style: 'width: 400px; height:200px;'}}">  
+                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
+                        <div class="oj-dialog-title">
+                            <span style="font-size: x-large;font-weight: bold;"><font color="DimGray">Settings</font></span>
+                            <a href="#" data-bind="click:handleSettingsDialogOKClose" style="float:right;"><font color="#e371b2" size="1">CLOSE</font></a>
+                        </div>
+                    </div>
                     <div class="oj-dialog-body">
-                        
                     </div>
                     <div class="oj-dialog-footer">
                         <button id="okButton" data-bind="click: handleSettingsDialogOKClose, 

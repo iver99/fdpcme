@@ -268,8 +268,6 @@ require(['knockout',
                     }
                 };
                 ko.virtualElements.allowedBindings.stopBinding = true;
-                
-                //ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
 
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new dtv.ToolBarModel(), $('#head-bar-container')[0]);
@@ -278,10 +276,10 @@ require(['knockout',
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
-                var timeSliderDisplayModel = new dtv.TimeSliderDisplayModel();
+                var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
                 $("#show-timeslider").on({
                     'ojoptionchange': function (event, data) {
-                        timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, data['value']);
+                        timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, data['value']);
                     }
                 });
             });

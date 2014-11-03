@@ -147,26 +147,32 @@ define(['knockout',
             };
         }
         
-        function TimeSliderDisplayModel() {
+        function TimeSliderDisplayView() {
             var self = this;
             self.bindingExists = false;
             
             self.showOrHideTimeSlider = function(timeSliderModel, show) {
+                var timeSlider = $('#global-time-slider');
                 if (show) {
-                    $('#global-time-slider').show();
+                    timeSlider.show();
                     if (!self.bindingExists) {
-                        ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
+                        ko.applyBindings({timeSliderModel: timeSliderModel}, timeSlider[0]);
                         self.bindingExists = true;
                     }
                 }
                 else {
-                    $('#global-time-slider').hide();
+                    timeSlider.hide();
                 }
             };
         }
         
         function ToolBarModel() {
             var self = this;
+            
+            self.dashboardName = ko.observable("LaaS Dashboard");
+            self.dashboardNameEditing = ko.observable(self.dashboardName());
+            self.dashboardDescription = ko.observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
+            self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             
             this.classNames = ko.observableArray(["oj-toolbars", 
                                           "oj-toolbar-top-border", 
@@ -187,6 +193,56 @@ define(['knockout',
 
             self.widgetList = ko.observableArray(_widgetArray);
             
+            self.editDashboardName = function() {
+                if (!$('#builder-dbd-description').hasClass('editing')) {
+                    $('#builder-dbd-name').addClass('editing');
+                    $('#builder-dbd-name-input').focus();
+                }
+            };
+            
+            self.okChangeDashboardName = function() {
+                if (!$('#builder-dbd-name-input')[0].value) {
+                    $('#builder-dbd-name-input').focus();
+                    return;
+                }
+                self.dashboardName(self.dashboardNameEditing());
+                if ($('#builder-dbd-name').hasClass('editing')) {
+                    $('#builder-dbd-name').removeClass('editing');
+                }
+            };
+            
+            self.cancelChangeDashboardName = function() {
+                self.dashboardNameEditing(self.dashboardName());
+                if ($('#builder-dbd-name').hasClass('editing')) {
+                    $('#builder-dbd-name').removeClass('editing');
+                }
+            };
+            
+            self.editDashboardDescription = function() {
+                if (!$('#builder-dbd-name').hasClass('editing')) {
+                    $('#builder-dbd-description').addClass('editing');
+                    $('#builder-dbd-description-input').focus();
+                }
+            };
+            
+            self.okChangeDashboardDescription = function() {
+                if (!$('#builder-dbd-description-input')[0].value) {
+                    $('#builder-dbd-description-input').focus();
+                    return;
+                }
+                self.dashboardDescription(self.dashboardDescriptionEditing());
+                if ($('#builder-dbd-description').hasClass('editing')) {
+                    $('#builder-dbd-description').removeClass('editing');
+                }
+            };
+            
+            self.cancelChangeDashboardDescription = function() {
+                self.dashboardDescriptionEditing(self.dashboardDescription());
+                if ($('#builder-dbd-description').hasClass('editing')) {
+                    $('#builder-dbd-description').removeClass('editing');
+                }
+            };
+            
             self.openAddWidgetDialog = function() {
                 $('#addWidgetDialog').ojDialog('open');
             };
@@ -206,7 +262,7 @@ define(['knockout',
         
         return {"DashboardTilesView": DashboardTilesView, 
             "TileUrlEditView": TileUrlEditView, 
-            "TimeSliderDisplayModel": TimeSliderDisplayModel,
+            "TimeSliderDisplayView": TimeSliderDisplayView,
             "ToolBarModel": ToolBarModel};
     }
 );
