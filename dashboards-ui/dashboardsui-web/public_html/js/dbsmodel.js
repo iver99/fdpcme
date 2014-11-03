@@ -21,10 +21,18 @@ define([
 ],
 function(temp, tabmodel, oj, ko, $)
 {
+    function createDashboardDialogModel() {
+        var self = this;
+        self.name = ko.observable('');
+        self.description = ko.observable('');
+        self.timeRangeFilterValue = ko.observable(["OFF"]);
+        self.targetFilterValue = ko.observable(["OFF"]);
+    }
     
     function ViewModel() {
         
         var self = this;
+        self.createDashboardModel = new createDashboardDialogModel();
         
         var _dbsArray = [];
         for (var _i = 0; _i < 1000; _i++)
@@ -113,11 +121,12 @@ function(temp, tabmodel, oj, ko, $)
         {
             //self.addTab();
             $( "#cDsbDialog" ).ojDialog( "close" );
-            if (self.timeRangeFilterValue()=="ON"){
-                window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?includeTimeRangeFilter=true');
-            }else{
-                window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
+            var _param = "?name="+encodeURIComponent(self.createDashboardModel.name())+"&description="+encodeURIComponent(self.createDashboardModel.description());
+            
+            if (self.createDashboardModel.timeRangeFilterValue()=="ON"){
+                _param = _param + "&includeTimeRangeFilter=true"
             }
+            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html'+_param);
         };
         
         self.cancelDashboardCreate = function()
@@ -125,8 +134,7 @@ function(temp, tabmodel, oj, ko, $)
             $( "#cDsbDialog" ).ojDialog( "close" );
         };
         
-        self.timeRangeFilterValue = ko.observable(["OFF"]);
-        self.targetFilterValue = ko.observable(["OFF"]);
+        
     };
             
     return {'ViewModel': ViewModel};
