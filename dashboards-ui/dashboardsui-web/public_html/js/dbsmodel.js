@@ -27,6 +27,13 @@ function(temp, tabmodel, oj, ko, $)
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["OFF"]);
         self.targetFilterValue = ko.observable(["OFF"]);
+        
+        self.clear = function() {
+            self.name('');
+            self.description('');
+            self.timeRangeFilterValue(["OFF"]);
+            self.targetFilterValue(["OFF"]);
+        };
     }
     
     function ViewModel() {
@@ -114,6 +121,7 @@ function(temp, tabmodel, oj, ko, $)
         
         self.createDashboardClicked = function()
         {
+            self.createDashboardModel.clear();
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
