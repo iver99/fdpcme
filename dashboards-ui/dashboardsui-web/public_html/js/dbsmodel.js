@@ -113,13 +113,20 @@ function(temp, tabmodel, oj, ko, $)
         {
             //self.addTab();
             $( "#cDsbDialog" ).ojDialog( "close" );
-            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
+            if (self.timeRangeFilterValue()=="ON"){
+                window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?includeTimeRangeFilter=true');
+            }else{
+                window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
+            }
         };
         
         self.cancelDashboardCreate = function()
         {
             $( "#cDsbDialog" ).ojDialog( "close" );
         };
+        
+        self.timeRangeFilterValue = ko.observable(["OFF"]);
+        self.targetFilterValue = ko.observable(["OFF"]);
     };
             
     return {'ViewModel': ViewModel};

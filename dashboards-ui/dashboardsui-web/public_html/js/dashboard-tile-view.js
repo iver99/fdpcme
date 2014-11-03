@@ -165,8 +165,15 @@ define(['knockout',
             };
         }
         
-        function ToolBarModel() {
+        function ToolBarModel(includeTimeRangeFilter) {
             var self = this;
+            
+            if ("true"===includeTimeRangeFilter){
+                self.includeTimeRangeFilter = ko.observable(["ON"]);
+            }else{
+                self.includeTimeRangeFilter = ko.observable(["OFF"]);
+            }
+            
             
             this.classNames = ko.observableArray(["oj-toolbars", 
                                           "oj-toolbar-top-border", 

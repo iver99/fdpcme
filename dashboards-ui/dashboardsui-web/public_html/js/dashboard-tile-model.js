@@ -20,8 +20,9 @@ define(['knockout',
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
         
-        function DashboardTile(title, description, width, url, chartType) {
+        function DashboardTile(title, description, width, url, chartType,sliderChangelistener) {
             var self = this;
+            self.timeRangeChangeEvent = sliderChangelistener;
             self.title = ko.observable(title);
             self.description = ko.observable(description);
             self.url = ko.observable(url);
@@ -57,15 +58,15 @@ define(['knockout',
             });
         }
 
-        function DashboardTilesViewModel(tilesView, urlEditView) {
+        function DashboardTilesViewModel(tilesView, urlEditView, sliderChangelistener) {
             var self = this;
             self.tilesView = tilesView;
 
             self.tiles = ko.observableArray([
-                new DashboardTile("Search (Line Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line"),
-                new DashboardTile("Search (Bar Chart)", "", 2, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar"),
-                new DashboardTile("Search (Bar Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar"),
-                new DashboardTile("Search (Line Chart)", "", 4, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line")
+                new DashboardTile("Search (Line Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line",sliderChangelistener),
+                new DashboardTile("Search (Bar Chart)", "", 2, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar",sliderChangelistener),
+                new DashboardTile("Search (Bar Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar",sliderChangelistener),
+                new DashboardTile("Search (Line Chart)", "", 4, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line",sliderChangelistener)
             ]);
 
             self.removeTile = function(tile) {

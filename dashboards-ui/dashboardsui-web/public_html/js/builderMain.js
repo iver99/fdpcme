@@ -98,6 +98,11 @@ require(['knockout',
 ],
         function(ko, $, dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {
+            ko.components.register("demo-chart-widget",{
+                viewModel:{require:'../dependencies/demo/js/demo-chart-widget'},
+                template:{require:'text!../dependencies/demo/demo-chart-widget.html'}
+            });
+            
             function FooterViewModel() {
                 var self = this;
 
@@ -193,10 +198,10 @@ require(['knockout',
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
             }
             
-            var tilesView = new dtv.DashboardTilesView(dtm);
-            var urlChangeView = new dtv.TileUrlEditView();
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView);
-
+            function getUrlParam(name) {
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+                return results === null ? "" : results[1];
+            };
         //
                 var HOUR = 60 * 60 * 1000;
                 
@@ -226,13 +231,15 @@ require(['knockout',
                     return {
                         timeRangeChange:timeSliderModel.timeRangeChange(),
                         advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
-                        timeRangeViewChange:timeSliderModel.timeRangeViewChange()
+                        timeRangeViewChange:timeSliderModel.timeRangeViewChange(),
+                        viewStart:timeSliderModel.viewStart(),
+                        viewEnd:timeSliderModel.viewEnd()
                     };
                 });
 //              
 
                 sliderChangelistener.subscribe(function (value) {
-                    
+                    /*
                     var iframes = document.getElementsByName("tileiframe");
 
                     var start = timeSliderModel.viewStart();
@@ -245,6 +252,7 @@ require(['knockout',
                         win.postMessage({"startTime":start,"endTime":end},"*");
 
                     }
+                    */
                     if (value.timeRangeChange){
                         timeSliderModel.timeRangeChange(false);
                     }else if (value.timeRangeViewChange){
@@ -253,7 +261,11 @@ require(['knockout',
                         timeSliderModel.advancedOptionsChange(false);
                     }
                 });
+
                
+            var tilesView = new dtv.DashboardTilesView(dtm);
+            var urlChangeView = new dtv.TileUrlEditView();
+            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener);
                
             $(document).ready(function() {
                 ko.bindingHandlers.sortableList = {
@@ -271,19 +283,32 @@ require(['knockout',
                 
                 //ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
 
+                var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
+
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-                ko.applyBindings(new dtv.ToolBarModel(), $('#head-bar-container')[0]);
+                ko.applyBindings(new dtv.ToolBarModel(includeTimeRangeFilter), $('#head-bar-container')[0]);
                 ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
                 var timeSliderDisplayModel = new dtv.TimeSliderDisplayModel();
-                $("#show-timeslider").on({
+//                $("#show-timeslider").on({
+//                    'ojoptionchange': function (event, data) {
+//                        timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, data['value']);
+//                    }
+//                });
+                if ("true"===includeTimeRangeFilter){
+                   timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, "ON"); 
+                }else{
+                   timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, null);  
+                }
+                
+                $("#ckbxTimeRangeFilter").on({
                     'ojoptionchange': function (event, data) {
                         timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, data['value']);
                     }
-                });
+                });                
             });
         }
 );
