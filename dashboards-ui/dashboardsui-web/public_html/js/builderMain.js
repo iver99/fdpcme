@@ -280,33 +280,32 @@ require(['knockout',
                     }
                 };
                 ko.virtualElements.allowedBindings.stopBinding = true;
-                
-                //ko.applyBindings({timeSliderModel: timeSliderModel}, $("#global-time-slider")[0]);
 
                 var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
-
+                var dsbName = getUrlParam("name");
+                var dsbDesc = getUrlParam("description");
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-                ko.applyBindings(new dtv.ToolBarModel(includeTimeRangeFilter), $('#head-bar-container')[0]);
+                ko.applyBindings(new dtv.ToolBarModel(dsbName,dsbDesc,includeTimeRangeFilter), $('#head-bar-container')[0]);
                 ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
-                var timeSliderDisplayModel = new dtv.TimeSliderDisplayModel();
+                var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
 //                $("#show-timeslider").on({
 //                    'ojoptionchange': function (event, data) {
 //                        timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, data['value']);
 //                    }
 //                });
                 if ("true"===includeTimeRangeFilter){
-                   timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, "ON"); 
+                   timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, "ON"); 
                 }else{
-                   timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, null);  
+                   timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, null);  
                 }
                 
                 $("#ckbxTimeRangeFilter").on({
                     'ojoptionchange': function (event, data) {
-                        timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, data['value']);
+                        timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, data['value']);
                     }
                 });                
             });
