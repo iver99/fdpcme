@@ -238,7 +238,7 @@ role value for that section to represent the appropriate content type.
                 </div>
                 <div style="display:none;" id="addWidgetDialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
-                        initialVisibility: 'hide', cancelBehavior:'none',
+                        initialVisibility: 'hide', cancelBehavior:'none',resizeBehavior:'none',
                         rootAttributes: { style: 'width: 800px; height:513px;background-color: #EAEAEA;'}}">   
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div id="dialog-title-id" class="oj-dialog-title">
@@ -249,23 +249,28 @@ role value for that section to represent the appropriate content type.
                     <div class="oj-dialog-body" style="background-color:  #EAEAEA;">
                       <div id="addAWidget">
                           <div style="width:100%;font-weight: bold;"><font color="gray">
-                              WE HAVE 365 WIDGETS, SEARCH OR BROWSE THE ONES YOU NEED.</font>
+                              WE HAVE 61 WIDGETS, SEARCH OR BROWSE THE ONES YOU NEED.</font>
                             </div>
                     </div>
                       <div style="padding-top: 20px;" >
                         <div style="float:left;" id="search_box">
                             <div style="float:left">
                             <input id="searchTxt" style="width:340px;height:40px;padding-top: 0;padding-left: 0;margin-left: 0;margin-top: 0;font-size: medium;font-weight: bold;" maxlength='100' 
-                                   placeholder="search here" data-bind="ojComponent:{component:'ojInputText',value:''}"/>
+                                   placeholder="search here" data-bind="event: {keypress: enterSearch}, ojComponent:{component:'ojInputText',value: searchText}"/>
                             </div>
                             <div style="float:right;">
-                                <input type="image" src="css/images/search-icon-16.png" width="30" id="go" alt="Search" title="Search" style="margin: 5px;" /> 
+                                <button class="oj-button-half-chrome" data-bind="click: searchWidgets,
+                                    ojComponent: {component: 'ojButton', label: 'Search',display: 'icons', 
+                                    icons: {start:'widget-search-icon'}}" style="margin:5px;height:32px;"> 
+                                </button> 
+                                <!--<input type="image" src="css/images/search-icon-16.png" width="30" id="go" alt="Search" title="Search" style="margin: 5px;" />--> 
                             </div>
                         </div>
                           <div id="searchSelect" style="float:right;">
                               <select id="categorySelect" class="oj-select-arrow" style="height:30px;float:right;alignment-baseline: central;" 
                                     data-bind="ojComponent: {component: 'ojSelect',
                                                                 value: categoryValue,
+                                                                optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:383px;'}}">
                                 <option value="all">ALL CATEGORIES</option>
                                 <option value="la">LOG ANALYTICS</option>
@@ -273,28 +278,49 @@ role value for that section to represent the appropriate content type.
                             </select>
                         </div>
                     </div>
-                        <div id="widgets" class="widget-summaries-container" style="float: right;">
-                        <!-- ko foreach: widgetList -->
-                        <div class=" widget-container">
+                        <div id="widgets" class="widget-summaries-container" >
+                        <!-- ko foreach: curPageWidgetList -->
+                        <div class=" widget-container" data-bind="attr:{title: name}, event: { dblclick: $parent.widgetDbClicked}">
                             <div>
-                                <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="taimg" alt="Log" title="Log" 
+                                <!-- ko if: type==='la' -->
+                                <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="laimg" alt="Log Analytics" title="Log Analytics" 
                                        style="padding-top: 24px;padding-right: 0px; "/>
-                                <span style="width:100%;font-weight: bold;font-size: large;margin: auto;"><font color="gray">Log Analytics</font>
-                                </span>
+                                <!-- /ko -->
+                                <!-- ko if: type==='ta' -->
+                                <input type="image" src="css/images/targets_16_ena.png" width="32" id="taimg" alt="Target Analytics" title="Target Analytics" 
+                                       style="padding-top: 24px;padding-right: 0px; "/>
+                                <!-- /ko -->
+                                <!--<div data-bind="text:name" style="display: inline;font-weight: bold;font-size: large;"></div>-->
+                                <font color="gray">
+                                    <span data-bind="text:name" style="font-weight: bold;font-size: large;margin: auto;"></span>
+                                </font>
+<!--                                <span style="width:100%;font-weight: bold;font-size: large;margin: auto;" ><font color="gray"></font>
+                                </span>-->
                             </div>
                         </div>
                         <!-- /ko -->
                     </div>
                   </div>     
-                    <div class="oj-dialog-footer" >        
-    <!--                                          <button data-bind="ojComponent: {component: 'ojButton', label: 'Add'}, click: addWidgetOK"> 
-                      </button> 
-                      <button data-bind="ojComponent: {component: 'ojButton', label: 'Cancel'}, click: addWidgetCancel"> 
-                      </button>-->
-                      <input type="image" src="css/images/navi-pre-temp.png" width="45" id="prePage" alt="Previous" title="Previous" 
+                    <div class="oj-dialog-footer" >      
+                        <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, visible: naviPreBtnVisible,
+                            ojComponent: {component: 'ojButton', label: 'Previous',display: 'icons', 
+                            icons: {start:'paging-previous-icon'}}" style="height:45px;"> 
+                        </button> 
+                        <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviNext, visible: naviNextBtnVisible,
+                            ojComponent: {component: 'ojButton', label: 'Next',display: 'icons', 
+                            icons: {start:'paging-next-icon'}}" style="height:45px;"> 
+                        </button>
+<!--                        <button id="buttonIcon5" 
+                        data-bind="ojComponent: {
+                            component:'ojButton', 
+                            display: 'icons', 
+                            icons: {start:'paging-previous-icon'}, 
+                            label: 'Button'
+                        }"></button>-->
+<!--                      <input type="image" src="css/images/navi-pre-temp.png" width="45" id="prePage" alt="Previous" title="Previous"
                              style="margin-right: 5px;"/> 
                       <input type="image" src="css/images/navi-next-temp.png" width="45" id="nextPage" alt="Next" title="Next" 
-                             style="margin-right: 5px;"/> 
+                             style="margin-right: 5px;"/> -->
                   </div>  
                 </div>
             </div>
