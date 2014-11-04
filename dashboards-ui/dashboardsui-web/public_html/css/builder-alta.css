@@ -251,7 +251,7 @@ iframe {
 }
 
 .widget-container {
-    width:  172px;
+    width:  174px;
     height: 80px;
     display: inline-block;
     margin-left: 5px;
@@ -262,12 +262,14 @@ iframe {
     padding-bottom: 1px;
     padding-left: 5px;
     padding-right: 5px;
-    vertical-align: top;
+    vertical-align: middle;
+    text-align: center;
     background-color: white;
     border-color: #d6dfe6;
-    text-align: center;
+    /*text-align: center;
     vertical-align: middle;
-    line-height:80px;
+    line-height:80px;*/
+    float:left;
     border-radius: 5px;
 }
 
@@ -277,4 +279,43 @@ iframe {
 
 .widget-summaries-container {
     /*background: #ffffff; */
+}
+
+.paging-previous-icon {
+    /*height:45px;width:45px;*/
+    content:url("images/navi-pre.png")
+}
+
+.paging-next-icon {
+    /*height:45px;width:45px;*/
+    content:url("images/navi-next.png")
+}
+
+.widget-search-icon {
+    /*height:45px;width:45px;*/
+    content:url("images/search-icon-24.png")
+}
+
+.widget-icon-button {
+    /*#e371b2 */
+    /*background-color:  red; /*#EAEAEA; */
+    border: 0;
+    border-color: #EAEAEA;
+    margin:0;
+    padding: 0;
+    height:45px;
+    /*font-size: 4em;
+    font-weight: 900;
+    background: red;
+    color: white;
+    font-family: "Cooper Black", "Bauhaus 93", "Arial Rounded MT Bold", "HGSGothicE"; */
+}
+
+.widget-icon-button:hover {
+    /*background-color:  #e371b2; /*#EAEAEA; */
+    border: 0;
+    border-color: #EAEAEA;
+    margin:0;
+    padding: 0;
+    /* color: white; */
 }

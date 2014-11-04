@@ -197,16 +197,6 @@ define(['knockout',
                 return this.classNames().join(" ");
             }, this);
             
-            self.categoryValue=ko.observableArray();
-            var _widgetArray = [];
-            for (var _i = 0; _i < 12; _i++)
-            {
-                var _widget = {id: _i, name: 'Widget'+_i};
-                _widgetArray.push(_widget);
-            }
-
-            self.widgetList = ko.observableArray(_widgetArray);
-            
             self.editDashboardName = function() {
                 if (!$('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-name').addClass('editing');
@@ -257,6 +247,77 @@ define(['knockout',
                 }
             };
             
+            self.handleSettingsDialogOpen = function() {
+                $('#settings-dialog').ojDialog('open');
+            };
+            
+            self.handleSettingsDialogOKClose = function() {
+                $("#settings-dialog").ojDialog("close");
+            };
+            
+            self.categoryValue=ko.observableArray();
+            var widgetArray = [];
+            var laWidgetArray = [];
+            var taWidgetArray = [];
+            var curPageWidgets=[];
+            var searchResultArray = [];
+            var dd=1,mh=1,si=1,art=1,sh=1,index=1;
+            for (var i = 0; i < 61; i++)
+            {
+                var widget = {id: i};
+                if (index === 1) {
+                    widget.type="ta";
+                    widget.name='Database Diagnostics '+dd;
+                    taWidgetArray.push(widget);
+                    dd++;
+                    index++;
+                }
+                else if (index === 2) {
+                    widget.type="ta";
+                    widget.name='Middleware Health '+mh;
+                    taWidgetArray.push(widget);
+                    mh++;
+                    index++;
+                }
+                else if (index === 3) {
+                    widget.type="la";
+                    widget.name='Security Incidents '+si;
+                    laWidgetArray.push(widget);
+                    si++;
+                    index++;
+                }
+                else if (index === 4) {
+                    widget.type="la";
+                    widget.name='Application Response Time '+art;
+//                    widget.name="Log Analytics"+art;
+                    laWidgetArray.push(widget);
+                    art++;
+                    index++;
+                }
+                else if (index === 5) {
+                    widget.type="la";
+                    widget.name='Security Histogram '+sh;
+                    laWidgetArray.push(widget);
+                    sh++;
+                    index = 1;
+                }
+                
+                widgetArray.push(widget);
+                
+                if (i < 12) {
+                    curPageWidgets.push(widget);
+                }
+            }
+            
+            var curPage = 1;
+            var totalPage = (widgetArray.length%12 === 0 ? widgetArray.length/12 : Math.floor(widgetArray.length/12) + 1);
+            var naviFromSearchResults = false;
+            self.widgetList = ko.observableArray(widgetArray);
+            self.curPageWidgetList = ko.observableArray(curPageWidgets);
+            self.searchText = ko.observable("");
+            self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
+            self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
+            
             self.openAddWidgetDialog = function() {
                 $('#addWidgetDialog').ojDialog('open');
             };
@@ -265,12 +326,146 @@ define(['knockout',
                 $('#addWidgetDialog').ojDialog('close');
             };
             
-            self.handleSettingsDialogOpen = function() {
-                $('#settings-dialog').ojDialog('open');
+            self.optionChangedHandler = function(event, data) {
+                if (data.option === "value") {
+                    curPageWidgets=[];
+                    curPage = 1;
+                     if (data.value[0]==='all') {
+                        totalPage = (widgetArray.length%12 === 0 ? widgetArray.length/12 : Math.floor(widgetArray.length/12) + 1);
+                    }
+                    else if (data.value[0]==='la') {
+                        totalPage = (laWidgetArray.length%12 === 0 ? laWidgetArray.length/12 : Math.floor(laWidgetArray.length/12) + 1);
+                    }
+                    else if (data.value[0]==='ta') {
+                        totalPage = (taWidgetArray.length%12 === 0 ? taWidgetArray.length/12 : Math.floor(taWidgetArray.length/12) + 1);
+                    }
+                    
+                    fetchWidgetsForCurrentPage(getAvailableWidgets());
+                    self.curPageWidgetList(curPageWidgets);
+                    refresNaviButton();
+                    naviFromSearchResults = false;
+                }
             };
             
-            self.handleSettingsDialogOKClose = function() {
-                $("#settings-dialog").ojDialog("close");
+            self.naviPrevious = function() {
+                if (curPage === 1) {
+                    self.naviPreBtnVisible(false);
+                }
+                else {
+                    curPage--;
+                }
+                if (naviFromSearchResults) {
+                    fetchWidgetsForCurrentPage(searchResultArray);
+                }
+                else {
+                    fetchWidgetsForCurrentPage(getAvailableWidgets());
+                }
+                
+                self.curPageWidgetList(curPageWidgets);
+                refresNaviButton();
+            };
+            
+            self.naviNext = function() {
+                if (curPage === totalPage) {
+                    self.naviNextBtnVisible(false);
+                }
+                else {
+                    curPage++;
+                }
+                if (naviFromSearchResults) {
+                    fetchWidgetsForCurrentPage(searchResultArray);
+                }
+                else {
+                    fetchWidgetsForCurrentPage(getAvailableWidgets());
+                }
+                self.curPageWidgetList(curPageWidgets);
+                refresNaviButton();
+            };
+            
+            self.widgetDbClicked = function(event,data) {
+                alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
+                //TODO integrate with builder to add a widget
+            };
+            
+            self.enterSearch = function(d,e){
+                if(e.keyCode === 13){
+                    self.searchWidgets();  
+                }
+                return true;
+            };
+            
+            self.searchWidgets = function() {
+                searchResultArray = [];
+                var allWidgets = [];
+                var searchtxt = $.trim(ko.toJS(self.searchText));
+                var category = ko.toJS(self.categoryValue);
+                if (!category || category.length === 0) {
+                    category = 'all';
+                }
+                else {
+                    category = category[0];
+                }
+                if (category === 'all') {
+                    allWidgets = widgetArray;
+                }
+                else if (category === 'la') {
+                    allWidgets = laWidgetArray;
+                }
+                else if (category === 'ta') {
+                    allWidgets = taWidgetArray;
+                }
+                if (searchtxt === '') {
+                    searchResultArray = allWidgets;
+                }
+                else {
+                    for (var i=0; i<allWidgets.length; i++) {
+                        if (allWidgets[i].name.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1) {
+                            searchResultArray.push(allWidgets[i]);
+                        }
+                    }
+                }
+                
+                curPageWidgets=[];
+                curPage = 1;
+                totalPage = (searchResultArray.length%12 === 0 ? searchResultArray.length/12 : Math.floor(searchResultArray.length/12) + 1);
+                fetchWidgetsForCurrentPage(searchResultArray);
+                self.curPageWidgetList(curPageWidgets);
+                refresNaviButton();
+                naviFromSearchResults = true;
+            };
+            
+            function fetchWidgetsForCurrentPage(allWidgets) {
+                curPageWidgets=[];
+                for (var i=(curPage-1)*12;i < curPage*12 && i < allWidgets.length;i++) {
+                    curPageWidgets.push(allWidgets[i]);
+                }
+            };
+            
+            function getAvailableWidgets() {
+                var allWidgets = [];
+                var category = ko.toJS(self.categoryValue);
+                if (!category || category.length === 0) {
+                    category = 'all';
+                }
+                else {
+                    category = category[0];
+                }
+                if (category === 'all') {
+                    allWidgets = widgetArray;
+                }
+                else if (category === 'la') {
+                    allWidgets = laWidgetArray;
+                }
+                else if (category === 'ta') {
+                    allWidgets = taWidgetArray;
+                }
+                
+                return allWidgets;
+            };
+            
+            function refresNaviButton() {
+                self.naviPreBtnVisible(curPage === 1 ? false : true);
+                self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
             };
         }
         
