@@ -264,6 +264,7 @@ define(['knockout',
             var curPageWidgets=[];
             var searchResultArray = [];
             var dd=1,mh=1,si=1,art=1,sh=1,index=1;
+            var pageSize = 6;
             for (var i = 0; i < 61; i++)
             {
                 var widget = {id: i};
@@ -306,13 +307,13 @@ define(['knockout',
                 
                 widgetArray.push(widget);
                 
-                if (i < 12) {
+                if (i < pageSize) {
                     curPageWidgets.push(widget);
                 }
             }
             
             var curPage = 1;
-            var totalPage = (widgetArray.length%12 === 0 ? widgetArray.length/12 : Math.floor(widgetArray.length/12) + 1);
+            var totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
             var naviFromSearchResults = false;
             self.widgetList = ko.observableArray(widgetArray);
             self.curPageWidgetList = ko.observableArray(curPageWidgets);
@@ -339,13 +340,13 @@ define(['knockout',
                     curPageWidgets=[];
                     curPage = 1;
                      if (data.value[0]==='all') {
-                        totalPage = (widgetArray.length%12 === 0 ? widgetArray.length/12 : Math.floor(widgetArray.length/12) + 1);
+                        totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
                     }
                     else if (data.value[0]==='la') {
-                        totalPage = (laWidgetArray.length%12 === 0 ? laWidgetArray.length/12 : Math.floor(laWidgetArray.length/12) + 1);
+                        totalPage = (laWidgetArray.length%pageSize === 0 ? laWidgetArray.length/pageSize : Math.floor(laWidgetArray.length/pageSize) + 1);
                     }
                     else if (data.value[0]==='ta') {
-                        totalPage = (taWidgetArray.length%12 === 0 ? taWidgetArray.length/12 : Math.floor(taWidgetArray.length/12) + 1);
+                        totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
                     }
                     
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
@@ -435,7 +436,7 @@ define(['knockout',
                 
                 curPageWidgets=[];
                 curPage = 1;
-                totalPage = (searchResultArray.length%12 === 0 ? searchResultArray.length/12 : Math.floor(searchResultArray.length/12) + 1);
+                totalPage = (searchResultArray.length%pageSize === 0 ? searchResultArray.length/pageSize : Math.floor(searchResultArray.length/pageSize) + 1);
                 fetchWidgetsForCurrentPage(searchResultArray);
                 self.curPageWidgetList(curPageWidgets);
                 refresNaviButton();
@@ -444,7 +445,7 @@ define(['knockout',
             
             function fetchWidgetsForCurrentPage(allWidgets) {
                 curPageWidgets=[];
-                for (var i=(curPage-1)*12;i < curPage*12 && i < allWidgets.length;i++) {
+                for (var i=(curPage-1)*pageSize;i < curPage*pageSize && i < allWidgets.length;i++) {
                     curPageWidgets.push(allWidgets[i]);
                 }
             };
@@ -475,6 +476,41 @@ define(['knockout',
                 self.naviPreBtnVisible(curPage === 1 ? false : true);
                 self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
             };
+            
+            self.searchFilterFunc = function (arr, value)
+            {/*
+                    var _contains = function (s1, s2)
+                    {
+                        if (!s1 && !s2)
+                            return true;
+                        if (s1 && s2)
+                        {
+                            if (s1.toUpperCase().indexOf(s2.toUpperCase()) > -1)
+                                return true;
+                        }
+                        return false;
+                    };
+                    console.log("Arrary length: " + arr.length);
+                    console.log("Value: " + value);
+                    var _filterArr = $.grep(_widgetArray, function (o) {
+                        if (!value || value.length <= 0)
+                            return true; //no filter
+                        return _contains(o.name, value);
+                    });
+                    return _filterArr;*/
+                console.log("Value: " + value);
+                self.searchText(value);
+                return searchResultArray;
+            };
+
+            self.searchResponse = function (event, data)
+            {
+                console.log("searchResponse: " + data.content.length);
+                //self.widgetList(data.content);
+                self.searchWidgets();
+            };
+            
+            // code to be executed at the end after function defined
             tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
         }
         

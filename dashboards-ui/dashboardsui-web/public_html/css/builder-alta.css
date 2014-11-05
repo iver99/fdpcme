@@ -224,15 +224,18 @@ body, html {
 #search_box #searchTxt { 
     float: left; 
     padding: 0; 
-    margin: 6px 0 0 6px; 
     border:0;
     width: 340px; 
+    height:40px;
     background: none; 
     color:gray;
+    font-size: medium;
+    font-weight: bold;
+    margin-left: 0;
+    margin-top: 0;
 } 
 #search_box #go { 
     float: right; 
-    
 } 
 
 #searchSelect {
@@ -245,10 +248,31 @@ body, html {
     margin-bottom: 10px;
     background-color: WhiteSmoke;
 }
+.widget-dialog-search-button {
+    margin:5px;
+    height:32px;
+}
+
+.widget-dialog-selector {
+    height:30px;
+    float:right;
+    alignment-baseline: central;    
+}
+
+.widget-image {
+    padding-top: 24px;
+    padding-right: 0px; 
+}
+
+.widget-content-text {
+    font-weight: bold;
+    font-size: large;
+    margin: auto;
+}
 
 .widget-container {
-    width:  174px;
-    height: 80px;
+    width:  239px; /* 174px; */
+    height: 128px; /* 80px; */
     display: inline-block;
     margin-left: 5px;
     margin-right: 5px;
@@ -262,15 +286,13 @@ body, html {
     text-align: center;
     background-color: white;
     border-color: #d6dfe6;
-    /*text-align: center;
-    vertical-align: middle;
-    line-height:80px;*/
+    /* line-height:134px; */
     float:left;
     border-radius: 5px;
 }
 
 .widget-container:hover {
-    background-color: #e371b2;
+    background-color: lightblue; /* #e371b2; */
 }
 
 .widget-summaries-container {
@@ -314,4 +336,33 @@ body, html {
     margin:0;
     padding: 0;
     /* color: white; */
+}
+
+.widget-dialog-header-title {
+    font-size: x-large;
+    font-weight: bold;
+    color: DimGray;
+}
+
+.widget-dialog-header-close {
+    float:right;
+    color: #e371b2;
+    font-size: xx-small;
+}
+
+.widget-dialog-body {
+    background-color:  #EAEAEA;
+}
+
+.widget-dialog-summary {
+    width:100%;
+    font-weight: bold;
+    color: gray;
+}
+
+.widget-dialog-footer-notes {
+    font-weight: bold;
+    float:left;
+    margin-left: 5px;
+    color:gray;
 }
