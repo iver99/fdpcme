@@ -28,7 +28,7 @@ ko.bindingHandlers.dbsTypeAhead = {
 $.widget( "dbs.dbsTypeAhead", {
 	
 	options: {
-		delay: 300,
+		delay: 500,
 		minLength: 1,
 		source: null,
                 filterFunc: null,
