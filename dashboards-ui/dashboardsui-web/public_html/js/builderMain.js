@@ -94,7 +94,8 @@ require(['knockout',
     'ojs/internal-deps/dvt/DvtChart',
     'ojs/ojdvt-base',
     'ojs/ojtree',
-    'ojs/ojcheckboxset'
+    'ojs/ojcheckboxset',
+    'ojs/ojpopup'
 ],
         function(ko, $, dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {
@@ -265,7 +266,12 @@ require(['knockout',
                
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener);
+            var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
+            var dsbName = getUrlParam("name");
+            var dsbDesc = getUrlParam("description");
+            var emptyTiles = (dsbName === "");
+            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener, emptyTiles);
+            var toolBarModel = new dtv.ToolBarModel(dsbName,dsbDesc,includeTimeRangeFilter, tilesViewMode);
                
             $(document).ready(function() {
                 ko.bindingHandlers.sortableList = {
@@ -281,22 +287,14 @@ require(['knockout',
                 };
                 ko.virtualElements.allowedBindings.stopBinding = true;
 
-                var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
-                var dsbName = getUrlParam("name");
-                var dsbDesc = getUrlParam("description");
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
-                ko.applyBindings(new dtv.ToolBarModel(dsbName,dsbDesc,includeTimeRangeFilter), $('#head-bar-container')[0]);
+                ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                 ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
                 var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
-//                $("#show-timeslider").on({
-//                    'ojoptionchange': function (event, data) {
-//                        timeSliderDisplayModel.showOrHideTimeSlider(timeSliderModel, data['value']);
-//                    }
-//                });
                 if ("true"===includeTimeRangeFilter){
                    timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, "ON"); 
                 }else{
@@ -307,7 +305,9 @@ require(['knockout',
                     'ojoptionchange': function (event, data) {
                         timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, data['value']);
                     }
-                });                
+                });
+                
+                toolBarModel.showAddWidgetTooltip();
             });
         }
 );

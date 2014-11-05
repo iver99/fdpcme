@@ -11,7 +11,8 @@ define(['knockout',
         'ojs/ojvalidation',
         'ojs/ojknockout-validation',
         'ojs/ojbutton',
-        'ojs/ojselectcombobox'
+        'ojs/ojselectcombobox',
+        'ojs/ojpopup'
     ],
     
     function(ko, $)
@@ -166,8 +167,9 @@ define(['knockout',
             };
         }
         
-        function ToolBarModel(name, desc,includeTimeRangeFilter) {
+        function ToolBarModel(name, desc,includeTimeRangeFilter, tilesViewModel) {
             var self = this;
+            self.tilesViewModel = tilesViewModel;
             
             if ("true"===includeTimeRangeFilter){
                 self.includeTimeRangeFilter = ko.observable(["ON"]);
@@ -326,6 +328,12 @@ define(['knockout',
                 $('#addWidgetDialog').ojDialog('close');
             };
             
+            self.showAddWidgetTooltip = function() {
+                if (tilesViewModel.isEmpty()) {
+                   $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
+                }
+            };
+            
             self.optionChangedHandler = function(event, data) {
                 if (data.option === "value") {
                     curPageWidgets=[];
@@ -383,8 +391,8 @@ define(['knockout',
             };
             
             self.widgetDbClicked = function(event,data) {
-                alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
-                //TODO integrate with builder to add a widget
+                //alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
+                self.tilesViewModel.appendNewTile(event.name, "", 1, "line");
             };
             
             self.enterSearch = function(d,e){
@@ -467,6 +475,7 @@ define(['knockout',
                 self.naviPreBtnVisible(curPage === 1 ? false : true);
                 self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
             };
+            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
         }
         
         return {"DashboardTilesView": DashboardTilesView, 

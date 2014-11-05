@@ -115,17 +115,19 @@ role value for that section to represent the appropriate content type.
                                        data-bind="ojComponent: {component: 'ojInputText', 
                                                value: dashboardNameEditing, required: true, rootAttributes: {
                                                style:'max-width:55em;'}}" maxlength="64">
-                                <button id="builder-dbd-name-ok" class="oj-button oj-default"
+                                <button id="builder-dbd-name-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardName,ojComponent: {
-                                                component:'ojButton',
-                                                label: 'save'
+                                                component:'ojButton'
                                     }" title="Ok">
+                                    <span role="img"
+                                        class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
-                                  <button id="builder-dbd-name-cancel" class="oj-button oj-default"
+                                  <button id="builder-dbd-name-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardName, ojComponent: {
-                                                component:'ojButton',
-                                                label: 'x'
+                                                component:'ojButton'
                                     }" title="Cancel">
+                                    <span role="img"
+                                        class="oj-fwk-icon-status-error oj-fwk-icon"></span>
                                   </button>
                               </div>
                         </div>
@@ -145,23 +147,25 @@ role value for that section to represent the appropriate content type.
                                        data-bind="ojComponent: {component: 'ojInputText', 
                                                value: dashboardDescriptionEditing, rootAttributes: {
                                                style:'max-width:55em;'}}" maxlength="264">
-                                <button id="builder-dbd-description-ok" class="oj-button oj-default"
+                                <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardDescription,ojComponent: {
-                                                component:'ojButton',
-                                                label: 'save'
+                                                component:'ojButton'
                                     }" title="Ok">
+                                    <span role="img"
+                                        class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
-                                  <button id="builder-dbd-name-cancel" class="oj-button oj-default"
+                                  <button id="builder-dbd-name-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardDescription, ojComponent: {
-                                                component:'ojButton',
-                                                label: '✕'
+                                                component:'ojButton'
                                     }" title="Cancel">
+                                    <span role="img"
+                                        class="oj-fwk-icon-status-error oj-fwk-icon"></span>
                                   </button>
                               </div>
                         </div>
                     </div>
                     <div id="builder-toolbar-right" class="dbd-pull-right dbd-pull-middle" style="margin-top: 15px;">
-                        <button id="add-widget" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
+                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
                                   data-bind="click:openAddWidgetDialog,ojComponent: {
                                         component:'ojButton'
                             }" title="Create">
@@ -177,6 +181,12 @@ role value for that section to represent the appropriate content type.
                           <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
                               <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
                           </button>
+                    </div>
+                    <div style="display:none; min-width:100px; min-height:50px;" id="add-widget-tooltip" 
+                         data-bind="ojComponent: {component: 'ojPopup',
+                                              tail: 'simple',
+                                              position: {'my': 'right top', 'at': 'start bottom', 'of': '#add-widget-button'}}">
+                      <br/>Click this button and add new widget to dashboard<br/>
                     </div>
                 </div>
                 <div style="display:none;" id="settings-dialog"
@@ -324,7 +334,7 @@ role value for that section to represent the appropriate content type.
                   </div>  
                 </div>
             </div>
-            <div id="mainContainer" class="stretch-height">
+            <div id="mainContainer" class="oj-col stretch-height">
                 <div class="oj-row stretch-height tile-container" id="tileContainer">
                     <!-- ko stopBinding: true -->
                     <div style="display:none" id="urlChangeDialog" title="Change URL" 

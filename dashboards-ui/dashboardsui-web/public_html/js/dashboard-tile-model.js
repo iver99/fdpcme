@@ -58,16 +58,30 @@ define(['knockout',
             });
         }
 
-        function DashboardTilesViewModel(tilesView, urlEditView, sliderChangelistener) {
+        function DashboardTilesViewModel(tilesView, urlEditView, sliderChangelistener, emptyTiles) {
             var self = this;
             self.tilesView = tilesView;
+            self.tileRemoveCallbacks = [];
 
-            self.tiles = ko.observableArray([
+            self.tiles = ko.observableArray(emptyTiles ? [
                 new DashboardTile("Search (Line Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line",sliderChangelistener),
                 new DashboardTile("Search (Bar Chart)", "", 2, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar",sliderChangelistener),
                 new DashboardTile("Search (Bar Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar",sliderChangelistener),
                 new DashboardTile("Search (Line Chart)", "", 4, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line",sliderChangelistener)
-            ]);
+            ] : []);
+            
+            self.isEmpty = function() {
+                return !self.tiles() || self.tiles().length === 0;
+            };
+            
+            self.registerTileRemoveCallback = function(callbackMethod) {
+                self.tileRemoveCallbacks.push(callbackMethod);
+            };
+            
+            self.appendNewTile = function(name, description, width, charType) {
+                var newTile =new DashboardTile(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType,sliderChangelistener);
+                self.tiles.push(newTile);
+            };
 
             self.removeTile = function(tile) {
                 self.tiles.remove(tile);
@@ -77,6 +91,9 @@ define(['knockout',
                 }
                 self.tilesView.enableSortable();
                 self.tilesView.enableDraggable();
+                for (var i = 0; i < self.tileRemoveCallbacks.length; i++) {
+                    self.tileRemoveCallbacks[i]();
+                }
             };
             
             self.broadenTile = function(tile) {
