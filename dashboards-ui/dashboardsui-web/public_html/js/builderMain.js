@@ -284,7 +284,13 @@ require(['knockout',
 
                 var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
                 var dsbName = getUrlParam("name");
+                if (dsbName){
+                    dsbName = decodeURIComponent(dsbName);
+                }
                 var dsbDesc = getUrlParam("description");
+                if (dsbDesc){
+                    dsbDesc = decodeURIComponent(dsbDesc);
+                }
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new dtv.ToolBarModel(dsbName,dsbDesc,includeTimeRangeFilter), $('#head-bar-container')[0]);
                 ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);   
