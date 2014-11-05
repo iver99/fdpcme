@@ -242,33 +242,33 @@ role value for that section to represent the appropriate content type.
                         rootAttributes: { style: 'width: 800px; height:513px;background-color: #EAEAEA;'}}">   
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div id="dialog-title-id" class="oj-dialog-title">
-                            <span style="font-size: x-large;font-weight: bold;"><font color="DimGray">Add a widget</font></span>
-                            <a href="#" data-bind="click:closeAddWidgetDialog" style="float:right;"><font color="#e371b2" size="1">CLOSE</font></a>
+                            <span class="widget-dialog-header-title">Add a widget</span>
+                            <a href="#" data-bind="click:closeAddWidgetDialog" class="widget-dialog-header-close">CLOSE</a>
                         </div>
                     </div>
-                    <div class="oj-dialog-body" style="background-color:  #EAEAEA;">
+                    <div class="oj-dialog-body widget-dialog-body">
                       <div id="addAWidget">
-                          <div style="width:100%;font-weight: bold;"><font color="gray">
-                              WE HAVE 61 WIDGETS, SEARCH OR BROWSE THE ONES YOU NEED.</font>
+                            <div class="widget-dialog-summary">
+                                WE HAVE 61 WIDGETS, SEARCH OR BROWSE THE ONES YOU NEED.
                             </div>
                     </div>
                       <div style="padding-top: 20px;" >
                         <div style="float:left;" id="search_box">
                             <div style="float:left">
-                            <input id="searchTxt" style="width:340px;height:40px;padding-top: 0;padding-left: 0;margin-left: 0;margin-top: 0;font-size: medium;font-weight: bold;" maxlength='100' 
+                            <input id="searchTxt" maxlength='100' 
                                    placeholder="search here" data-bind="ojComponent:{component:'ojInputText',value: searchText},
                                                                         dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             </div>
                             <div style="float:right;">
-                                <button class="oj-button-half-chrome" data-bind="click: searchWidgets,
+                                <button class="oj-button-half-chrome widget-dialog-search-button" data-bind="click: searchWidgets,
                                     ojComponent: {component: 'ojButton', label: 'Search',display: 'icons', 
-                                    icons: {start:'widget-search-icon'}}" style="margin:5px;height:32px;"> 
+                                    icons: {start:'widget-search-icon'}}"> 
                                 </button> 
                                 <!--<input type="image" src="css/images/search-icon-16.png" width="30" id="go" alt="Search" title="Search" style="margin: 5px;" />--> 
                             </div>
                         </div>
                           <div id="searchSelect" style="float:right;">
-                              <select id="categorySelect" class="oj-select-arrow" style="height:30px;float:right;alignment-baseline: central;" 
+                              <select id="categorySelect" class="oj-select-arrow widget-dialog-selector" 
                                     data-bind="ojComponent: {component: 'ojSelect',
                                                                 value: categoryValue,
                                                                 optionChange: optionChangedHandler,
@@ -285,24 +285,22 @@ role value for that section to represent the appropriate content type.
                             <div>
                                 <!-- ko if: type==='la' -->
                                 <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="laimg" alt="Log Analytics" title="Log Analytics" 
-                                       style="padding-top: 24px;padding-right: 0px; "/>
+                                       class="widget-image"/>
                                 <!-- /ko -->
                                 <!-- ko if: type==='ta' -->
                                 <input type="image" src="css/images/targets_16_ena.png" width="32" id="taimg" alt="Target Analytics" title="Target Analytics" 
-                                       style="padding-top: 24px;padding-right: 0px; "/>
+                                       class="widget-image"/>
                                 <!-- /ko -->
-                                <!--<div data-bind="text:name" style="display: inline;font-weight: bold;font-size: large;"></div>-->
                                 <font color="gray">
-                                    <span data-bind="text:name" style="font-weight: bold;font-size: large;margin: auto;"></span>
+                                    <span data-bind="text:name" class="widget-content-text"></span>
                                 </font>
-<!--                                <span style="width:100%;font-weight: bold;font-size: large;margin: auto;" ><font color="gray"></font>
-                                </span>-->
                             </div>
                         </div>
                         <!-- /ko -->
                     </div>
                   </div>     
-                    <div class="oj-dialog-footer" >      
+                    <div class="oj-dialog-footer" > 
+                        <div class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard</div>
                         <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, visible: naviPreBtnVisible,
                             ojComponent: {component: 'ojButton', label: 'Previous',display: 'icons', 
                             icons: {start:'paging-previous-icon'}}" style="height:45px;"> 

@@ -228,15 +228,18 @@ iframe {
 #search_box #searchTxt { 
     float: left; 
     padding: 0; 
-    margin: 6px 0 0 6px; 
     border:0;
     width: 340px; 
+    height:40px;
     background: none; 
     color:gray;
+    font-size: medium;
+    font-weight: bold;
+    margin-left: 0;
+    margin-top: 0;
 } 
 #search_box #go { 
     float: right; 
-    
 } 
 
 #searchSelect {
@@ -248,6 +251,27 @@ iframe {
     height: 40px; 
     margin-bottom: 10px;
     background-color: WhiteSmoke;
+}
+.widget-dialog-search-button {
+    margin:5px;
+    height:32px;
+}
+
+.widget-dialog-selector {
+    height:30px;
+    float:right;
+    alignment-baseline: central;    
+}
+
+.widget-image {
+    padding-top: 24px;
+    padding-right: 0px; 
+}
+
+.widget-content-text {
+    font-weight: bold;
+    font-size: large;
+    margin: auto;
 }
 
 .widget-container {
@@ -274,7 +298,7 @@ iframe {
 }
 
 .widget-container:hover {
-    background-color: #e371b2;
+    background-color: lightblue; /* #e371b2; */
 }
 
 .widget-summaries-container {
@@ -318,4 +342,33 @@ iframe {
     margin:0;
     padding: 0;
     /* color: white; */
+}
+
+.widget-dialog-header-title {
+    font-size: x-large;
+    font-weight: bold;
+    color: DimGray;
+}
+
+.widget-dialog-header-close {
+    float:right;
+    color: #e371b2;
+    font-size: small;
+}
+
+.widget-dialog-body {
+    background-color:  #EAEAEA;
+}
+
+.widget-dialog-summary {
+    width:100%;
+    font-weight: bold;
+    color: gray;
+}
+
+.widget-dialog-footer-notes {
+    font-weight: bold;
+    float:left;
+    margin-left: 5px;
+    color:gray;
 }
