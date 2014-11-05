@@ -289,10 +289,15 @@ body, html {
     /* line-height:134px; */
     float:left;
     border-radius: 5px;
+    
+    font-weight: bold;
+    font-size: large;
+    color:gray;
 }
 
 .widget-container:hover {
-    background-color: lightblue; /* #e371b2; */
+    background-color: #6495ED; /*lightblue;*/ /* #e371b2; */
+    color: white;
 }
 
 .widget-summaries-container {
@@ -346,7 +351,7 @@ body, html {
 
 .widget-dialog-header-close {
     float:right;
-    color: #e371b2;
+    color: #4169E1;
     font-size: xx-small;
 }
 
@@ -361,8 +366,10 @@ body, html {
 }
 
 .widget-dialog-footer-notes {
-    font-weight: bold;
+    /* font-weight: bold; */
     float:left;
     margin-left: 5px;
-    color:gray;
+    color:black;
+    font-size: small;
+    padding-top: 5px;
 }
