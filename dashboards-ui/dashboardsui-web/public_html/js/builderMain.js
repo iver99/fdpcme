@@ -94,7 +94,8 @@ require(['knockout',
     'ojs/internal-deps/dvt/DvtChart',
     'ojs/ojdvt-base',
     'ojs/ojtree',
-    'ojs/ojcheckboxset'
+    'ojs/ojcheckboxset',
+    'dashboards/dbstypeahead'
 ],
         function(ko, $, dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {

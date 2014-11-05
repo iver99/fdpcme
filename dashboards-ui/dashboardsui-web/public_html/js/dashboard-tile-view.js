@@ -467,6 +467,39 @@ define(['knockout',
                 self.naviPreBtnVisible(curPage === 1 ? false : true);
                 self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
             };
+            
+            self.searchFilterFunc = function (arr, value)
+            {/*
+                    var _contains = function (s1, s2)
+                    {
+                        if (!s1 && !s2)
+                            return true;
+                        if (s1 && s2)
+                        {
+                            if (s1.toUpperCase().indexOf(s2.toUpperCase()) > -1)
+                                return true;
+                        }
+                        return false;
+                    };
+                    console.log("Arrary length: " + arr.length);
+                    console.log("Value: " + value);
+                    var _filterArr = $.grep(_widgetArray, function (o) {
+                        if (!value || value.length <= 0)
+                            return true; //no filter
+                        return _contains(o.name, value);
+                    });
+                    return _filterArr;*/
+                console.log("Value: " + value);
+                self.searchText(value);
+                return searchResultArray;
+            };
+
+            self.searchResponse = function (event, data)
+            {
+                console.log("searchResponse: " + data.content.length);
+                //self.widgetList(data.content);
+                self.searchWidgets();
+            };
         }
         
         return {"DashboardTilesView": DashboardTilesView, 
