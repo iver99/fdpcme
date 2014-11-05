@@ -262,6 +262,7 @@ define(['knockout',
             var curPageWidgets=[];
             var searchResultArray = [];
             var dd=1,mh=1,si=1,art=1,sh=1,index=1;
+            var pageSize = 6;
             for (var i = 0; i < 61; i++)
             {
                 var widget = {id: i};
@@ -304,13 +305,13 @@ define(['knockout',
                 
                 widgetArray.push(widget);
                 
-                if (i < 12) {
+                if (i < pageSize) {
                     curPageWidgets.push(widget);
                 }
             }
             
             var curPage = 1;
-            var totalPage = (widgetArray.length%12 === 0 ? widgetArray.length/12 : Math.floor(widgetArray.length/12) + 1);
+            var totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
             var naviFromSearchResults = false;
             self.widgetList = ko.observableArray(widgetArray);
             self.curPageWidgetList = ko.observableArray(curPageWidgets);
@@ -331,13 +332,13 @@ define(['knockout',
                     curPageWidgets=[];
                     curPage = 1;
                      if (data.value[0]==='all') {
-                        totalPage = (widgetArray.length%12 === 0 ? widgetArray.length/12 : Math.floor(widgetArray.length/12) + 1);
+                        totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
                     }
                     else if (data.value[0]==='la') {
-                        totalPage = (laWidgetArray.length%12 === 0 ? laWidgetArray.length/12 : Math.floor(laWidgetArray.length/12) + 1);
+                        totalPage = (laWidgetArray.length%pageSize === 0 ? laWidgetArray.length/pageSize : Math.floor(laWidgetArray.length/pageSize) + 1);
                     }
                     else if (data.value[0]==='ta') {
-                        totalPage = (taWidgetArray.length%12 === 0 ? taWidgetArray.length/12 : Math.floor(taWidgetArray.length/12) + 1);
+                        totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
                     }
                     
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
@@ -427,7 +428,7 @@ define(['knockout',
                 
                 curPageWidgets=[];
                 curPage = 1;
-                totalPage = (searchResultArray.length%12 === 0 ? searchResultArray.length/12 : Math.floor(searchResultArray.length/12) + 1);
+                totalPage = (searchResultArray.length%pageSize === 0 ? searchResultArray.length/pageSize : Math.floor(searchResultArray.length/pageSize) + 1);
                 fetchWidgetsForCurrentPage(searchResultArray);
                 self.curPageWidgetList(curPageWidgets);
                 refresNaviButton();
@@ -436,7 +437,7 @@ define(['knockout',
             
             function fetchWidgetsForCurrentPage(allWidgets) {
                 curPageWidgets=[];
-                for (var i=(curPage-1)*12;i < curPage*12 && i < allWidgets.length;i++) {
+                for (var i=(curPage-1)*pageSize;i < curPage*pageSize && i < allWidgets.length;i++) {
                     curPageWidgets.push(allWidgets[i]);
                 }
             };
