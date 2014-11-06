@@ -28,7 +28,7 @@ ko.bindingHandlers.dbsTypeAhead = {
 $.widget( "dbs.dbsTypeAhead", {
 	
 	options: {
-		delay: 500,
+		delay: 300,
 		minLength: 1,
 		source: null,
                 filterFunc: null,
@@ -44,7 +44,7 @@ $.widget( "dbs.dbsTypeAhead", {
 	_create: function() {
 		// Some browsers only repeat keydown events, not keypress events
 		// The code for & in keypress is the same as the up arrow, 
-		var suppressKeyPress, suppressKeyPressRepeat,
+		var suppressKeyPress, suppressKeyPressRepeat, suppressInput,
 			nodeName = this.element[ 0 ].nodeName.toLowerCase(),
 			isTextarea = nodeName === "textarea",
 			isInput = nodeName === "input";
@@ -65,11 +65,13 @@ $.widget( "dbs.dbsTypeAhead", {
 			keydown: function( event ) {
 				if ( this.element.prop( "readOnly" ) ) {
 					suppressKeyPress = true;
+					suppressInput = true;
 					suppressKeyPressRepeat = true;
 					return;
 				}
 
 				suppressKeyPress = false;
+				suppressInput = false;
 				suppressKeyPressRepeat = false;
 				var keyCode = $.ui.keyCode;
 				switch ( event.keyCode ) {
@@ -91,6 +93,7 @@ $.widget( "dbs.dbsTypeAhead", {
 					break;
 				case keyCode.ENTER:
 					suppressKeyPressRepeat = true;
+                                        suppressInput = true;
 					this._searchTimeout( event );
                                         event.preventDefault();
 					break;
@@ -100,6 +103,7 @@ $.widget( "dbs.dbsTypeAhead", {
 					break;
 				default:
 					suppressKeyPressRepeat = true;
+                                        suppressInput = true;
 					this._searchTimeout( event );
 					break;
 				}
@@ -132,6 +136,14 @@ $.widget( "dbs.dbsTypeAhead", {
 					this._keyEvent( "next", event );
 					break;
 				}
+			},
+			input: function( event ) {
+				if ( suppressInput ) {
+					suppressInput = false;
+					event.preventDefault();
+					return;
+				}
+				this._searchTimeout( event );
 			},
 			focus: function() {
 				
@@ -283,5 +295,6 @@ $.widget( "dbs.dbsTypeAhead", {
 }()); // end make sure register is running
 
 });
+
 
 
