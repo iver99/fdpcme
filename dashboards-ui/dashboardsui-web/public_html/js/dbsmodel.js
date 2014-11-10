@@ -42,16 +42,23 @@ function(temp, tabmodel, oj, ko, $)
         self.createDashboardModel = new createDashboardDialogModel();
         
         var _dbsArray = [];
-        for (var _i = 0; _i < 1000; _i++)
+        var _did = 0;
+        /*
+        for (var _did = 0; _did < 10000; _did++)
         {
-            var _db = {id: _i, name: 'Dashboard'+_i, tiles: [{name: 'Demo Tile'}, {name: 'Demo Tile'}, {name: 'Demo Tile'}]};
+            var _db = {id: _did, name: 'Dashboard'+_did, description: 'Demo Dashboard'+_did, tiles: [{name: 'Demo Tile'}, {name: 'Demo Tile'}, {name: 'Demo Tile'}]};
             _dbsArray.push(_db);
         }
-        
-        self.pagingDatasource = new oj.ArrayPagingDataSource(_dbsArray);
-        self.dashboards = self.pagingDatasource.getWindowObservable();
-        
-       /*
+        */
+        self.pageSize = ko.observable(20);
+        self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource(_dbsArray));
+        self.dashboards = ko.computed(function() {
+            return (self.pagingDatasource().getWindowObservable())();
+        });
+        self.showPaging = ko.computed(function() {
+            return self.pagingDatasource().totalSize() > self.pageSize();
+        });
+        /*
        self.serviceURL = 'http://slc04wjl.us.oracle.com:7101/emlacore/resources/dashboards';
        self.parseDashboard = function(response) {
             return {
@@ -89,10 +96,13 @@ function(temp, tabmodel, oj, ko, $)
         
         var _col = new self.DashboardCollection();
         //var o = _col.where({name: 'dash'});
-        self.pagingDatasource = new oj.CollectionPagingDataSource(_col);
-        self.dashboards = self.pagingDatasource.getWindowObservable(); //ko.observableArray([]);
-        */
-       
+        var _pagingds = new oj.CollectionPagingDataSource(_col);
+        _pagingds.setPageSize(self.pageSize());
+        _pagingds.fetch({'startIndex': 0, 'fetchType': 'init', 'success': function() {
+                self.pagingDatasource( _pagingds );
+        }} );
+       */
+      
         var _count = 1;
         //console.log(temp);
         self.addTab =  function()
@@ -129,9 +139,18 @@ function(temp, tabmodel, oj, ko, $)
         {
             //self.addTab();
             $( "#cDsbDialog" ).ojDialog( "close" );
+            
+            ++_did;
+            var _timeRangeFilter = false;
+            if (self.createDashboardModel.timeRangeFilterValue() == "ON") _timeRangeFilter=true;
+            
+            var _addeddb = {id: _did, name: self.createDashboardModel.name(), description: self.createDashboardModel.description(), timeRangeFilter: _timeRangeFilter, tiles: [{name: 'Demo Tile'}, {name: 'Demo Tile'}, {name: 'Demo Tile'}]};
+            _dbsArray.unshift(_addeddb);
+            self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
+            
             var _param = "?name="+encodeURIComponent(self.createDashboardModel.name())+"&description="+encodeURIComponent(self.createDashboardModel.description());
             
-            if (self.createDashboardModel.timeRangeFilterValue()=="ON"){
+            if (_timeRangeFilter === true) {
                 _param = _param + "&includeTimeRangeFilter=true"
             }
             window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html'+_param);

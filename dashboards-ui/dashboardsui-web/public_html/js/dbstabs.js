@@ -62,20 +62,20 @@ $.widget('dbs.dbsTabs', $['oj']['ojTabs'],
     _create : function ()
     {
         this._super();
-        console.log("_create is called. "/*+ this.options['test']*/);
+        //console.log("_create is called. "/*+ this.options['test']*/);
     },
     
     _ComponentCreate : function ()
     {
         this._super();
-        console.log("_ComponentCreate is called. "/*+ this.options['test']*/);
+        //console.log("_ComponentCreate is called. "/*+ this.options['test']*/);
     },
     
     _init : function ()
     {
         var self = this;
         self._super();
-        console.log("_init is called. "/*+ this.options['test']*/);
+        //console.log("_init is called. "/*+ this.options['test']*/);
     },
     
     _createCloseIcons : function ()

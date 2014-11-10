@@ -244,6 +244,17 @@ require(['dbs/dbsmodel',
         }
 );
 
+function truncateString(str, length) {
+    if (str && length > 0 && str.length > length)
+    {
+        var _tlocation = str.indexOf(' ', length);
+        if ( _tlocation <= 0 )
+            _tlocation = length;
+        return str.substring(0, _tlocation) + "...";
+    }
+    return str;
+};
+
 /*
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
