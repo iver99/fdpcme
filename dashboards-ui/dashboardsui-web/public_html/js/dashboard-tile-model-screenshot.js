@@ -8,7 +8,11 @@ define(['knockout',
         'jquery',
         'jqueryui',
         'ojs/ojknockout',
-        'ojs/ojmenu'
+        'ojs/ojmenu',
+        'html2canvas',
+        'canvg-rgbcolor',
+        'canvg-stackblur',
+        'canvg'
     ],
     
     function(ko)
@@ -131,34 +135,6 @@ define(['knockout',
             self.changeUrl = function(tile) {
                 urlEditView.setEditedTile(tile);
                 $('#urlChangeDialog').ojDialog('open');
-            };
-            /* event handler for button to get screen shot */
-            self.screenShotClicked = function(data, event) {
-                var images = self.images;
-                var renderWhole = self.renderWholeScreenShot;
-                var tileFrames = $('.dbd-tile-element div iframe');
-                var sizeTiles = tileFrames.size();
-                var handled = 0;
-                tileFrames.each(function(idx, elem){
-                    /*try {
-                        var dom = elem.contentWindow.document;
-                        var domHead = dom.getElementsByTagName('head').item(0);
-                        $("<script src='http://localhost:8383/emcpssf/js/libs/html2canvas/html2canvas.js' type='text/javascript'></script>").appendTo(domHead);
-                    } catch (ex) {
-                        // Security Error
-                    }*/
-                    elem.contentWindow.postMessage({index: idx, type: "screenShot"},"*");
-                    /*html2canvas(elem.contentWindow.$('body'), {
-                        onrendered: function(canvas) {  
-                            var tileData = canvas.toDataURL();
-                            images.splice(images().length, 0, new DashboardTileImage(tileData));
-                            handled++;
-                            if (handled === sizeTiles) {
-                                renderWhole();
-                            }
-                        }  
-                    });*/
-                });
             };
         }
         

@@ -161,6 +161,10 @@ body, html {
   vertical-align: middle;
 }
 
+.dbd-screenshot-zoomout {
+  width: 25%;
+}
+
 .dbd-btn-group {
   position: relative;
   display: inline-block;
