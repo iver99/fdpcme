@@ -15,9 +15,9 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.1.0/debug',
-        'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
-        'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.1.0/resources',
+        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/debug',
+        'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
+        'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
         'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../dependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
@@ -101,8 +101,8 @@ require(['knockout',
         function(ko, $, dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("demo-chart-widget",{
-                viewModel:{require:'../dependencies/demo/js/demo-chart-widget'},
-                template:{require:'text!../dependencies/demo/demo-chart-widget.html'}
+                viewModel:{require:'../dependencies/demo/simpleChartWidget/js/demo-chart-widget'},
+                template:{require:'text!../dependencies/demo/simpleChartWidget/demo-chart-widget.html'}
             });
             
             function FooterViewModel() {
@@ -229,45 +229,10 @@ require(['knockout',
                 //
 //                self.timeSliderModel = timeSliderModel;
                 
-                var sliderChangelistener = ko.computed(function(){
-                    return {
-                        timeRangeChange:timeSliderModel.timeRangeChange(),
-                        advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
-                        timeRangeViewChange:timeSliderModel.timeRangeViewChange(),
-                        viewStart:timeSliderModel.viewStart(),
-                        viewEnd:timeSliderModel.viewEnd()
-                    };
-                });
-//              
-
-                sliderChangelistener.subscribe(function (value) {
-                    /*
-                    var iframes = document.getElementsByName("tileiframe");
-
-                    var start = timeSliderModel.viewStart();
-                    var end = timeSliderModel.viewEnd();
-                    for (i = 0; i < iframes.length; i++) {
-
-                        var win = iframes[i].contentWindow;
-
-//                        win.postMessage({"startTime":new Date(2014,09,17),"endTime":new Date(2014,09,18)},"*");
-                        win.postMessage({"startTime":start,"endTime":end},"*");
-
-                    }
-                    */
-                    if (value.timeRangeChange){
-                        timeSliderModel.timeRangeChange(false);
-                    }else if (value.timeRangeViewChange){
-                        timeSliderModel.timeRangeViewChange(false);
-                    }else if (value.advancedOptionsChange){
-                        timeSliderModel.advancedOptionsChange(false);
-                    }
-                });
-
-               
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
             var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
+            includeTimeRangeFilter = "true";//TODO remove
             var dsbName = getUrlParam("name");
             var dsbDesc = getUrlParam("description");
             if (dsbName){
@@ -277,7 +242,8 @@ require(['knockout',
                 dsbDesc = decodeURIComponent(dsbDesc);
             }
             var emptyTiles = (dsbName === "");
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener, emptyTiles);
+//            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener, emptyTiles);
+            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,timeSliderModel, emptyTiles);
             var toolBarModel = new dtv.ToolBarModel(dsbName,dsbDesc,includeTimeRangeFilter, tilesViewMode);
                
             $(document).ready(function() {

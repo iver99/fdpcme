@@ -73,6 +73,6 @@ dependencies {
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.3')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.4')
-        compile(group: 'oraclejet', name: 'oraclejet', version: '1.0-3555', ext: 'zip')
+        compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
 }
 

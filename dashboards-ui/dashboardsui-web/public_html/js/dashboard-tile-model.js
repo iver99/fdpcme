@@ -20,9 +20,9 @@ define(['knockout',
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
         
-        function DashboardTile(title, description, width, url, chartType,sliderChangelistener) {
+        function DashboardTile(title, description, width, url, chartType) {
             var self = this;
-            self.timeRangeChangeEvent = sliderChangelistener;
+//            self.timeRangeChangeEvent = sliderChangelistener;
             self.title = ko.observable(title);
             self.description = ko.observable(description);
             self.url = ko.observable(url);
@@ -58,16 +58,23 @@ define(['knockout',
             });
         }
 
-        function DashboardTilesViewModel(tilesView, urlEditView, sliderChangelistener, emptyTiles) {
+        function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, emptyTiles) {
+            var sliderChangelistener = ko.computed(function(){
+                    return {
+                        timeRangeChange:timeSliderModel.timeRangeChange(),
+                        advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
+                        timeRangeViewChange:timeSliderModel.timeRangeViewChange(),
+                    };
+                });
             var self = this;
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
 
             self.tiles = ko.observableArray(emptyTiles ? [
-                new DashboardTile("Search (Line Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line",sliderChangelistener),
-                new DashboardTile("Search (Bar Chart)", "", 2, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar",sliderChangelistener),
-                new DashboardTile("Search (Bar Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar",sliderChangelistener),
-                new DashboardTile("Search (Line Chart)", "", 4, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line",sliderChangelistener)
+                new DashboardTile("Search (Line Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line"),
+                new DashboardTile("Search (Bar Chart)", "", 2, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar"),
+                new DashboardTile("Search (Bar Chart) 2", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar"),
+                new DashboardTile("Search (Line Chart) 2", "", 4, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line")
             ] : []);
             
             self.isEmpty = function() {
@@ -132,6 +139,53 @@ define(['knockout',
                 urlEditView.setEditedTile(tile);
                 $('#urlChangeDialog').ojDialog('open');
             };
+            
+            var fireDashboardItemChangeEvent = function (widget, dashboardItemChangeEvent) {
+                var deferred = $.Deferred();
+                $.ajax({url: 'widgetLoading.html',
+                    widget: widget,
+                    success: function () {
+                        /**
+                         * A widget needs to define its parent's onDashboardItemChangeEvent() method to resposne to dashboardItemChangeEvent
+                         */
+                        if (this.widget.onDashboardItemChangeEvent) {
+                            this.widget.onDashboardItemChangeEvent(dashboardItemChangeEvent);
+                            console.log(widget.title());
+                            deferred.resolve();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus);
+                        deferred.reject(textStatus);
+                    }
+                });
+                return deferred.promise();
+            }
+            sliderChangelistener.subscribe(function (value) {
+                if (value.timeRangeChange){
+                    var dashboardItemChangeEvent = {timeRangeChangeEvent:{viewStartTime:timeSliderModel.viewStart,viewEndTime:timeSliderModel.viewEnd}};
+                    var defArray = [];
+                    for (i = 0; i < self.tiles().length; i++) {
+                        var aTile = self.tiles()[i];
+                        defArray.push(fireDashboardItemChangeEvent(aTile,dashboardItemChangeEvent));
+                    }
+
+                    var combinedPromise = $.when.apply($,defArray);
+                    combinedPromise.done(function(){
+                        console.log("All Widgets have completed refresh!");
+                    });
+                    combinedPromise.fail(function(ex){
+                        console.log("One or more widgets failed to refresh: "+ex);
+                    });   
+                    
+                    timeSliderModel.timeRangeChange(false);
+                }else if (value.timeRangeViewChange){
+                    timeSliderModel.timeRangeViewChange(false);
+                }else if (value.advancedOptionsChange){
+                    timeSliderModel.advancedOptionsChange(false);
+                }
+            });
+ 
         }
         
         function DashboardViewModel() {
