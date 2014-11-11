@@ -232,7 +232,6 @@ require(['knockout',
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
             var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
-            includeTimeRangeFilter = "true";//TODO remove
             var dsbName = getUrlParam("name");
             var dsbDesc = getUrlParam("description");
             if (dsbName){

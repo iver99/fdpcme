@@ -102,7 +102,7 @@ role value for that section to represent the appropriate content type.
                 <!--div class="oj-md-center oj-row stretch-height">
                     <div id="viewContent" class="oj-sm-11 oj-col stretch-height" -->
                         <div class="main-content-area">
-                            <div id="dtabs" data-bind="dbsTabs: {removable:true}">
+                            <div id="dtabs" data-bind="dbsTabs: {removable:false}">
                                 <div id="dhometab" class="dbs-tab-container">
                                     <span>Dashoards</span>
                                     <div>
@@ -124,7 +124,7 @@ role value for that section to represent the appropriate content type.
                                     </div>
                                     <div id="dtabhomesc" class="dbs-summaries-container">
                                         <!-- ko foreach: dashboards -->
-                                        <div class="oj-panel dbs-summary-container" onclick="window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');">
+                                        <div class="oj-panel dbs-summary-container" data-bind="click: openDashboard">
                                             <div class="oj-row oj-sm-even-cols-2 dbs-summary-header-container">
                                                 <div style="min-width: 150px; width: 40px;" class="oj-col">
                                                     <h3 data-bind="text: truncateString(name, 25)"></h3>
@@ -136,8 +136,9 @@ role value for that section to represent the appropriate content type.
                                             </div>
                                             <div>
                                                 <ul class="dbs-summary-row">
-                                                    <li class="dbs-summary-row">Demo Tile</li>
-                                                    <li class="dbs-summary-row">Demo Tile</li>
+                                                    <!-- ko foreach:widgets -->
+                                                    <li class="dbs-summary-row" data-bind="text:name"></li>
+                                                    <!-- /ko -->
                                                 </ul>
                                             </div>
                                         </div>

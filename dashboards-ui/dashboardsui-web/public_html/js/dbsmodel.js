@@ -36,6 +36,18 @@ function(temp, tabmodel, oj, ko, $)
         };
     }
     
+    function DashboardModel(id,name,description,widgets){
+        var self = this;
+        self.id = id;
+        self.name = name;
+        self.description = description;
+        self.widgets = widgets;
+        self.openDashboard = function(){
+//            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
+            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
+        }
+    }
+    
     function ViewModel() {
         
         var self = this;
@@ -50,6 +62,20 @@ function(temp, tabmodel, oj, ko, $)
             _dbsArray.push(_db);
         }
         */
+       
+       /**
+        * 
+        * Hard coded dashboards for demo, need to delete them when they are not needed in the future
+        */
+       var dsb0 = new DashboardModel(0, 'Application', 'Demo Dashboard', [{name: 'Response time'}, {name: 'Concurrency'}, {name: 'Error'}]);
+       var dsb1 = new DashboardModel(1, 'Database', 'Demo Dashboard', [{name: 'Top SQL'}, {name: 'Ora-XX Error'}, {name: 'SGA'}]);
+       var dsb2 = new DashboardModel(2, 'Middleware', 'Demo Dashboard', [{name: 'CPU Usage'}, {name: 'Memory Usage'}, {name: 'JVM Heap Usage'}]);
+       var dsb3 = new DashboardModel(3, 'Server Error', 'Demo Dashboard', [{name: 'Server Status'}, {name: 'Server (Down)'}, {name: 'Server Location'}]);       
+        _dbsArray.push(dsb0);
+        _dbsArray.push(dsb1);
+        _dbsArray.push(dsb2);
+        _dbsArray.push(dsb3);
+        _did=3;
         self.pageSize = ko.observable(20);
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource(_dbsArray));
         self.dashboards = ko.computed(function() {
@@ -103,7 +129,7 @@ function(temp, tabmodel, oj, ko, $)
         }} );
        */
       
-        var _count = 1;
+        var _count = 4;
         //console.log(temp);
         self.addTab =  function()
         {
@@ -144,8 +170,9 @@ function(temp, tabmodel, oj, ko, $)
             var _timeRangeFilter = false;
             if (self.createDashboardModel.timeRangeFilterValue() == "ON") _timeRangeFilter=true;
             
-            var _addeddb = {id: _did, name: self.createDashboardModel.name(), description: self.createDashboardModel.description(), timeRangeFilter: _timeRangeFilter, tiles: [{name: 'Demo Tile'}, {name: 'Demo Tile'}, {name: 'Demo Tile'}]};
-            _dbsArray.unshift(_addeddb);
+            var _addeddb = new DashboardModel(_did, self.createDashboardModel.name(), self.createDashboardModel.description());
+//            _dbsArray.unshift(_addeddb);
+            _dbsArray.push(_addeddb);
             self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
             
             var _param = "?name="+encodeURIComponent(self.createDashboardModel.name())+"&description="+encodeURIComponent(self.createDashboardModel.description());
