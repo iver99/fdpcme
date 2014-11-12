@@ -22,41 +22,27 @@ define([
             self.chartTypeValue=ko.observableArray();
             self.stackValue = ko.observable('off');
             self.orientationValue = ko.observable('vertical');
-            self.plotBackground = ko.observable('#FAF0E6');
+//            self.plotBackground = ko.observable('#FAF0E6');
+            self.plotBackground = ko.observable('#FFFFFF');
             var plotAreaInfo = {backgroundColor: ko.toJS(self.plotBackground)};
             self.plotAreaData = ko.observable(plotAreaInfo);
-            
-//            var param_chartType = getUrlParam('chartType');
-//            if (param_chartType) {
-//                chartType=param_chartType;
-//            }
 
-            if (params.chartType){
-                chartType=params.chartType();
+            if (params.tile.chartType){
+                chartType=params.tile.chartType();
             }
-            if (params.timeRangeChangeEvent){
-                params.timeRangeChangeEvent.subscribe(function (value) {
-                    if (value.viewStart){
-                        self.parameters.startTime=value.viewStart;
-                    }
-                    if (value.viewEnd){
-                        self.parameters.endTime=value.viewEnd;
-                    }
-                    refresh();
-                });
-            }
-            
-            var startTime = new Date();
-            var param_startTime = getUrlParam('startTime');
-            if (param_startTime) {
-                startTime=param_startTime;
-            }
-            
+            var startTime = new Date(); 
             var endTime = null;
-            var param_endTime = getUrlParam('endTime');
-            if (param_endTime) {
-                endTime=param_endTime;
+            params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent){
+                if (dashboardItemChangeEvent){
+                    if (dashboardItemChangeEvent.timeRangeChangeEvent){
+                        startTime = dashboardItemChangeEvent.timeRangeChangeEvent.viewStartTime();
+                        endTime = dashboardItemChangeEvent.timeRangeChangeEvent.viewEndTime();
+                        refresh0(chartType,startTime,endTime);
+                    }
+                }
             }
+            
+
             
             self.parameters.chartType=chartType;
             self.parameters.startTime=startTime;
@@ -67,18 +53,21 @@ define([
                 refresh();
             };
             
-            function getUrlParam(name) {
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-                return results === null ? "" : results[1];
-            };
+//            function getUrlParam(name) {
+//                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+//                return results === null ? "" : results[1];
+//            };
             
-            function refresh() {
+            function refresh(){
+                refresh0(self.parameters.chartType, self.parameters.startTime, self.parameters.endTime);
+            }
+            function refresh0(chartType, startTime, endTime) {
                 if(self.chartTypeValue().length<=0)
-                    self.chartTypeValue([self.parameters.chartType]);
+                    self.chartTypeValue([chartType]);
                 
                 var size = 50;
-                if (self.parameters.endTime !== null) {
-                    var diff = self.parameters.endTime.getTime()-self.parameters.startTime.getTime();
+                if (endTime !== null) {
+                    var diff = endTime.getTime()-startTime.getTime();
                     var min = diff/(60*1000*60*24);
                     size = min/5;
                     //without at least 2 points, DVT will throw exception
@@ -87,7 +76,7 @@ define([
                     }
                 }
 
-                var tempDate = self.parameters.startTime;
+                var tempDate = startTime;
                 var series=[];
                 var groups=[];
                 var seriesItems = [];
@@ -99,12 +88,12 @@ define([
                     groups.push(groupvalue);
                     tempDate=groupvalue;
                 }
-                series.push({name: "Demo Series", items: seriesItems});
+                series.push({name: "Demo Series", items: seriesItems,color:'#3CB371',bordercolor:'#FFF'});
                 
                 self.seriesValue(series);
                 self.groupsValue(groups);
             };
-            
+
             function addDate(type,NumDay,vdate){
                 var date=new Date(vdate);
                 type = parseInt(type);

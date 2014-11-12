@@ -29,7 +29,11 @@ requirejs.config({
         'itautil':'../dependencies/timeslider/js/ita-util',
         'ojall':'../dependencies/timeslider/js/ojall',
 
-        'timeslider':'../dependencies/timeslider/js'
+        'timeslider':'../dependencies/timeslider/js',
+        'html2canvas':'../dependencies/html2canvas/html2canvas',
+        'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
+        'canvg-stackblur':'../dependencies/canvg/StackBlur',
+        'canvg':'../dependencies/canvg/canvg'
 
     },
     // Shim configurations for modules that do not expose AMD
@@ -70,8 +74,8 @@ var defaultColumnsNumber = 4;
  */
 require(['knockout',
     'jquery',
-    'dashboards/dashboard-tile-model',
-    'dashboards/dashboard-tile-view',
+    'dashboards/dashboard-tile-model-screenshot',
+    'dashboards/dashboard-tile-view-screenshot',
     
     'timeslider/time-slider-model',
     'timeslider/time-slider',
@@ -229,6 +233,42 @@ require(['knockout',
                 //
 //                self.timeSliderModel = timeSliderModel;
                 
+                var sliderChangelistener = ko.computed(function(){
+                    return {
+                        timeRangeChange:timeSliderModel.timeRangeChange(),
+                        advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
+                        timeRangeViewChange:timeSliderModel.timeRangeViewChange(),
+                        viewStart:timeSliderModel.viewStart(),
+                        viewEnd:timeSliderModel.viewEnd()
+                    };
+                });
+//              
+
+                sliderChangelistener.subscribe(function (value) {
+                    /*
+                    var iframes = document.getElementsByName("tileiframe");
+
+                    var start = timeSliderModel.viewStart();
+                    var end = timeSliderModel.viewEnd();
+                    for (i = 0; i < iframes.length; i++) {
+
+                        var win = iframes[i].contentWindow;
+
+//                        win.postMessage({"startTime":new Date(2014,09,17),"endTime":new Date(2014,09,18)},"*");
+                        win.postMessage({"startTime":start,"endTime":end},"*");
+
+                    }
+                    */
+                    if (value.timeRangeChange){
+                        timeSliderModel.timeRangeChange(false);
+                    }else if (value.timeRangeViewChange){
+                        timeSliderModel.timeRangeViewChange(false);
+                    }else if (value.advancedOptionsChange){
+                        timeSliderModel.advancedOptionsChange(false);
+                    }
+                });
+
+               
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
             var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
@@ -241,8 +281,7 @@ require(['knockout',
                 dsbDesc = decodeURIComponent(dsbDesc);
             }
             var emptyTiles = (dsbName === "");
-//            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener, emptyTiles);
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,timeSliderModel, emptyTiles);
+            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener, emptyTiles);
             var toolBarModel = new dtv.ToolBarModel(dsbName,dsbDesc,includeTimeRangeFilter, tilesViewMode);
                
             $(document).ready(function() {

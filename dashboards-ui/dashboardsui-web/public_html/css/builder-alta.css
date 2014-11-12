@@ -142,7 +142,7 @@ body, html {
   border-color: #ddd;
   font-size: 14px;
   cursor: move;
-  border-top: 2px solid #D8D6D6 !important;
+  border-top: 1px solid #D8D6D6 !important;
 }
 
 .dbd-tile-maximized .dbd-tile-header {
@@ -161,6 +161,10 @@ body, html {
   vertical-align: middle;
 }
 
+.dbd-screenshot-zoomout {
+  width: 25%;
+}
+
 .dbd-btn-group {
   position: relative;
   display: inline-block;
@@ -170,6 +174,7 @@ body, html {
 .dbd-tile-header .dbd-tile-title {
   height: 2.34rem;
   line-height: 2.34rem;
+  font-weight: bold;
 }
 
 .dbd-tile-header .dbd-tile-action {
@@ -179,7 +184,7 @@ body, html {
 }
 
 .dbd-tile-element {
-  border: 1px solid #d6dfe6;
+  /*border: 1px solid #d6dfe6;*/
   overflow: auto; 
   height: 220px;
   clear: right;

@@ -33,7 +33,7 @@ role value for that section to represent the appropriate content type.
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
 
         <!-- RequireJS bootstrap file -->
-        <script data-main="js/builderMain" src="dependencies/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="js/builderMain-screenshot" src="dependencies/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
@@ -170,14 +170,21 @@ role value for that section to represent the appropriate content type.
                                   data-bind="click:openAddWidgetDialog,ojComponent: {
                                         component:'ojButton'
                             }" title="Create">
-                            <img src="css/images/qual_plus_24_mono.png" alt="add a widget"/>
+                            <img src="images/navi_add_24_ena.png" alt="computer image"/>
                           </button>
                           <button id="dashboard-settings" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
                                   data-bind="click:handleSettingsDialogOpen, ojComponent: {
                                         component:'ojButton', 
                                         icons: {start:'dbd-toolbar-icon-settings'}
                             }" title="Settings">
-                            <img src="css/images/qual_gear_24_mono.png" alt="configure dashboard"/>
+                            <img src="images/navi_settings_24_ena.png" alt="computer image"/>
+                          </button>
+                          <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
+                                  data-bind="click:handleScreenShotClicked, ojComponent: {
+                                        component:'ojButton', 
+                                        icons: {start:'dbd-toolbar-icon-settings'}
+                            }" title="Screen Shot">
+                            <img src="images/navi_products_24_tab_ena.png" alt="Screen Shot"/>
                           </button>
                           <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
                               <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
@@ -331,6 +338,30 @@ role value for that section to represent the appropriate content type.
                              style="margin-right: 5px;"/> -->
                   </div>  
                 </div>
+                <div style="display:none" id="screen-shot-dialog" title="Screen Shot" 
+                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', cancelBehavior: 'none', rootAttributes: {style: 'width: 1384px; height: 651px;'}}">
+                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
+                        <div id="dialog-title-id" class="oj-dialog-title">
+                            <span class="widget-dialog-header-title">Screen Shot for Dashboard Builder</span>
+                            <a href="#" data-bind="click:closeScreenshotDialog" class="df-dialog-header-close">CLOSE</a>
+                            <button id="screen-shot-zoom-out" class="oj-button oj-default oj-button-half-chrome dbd-pull-right"
+                                    data-bind="click:screenShotZoomOut, ojComponent: {
+                                          component:'ojButton'
+                              }" title="Zoom out" style="float: right; margin-right: 50px;">
+                                <img src="images/zoom-out-128.png" style="width: 10%;"/>
+                            </button>
+                            <button id="screen-shot-zoom-in" class="oj-button oj-default oj-button-half-chrome dbd-pull-right"
+                                    data-bind="click:screenShotZoomIn, ojComponent: {
+                                          component:'ojButton'
+                              }" title="Zoom in" style="float: right; margin-right: 50px; display: none;">
+                                <img src="images/zoom-in-128.png" style="width: 10%;"/>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="builder-screen-shot">
+                        <img id="builder-screenshot-img" src="" alt="Screen shot for dashboard builder">
+                    </div>
+                </div>
             </div>
             <div id="mainContainer" class="oj-col stretch-height">
                 <div class="oj-row stretch-height tile-container" id="tileContainer">
@@ -413,8 +444,7 @@ role value for that section to represent the appropriate content type.
                                 <div class="dbd-tile-element">
                                     <div style="position: relative; width: 100%; height: 100%;">
                                         <!--iframe style="width:100%;height:100%" id="iframe1" name="tileiframe" data-bind="attr: {src: fullUrl}"></iframe-->
-                                        <!--demo-chart-widget params="{chartType:chartType, timeRangeChangeEvent:timeRangeChangeEvent }"></demo-chart-widget-->
-                                        <demo-chart-widget params="{tile:$data }"></demo-chart-widget>
+                                        <demo-chart-widget params="{tile:$data}"></demo-chart-widget>
                                     </div>
                                 </div>
                             </div>
