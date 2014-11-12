@@ -43,13 +43,13 @@ function(temp, tabmodel, oj, ko, $)
         
         var _dbsArray = [];
         var _did = 0;
-        /*
-        for (var _did = 0; _did < 10000; _did++)
+        
+        for (var _did = 0; _did < 100000; _did++)
         {
             var _db = {id: _did, name: 'Dashboard'+_did, description: 'Demo Dashboard'+_did, tiles: [{name: 'Demo Tile'}, {name: 'Demo Tile'}, {name: 'Demo Tile'}]};
             _dbsArray.push(_db);
         }
-        */
+        
         self.pageSize = ko.observable(20);
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource(_dbsArray));
         self.dashboards = ko.computed(function() {
@@ -161,7 +161,34 @@ function(temp, tabmodel, oj, ko, $)
             $( "#cDsbDialog" ).ojDialog( "close" );
         };
         
+        self.searchFilterFunc = function (arr, value)
+        {
+            var _contains = function(s1, s2)
+                        {
+                            if (!s1 && !s2)
+                                return true;
+                            if (s1 && s2)
+                            {
+                                if (s1.toUpperCase().indexOf(s2.toUpperCase()) > -1)
+                                    return true;
+                            }
+                            return false;
+                        };
+            //console.log("Arrary length: "+arr.length);
+            //console.log("Value: "+value);
+            var _filterArr = $.grep(_dbsArray, function(o) {
+                if (!value || value.length <=0) return true; //no filter
+                return _contains(o.name, value);
+            });
+            return _filterArr;
+        };
         
+        self.searchResponse = function (event, data)
+        {
+            //console.log("searchResponse: "+data.content.length);
+            self.pagingDatasource(new oj.ArrayPagingDataSource(data.content));
+            //self.dashboards = self.pagingDatasource().getWindowObservable();
+        };
     };
             
     return {'ViewModel': ViewModel};
