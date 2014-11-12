@@ -74,6 +74,7 @@ require(['dbs/dbsmodel',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'dbs/dbstabs',
+    'dbs/dbstypeahead',
 //    'ojs/ojvalidation'
 //  'ojs/ojselectcombobox',
 //    'ojs/ojmodel',
