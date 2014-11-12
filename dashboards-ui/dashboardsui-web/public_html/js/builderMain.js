@@ -55,6 +55,14 @@ requirejs.config({
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
         }
+        ,
+        text: {
+            useXhr: function (url, protocol, hostname, port) {
+              // allow cross-domain requests
+              // remote server allows CORS
+              return true;
+            }
+          }
     }
 });
 
@@ -104,7 +112,7 @@ require(['knockout',
                 viewModel:{require:'../dependencies/demo/simpleChartWidget/js/demo-chart-widget'},
                 template:{require:'text!../dependencies/demo/simpleChartWidget/demo-chart-widget.html'}
             });
-            
+
             function FooterViewModel() {
                 var self = this;
 
