@@ -385,27 +385,28 @@ role value for that section to represent the appropriate content type.
                                         <div class="dbd-btn-group">
                                             <button id="actionButton"  class="oj-button-half-chrome dbd-tile-action"
                                                     data-bind="ojComponent: {component: 'ojButton', label: '', menu: '#tileMenu' + clientGuid}">
+                                                <img src="images/func_threebullets_16_ena.png" alt="Edit"/>
                                             </button>
                                             <ul style="display:none"
                                                     data-bind="attr: {'id': 'tileMenu' + clientGuid}, ojComponent: {component: 'ojMenu'}">
                                                 <li id="delete">
-                                                  <a href="#" data-bind="click: $root.removeTile"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Delete</a>
+                                                  <a href="#" data-bind="click: $root.removeTile"><span class="oj-menu-item-icon demo-icon-font"><img src="images/func_x_16_ena.png" alt="Delete"/></span>Delete</a>
                                                 </li>
                                                 <li id="wider" data-bind="css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled())}">
-                                                  <a href="#" data-bind="click: $root.broadenTile"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Wider</a>
+                                                  <a href="#" data-bind="click: $root.broadenTile"><span class="oj-menu-item-icon demo-icon-font"><img src="images/func_window_wider_16_ena.png" alt="Wider"/></span>Wider</a>
                                                 </li>
                                                 <li id="narrower" data-bind="css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled()}">
-                                                  <a href="#" data-bind="click: $root.narrowTile"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Narrower</a>
+                                                  <a href="#" data-bind="click: $root.narrowTile"><span class="oj-menu-item-icon demo-icon-font"><img src="images/func_window_narrower_16_ena.png" alt="Narrower"/></span>Narrower</a>
                                                 </li>
                                                 <li id="maximize" data-bind="css: { 'oj-disabled': !maximizeEnabled()}">
-                                                  <a href="#" data-bind="click: $root.maximize"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Maximize</a>
+                                                  <a href="#" data-bind="click: $root.maximize"><span class="oj-menu-item-icon demo-icon-font"><img src="images/func_maxmize_16_ena.png" alt="Narrower"/></span>Maximize</a>
                                                 </li>
                                                 <li id="restore" data-bind="css: { 'oj-disabled': !restoreEnabled()}">
-                                                  <a href="#" data-bind="click: $root.restore"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Restore</a>
+                                                  <a href="#" data-bind="click: $root.restore"><span class="oj-menu-item-icon demo-icon-font"><img src="images/func_restore_16_ena.png" alt="Narrower"/></span>Restore</a>
                                                 </li>
-                                                <li id="changeUrl">
+                                                <!--<li id="changeUrl">
                                                   <a href="#" data-bind="click: $root.changeUrl"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Change URL</a>
-                                                </li>
+                                                </li>-->
                                             </ul>
                                         </div>
                                     </div>
