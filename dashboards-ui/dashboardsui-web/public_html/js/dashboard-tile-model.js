@@ -113,6 +113,20 @@ define(['knockout',
                     tile.tileWidth(tile.tileWidth() - 1);
             };
             
+            self.calculateTilesRowHeight = function() {
+                var tilesRow = $('#tiles-row');
+                var tilesRowSpace = parseInt(tilesRow.css('margin-top'), 0) 
+                        + parseInt(tilesRow.css('margin-bottom'), 0) 
+                        + parseInt(tilesRow.css('padding-top'), 0) 
+                        + parseInt(tilesRow.css('padding-bottom'), 0);
+                var tileSpace = parseInt($('.dbd-tile-maximized .dbd-tile-element').css('margin-bottom'), 0) 
+                        + parseInt($('.dbd-tile-maximized').css('padding-bottom'), 0)
+                        + parseInt($('.dbd-tile-maximized').css('padding-top'), 0);
+                return $(window).height() - $('#headerWrapper').outerHeight() 
+                        - $('#head-bar-container').outerHeight() - $('#global-time-slider').outerHeight() 
+                        - (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
+            };
+            
             self.maximize = function(tile) {
                 for (var i = 0; i < self.tiles().length; i++) {
                     var eachTile = self.tiles()[i];
@@ -123,9 +137,14 @@ define(['knockout',
                 tile.maximized(true);
                 self.tilesView.disableSortable();
                 self.tilesView.disableDraggable();
+                var maximizedTileHeight = self.calculateTilesRowHeight();
+                self.tileOriginalHeight = $('.dbd-tile-maximized .dbd-tile-element').height();
+                $('.dbd-tile-maximized .dbd-tile-element').height(maximizedTileHeight);
             };
             
             self.restore = function(tile) {
+                if (self.tileOriginalHeight)
+                    $('.dbd-tile-maximized .dbd-tile-element').height(self.tileOriginalHeight);
                 tile.maximized(false);
                 for (var i = 0; i < self.tiles().length; i++) {
                     var eachTile = self.tiles()[i];
