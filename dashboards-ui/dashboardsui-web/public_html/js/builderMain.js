@@ -25,6 +25,7 @@ requirejs.config({
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': './',
         'jqueryui192': '../dependencies/timeslider/js/jquery-ui-1.9.2.min',
+        'dfutil':'../dependencies/util/js/df-util',
         'itacore':'../dependencies/timeslider/js/ita-core',
         'itautil':'../dependencies/timeslider/js/ita-util',
         'ojall':'../dependencies/timeslider/js/ojall',
@@ -78,6 +79,7 @@ var defaultColumnsNumber = 4;
  */
 require(['knockout',
     'jquery',
+    'dfutil',
     'dashboards/dashboard-tile-model',
     'dashboards/dashboard-tile-view',
     
@@ -106,13 +108,23 @@ require(['knockout',
     'ojs/ojpopup',
     'dashboards/dbstypeahead'
 ],
-        function(ko, $, dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
+        function(ko, $, dfu,dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("demo-chart-widget",{
                 viewModel:{require:'../dependencies/demo/simpleChartWidget/js/demo-chart-widget'},
                 template:{require:'text!../dependencies/demo/simpleChartWidget/demo-chart-widget.html'}
             });
 
+            ko.components.register("demo-publisher-widget",{
+                viewModel:{require:'../dependencies/demo/publisherWidget/js/demo-publisher'},
+                template:{require:'text!../dependencies/demo/publisherWidget/demo-publisher.html'}
+            });
+ 
+            ko.components.register("demo-subscriber-widget",{
+                viewModel:{require:'../dependencies/demo/subscriberWidget/js/demo-subscriber'},
+                template:{require:'text!../dependencies/demo/subscriberWidget/demo-subscriber.html'}
+            });
+            
             function FooterViewModel() {
                 var self = this;
 
@@ -208,10 +220,6 @@ require(['knockout',
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
             }
             
-            function getUrlParam(name) {
-                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-                return results === null ? "" : results[1];
-            };
         //
                 var HOUR = 60 * 60 * 1000;
                 
@@ -239,9 +247,10 @@ require(['knockout',
                 
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
-            var includeTimeRangeFilter = getUrlParam("includeTimeRangeFilter");
-            var dsbName = getUrlParam("name");
-            var dsbDesc = getUrlParam("description");
+            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
+            includeTimeRangeFilter ="true";//TODO remove
+            var dsbName = dfu.getUrlParam("name");
+            var dsbDesc = dfu.getUrlParam("description");
             if (dsbName){
                 dsbName = decodeURIComponent(dsbName);
             }

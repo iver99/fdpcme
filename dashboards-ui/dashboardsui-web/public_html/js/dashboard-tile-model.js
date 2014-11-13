@@ -20,9 +20,64 @@ define(['knockout',
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         }
         
-        function DashboardTile(title, description, width, url, chartType) {
+        /**
+         * 
+         * @param {ko.observable} startTime: start time of new time range
+         * @param {ko.observable} endTime: end time of new time range
+         * @returns {DashboardTimeRangeChange} instance
+         */
+        function DashboardTimeRangeChange(startTime, endTime){
             var self = this;
-//            self.timeRangeChangeEvent = sliderChangelistener;
+            if (ko.isObservable(startTime) && startTime() instanceof Date){
+                self.viewStartTime = startTime;
+            }
+            if (ko.isObservable(endTime) && endTime() instanceof Date){
+                self.viewEndTime = endTime;
+            }
+        }
+        
+        /**
+         * 
+         * @param {String} name: name of custome item
+         * @param {Object} value: new value of custome item
+         * @returns {undefined}
+         */
+        function DashboardCustomChange(name, value){
+            var self = this;
+            if (name){
+                self.name = name.toString();
+                self.value = value;
+            }
+        }
+
+        function DashboardItemChangeEvent(timeRangeChange, customChanges){
+            var self = this;
+            self.timeRangeChange = null;
+            self.customChanges = null;
+            if (timeRangeChange instanceof DashboardTimeRangeChange){
+                self.timeRangeChange = timeRangeChange;
+            }
+
+            if (customChanges instanceof Array){
+                for(var i=0;i<customChanges.length;i++){
+                    var change = customChanges[i];
+                    if (change instanceof DashboardCustomChange){
+                        if (!self.customChanges){
+                            self.customChanges = [];
+                        }
+                        self.customChanges.push(change);
+                    }else{
+                        console.log("ERROR: "+"invalid custom change: "+change);
+                    }
+                }
+            }
+        }
+        
+        /* used for iFrame integration
+        function DashboardTile(dashboard,type, title, description, width, url, chartType) {
+            var self = this;
+            self.dashboard = dashboard;
+            self.type = type;
             self.title = ko.observable(title);
             self.description = ko.observable(description);
             self.url = ko.observable(url);
@@ -56,27 +111,70 @@ define(['knockout',
                 css += self.shouldHide() ? ' dbd-tile-no-display' : ' ';
                 return css;
             });
-        }
 
+        }
+         */
+
+
+        /**
+         *  used for KOC integration
+         */
+        function DashboardTile(dashboard,type, title, description, width) {
+            var self = this;
+            self.dashboard = dashboard;
+            self.type = type;
+            self.title = ko.observable(title);
+            self.description = ko.observable(description);
+            self.maximized = ko.observable(false);
+            self.shouldHide = ko.observable(false);
+            self.tileWidth = ko.observable(width);
+            self.clientGuid = guid();
+            self.widerEnabled = ko.computed(function() {
+                return self.tileWidth() < 4;
+            });
+            self.narrowerEnabled = ko.computed(function() {
+                return self.tileWidth() > 1;
+            });
+            self.maximizeEnabled = ko.computed(function() {
+                return !self.maximized();
+            });
+            self.restoreEnabled = ko.computed(function() {
+                return self.maximized();
+            });
+            self.tileDisplayClass = ko.computed(function() {
+                var css = 'oj-md-'+(self.tileWidth()*3) + ' oj-sm-'+(self.tileWidth()*3) + ' oj-lg-'+(self.tileWidth()*3);
+                css += self.maximized() ? ' dbd-tile-maximized' : ' ';
+                css += self.shouldHide() ? ' dbd-tile-no-display' : ' ';
+                return css;
+            });
+    
+            /**
+             * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
+             * e.g.
+             * params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent) {...}
+             * Note:
+             * Integrator will get a parameter: params by which integrator can access tile related properties/method/function
+             */
+            self.onDashboardItemChangeEvent = null;
+            
+            self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
+                self.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+            }
+        }
+        
         function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, emptyTiles) {
-            var sliderChangelistener = ko.computed(function(){
-                    return {
-                        timeRangeChange:timeSliderModel.timeRangeChange(),
-                        advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
-                        timeRangeViewChange:timeSliderModel.timeRangeViewChange(),
-                    };
-                });
             var self = this;
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
 
             self.tiles = ko.observableArray(emptyTiles ? [
-                new DashboardTile("Search (Line Chart)", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line"),
-                new DashboardTile("Search (Bar Chart)", "", 2, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar"),
-                new DashboardTile("Search (Bar Chart) 2", "", 1, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "bar"),
-                new DashboardTile("Search (Line Chart) 2", "", 4, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", "line")
+                new DashboardTile(self,"demo-subscriber-widget","SubScriber 1", "", 1),
+                new DashboardTile(self,"demo-publisher-widget","Pulisher", "", 1),
+                new DashboardTile(self,"demo-subscriber-widget","Subscriber 2", "", 1),
+                new DashboardTile(self,"demo-chart-widget","Random Chart 1", "", 1),
+                new DashboardTile(self,"demo-chart-widget","Random Chart 2", "", 4)
             ] : []);
-            
+
             self.isEmpty = function() {
                 return !self.tiles() || self.tiles().length === 0;
             };
@@ -86,7 +184,8 @@ define(['knockout',
             };
             
             self.appendNewTile = function(name, description, width, charType) {
-                var newTile =new DashboardTile(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType,sliderChangelistener);
+//                var newTile =new DashboardTile(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
+                var newTile =new DashboardTile(self,"demo-chart-widget",name, description, width);
                 self.tiles.push(newTile);
             };
 
@@ -162,7 +261,7 @@ define(['knockout',
                 $('#urlChangeDialog').ojDialog('open');
             };
             
-            var fireDashboardItemChangeEvent = function (widget, dashboardItemChangeEvent) {
+            self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
                 $.ajax({url: 'widgetLoading.html',
                     widget: widget,
@@ -183,13 +282,13 @@ define(['knockout',
                 });
                 return deferred.promise();
             }
-            sliderChangelistener.subscribe(function (value) {
-                if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = {timeRangeChangeEvent:{viewStartTime:timeSliderModel.viewStart,viewEndTime:timeSliderModel.viewEnd}};
+
+            self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
+                if (dashboardItemChangeEvent){
                     var defArray = [];
                     for (i = 0; i < self.tiles().length; i++) {
                         var aTile = self.tiles()[i];
-                        defArray.push(fireDashboardItemChangeEvent(aTile,dashboardItemChangeEvent));
+                        defArray.push(self.fireDashboardItemChangeEventTo(aTile,dashboardItemChangeEvent));
                     }
 
                     var combinedPromise = $.when.apply($,defArray);
@@ -199,7 +298,21 @@ define(['knockout',
                     combinedPromise.fail(function(ex){
                         console.log("One or more widgets failed to refresh: "+ex);
                     });   
-                    
+                }
+            }
+
+            var sliderChangelistener = ko.computed(function(){
+                    return {
+                        timeRangeChange:timeSliderModel.timeRangeChange(),
+                        advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
+                        timeRangeViewChange:timeSliderModel.timeRangeViewChange(),
+                    };
+                });
+                
+            sliderChangelistener.subscribe(function (value) {
+                if (value.timeRangeChange){
+                    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(timeSliderModel.viewStart,timeSliderModel.viewEnd),null);
+                    self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
                     timeSliderModel.timeRangeChange(false);
                 }else if (value.timeRangeViewChange){
                     timeSliderModel.timeRangeViewChange(false);
@@ -207,7 +320,7 @@ define(['knockout',
                     timeSliderModel.advancedOptionsChange(false);
                 }
             });
- 
+            
             /* event handler for button to get screen shot */
             self.screenShotClicked = function(data, event) {
                 var images = self.images;
