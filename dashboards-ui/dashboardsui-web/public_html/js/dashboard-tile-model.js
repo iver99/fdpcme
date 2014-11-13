@@ -140,11 +140,14 @@ define(['knockout',
                 var maximizedTileHeight = self.calculateTilesRowHeight();
                 self.tileOriginalHeight = $('.dbd-tile-maximized .dbd-tile-element').height();
                 $('.dbd-tile-maximized .dbd-tile-element').height(maximizedTileHeight);
+                $('#add-widget-button').ojButton('option', 'disabled', true);
             };
             
             self.restore = function(tile) {
-                if (self.tileOriginalHeight)
+                if (self.tileOriginalHeight) {
                     $('.dbd-tile-maximized .dbd-tile-element').height(self.tileOriginalHeight);
+                }
+                $('#add-widget-button').ojButton('option', 'disabled', false);
                 tile.maximized(false);
                 for (var i = 0; i < self.tiles().length; i++) {
                     var eachTile = self.tiles()[i];
