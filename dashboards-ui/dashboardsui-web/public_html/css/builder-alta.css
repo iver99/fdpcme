@@ -10,22 +10,13 @@ and open the template in the editor.
 
 body, html {
   width: 100%;
-  /*height: 100%;*/
   padding: 0;
   margin: 0;
-  overflow: hidden;
-}
-
-#globalBody, .stretch-height {
-  /*height: 100%;*/
 }
 
 .tile-container {
   max-width: none;
-  /* margin-left: 10px; */
-  /* margin-right: 10px; */
   width: 100%;
-  padding-bottom: 90px;
 }
 
 .dbd-column {
@@ -123,7 +114,6 @@ body, html {
 
 .dbd-tile-maximized {
   width: 100%;
-  height: 90%;
 }
 
 .dbd-tile-dragging {
@@ -137,12 +127,17 @@ body, html {
   padding: 1px 8px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border: 1px solid;
+  border-left: 1px solid;
+  border-right: 1px solid;
   border-bottom: 0px;
   border-color: #ddd;
   font-size: 14px;
   cursor: move;
   border-top: 1px solid #D8D6D6 !important;
+}
+
+#actionButton span.oj-button-icon:before {
+  content: url('../images/func_threebullets_16_ena.png');
 }
 
 .dbd-tile-maximized .dbd-tile-header {
@@ -184,14 +179,15 @@ body, html {
 }
 
 .dbd-tile-element {
-  /*border: 1px solid #d6dfe6;*/
-  overflow: auto; 
+   border: 1px solid #d6dfe6; 
+   overflow: auto;  
   height: 220px;
   clear: right;
+  border-top:0px;
+  background-color: white
 }
 
 .dbd-tile-maximized .dbd-tile-element {
-  height: 90%;
   margin-bottom: 5em;
 }
 

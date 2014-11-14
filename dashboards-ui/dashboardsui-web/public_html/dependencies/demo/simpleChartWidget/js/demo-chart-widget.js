@@ -4,17 +4,19 @@
  * and open the template in the editor.
  */
 define([
-    'ojs/ojcore', 
     'knockout', 
-    'jquery', 
-    'ojs/ojknockout', 
-    'ojs/ojselectcombobox'
+    'jquery',
+    'dfutil'
 ],
-    function(oj, ko, $)
+    function(ko, $, dfu)
     {
         function VisualizationModel(params) {
             var self = this;
+            var randomInt = dfu.getRandomInt(1,2);
             var chartType = 'bar';
+            if (randomInt===2){
+                chartType = "line";
+            }
 
             self.parameters={};
             self.seriesValue = ko.observableArray();
@@ -34,9 +36,9 @@ define([
             var endTime = null;
             params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
-                    if (dashboardItemChangeEvent.timeRangeChangeEvent){
-                        startTime = dashboardItemChangeEvent.timeRangeChangeEvent.viewStartTime();
-                        endTime = dashboardItemChangeEvent.timeRangeChangeEvent.viewEndTime();
+                    if (dashboardItemChangeEvent.timeRangeChange){
+                        startTime = dashboardItemChangeEvent.timeRangeChange.viewStartTime();
+                        endTime = dashboardItemChangeEvent.timeRangeChange.viewEndTime();
                         refresh0(chartType,startTime,endTime);
                     }
                 }
@@ -53,11 +55,7 @@ define([
                 refresh();
             };
             
-//            function getUrlParam(name) {
-//                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
-//                return results === null ? "" : results[1];
-//            };
-            
+       
             function refresh(){
                 refresh0(self.parameters.chartType, self.parameters.startTime, self.parameters.endTime);
             }
