@@ -156,6 +156,11 @@ function(temp, tabmodel, oj, ko, $)
             $("#dtabs").dbsTabs("removeTab", _tabId);
         };
         
+        self.handleDashboardClicked = function(event, data) {
+            //console.log(data);
+            data.dashboard.openDashboard();
+        };
+        
         self.createDashboardClicked = function()
         {
             self.createDashboardModel.clear();
@@ -202,8 +207,7 @@ function(temp, tabmodel, oj, ko, $)
                             }
                             return false;
                         };
-            //console.log("Arrary length: "+arr.length);
-            //console.log("Value: "+value);
+            
             var _filterArr = $.grep(_dbsArray, function(o) {
                 if (!value || value.length <=0) return true; //no filter
                 return _contains(o.name, value);
@@ -215,7 +219,6 @@ function(temp, tabmodel, oj, ko, $)
         {
             //console.log("searchResponse: "+data.content.length);
             self.pagingDatasource(new oj.ArrayPagingDataSource(data.content));
-            //self.dashboards = self.pagingDatasource().getWindowObservable();
         };
     };
             

@@ -33,10 +33,10 @@
 }
 
 .dbs-summary-container {
-    width:  280px;
+    width:  320px;
     height: 200px;
     display: inline-block;
-    margin: 15px;
+    margin: 5px;
     padding-top: 1px;
     padding-bottom: 1px;
     padding-left: 2px;
@@ -46,8 +46,7 @@
     background: #ffffff;
     border-color: #d6dfe6;
 }
-
-
+/*
 .dbs-summary-container:hover {
     width:  290px;
     height: 210px;
@@ -57,10 +56,11 @@
     border: solid thick;
     border-color: #267db3;
 }
-
+*/
 .dbs-summary-container-hover {
     border: solid thick;
-    border-color: #267db3;
+    border-color: #85bbe7; //#267db3;
+    cursor: pointer;
 }
 
 .dbs-summary-header-container {
