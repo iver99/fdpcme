@@ -125,6 +125,10 @@ require(['knockout',
                 template:{require:'text!../dependencies/demo/subscriberWidget/demo-subscriber.html'}
             });
             
+            ko.components.register("demo-iframe-widget",{
+                viewModel:{require:'../dependencies/demo/iFrameWidget/js/demo-iframe'},
+                template:{require:'text!../dependencies/demo/iFrameWidget/demo-iframe.html'}
+            });         
             function FooterViewModel() {
                 var self = this;
 

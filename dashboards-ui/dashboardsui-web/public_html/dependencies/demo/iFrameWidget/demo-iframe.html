@@ -1,0 +1,13 @@
+<div id="demo-publisher" class="oj-panel" style="width:100%;height:100%;background-color: white; border-top: 0px;border-width: 0px">
+    <i>Please change your calendar URL and click "Change" to apply</i>
+    <input id="text-input" 
+           type="text"
+           data-bind="ojComponent: {component: 'ojInputText', 
+                              value: url}"/>
+    <button id= "button"
+            data-bind="click: apply, 
+                   ojComponent: { component: 'ojButton', label: 'Change' }">
+    </button> 
+       <iframe style="width:100%;height:100%" id="iframe1" name="tileiframe" data-bind="attr: {src: fullUrl}"></iframe>
+ 
+</div>
