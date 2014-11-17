@@ -62,32 +62,65 @@ $.widget('dbs.dbsDashboardPanel',
         {
             'chover': 'dbs-summary-container-hover'
         },
-
-        _create: function () {
-            this._createHeader();
-            this._createContent();
-            var self = this, _name = self.name, _dashboard = self.options['dashboard'], _element = self.element, _toolbarEle = self.toolbarElement;
-
-            _element
-            .bind('mouseenter.' + _name, function (event) {
+        
+        active: false,
+        
+        activate: function(event) {
+            var self = this;
+            if (self.active === false)
+            {
+                var _name = self.name, _dashboard = self.options['dashboard'], _element = self.element, _toolbarEle = self.toolbarElement;
                 _element.addClass(self.classNames['chover']);
                 //$(_element).animate({ 'zoom': 1.1 }, 'slow');
                 $(_element).animate({margin:'-=5px', height:'+=10px', width:'+=10px'});
                 
                 $(_toolbarEle).show();
+                self.active = true;
                 self._trigger('activated', event, _dashboard);
-            })
-            .bind('mouseleave.' + _name, function () {
-                _element.removeClass(self.classNames['chover']);
+            }
+        },
+        
+        deactivate: function(event) {
+            var self = this;
+            if (self.active === true)
+            {
+                var _name = self.name, _dashboard = self.options['dashboard'], _element = self.element, _toolbarEle = self.toolbarElement;
+                 _element.removeClass(self.classNames['chover']);
                 //$(_element).animate({ 'zoom': 1.0 }, 'slow');
                 $(_toolbarEle).hide();
                 $(_element).animate({margin:'+=5px', height:'-=10px', width:'-=10px'});
+                self.active = false;
                 self._trigger('deactivated');
+            }
+        },
+
+        _create: function () {
+            this._createHeader();
+            this._createContent();
+            var self = this, _name = self.name, _dashboard = self.options['dashboard'], _element = self.element, _toolbarEle = self.toolbarElement;
+            
+            _element
+            .bind('mouseenter.' + _name, function (event) {
+                //console.log("mouse enter");
+                self.activate(event);
+            })
+            .bind('mouseleave.' + _name, function (event) {
+                self.deactivate(event);
             })
             .bind('click.' + _name, function (event) {
                 self._fireNavigated(event);
             });
             
+            setTimeout(function() {
+                if(_element.is(":hover")) {
+                    //_element.css("background", "yellow");
+                    self.activate(null);
+                }
+                else
+                {
+                    self.deactivate(null);
+                }
+            }, 0);
         },
         
         _truncateString: function(str, length) {

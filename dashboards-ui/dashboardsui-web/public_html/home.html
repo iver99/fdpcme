@@ -129,7 +129,7 @@ role value for that section to represent the appropriate content type.
                                              data-tag data-bind="dbsDashboardPanel: {
                                                                    activated: null,
                                                                    deactivated: null,
-                                                                   deleteClicked: null,
+                                                                   deleteClicked: $root.handleDashboardDeleted,
                                                                    navigated: $root.handleDashboardClicked,
                                                                    contentTmplate: 'db_summary_tmp',
                                                                    dashboard: $data
