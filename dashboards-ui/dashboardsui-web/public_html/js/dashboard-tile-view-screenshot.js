@@ -294,6 +294,10 @@ define(['knockout',
                             pair.parent.appendChild(pair.child);
                         });
                         $('#builder-screenshot-img').attr('src', data);
+                        if (localStorage.getItem('screenShot'))
+                            localStorage.removeItem('screenShot');
+                        else
+                            localStorage.setItem('screenShot', data);
                         $('#screen-shot-dialog').ojDialog('open');
                     }  
                 });

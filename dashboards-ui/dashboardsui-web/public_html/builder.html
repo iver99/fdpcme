@@ -179,6 +179,13 @@ role value for that section to represent the appropriate content type.
                             }" title="Settings">
                             <img src="css/images/qual_gear_24_mono.png" alt="configure dashboard"/>
                           </button>
+                          <button id="dashboard-msg" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
+                                  data-bind="click:handleMessageDialogOpen, ojComponent: {
+                                        component:'ojButton', 
+                                        icons: {start:'dbd-toolbar-icon-settings'}
+                            }" title="Settings">
+                            <img src="css/images/qual_gear_24_mono.png" alt="Message"/>
+                          </button>
                           <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
                               <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
                           </button>
@@ -188,6 +195,37 @@ role value for that section to represent the appropriate content type.
                                               tail: 'simple',
                                               position: {'my': 'right top', 'at': 'start bottom', 'of': '#add-widget-button'}}">
                       <br/>Click this button and add new widget to dashboard<br/>
+                    </div>
+                </div>
+                <div style="display:none;" id="parent-message-dialog"
+                    data-bind="ojComponent:{component: 'ojDialog', 
+                        initialVisibility: 'hide', cancelBehavior:'none',
+                        rootAttributes: { style: 'width: 400px; height:180px;'}}">  
+                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
+                        <div class="oj-dialog-title">
+                            <span style="font-size: x-large;font-weight: bold;"><font color="DimGray">Message to parent page</font></span>
+                            <a href="#" data-bind="click:handleMessageDialogOKClose" class="df-dialog-header-close">CLOSE</a>
+                        </div>
+                    </div>
+                    <div class="oj-dialog-body">
+                        <form id="message-form-container" class="oj-form oj-md-odd-cols-3 oj-md-labels-inline">
+                            <div class="oj-row">
+                                <div class="oj-col">
+                                    <label for="urlInput">Message</label>
+                                </div>
+                                <div class="oj-col">
+                                    <input id="urlInput" required 
+                                           data-bind="ojComponent: {
+                                                    component: 'ojInputText', 
+                                                    value: messageToParent, rootAttributes: {style: 'max-width: 30em;'}}">
+                                </div>
+                            </div>
+                        </form>                   
+                    </div>
+                    <div class="oj-dialog-footer">
+                        <button id="okButton" data-bind="click: handleMessageDialogOKClose, 
+                                ojComponent: {component: 'ojButton', label: 'OK'}"> 
+                        </button>
                     </div>
                 </div>
                 <div style="display:none;" id="settings-dialog"

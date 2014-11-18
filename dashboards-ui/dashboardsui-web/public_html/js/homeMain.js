@@ -240,10 +240,26 @@ require(['dbs/dbsmodel',
                     }
                 });
                 */
+               
+               var data = localStorage.getItem('screenShot');
+               $('#screenshot-test').attr('src', data);
+               
+               window.addEventListener('message', childMessageListener, false);
                 
             });
         }
 );
+            
+/**
+ * listener on messages from child page
+ * @param {type} message
+ * @returns {undefined} */
+function childMessageListener(message) {
+    if (message) {
+        alert(message);
+        $('#child-message-text').text(message);
+    }
+}
 
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
