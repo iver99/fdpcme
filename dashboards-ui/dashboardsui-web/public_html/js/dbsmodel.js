@@ -34,7 +34,33 @@ function(temp, tabmodel, oj, ko, $)
             self.timeRangeFilterValue(["OFF"]);
             self.targetFilterValue(["OFF"]);
         };
-    }
+    };
+    
+    function confirmDialogModel(title, okLabel, message, okFunction) {
+        var self = this;
+        //self.style = ko.observable('min-width: 450px; min-height:150px;');
+        self.title = ko.observable(title || '');
+        self.okLabel = ko.observable(okLabel || '');
+        self.message = ko.observable(message || '');
+        
+        self.okFunction = (okFunction && $.isFunction(okFunction)) ? okFunction : function() {}; 
+        
+        self.show = function (title, okLabel, message, okFunction) {
+            self.title(title || '');
+            self.okLabel(okLabel || '');
+            self.message(message || '');
+            self.okFunction = function () {
+                var _okfunc = (okFunction && $.isFunction(okFunction)) ? okFunction : function() {};
+                _okfunc();
+                self.close();
+            };
+            $( "#dbs_cfmDialog" ).ojDialog( "open" );
+        };
+        
+        self.close = function () {
+            $( "#dbs_cfmDialog" ).ojDialog( "close" );
+        };
+    }; 
     
     function DashboardModel(id,name,description,widgets){
         var self = this;
@@ -46,12 +72,14 @@ function(temp, tabmodel, oj, ko, $)
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
             window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
         }
-    }
+    };
     
     function ViewModel() {
         
         var self = this;
+        self.selectedDashboard = ko.observable(null);
         self.createDashboardModel = new createDashboardDialogModel();
+        self.confirmDialogModel = new confirmDialogModel();
         
         var _dbsArray = [];
          var _filterArr = [];
@@ -164,7 +192,17 @@ function(temp, tabmodel, oj, ko, $)
         
         self.handleDashboardDeleted = function(event, data) {
             //console.log(data);
-            var __id = data.dashboard['id'];
+            self.selectedDashboard(data.dashboard);
+            self.confirmDialogModel.show("Delete Dashboard", "Delete", 
+                         "Do you want to delete the selected dashboard '"+data.dashboard.name+"'?",
+                         self.confirmDashboardDelete);
+        };
+        
+        self.confirmDashboardDelete = function() {
+            
+            if ( !self.selectedDashboard() || self.selectedDashboard() === null ) return;
+            
+            var __id = (self.selectedDashboard())['id'];
             _dbsArray = $.grep(_dbsArray, function(o) {
                 return o.id !== __id;
             });
@@ -179,7 +217,6 @@ function(temp, tabmodel, oj, ko, $)
             {
                 self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
             }
-            console.log("ok");
         };
         
         self.createDashboardClicked = function()
