@@ -253,13 +253,10 @@ require(['dbs/dbsmodel',
             
 /**
  * listener on messages from child page
- * @param {type} message
+ * @param {type} builderData
  * @returns {undefined} */
-function childMessageListener(message) {
-    if (message) {
-        alert(message);
-        $('#child-message-text').text(message);
-    }
+function childMessageListener(builderData) {
+    console.log(builderData);
 }
 
 function truncateString(str, length) {

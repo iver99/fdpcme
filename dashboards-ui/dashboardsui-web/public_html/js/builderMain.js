@@ -30,7 +30,11 @@ requirejs.config({
         'itautil':'../dependencies/timeslider/js/ita-util',
         'ojall':'../dependencies/timeslider/js/ojall',
 
-        'timeslider':'../dependencies/timeslider/js'
+        'timeslider':'../dependencies/timeslider/js',
+        'html2canvas':'../dependencies/html2canvas/html2canvas',
+        'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
+        'canvg-stackblur':'../dependencies/canvg/StackBlur',
+        'canvg':'../dependencies/canvg/canvg'
 
     },
     // Shim configurations for modules that do not expose AMD
@@ -253,8 +257,12 @@ require(['knockout',
             var urlChangeView = new dtv.TileUrlEditView();
             var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
             includeTimeRangeFilter ="true";//TODO remove
+            var dsbId = dfu.getUrlParam("id");
             var dsbName = dfu.getUrlParam("name");
             var dsbDesc = dfu.getUrlParam("description");
+            if (dsbId) {
+                dsbId = decodeURIComponent(dsbId);
+            }
             if (dsbName){
                 dsbName = decodeURIComponent(dsbName);
             }
@@ -264,7 +272,7 @@ require(['knockout',
             var emptyTiles = (dsbName === "");
 //            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener, emptyTiles);
             var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,timeSliderModel, emptyTiles);
-            var toolBarModel = new dtv.ToolBarModel(dsbName,dsbDesc,includeTimeRangeFilter, tilesViewMode);
+            var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, tilesViewMode);
                
             $(document).ready(function() {
                 ko.bindingHandlers.sortableList = {

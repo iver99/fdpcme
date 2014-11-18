@@ -179,12 +179,12 @@ role value for that section to represent the appropriate content type.
                             }" title="Settings">
                             <img src="css/images/qual_gear_24_mono.png" alt="configure dashboard"/>
                           </button>
-                          <button id="dashboard-msg" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
-                                  data-bind="click:handleMessageDialogOpen, ojComponent: {
+                          <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
+                                  data-bind="click:handleDashboardSave, ojComponent: {
                                         component:'ojButton', 
                                         icons: {start:'dbd-toolbar-icon-settings'}
-                            }" title="Settings">
-                            <img src="css/images/qual_gear_24_mono.png" alt="Message"/>
+                            }" title="Screen Shot">
+                            <img src="images/navi_products_24_tab_ena.png" alt="Screen Shot"/>
                           </button>
                           <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
                               <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
@@ -197,7 +197,7 @@ role value for that section to represent the appropriate content type.
                       <br/>Click this button and add new widget to dashboard<br/>
                     </div>
                 </div>
-                <div style="display:none;" id="parent-message-dialog"
+<!--                <div style="display:none;" id="parent-message-dialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
                         initialVisibility: 'hide', cancelBehavior:'none',
                         rootAttributes: { style: 'width: 400px; height:180px;'}}">  
@@ -227,7 +227,7 @@ role value for that section to represent the appropriate content type.
                                 ojComponent: {component: 'ojButton', label: 'OK'}"> 
                         </button>
                     </div>
-                </div>
+                </div>-->
                 <div style="display:none;" id="settings-dialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
                         initialVisibility: 'hide', cancelBehavior:'none',
@@ -368,6 +368,30 @@ role value for that section to represent the appropriate content type.
                       <input type="image" src="css/images/navi-next-temp.png" width="45" id="nextPage" alt="Next" title="Next" 
                              style="margin-right: 5px;"/> -->
                   </div>  
+                </div>
+                <div style="display:none" id="screen-shot-dialog" title="Screen Shot" 
+                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', cancelBehavior: 'none', rootAttributes: {style: 'width: 1384px; height: 651px;'}}">
+                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
+                        <div id="dialog-title-id" class="oj-dialog-title">
+                            <span class="widget-dialog-header-title">Screen Shot for Dashboard Builder</span>
+                            <a href="#" data-bind="click:closeScreenshotDialog" class="df-dialog-header-close">CLOSE</a>
+                            <button id="screen-shot-zoom-out" class="oj-button oj-default oj-button-half-chrome dbd-pull-right"
+                                    data-bind="click:screenShotZoomOut, ojComponent: {
+                                          component:'ojButton'
+                              }" title="Zoom out" style="float: right; margin-right: 50px;">
+                                <img src="images/zoom-out-128.png" style="width: 10%;"/>
+                            </button>
+                            <button id="screen-shot-zoom-in" class="oj-button oj-default oj-button-half-chrome dbd-pull-right"
+                                    data-bind="click:screenShotZoomIn, ojComponent: {
+                                          component:'ojButton'
+                              }" title="Zoom in" style="float: right; margin-right: 50px; display: none;">
+                                <img src="images/zoom-in-128.png" style="width: 10%;"/>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="builder-screen-shot">
+                        <img id="builder-screenshot-img" src="" alt="Screen shot for dashboard builder">
+                    </div>
                 </div>
             </div>
             <div id="mainContainer" class="oj-col stretch-height">
