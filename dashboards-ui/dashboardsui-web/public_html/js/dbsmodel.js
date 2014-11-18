@@ -54,6 +54,7 @@ function(temp, tabmodel, oj, ko, $)
         self.createDashboardModel = new createDashboardDialogModel();
         
         var _dbsArray = [];
+         var _filterArr = [];
         var _did = 0;
         
        /**
@@ -156,6 +157,31 @@ function(temp, tabmodel, oj, ko, $)
             $("#dtabs").dbsTabs("removeTab", _tabId);
         };
         
+        self.handleDashboardClicked = function(event, data) {
+            //console.log(data);
+            data.dashboard.openDashboard();
+        };
+        
+        self.handleDashboardDeleted = function(event, data) {
+            //console.log(data);
+            var __id = data.dashboard['id'];
+            _dbsArray = $.grep(_dbsArray, function(o) {
+                return o.id !== __id;
+            });
+            _filterArr = $.grep(_filterArr, function(o) {
+                return o.id !== __id;
+            });
+            if (_filterArr.length > 0)
+            {
+                self.pagingDatasource(new oj.ArrayPagingDataSource(_filterArr));
+            }
+            else
+            {
+                self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
+            }
+            console.log("ok");
+        };
+        
         self.createDashboardClicked = function()
         {
             self.createDashboardModel.clear();
@@ -202,9 +228,8 @@ function(temp, tabmodel, oj, ko, $)
                             }
                             return false;
                         };
-            //console.log("Arrary length: "+arr.length);
-            //console.log("Value: "+value);
-            var _filterArr = $.grep(_dbsArray, function(o) {
+            
+            _filterArr = $.grep(_dbsArray, function(o) {
                 if (!value || value.length <=0) return true; //no filter
                 return _contains(o.name, value);
             });
@@ -215,7 +240,6 @@ function(temp, tabmodel, oj, ko, $)
         {
             //console.log("searchResponse: "+data.content.length);
             self.pagingDatasource(new oj.ArrayPagingDataSource(data.content));
-            //self.dashboards = self.pagingDatasource().getWindowObservable();
         };
     };
             

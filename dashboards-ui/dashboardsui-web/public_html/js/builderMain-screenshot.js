@@ -25,6 +25,7 @@ requirejs.config({
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': './',
         'jqueryui192': '../dependencies/timeslider/js/jquery-ui-1.9.2.min',
+        'dfutil':'../dependencies/util/js/df-util',
         'itacore':'../dependencies/timeslider/js/ita-core',
         'itautil':'../dependencies/timeslider/js/ita-util',
         'ojall':'../dependencies/timeslider/js/ojall',
