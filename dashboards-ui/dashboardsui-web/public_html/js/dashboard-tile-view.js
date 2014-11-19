@@ -282,8 +282,8 @@ define(['knockout',
                 if (tilesViewModel) {
                     for (var i = 0; i < tilesViewModel.tiles().length; i++) {
                         var tile = tilesViewModel.tiles()[i];
-                        var title = tile.title();
-                        summaryData.widgets.push(title);
+                        var widget = {"title": tile.title()};
+                        summaryData.widgets.push(widget);
                     }
                 }
                 return summaryData;
