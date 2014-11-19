@@ -152,7 +152,7 @@ role value for that section to represent the appropriate content type.
                             </div>
                         </div>
 
-                <!-- Dashboard dilog start -->
+                    <!-- Create Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog" title="Create Dashboard" 
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -207,7 +207,26 @@ role value for that section to represent the appropriate content type.
                             <button data-bind="click: confirmDashboardCreate,ojComponent: { component: 'ojButton', label: 'Create', rootAttributes: {style:'margin-right:5px'}}"></button>
                         </div>
                     </div>
-                    <!-- Dashboard dilog end -->
+                    <!-- Create Dashboard dilog end -->
+                    
+                    <!-- Confirmation dilog start -->
+                    <div style="display:none" id="dbs_cfmDialog"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <div class="oj-dialog-header-close-wrapper" >
+                                <a style="font-size: 0.8em; color: firebrick;" data-bind="click: confirmDialogModel.close">Close</a>
+                            </div>
+                            <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <p data-bind="text: confirmDialogModel.message"></p>
+                        </div>
+                        <div class="oj-dialog-footer">
+                            <button data-bind="click: confirmDialogModel.okFunction, 
+                                               ojComponent: { component: 'ojButton', label: confirmDialogModel.okLabel, rootAttributes: {style:'margin-right:5px'}}"></button>
+                        </div>
+                    </div>
+                    <!-- Confirmation dilog end -->
             </div>
 
                 <!-- Footer section which contains dynamic list of items. Template is located in /templates/demoFooterTemaplate.html-->
