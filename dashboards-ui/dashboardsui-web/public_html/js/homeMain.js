@@ -259,6 +259,24 @@ function childMessageListener(builderData) {
     console.log(builderData);
 }
 
+/**
+*  Callback method to be invokced by child builder page to get dashboard data
+
+ * @param {type} dashboardid
+ * @returns {dashboarInfoCallBack.Anonym$0} */
+function dashboarDataCallBack(dashboardid) {
+    // TODO: put code to retrieve dashboard data, and update code to add 'real' dashboard/widgets data below
+    return {
+        dashboardId: dashboardid,
+        dashboardName: "Weblogic", 
+        dashboardDescription: "Show information for weblogic", 
+        showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
+        widgets: [
+            {title: "CPU Load"},
+            {title: "Error Reports"}
+        ]};
+}
+
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {

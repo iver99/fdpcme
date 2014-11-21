@@ -123,7 +123,7 @@ define(['knockout',
         /**
          *  used for KOC integration
          */
-        function DashboardTile(dashboard,type, title, description, width) {
+        function DashboardWidget(dashboard,type, title, description, width) {
             var self = this;
             self.dashboard = dashboard;
             self.type = type;
@@ -166,18 +166,27 @@ define(['knockout',
             }
         }
         
-        function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, emptyTiles) {
+        function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, widgetsHomRef) {
             var self = this;
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
+            
+            var widgets = [];
+            if (widgetsHomRef) {
+                for (i = 0; i < widgetsHomRef.length; i++) {
+                    var widget = new DashboardWidget(self, "demo-chart-widget", widgetsHomRef[i].title, "", 1);
+                    widgets.push(widget);
+                }
+            }
 
-            self.tiles = ko.observableArray(emptyTiles ? [
-                new DashboardTile(self,"demo-iframe-widget","iFrame", "", 2),
-                new DashboardTile(self,"demo-publisher-widget","Pulisher", "", 1),
-                new DashboardTile(self,"demo-subscriber-widget","Subscriber", "", 1),
-//                new DashboardTile(self,"demo-chart-widget","Random Chart 1", "", 1),
-                new DashboardTile(self,"demo-chart-widget","Random Chart", "", 4)
-            ] : []);
+//            self.tiles = ko.observableArray(emptyTiles ? [
+//                new DashboardWidget(self,"demo-iframe-widget","iFrame", "", 2),
+//                new DashboardWidget(self,"demo-publisher-widget","Pulisher", "", 1),
+//                new DashboardWidget(self,"demo-subscriber-widget","Subscriber", "", 1),
+////                new DashboardWidget(self,"demo-chart-widget","Random Chart 1", "", 1),
+//                new DashboardWidget(self,"demo-chart-widget","Random Chart", "", 4)
+//            ] : []);
+            self.tiles = ko.observableArray(widgets);
 
             self.isEmpty = function() {
                 return !self.tiles() || self.tiles().length === 0;
@@ -188,8 +197,8 @@ define(['knockout',
             };
             
             self.appendNewTile = function(name, description, width, charType) {
-//                var newTile =new DashboardTile(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
-                var newTile =new DashboardTile(self,"demo-chart-widget",name, description, width);
+//                var newTile =new DashboardWidget(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
+                var newTile =new DashboardWidget(self,"demo-chart-widget",name, description, width);
                 self.tiles.push(newTile);
             };
 
@@ -326,33 +335,33 @@ define(['knockout',
             });
             
             /* event handler for button to get screen shot */
-            self.screenShotClicked = function(data, event) {
-                var images = self.images;
-                var renderWhole = self.renderWholeScreenShot;
-                var tileFrames = $('.dbd-tile-element div iframe');
-                var sizeTiles = tileFrames.size();
-                var handled = 0;
-                tileFrames.each(function(idx, elem){
-                    /*try {
-                        var dom = elem.contentWindow.document;
-                        var domHead = dom.getElementsByTagName('head').item(0);
-                        $("<script src='http://localhost:8383/emcpssf/js/libs/html2canvas/html2canvas.js' type='text/javascript'></script>").appendTo(domHead);
-                    } catch (ex) {
-                        // Security Error
-                    }*/
-                    elem.contentWindow.postMessage({index: idx, type: "screenShot"},"*");
-                    /*html2canvas(elem.contentWindow.$('body'), {
-                        onrendered: function(canvas) {  
-                            var tileData = canvas.toDataURL();
-                            images.splice(images().length, 0, new DashboardTileImage(tileData));
-                            handled++;
-                            if (handled === sizeTiles) {
-                                renderWhole();
-                            }
-                        }  
-                    });*/
-                });
-            };
+//            self.screenShotClicked = function(data, event) {
+//                var images = self.images;
+//                var renderWhole = self.renderWholeScreenShot;
+//                var tileFrames = $('.dbd-tile-element div iframe');
+//                var sizeTiles = tileFrames.size();
+//                var handled = 0;
+//                tileFrames.each(function(idx, elem){
+//                    /*try {
+//                        var dom = elem.contentWindow.document;
+//                        var domHead = dom.getElementsByTagName('head').item(0);
+//                        $("<script src='http://localhost:8383/emcpssf/js/libs/html2canvas/html2canvas.js' type='text/javascript'></script>").appendTo(domHead);
+//                    } catch (ex) {
+//                        // Security Error
+//                    }*/
+//                    elem.contentWindow.postMessage({index: idx, type: "screenShot"},"*");
+//                    /*html2canvas(elem.contentWindow.$('body'), {
+//                        onrendered: function(canvas) {  
+//                            var tileData = canvas.toDataURL();
+//                            images.splice(images().length, 0, new DashboardTileImage(tileData));
+//                            handled++;
+//                            if (handled === sizeTiles) {
+//                                renderWhole();
+//                            }
+//                        }  
+//                    });*/
+//                });
+//            };
         }
         
         function DashboardViewModel() {
@@ -362,7 +371,7 @@ define(['knockout',
             self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
         }
         
-        return {"DashboardTile": DashboardTile, 
+        return {"DashboardWidget": DashboardWidget, 
             "DashboardTilesViewModel": DashboardTilesViewModel,
             "DashboardViewModel": DashboardViewModel};
     }
