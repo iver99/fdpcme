@@ -68,6 +68,9 @@ function(temp, tabmodel, oj, ko, $)
         self.name = name;
         self.description = description;
         self.widgets = widgets;
+        self.image = "http://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png";
+        self.includeTimeRangeFilter = false;
+        self.currentPageNum = 1;
         self.openDashboard = function(){
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
             window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
