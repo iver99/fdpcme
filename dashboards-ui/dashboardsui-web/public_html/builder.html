@@ -49,7 +49,7 @@ role value for that section to represent the appropriate content type.
                         <!-- logo -->  
                         <div class="demo-appheader-logo" tabindex="0">
                             <div class="demo-appheader-logo-block">
-                                <span role="img" class="oj-icon demo-appheader-lite-logo-oracle" title="Oracle Logo"></span>  
+                                <span role="img" class="oj-icon demo-appheader-logo-oracle" title="Oracle Logo"></span>  
                             </div>
 
                             <div class="demo-appheader-appname-block">
@@ -72,17 +72,17 @@ role value for that section to represent the appropriate content type.
                                 <div class="demo-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
 
                                     <!-- ko foreach: toolbarButtons -->
-                                    <button class='oj-button-half-chrome demo-appheader-toolbar-button'
+                                    <!--button class='oj-button-half-chrome demo-appheader-toolbar-button'
                                             data-bind="ojComponent: {component:'ojButton', 
                                                         label: label, 
                                                         display: 'icons', 
                                                         icons: {start: iconClass + ' demo-icon-font'}} ">
-                                    </button>
+                                    </button-->
                                     <!-- /ko -->
 
                                     <!-- This is how to add a separator to the toolbar.  
                                          Be sure to include the role and aria-orientation as shown to make it accessible.  -->
-                                    <span role="separator" class="oj-toolbar-separator"></span>
+                                    <!--span role="separator" class="oj-toolbar-separator"></span-->
 
                                     <button id="menubutton"
                                             class='oj-button-half-chrome demo-appheader-toolbar-button'
@@ -184,7 +184,7 @@ role value for that section to represent the appropriate content type.
                                         component:'ojButton', 
                                         icons: {start:'dbd-toolbar-icon-settings'}
                             }" title="Save">
-                            <img src="images/qual_paperpencil_24_full.png" alt="Save"/>
+                            <img src="css/images/func_floppy_24.png" alt="Save"/>
                           </button>
                           <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
                               <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
@@ -288,7 +288,7 @@ role value for that section to represent the appropriate content type.
                 <div style="display:none;" id="addWidgetDialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
                         initialVisibility: 'hide', cancelBehavior:'none',resizeBehavior:'none',
-                        rootAttributes: { style: 'width: 800px; height:513px;background-color: #EAEAEA;'}}">   
+                        rootAttributes: { style: 'width: 800px; height:493px;background-color: #EAEAEA;'}}">   
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div id="dialog-title-id" class="oj-dialog-title">
                             <span class="widget-dialog-header-title">Add a widget</span>
@@ -305,7 +305,7 @@ role value for that section to represent the appropriate content type.
                         <div style="float:left;" id="search_box">
                             <div style="float:left">
                             <input id="searchTxt" maxlength='100' 
-                                   placeholder="search here" data-bind="ojComponent:{component:'ojInputText',value: searchText},
+                                   placeholder=" search here" data-bind="ojComponent:{component:'ojInputText',value: searchText},
                                                                         dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             </div>
                             <div style="float:right;">
@@ -317,7 +317,7 @@ role value for that section to represent the appropriate content type.
                             </div>
                         </div>
                           <div id="searchSelect" style="float:right;">
-                              <select id="categorySelect" class="oj-select-arrow widget-dialog-selector" 
+                              <select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',
                                                                 value: categoryValue,
                                                                 optionChange: optionChangedHandler,
@@ -350,19 +350,21 @@ role value for that section to represent the appropriate content type.
                     </div>
                   </div>     
                     <div class="oj-dialog-footer" > 
-                        <div>
-                        <image src="css/images/func_information_32.png" alt="hint" style="float:left;width:24px;height:24px" />
+                        <!--div style="padding-bottom: 10px"-->
+                        <image src="css/images/func_information_32.png" alt="hint" style="float:left;width:24px;height:24px;padding-top: 8px" />
                         <!--div class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard</div-->
-                        <span class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard</span>
-                        </div>
-                        <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, visible: naviPreBtnVisible,
-                            ojComponent: {component: 'ojButton', label: 'Previous',display: 'icons', 
-                            icons: {start:'paging-previous-icon'}}" style="height:45px;"> 
+                        <label class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard </label>
+                        <a class="oj-link" style="padding-right: 6px " data-bind="click:gotoCreateNewWidget">Didn't find what you are looking for? Create new widget</a>
+                        <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, disabled: naviPreBtnVisible,
+                            ojComponent: {component: 'ojButton'},style:{opacity:naviPreBtnVisible()?1:0.4}" > 
+                            <img src="css/images/navi-pre.png"  alt="Previous"/>
                         </button> 
-                        <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviNext, visible: naviNextBtnVisible,
-                            ojComponent: {component: 'ojButton', label: 'Next',display: 'icons', 
-                            icons: {start:'paging-next-icon'}}" style="height:45px;"> 
-                        </button>
+                        <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviNext, disabled: naviNextBtnVisible,
+                            ojComponent: {component: 'ojButton'},style:{opacity:naviNextBtnVisible()?1:0.4}"> 
+                            <img src="css/images/navi-next.png"  alt="Next"/>
+                        </button>                            
+                        <!--/div-->
+
 <!--                      <input type="image" src="css/images/navi-pre-temp.png" width="45" id="prePage" alt="Previous" title="Previous"
                              style="margin-right: 5px;"/> 
                       <input type="image" src="css/images/navi-next-temp.png" width="45" id="nextPage" alt="Next" title="Next" 
