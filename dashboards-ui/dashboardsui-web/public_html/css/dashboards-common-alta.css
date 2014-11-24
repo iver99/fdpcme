@@ -14,3 +14,7 @@ and open the template in the editor.
     color: red;
     font-size: xx-small;
 }
+
+a.df-dialog-header-close:visited {
+    color: red;
+}
