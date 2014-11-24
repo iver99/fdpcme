@@ -67,9 +67,14 @@ function(temp, tabmodel, oj, ko, $)
         self.id = id;
         self.name = name;
         self.description = description;
+        self.type = 0;
         self.widgets = widgets;
+        self.image = undefined; //"http://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png";
+        self.includeTimeRangeFilter = false;
+        self.currentPageNum = 1;
         self.openDashboard = function(){
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
+            //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html&dashboardId='+self.id);
             window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
         }
     };
@@ -81,33 +86,41 @@ function(temp, tabmodel, oj, ko, $)
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
         
-        var _dbsArray = [];
-         var _filterArr = [];
-        var _did = 0;
+        self.dbsArray = [];
+        self.filterArray = [];
+        self.did = 0;
         
-       /**
-        * 
-        * Hard coded dashboards for demo, need to delete them when they are not needed in the future
-        */
-       var dsb0 = new DashboardModel(0, 'Application', 'Demo Dashboard', [{name: 'Response time'}, {name: 'Concurrency'}, {name: 'Error'}]);
-       var dsb1 = new DashboardModel(1, 'Database', 'Demo Dashboard', [{name: 'Top SQL'}, {name: 'Ora-XX Error'}, {name: 'SGA'}]);
-       var dsb2 = new DashboardModel(2, 'Middleware', 'Demo Dashboard', [{name: 'CPU Usage'}, {name: 'Memory Usage'}, {name: 'JVM Heap Usage'}]);
-       var dsb3 = new DashboardModel(3, 'Server Error', 'Demo Dashboard', [{name: 'Server Status'}, {name: 'Server (Down)'}, {name: 'Server Location'}]);       
-        _dbsArray.push(dsb0);
-        _dbsArray.push(dsb1);
-        _dbsArray.push(dsb2);
-        _dbsArray.push(dsb3);
-        _did=3;
+       var dsb0 = new DashboardModel(0, 'Application', 
+            "Application Dashboard includes widgets: Application Response Time, Security Incidents, Security Histogram.", 
+            [{"title":"Application Response Time 1"},{"title":"Security Incidents 1"},{"title":"Security Histogram 4"}]);
+        
+        var dsb1 = new DashboardModel(1, 'Database', 
+        "Database dashboard includes widgets: Database Diagnostics and Security Incidents",
+        [{"title":"Database Diagnostics 1"},{"title":"Security Incidents 1"}]);
+       
+        var dsb2 = new DashboardModel(2, 'Middleware', 
+        'Middleware dashboard includes widgets: Middleware Health, Application Response Time, Database Diagnostics and Security Incidents', 
+        [{"title":"Middleware Health 1"},{"title":"Application Response Time 1"},{"title":"Database Diagnostics 1"},{"title":"Security Incidents 2"}]);
+        
+        var dsb3 = new DashboardModel(3, 'Server Error', 
+        "Database dashboard includes widgets: Security Histogram and Security Incidents", 
+        [{"title":"Security Histogram 1"},{"title":"Security Incidents 2"}]);       
+       
+        self.dbsArray.push(dsb0);
+        self.dbsArray.push(dsb1);
+        self.dbsArray.push(dsb2);
+        self.dbsArray.push(dsb3);
+        self.did=3;
         
         /*
-        for (var _did = 0; _did < 100000; _did++)
+        for (var self.did = 0; self.did < 100000; self.did++)
         {
-            var _db = new DashboardModel( _did, 'Dashboard'+_did, 'Demo Dashboard'+_did, [{name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}]);
-            _dbsArray.push(_db);
+            var _db = new DashboardModel( self.did, 'Dashboard'+self.did, 'Demo Dashboard'+self.did, [{name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}]);
+            self.dbsArray.push(_db);
         }*/
 
         self.pageSize = ko.observable(20);
-        self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource(_dbsArray));
+        self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource(self.dbsArray));
         self.dashboards = ko.computed(function() {
             return (self.pagingDatasource().getWindowObservable())();
         });
@@ -203,19 +216,19 @@ function(temp, tabmodel, oj, ko, $)
             if ( !self.selectedDashboard() || self.selectedDashboard() === null ) return;
             
             var __id = (self.selectedDashboard())['id'];
-            _dbsArray = $.grep(_dbsArray, function(o) {
+            self.dbsArray = $.grep(self.dbsArray, function(o) {
                 return o.id !== __id;
             });
-            _filterArr = $.grep(_filterArr, function(o) {
+            self.filterArray = $.grep(self.filterArray, function(o) {
                 return o.id !== __id;
             });
-            if (_filterArr.length > 0)
+            if (self.filterArray.length > 0)
             {
-                self.pagingDatasource(new oj.ArrayPagingDataSource(_filterArr));
+                self.pagingDatasource(new oj.ArrayPagingDataSource(self.filterArray));
             }
             else
             {
-                self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
+                self.pagingDatasource(new oj.ArrayPagingDataSource(self.dbsArray));
             }
         };
         
@@ -230,21 +243,26 @@ function(temp, tabmodel, oj, ko, $)
             //self.addTab();
             $( "#cDsbDialog" ).ojDialog( "close" );
             
-            ++_did;
-            var _timeRangeFilter = false;
-            if (self.createDashboardModel.timeRangeFilterValue() == "ON") _timeRangeFilter=true;
+            ++self.did;
+            //var _timeRangeFilter = false;
+            //if (self.createDashboardModel.timeRangeFilterValue() == "ON") _timeRangeFilter=true;
             
-            var _addeddb = new DashboardModel(_did, self.createDashboardModel.name(), self.createDashboardModel.description());
-//            _dbsArray.unshift(_addeddb);
-            _dbsArray.push(_addeddb);
-            self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
-            
+            var _addeddb = new DashboardModel(self.did, self.createDashboardModel.name(), self.createDashboardModel.description());
+            if (self.createDashboardModel.timeRangeFilterValue() == "ON")
+            {
+                _addeddb.includeTimeRangeFilter = true;
+            }
+//            self.dbsArray.unshift(_addeddb);
+            self.dbsArray.push(_addeddb);
+            self.pagingDatasource(new oj.ArrayPagingDataSource(self.dbsArray));
+            _addeddb.openDashboard();
+            /*
             var _param = "?name="+encodeURIComponent(self.createDashboardModel.name())+"&description="+encodeURIComponent(self.createDashboardModel.description());
             
             if (_timeRangeFilter === true) {
                 _param = _param + "&includeTimeRangeFilter=true"
             }
-            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html'+_param);
+            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html'+_param);*/
         };
         
         self.cancelDashboardCreate = function()
@@ -266,11 +284,42 @@ function(temp, tabmodel, oj, ko, $)
                             return false;
                         };
             
-            _filterArr = $.grep(_dbsArray, function(o) {
+            self.filterArray = $.grep(self.dbsArray, function(o) {
                 if (!value || value.length <=0) return true; //no filter
                 return _contains(o.name, value);
             });
-            return _filterArr;
+            return self.filterArray;
+        };
+        
+        self.updateDashboard = function (dsb)
+        {
+            var that = this, _did = dsb['dashboardId'];
+            
+            for (var _i = 0 ; _i < that.dbsArray.length; _i++)
+            {
+                if (_did === that.dbsArray[_i].id)
+                {
+                    that.dbsArray[_i].name = dsb.dashboardName;
+                    that.dbsArray[_i].description = dsb.dashboardDescription;
+                    that.dbsArray[_i].type = dsb.type;
+                    that.dbsArray[_i].includeTimeRangeFilter = dsb.includeTimeRangeFilter;
+                    that.dbsArray[_i].image = dsb.screenShot;
+                    that.dbsArray[_i].widgets = dsb.widgets;
+                    
+                }
+            }
+        };
+        
+        self.getDashboard = function (id)
+        {
+            if (!id) return null;
+            for (var _i = 0 ; _i < self.dbsArray.length; _i++)
+            {
+                if (id === self.dbsArray[_i].id)
+                {
+                    return self.dbsArray[_i];
+                }
+            }
         };
         
         self.searchResponse = function (event, data)
@@ -279,6 +328,7 @@ function(temp, tabmodel, oj, ko, $)
             self.pagingDatasource(new oj.ArrayPagingDataSource(data.content));
         };
     };
-            
+    
+    
     return {'ViewModel': ViewModel};
 });

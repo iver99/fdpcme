@@ -51,6 +51,7 @@ requirejs.config({
     }
 });
 
+var dashboardsViewModle = undefined;
 
 /**
  * A top-level require call executed by the Application.
@@ -191,7 +192,7 @@ require(['dbs/dbsmodel',
 
             }
             
-            var vm = new model.ViewModel();
+            dashboardsViewModle = new model.ViewModel();
 
             $(document).ready(function() {
                 
@@ -201,7 +202,7 @@ require(['dbs/dbsmodel',
                 // Setup bindings for the header and footer then display everything
                 //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));
                 
-                ko.applyBindings(vm, document.getElementById('mainContent'));
+                ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                 $('#mainContent').show(); 
                 
                 /*
@@ -242,8 +243,8 @@ require(['dbs/dbsmodel',
                 });
                 */
                
-               var data = localStorage.getItem('screenShot');
-               $('#screenshot-test').attr('src', data);
+               //var data = localStorage.getItem('screenShot');
+               //$('#screenshot-test').attr('src', data);
                
                window.addEventListener('message', childMessageListener, false);
                 
@@ -257,7 +258,11 @@ require(['dbs/dbsmodel',
  * @returns {undefined} */
 function childMessageListener(builderData) {
     console.log(builderData);
-}
+    var _o = JSON.parse(builderData);
+    //var _did = _o.dashboardId;
+    //_o.dashboardId = 0;
+    dashboardsViewModle.updateDashboard(_o);
+};
 
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
