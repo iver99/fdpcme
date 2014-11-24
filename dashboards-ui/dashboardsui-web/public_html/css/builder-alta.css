@@ -51,6 +51,12 @@ body, html {
   opacity:0.50; 
 }
 
+.dbd-gray img {
+  -webkit-filter: grayscale(1);
+  filter: gray;
+  filter: grayscale(1);
+}
+
 #builder-dbd-name {
   font-size: 24px;
   font-family: inherit;

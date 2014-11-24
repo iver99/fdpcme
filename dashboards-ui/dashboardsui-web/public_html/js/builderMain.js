@@ -271,10 +271,11 @@ require(['knockout',
             var dsbName = dashboardModel && dashboardModel.dashboardName ? dashboardModel.dashboardName : "";
             var dsbDesc = dashboardModel && dashboardModel.dashboardDescription ? dashboardModel.dashboardDescription : "";
             var dsbWidgets = dashboardModel && dashboardModel.widgets ? dashboardModel.widgets : undefined;
-            var includeTimeRangeFilter = dashboardModel && dashboardModel.showTimeSlider;
+            var dsbType = dashboardModel && dashboardModel.type ? dashboardModel.type : "normal";
+            var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.showTimeSlider);
             
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView, timeSliderModel, dsbWidgets);
-            var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, tilesViewMode);
+            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView, timeSliderModel, dsbWidgets, dsbType);
+            var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, dsbType, tilesViewMode);
                
             $(document).ready(function() {
                 ko.bindingHandlers.sortableList = {
@@ -310,6 +311,7 @@ require(['knockout',
                 });
                 
                 toolBarModel.showAddWidgetTooltip();
+                tilesViewMode.postDocumentShow();
             });
         }
 );

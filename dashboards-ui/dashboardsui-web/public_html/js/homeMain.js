@@ -269,8 +269,9 @@ function dashboarDataCallBack(dashboardid) {
     return {
         dashboardId: dashboardid,
         dashboardName: "Weblogic", 
-        dashboardDescription: "Show information for weblogic", 
+        dashboardDescription: "Dashboards for weblogic server management", 
         showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
+        type: "onePage",
         widgets: [
             {title: "CPU Load"},
             {title: "Error Reports"}

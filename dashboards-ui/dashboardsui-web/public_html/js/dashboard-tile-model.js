@@ -166,13 +166,17 @@ define(['knockout',
             }
         }
         
-        function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, widgetsHomRef) {
+        function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, widgetsHomRef, dsbType) {
             var self = this;
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
+            self.isOnePageType = (dsbType === "onePage");
             
             var widgets = [];
-            if (widgetsHomRef) {
+            if (self.isOnePageType) {
+                var defaultWidgetTitle = (widgetsHomRef && widgetsHomRef.length > 0) ? widgetsHomRef[0].title : "iFrame";
+                widgets.push(new DashboardWidget(self, "demo-iframe-widget", defaultWidgetTitle, "", 2));
+            } else if (widgetsHomRef) {
                 for (i = 0; i < widgetsHomRef.length; i++) {
                     var widget = new DashboardWidget(self, "demo-chart-widget", widgetsHomRef[i].title, "", 1);
                     widgets.push(widget);
@@ -187,6 +191,8 @@ define(['knockout',
 //                new DashboardWidget(self,"demo-chart-widget","Random Chart", "", 4)
 //            ] : []);
             self.tiles = ko.observableArray(widgets);
+            
+            self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
 
             self.isEmpty = function() {
                 return !self.tiles() || self.tiles().length === 0;
@@ -237,6 +243,14 @@ define(['knockout',
                 return $(window).height() - $('#headerWrapper').outerHeight() 
                         - $('#head-bar-container').outerHeight() - $('#global-time-slider').outerHeight() 
                         - (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
+            };
+            
+            // maximize 1st tile only
+            self.maximizeFirst = function() {
+                if (self.isOnePageType && self.tiles() && self.tiles().length > 0) {
+                    var tile = self.tiles()[0];
+                    self.maximize(tile);
+                }
             };
             
             self.maximize = function(tile) {
@@ -294,7 +308,7 @@ define(['knockout',
                     }
                 });
                 return deferred.promise();
-            }
+            };
 
             self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
@@ -312,13 +326,17 @@ define(['knockout',
                         console.log("One or more widgets failed to refresh: "+ex);
                     });   
                 }
-            }
+            };
+            
+            self.postDocumentShow = function() {
+                self.maximizeFirst();
+            };
 
             var sliderChangelistener = ko.computed(function(){
                     return {
                         timeRangeChange:timeSliderModel.timeRangeChange(),
                         advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
-                        timeRangeViewChange:timeSliderModel.timeRangeViewChange(),
+                        timeRangeViewChange:timeSliderModel.timeRangeViewChange()
                     };
                 });
                 
