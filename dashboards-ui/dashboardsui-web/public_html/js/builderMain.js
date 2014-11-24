@@ -257,14 +257,14 @@ require(['knockout',
             var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
-            var dsbId = dfu.getUrlParam("id");
+            var dsbId = dfu.getUrlParam("dashboardId");
             if (dsbId) {
                 dsbId = decodeURIComponent(dsbId);
             }
 
             var dashboardModel = function(dashboardId) {
                 if (window.opener && window.opener.dashboarDataCallBack) {
-                    return window.opener.dashboarDataCallBack(dashboardId);
+                    return window.opener.dashboarDataCallBack(parseInt(dashboardId));
                 }
                 return undefined;
             }(dsbId);

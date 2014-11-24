@@ -270,17 +270,29 @@ function childMessageListener(builderData) {
  * @param {type} dashboardid
  * @returns {dashboarInfoCallBack.Anonym$0} */
 function dashboarDataCallBack(dashboardid) {
+    var dashboard = dashboardsViewModle.getDashboard(dashboardid);
     // TODO: put code to retrieve dashboard data, and update code to add 'real' dashboard/widgets data below
-    return {
-        dashboardId: dashboardid,
-        dashboardName: "Weblogic", 
-        dashboardDescription: "Dashboards for weblogic server management", 
-        showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
-        type: "onePage",
-        widgets: [
-            {title: "CPU Load"},
-            {title: "Error Reports"}
-        ]};
+    if (dashboard) {
+        return {
+            dashboardId: dashboard.id,
+            dashboardName: dashboard.name, 
+            dashboardDescription: dashboard.description, 
+            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
+            type: (dashboard.type === 1) ? "onePage" : "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
+            widgets: dashboard.widgets
+        };
+    }
+    else // provide the default dashboard
+        return {
+            dashboardId: dashboardid,
+            dashboardName: "Weblogic", 
+            dashboardDescription: "Dashboards for weblogic server management", 
+            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
+            type: "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
+            widgets: [
+                {title: "CPU Load"},
+                {title: "Error Reports"}
+            ]};
 }
 
 function truncateString(str, length) {
