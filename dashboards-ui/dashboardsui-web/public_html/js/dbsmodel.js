@@ -74,7 +74,7 @@ function(temp, tabmodel, oj, ko, $)
         self.currentPageNum = 1;
         self.openDashboard = function(){
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
-            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html&dashboardId='+self.id);
+            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId='+self.id);
         }
     };
     
