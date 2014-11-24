@@ -237,6 +237,11 @@ function(temp, tabmodel, oj, ko, $)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
+        self.exploreDataClicked = function()
+        {
+            window.open('http://slc00aeg.us.oracle.com:7201/emlacore/faces/core-logan-observation-search');
+        };
+        
         self.confirmDashboardCreate = function()
         {
             //self.addTab();

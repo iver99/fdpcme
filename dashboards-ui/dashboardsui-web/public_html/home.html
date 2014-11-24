@@ -31,6 +31,7 @@ role value for that section to represent the appropriate content type.
         <!-- This is where you would add any app specific styling -->
         <!--link rel="stylesheet" href="css/override.css" type="text/css"/-->
         
+        <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/dashboards-home-alta.css" type="text/css"/>
 
 
@@ -51,7 +52,7 @@ role value for that section to represent the appropriate content type.
                         <!-- logo -->  
                         <div class="demo-appheader-logo" tabindex="0">
                             <div class="demo-appheader-logo-block">
-                                <span role="img" class="oj-icon demo-appheader-lite-logo-oracle" title="Oracle Logo"></span>  
+                                <span role="img" class="oj-icon demo-appheader-logo-oracle" title="Oracle Logo"></span>  
                             </div>
 
                             <div class="demo-appheader-appname-block">
@@ -74,17 +75,17 @@ role value for that section to represent the appropriate content type.
                                 <div class="demo-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
 
                                     <!-- ko foreach: toolbarButtons -->
-                                    <button class='oj-button-half-chrome demo-appheader-toolbar-button'
+                                    <!--button class='oj-button-half-chrome demo-appheader-toolbar-button'
                                             data-bind="ojComponent: {component:'ojButton', 
                                                         label: label, 
                                                         display: 'icons', 
                                                         icons: {start: iconClass + ' demo-icon-font'}} ">
-                                    </button>
+                                    </button-->
                                     <!-- /ko -->
 
                                     <!-- This is how to add a separator to the toolbar.  
                                          Be sure to include the role and aria-orientation as shown to make it accessible.  -->
-                                    <span role="separator" class="oj-toolbar-separator"></span>
+                                    <!--span role="separator" class="oj-toolbar-separator"></span-->
 
                                     <button id="menubutton"
                                             class='oj-button-half-chrome demo-appheader-toolbar-button'
@@ -103,13 +104,13 @@ role value for that section to represent the appropriate content type.
                             <div id="dtabs" data-bind="dbsTabs: {removable: false}">
                                 <!-- Home tab start -->
                                 <div id="dhometab" class="dbs-tab-container">
-                                    <span>Dashoards</span>
+                                    <span>Dashboards</span>
                                     <div>
                                     <!-- Home toolbar start -->
                                     <div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;">
                                         <div id="toolbar1"  aria-label="Control toolbar" data-bind="ojComponent: {component:'ojToolbar'}">
-                                                <button id="cbtn" style="margin-bottom: 4px;"
-                                                        data-bind="click: createDashboardClicked, ojComponent: { component:'ojButton', label: 'Create'}"></button>
+                                                <button id="cbtn" style="margin-bottom: 4px;color: royalblue;margin-left: 6px"
+                                                        data-bind="click: createDashboardClicked, ojComponent: { component:'ojButton', label: 'Create New Dashboard'}"></button>
                                         </div>
                                         <div id="toolbar2"  aria-label="Searching toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:400px; width:400px; border-left: 0;' }}">
                                                 <input id="sinput" type="text" name="searchInput" style="margin-left: 10px;"
@@ -121,6 +122,10 @@ role value for that section to represent the appropriate content type.
                                         <div id="toolbar3" class="oj-xl-float-end"  aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
                                                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
                                         </div>
+                                        <div id="toolbar4"  aria-label="Explore Data toolbar" data-bind="ojComponent: {component:'ojToolbar'}" style="float: right;border-left: 0">
+                                                <button id="cbtn" style="margin-bottom: 4px;color: gray;margin-right: 10px"
+                                                        data-bind="click: exploreDataClicked, ojComponent: { component:'ojButton', label: 'Explore Data'}"></button>
+                                        </div>                                        
                                     </div>
                                     <!-- Home toolbar end -->
                                     <div id="dtabhomesc" class="dbs-summaries-container">
@@ -157,7 +162,7 @@ role value for that section to represent the appropriate content type.
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <div class="oj-dialog-header-close-wrapper" >
-                                <a style="font-size: 0.8em; color: firebrick;" data-bind="click: cancelDashboardCreate">Close</a>
+                                <a class="df-dialog-header-close" data-bind="click: cancelDashboardCreate">CLOSE</a>
                             </div>
                             <span class="oj-dialog-title">Create Dashboard</span>
                         </div>
@@ -214,7 +219,7 @@ role value for that section to represent the appropriate content type.
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <div class="oj-dialog-header-close-wrapper" >
-                                <a style="font-size: 0.8em; color: firebrick;" data-bind="click: confirmDialogModel.close">Close</a>
+                                <a class="df-dialog-header-close" data-bind="click: confirmDialogModel.close">CLOSE</a>
                             </div>
                             <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
                         </div>

@@ -182,7 +182,7 @@ require(['knockout',
                 // Data for application name
                 var appName = {
                     "id": "qs",
-                    "name": "Enterprise Manager	Analytics Services 12c"
+                    "name": "Enterprise Manager	Analytics Services"
                 };
 
                 // 
@@ -190,7 +190,7 @@ require(['knockout',
                 // 
                 var toolbarData = {
                     // user name in toolbar
-                    "userName": "john.hancock@oracle.com",
+                    "userName": "emaas.user@oracle.com",
                     "toolbar_buttons": [
                         {
                             "label": "toolbar_button1",
