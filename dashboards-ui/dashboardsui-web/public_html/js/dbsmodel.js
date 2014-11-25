@@ -67,8 +67,9 @@ function(temp, tabmodel, oj, ko, $)
         self.id = id;
         self.name = name;
         self.description = description;
+        self.type = 0;
         self.widgets = widgets;
-        self.image = "http://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png";
+        self.image = undefined; //"http://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png";
         self.includeTimeRangeFilter = false;
         self.currentPageNum = 1;
         self.openDashboard = function(){
@@ -84,9 +85,9 @@ function(temp, tabmodel, oj, ko, $)
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
         
-        var _dbsArray = [];
-         var _filterArr = [];
-        var _did = 0;
+        self.dbsArray = [];
+        self.filterArray = [];
+        self.did = 0;
         
        var dsb0 = new DashboardModel(0, 'Application', 
             "Application Dashboard includes widgets: Application Response Time, Security Incidents, Security Histogram.", 
@@ -104,21 +105,22 @@ function(temp, tabmodel, oj, ko, $)
         "Database dashboard includes widgets: Security Histogram and Security Incidents", 
         [{"title":"Security Histogram 1"},{"title":"Security Incidents 2"}]);       
         dsb3.image = serverErrorScreenShot();
-        _dbsArray.push(dsb0);
-        _dbsArray.push(dsb1);
-        _dbsArray.push(dsb2);
-        _dbsArray.push(dsb3);
-        _did=3;
+        dsb3.type = "special";
+        self.dbsArray.push(dsb0);
+        self.dbsArray.push(dsb1);
+        self.dbsArray.push(dsb2);
+        self.dbsArray.push(dsb3);
+        self.did=3;
         
         /*
-        for (var _did = 0; _did < 100000; _did++)
+        for (var self.did = 0; self.did < 100000; self.did++)
         {
-            var _db = new DashboardModel( _did, 'Dashboard'+_did, 'Demo Dashboard'+_did, [{name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}]);
-            _dbsArray.push(_db);
+            var _db = new DashboardModel( self.did, 'Dashboard'+self.did, 'Demo Dashboard'+self.did, [{name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}]);
+            self.dbsArray.push(_db);
         }*/
 
         self.pageSize = ko.observable(20);
-        self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource(_dbsArray));
+        self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource(self.dbsArray));
         self.dashboards = ko.computed(function() {
             return (self.pagingDatasource().getWindowObservable())();
         });
@@ -214,19 +216,19 @@ function(temp, tabmodel, oj, ko, $)
             if ( !self.selectedDashboard() || self.selectedDashboard() === null ) return;
             
             var __id = (self.selectedDashboard())['id'];
-            _dbsArray = $.grep(_dbsArray, function(o) {
+            self.dbsArray = $.grep(self.dbsArray, function(o) {
                 return o.id !== __id;
             });
-            _filterArr = $.grep(_filterArr, function(o) {
+            self.filterArray = $.grep(self.filterArray, function(o) {
                 return o.id !== __id;
             });
-            if (_filterArr.length > 0)
+            if (self.filterArray.length > 0)
             {
-                self.pagingDatasource(new oj.ArrayPagingDataSource(_filterArr));
+                self.pagingDatasource(new oj.ArrayPagingDataSource(self.filterArray));
             }
             else
             {
-                self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
+                self.pagingDatasource(new oj.ArrayPagingDataSource(self.dbsArray));
             }
         };
         
@@ -241,21 +243,26 @@ function(temp, tabmodel, oj, ko, $)
             //self.addTab();
             $( "#cDsbDialog" ).ojDialog( "close" );
             
-            ++_did;
-            var _timeRangeFilter = false;
-            if (self.createDashboardModel.timeRangeFilterValue() == "ON") _timeRangeFilter=true;
+            ++self.did;
+            //var _timeRangeFilter = false;
+            //if (self.createDashboardModel.timeRangeFilterValue() == "ON") _timeRangeFilter=true;
             
-            var _addeddb = new DashboardModel(_did, self.createDashboardModel.name(), self.createDashboardModel.description());
-//            _dbsArray.unshift(_addeddb);
-            _dbsArray.push(_addeddb);
-            self.pagingDatasource(new oj.ArrayPagingDataSource(_dbsArray));
-            
+            var _addeddb = new DashboardModel(self.did, self.createDashboardModel.name(), self.createDashboardModel.description());
+            if (self.createDashboardModel.timeRangeFilterValue() == "ON")
+            {
+                _addeddb.includeTimeRangeFilter = true;
+            }
+//            self.dbsArray.unshift(_addeddb);
+            self.dbsArray.push(_addeddb);
+            self.pagingDatasource(new oj.ArrayPagingDataSource(self.dbsArray));
+            _addeddb.openDashboard();
+            /*
             var _param = "?name="+encodeURIComponent(self.createDashboardModel.name())+"&description="+encodeURIComponent(self.createDashboardModel.description());
             
             if (_timeRangeFilter === true) {
                 _param = _param + "&includeTimeRangeFilter=true"
             }
-            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html'+_param);
+            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html'+_param);*/
         };
         
         self.cancelDashboardCreate = function()
@@ -277,11 +284,48 @@ function(temp, tabmodel, oj, ko, $)
                             return false;
                         };
             
-            _filterArr = $.grep(_dbsArray, function(o) {
+            self.filterArray = $.grep(self.dbsArray, function(o) {
                 if (!value || value.length <=0) return true; //no filter
                 return _contains(o.name, value);
             });
-            return _filterArr;
+            return self.filterArray;
+        };
+        
+        self.updateDashboard = function (dsb)
+        {/*
+            _dbsArray[0].name = "test";
+            _dbsArray[0].image = "";
+            _dbsArray[0].description = "test";
+            var _e = $(".dbs-summary-container[aria-dashboard=\""+_dbsArray[0].id+"\"]");
+            _e.dbsDashboardPanel("refresh");*/
+            
+            var that = this, _did = dsb['dashboardId'];
+            
+            for (var _i = 0 ; _i < that.dbsArray.length; _i++)
+            {
+                if (_did === that.dbsArray[_i].id)
+                {
+                    that.dbsArray[_i].name = dsb.dashboardName;
+                    that.dbsArray[_i].description = dsb.dashboardDescription;
+                    that.dbsArray[_i].includeTimeRangeFilter = dsb.includeTimeRangeFilter;
+                    that.dbsArray[_i].image = dsb.screenShot;
+                    that.dbsArray[_i].widgets = dsb.widgets;
+                    var _e = $(".dbs-summary-container[aria-dashboard=\""+that.dbsArray[0].id+"\"]");
+                    if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
+                }
+            }
+        };
+        
+        self.getDashboard = function (id)
+        {
+            if (!id) return null;
+            for (var _i = 0 ; _i < self.dbsArray.length; _i++)
+            {
+                if (id === self.dbsArray[_i].id)
+                {
+                    return self.dbsArray[_i];
+                }
+            }
         };
         
         self.searchResponse = function (event, data)

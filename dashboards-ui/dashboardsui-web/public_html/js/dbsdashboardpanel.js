@@ -44,7 +44,9 @@ ko.bindingHandlers.dbsDashboardPanel = {
 };
 
 var TITLE_MAX_LENGTH = 25;
+var DESCRIPTION_MAX_LENGTH = 256;
 var WIGDET_NAME_MAX_LENGTH = 30;
+
 
 $.widget('dbs.dbsDashboardPanel',
 {
@@ -70,17 +72,15 @@ $.widget('dbs.dbsDashboardPanel',
             'pageScroll':' dbs-summary-page-scroll',
             'active': 'active',
             'pageImage': 'dbs-summary-page-image',
+            'pageDescription':'dbs-summary-page-description',
             'controlls': 'dbs-summary-controlls',
             'controll': 'dbs-summary-controll'
         },
         
-        subelements: {},
-        
         active: false,
         currentPageNum: undefined,
-        count: 0,
         
-        _activate: function(event) {
+        _activate: function(event, callback) {
             var self = this;
             if (self.active === false)
             {
@@ -92,7 +92,13 @@ $.widget('dbs.dbsDashboardPanel',
                 {
                     self.contentPage3Ele.addClass(self.classNames['pageScroll']);
                 }
-                _element.animate({margin:'-=5px', height:'+=10px', width:'+=10px'});
+                _element.animate({margin:'-=5px', height:'+=10px', width:'+=10px'},
+                {
+                    duration: 300,
+                    complete: function(){
+                     if ($.isFunction(callback)) callback(); 
+                    }
+                });
                 
                 
                 self.active = true;
@@ -100,11 +106,11 @@ $.widget('dbs.dbsDashboardPanel',
             }
         },
         
-        _deactivate: function(event) {
+        _deactivate: function(event, callback) {
             var self = this;
             if (self.active === true)
             {
-                var _name = self.name,  _element = self.element, _toolbarEle = self.toolbarElement;
+                var _element = self.element, _toolbarEle = self.toolbarElement;
                 _element.removeClass(self.classNames['active']);
                 self.titleElement.removeClass(self.classNames['active']);
                 _toolbarEle.removeClass(self.classNames['active']);
@@ -112,7 +118,13 @@ $.widget('dbs.dbsDashboardPanel',
                 {
                     self.contentPage3Ele.removeClass(self.classNames['pageScroll']);
                 }
-                _element.animate({margin:'+=5px', height:'-=10px', width:'-=10px'});
+                _element.animate({margin:'+=5px', height:'-=10px', width:'-=10px'},
+                {
+                    duration: 150,
+                    complete: function(){
+                     if ($.isFunction(callback)) callback(); 
+                    }
+                });
     
                 self.active = false;
                 self._trigger('deactivated');
@@ -120,10 +132,20 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _create: function () {
-            
+            var self = this, _element = self.element;
             this._createComponent();
             this._goToPage(this._getCurrentPageNum() || 1);
             this.element.attr("aria-dashboard", this.options['dashboard'].id);
+            setTimeout(function() {
+                if(_element.is(":hover")) {
+                    //_element.css("background", "yellow");
+                    self._activate(null);
+                }
+                else
+                {
+                    self._deactivate(null);
+                }
+            }, 0);
         },
 
         _createComponent: function () {
@@ -144,17 +166,6 @@ $.widget('dbs.dbsDashboardPanel',
             .bind('click.' + _name, function (event) {
                 self._fireNavigated(event);
             });
-            
-            setTimeout(function() {
-                if(_element.is(":hover")) {
-                    //_element.css("background", "yellow");
-                    self._activate(null);
-                }
-                else
-                {
-                    self._deactivate(null);
-                }
-            }, 0);
         },
         
         _truncateString: function(str, length) {
@@ -179,16 +190,25 @@ $.widget('dbs.dbsDashboardPanel',
             self.headerElement.append(self.titleElement); 
             
             // add toolbar
-            self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']).attr({'id' : 'toolbar_' + (self.count++)});
-            self.deleteElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', icons: {start:'icon-delete-ena-16 oj-fwk-icon'}}\"></button>")
+            self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
+            var _type = self.options.dashboard['type'];
+            if (_type === 'special')
+            {
+                self.lockElement = $("<span></span>").attr({"role": "img"}).addClass("dbs-lock-icon-24 dbs-icon oj-sm-float-end");
+                self.toolbarElement.append(self.lockElement);
+            }
+            else
+            {
+                self.deleteElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', icons: {start:'icon-delete-ena-16 oj-fwk-icon'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click.'+_name, function(event) {
                         //prevent event bubble
                         event.stopPropagation();
                         self._fireDeleteClicked(event);
                     }); //$("<span>test</span>")
-            
-            self.toolbarElement.append(self.deleteElement); 
+                self.toolbarElement.append(self.deleteElement);
+            }
+             
             self.headerElement.append(self.toolbarElement); 
             _element.append(self.headerElement);
             
@@ -223,17 +243,22 @@ $.widget('dbs.dbsDashboardPanel',
             //description page
             var _dtext = self.options.dashboard['description'];
             if (!_dtext) _dtext = '';
-            self.contentPage2CntEle = $("<div></div>").html( _dtext );
+            self.contentPage2CntEle = $("<p></p>").addClass(self.classNames['pageDescription']).html(self._truncateString(_dtext, DESCRIPTION_MAX_LENGTH));
             self.contentPage2Ele = $("<div></div>")
                     .addClass(self.classNames['page']).append(self.contentPage2CntEle);
             self.contentPagesEle.append(self.contentPage2Ele);
             //widgets page
-            
+            var _wdts = self.options.dashboard.widgets;
             self.contentPage3CntEle = $("<ul></ul>").addClass("dbs-summary-rows");
-            $.each(self.options.dashboard.widgets, function( index, widget ) {
-                self.contentPage3CntEle.append($("<li ></li>").text(self._truncateString(widget['title'], WIGDET_NAME_MAX_LENGTH)));
-                //alert( index + ": " + value );
-            });
+            if (_wdts && _wdts.length > 0)
+            {
+                $.each(_wdts, function( index, widget ) {
+                    self.contentPage3CntEle
+                            .append($("<li ></li>")
+                            .text(self._truncateString(widget['title'], WIGDET_NAME_MAX_LENGTH)));
+                //alert( index + ": " + value ); 
+                });
+            }
             self.contentPage3Ele = $("<div></div>")
                     .addClass(self.classNames['page']).append(self.contentPage3CntEle);
             
@@ -347,11 +372,12 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         refresh: function () {
-            this._deactivate();
-            this._destroyComponent();
-            this._createComponent();
-            ko.applyBindings({}, this.deleteElement[0]);      
-            this._goToPage(this.currentPageNum);
+            var self = this;
+            this._deactivate(null);
+            self._destroyComponent();
+            self._createComponent();
+            ko.applyBindings({}, self.deleteElement[0]);      
+            self._goToPage(self.currentPageNum);
         }
 });
 
