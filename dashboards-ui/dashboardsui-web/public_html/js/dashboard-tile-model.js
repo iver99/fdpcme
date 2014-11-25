@@ -178,7 +178,7 @@ define(['knockout',
                 widgets.push(new DashboardWidget(self, "demo-iframe-widget", defaultWidgetTitle, "", 2));
             } else if (widgetsHomRef) {
                 for (i = 0; i < widgetsHomRef.length; i++) {
-                    var widget = new DashboardWidget(self, "demo-chart-widget", widgetsHomRef[i].title, "", 1);
+                    var widget = new DashboardWidget(self, widgetsHomRef[i]["WIDGET_KOC_NAME"], widgetsHomRef[i].title, "", widgetsHomRef[i]["TILE_WIDTH"]);
                     widgets.push(widget);
                 }
             }
@@ -193,6 +193,7 @@ define(['knockout',
             self.tiles = ko.observableArray(widgets);
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
+            /*
             self.tiles = ko.observableArray(emptyTiles ? [
                 new DashboardTile(self,"demo-iframe-widget","iFrame", "", 2),
                 new DashboardTile(self,"demo-publisher-widget","Pulisher", "", 1),
@@ -202,6 +203,7 @@ define(['knockout',
                 new DashboardTile(self,"demo-la-widget","Demo Log Anaytics (Log Records Count)", "", 2),
                 new DashboardTile(self,"demo-ta-widget","Demo Target Anaytics (Target Availability Status)", "", 2)
             ] : []);
+            */
 
             self.isEmpty = function() {
                 return !self.tiles() || self.tiles().length === 0;

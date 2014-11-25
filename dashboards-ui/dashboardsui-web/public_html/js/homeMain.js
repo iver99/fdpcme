@@ -277,7 +277,8 @@ function dashboarDataCallBack(dashboardid) {
             dashboardId: dashboard.id,
             dashboardName: dashboard.name, 
             dashboardDescription: dashboard.description, 
-            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
+            showTimeSlider: String(dashboard.includeTimeRangeFilter),   
+//            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
             type: (dashboard.type === 1) ? "onePage" : "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
             widgets: dashboard.widgets
         };

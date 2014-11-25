@@ -62,7 +62,7 @@ function(temp, tabmodel, oj, ko, $)
         };
     }; 
     
-    function DashboardModel(id,name,description,widgets){
+    function DashboardModel(id,name,description,includeTimeRangeFilter,widgets){
         var self = this;
         self.id = id;
         self.name = name;
@@ -70,7 +70,7 @@ function(temp, tabmodel, oj, ko, $)
         self.type = 0;
         self.widgets = widgets;
         self.image = undefined; //"http://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png";
-        self.includeTimeRangeFilter = false;
+        self.includeTimeRangeFilter = includeTimeRangeFilter===null?false:includeTimeRangeFilter;
         self.currentPageNum = 1;
         self.openDashboard = function(){
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
@@ -90,21 +90,21 @@ function(temp, tabmodel, oj, ko, $)
         self.did = 0;
         
        var dsb0 = new DashboardModel(0, 'Application', 
-            "Application Dashboard includes widgets: Application Response Time, Security Incidents, Security Histogram.", 
-            [{"title":"Application Response Time 1"},{"title":"Security Incidents 1"},{"title":"Security Histogram 4"}]);
+            "Application Dashboard includes widgets: Application Response Time, Security Incidents, Security Histogram.",false, 
+            [{"title":"Application Response Time 1","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":1},{"title":"Security Incidents 1","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Security Incidents 2","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":1},{"title":"Security Histogram 4","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":4}]);
         
-        var dsb1 = new DashboardModel(1, 'Database', 
-        "Database dashboard includes widgets: Database Diagnostics and Security Incidents",
-        [{"title":"Database Diagnostics 1"},{"title":"Security Incidents 1"}]);
+        var dsb1 = new DashboardModel(1, 'Refresh Demo', 
+        "A dashboard to demonstrate widget refresh by time range change",true,
+        [{"title":"Database Diagnostics","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Security Incidents","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Top SQL","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":4}]);
        
-        var dsb2 = new DashboardModel(2, 'Middleware', 
-        'Middleware dashboard includes widgets: Middleware Health, Application Response Time, Database Diagnostics and Security Incidents', 
-        [{"title":"Middleware Health 1"},{"title":"Application Response Time 1"},{"title":"Database Diagnostics 1"},{"title":"Security Incidents 2"}]);
+        var dsb2 = new DashboardModel(2, 'Event Demo', 
+        'A dashboard demonstrating wiget refresh',false, 
+        [{"title":"Publisher","WIDGET_KOC_NAME":"demo-publisher-widget","TILE_WIDTH":2},{"title":"Subscriber 1","WIDGET_KOC_NAME":"demo-subscriber-widget","TILE_WIDTH":1},{"title":"Subscriber 2","WIDGET_KOC_NAME":"demo-subscriber-widget","TILE_WIDTH":1}]);
         
-        var dsb3 = new DashboardModel(3, 'Server Error', 
-        "Database dashboard includes widgets: Security Histogram and Security Incidents", 
-        [{"title":"Security Histogram 1"},{"title":"Security Incidents 2"}]);       
-       
+        var dsb3 = new DashboardModel(3, 'LA & TA Demo', 
+        "Dashboard includes both LA widgets and TA widgets", true,
+        [{"title":"LA Widget","WIDGET_KOC_NAME":"demo-la-widget","TILE_WIDTH":2},{"title":"TA Widget","WIDGET_KOC_NAME":"demo-ta-widget","TILE_WIDTH":2}]);       
+
         self.dbsArray.push(dsb0);
         self.dbsArray.push(dsb1);
         self.dbsArray.push(dsb2);
