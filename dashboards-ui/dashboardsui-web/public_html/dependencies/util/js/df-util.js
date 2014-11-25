@@ -18,7 +18,7 @@ define(['knockout',
             */
             self.getRandomInt = function(min,max){
                 return Math.floor(Math.random() * (max - min + 1)) + min;
-            }
+            };
 
             /**
              * Get URL parameter value according to URL parameter name
@@ -28,7 +28,81 @@ define(['knockout',
             self.getUrlParam = function(name){
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
                 return results === null ? "" : results[1];                
-            }
+            };
+            
+            /**
+             * Discover available Saved Search service URL
+             * @returns {String} url
+             */
+            self.discoverSavedSearchServiceUrl = function() {
+                var availableUrl = null;
+                var urlFound = false;
+
+                var fetchServiceCallback = function(data) {
+                    var items = data.items;
+                    if (items && items.length > 0) {
+                        for (j = 0; j < items.length && !urlFound; j++) {
+                            var virtualEndpoints = items[j].virtualEndpoints;
+                            for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
+                                $.ajax({
+                                    url: virtualEndpoints[k],
+                                    success: function(data, textStatus) {
+                                        availableUrl = virtualEndpoints[k];
+                                        urlFound = true;
+                                    },
+                                    error: function(xhr, textStatus, errorThrown){
+
+                                    }
+                                    ,
+                                    async: false
+                                });
+                            }
+
+                            if (!urlFound) {
+                                var canonicalEndpoints = items[j].canonicalEndpoints;
+                                for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
+                                    $.ajax({
+                                        url: canonicalEndpoints[m],
+                                        success: function(data, textStatus) {
+                                            availableUrl = canonicalEndpoints[m];
+                                            urlFound = true;
+                                        },
+                                        error: function(xhr, textStatus, errorThrown){
+
+                                        }
+                                        ,
+                                        async: false
+                                    });
+                                }
+                            }
+                        }
+                    }
+                };
+
+                $.ajaxSettings.async = false;
+                $.getJSON('data/servicemanager.json', function(data) {
+                    if (data.serviceUrls && data.serviceUrls.length > 0) {
+                        for (i = 0; i < data.serviceUrls.length && !urlFound; i++) {
+                            var serviceUrl = data.serviceUrls[i]+'/'+'instances?servicename='+data.serviceName;
+                            if (data.version)
+                                serviceUrl = serviceUrl+'&version='+data.version;
+                            $.ajax({
+                                url: serviceUrl,
+                                success: function(data, textStatus) {
+                                    fetchServiceCallback(data);
+                                },
+                                error: function(xhr, textStatus, errorThrown){
+
+                                },
+                                async: false
+                            });
+                        }
+                    }
+                });
+
+                $.ajaxSettings.async = true;
+                return availableUrl;
+            };
         }
         
         return new DashboardFrameworkUtility();
