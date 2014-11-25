@@ -143,6 +143,11 @@ require(['knockout',
                 viewModel:{require:'../dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
                 template:{require:'text!../dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
             });  
+
+            ko.components.register("DF_V1_IFRAME",{
+                viewModel:{require:'../dependencies/widgets/iFrame/js/widget-iframe'},
+                template:{require:'text!../dependencies/widgets/iFrame/widget-iframe.html'}
+            }); 
             
             function FooterViewModel() {
                 var self = this;

@@ -123,7 +123,7 @@ define(['knockout',
         /**
          *  used for KOC integration
          */
-        function DashboardWidget(dashboard,type, title, description, width) {
+        function DashboardWidget(dashboard,type, title, description, width, widget) {
             var self = this;
             self.dashboard = dashboard;
             self.type = type;
@@ -151,6 +151,8 @@ define(['knockout',
                 css += self.shouldHide() ? ' dbd-tile-no-display' : ' ';
                 return css;
             });
+            
+            self.widget = widget;
     
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
@@ -174,11 +176,11 @@ define(['knockout',
             
             var widgets = [];
             if (self.isOnePageType) {
-                var defaultWidgetTitle = (widgetsHomRef && widgetsHomRef.length > 0) ? widgetsHomRef[0].title : "iFrame";
-                widgets.push(new DashboardWidget(self, "demo-iframe-widget", defaultWidgetTitle, "", 2));
+                var defaultWidgetTitle = (widgetsHomRef && widgetsHomRef.length > 0) ? widgetsHomRef[0].title : "Home";
+                widgets.push(new DashboardWidget(self, widgetsHomRef[0]["WIDGET_KOC_NAME"], defaultWidgetTitle, "", 2,widgetsHomRef[0]));
             } else if (widgetsHomRef) {
                 for (i = 0; i < widgetsHomRef.length; i++) {
-                    var widget = new DashboardWidget(self, widgetsHomRef[i]["WIDGET_KOC_NAME"], widgetsHomRef[i].title, "", widgetsHomRef[i]["TILE_WIDTH"]);
+                    var widget = new DashboardWidget(self, widgetsHomRef[i]["WIDGET_KOC_NAME"], widgetsHomRef[i].title, "", widgetsHomRef[i]["TILE_WIDTH"],widgetsHomRef[i]);
                     widgets.push(widget);
                 }
             }

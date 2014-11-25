@@ -280,7 +280,7 @@ function dashboarDataCallBack(dashboardid) {
             dashboardDescription: dashboard.description, 
             showTimeSlider: String(dashboard.includeTimeRangeFilter),   
 //            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
-            type: (dashboard.type === 1) ? "onePage" : "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
+            type: dashboard.type,//(dashboard.type === 1) ? "onePage" : "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
             widgets: dashboard.widgets
         };
     }
