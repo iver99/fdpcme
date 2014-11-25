@@ -168,7 +168,7 @@ define(['knockout',
             };
         }
         
-        function ToolBarModel(dbdId, name, desc,includeTimeRangeFilter, tilesViewModel) {
+        function ToolBarModel(dbdId, name, desc,includeTimeRangeFilter, dsbType, tilesViewModel) {
             var self = this;
             self.tilesViewModel = tilesViewModel;
             
@@ -195,6 +195,12 @@ define(['knockout',
                 self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
             }
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
+            self.editDisabled = ko.observable(dsbType === "onePage");
+            
+            self.rightButtonsAreaClasses = ko.computed(function() {
+                var css = "dbd-pull-right " + (self.editDisabled() ? "dbd-gray" : "");
+                return css;
+            });
             
             this.classNames = ko.observableArray(["oj-toolbars", 
                                           "oj-toolbar-top-border", 
@@ -498,6 +504,9 @@ define(['knockout',
                 }
             };
             
+            self.gotoCreateNewWidget = function(){
+                return window.open("http://slc00aeg.us.oracle.com:7201/emlacore/faces/core-logan-observation-search");
+            }
             self.naviPrevious = function() {
                 if (curPage === 1) {
                     self.naviPreBtnVisible(false);

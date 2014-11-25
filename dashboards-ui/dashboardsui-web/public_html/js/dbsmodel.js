@@ -74,7 +74,7 @@ function(temp, tabmodel, oj, ko, $)
         self.currentPageNum = 1;
         self.openDashboard = function(){
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
-            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html');
+            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId='+self.id);
         }
     };
     
@@ -89,7 +89,7 @@ function(temp, tabmodel, oj, ko, $)
         self.filterArray = [];
         self.did = 0;
         
-       var dsb0 = new DashboardModel(0, 'Application', 
+       var dsb0 = new DashboardModel(4, 'Application', 
             "Application Dashboard includes widgets: Application Response Time, Security Incidents, Security Histogram.", 
             [{"title":"Application Response Time 1"},{"title":"Security Incidents 1"},{"title":"Security Histogram 4"}]);
         dsb0.image = applicationScreenShot();
@@ -105,12 +105,13 @@ function(temp, tabmodel, oj, ko, $)
         "Database dashboard includes widgets: Security Histogram and Security Incidents", 
         [{"title":"Security Histogram 1"},{"title":"Security Incidents 2"}]);       
         dsb3.image = serverErrorScreenShot();
-        dsb3.type = "special";
+        dsb3.type = "onePage";
+
         self.dbsArray.push(dsb0);
         self.dbsArray.push(dsb1);
         self.dbsArray.push(dsb2);
         self.dbsArray.push(dsb3);
-        self.did=3;
+        self.did=4;
         
         /*
         for (var self.did = 0; self.did < 100000; self.did++)
@@ -238,6 +239,11 @@ function(temp, tabmodel, oj, ko, $)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
+        self.exploreDataClicked = function()
+        {
+            window.open('http://slc00aeg.us.oracle.com:7201/emlacore/faces/core-logan-observation-search');
+        };
+        
         self.confirmDashboardCreate = function()
         {
             //self.addTab();
@@ -286,7 +292,26 @@ function(temp, tabmodel, oj, ko, $)
             
             self.filterArray = $.grep(self.dbsArray, function(o) {
                 if (!value || value.length <=0) return true; //no filter
-                return _contains(o.name, value);
+                if (_contains(o.name, value))
+                {
+                    return true;
+                }
+                else
+                {
+                    var _wdgts = o.widgets;
+                    if (_wdgts && _wdgts.length > 0)
+                    {
+                        for (var _i = 0 ; _i < _wdgts.length ; _i++)
+                        {
+                            if (_contains(_wdgts[_i].title, value))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                
+                return false;
             });
             return self.filterArray;
         };
@@ -298,8 +323,7 @@ function(temp, tabmodel, oj, ko, $)
             _dbsArray[0].description = "test";
             var _e = $(".dbs-summary-container[aria-dashboard=\""+_dbsArray[0].id+"\"]");
             _e.dbsDashboardPanel("refresh");*/
-            
-            var that = this, _did = dsb['dashboardId'];
+            var that = this, _did = parseInt(dsb['dashboardId']);
             
             for (var _i = 0 ; _i < that.dbsArray.length; _i++)
             {
@@ -307,10 +331,11 @@ function(temp, tabmodel, oj, ko, $)
                 {
                     that.dbsArray[_i].name = dsb.dashboardName;
                     that.dbsArray[_i].description = dsb.dashboardDescription;
+                    that.dbsArray[_i].type = dsb.type;
                     that.dbsArray[_i].includeTimeRangeFilter = dsb.includeTimeRangeFilter;
                     that.dbsArray[_i].image = dsb.screenShot;
                     that.dbsArray[_i].widgets = dsb.widgets;
-                    var _e = $(".dbs-summary-container[aria-dashboard=\""+that.dbsArray[0].id+"\"]");
+                    var _e = $(".dbs-summary-container[aria-dashboard=\""+_did+"\"]");
                     if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
                 }
             }
@@ -318,7 +343,7 @@ function(temp, tabmodel, oj, ko, $)
         
         self.getDashboard = function (id)
         {
-            if (!id) return null;
+            if (id !== 0 && !id) return null;
             for (var _i = 0 ; _i < self.dbsArray.length; _i++)
             {
                 if (id === self.dbsArray[_i].id)

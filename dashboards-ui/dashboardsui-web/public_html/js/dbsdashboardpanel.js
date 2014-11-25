@@ -114,10 +114,8 @@ $.widget('dbs.dbsDashboardPanel',
                 _element.removeClass(self.classNames['active']);
                 self.titleElement.removeClass(self.classNames['active']);
                 _toolbarEle.removeClass(self.classNames['active']);
-                if (self.options.dashboard.widgets && self.options.dashboard.widgets.length > 4)
-                {
-                    self.contentPage3Ele.removeClass(self.classNames['pageScroll']);
-                }
+                self.contentPage3Ele.removeClass(self.classNames['pageScroll']);
+                
                 _element.animate({margin:'+=5px', height:'-=10px', width:'-=10px'},
                 {
                     duration: 150,
@@ -192,7 +190,7 @@ $.widget('dbs.dbsDashboardPanel',
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
             var _type = self.options.dashboard['type'];
-            if (_type === 'special')
+            if (_type === 'onePage')
             {
                 self.lockElement = $("<span></span>").attr({"role": "img"}).addClass("dbs-lock-icon-24 dbs-icon oj-sm-float-end");
                 self.toolbarElement.append(self.lockElement);
@@ -248,6 +246,7 @@ $.widget('dbs.dbsDashboardPanel',
                     .addClass(self.classNames['page']).append(self.contentPage2CntEle);
             self.contentPagesEle.append(self.contentPage2Ele);
             //widgets page
+            self.contentPage3TlEle = $("<div>Widgets</div>").css({"text-align": "center", "max-height": "16px", "font-weight":"bold"});//.append("<h6>Widgets</h6>");
             var _wdts = self.options.dashboard.widgets;
             self.contentPage3CntEle = $("<ul></ul>").addClass("dbs-summary-rows");
             if (_wdts && _wdts.length > 0)
@@ -260,7 +259,9 @@ $.widget('dbs.dbsDashboardPanel',
                 });
             }
             self.contentPage3Ele = $("<div></div>")
-                    .addClass(self.classNames['page']).append(self.contentPage3CntEle);
+                    .addClass(self.classNames['page'])
+                    .append(self.contentPage3TlEle)
+                    .append(self.contentPage3CntEle);
             
             self.contentPagesEle.append(self.contentPage3Ele);
         },

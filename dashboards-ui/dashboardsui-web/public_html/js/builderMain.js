@@ -182,7 +182,7 @@ require(['knockout',
                 // Data for application name
                 var appName = {
                     "id": "qs",
-                    "name": "Enterprise Manager	Analytics Services 12c"
+                    "name": "Enterprise Manager	Analytics Services"
                 };
 
                 // 
@@ -190,7 +190,7 @@ require(['knockout',
                 // 
                 var toolbarData = {
                     // user name in toolbar
-                    "userName": "john.hancock@oracle.com",
+                    "userName": "emaas.user@oracle.com",
                     "toolbar_buttons": [
                         {
                             "label": "toolbar_button1",
@@ -255,24 +255,27 @@ require(['knockout',
                 
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
-            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
-            includeTimeRangeFilter ="true";//TODO remove
-            var dsbId = dfu.getUrlParam("id");
-            var dsbName = dfu.getUrlParam("name");
-            var dsbDesc = dfu.getUrlParam("description");
+//            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
+//            includeTimeRangeFilter ="true";//TODO remove
+            var dsbId = dfu.getUrlParam("dashboardId");
             if (dsbId) {
                 dsbId = decodeURIComponent(dsbId);
             }
-            if (dsbName){
-                dsbName = decodeURIComponent(dsbName);
-            }
-            if (dsbDesc){
-                dsbDesc = decodeURIComponent(dsbDesc);
-            }
-            var emptyTiles = (dsbName === "");
-//            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,sliderChangelistener, emptyTiles);
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView,timeSliderModel, emptyTiles);
-            var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, tilesViewMode);
+
+            var dashboardModel = function(dashboardId) {
+                if (window.opener && window.opener.dashboarDataCallBack) {
+                    return window.opener.dashboarDataCallBack(parseInt(dashboardId));
+                }
+                return undefined;
+            }(dsbId);
+            var dsbName = dashboardModel && dashboardModel.dashboardName ? dashboardModel.dashboardName : "";
+            var dsbDesc = dashboardModel && dashboardModel.dashboardDescription ? dashboardModel.dashboardDescription : "";
+            var dsbWidgets = dashboardModel && dashboardModel.widgets ? dashboardModel.widgets : undefined;
+            var dsbType = dashboardModel && dashboardModel.type ? dashboardModel.type : "normal";
+            var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.showTimeSlider);
+            
+            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView, timeSliderModel, dsbWidgets, dsbType);
+            var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, dsbType, tilesViewMode);
                
             $(document).ready(function() {
                 ko.bindingHandlers.sortableList = {
@@ -308,6 +311,7 @@ require(['knockout',
                 });
                 
                 toolBarModel.showAddWidgetTooltip();
+                tilesViewMode.postDocumentShow();
             });
         }
 );

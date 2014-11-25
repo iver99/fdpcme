@@ -145,7 +145,7 @@ require(['dbs/dbsmodel',
                 // Data for application name
                 var appName = {
                     "id": "qs",
-                    "name": "Enterprise Manager	Analytics Services 12c"
+                    "name": "Enterprise Manager	Analytics Services"
                 };
 
                 // 
@@ -153,7 +153,7 @@ require(['dbs/dbsmodel',
                 // 
                 var toolbarData = {
                     // user name in toolbar
-                    "userName": "john.hancock@oracle.com",
+                    "userName": "emaas.user@oracle.com",
                     "toolbar_buttons": [
                         {
                             "label": "toolbar_button1",
@@ -259,9 +259,41 @@ require(['dbs/dbsmodel',
 function childMessageListener(builderData) {
     console.log(builderData);
     var _o = JSON.parse(builderData);
-    var _did = _o.dashboardId;
-    _o.dashboardId = 0;
+    //var _did = _o.dashboardId;
+    //_o.dashboardId = 0;
     dashboardsViewModle.updateDashboard(_o);
+};
+
+
+/**
+*  Callback method to be invokced by child builder page to get dashboard data
+
+ * @param {type} dashboardid
+ * @returns {dashboarInfoCallBack.Anonym$0} */
+function dashboarDataCallBack(dashboardid) {
+    var dashboard = dashboardsViewModle.getDashboard(dashboardid);
+    // TODO: put code to retrieve dashboard data, and update code to add 'real' dashboard/widgets data below
+    if (dashboard) {
+        return {
+            dashboardId: dashboard.id,
+            dashboardName: dashboard.name, 
+            dashboardDescription: dashboard.description, 
+            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
+            type: (dashboard.type === 1) ? "onePage" : "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
+            widgets: dashboard.widgets
+        };
+    }
+    else // provide the default dashboard
+        return {
+            dashboardId: dashboardid,
+            dashboardName: "Weblogic", 
+            dashboardDescription: "Dashboards for weblogic server management", 
+            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
+            type: "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
+            widgets: [
+                {title: "CPU Load"},
+                {title: "Error Reports"}
+            ]};
 };
 
 function truncateString(str, length) {
