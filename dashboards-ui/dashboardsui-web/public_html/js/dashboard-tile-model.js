@@ -176,7 +176,9 @@ define(['knockout',
                 new DashboardTile(self,"demo-publisher-widget","Pulisher", "", 1),
                 new DashboardTile(self,"demo-subscriber-widget","Subscriber", "", 1),
 //                new DashboardTile(self,"demo-chart-widget","Random Chart 1", "", 1),
-                new DashboardTile(self,"demo-chart-widget","Random Chart", "", 4)
+                new DashboardTile(self,"demo-chart-widget","Random Chart", "", 4),
+                new DashboardTile(self,"demo-la-widget","Demo Log Anaytics (Log Records Count)", "", 2),
+                new DashboardTile(self,"demo-ta-widget","Demo Target Anaytics (Target Availability Status)", "", 2)
             ] : []);
 
             self.isEmpty = function() {
