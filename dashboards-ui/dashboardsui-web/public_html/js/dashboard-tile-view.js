@@ -7,6 +7,7 @@
 define(['knockout',
         'jquery',
         'dashboards/dashboard-tile-model',
+        'dfutil',
         'ojs/ojcore',
         'ojs/ojtree',
         'ojs/ojvalidation',
@@ -16,7 +17,7 @@ define(['knockout',
         'ojs/ojpopup'
     ],
     
-    function(ko, $, dbsModel)
+    function(ko, $, dbsModel, dfu)
     {
         function getPlaceHolder(columns) {
             return $('<div class="dbd-tile oj-col oj-sm-' + columns + ' oj-md-' + columns + ' oj-lg-' + columns + ' dbd-tile-placeholder' + '"><div class="dbd-tile-header dbd-tile-header-placeholder">placeholder</div><div class="dbd-tile-placeholder-inner"></div></div>');
@@ -411,54 +412,97 @@ define(['knockout',
             var taWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
-            var dd=1,mh=1,si=1,art=1,sh=1,index=1;
+            var dd=1,mh=1,si=1,art=1,sh=1,index=0;
             var pageSize = 6;
-            for (var i = 0; i < 61; i++)
-            {
-                var widget = {id: i};
-                if (index === 1) {
-                    widget.type="ta";
-                    widget.name='Database Diagnostics '+dd;
-                    taWidgetArray.push(widget);
-                    dd++;
-                    index++;
-                }
-                else if (index === 2) {
-                    widget.type="ta";
-                    widget.name='Middleware Health '+mh;
-                    taWidgetArray.push(widget);
-                    mh++;
-                    index++;
-                }
-                else if (index === 3) {
-                    widget.type="la";
-                    widget.name='Security Incidents '+si;
-                    laWidgetArray.push(widget);
-                    si++;
-                    index++;
-                }
-                else if (index === 4) {
-                    widget.type="la";
-                    widget.name='Application Response Time '+art;
-//                    widget.name="Log Analytics"+art;
-                    laWidgetArray.push(widget);
-                    art++;
-                    index++;
-                }
-                else if (index === 5) {
-                    widget.type="la";
-                    widget.name='Security Histogram '+sh;
-                    laWidgetArray.push(widget);
-                    sh++;
-                    index = 1;
-                }
+            var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+            if (ssfUrl && ssfUrl !== '') {
+                var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
+                var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
+                $.ajax({
+                    url: laSearchesUrl,
+                    success: function(data, textStatus) {
+                        laWidgetArray = loadWidgets(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        console.log('Error when querying log analytics searches!');
+                    },
+                    async: false
+                });
                 
-                widgetArray.push(widget);
-                
-                if (i < pageSize) {
-                    curPageWidgets.push(widget);
-                }
+                $.ajax({
+                    url: taSearchesUrl,
+                    success: function(data, textStatus) {
+                        taWidgetArray = loadWidgets(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        console.log('Error when querying target analytics searches!');
+                    },
+                    async: false
+                });
             }
+            
+            function loadWidgets(data) {
+                var targetWidgetArray = [];
+                if (data && data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var widget = {id: data[i].id, name: data[i].name, type: data[i].category.id};
+                        targetWidgetArray.push(widget);
+                        widgetArray.push(widget);
+                        if (index < pageSize) {
+                            curPageWidgets.push(widget);
+                            index++;
+                        }
+                    }
+                }
+                return targetWidgetArray;
+            };
+            
+//            for (var i = 0; i < 61; i++)
+//            {
+//                var widget = {id: i};
+//                if (index === 1) {
+//                    widget.type="ta";
+//                    widget.name='Database Diagnostics '+dd;
+//                    taWidgetArray.push(widget);
+//                    dd++;
+//                    index++;
+//                }
+//                else if (index === 2) {
+//                    widget.type="ta";
+//                    widget.name='Middleware Health '+mh;
+//                    taWidgetArray.push(widget);
+//                    mh++;
+//                    index++;
+//                }
+//                else if (index === 3) {
+//                    widget.type="la";
+//                    widget.name='Security Incidents '+si;
+//                    laWidgetArray.push(widget);
+//                    si++;
+//                    index++;
+//                }
+//                else if (index === 4) {
+//                    widget.type="la";
+//                    widget.name='Application Response Time '+art;
+////                    widget.name="Log Analytics"+art;
+//                    laWidgetArray.push(widget);
+//                    art++;
+//                    index++;
+//                }
+//                else if (index === 5) {
+//                    widget.type="la";
+//                    widget.name='Security Histogram '+sh;
+//                    laWidgetArray.push(widget);
+//                    sh++;
+//                    index = 1;
+//                }
+//                
+//                widgetArray.push(widget);
+//                
+//                if (i < pageSize) {
+//                    curPageWidgets.push(widget);
+//                }
+//            }
             
             var curPage = 1;
             var totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
@@ -499,7 +543,7 @@ define(['knockout',
                     
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
                     self.curPageWidgetList(curPageWidgets);
-                    refresNaviButton();
+                    refreshNaviButton();
                     naviFromSearchResults = false;
                 }
             };
@@ -522,7 +566,7 @@ define(['knockout',
                 }
                 
                 self.curPageWidgetList(curPageWidgets);
-                refresNaviButton();
+                refreshNaviButton();
             };
             
             self.naviNext = function() {
@@ -539,12 +583,12 @@ define(['knockout',
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
                 }
                 self.curPageWidgetList(curPageWidgets);
-                refresNaviButton();
+                refreshNaviButton();
             };
             
             self.widgetDbClicked = function(event,data) {
                 //alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
-                self.tilesViewModel.appendNewTile(event.name, "", 1, "line");
+                self.tilesViewModel.appendNewTile(event.name, "", 2, event.type);
             };
             
             self.enterSearch = function(d,e){
@@ -590,7 +634,7 @@ define(['knockout',
                 totalPage = (searchResultArray.length%pageSize === 0 ? searchResultArray.length/pageSize : Math.floor(searchResultArray.length/pageSize) + 1);
                 fetchWidgetsForCurrentPage(searchResultArray);
                 self.curPageWidgetList(curPageWidgets);
-                refresNaviButton();
+                refreshNaviButton();
                 naviFromSearchResults = true;
             };
             
@@ -623,7 +667,7 @@ define(['knockout',
                 return allWidgets;
             };
             
-            function refresNaviButton() {
+            function refreshNaviButton() {
                 self.naviPreBtnVisible(curPage === 1 ? false : true);
                 self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
             };

@@ -185,12 +185,14 @@ define(['knockout',
                 }
             }
 
-//            self.tiles = ko.observableArray(emptyTiles ? [
+//            self.tiles = ko.observableArray(true ? [
 //                new DashboardWidget(self,"demo-iframe-widget","iFrame", "", 2),
 //                new DashboardWidget(self,"demo-publisher-widget","Pulisher", "", 1),
 //                new DashboardWidget(self,"demo-subscriber-widget","Subscriber", "", 1),
 ////                new DashboardWidget(self,"demo-chart-widget","Random Chart 1", "", 1),
 //                new DashboardWidget(self,"demo-chart-widget","Random Chart", "", 4)
+//                ,new DashboardWidget(self,"demo-la-widget","Demo Log Analytics", "", 2)
+//                ,new DashboardWidget(self,"demo-ta-widget","Demo Target Analytics", "", 2)
 //            ] : []);
             self.tiles = ko.observableArray(widgets);
             
@@ -215,9 +217,21 @@ define(['knockout',
                 self.tileRemoveCallbacks.push(callbackMethod);
             };
             
-            self.appendNewTile = function(name, description, width, charType) {
+            self.appendNewTile = function(name, description, width, type) {
 //                var newTile =new DashboardWidget(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
-                var newTile =new DashboardWidget(self,"demo-chart-widget",name, description, width);
+                var newTile = null;
+                //demo log analytics widget
+                if (type === 1) {
+                    newTile =new DashboardWidget(self,"demo-la-widget",name, description, width);
+                }
+                //demo target analytics widget
+                else if (type === 2) {
+                    newTile =new DashboardWidget(self,"demo-ta-widget",name, description, width);
+                }
+                //demo simple chart widget
+                else {
+                    newTile =new DashboardWidget(self,"demo-chart-widget",name, description, width);
+                }
                 self.tiles.push(newTile);
             };
 

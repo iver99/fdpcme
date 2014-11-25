@@ -335,11 +335,11 @@ role value for that section to represent the appropriate content type.
                         <!-- ko foreach: curPageWidgetList -->
                         <div class=" widget-container" data-bind="attr:{title: name}, event: { dblclick: $parent.widgetDbClicked}">
                             <div>
-                                <!-- ko if: type==='la' -->
+                                <!-- ko if: type===1 -->
                                 <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="laimg" alt="Log Analytics" title="Log Analytics" 
                                        class="widget-image"/>
                                 <!-- /ko -->
-                                <!-- ko if: type==='ta' -->
+                                <!-- ko if: type===2 -->
                                 <input type="image" src="css/images/targets_16_ena.png" width="32" id="taimg" alt="Target Analytics" title="Target Analytics" 
                                        class="widget-image"/>
                                 <!-- /ko -->
