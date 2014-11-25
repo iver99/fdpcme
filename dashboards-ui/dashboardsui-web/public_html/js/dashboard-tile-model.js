@@ -193,6 +193,15 @@ define(['knockout',
             self.tiles = ko.observableArray(widgets);
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
+            self.tiles = ko.observableArray(emptyTiles ? [
+                new DashboardTile(self,"demo-iframe-widget","iFrame", "", 2),
+                new DashboardTile(self,"demo-publisher-widget","Pulisher", "", 1),
+                new DashboardTile(self,"demo-subscriber-widget","Subscriber", "", 1),
+//                new DashboardTile(self,"demo-chart-widget","Random Chart 1", "", 1),
+                new DashboardTile(self,"demo-chart-widget","Random Chart", "", 4),
+                new DashboardTile(self,"demo-la-widget","Demo Log Anaytics (Log Records Count)", "", 2),
+                new DashboardTile(self,"demo-ta-widget","Demo Target Anaytics (Target Availability Status)", "", 2)
+            ] : []);
 
             self.isEmpty = function() {
                 return !self.tiles() || self.tiles().length === 0;
