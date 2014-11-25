@@ -264,6 +264,7 @@ function childMessageListener(builderData) {
     dashboardsViewModle.updateDashboard(_o);
 };
 
+
 /**
 *  Callback method to be invokced by child builder page to get dashboard data
 
@@ -294,7 +295,7 @@ function dashboarDataCallBack(dashboardid) {
                 {title: "CPU Load"},
                 {title: "Error Reports"}
             ]};
-}
+};
 
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)

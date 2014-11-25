@@ -37,52 +37,131 @@
     height: 200px;
     display: inline-block;
     margin: 5px;
-    padding-top: 1px;
+    padding-top: 0px;
     padding-bottom: 1px;
     padding-left: 2px;
     padding-right: 2px;
     vertical-align: top;
-    //background-color: #eff2f5;
     background: #ffffff;
+    border: 1px solid #d6dfe6;
     border-color: #d6dfe6;
+    border-radius: 1px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
-/*
-.dbs-summary-container:hover {
-    border-color: #85bbe7;
-}
-*/
-.dbs-summary-container-hover {
+
+.dbs-summary-container.active {
     border: solid thick;
-    border-color: #85bbe7; //#267db3;
+    border-color: #85bbe7; 
     cursor: pointer;
 }
 
 .dbs-summary-header-container {
-    min-height:40px;
-    height: 40px;
-    border-radius: 3px;
-    border-bottom: 2px solid #d6dfe6;
-    
+    height: 30px;
+    position: relative;
+    vertical-align: top;
+    padding: 0px;
+    margin: 0px;
 }
 
-ul.dbs-summary-row {
+.dbs-summary-header-title {
+    text-align: center;
+}
+
+.dbs-summary-header-title.active {
+    text-align: left;
+}
+
+.dbs-summary-header-toolbar {
+    position: absolute; 
+    top: 0; 
+    width: 100% ; 
+    vertical-align: top;
+    display: none;
+}
+
+.dbs-summary-header-toolbar.active {
+    display: inline-block;
+}
+
+.dbs-summary-pages {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 120px;
+}
+
+.dbs-summary-page {
+    display: none;//inline-block;  
+    width: 100%;
+    max-height: 120px;
+    float: left;
+}
+
+.dbs-summary-page.active {
+    display: inline-block;
+}
+
+.dbs-summary-page-scroll {
+    overflow-y: scroll;
+}
+
+.dbs-summary-page-image {
+   width: 100%;
+   height: auto;
+   text-align:center;
+}
+
+.dbs-summary-page-description {
+   padding-left: 5px;
+   padding-right: 5px;
+}
+
+.dbs-summary-controlls {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.dbs-summary-controlls .dbs-summary-controll {
+    display: inline-block;
+}
+
+.dbs-summary-controlls .dbs-summary-controll span {
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin: 5px 7px;
+    opacity: 0.5;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    background: #869791;
+}
+
+.dbs-summary-controlls .dbs-summary-controll.active span, .dbs-summary-controlls .dbs-summary-controll:hover span{
+    opacity: 1;
+}
+
+ul.dbs-summary-rows {
     list-style-type: none;
     padding: 0px;
     margin: 0px;
 }
 
-ul li.dbs-summary-row {
+ul.dbs-summary-rows li {
     list-style-type: none;
     padding: 5px;
     //margin: 5px;
     border-radius: 1px;
-    border-bottom: #d6dfe6; 
+    border-bottom: 1px #869791; // #d6dfe6; 
     border-bottom-style: dotted;
 }
 
+.dbs-lock-icon-24:before{content:url("images/lock.png");}
+
 .dbs-isolate-icon{content:url("images/s_max_ovr.png")}
 
-.console-table-incon {
+.dbs-icon {
   display: inline-block;
   margin: 0;
   width: 16px;
