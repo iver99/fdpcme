@@ -549,7 +549,7 @@ define(['knockout',
             };
             
             self.gotoCreateNewWidget = function(){
-                return window.open("http://slc00aeg.us.oracle.com:7201/emlacore/faces/core-logan-observation-search");
+                return window.open("http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search");
             }
             self.naviPrevious = function() {
                 if (curPage === 1) {
