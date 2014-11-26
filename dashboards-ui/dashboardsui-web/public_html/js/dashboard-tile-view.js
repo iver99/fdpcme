@@ -588,7 +588,7 @@ define(['knockout',
             
             self.widgetDbClicked = function(event,data) {
                 //alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
-                self.tilesViewModel.appendNewTile(event.name, "", 2, event.type);
+                self.tilesViewModel.appendNewTile(event.name, "", 2, event);
             };
             
             self.enterSearch = function(d,e){

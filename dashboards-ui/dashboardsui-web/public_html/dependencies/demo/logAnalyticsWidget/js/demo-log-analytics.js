@@ -5,9 +5,10 @@
  */
 define([
     'knockout', 
-    'jquery'
+    'jquery',
+    'dfutil'
 ],
-    function(ko, $)
+    function(ko, $, dfu)
     {
         function DemoLogAnalyticsViewModel(params) {
             var self = this;
@@ -21,6 +22,23 @@ define([
                 "timeFilter" : null};
             var barSeries = [];
             var barGroups = [];
+            var widget = params.tile.widget;
+            if (widget && widget.id) {
+                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+                if (ssfUrl && ssfUrl !== '') {
+                    var searchUrl = ssfUrl + '/search/'+widget.id;
+                    $.ajax({
+                        url: searchUrl,
+                        success: function(data, textStatus) {
+                            queryString.queries.queryString = data.queryStr;
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying log analytics saved searches!');
+                        },
+                        async: false
+                    });
+                }
+            }
             self.seriesValue = ko.observableArray(barSeries);
             self.groupsValue = ko.observableArray(barGroups);
             
