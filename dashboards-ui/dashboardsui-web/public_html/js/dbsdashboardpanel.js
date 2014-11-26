@@ -192,7 +192,13 @@ $.widget('dbs.dbsDashboardPanel',
             var _type = self.options.dashboard['type'];
             if (_type === 'onePage')
             {
-                self.lockElement = $("<span></span>").attr({"role": "img"}).addClass("dbs-lock-icon-24 dbs-icon oj-sm-float-end");
+                self.lockElement = $("<span></span>").attr({"role": "img"})
+                        .css({"cursor": "default"})
+                        .addClass("dbs-lock-icon-24 dbs-icon oj-sm-float-end")
+                        .on('click.'+_name, function(event) {
+                            //prevent event bubble
+                            event.stopPropagation();
+                        });
                 self.toolbarElement.append(self.lockElement);
             }
             else
@@ -359,11 +365,13 @@ $.widget('dbs.dbsDashboardPanel',
         
         _destroyComponent: function() {
             var self = this;
-            self.deleteElement.unbind("click." + self.name);
+            if (self.lockElement && self.lockElement.length > 0) self.lockElement.unbind("click." + self.name);
+            if (self.deleteElement && self.deleteElement.length > 0) self.deleteElement.unbind("click." + self.name);
             self.element.find("*").removeAttr('style').removeClass().remove();
-            self.element.unbind("mouseenter." + self.name);
-            self.element.unbind("mouseleave." + self.name);
-            self.element.unbind("click." + self.name);
+            self.element.unbind("." + self.name);
+            //self.element.unbind("mouseenter." + self.name);
+            //self.element.unbind("mouseleave." + self.name);
+            //self.element.unbind("click." + self.name);
         },
 
         _destroy: function () {

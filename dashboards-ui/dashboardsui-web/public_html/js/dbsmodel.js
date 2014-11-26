@@ -131,7 +131,7 @@ function(temp, tabmodel, oj, ko, $)
         self.did=6;
         
         /*
-        for (var self.did = 0; self.did < 100000; self.did++)
+        for (self.did = 7; self.did < 100000; self.did++)
         {
             var _db = new DashboardModel( self.did, 'Dashboard'+self.did, 'Demo Dashboard'+self.did, [{name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}, {name: 'Demo Wedgit'}]);
             self.dbsArray.push(_db);
