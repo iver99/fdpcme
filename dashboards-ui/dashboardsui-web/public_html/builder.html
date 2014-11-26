@@ -450,8 +450,8 @@ role value for that section to represent the appropriate content type.
                                     <span class="dbd-tile-title" data-bind="text: title"></span>
                                     <div class="dbd-pull-right">
                                         <div class="dbd-btn-group">
-                                            <button id="actionButton"  class="oj-button-half-chrome dbd-tile-action"
-                                                    data-bind="ojComponent: {component: 'ojButton', label: '', menu: '#tileMenu' + clientGuid, disabled: $root.disableTilesOperateMenu}">
+                                            <button class="oj-button-half-chrome dbd-tile-action"
+                                                    data-bind="attr: {'id': 'actionButton' + clientGuid}, ojComponent: {component: 'ojButton', label: '', menu: '#tileMenu' + clientGuid, disabled: $root.disableTilesOperateMenu}">
                                                 <img src="images/func_threebullets_16_ena.png" alt="Edit"/>
                                             </button>
                                             <ul style="display:none"
