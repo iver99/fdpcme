@@ -142,7 +142,7 @@ body, html {
   border-top: 1px solid #D8D6D6 !important;
 }
 
-#actionButton span.oj-button-icon:before {
+.dbd-tile-action span.oj-button-icon:before {
   content: url('../images/func_threebullets_16_ena.png');
 }
 
