@@ -18,3 +18,13 @@ and open the template in the editor.
 a.df-dialog-header-close:visited {
     color: red;
 }
+
+.df-dialog-header-close-bigger {
+    float:right;
+    color: red;
+    font-size: small;
+}
+
+a.df-dialog-header-close-bigger:visited {
+    color: red;
+}

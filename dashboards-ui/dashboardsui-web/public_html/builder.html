@@ -44,7 +44,7 @@ role value for that section to represent the appropriate content type.
             -->
             <header id="headerWrapper" role="banner">
                 <div class="demo-appheader">
-                    <div class="oj-row demo-appheader-lite">
+                    <div class="oj-row demo-appheader-lite" style="max-width: 1920px">
 
                         <!-- logo -->  
                         <div class="demo-appheader-logo" tabindex="0">
@@ -54,6 +54,9 @@ role value for that section to represent the appropriate content type.
 
                             <div class="demo-appheader-appname-block">
                                 <span style="" class="demo-appheader-appname" data-bind="text: appName"></span>
+                            </div>
+                            <div class="demo-appheader-appname-block">
+                                <span  data-bind="text: cloudName"></span>
                             </div>
                         </div>
 
@@ -290,25 +293,30 @@ role value for that section to represent the appropriate content type.
                 </div>
                 <div style="display:none;" id="addWidgetDialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
-                        initialVisibility: 'hide', cancelBehavior:'none',resizeBehavior:'none',
-                        rootAttributes: { style: 'width: 800px; height:493px;background-color: #EAEAEA;'}}">   
+                        initialVisibility: 'hide', cancelBehavior:'none',
+                        rootAttributes: { style: 'width: 800px; height:513px;background-color: #EAEAEA;'}}">   
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div id="dialog-title-id" class="oj-dialog-title">
                             <span class="widget-dialog-header-title">Add a widget</span>
-                            <a href="#" data-bind="click:closeAddWidgetDialog" class="df-dialog-header-close">CLOSE</a>
+                            <a href="#" data-bind="click:closeAddWidgetDialog" class="df-dialog-header-close-bigger">CLOSE</a>
                         </div>
                     </div>
                     <div class="oj-dialog-body widget-dialog-body">
-                      <div id="addAWidget">
-                            <div class="widget-dialog-summary">
-                                WE HAVE 61 WIDGETS, SEARCH OR BROWSE THE ONES YOU NEED.
+                      <div id="addAWidget" class="oj-row">
+                            <div class="widget-dialog-summary oj-col oj-sm-9" style="padding-top: 8px;font-size: small">
+                                Search from 61 available widgets for your dashboard
                             </div>
+                            <div class="oj-col oj-sm-3">
+                                  <button id="okButton" style="float:right" data-bind="click: gotoCreateNewWidget, 
+                                          ojComponent: {component: 'ojButton', label: 'Create new widget'}"> 
+                                  </button>
+                           </div>
                     </div>
                       <div style="padding-top: 20px;" >
                         <div style="float:left;" id="search_box">
                             <div style="float:left">
-                            <input id="searchTxt" maxlength='100' 
-                                   placeholder=" search here" data-bind="ojComponent:{component:'ojInputText',value: searchText},
+                            <input id="searchTxt" maxlength='100' autofocus="autofocus"
+                                   placeholder=" search widgets" data-bind="ojComponent:{component:'ojInputText',value: searchText},
                                                                         dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             </div>
                             <div style="float:right;">
@@ -357,7 +365,7 @@ role value for that section to represent the appropriate content type.
                         <image src="css/images/func_information_32.png" alt="hint" style="float:left;width:24px;height:24px;padding-top: 8px" />
                         <!--div class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard</div-->
                         <label class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard </label>
-                        <a class="oj-link" style="padding-right: 6px " data-bind="click:gotoCreateNewWidget">Didn't find what you are looking for? Create new widget</a>
+                        <!--a class="oj-link" style="padding-right: 6px " data-bind="click:gotoCreateNewWidget">Didn't find what you are looking for? Create new widget</a-->
                         <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, disabled: naviPreBtnVisible,
                             ojComponent: {component: 'ojButton'},style:{opacity:naviPreBtnVisible()?1:0.4}" > 
                             <img src="css/images/navi-pre.png"  alt="Previous"/>

@@ -198,9 +198,10 @@ require(['knockout',
                 // Data for application name
                 var appName = {
                     "id": "qs",
-                    "name": "Enterprise Manager	Analytics Services"
+                    "name": "Enterprise Manager"
                 };
 
+                var cloudName ="Cloud Service";
                 // 
                 // Toolbar buttons
                 // 
@@ -238,7 +239,7 @@ require(['knockout',
 
                 self.appId = appName.id;
                 self.appName = appName.name;
-
+                self.cloudName = cloudName;
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;

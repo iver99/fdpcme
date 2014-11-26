@@ -263,7 +263,9 @@ body, html {
 .widget-dialog-selector {
     height:30px;
     float:right;
-    alignment-baseline: central;    
+    alignment-baseline: central;   
+    font-weight: bold;
+    color: gray;
 }
 
 .widget-image {
@@ -367,7 +369,7 @@ body, html {
 }
 
 .widget-dialog-summary {
-    width:100%;
+    /*width:100%;*/
     font-weight: bold;
     color: gray;
 }
@@ -376,7 +378,9 @@ body, html {
     /* font-weight: bold; */
     float:left;
     margin-left: 5px;
-    color:black;
+    /*color:black;*/
+    font-weight: bold;
+    color: gray;
     font-size: small;
     padding-top: 14px;
 }

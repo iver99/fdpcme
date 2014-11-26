@@ -14,7 +14,8 @@ define([
             var startTime = null; 
             var endTime = null;
 //            var qlBaseUrl = 'http://slc00aeg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
-            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
+//            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
+            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
             var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "* | stats count by 'target type','log source'"}, 
                 "subSystem":"LOG",
                 "timeFilter" : null};
