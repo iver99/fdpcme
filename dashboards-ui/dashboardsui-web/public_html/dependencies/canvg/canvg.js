@@ -1465,7 +1465,7 @@
 								ctx.translate(centp.x, centp.y);
 								ctx.rotate(xAxisRotation);
 								ctx.scale(sx, sy);
-								ctx.arc(0, 0, r, a1, a1 + ad, 1 - sweepFlag);
+								ctx.arc(0, 0, (r >= 0) ? r : 0, a1, a1 + ad, 1 - sweepFlag);
 								ctx.scale(1/sx, 1/sy);
 								ctx.rotate(-xAxisRotation);
 								ctx.translate(-centp.x, -centp.y);
