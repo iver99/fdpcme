@@ -115,6 +115,8 @@
 .dbs-summary-page-description {
    padding-left: 5px;
    padding-right: 5px;
+    font-weight: bold;
+    color:gray;   
 }
 
 .dbs-summary-controlls {
@@ -155,6 +157,8 @@ ul.dbs-summary-rows li {
     border-radius: 1px;
     border-bottom: 1px #869791; // #d6dfe6; 
     border-bottom-style: dotted;
+    font-weight: bold;
+    color:gray;
 }
 
 .dbs-lock-icon-24:before{content:url("images/qual_lock_16_full.png");}

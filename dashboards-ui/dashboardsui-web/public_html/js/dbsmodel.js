@@ -103,7 +103,7 @@ function(temp, tabmodel, oj, ko, $)
         
         var dsb3 = new DashboardModel(3, 'LA & TA Demo', 
         "Dashboard includes both LA widgets and TA widgets", true,
-        [{"title":"LA Widget","WIDGET_KOC_NAME":"demo-la-widget","TILE_WIDTH":2},{"title":"TA Widget","WIDGET_KOC_NAME":"demo-ta-widget","TILE_WIDTH":2}]);       
+        [{"title":"Logs by source type","WIDGET_KOC_NAME":"demo-la-widget","TILE_WIDTH":2},{"title":"Targets by Type & status","WIDGET_KOC_NAME":"demo-ta-widget","TILE_WIDTH":2}]);       
 
         var dsb0 = new DashboardModel(0, 'Database Health', 
         "Dashboard of DB Analytics", false,
