@@ -296,6 +296,13 @@ define(['knockout',
                 return summaryData;
             };
             
+            self.handleGobackHomepage = function() {
+                if (window.opener) {
+                    var goBack = window.open('', 'dashboardhome');
+                    goBack.focus();
+                }
+            };
+            
             self.handleDashboardSave = function() {
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 var nodesToRecover = [];
@@ -342,69 +349,69 @@ define(['knockout',
                 });
             };
             
-            /* event handler for button to get screen shot */
-            self.handleScreenShotClicked = function(data, event) {
-                var nodesToRecover = [];
-                var nodesToRemove = [];
-                var elems = $('#tiles-row').find('svg');
-                elems.each(function(index, node) {
-                    var parentNode = node.parentNode;
-                    var width = $(node).width();
-                    var height = $(node).height();
-                    var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
-                    var canvas = document.createElement('canvas');
-                    canvg(canvas, svg);
-                    nodesToRecover.push({
-                        parent: parentNode,
-                        child: node
-                    });
-                    parentNode.removeChild(node);
-                    nodesToRemove.push({
-                        parent: parentNode,
-                        child: canvas
-                    });
-                    parentNode.appendChild(canvas);
-                });
-                html2canvas($('#tiles-row'), {
-                    onrendered: function(canvas) {
-                        var ctx = canvas.getContext('2d');
-                        ctx.webkitImageSmoothingEnabled = false;
-                        ctx.mozImageSmoothingEnabled = false;
-                        ctx.imageSmoothingEnabled = false;
-                        var data = canvas.toDataURL();
-                        nodesToRemove.forEach(function(pair) {
-                            pair.parent.removeChild(pair.child);
-                        });
-                        nodesToRecover.forEach(function(pair) {
-                            pair.parent.appendChild(pair.child);
-                        });
-                        $('#builder-screenshot-img').attr('src', data);
-                        if (localStorage.getItem('screenShot'))
-                            localStorage.removeItem('screenShot');
-                        else
-                            localStorage.setItem('screenShot', data);
-                        $('#screen-shot-dialog').ojDialog('open');
-                    }  
-                });
-            };
+//            /* event handler for button to get screen shot */
+//            self.handleScreenShotClicked = function(data, event) {
+//                var nodesToRecover = [];
+//                var nodesToRemove = [];
+//                var elems = $('#tiles-row').find('svg');
+//                elems.each(function(index, node) {
+//                    var parentNode = node.parentNode;
+//                    var width = $(node).width();
+//                    var height = $(node).height();
+//                    var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
+//                    var canvas = document.createElement('canvas');
+//                    canvg(canvas, svg);
+//                    nodesToRecover.push({
+//                        parent: parentNode,
+//                        child: node
+//                    });
+//                    parentNode.removeChild(node);
+//                    nodesToRemove.push({
+//                        parent: parentNode,
+//                        child: canvas
+//                    });
+//                    parentNode.appendChild(canvas);
+//                });
+//                html2canvas($('#tiles-row'), {
+//                    onrendered: function(canvas) {
+//                        var ctx = canvas.getContext('2d');
+//                        ctx.webkitImageSmoothingEnabled = false;
+//                        ctx.mozImageSmoothingEnabled = false;
+//                        ctx.imageSmoothingEnabled = false;
+//                        var data = canvas.toDataURL();
+//                        nodesToRemove.forEach(function(pair) {
+//                            pair.parent.removeChild(pair.child);
+//                        });
+//                        nodesToRecover.forEach(function(pair) {
+//                            pair.parent.appendChild(pair.child);
+//                        });
+//                        $('#builder-screenshot-img').attr('src', data);
+//                        if (localStorage.getItem('screenShot'))
+//                            localStorage.removeItem('screenShot');
+//                        else
+//                            localStorage.setItem('screenShot', data);
+//                        $('#screen-shot-dialog').ojDialog('open');
+//                    }  
+//                });
+//            };
             
-            self.closeScreenshotDialog = function() {
-                $('#screen-shot-dialog').ojDialog('close');
-            };
-            
-            self.screenShotZoomOut = function() {
-                if (!$('#builder-screenshot-img').hasClass('dbd-screenshot-zoomout'))
-                    $('#builder-screenshot-img').addClass('dbd-screenshot-zoomout');
-                $('#screen-shot-zoom-out').hide();
-                $('#screen-shot-zoom-in').show();
-            };
-            
-            self.screenShotZoomIn = function() {
-                if ($('#builder-screenshot-img').hasClass('dbd-screenshot-zoomout'))
-                    $('#builder-screenshot-img').removeClass('dbd-screenshot-zoomout');
-                $('#screen-shot-zoom-in').hide();
-                $('#screen-shot-zoom-out').show();
-            };
+//            self.closeScreenshotDialog = function() {
+//                $('#screen-shot-dialog').ojDialog('close');
+//            };
+//            
+//            self.screenShotZoomOut = function() {
+//                if (!$('#builder-screenshot-img').hasClass('dbd-screenshot-zoomout'))
+//                    $('#builder-screenshot-img').addClass('dbd-screenshot-zoomout');
+//                $('#screen-shot-zoom-out').hide();
+//                $('#screen-shot-zoom-in').show();
+//            };
+//            
+//            self.screenShotZoomIn = function() {
+//                if ($('#builder-screenshot-img').hasClass('dbd-screenshot-zoomout'))
+//                    $('#builder-screenshot-img').removeClass('dbd-screenshot-zoomout');
+//                $('#screen-shot-zoom-in').hide();
+//                $('#screen-shot-zoom-out').show();
+//            };
             
             self.categoryValue=ko.observableArray();
             var widgetArray = [];

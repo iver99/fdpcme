@@ -248,7 +248,7 @@ require(['dbs/dbsmodel',
                //$('#screenshot-test').attr('src', data);
                
                window.addEventListener('message', childMessageListener, false);
-                
+               window.name = 'dashboardhome'; 
             });
         }
 );

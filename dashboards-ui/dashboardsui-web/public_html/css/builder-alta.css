@@ -51,7 +51,7 @@ body, html {
   opacity:0.50; 
 }
 
-.dbd-gray img {
+.dbd-gray img:not(.dbd-not-gray) {
   -webkit-filter: grayscale(1);
   filter: gray;
   filter: grayscale(1);
