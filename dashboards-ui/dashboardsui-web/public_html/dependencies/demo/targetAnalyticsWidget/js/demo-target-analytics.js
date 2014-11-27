@@ -5,11 +5,12 @@
  */
 define([
     'knockout', 
-    'jquery'
+    'jquery',
+    'dfutil'
 ],
-    function(ko, $)
+    function(ko, $, dfu)
     {
-        function DemoTargetAnalytics() {
+        function DemoTargetAnalytics(params) {
             var self = this;
             
             var queryString = {"ast":{"query":"simple",
@@ -27,6 +28,24 @@ define([
                         "orderBy":{"entries":[{"entry":"expr","item":{"expr":"column","table":"met","column":"category"}}]}
                        }
                 };
+                
+//            var widget = params.tile.widget;
+//            if (widget && widget.id) {
+//                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+//                if (ssfUrl && ssfUrl !== '') {
+//                    var searchUrl = ssfUrl + '/search/'+widget.id;
+//                    $.ajax({
+//                        url: searchUrl,
+//                        success: function(data, textStatus) {
+//                            queryString = data.queryStr;
+//                        },
+//                        error: function(xhr, textStatus, errorThrown){
+//                            console.log('Error when querying target analytics saved searches!');
+//                        },
+//                        async: false
+//                    });
+//                }
+//            }
             
             self.seriesValue = ko.observableArray();
             self.groupsValue = ko.observableArray();

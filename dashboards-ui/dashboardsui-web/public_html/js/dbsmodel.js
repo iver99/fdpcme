@@ -89,38 +89,38 @@ function(temp, tabmodel, oj, ko, $)
         self.filterArray = [];
         self.did = 0;
         
-       var dsb0 = new DashboardModel(0, 'Application', 
+       var dsb5 = new DashboardModel(5, 'Application', 
             "Application Dashboard includes widgets: Application Response Time, Security Incidents, Security Histogram.",false, 
             [{"title":"Application Response Time 1","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":1},{"title":"Security Incidents 1","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Security Incidents 2","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":1},{"title":"Security Histogram 4","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":4}]);
         
-        var dsb1 = new DashboardModel(1, 'Refresh Demo', 
+        var dsb4 = new DashboardModel(4, 'Refresh Demo', 
         "A dashboard to demonstrate widget refresh by time range change",true,
         [{"title":"Database Diagnostics","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Security Incidents","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Top SQL","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":4}]);
        
-        var dsb2 = new DashboardModel(2, 'Event Demo', 
+        var dsb2 = new DashboardModel(2, 'Dashboard events', 
         'A dashboard demonstrating wiget refresh',false, 
         [{"title":"Publisher","WIDGET_KOC_NAME":"demo-publisher-widget","TILE_WIDTH":2},{"title":"Subscriber 1","WIDGET_KOC_NAME":"demo-subscriber-widget","TILE_WIDTH":1},{"title":"Subscriber 2","WIDGET_KOC_NAME":"demo-subscriber-widget","TILE_WIDTH":1}]);
         
         var dsb3 = new DashboardModel(3, 'LA & TA Demo', 
         "Dashboard includes both LA widgets and TA widgets", true,
-        [{"title":"LA Widget","WIDGET_KOC_NAME":"demo-la-widget","TILE_WIDTH":2},{"title":"TA Widget","WIDGET_KOC_NAME":"demo-ta-widget","TILE_WIDTH":2}]);       
+        [{"title":"Logs by source type","WIDGET_KOC_NAME":"demo-la-widget","TILE_WIDTH":2},{"title":"Targets by Type & status","WIDGET_KOC_NAME":"demo-ta-widget","TILE_WIDTH":2}]);       
 
-        var dsb4 = new DashboardModel(4, 'DB Analytics', 
+        var dsb0 = new DashboardModel(0, 'Database Health', 
         "Dashboard of DB Analytics", false,
         [{"title":"Home","WIDGET_KOC_NAME":"DF_V1_IFRAME","TILE_WIDTH":2,"PROVIDER_NAME":"DB Analytics","PROVIDER_VERSION":"0.1","PROVIDER_ASSET_ROOT":"home"}]);       
 
-        var dsb5 = new DashboardModel(5, 'APM Cloud Service', 
+        var dsb1 = new DashboardModel(1, 'Application Performance', 
         "Dashboard of Application Performance Manager Cloud Service", false,
         [{"title":"Home","WIDGET_KOC_NAME":"DF_V1_IFRAME","TILE_WIDTH":2,"PROVIDER_NAME":"Application Performance Manager Cloud Service","PROVIDER_VERSION":"0.1","PROVIDER_ASSET_ROOT":"home"}]);       
 
-        dsb0.image = applicationScreenShot();
-        dsb1.image = databaseScreenShot();
+        dsb0.image = dbaasScreenShot();
+        dsb1.image = apmcsScreenShot();  
         dsb2.image = middlewareScreenShot();
         dsb3.image = serverErrorScreenShot();
-        dsb4.image = dbaasScreenShot();
-        dsb4.type = "onePage";
-        dsb5.image = apmcsScreenShot();  
-        dsb5.type = "onePage";
+        dsb4.image = applicationScreenShot();
+        dsb0.type = "onePage";
+        dsb5.image = databaseScreenShot();
+        dsb1.type = "onePage";
 
         self.dbsArray.push(dsb0);
         self.dbsArray.push(dsb1);
@@ -258,7 +258,7 @@ function(temp, tabmodel, oj, ko, $)
         
         self.exploreDataClicked = function()
         {
-            window.open('http://slc00aeg.us.oracle.com:7201/emlacore/faces/core-logan-observation-search');
+            window.open('http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search');
         };
         
         self.confirmDashboardCreate = function()

@@ -549,7 +549,7 @@ define(['knockout',
             };
             
             self.gotoCreateNewWidget = function(){
-                return window.open("http://slc00aeg.us.oracle.com:7201/emlacore/faces/core-logan-observation-search");
+                return window.open("http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search");
             }
             self.naviPrevious = function() {
                 if (curPage === 1) {
@@ -588,7 +588,7 @@ define(['knockout',
             
             self.widgetDbClicked = function(event,data) {
                 //alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
-                self.tilesViewModel.appendNewTile(event.name, "", 2, event.type);
+                self.tilesViewModel.appendNewTile(event.name, "", 2, event);
             };
             
             self.enterSearch = function(d,e){

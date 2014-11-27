@@ -134,16 +134,26 @@ require(['knockout',
                 template:{require:'text!../dependencies/demo/iFrameWidget/demo-iframe.html'}
             });    
             
+//            ko.components.register("demo-la-widget",{
+//                viewModel:{require:'../dependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
+//                template:{require:'text!../dependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
+//            });  
+            
             ko.components.register("demo-la-widget",{
-                viewModel:{require:'../dependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
-                template:{require:'text!../dependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
-            });  
+                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js'},
+                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
+            }); 
+            
+//            ko.components.register("demo-ta-widget",{
+//                viewModel:{require:'../dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
+//                template:{require:'text!../dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
+//            }); 
             
             ko.components.register("demo-ta-widget",{
-                viewModel:{require:'../dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
-                template:{require:'text!../dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
-            });  
-
+                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics.js'},
+                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
+            });
+            
             ko.components.register("DF_V1_IFRAME",{
                 viewModel:{require:'../dependencies/widgets/iFrame/js/widget-iframe'},
                 template:{require:'text!../dependencies/widgets/iFrame/widget-iframe.html'}
