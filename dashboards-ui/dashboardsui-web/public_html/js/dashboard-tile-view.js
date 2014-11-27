@@ -297,8 +297,10 @@ define(['knockout',
             };
             
             self.handleGobackHomepage = function() {
-                var goBack = window.open('', 'dashboardhome');
-                goBack.focus();
+                if (window.opener) {
+                    var goBack = window.open('', 'dashboardhome');
+                    goBack.focus();
+                }
             };
             
             self.handleDashboardSave = function() {
