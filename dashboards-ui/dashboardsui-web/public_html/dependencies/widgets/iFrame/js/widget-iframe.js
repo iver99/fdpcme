@@ -29,21 +29,7 @@ define([
                     providerName = "DB Analytics"; //TODO
                     providerVersion = "0.1"; //TODO
                     providerAssetRoot = "home"; //TODO
-                    self.fullUrl = ko.observable("http://slc03psa.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html");//TODO
-                }
-
-                //communicate with iFrame via postMessage()
-                params.tile.onDashboardItemChangeEvent = function (dashboardItemChangeEvent) {
-                    /**
-                     * Check whether it is a valid dashboardItemChangeEvent
-                     */
-                    if (dashboardItemChangeEvent) {
-                        /**
-                         * send dashboardItemChangeEvent to iFrame by postMessage. iFrame side codes should capture that message to respond if interested.
-                         */
-                        //send dashboardItemChangeEvent
-                        //TODO
-                    }
+                    self.fullUrl = ko.observable(df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
                 }
             }
             return IFrameModel;

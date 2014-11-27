@@ -224,11 +224,27 @@ ul.dbs-summary-rows li {
 .icon-pageline-system-16:before{content:url("images/func_pagelines_16_hov_locked.png");}
 
 #dtabhomettb #toolbar1 #cbtn{
-  margin-bottom: 4px; 
-  background-image: none;
-  background-color: royalblue;
-  color: white;
-  margin-left: 6px;
-  text-shadow: none;
+    margin-bottom: 4px; 
+    background-image: none;
+    margin-left: 6px;
+    text-shadow: none;
+
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #0572ce;
+    background: linear-gradient(to bottom, #0470c9 0%, #0571cd 50%, #0479d8 100%);
+    border: 1px solid #0476d3;
+    border-radius: 2px;
+    
+    text-align: right;
+     box-shadow:none;  
+    
 } 
-                                        
+
+#dtabhomettb #toolbar1 #cbtn:hover{
+    
+    background-color: #3a9aea;
+    border: 1px solid #3a9aea;  
+    background-image: none;
+
+}                                        
