@@ -44,6 +44,27 @@ and open the template in the editor.
                      style="width:100%;height:100%;">
                 </div>
                 <!-- /ko -->
+                <!-- ko if: chartType()==='treemap' -->
+                <div data-bind="ojComponent: {
+                        component: 'ojTreemap',
+                        animationOnDisplay: 'auto',
+                        animationOnDataChange: 'auto',
+                        nodes: nodeValues
+                    }" 
+                    style="width:100%; height:100%;">
+                </div>
+                <!-- /ko -->
+                <!-- ko if: chartType()==='sunburst' -->
+                <div data-bind="ojComponent: {
+                        component: 'ojSunburst', 
+                        animationOnDisplay: 'auto',
+                        
+                        nodeDefaults: {labelDisplay: 'rotated'},
+                        nodes: nodeValues
+                    }" 
+                    style="width:100%; height:100%;">
+                </div>
+                <!-- /ko -->
             </div>
         </div>
     </body>

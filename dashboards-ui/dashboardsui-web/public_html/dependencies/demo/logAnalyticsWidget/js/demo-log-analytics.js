@@ -4,11 +4,14 @@
  * and open the template in the editor.
  */
 define([
+    'ojs/ojcore',
     'knockout', 
     'jquery',
-    'dfutil'
+    'dfutil',
+    'ojs/ojtreemap',
+    'ojs/ojsunburst'
 ],
-    function(ko, $, dfu)
+    function(oj, ko, $, dfu)
     {
         function DemoLogAnalyticsViewModel(params) {
             var self = this;
@@ -42,6 +45,10 @@ define([
             self.seriesValue = ko.observableArray(barSeries);
             self.groupsValue = ko.observableArray(barGroups);
             self.chartType = ko.observable('bar');
+            var handler = new oj.ColorAttributeGroupHandler();
+            self.nodeValues = ko.observableArray([]);
+            var wholeNode = createNode("All", 0, 0);
+            var totalValues = 0;
             
             fetchResults();
             
@@ -81,7 +88,12 @@ define([
                             headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1"},
                             success: function(data, textStatus){
                                 if (data.results && data.results.length > 0) {
-                                    fetchResultSuccessCallBack(data);
+                                    if (data.columns.length === 3) {
+                                        fetchResultSuccessCallBackForTreeMap(data);
+                                    }
+                                    else {
+                                        fetchResultSuccessCallBack(data);
+                                    }
                                 }
                                 else {
                                     barSeries = [];
@@ -179,6 +191,74 @@ define([
                 barGroups = barChartGrps;
             };
             
+            function fetchResultSuccessCallBackForTreeMap(data) {
+                var targetTypeValues = {};
+                var logSrcValues = {};
+                var resultsData = data.results;
+                var barChartGrps = [];
+                var series = []; 
+                if (data.columns.length === 3) {
+                    self.chartType('treemap');
+//                    self.chartType('sunburst');
+                    if (data.columns[0].values) {
+                        targetTypeValues = convertToNameValueObject(data.columns[0].values);
+                        barChartGrps = getGroups(targetTypeValues, resultsData);
+                    }
+                    else {
+                        barChartGrps = getGroups(null, resultsData);
+                        targetTypeValues = convertToNameValueObject(barChartGrps);
+                    }
+                    if (data.columns[1].values) {
+                        logSrcValues = convertToNameValueObject(data.columns[1].values);
+                        series = getSeries(logSrcValues, resultsData);
+                    }
+                    else {
+                        series = getSeries(null, resultsData);
+                        logSrcValues = convertToNameValueObject(series);
+                    }
+                }
+                
+                for (var i = 0; i < resultsData.length; i++) {
+                    totalValues += resultsData[i][2];
+                    var nodeId = targetTypeValues[resultsData[i][0]];
+                    if (isContainsNode(wholeNode, nodeId)) {
+                        var childNode = createNode(logSrcValues[resultsData[i][1]], resultsData[i][2], resultsData[i][2]);
+                        addChildNodes(getNode(wholeNode, nodeId), [childNode]);
+                    }
+                    else {
+                        var targetChildNode = createNode(nodeId, resultsData[i][2], resultsData[i][2]);
+                        var logSrcChildNode = createNode(logSrcValues[resultsData[i][1]], resultsData[i][2], resultsData[i][2]);
+                        addChildNodes(targetChildNode, [logSrcChildNode]);
+                        addChildNodes(wholeNode, [targetChildNode]);
+                    }
+                }
+                wholeNode.value = totalValues;
+                wholeNode.shortDesc = "&lt;b&gt;"+wholeNode.label+"&lt;/b&gt;&lt;br/&gt;Value: "+totalValues+"&lt;br/&gt;";
+                self.nodeValues([wholeNode]);
+            };
+            
+            function isContainsNode(parent, childId) {
+                if (parent && parent.nodes) {
+                    for (var i = 0; i < parent.nodes.length; i++) {
+                        if (parent.nodes[i].id === childId) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            };
+            
+            function getNode(parent, nodeId) {
+                if (parent && parent.nodes) {
+                    for (var i = 0; i < parent.nodes.length; i++) {
+                        if (parent.nodes[i].id === nodeId) {
+                            return parent.nodes[i];
+                        }
+                    }
+                }
+                return null;
+            };
+            
             function getGroups(targetTypeValues, resultsData) {
                 var groups = [];
                 if (targetTypeValues !== null) {
@@ -264,6 +344,36 @@ define([
                 }
                 return 0;
             }; 
+            
+            function createNode(label, sizeValue, colorValue) {
+                return {label: label,
+                        id: label,
+                        value: sizeValue,
+                        color: getColor(colorValue),
+                        shortDesc: "&lt;b&gt;"+label+"&lt;/b&gt;&lt;br/&gt;Value: "+sizeValue+"&lt;br/&gt;"};
+            };
+
+            function getColor(meanIncome) {
+                if (meanIncome < 45000) // 1st quartile
+                    return handler.getValue('1stQuartile');
+                else if (meanIncome < 49000) // 2nd quartile
+                    return handler.getValue('2ndQuartile');
+                else if (meanIncome < 56000) // 3rd quartile
+                    return handler.getValue('3rdQuartile');
+                else
+                    return handler.getValue('4thQuartile');
+            };
+
+            function addChildNodes(parent, childNodes) {
+                if (!parent.nodes) {
+                    parent.nodes = [];
+                }
+                
+                for (var i = 0; i < childNodes.length; i++) {
+                    parent.nodes.push(childNodes[i]);
+                    parent.value += childNodes[i].value;
+                }
+            };
         }
         
         return DemoLogAnalyticsViewModel;
