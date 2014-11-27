@@ -300,7 +300,7 @@ role value for that section to represent the appropriate content type.
                 <div style="display:none;" id="addWidgetDialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
                         initialVisibility: 'hide', cancelBehavior:'none',
-                        rootAttributes: { style: 'width: 815px; height:520px;background-color: #EAEAEA;'}}">   
+                        rootAttributes: { style: 'width: 815px; height:520px;background-color: #DDDDDD;'}}">   
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div id="dialog-title-id" class="oj-dialog-title">
                             <span class="widget-dialog-header-title">Add a widget</span>
@@ -309,19 +309,19 @@ role value for that section to represent the appropriate content type.
                     </div>
                     <div class="oj-dialog-body widget-dialog-body">
                       <div id="addAWidget" class="oj-row">
-                            <div class="widget-dialog-summary oj-col oj-sm-9" style="padding-top: 8px;font-size: small">
+                            <div class="widget-dialog-summary oj-col oj-sm-6" style="padding-top: 8px;font-size: small">
                                 Search from 61 available widgets for your dashboard
                             </div>
-                            <div class="oj-col oj-sm-3">
-                                  <button id="okButton" style="float:right" data-bind="click: gotoCreateNewWidget, 
+                            <div class="oj-col oj-sm-6" style="padding-right: 20px">
+                                  <button id="okButton" style="float:right;" data-bind="click: gotoCreateNewWidget, 
                                           ojComponent: {component: 'ojButton', label: 'Create new widget'}"> 
                                   </button>
                            </div>
                     </div>
-                      <div style="padding-top: 20px;padding-right: 10px" >
+                      <div style="padding-top: 20px;padding-right: 18px;padding-left: 4px" >
                         <div style="float:left;" id="search_box">
-                            <div style="float:left">
-                            <input id="searchTxt" maxlength='100' autofocus="autofocus"
+                            <div style="float:left;">
+                                <input id="searchTxt" maxlength='100' autofocus="autofocus"
                                    placeholder=" search widgets" data-bind="ojComponent:{component:'ojInputText',value: searchText},
                                                                         dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             </div>
@@ -338,7 +338,7 @@ role value for that section to represent the appropriate content type.
                                     data-bind="ojComponent: {component: 'ojSelect',
                                                                 value: categoryValue,
                                                                 optionChange: optionChangedHandler,
-                                                                rootAttributes: {style:'max-width:383px;'}}">
+                                                                rootAttributes: {style:'max-width:373px;'}}">
                                 <option value="all">ALL CATEGORIES</option>
                                 <option value="la">LOG ANALYTICS</option>
                                 <option value="ta">TARGET ANALYTICS</option>
@@ -366,7 +366,7 @@ role value for that section to represent the appropriate content type.
                         <!-- /ko -->
                     </div>
                   </div>     
-                    <div class="oj-dialog-footer" > 
+                    <div class="oj-dialog-footer" style="padding-right: 24px" > 
                         <!--div style="padding-bottom: 10px"-->
                         <image src="css/images/func_information_32.png" alt="hint" style="float:left;width:24px;height:24px;padding-top: 8px" />
                         <!--div class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard</div-->

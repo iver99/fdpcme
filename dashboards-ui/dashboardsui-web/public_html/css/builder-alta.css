@@ -250,7 +250,7 @@ body, html {
     border-radius: 5px;
     border-color:lightgray;
     border-style:solid;
-    width:380px;
+    width:370px;
     height: 28px; 
     margin-bottom: 10px;
     background-color: WhiteSmoke;
@@ -365,7 +365,7 @@ body, html {
 }
 
 .widget-dialog-body {
-    background-color:  #EAEAEA;
+    background-color:  #DDDDDD;
 }
 
 .widget-dialog-summary {

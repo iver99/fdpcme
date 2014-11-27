@@ -222,7 +222,48 @@ define(['knockout',
                 var newTile = null;
                 //demo log analytics widget
                 if (widget && widget.type === 1) {
-                    newTile =new DashboardWidget(self,"demo-la-widget",name, description, width, widget);
+                    //find KOC name for registration. if valid registration is not detected, use default one.
+                    var href = widget.href;
+                    var widgetDetails = null;
+                    $.ajax({
+                        url: href,
+                        success: function(data, textStatus) {
+                            widgetDetails = data;
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when get widget details!');
+                        },
+                        async: false
+                    });
+                    var koc_name = null;
+                    var template = null;
+                    var viewmodel = null;
+                    if (widgetDetails){
+                        if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+                           for(var int=0;i<widgetDetails.parameters.length;i++){
+                               if ("WIDGET_KOC_NAME"==widgetDetails.parameters[i]["name"]){
+                                    koc_name = widgetDetails.parameters[i]["value"];
+                               }else if ("WIDGET_TEMPLATE"==widgetDetails.parameters[i]["name"]){
+                                   template = widgetDetails.parameters[i]["value"];
+                               }else if ("WIDGET_VIEWMODEL"==widgetDetails.parameters[i]["name"]){
+                                   viewmodel = widgetDetails.parameters[i]["value"];
+                               }
+                           }
+                        }
+                    }
+                    if (koc_name && template && viewmodel){
+                      ko.components.register(koc_name,{
+                           viewModel:{require:viewmodel},
+                           template:{require:'text!'+template}
+                       }); 
+                      console.log("widget: "+koc_name+" is registered");
+                      console.log("widget template: "+template);
+                      console.log("widget viewmodel:: "+viewmodel);
+                      newTile =new DashboardWidget(self,koc_name,name, description, width, widget); 
+                    }else{
+                       newTile =new DashboardWidget(self,"demo-la-widget",name, description, width, widget); 
+                    }
+                    
                 }
                 //demo target analytics widget
                 else if (widget && widget.type === 2) {
