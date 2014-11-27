@@ -217,20 +217,20 @@ define(['knockout',
                 self.tileRemoveCallbacks.push(callbackMethod);
             };
             
-            self.appendNewTile = function(name, description, width, type) {
+            self.appendNewTile = function(name, description, width, widget) {
 //                var newTile =new DashboardWidget(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
                 var newTile = null;
                 //demo log analytics widget
-                if (type === 1) {
-                    newTile =new DashboardWidget(self,"demo-la-widget",name, description, width);
+                if (widget && widget.type === 1) {
+                    newTile =new DashboardWidget(self,"demo-la-widget",name, description, width, widget);
                 }
                 //demo target analytics widget
-                else if (type === 2) {
-                    newTile =new DashboardWidget(self,"demo-ta-widget",name, description, width);
+                else if (widget && widget.type === 2) {
+                    newTile =new DashboardWidget(self,"demo-ta-widget",name, description, width, widget);
                 }
                 //demo simple chart widget
                 else {
-                    newTile =new DashboardWidget(self,"demo-chart-widget",name, description, width);
+                    newTile =new DashboardWidget(self,"demo-chart-widget",name, description, width, widget);
                 }
                 self.tiles.push(newTile);
             };
