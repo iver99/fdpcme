@@ -41,6 +41,7 @@ define([
             }
             self.seriesValue = ko.observableArray(barSeries);
             self.groupsValue = ko.observableArray(barGroups);
+            self.chartType = ko.observable('bar');
             
             fetchResults();
             
@@ -102,21 +103,74 @@ define([
             };
             
             function fetchResultSuccessCallBack(data) {
-                var targetTypeValues = convertToNameValueObject(data.columns[0].values);
-                var logSrcValues = convertToNameValueObject(data.columns[1].values);
+//                var targetTypeValues = convertToNameValueObject(data.columns[0].values);
+//                var logSrcValues = convertToNameValueObject(data.columns[1].values);
+//                var resultsData = data.results;
+//                var barChartGrps = getGroups(targetTypeValues, resultsData);
+//                var series = getSeries(logSrcValues, resultsData); 
+                
+                var targetTypeValues = {};
+                var logSrcValues = {};
                 var resultsData = data.results;
-                var barChartGrps = getGroups(targetTypeValues, resultsData);
-                var series = getSeries(logSrcValues, resultsData);   
+                var barChartGrps = [];
+                var series = []; 
+                if (data.columns.length === 3) {
+                    self.chartType('polar');
+                    if (data.columns[0].values) {
+                        targetTypeValues = convertToNameValueObject(data.columns[0].values);
+                        barChartGrps = getGroups(targetTypeValues, resultsData);
+                    }
+                    else {
+                        barChartGrps = getGroups(null, resultsData);
+                        targetTypeValues = convertToNameValueObject(barChartGrps);
+                    }
+                    if (data.columns[1].values) {
+                        logSrcValues = convertToNameValueObject(data.columns[1].values);
+                        series = getSeries(logSrcValues, resultsData);
+                    }
+                    else {
+                        series = getSeries(null, resultsData);
+                        logSrcValues = convertToNameValueObject(series);
+                    }
+                }
+                else if (data.columns.length === 2) {
+                    self.chartType('bar');
+                    if (data.columns[0].values) {
+                        targetTypeValues = convertToNameValueObject(data.columns[0].values);
+                        barChartGrps = getGroups(targetTypeValues, resultsData);
+                    }
+                    else {
+                        barChartGrps = getGroups(null, resultsData);
+                        targetTypeValues = convertToNameValueObject(barChartGrps);
+                    }   
+                    series = [data.columns[1].displayName];
+                    logSrcValues = convertToNameValueObject(series);
+                }
+                else {
+                    self.chartType('bar');
+                }
 
                 var barChartSeries = [];
                 for (var i = 0; i < series.length; i++) {
                     var seriesItem = {name: series[i]};
                     var items = initializeSeriesItems(barChartGrps.length);
-                    for (var j = 0; j < resultsData.length; j++) { 
-                        if (logSrcValues[resultsData[j][1]] === series[i]) {
-                            items[getItemIndex(barChartGrps, targetTypeValues[resultsData[j][0]])] = resultsData[j][2];
+                    if (data.columns.length === 3) {
+                        for (var j = 0; j < resultsData.length; j++) { 
+                            if (logSrcValues[resultsData[j][1]] === series[i]) {
+                                items[getItemIndex(barChartGrps, targetTypeValues[resultsData[j][0]])] = resultsData[j][2];
+                            }
                         }
                     }
+                    else if (data.columns.length === 2){
+                        for (var k = 0; k < barChartGrps.length; k++) { 
+                            for (var m = 0; m < resultsData.length; m++) {
+                                if (targetTypeValues[resultsData[m][0]] === barChartGrps[k]) {
+                                    items[k] = items[k] + resultsData[m][1];
+                                }
+                            }
+                        }
+                    }
+                    
                     seriesItem.items = items;
                     barChartSeries.push(seriesItem);
                 }
@@ -127,21 +181,45 @@ define([
             
             function getGroups(targetTypeValues, resultsData) {
                 var groups = [];
-                for (var i = 0; i < resultsData.length; i++) {
-                    if (!isContains(groups, targetTypeValues[resultsData[i][0]])) {
-                        groups.push(targetTypeValues[resultsData[i][0]]);
-                    } 
+                if (targetTypeValues !== null) {
+                    for (var i = 0; i < resultsData.length; i++) {
+                        if (!isContains(groups, targetTypeValues[resultsData[i][0]])) {
+                            groups.push(targetTypeValues[resultsData[i][0]]);
+                        } 
+                    }
                 }
+                else {
+//                    targetTypeValues = {};
+                    for (var i = 0; i < resultsData.length; i++) {
+                        if (!isContains(groups, resultsData[i][0])) {
+                            groups.push(resultsData[i][0]);
+//                            targetTypeValues[resultsData[i][0]] = resultsData[i][0];
+                        } 
+                    }
+                }
+                
                 return groups;
             };
             
             function getSeries(logSrcValues, resultsData) {
                 var series = [];
-                for (var i = 0; i < resultsData.length; i++) {
-                    if (!isContains(series, logSrcValues[resultsData[i][1]])) {
-                        series.push(logSrcValues[resultsData[i][1]]);
-                    } 
+                if (logSrcValues !== null) {
+                    for (var i = 0; i < resultsData.length; i++) {
+                        if (!isContains(series, logSrcValues[resultsData[i][1]])) {
+                            series.push(logSrcValues[resultsData[i][1]]);
+                        } 
+                    }
                 }
+                else {
+//                    logSrcValues = {};
+                    for (var i = 0; i < resultsData.length; i++) {
+                        if (!isContains(series, resultsData[i][1])) {
+                            series.push(resultsData[i][1]+"");
+//                            logSrcValues[resultsData[i][1]] = resultsData[i][1];
+                        } 
+                    }
+                }
+                
                 return series;
             };
             
@@ -158,7 +236,12 @@ define([
             function convertToNameValueObject(array) {
                 var resultObj = {};
                 for (var i = 0; i < array.length; i++) {
-                    resultObj[array[i].internalValue] = array[i].displayValue;
+                    if (array[i] !== null && array[i].internalValue && array[i].displayValue) {
+                        resultObj[array[i].internalValue] = array[i].displayValue;
+                    }
+                    else {
+                        resultObj[array[i]] = array[i];
+                    }
                 }
                 
                 return resultObj;
