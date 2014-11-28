@@ -127,9 +127,12 @@ role value for that section to represent the appropriate content type.
                                                 <button id="sbtn" style="margin-bottom: 4px;margin-left: 5px;"
                                                         data-bind="ojComponent: { component:'ojButton', label: 'Search'}"></button>
                                         </div>
-                                        <div id="toolbar3" class="oj-xl-float-end"  aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
+                                        <!--div id="toolbar3" class="oj-xl-float-end"  aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
                                                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
-                                        </div>
+                                        </div-->
+                                    </div>
+                                    <div id="toolbar3" aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
+                                                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
                                     </div>
                                     <!-- Home toolbar end -->
                                     <div id="dtabhomesc" class="dbs-summaries-container">
