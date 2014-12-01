@@ -264,7 +264,7 @@ role value for that section to represent the appropriate content type.
                                             <div id="checkboxsetTimeRangeFilter" class="oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
                                                         value: includeTimeRangeFilter}" >
                                                 <input id="ckbxTimeRangeFilter" type="checkbox" value="ON">
-                                                <label for="ckbxTimeRangeFilter">Include a time-range filter</label>
+                                                <label for="ckbxTimeRangeFilter">Include time control (range and refresh)</label>
                                             </div>
                                         </div> 
                                         <!--div class="oj-row">
@@ -434,6 +434,21 @@ role value for that section to represent the appropriate content type.
 
                         </div>
                         <!-- /ko -->
+                        <div id="global-time-control" class="oj-row" style="padding-left: 10px;padding-top: 20px" >
+                            <div class="oj-col oj-sm-9">
+                                    <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
+                                    data-bind="ojComponent: {component: 'ojSelect',
+                                                                value: categoryValue,
+                                                                optionChange: optionChangedHandler,
+                                                                rootAttributes: {style:'max-width:373px;'}}"-->
+                               <df-time-selector params="{model:timeSelectorModel}"></df-time-selector>
+                            </div>
+                            <div class="oj-col oj-sm-3">
+                                <df-auto-refresh params="{model:timeSelectorModel}"></df-auto-refresh>
+                            </div>
+                            <!--div class="oj-col oj-sm-4"></div-->
+                            
+                        </div>
                         <div class="oj-row dbd-column stretch-height" data-bind="foreach: tiles, sortableList: tiles" id="tiles-row">
                             <div class="dbd-tile dbd-tile-sortable oj-col" data-bind="css: tileDisplayClass()">
                                 <div class="dbd-tile-header">

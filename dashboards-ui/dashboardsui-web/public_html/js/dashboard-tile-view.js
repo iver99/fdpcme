@@ -155,6 +155,7 @@ define(['knockout',
             self.bindingExists = false;
             
             self.showOrHideTimeSlider = function(timeSliderModel, show) {
+                /*
                 var timeSlider = $('#global-time-slider');
                 if (show) {
                     timeSlider.show();
@@ -166,6 +167,13 @@ define(['knockout',
                 else {
                     timeSlider.hide();
                 }
+                */
+               var timeControl = $('#global-time-control');
+               if (show){
+                   timeControl.show();
+               }else{
+                   timeControl.hide();
+               }
             };
         }
         

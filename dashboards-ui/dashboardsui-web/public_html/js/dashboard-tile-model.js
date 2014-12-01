@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 define(['knockout',
+        'timeselector/time-selector-model',  
         'ojs/ojcore',
         'jquery',
         'jqueryui',
@@ -15,7 +16,7 @@ define(['knockout',
         'canvg'
     ],
     
-    function(ko)
+    function(ko, TimeSelectorModel)
     {
         function guid() {
             function S4() {
@@ -170,6 +171,7 @@ define(['knockout',
         
         function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, widgetsHomRef, dsbType) {
             var self = this;
+            self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
             self.isOnePageType = (dsbType === "onePage");
@@ -439,7 +441,20 @@ define(['knockout',
                     timeSliderModel.advancedOptionsChange(false);
                 }
             });
-            
+
+            var timeSelectorChangelistener = ko.computed(function(){
+                    return {
+                        timeRangeChange:self.timeSelectorModel.timeRangeChange()
+                    };
+                });
+                
+            timeSelectorChangelistener.subscribe(function (value) {
+                if (value.timeRangeChange){
+                    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart,self.timeSelectorModel.viewEnd),null);
+                    self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+                    self.timeSelectorModel.timeRangeChange(false);
+                }
+            });            
             /* event handler for button to get screen shot */
 //            self.screenShotClicked = function(data, event) {
 //                var images = self.images;

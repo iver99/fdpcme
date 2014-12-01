@@ -31,6 +31,7 @@ requirejs.config({
         'ojall':'../dependencies/timeslider/js/ojall',
 
         'timeslider':'../dependencies/timeslider/js',
+        'timeselector':'../dependencies/timeselector/js',
         'html2canvas':'../dependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
         'canvg-stackblur':'../dependencies/canvg/StackBlur',
@@ -114,6 +115,15 @@ require(['knockout',
 ],
         function(ko, $, dfu,dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
         {
+            ko.components.register("df-time-selector",{
+                viewModel:{require:'../dependencies/timeselector/js/time-selector'},
+                template:{require:'text!../dependencies/timeselector/time-selector.html'}
+            });
+            ko.components.register("df-auto-refresh",{
+                viewModel:{require:'../dependencies/autorefresh/js/auto-refresh'},
+                template:{require:'text!../dependencies/autorefresh/auto-refresh.html'}
+            });
+            
             ko.components.register("demo-chart-widget",{
                 viewModel:{require:'../dependencies/demo/simpleChartWidget/js/demo-chart-widget'},
                 template:{require:'text!../dependencies/demo/simpleChartWidget/demo-chart-widget.html'}

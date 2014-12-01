@@ -1,0 +1,14 @@
+<div id="global-time-selector">
+    <label style="font-weight: bold">Time Range:</label>
+    <select id="timeSelect" class="oj-select-arrow" 
+            data-bind="ojComponent:{component:'ojSelect',value:selected,optionChange: optionChangedHandler}"> 
+        <option value="none">None</option>
+        <option value="15mins">Last 15 Mins</option>
+        <option value="1hour">Last 1 Hour</option>
+        <option value="1day">Last 1 Day</option>
+        <option value="1week">Last 1 Week</option>
+        <option value="1month">Last 1 Month</option>
+        <option value="1year">Last 1 Year</option> 
+        <!--option value="custom">Custom</option--> 
+    </select> 
+</div>
