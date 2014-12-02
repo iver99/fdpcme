@@ -329,7 +329,7 @@ require(['knockout',
                 ko.virtualElements.allowedBindings.stopBinding = true;
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
-                ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);   
+                ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
                 
                 $('#globalBody').show();

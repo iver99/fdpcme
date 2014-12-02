@@ -187,29 +187,9 @@ define(['knockout',
                 }
             }
 
-//            self.tiles = ko.observableArray(true ? [
-//                new DashboardWidget(self,"demo-iframe-widget","iFrame", "", 2),
-//                new DashboardWidget(self,"demo-publisher-widget","Pulisher", "", 1),
-//                new DashboardWidget(self,"demo-subscriber-widget","Subscriber", "", 1),
-////                new DashboardWidget(self,"demo-chart-widget","Random Chart 1", "", 1),
-//                new DashboardWidget(self,"demo-chart-widget","Random Chart", "", 4)
-//                ,new DashboardWidget(self,"demo-la-widget","Demo Log Analytics", "", 2)
-//                ,new DashboardWidget(self,"demo-ta-widget","Demo Target Analytics", "", 2)
-//            ] : []);
             self.tiles = ko.observableArray(widgets);
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
-            /*
-            self.tiles = ko.observableArray(emptyTiles ? [
-                new DashboardTile(self,"demo-iframe-widget","iFrame", "", 2),
-                new DashboardTile(self,"demo-publisher-widget","Pulisher", "", 1),
-                new DashboardTile(self,"demo-subscriber-widget","Subscriber", "", 1),
-//                new DashboardTile(self,"demo-chart-widget","Random Chart 1", "", 1),
-                new DashboardTile(self,"demo-chart-widget","Random Chart", "", 4),
-                new DashboardTile(self,"demo-la-widget","Demo Log Anaytics (Log Records Count)", "", 2),
-                new DashboardTile(self,"demo-ta-widget","Demo Target Anaytics (Target Availability Status)", "", 2)
-            ] : []);
-            */
 
             self.isEmpty = function() {
                 return !self.tiles() || self.tiles().length === 0;
@@ -321,11 +301,44 @@ define(['knockout',
                         - (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
             };
             
-            // maximize 1st tile only
+            // maximize 1st tile only, used for one-page type dashboard
             self.maximizeFirst = function() {
                 if (self.isOnePageType && self.tiles() && self.tiles().length > 0) {
+                    if (!$('#main-container').hasClass('dbd-one-page')) {
+                        $('#main-container').addClass('dbd-one-page');
+                    }
+                    if (!$('#tiles-row').hasClass('dbd-one-page')) {
+                        $('#tiles-row').addClass('dbd-one-page');
+                    }
                     var tile = self.tiles()[0];
-                    self.maximize(tile);
+                    
+                    var tileId = 'tile' + tile.clientGuid;
+                    var iframe = $('#' + tileId + ' div iframe');
+                    globalDom = iframe.context.body;
+                    var height = globalDom.scrollHeight;
+                    var maximizedTileHeight = self.calculateTilesRowHeight();
+                    height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
+                    originalHeight = height;
+                    var width = globalDom.scrollWidth;
+                    console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
+                    //waitForIFrameLoading();
+                    // following are investigation code, and now work actually for plugins loaded by requireJS
+//                    $($('#df_iframe').context).ready(function() {
+//                        alert('iframe loaded');
+//                    });
+//                    $("iframe").on("iframeloading iframeready iframeloaded iframebeforeunload iframeunloaded", function(e){
+//                        console.log(e.type);
+//                    });
+//                    requirejs.onResourceLoad = function (context, map, depArray) {
+//                        alert('test');
+//                    };
+//                    iframe.height(height + 'px');
+//                    iframe.width(width + 'px');
+                    $('#' + tileId).height(height + 'px');
+                    $('#' + tileId).width(width + 'px');
+                    if (!$('#df_iframe').hasClass('dbd-one-page'))
+                        $('#df_iframe').addClass('dbd-one-page');
+                    $('#df_iframe').width((width - 5) + 'px');
                 }
             };
             
@@ -497,3 +510,22 @@ define(['knockout',
             "DashboardViewModel": DashboardViewModel};
     }
 );
+
+var globalDom;
+var originalHeight;
+function waitForIFrameLoading() {
+//                        if ($('#df_iframe').context.readyState != "complete") {
+    var height = globalDom.scrollHeight;
+    if (originalHeight === height) {
+        console.log('height for document is ' + height);
+        setTimeout("waitForIFrameLoading();", 200);
+    } else {
+        onePageIframeLoaded();
+    }
+}
+
+function onePageIframeLoaded() {
+    alert($('#df_iframe').contents().find("body").height());
+    alert('iframe state changed to completed');
+    console.log('height for document is ' + height);
+}
