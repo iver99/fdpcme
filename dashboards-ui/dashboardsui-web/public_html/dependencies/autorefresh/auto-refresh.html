@@ -1,11 +1,11 @@
 <div id="global-auto-refresh">
-    <label style="font-weight: bold">Auto Refresh:</label>
-    <select id="autoRefreshSelect" class="oj-select-arrow" 
+    <label style="font-weight: bold;" for="autoRefreshSelect" class="oj-label-inline">Refresh:</label>
+    <select id="autoRefreshSelect" class="oj-select-arrow" style="width:170px;"
             data-bind="ojComponent:{component:'ojSelect',value:selected,optionChange: optionChangedHandler}"> 
-        <option value="no">No Auto Refresh</option>
-        <option value="5secs">Every 5 Secs</option>
-        <option value="1min">Every 1 Min</option>
-        <option value="5mins">Every 5 Mins</option>
-        <option value="30mins">Every 30 Mins</option>
-    </select>     
+        <option value="no">None</option>
+        <option value="15secs">15 seconds</option>
+        <option value="30secs">30 seconds</option>
+        <option value="1min">1 min</option>
+        <option value="15mins">15 mins</option>
+    </select>  
 </div>

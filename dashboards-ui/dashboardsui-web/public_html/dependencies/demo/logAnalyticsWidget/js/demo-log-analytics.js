@@ -63,6 +63,9 @@ define([
             };
             
             function refresh(startTime, endTime) {
+                self.nodeValues([]);
+                wholeNode = createNode("All", 0, 0);
+                totalValues = 0;
                 if (startTime === null && endTime === null) {
                     queryString.timeFilter = null;
                 }
@@ -75,8 +78,8 @@ define([
                     queryString.timeFilter.type = "absolute";
                     queryString.timeFilter.startTime = startTimeStr;
                     queryString.timeFilter.endTime = endTimeStr;
-                    fetchResults();
                 }
+                fetchResults();
             };
             
             function fetchResults() {

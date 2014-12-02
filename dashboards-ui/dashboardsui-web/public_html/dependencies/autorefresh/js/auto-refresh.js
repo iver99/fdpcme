@@ -42,14 +42,14 @@ define(['knockout', 'jquery'],
                     console.log(data.value);
                     if ("no" === data.value[0]) {
                         resetTimer(0);
-                    } else if ("5secs" === data.value[0]) {
-                        resetTimer(5 * 1000);
+                    } else if ("15secs" === data.value[0]) {
+                        resetTimer(15 * 1000);
+                    } else if ("30secs" === data.value[0]) {
+                        resetTimer(30 * 1000);
                     } else if ("1min" === data.value[0]) {
                         resetTimer(60 * 1000);
-                    } else if ("5mins" === data.value[0]) {
-                        resetTimer(5 * 60 * 1000);
-                    } else if ("30mins" === data.value[0]) {
-                        resetTimer(30 * 60 * 1000);
+                    } else if ("15mins" === data.value[0]) {
+                        resetTimer(15 * 60 * 1000);
                     }
                 };
             }
