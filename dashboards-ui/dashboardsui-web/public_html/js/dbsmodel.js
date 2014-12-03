@@ -21,6 +21,8 @@ define([
 ],
 function(temp, tabmodel, oj, ko, $)
 {
+    var RECENT_MAX_SIZE = 10;
+    
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable('');
@@ -33,6 +35,33 @@ function(temp, tabmodel, oj, ko, $)
             self.description('');
             self.timeRangeFilterValue(["OFF"]);
             self.targetFilterValue(["OFF"]);
+        };
+    };
+    
+    function navigationsPopupModel() {
+        var self = this;
+        self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
+        self.dataVisualLink = "";
+        self.favorites = ko.observableArray();
+        self.recents = ko.observableArray();
+        self.addFavorite = function(dashboard) {
+            if (self.favorites.indexOf(dashboard) < 0)
+            {
+                self.favorites.push(dashboard);
+            }
+        };
+        self.removeFavorite = function(dashboard) {
+            self.favorites.remove(function(item) { return item.id === dashboard.id; });
+        };
+        self.addRecent = function(dashboard) {
+            if (self.recents.indexOf(dashboard) < 0)
+            {
+                if (self.recents().length >= RECENT_MAX_SIZE) self.recents.shift();
+                self.recents.unshift(dashboard);
+            }
+        };
+        self.removeRecent = function(dashboard) {
+            self.recents.remove(function(item) { return item.id === dashboard.id; });
         };
     };
     
@@ -74,8 +103,11 @@ function(temp, tabmodel, oj, ko, $)
         self.currentPageNum = 1;
         self.openDashboard = function(){
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
-            window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId='+self.id);
-        }
+            window.open(self.getLink());
+        };
+        self.getLink = function() {
+            return document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId=' + self.id;
+        };
     };
     
     function ViewModel() {
@@ -84,6 +116,7 @@ function(temp, tabmodel, oj, ko, $)
         self.selectedDashboard = ko.observable(null);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
+        self.navigationsPopupModel = new navigationsPopupModel();
         
         self.dbsArray = [];
         self.filterArray = [];
@@ -130,6 +163,10 @@ function(temp, tabmodel, oj, ko, $)
         self.dbsArray.push(dsb5);       
         self.did=6;
         
+        self.navigationsPopupModel.addFavorite(dsb0);
+        self.navigationsPopupModel.addFavorite(dsb5);
+        self.navigationsPopupModel.addRecent(dsb0);
+        self.navigationsPopupModel.addRecent(dsb2);
         /*
         for (self.did = 7; self.did < 100000; self.did++)
         {
@@ -218,6 +255,7 @@ function(temp, tabmodel, oj, ko, $)
         
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
+            self.navigationsPopupModel.addRecent(data.dashboard);
             data.dashboard.openDashboard();
         };
         
@@ -293,6 +331,12 @@ function(temp, tabmodel, oj, ko, $)
             $( "#cDsbDialog" ).ojDialog( "close" );
         };
         
+        self.searchResponse = function (event, data)
+        {
+            //console.log("searchResponse: "+data.content.length);
+            self.pagingDatasource(new oj.ArrayPagingDataSource(data.content));
+        };
+        
         self.searchFilterFunc = function (arr, value)
         {
             var _contains = function(s1, s2)
@@ -309,15 +353,11 @@ function(temp, tabmodel, oj, ko, $)
             
             self.filterArray = $.grep(self.dbsArray, function(o) {
                 if (!value || value.length <=0) return true; //no filter
-                if (_contains(o.name, value))
+                if (_contains(o.name, value)) return true;
+                if (_contains(o.description, value)) return true;
+                var _wdgts = o.widgets;
+                if (_wdgts && _wdgts.length > 0)
                 {
-                    return true;
-                }
-                else
-                {
-                    var _wdgts = o.widgets;
-                    if (_wdgts && _wdgts.length > 0)
-                    {
                         for (var _i = 0 ; _i < _wdgts.length ; _i++)
                         {
                             if (_contains(_wdgts[_i].title, value))
@@ -325,7 +365,6 @@ function(temp, tabmodel, oj, ko, $)
                                 return true;
                             }
                         }
-                    }
                 }
                 
                 return false;
@@ -370,10 +409,13 @@ function(temp, tabmodel, oj, ko, $)
             }
         };
         
-        self.searchResponse = function (event, data)
+        self.saveFavorite = function (id)
         {
-            //console.log("searchResponse: "+data.content.length);
-            self.pagingDatasource(new oj.ArrayPagingDataSource(data.content));
+            var _dsb = self.getDashboard(id);
+            if (_dsb && _dsb !== null)
+            {
+                self.navigationsPopupModel.addFavorite(_dsb);
+            }
         };
     };
     

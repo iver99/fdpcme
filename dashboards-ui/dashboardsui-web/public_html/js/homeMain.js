@@ -74,6 +74,7 @@ require(['dbs/dbsmodel',
     'ojs/ojbutton',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
+    'ojs/ojpopup',
     'dbs/dbstabs',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
@@ -190,6 +191,10 @@ require(['dbs/dbsmodel',
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+                self.openLinksPopup = function (event) {
+                    var t = $('#dbs_navPopup');
+                    $('#dbs_navPopup').ojPopup('open');//'#linksButton');
+                };
 
             }
             
