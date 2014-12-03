@@ -163,8 +163,8 @@ function(temp, tabmodel, oj, ko, $)
         self.dbsArray.push(dsb5);       
         self.did=6;
         
-        self.navigationsPopupModel.addFavorite(dsb0);
-        self.navigationsPopupModel.addFavorite(dsb5);
+//        self.navigationsPopupModel.addFavorite(dsb0);
+//        self.navigationsPopupModel.addFavorite(dsb5);
         self.navigationsPopupModel.addRecent(dsb0);
         self.navigationsPopupModel.addRecent(dsb2);
         /*
@@ -409,12 +409,20 @@ function(temp, tabmodel, oj, ko, $)
             }
         };
         
-        self.saveFavorite = function (id)
+        self.addToFavorites = function (id)
         {
             var _dsb = self.getDashboard(id);
             if (_dsb && _dsb !== null)
             {
                 self.navigationsPopupModel.addFavorite(_dsb);
+            }
+        };
+        self.removeFromFavorites = function (id)
+        {
+            var _dsb = self.getDashboard(id);
+            if (_dsb && _dsb !== null)
+            {
+                self.navigationsPopupModel.removeFavorite(_dsb);
             }
         };
     };

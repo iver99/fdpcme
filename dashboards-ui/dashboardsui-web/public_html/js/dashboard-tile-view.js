@@ -313,6 +313,7 @@ define(['knockout',
             
             self.handleDashboardSave = function() {
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+                outputData.eventType = "SAVE";
                 var nodesToRecover = [];
                 var nodesToRemove = [];
                 var elems = $('#tiles-row').find('svg');
@@ -420,6 +421,28 @@ define(['knockout',
 //                $('#screen-shot-zoom-in').hide();
 //                $('#screen-shot-zoom-out').show();
 //            };
+            
+            self.isFavorite = ko.observable(false);
+            self.addToFavorites = function() {
+                self.isFavorite(true);
+                var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+                outputData.eventType = "ADD_TO_FAVORITES";
+                if (window.opener && window.opener.childMessageListener) {
+                    var jsonValue = JSON.stringify(outputData);
+                    console.log(jsonValue);
+                    window.opener.childMessageListener(jsonValue);
+                }
+            };
+            self.deleteFromFavorites = function() {
+                self.isFavorite(false);
+                var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+                outputData.eventType = "REMOVE_FROM_FAVORITES";
+                if (window.opener && window.opener.childMessageListener) {
+                    var jsonValue = JSON.stringify(outputData);
+                    console.log(jsonValue);
+                    window.opener.childMessageListener(jsonValue);
+                }
+            };
             
             self.categoryValue=ko.observableArray();
             var widgetArray = [];
