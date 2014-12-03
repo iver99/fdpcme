@@ -334,6 +334,7 @@ define(['knockout',
 //                    };
 //                    iframe.height(height + 'px');
 //                    iframe.width(width + 'px');
+                    onePageTile = $('#' + tileId);
                     $('#' + tileId).height(height + 'px');
                     $('#' + tileId).width(width + 'px');
                     if (!$('#df_iframe').hasClass('dbd-one-page'))
@@ -511,10 +512,16 @@ define(['knockout',
     }
 );
 
+// global variable for iframe dom object
 var globalDom;
+// original height for document inside iframe
 var originalHeight;
+// tile used to wrapper the only widget inside one page dashboard
+var onePageTile;
+
+// check the height of document inside iframe repeatedly
 function waitForIFrameLoading() {
-//                        if ($('#df_iframe').context.readyState != "complete") {
+//  if ($('#df_iframe').context.readyState != "complete") {
     var height = globalDom.scrollHeight;
     if (originalHeight === height) {
         console.log('height for document is ' + height);

@@ -352,3 +352,11 @@ require(['knockout',
             });
         }
 );
+
+// method to be called by page inside iframe (especially inside one page type dashboard)
+function updateOnePageHeight(newHeight) {
+    if (onePageTile && newHeight) {
+        onePageTile.height(newHeight);
+        console.log('one page tile height is set to ' + newHeight);
+    }
+};

@@ -249,6 +249,9 @@ require(['dbs/dbsmodel',
                
                window.addEventListener('message', childMessageListener, false);
                window.name = 'dashboardhome'; 
+               
+               if (window.parent && window.parent.updateOnePageHeight)
+                   window.parent.updateOnePageHeight('2000px');
             });
         }
 );
