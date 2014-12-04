@@ -318,10 +318,8 @@ define(['knockout',
                     var height = globalDom.scrollHeight;
                     var maximizedTileHeight = self.calculateTilesRowHeight();
                     height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
-                    originalHeight = height;
                     var width = globalDom.scrollWidth;
                     console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
-                    //waitForIFrameLoading();
                     // following are investigation code, and now work actually for plugins loaded by requireJS
 //                    $($('#df_iframe').context).ready(function() {
 //                        alert('iframe loaded');
@@ -518,21 +516,3 @@ var globalDom;
 var originalHeight;
 // tile used to wrapper the only widget inside one page dashboard
 var onePageTile;
-
-// check the height of document inside iframe repeatedly
-function waitForIFrameLoading() {
-//  if ($('#df_iframe').context.readyState != "complete") {
-    var height = globalDom.scrollHeight;
-    if (originalHeight === height) {
-        console.log('height for document is ' + height);
-        setTimeout("waitForIFrameLoading();", 200);
-    } else {
-        onePageIframeLoaded();
-    }
-}
-
-function onePageIframeLoaded() {
-    alert($('#df_iframe').contents().find("body").height());
-    alert('iframe state changed to completed');
-    console.log('height for document is ' + height);
-}
