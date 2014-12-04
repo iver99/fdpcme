@@ -329,7 +329,7 @@ require(['knockout',
                 ko.virtualElements.allowedBindings.stopBinding = true;
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
-                ko.applyBindings(tilesViewMode, $('#mainContainer')[0]);   
+                ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
                 
                 $('#globalBody').show();
@@ -352,3 +352,13 @@ require(['knockout',
             });
         }
 );
+
+// method to be called by page inside iframe (especially inside one page type dashboard)
+function updateOnePageHeight(event) {
+    if (event && event.data && event.data.messageType === 'onePageWidgetHeight') {
+        onePageTile.height(event.data.height);
+        console.log('one page tile height is set to ' + event.data.height);
+    }
+};
+
+window.addEventListener("message", updateOnePageHeight, false);
