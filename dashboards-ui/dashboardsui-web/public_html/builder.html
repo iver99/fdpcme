@@ -198,6 +198,20 @@ role value for that section to represent the appropriate content type.
                             }" title="Save">
                             <img src="css/images/func_floppy_24.png" alt="Save"/>
                           </button>
+                        <!-- ko if: isFavorite()===false -->
+                        <button id="dashboard-favorite-add" class="oj-button oj-default oj-button-half-chrome"
+                                data-bind="click: addToFavorites, ojComponent: {
+                                      component:'ojButton'}" title="Add to favorites">
+                          <img src="css/images/add-favorites-24.png" alt="Add to favorites"/>
+                        </button>
+                        <!-- /ko -->
+                        <!-- ko if: isFavorite()===true -->
+                        <button id="dashboard-favorite-del" class="oj-button oj-default oj-button-half-chrome"
+                                data-bind="click: deleteFromFavorites, ojComponent: {
+                                      component:'ojButton'}" title="Delete from favorites">
+                          <img src="css/images/favorites-marked-24.png" alt="Delete from favorites"/>
+                        </button>
+                        <!-- /ko -->
                           <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
                               <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
                           </button>

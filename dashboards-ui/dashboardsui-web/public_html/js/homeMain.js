@@ -74,6 +74,7 @@ require(['dbs/dbsmodel',
     'ojs/ojbutton',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
+    'ojs/ojpopup',
     'dbs/dbstabs',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
@@ -190,6 +191,10 @@ require(['dbs/dbsmodel',
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+                self.openLinksPopup = function (event) {
+                    var t = $('#dbs_navPopup');
+                    $('#dbs_navPopup').ojPopup('open');//'#linksButton');
+                };
 
             }
             
@@ -262,7 +267,16 @@ function childMessageListener(builderData) {
     var _o = JSON.parse(builderData);
     //var _did = _o.dashboardId;
     //_o.dashboardId = 0;
-    dashboardsViewModle.updateDashboard(_o);
+    if (_o.eventType && _o.eventType === 'SAVE') {
+        dashboardsViewModle.updateDashboard(_o);
+    }
+    else if (_o.eventType && _o.dashboardId && _o.eventType === 'ADD_TO_FAVORITES') {
+        dashboardsViewModle.addToFavorites(parseInt(_o.dashboardId));
+    }
+    else if (_o.eventType && _o.dashboardId && _o.eventType === 'REMOVE_FROM_FAVORITES') {
+        dashboardsViewModle.removeFromFavorites(parseInt(_o.dashboardId));
+    }
+    
 };
 
 

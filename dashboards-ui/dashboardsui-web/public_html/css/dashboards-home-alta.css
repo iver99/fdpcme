@@ -167,6 +167,8 @@ ul.dbs-summary-rows li {
 
 .dbs-lock-icon-24:before{content:url("images/qual_lock_16_full.png");}
 
+.dbs-nav-mapping-icon-24:before{content:url("images/navi_mapping_24_ena.png");}
+
 .dbs-isolate-icon{content:url("images/s_max_ovr.png")}
 
 .dbs-icon {
@@ -247,4 +249,8 @@ ul.dbs-summary-rows li {
     border: 1px solid #3a9aea;  
     background-image: none;
 
-}                                        
+}  
+
+a:hover {
+ cursor:pointer;
+}

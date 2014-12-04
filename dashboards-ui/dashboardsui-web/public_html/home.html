@@ -77,18 +77,25 @@ role value for that section to represent the appropriate content type.
                             <div class="demo-appheader-toolbar-container">
                                 <div class="demo-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
 
-                                    <!-- ko foreach: toolbarButtons -->
+                                    <!-- koooo foreach: toolbarButtons -->
                                     <!--button class='oj-button-half-chrome demo-appheader-toolbar-button'
                                             data-bind="ojComponent: {component:'ojButton', 
                                                         label: label, 
                                                         display: 'icons', 
                                                         icons: {start: iconClass + ' demo-icon-font'}} ">
                                     </button-->
-                                    <!-- /ko -->
+                                    <!-- /kooo -->
+                                    <button id="linksButton" class='oj-button-half-chrome demo-appheader-toolbar-button'
+                                            data-bind="ojComponent: {component:'ojButton', 
+                                                        label: 'Links', 
+                                                        display: 'icons', 
+                                                        icons: {start: 'dbs-nav-mapping-icon-24 demo-icon-font'}}, 
+                                                        click: function () { $('#dbs_navPopup').ojPopup('open', '#linksButton');}">
+                                    </button>
 
                                     <!-- This is how to add a separator to the toolbar.  
                                          Be sure to include the role and aria-orientation as shown to make it accessible.  -->
-                                    <!--span role="separator" class="oj-toolbar-separator"></span-->
+                                    <span role="separator" class="oj-toolbar-separator"></span>
 
                                     <button id="menubutton"
                                             class='oj-button-half-chrome demo-appheader-toolbar-button'
@@ -128,9 +135,12 @@ role value for that section to represent the appropriate content type.
                                                 <button id="cbtn" style="margin-bottom: 4px;color: black;margin-right: 4px;text-align: right;"
                                                         data-bind="click: exploreDataClicked, ojComponent: { component:'ojButton', label: 'Explore Data'}"></button>
                                         </div>                                        
-                                        <div id="toolbar3" class="oj-xl-float-end"  aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
+                                        <!--div id="toolbar3" class="oj-xl-float-end"  aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
                                                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
-                                        </div>
+                                        </div-->
+                                    </div>
+                                    <div id="toolbar3" aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
+                                                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
                                     </div>
                                     <!-- Home toolbar end -->
                                     <div id="dtabhomesc" class="dbs-summaries-container">
@@ -237,6 +247,32 @@ role value for that section to represent the appropriate content type.
                         </div>
                     </div>
                     <!-- Confirmation dilog end -->
+                    
+                    <!-- Navigations popup start -->
+                    <div style="display:none; min-width:500px; min-height:150px" id="dbs_navPopup" 
+                         data-bind="ojComponent:{component: 'ojPopup', tail: 'simple', position: {'my' : 'right top', 'at' : 'left center', 'collision' : 'none'}}">
+                        <div class="oj-row">
+                            <div class="oj-sm-3 oj-col">
+                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Favorites</div>
+                                <div class="oj-row">---------</div>
+                                <!-- ko foreach: navigationsPopupModel.favorites -->
+                                <div class="oj-row"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
+                                <!-- /ko -->
+                            </div>
+                            <div class="oj-sm-4 oj-col">
+                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Recent Dashboards</div>
+                                <div class="oj-row">---------</div>
+                                <!-- ko foreach: navigationsPopupModel.recents -->
+                                <div class="oj-row"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
+                                <!-- /ko -->
+                            </div>
+                            <div class="oj-sm-4 oj-col">
+                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: function() { window.open( navigationsPopupModel.homeLink );}">Dashboard Home</a></div>
+                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: exploreDataClicked">Data Visual Analyzer Home</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Navigations popup end -->
             </div>
 
                 <!-- Footer section which contains dynamic list of items. Template is located in /templates/demoFooterTemaplate.html-->
