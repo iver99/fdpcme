@@ -208,7 +208,7 @@ role value for that section to represent the appropriate content type.
                                     <div id="checkboxsetTimeRangeFilter" class="oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
                                                 value: createDashboardModel.timeRangeFilterValue}" >
                                         <input id="ckbxTimeRangeFilter" type="checkbox" value="ON">
-                                        <label for="ckbxTimeRangeFilter">Include a time-range filter</label>
+                                        <label for="ckbxTimeRangeFilter">Include a time control (range and refresh)</label>
                                     </div>
                                 </div> 
                                 <!--div class="oj-row">
@@ -223,8 +223,8 @@ role value for that section to represent the appropriate content type.
                                 </div-->                                 
                             </div>
                         </div>
-                        <div class="oj-dialog-footer">
-                            <button data-bind="click: confirmDashboardCreate,ojComponent: { component: 'ojButton', label: 'Create', rootAttributes: {style:'margin-right:5px'}}"></button>
+                        <div id="createDialogFooter" class="oj-dialog-footer">
+                            <button id="createDsb" data-bind="click: confirmDashboardCreate,ojComponent: { component: 'ojButton', label: 'Create', rootAttributes: {style:'margin-right:5px'}}"></button>
                         </div>
                     </div>
                     <!-- Create Dashboard dilog end -->

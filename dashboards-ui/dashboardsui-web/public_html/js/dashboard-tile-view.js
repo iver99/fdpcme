@@ -483,7 +483,8 @@ define(['knockout',
                 var targetWidgetArray = [];
                 if (data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
-                        var widget = {id: data[i].id, name: data[i].name, type: data[i].category.id, href:data[i].href};
+//                        var widget = {id: data[i].id, name: data[i].name, type: data[i].category.id, href:data[i].href};
+                        var widget = data[i];
                         targetWidgetArray.push(widget);
                         widgetArray.push(widget);
                         if (index < pageSize) {

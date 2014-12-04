@@ -203,7 +203,7 @@ define(['knockout',
 //                var newTile =new DashboardWidget(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
                 var newTile = null;
                 //demo log analytics widget
-                if (widget && widget.type === 1) {
+                if (widget && widget.category.id === 1) {
                     //find KOC name for registration. if valid registration is not detected, use default one.
                     var href = widget.href;
                     var widgetDetails = null;
@@ -220,18 +220,29 @@ define(['knockout',
                     var koc_name = null;
                     var template = null;
                     var viewmodel = null;
+//                    if (widgetDetails){
+//                        if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+//                           for(var int=0;i<widgetDetails.parameters.length;i++){
+//                               if ("WIDGET_KOC_NAME"==widgetDetails.parameters[i]["name"]){
+//                                    koc_name = widgetDetails.parameters[i]["value"];
+//                               }else if ("WIDGET_TEMPLATE"==widgetDetails.parameters[i]["name"]){
+//                                   template = widgetDetails.parameters[i]["value"];
+//                               }else if ("WIDGET_VIEWMODEL"==widgetDetails.parameters[i]["name"]){
+//                                   viewmodel = widgetDetails.parameters[i]["value"];
+//                               }
+//                           }
+//                        }
+//                    }
                     if (widgetDetails){
                         if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+                           widget.parameters = {};
                            for(var int=0;i<widgetDetails.parameters.length;i++){
-                               if ("WIDGET_KOC_NAME"==widgetDetails.parameters[i]["name"]){
-                                    koc_name = widgetDetails.parameters[i]["value"];
-                               }else if ("WIDGET_TEMPLATE"==widgetDetails.parameters[i]["name"]){
-                                   template = widgetDetails.parameters[i]["value"];
-                               }else if ("WIDGET_VIEWMODEL"==widgetDetails.parameters[i]["name"]){
-                                   viewmodel = widgetDetails.parameters[i]["value"];
-                               }
+                               widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
                            }
-                        }
+                           koc_name =  widget.parameters["WIDGET_KOC_NAME"];
+                           template =  widget.parameters["WIDGET_TEMPLATE"];
+                           viewmodel =  widget.parameters["WIDGET_VIEWMODEL"];
+                        }                        
                     }
                     if (koc_name && template && viewmodel){
                       ko.components.register(koc_name,{
