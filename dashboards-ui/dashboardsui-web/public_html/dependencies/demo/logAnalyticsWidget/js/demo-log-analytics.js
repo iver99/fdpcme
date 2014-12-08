@@ -55,8 +55,8 @@ define([
             params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
                     if (dashboardItemChangeEvent.timeRangeChange){
-                        startTime = dashboardItemChangeEvent.timeRangeChange.viewStartTime();
-                        endTime = dashboardItemChangeEvent.timeRangeChange.viewEndTime();
+                        startTime = dashboardItemChangeEvent.timeRangeChange.viewStartTime;//();
+                        endTime = dashboardItemChangeEvent.timeRangeChange.viewEndTime;//();
                         refresh(startTime, endTime);
                     }
                 }
