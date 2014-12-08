@@ -448,6 +448,7 @@ define(['knockout',
             var widgetArray = [];
             var laWidgetArray = [];
             var taWidgetArray = [];
+            var itaWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
             var dd=1,mh=1,si=1,art=1,sh=1,index=0;
@@ -456,6 +457,7 @@ define(['knockout',
             if (ssfUrl && ssfUrl !== '') {
                 var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
                 var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
+                var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
                 $.ajax({
                     url: laSearchesUrl,
                     success: function(data, textStatus) {
@@ -471,6 +473,17 @@ define(['knockout',
                     url: taSearchesUrl,
                     success: function(data, textStatus) {
                         taWidgetArray = loadWidgets(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        console.log('Error when querying target analytics searches!');
+                    },
+                    async: false
+                });
+                
+                $.ajax({
+                    url: itaSearchesUrl,
+                    success: function(data, textStatus) {
+                        itaWidgetArray = loadWidgets(data);
                     },
                     error: function(xhr, textStatus, errorThrown){
                         console.log('Error when querying target analytics searches!');
@@ -579,6 +592,9 @@ define(['knockout',
                     else if (data.value[0]==='ta') {
                         totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
                     }
+                    else if (data.value[0] === 'ita') {
+                        totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
+                    }
                     
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
                     self.curPageWidgetList(curPageWidgets);
@@ -658,6 +674,9 @@ define(['knockout',
                 else if (category === 'ta') {
                     allWidgets = taWidgetArray;
                 }
+                else if (category === 'ita') {
+                    allWidgets = itaWidgetArray;
+                }
                 if (searchtxt === '') {
                     searchResultArray = allWidgets;
                 }
@@ -702,6 +721,9 @@ define(['knockout',
                 }
                 else if (category === 'ta') {
                     allWidgets = taWidgetArray;
+                }
+                else if (category === 'ita') {
+                    allWidgets = itaWidgetArray;
                 }
                 
                 return allWidgets;
