@@ -265,7 +265,7 @@ define(['knockout',
                     
                 }
                 //demo target analytics widget
-                else if (widget && widget.type === 2) {
+                else if (widget && widget.category.id === 2) {
                     newTile =new DashboardWidget(self,"demo-ta-widget",name, description, width, widget);
                 }
                 //demo simple chart widget

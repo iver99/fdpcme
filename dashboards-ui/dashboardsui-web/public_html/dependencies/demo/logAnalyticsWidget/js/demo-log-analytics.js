@@ -22,7 +22,10 @@ define([
             var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
             var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "* | stats count by 'target type','log source'"}, 
                 "subSystem":"LOG",
-                "timeFilter" : null};
+                "timeFilter" : {"type":"absolute","startTime":"2014-07-11T10:22:29.000Z","endTime":"2014-12-01T00:00:00.000Z"}};
+//            var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "* | timestats count by 'severity'"}, 
+//                            "subSystem":"LOG",
+//                            "timeFilter" : {"type":"absolute","startTime":"2014-07-11T10:22:29.000Z","endTime":"2014-12-01T00:00:00.000Z"}};
             var barSeries = [];
             var barGroups = [];
             var widget = params.tile.widget;
