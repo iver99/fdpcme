@@ -504,53 +504,6 @@ define(['knockout',
                 return targetWidgetArray;
             };
             
-//            for (var i = 0; i < 61; i++)
-//            {
-//                var widget = {id: i};
-//                if (index === 1) {
-//                    widget.type="ta";
-//                    widget.name='Database Diagnostics '+dd;
-//                    taWidgetArray.push(widget);
-//                    dd++;
-//                    index++;
-//                }
-//                else if (index === 2) {
-//                    widget.type="ta";
-//                    widget.name='Middleware Health '+mh;
-//                    taWidgetArray.push(widget);
-//                    mh++;
-//                    index++;
-//                }
-//                else if (index === 3) {
-//                    widget.type="la";
-//                    widget.name='Security Incidents '+si;
-//                    laWidgetArray.push(widget);
-//                    si++;
-//                    index++;
-//                }
-//                else if (index === 4) {
-//                    widget.type="la";
-//                    widget.name='Application Response Time '+art;
-////                    widget.name="Log Analytics"+art;
-//                    laWidgetArray.push(widget);
-//                    art++;
-//                    index++;
-//                }
-//                else if (index === 5) {
-//                    widget.type="la";
-//                    widget.name='Security Histogram '+sh;
-//                    laWidgetArray.push(widget);
-//                    sh++;
-//                    index = 1;
-//                }
-//                
-//                widgetArray.push(widget);
-//                
-//                if (i < pageSize) {
-//                    curPageWidgets.push(widget);
-//                }
-//            }
-            
             var curPage = 1;
             var totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
             var naviFromSearchResults = false;
@@ -559,6 +512,8 @@ define(['knockout',
             self.searchText = ko.observable("");
             self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
             self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
+            self.currentWidget = ko.observable();
+            var widgetClickTimer = null; 
             
             self.openAddWidgetDialog = function() {
                 $('#addWidgetDialog').ojDialog('open');
@@ -574,17 +529,17 @@ define(['knockout',
                 }
             };
             
-            self.optionChangedHandler = function(event, data) {
-                if (data.option === "value") {
+            self.optionChangedHandler = function(data, event) {
+                if (event.option === "value") {
                     curPageWidgets=[];
                     curPage = 1;
-                     if (data.value[0]==='all') {
+                     if (event.value[0]==='all') {
                         totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
                     }
-                    else if (data.value[0]==='la') {
+                    else if (event.value[0]==='la') {
                         totalPage = (laWidgetArray.length%pageSize === 0 ? laWidgetArray.length/pageSize : Math.floor(laWidgetArray.length/pageSize) + 1);
                     }
-                    else if (data.value[0]==='ta') {
+                    else if (event.value[0]==='ta') {
                         totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
                     }
                     
@@ -634,9 +589,43 @@ define(['knockout',
                 refreshNaviButton();
             };
             
-            self.widgetDbClicked = function(event,data) {
-                //alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
-                self.tilesViewModel.appendNewTile(event.name, "", 2, event);
+            self.widgetDbClicked = function(data, event) {
+                clearTimeout(widgetClickTimer);
+                self.tilesViewModel.appendNewTile(data.name, "", 2, data);
+            };
+            
+            self.widgetClicked = function(data, event) {
+                clearTimeout(widgetClickTimer);
+                widgetClickTimer = setTimeout(function (){
+                    var _data = ko.toJS(data);
+                    _data.createdOn = dfu.formatUTCDateTime(data.createdOn);
+                    _data.description = '';
+                    _data.owner = '';
+                    if (ssfUrl && ssfUrl !== '') {
+                        $.ajax({
+                            url: ssfUrl+'/search/'+data.id,
+                            success: function(widget, textStatus) {
+                                _data.owner = widget.owner ? widget.owner : '';
+                                _data.description = widget.description ? widget.description : '';
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                console.log('Error when querying saved searches!');
+                            },
+                            async: false
+                        });
+                    }
+                    self.currentWidget(_data);
+                    $('#widgetDetailsDialog').ojDialog('open');
+                }, 300); 
+            };
+            
+            self.closeWidgetDetailsDialog = function() {
+                $('#widgetDetailsDialog').ojDialog('close');
+            };
+            
+            self.addWidgetToDashboard = function() {
+                $('#widgetDetailsDialog').ojDialog('close');
+                self.tilesViewModel.appendNewTile(self.currentWidget().name, "", 2, self.currentWidget());
             };
             
             self.enterSearch = function(d,e){

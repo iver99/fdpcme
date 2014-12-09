@@ -396,7 +396,8 @@ role value for that section to represent the appropriate content type.
                     </div>
                         <div id="widgets" class="widget-summaries-container" >
                         <!-- ko foreach: curPageWidgetList -->
-                        <div class=" widget-container" data-bind="attr:{title: name}, event: { dblclick: $parent.widgetDbClicked}">
+                        <div class=" widget-container" data-bind="attr:{title: name}, 
+                                                        event: { dblclick: $parent.widgetDbClicked, click: $parent.widgetClicked}">
                             <div>
                                 <!-- ko if: category.id===1 -->
                                 <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="laimg" alt="Log Analytics" title="Log Analytics" 
@@ -419,7 +420,7 @@ role value for that section to represent the appropriate content type.
                         <!--div style="padding-bottom: 10px"-->
                         <image src="css/images/func_information_32.png" alt="hint" style="float:left;width:24px;height:24px;padding-top: 8px" />
                         <!--div class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard</div-->
-                        <label class="widget-dialog-footer-notes">Double click a widget to add it to current dashboard </label>
+                        <label class="widget-dialog-footer-notes">Double or single click a widget to add it to current dashboard </label>
                         <!--a class="oj-link" style="padding-right: 6px " data-bind="click:gotoCreateNewWidget">Didn't find what you are looking for? Create new widget</a-->
                         <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, disabled: naviPreBtnVisible,
                             ojComponent: {component: 'ojButton'},style:{opacity:naviPreBtnVisible()?1:0.4}" > 
@@ -435,6 +436,69 @@ role value for that section to represent the appropriate content type.
                              style="margin-right: 5px;"/> 
                       <input type="image" src="css/images/navi-next-temp.png" width="45" id="nextPage" alt="Next" title="Next" 
                              style="margin-right: 5px;"/> -->
+                  </div>  
+                </div>
+                <div style="display:none;" id="widgetDetailsDialog"
+                    data-bind="ojComponent:{component: 'ojDialog', 
+                        initialVisibility: 'hide', cancelBehavior:'none',
+                        rootAttributes: { style: 'width: 500px; height:300px;'}}">   
+                    <div class="oj-dialog-header" aria-labelledby="widget-info-title-id">
+                        <div id="widget-info-title-id" class="oj-dialog-title">
+                            <span class="widget-dialog-header-title">Widget Details</span>
+                            <a href="#" data-bind="click:closeWidgetDetailsDialog" class="df-dialog-header-close-bigger">CLOSE</a>
+                        </div>
+                    </div>
+                    <div class="oj-dialog-body">
+                        <div class="oj-md-3 oj-col">
+                            <div class="frame">
+                                <div id="widgetDetailsForm" class="oj-form oj-md-odd-cols-4 oj-md-labels-inline">
+                                    <form class="oj-form oj-md-odd-cols-11 oj-md-labels-inline" data-bind="with:currentWidget">
+                                        <div class="oj-row">
+                                            <div class="oj-col">
+                                                <label for="widgetDetailName" class="oj-label">Name</label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <input id="widgetDetailName" type="text" autocomplete="off" maxlength='30' class="widget-detail-dialog-text"
+                                                       data-bind="ojComponent:{component:'ojInputText',value:name, disabled: true}"/>
+                                            </div>
+                                        </div>
+                                        <div class="oj-row">
+                                            <div class="oj-col">
+                                                <label for="widgetDetailDescription" class="oj-label">Description</label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <textarea id="widgetDetailDescription" class="widget-detail-dialog-text"
+                                                          data-bind="ojComponent: {component: 'ojTextArea',value:description, disabled:true}"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="oj-row">
+                                            <div class="oj-col">
+                                                <label for="widgetDetailOwner" class="oj-label">Owner</label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <input id="widgetDetailOwner"  class="widget-detail-dialog-text"
+                                                       data-bind="ojComponent:{component:'ojInputText', disabled:true, value:owner}"/>
+                                            </div>
+                                        </div>
+                                        <div class="oj-row">
+                                            <div class="oj-col">
+                                                <label for="widgetDetailCreationDate" class="oj-label">Creation Date</label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <input id="widgetDetailCreationDate"
+                                                       class="widget-detail-dialog-text"
+                                                       data-bind="ojComponent:{component:'ojInputText', disabled:true, value: createdOn}"/>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                    <div class="oj-dialog-footer" style="padding-right: 20px" > 
+                        <button data-bind="click: addWidgetToDashboard, 
+                            ojComponent: {component: 'ojButton', label: 'Add'}"> 
+                        </button>                            
                   </div>  
                 </div>
             </div>

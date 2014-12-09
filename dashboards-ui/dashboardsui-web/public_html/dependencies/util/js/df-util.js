@@ -103,6 +103,47 @@ define(['knockout',
                 $.ajaxSettings.async = true;
                 return availableUrl;
             };
+            
+            self.formatUTCDateTime = function(dateString) {
+                var monthArray = [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep",
+                    "Oct",
+                    "Nov",
+                    "Dec"
+                ];
+                var year, month, day, hour, min, sec, dn;
+                var dt = dateString.split('T');
+                if (dt && dt.length === 2) {
+                    var yd = dt[0].split('-');
+                    var time = dt[1].split(':'); 
+                    if (yd && yd.length === 3) {
+                        year = yd[0];
+                        month=parseInt(yd[1]);
+                        day=parseInt(yd[2]);
+                    }
+                    if (time && time.length === 3) {
+                        hour=parseInt(time[0]);
+                        if (hour > 12) {
+                            dn='PM';
+                            hour = hour%12;
+                        }
+                        else {
+                            dn='AM';
+                        }
+                        min=time[1];
+                        sec=(time[2].split('.'))[0];
+                    }
+                }
+                return monthArray[month-1]+' '+day+', '+year+' '+hour+':'+min+':'+sec+' '+dn+' '+'UTC';
+            };
         }
         
         return new DashboardFrameworkUtility();
