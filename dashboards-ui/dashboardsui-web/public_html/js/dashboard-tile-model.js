@@ -33,10 +33,16 @@ define(['knockout',
          */
         function DashboardTimeRangeChange(startTime, endTime){
             var self = this;
-            if (ko.isObservable(startTime) && startTime() instanceof Date){
+//            if (ko.isObservable(startTime) && startTime() instanceof Date){
+//                self.viewStartTime = startTime;
+//            }
+//            if (ko.isObservable(endTime) && endTime() instanceof Date){
+//                self.viewEndTime = endTime;
+//            }
+            if (startTime instanceof Date){
                 self.viewStartTime = startTime;
             }
-            if (ko.isObservable(endTime) && endTime() instanceof Date){
+            if (endTime instanceof Date){
                 self.viewEndTime = endTime;
             }
         }
@@ -473,7 +479,7 @@ define(['knockout',
                 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart,self.timeSelectorModel.viewEnd),null);
+                    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
                     self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
