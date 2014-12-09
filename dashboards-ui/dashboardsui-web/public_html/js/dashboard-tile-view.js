@@ -431,6 +431,10 @@ define(['knockout',
                     var jsonValue = JSON.stringify(outputData);
                     console.log(jsonValue);
                     window.opener.childMessageListener(jsonValue);
+                    if (window.opener.navigationsModelCallBack())
+                    {
+                        navigationsModel(window.opener.navigationsModelCallBack());
+                    }
                 }
             };
             self.deleteFromFavorites = function() {
@@ -441,6 +445,10 @@ define(['knockout',
                     var jsonValue = JSON.stringify(outputData);
                     console.log(jsonValue);
                     window.opener.childMessageListener(jsonValue);
+                    if (window.opener.navigationsModelCallBack())
+                    {
+                        navigationsModel(window.opener.navigationsModelCallBack());
+                    }
                 }
             };
             

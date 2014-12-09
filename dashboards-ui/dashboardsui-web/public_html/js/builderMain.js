@@ -75,6 +75,7 @@ requirejs.config({
 var defaultTileHeight = 220;
 var defaultTileRowHeight = defaultTileHeight + 10;
 var defaultColumnsNumber = 4;
+var navigationsModel = {};
 
 /**
  * A top-level require call executed by the Application.
@@ -313,7 +314,16 @@ require(['knockout',
             
             var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView, timeSliderModel, dsbWidgets, dsbType);
             var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, dsbType, tilesViewMode);
-               
+            
+            if (window.opener && window.opener.navigationsModelCallBack) {
+                navigationsModel = ko.observable(window.opener.navigationsModelCallBack());
+                    //console.log("test:"+navigationsModel.homeLink);
+            }
+            else
+            {
+                navigationsModel = ko.observable({});
+            }
+           
             $(document).ready(function() {
                 ko.bindingHandlers.sortableList = {
                     init: function(element, valueAccessor) {
@@ -331,6 +341,7 @@ require(['knockout',
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                 ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
+                ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#dbs_navPopup')[0]);     
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
@@ -359,6 +370,17 @@ function updateOnePageHeight(event) {
         onePageTile.height(event.data.height);
         console.log('one page tile height is set to ' + event.data.height);
     }
+};
+
+function truncateString(str, length) {
+    if (str && length > 0 && str.length > length)
+    {
+        var _tlocation = str.indexOf(' ', length);
+        if ( _tlocation <= 0 )
+            _tlocation = length;
+        return str.substring(0, _tlocation) + "...";
+    }
+    return str;
 };
 
 window.addEventListener("message", updateOnePageHeight, false);

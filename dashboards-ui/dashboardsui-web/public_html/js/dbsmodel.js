@@ -41,7 +41,7 @@ function(temp, tabmodel, oj, ko, $)
     function navigationsPopupModel() {
         var self = this;
         self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
-        self.dataVisualLink = "";
+        self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
         self.favorites = ko.observableArray();
         self.recents = ko.observableArray();
         self.addFavorite = function(dashboard) {
@@ -417,6 +417,7 @@ function(temp, tabmodel, oj, ko, $)
                 self.navigationsPopupModel.addFavorite(_dsb);
             }
         };
+        
         self.removeFromFavorites = function (id)
         {
             var _dsb = self.getDashboard(id);
@@ -424,6 +425,11 @@ function(temp, tabmodel, oj, ko, $)
             {
                 self.navigationsPopupModel.removeFavorite(_dsb);
             }
+        };
+        
+        self.getNavigationsModel = function()
+        {
+            return self.navigationsPopupModel;
         };
     };
     

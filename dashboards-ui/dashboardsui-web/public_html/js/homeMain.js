@@ -266,7 +266,7 @@ require(['dbs/dbsmodel',
  * @param {type} builderData
  * @returns {undefined} */
 function childMessageListener(builderData) {
-    console.log(builderData);
+    //console.log(builderData);
     var _o = JSON.parse(builderData);
     //var _did = _o.dashboardId;
     //_o.dashboardId = 0;
@@ -282,6 +282,14 @@ function childMessageListener(builderData) {
     
 };
 
+function navigationsModelCallBack() {
+    //console.log("test:"+dashboardsViewModle.getNavigationsModel().homeLink);
+    var _model = dashboardsViewModle.getNavigationsModel();
+    return {'homeLink' : _model.homeLink,
+            'dataVisualLink': _model.dataVisualLink,
+            'favorites': _model.favorites(),
+            'recents': _model.recents()};
+};
 
 /**
 *  Callback method to be invokced by child builder page to get dashboard data
