@@ -117,12 +117,14 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
         }else if ("Application Performance Manager Cloud Service"===providerName){
             return "http://slc04srr.us.oracle.com:7401/apmUi/";
         } else {
+            var urlFound = false;
+            
             function fetchServiceAssetRoot(data) {
                 var items = data.items;
                 if (items && items.length > 0) {
                     for (j = 0; j < items.length && !urlFound; j++) {
                         var links = items[j].links;
-                        for (k = 0; l < links.length; k++) {
+                        for (k = 0; k < links.length; k++) {
                             var link = links[k];
                             if (providerAssetRoot === link.rel) {
                                 return link.href;
@@ -160,4 +162,3 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
     }
     return "http://jet.us.oracle.com";
 }
-

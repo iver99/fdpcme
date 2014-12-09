@@ -354,6 +354,12 @@ require(['knockout',
                 
                 toolBarModel.showAddWidgetTooltip();
                 tilesViewMode.postDocumentShow();
+
+                /*
+                 * Code to test df_util_widget_lookup_assetRootUrl
+                var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
+                console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
+                */
             });
         }
 );
