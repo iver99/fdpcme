@@ -242,7 +242,7 @@ define(['knockout',
                     if (widgetDetails){
                         if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
                            widget.parameters = {};
-                           for(var int=0;i<widgetDetails.parameters.length;i++){
+                           for(var i=0;i<widgetDetails.parameters.length;i++){
                                widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
                            }
                            koc_name =  widget.parameters["WIDGET_KOC_NAME"];
@@ -251,13 +251,16 @@ define(['knockout',
                         }                        
                     }
                     if (koc_name && template && viewmodel){
-                      ko.components.register(koc_name,{
-                           viewModel:{require:viewmodel},
-                           template:{require:'text!'+template}
-                       }); 
-                      console.log("widget: "+koc_name+" is registered");
-                      console.log("widget template: "+template);
-                      console.log("widget viewmodel:: "+viewmodel);
+                        if (!ko.components.isRegistered(koc_name)) {
+                            ko.components.register(koc_name,{
+                                  viewModel:{require:viewmodel},
+                                  template:{require:'text!'+template}
+                              }); 
+                        }
+                        console.log("widget: "+koc_name+" is registered");
+                        console.log("widget template: "+template);
+                        console.log("widget viewmodel:: "+viewmodel);
+                      
                       newTile =new DashboardWidget(self,koc_name,name, description, width, widget); 
                     }else{
                        newTile =new DashboardWidget(self,"demo-la-widget",name, description, width, widget); 
@@ -267,6 +270,76 @@ define(['knockout',
                 //demo target analytics widget
                 else if (widget && widget.category.id === 2) {
                     newTile =new DashboardWidget(self,"demo-ta-widget",name, description, width, widget);
+                }
+                if (widget && widget.category.id === 3) {
+                    var href = widget.href;
+                    var widgetDetails = null;
+                    $.ajax({
+                        url: href,
+                        success: function(data, textStatus) {
+                            widgetDetails = data;
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when get widget details!');
+                        },
+                        async: false
+                    });
+                    var koc_name = null;
+                    var template = null;
+                    var viewmodel = null;
+                    var rootAsset = null;
+                    var rootAssetFound = false;
+                    var worksheetName = 'WS_4_QDG_WIDGET';
+                    var workSheetCreatedBy = 'sysman';
+                    var qdgId = 'chart1';
+                    if (widgetDetails){
+                        if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+                            widget.parameters = {};
+                            for(var int=0;i<widgetDetails.parameters.length;i++){
+                                widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
+                            }
+                            koc_name =  widget.parameters["WIDGET_KOC_NAME"];
+                            template =  widget.parameters["WIDGET_TEMPLATE"];
+                            viewmodel =  widget.parameters["WIDGET_VIEWMODEL"];
+                            // specific parameters for ita
+                            if (widget.parameters["WORK_SHEET_NAME"])
+                                worksheetName = widget.parameters["WORK_SHEET_NAME"];
+                            if (widget.parameters["CREATED_BY"])
+                                workSheetCreatedBy = widget.parameters["CREATED_BY"];
+                            if (widget.parameters["QDG_ID"])
+                                qdgId = widget.parameters["QDG_ID"];
+
+                            var providerName =  widget.parameters["PROVIDER_NAME"];
+                            var providerVersion =  widget.parameters["PROVIDER_VERSION"];
+                            var providerAssetRoot =  widget.parameters["PROVIDER_ASSET_ROOT"];
+                            if (providerName && providerVersion && providerAssetRoot) {
+                                rootAsset = df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot);
+                                if (rootAsset) {
+                                    rootAssetFound = true;
+                                    template = rootAsset + template;
+                                    viewmodel = rootAsset + viewmodel;
+                                 }
+                             }
+                        }                        
+                    }
+                    
+                    if (koc_name && rootAssetFound && template && viewmodel){
+                      ko.components.register(koc_name,{
+                           viewModel:{require:viewmodel},
+                           template:{require:'text!'+template}
+                       }); 
+                      console.log("widget: "+koc_name+" is registered");
+                      console.log("widget template: "+template);
+                      console.log("widget viewmodel:: "+viewmodel);
+                      newTile =new DashboardWidget(self,koc_name,name, description, width, widget); 
+                    }else{
+                        newTile =new DashboardWidget(self,"ita-widget",name, description, width, widget);
+                    }
+                    if (newTile) {
+                        newTile.worksheetName = worksheetName;
+                        newTile.createdBy = workSheetCreatedBy;
+                        newTile.qdgId = qdgId;
+                    }
                 }
                 //demo simple chart widget
                 else {
