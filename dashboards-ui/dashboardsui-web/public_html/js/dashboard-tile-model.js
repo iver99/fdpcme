@@ -130,7 +130,7 @@ define(['knockout',
         /**
          *  used for KOC integration
          */
-        function DashboardWidget(dashboard,type, title, description, width, widget) {
+        function DashboardTile(dashboard,type, title, description, width, widget) {
             var self = this;
             self.dashboard = dashboard;
             self.type = type;
@@ -182,18 +182,18 @@ define(['knockout',
             self.tileRemoveCallbacks = [];
             self.isOnePageType = (dsbType === "onePage");
             
-            var widgets = [];
+            var tileArray = [];
             if (self.isOnePageType) {
                 var defaultWidgetTitle = (widgetsHomRef && widgetsHomRef.length > 0) ? widgetsHomRef[0].title : "Home";
-                widgets.push(new DashboardWidget(self, widgetsHomRef[0]["WIDGET_KOC_NAME"], defaultWidgetTitle, "", 2,widgetsHomRef[0]));
+                tileArray.push(new DashboardTile(self, widgetsHomRef[0]["WIDGET_KOC_NAME"], defaultWidgetTitle, "", 2,widgetsHomRef[0]));
             } else if (widgetsHomRef) {
                 for (i = 0; i < widgetsHomRef.length; i++) {
-                    var widget = new DashboardWidget(self, widgetsHomRef[i]["WIDGET_KOC_NAME"], widgetsHomRef[i].title, "", widgetsHomRef[i]["TILE_WIDTH"],widgetsHomRef[i]);
-                    widgets.push(widget);
+                    var widget = new DashboardTile(self, widgetsHomRef[i]["WIDGET_KOC_NAME"], widgetsHomRef[i].title, "", widgetsHomRef[i]["TILE_WIDTH"],widgetsHomRef[i]);
+                    tileArray.push(widget);
                 }
             }
 
-            self.tiles = ko.observableArray(widgets);
+            self.tiles = ko.observableArray(tileArray);
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
 
@@ -206,7 +206,7 @@ define(['knockout',
             };
             
             self.appendNewTile = function(name, description, width, widget) {
-//                var newTile =new DashboardWidget(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
+//                var newTile =new DashboardTile(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
                 var newTile = null;
                 //demo log analytics widget
                 if (widget && widget.category.id === 1) {
@@ -261,17 +261,17 @@ define(['knockout',
                         console.log("widget template: "+template);
                         console.log("widget viewmodel:: "+viewmodel);
                       
-                      newTile =new DashboardWidget(self,koc_name,name, description, width, widget); 
+                      newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
                     }else{
-                       newTile =new DashboardWidget(self,"demo-la-widget",name, description, width, widget); 
+                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
                     }
                     
                 }
                 //demo target analytics widget
                 else if (widget && widget.category.id === 2) {
-                    newTile =new DashboardWidget(self,"demo-ta-widget",name, description, width, widget);
+                    newTile =new DashboardTile(self,"demo-ta-widget",name, description, width, widget);
                 }
-                if (widget && widget.category.id === 3) {
+                else if (widget && widget.category.id === 3) {
                     var href = widget.href;
                     var widgetDetails = null;
                     $.ajax({
@@ -331,9 +331,9 @@ define(['knockout',
                       console.log("widget: "+koc_name+" is registered");
                       console.log("widget template: "+template);
                       console.log("widget viewmodel:: "+viewmodel);
-                      newTile =new DashboardWidget(self,koc_name,name, description, width, widget); 
+                      newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
                     }else{
-                        newTile =new DashboardWidget(self,"ita-widget",name, description, width, widget);
+                        newTile =new DashboardTile(self,"ita-widget",name, description, width, widget);
                     }
                     if (newTile) {
                         newTile.worksheetName = worksheetName;
@@ -343,7 +343,7 @@ define(['knockout',
                 }
                 //demo simple chart widget
                 else {
-                    newTile =new DashboardWidget(self,"demo-chart-widget",name, description, width, widget);
+                    newTile =new DashboardTile(self,"demo-chart-widget",name, description, width, widget);
                 }
                 self.tiles.push(newTile);
             };
@@ -594,7 +594,7 @@ define(['knockout',
             self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
         }
         
-        return {"DashboardWidget": DashboardWidget, 
+        return {"DashboardTile": DashboardTile, 
             "DashboardTilesViewModel": DashboardTilesViewModel,
             "DashboardViewModel": DashboardViewModel};
     }
