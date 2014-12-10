@@ -576,6 +576,7 @@ define(['knockout',
             var widgetArray = [];
             var laWidgetArray = [];
             var taWidgetArray = [];
+            var itaWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
             var index=0;
@@ -610,6 +611,7 @@ define(['knockout',
                 if (ssfUrl && ssfUrl !== '') {
                     var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
                     var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
+                    var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
                     $.ajax({
                         url: laSearchesUrl,
                         success: function(data, textStatus) {
@@ -631,6 +633,17 @@ define(['knockout',
                         },
                         async: false
                     });
+
+                    $.ajax({
+                        url: itaSearchesUrl,
+                        success: function(data, textStatus) {
+                            itaWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying IT analytics searches!');
+                        },
+                        async: false
+                    });                    
                 }
 
                 curPage = 1;
@@ -688,6 +701,9 @@ define(['knockout',
                     }
                     else if (event.value[0]==='ta') {
                         totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
+                    }
+                    else if (event.value[0] === 'ita') {
+                        totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
                     }
                     
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
@@ -802,6 +818,9 @@ define(['knockout',
                 else if (category === 'ta') {
                     allWidgets = taWidgetArray;
                 }
+                else if (category === 'ita') {
+                    allWidgets = itaWidgetArray;
+                }
                 if (searchtxt === '') {
                     searchResultArray = allWidgets;
                 }
@@ -846,6 +865,9 @@ define(['knockout',
                 }
                 else if (category === 'ta') {
                     allWidgets = taWidgetArray;
+                }
+                else if (category === 'ita') {
+                    allWidgets = itaWidgetArray;
                 }
                 
                 return allWidgets;
