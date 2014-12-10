@@ -242,7 +242,7 @@ define(['knockout',
                     if (widgetDetails){
                         if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
                            widget.parameters = {};
-                           for(var int=0;i<widgetDetails.parameters.length;i++){
+                           for(var i=0;i<widgetDetails.parameters.length;i++){
                                widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
                            }
                            koc_name =  widget.parameters["WIDGET_KOC_NAME"];
@@ -251,13 +251,16 @@ define(['knockout',
                         }                        
                     }
                     if (koc_name && template && viewmodel){
-                      ko.components.register(koc_name,{
-                           viewModel:{require:viewmodel},
-                           template:{require:'text!'+template}
-                       }); 
-                      console.log("widget: "+koc_name+" is registered");
-                      console.log("widget template: "+template);
-                      console.log("widget viewmodel:: "+viewmodel);
+                        if (!ko.components.isRegistered(koc_name)) {
+                            ko.components.register(koc_name,{
+                                  viewModel:{require:viewmodel},
+                                  template:{require:'text!'+template}
+                              }); 
+                        }
+                        console.log("widget: "+koc_name+" is registered");
+                        console.log("widget template: "+template);
+                        console.log("widget viewmodel:: "+viewmodel);
+                      
                       newTile =new DashboardWidget(self,koc_name,name, description, width, widget); 
                     }else{
                        newTile =new DashboardWidget(self,"demo-la-widget",name, description, width, widget); 

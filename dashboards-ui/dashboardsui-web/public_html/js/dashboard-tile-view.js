@@ -311,6 +311,125 @@ define(['knockout',
                 }
             };
             
+            //Temp codes for widget test for integrators -- start, to be removed in release version
+            self.resultTitle=ko.observable("");
+            self.resultMsg=ko.observable("");
+            self.categoryList=ko.observableArray([]);
+            self.useAbsolutePathForUrls=ko.observable(false);
+            var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+            var allCategories = [];
+            if (ssfUrl === null && ssfUrl !== "") {
+                console.log("Saved Search service is not available! Try again later.");
+            }
+            else {
+                var categoryUrl = ssfUrl + '/categories';
+                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl, async: false,
+                    success: function(data, textStatus){
+                        if (data && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                allCategories.push({label:data[i].name, value:data[i].id});
+                            }
+                            self.categoryList(allCategories);
+                        }
+                    },
+                    error: function(data, textStatus){
+                        console.log('Failed to query categories!');
+                    }
+                });
+            }
+            
+//            self.newWidget = ko.observable({ name: "TestWidget_10",
+//                                description: "Widget for test",
+//                                queryStr: "* | stats count by 'target type','log source'",
+//                                categoryId: allCategories[0].value+"",
+//                                kocName: "test-la-widget-10",
+//                                vmUrl: "http://slc04wjj.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
+//                                templateUrl: "http://slc04wjj.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
+//                                iconUrl: "",
+//                                histogramUrl: ""});
+            self.newWidget = ko.observable({ name: "",
+                                description: "",
+                                queryStr: "",
+                                categoryId: allCategories[0].value+"",
+                                kocName: "",
+                                vmUrl: "",
+                                templateUrl: "",
+                                iconUrl: "",
+                                histogramUrl: ""});
+            
+            self.categoryOptionChangeHandler = function(event, data) {
+                if (data.option === "value") {
+                    if (data.value[0]===999 || data.value[0] === '999') {
+                        self.useAbsolutePathForUrls(true);
+                    }
+                    else {
+                        self.useAbsolutePathForUrls(false);
+                    }
+                }
+            };
+            
+            function showResultInfoDialog(title, msg) {
+                self.resultTitle(title);
+                self.resultMsg(msg);
+                $("#resultInfoDialog").ojDialog("open");
+            };
+            
+            self.createNewWidget = function() {
+                $("#createWidgetDialog").ojDialog("open");
+            };
+            
+            self.saveWidget = function() {
+//                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+                if (ssfUrl === null && ssfUrl !== "") {
+                    console.log("Saved Search service is not available! Failed to create the widget.");
+                    alert("Saved Search service is not available! Failed to create the widget.");
+                    return;
+                }
+                else {
+                    var widgetToSave = ko.toJS(self.newWidget);
+                    var params = [];
+                    if (widgetToSave.kocName && widgetToSave.kocName !== "") {
+                        params.push({name: "WIDGET_KOC_NAME", type: "STRING", value: widgetToSave.kocName});
+                    }
+                    if (widgetToSave.vmUrl && widgetToSave.vmUrl !== "") {
+                        params.push({name: "WIDGET_VIEWMODEL", type: "STRING", value: widgetToSave.vmUrl});
+                    }
+                    if (widgetToSave.templateUrl && widgetToSave.templateUrl !== "") {
+                        params.push({name: "WIDGET_TEMPLATE", type: "STRING", value: widgetToSave.templateUrl});
+                    }
+                    if (widgetToSave.iconUrl && widgetToSave.iconUrl !== "") {
+                        params.push({name: "WIDGET_ICON", type: "STRING", value: widgetToSave.iconUrl});
+                    }
+                    if (widgetToSave.histogramUrl && widgetToSave.histogramUrl !== "") {
+                        params.push({name: "WIDGET_HISTOGRAM", type: "STRING", value: widgetToSave.histogramUrl});
+                    }
+                    params.push({name: "WIDGET_INTG_TESTING", type: "STRING", value: "YES"});
+                    var searchToSave = {name: widgetToSave.name, 
+                        category:{id:(widgetToSave.categoryId instanceof Array ? widgetToSave.categoryId[0] : widgetToSave.categoryId)},
+                                        folder:{id: 999}, description: widgetToSave.description, 
+                                        queryStr: widgetToSave.queryStr, parameters: params};
+                    var saveSearchUrl = ssfUrl + "/search";
+                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, data: ko.toJSON(searchToSave), async: false,
+                        success: function(data, textStatus){
+                            $('#createWidgetDialog').ojDialog('close');
+                            var msg = "Widget created successfully!";
+                            console.log(msg);
+                            showResultInfoDialog("Success", msg);
+                        },
+                        error: function(data, textStatus){
+                            $('#createWidgetDialog').ojDialog('close');
+                            var msg = "Failed to create the widget! \nStatus: " + 
+                                    data.status + "("+data.statusText+"), \nResponseText: "+data.responseText;
+                            console.log(msg);
+                            showResultInfoDialog("Error", msg);
+                        }
+                    });
+                    
+                    refreshWidgets();
+                }
+            };
+            //Temp codes for widget test for integrators -- end
+            
             self.handleDashboardSave = function() {
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
@@ -452,40 +571,78 @@ define(['knockout',
                 }
             };
             
+            //Add widget dialog
             self.categoryValue=ko.observableArray();
             var widgetArray = [];
             var laWidgetArray = [];
             var taWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
-            var dd=1,mh=1,si=1,art=1,sh=1,index=0;
+            var index=0;
             var pageSize = 6;
             var ssfUrl = dfu.discoverSavedSearchServiceUrl();
-            if (ssfUrl && ssfUrl !== '') {
-                var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
-                var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
-                $.ajax({
-                    url: laSearchesUrl,
-                    success: function(data, textStatus) {
-                        laWidgetArray = loadWidgets(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Error when querying log analytics searches!');
-                    },
-                    async: false
-                });
-                
-                $.ajax({
-                    url: taSearchesUrl,
-                    success: function(data, textStatus) {
-                        taWidgetArray = loadWidgets(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Error when querying target analytics searches!');
-                    },
-                    async: false
-                });
-            }
+            var curPage = 1;
+            var totalPage = 0;
+            var naviFromSearchResults = false;
+            self.widgetList = ko.observableArray(widgetArray);
+            self.curPageWidgetList = ko.observableArray(curPageWidgets);
+            self.searchText = ko.observable("");
+//            self.naviPreBtnVisible=ko.observable(false);
+//            self.naviNextBtnVisible=ko.observable(false);
+            self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
+            self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
+
+            self.widgetsCount = ko.observable(0);
+            self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard";}, this);
+
+            self.currentWidget = ko.observable();
+            var widgetClickTimer = null; 
+            
+            refreshWidgets();
+            
+            function refreshWidgets() {
+                widgetArray = [];
+                laWidgetArray = [];
+                taWidgetArray = [];
+                curPageWidgets=[];
+                searchResultArray = [];
+                index=0;
+                if (ssfUrl && ssfUrl !== '') {
+                    var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
+                    var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
+                    $.ajax({
+                        url: laSearchesUrl,
+                        success: function(data, textStatus) {
+                            laWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying log analytics searches!');
+                        },
+                        async: false
+                    });
+
+                    $.ajax({
+                        url: taSearchesUrl,
+                        success: function(data, textStatus) {
+                            taWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying target analytics searches!');
+                        },
+                        async: false
+                    });
+                }
+
+                curPage = 1;
+                totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
+                naviFromSearchResults = false;
+                self.widgetList(widgetArray);
+                self.curPageWidgetList(curPageWidgets);
+                self.searchText("");
+                self.naviPreBtnVisible(curPage === 1 ? false : true);
+                self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
+                self.widgetsCount(widgetArray.length);
+            };
             
             function loadWidgets(data) {
                 var targetWidgetArray = [];
@@ -503,18 +660,8 @@ define(['knockout',
                 }
                 return targetWidgetArray;
             };
-            
-            var curPage = 1;
-            var totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
-            var naviFromSearchResults = false;
-            self.widgetList = ko.observableArray(widgetArray);
-            self.curPageWidgetList = ko.observableArray(curPageWidgets);
-            self.searchText = ko.observable("");
-            self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
-            self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
-            self.currentWidget = ko.observable();
-            var widgetClickTimer = null; 
-            
+
+ 
             self.openAddWidgetDialog = function() {
                 $('#addWidgetDialog').ojDialog('open');
             };
