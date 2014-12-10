@@ -189,6 +189,8 @@ define(['knockout',
             } else if (widgetsHomRef) {
                 for (i = 0; i < widgetsHomRef.length; i++) {
                     var widget = new DashboardTile(self, widgetsHomRef[i]["WIDGET_KOC_NAME"], widgetsHomRef[i].title, "", widgetsHomRef[i]["TILE_WIDTH"],widgetsHomRef[i]);
+                    widget.timeRangeStart = self.timeSelectorModel.viewStart();
+                    widget.timeRangeEnd = self.timeSelectorModel.viewEnd();
                     tileArray.push(widget);
                 }
             }
@@ -344,6 +346,10 @@ define(['knockout',
                 //demo simple chart widget
                 else {
                     newTile =new DashboardTile(self,"demo-chart-widget",name, description, width, widget);
+                }
+                if (newTile) {
+                    newTile.timeRangeStart = self.timeSelectorModel.viewStart();
+                    newTile.timeRangeEnd = self.timeSelectorModel.viewEnd();
                 }
                 self.tiles.push(newTile);
             };
