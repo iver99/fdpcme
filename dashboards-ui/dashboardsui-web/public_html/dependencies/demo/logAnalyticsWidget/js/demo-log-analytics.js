@@ -72,6 +72,8 @@ define([
             };
             
             function refresh(startTime, endTime) {
+                self.seriesValue([]);
+                self.groupsValue([]);
                 self.nodeValues([]);
                 wholeNode = createNode("All", 0, 0);
                 totalValues = 0;
