@@ -154,7 +154,7 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
     //TODO replace below hard coded values
     if (providerName && providerVersion && providerAssetRoot){
         if ("DB Analytics"===providerName){
-            return "http://slc03psa.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html";
+            return "http://slc08fvg.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html";
         }else if ("Application Performance Manager Cloud Service"===providerName){
             return "http://slc04srr.us.oracle.com:7401/apmUi/";
         } else {
