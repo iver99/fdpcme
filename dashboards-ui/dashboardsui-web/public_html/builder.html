@@ -446,7 +446,7 @@ role value for that section to represent the appropriate content type.
                 <div style="display:none;" id="widgetDetailsDialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
                         initialVisibility: 'hide', cancelBehavior:'none',
-                        rootAttributes: { style: 'width: 500px; height:320px;background-color: #DDDDDD;'}}">   
+                        rootAttributes: { style: 'width: 500px; height:400px;background-color: #DDDDDD;'}}">   
                     <div class="oj-dialog-header" aria-labelledby="widget-info-title-id">
                         <div id="widget-info-title-id" class="oj-dialog-title">
                             <span class="widget-dialog-header-title">Widget Details</span>
@@ -472,8 +472,17 @@ role value for that section to represent the appropriate content type.
                                                 <label for="widgetDetailDescription" class="oj-label">Description</label>
                                             </div>
                                             <div class="oj-col">
-                                                <textarea id="widgetDetailDescription" class="widget-detail-dialog-text"
+                                                <textarea id="widgetDetailDescription" class="widget-detail-dialog-text" style="height: 70px;"
                                                           data-bind="ojComponent: {component: 'ojTextArea',value:description, disabled:true}"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="oj-row">
+                                            <div class="oj-col">
+                                                <label for="widgetDetailQueryStr" class="oj-label">Query String</label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <textarea id="widgetDetailQueryStr" class="widget-detail-dialog-text" style="height: 70px;"
+                                                          data-bind="ojComponent: {component: 'ojTextArea',value:queryStr, disabled:true}"></textarea>
                                             </div>
                                         </div>
                                         <div class="oj-row">

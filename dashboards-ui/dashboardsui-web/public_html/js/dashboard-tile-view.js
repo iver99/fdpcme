@@ -764,12 +764,14 @@ define(['knockout',
                     _data.createdOn = dfu.formatUTCDateTime(data.createdOn);
                     _data.description = '';
                     _data.owner = '';
+                    _data.queryStr = '';
                     if (ssfUrl && ssfUrl !== '') {
                         $.ajax({
                             url: ssfUrl+'/search/'+data.id,
                             success: function(widget, textStatus) {
                                 _data.owner = widget.owner ? widget.owner : '';
                                 _data.description = widget.description ? widget.description : '';
+                                _data.queryStr = widget.queryStr ? widget.queryStr : '';
                             },
                             error: function(xhr, textStatus, errorThrown){
                                 console.log('Error when querying saved searches!');
