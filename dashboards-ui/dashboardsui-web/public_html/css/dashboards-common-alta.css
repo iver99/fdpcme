@@ -28,3 +28,5 @@ a.df-dialog-header-close:visited {
 a.df-dialog-header-close-bigger:visited {
     color: red;
 }
+
+.dbs-nav-mapping-icon-24:before{content:url("images/compassIcon_24.png");}
