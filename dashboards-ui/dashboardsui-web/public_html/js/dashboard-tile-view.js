@@ -154,20 +154,7 @@ define(['knockout',
             var self = this;
             self.bindingExists = false;
             
-            self.showOrHideTimeSlider = function(timeSliderModel, show) {
-                /*
-                var timeSlider = $('#global-time-slider');
-                if (show) {
-                    timeSlider.show();
-                    if (!self.bindingExists) {
-                        ko.applyBindings({timeSliderModel: timeSliderModel}, timeSlider[0]);
-                        self.bindingExists = true;
-                    }
-                }
-                else {
-                    timeSlider.hide();
-                }
-                */
+            self.showOrHideTimeSlider = function(show) {
                var timeControl = $('#global-time-control');
                if (show){
                    timeControl.show();

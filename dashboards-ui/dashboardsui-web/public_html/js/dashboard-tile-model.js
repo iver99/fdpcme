@@ -175,7 +175,7 @@ define(['knockout',
             }
         }
         
-        function DashboardTilesViewModel(tilesView, urlEditView, timeSliderModel, widgetsHomRef, dsbType) {
+        function DashboardTilesViewModel(tilesView, urlEditView, widgetsHomRef, dsbType) {
             var self = this;
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
@@ -529,26 +529,6 @@ define(['knockout',
             self.postDocumentShow = function() {
                 self.maximizeFirst();
             };
-
-            var sliderChangelistener = ko.computed(function(){
-                    return {
-                        timeRangeChange:timeSliderModel.timeRangeChange(),
-                        advancedOptionsChange:timeSliderModel.advancedOptionsChange(),
-                        timeRangeViewChange:timeSliderModel.timeRangeViewChange()
-                    };
-                });
-                
-            sliderChangelistener.subscribe(function (value) {
-                if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(timeSliderModel.viewStart,timeSliderModel.viewEnd),null);
-                    self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
-                    timeSliderModel.timeRangeChange(false);
-                }else if (value.timeRangeViewChange){
-                    timeSliderModel.timeRangeViewChange(false);
-                }else if (value.advancedOptionsChange){
-                    timeSliderModel.advancedOptionsChange(false);
-                }
-            });
 
             var timeSelectorChangelistener = ko.computed(function(){
                     return {

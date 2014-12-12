@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojall','knockout', 'jquery'], function(oj,ko, $) {
+define(['knockout', 'jquery'], function(ko, $) {
 
     function TimeSelectorModel() {
         var me = this;
