@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojall','knockout', 'jquery'], function(oj,ko, $) {
+define(['knockout', 'jquery'], function(ko, $) {
 
     function TimeSelectorModel() {
         var me = this;
         var now = new Date();
-        var lastYear = new Date(now.getTime() - 365*24*60*60*1000);
-        me.viewStart = ko.observable(lastYear);
+        var lastMonth = new Date(now.getTime() - 30*24*60*60*1000);
+        me.viewStart = ko.observable(lastMonth);
         me.viewEnd = ko.observable(now);
         
         me.timeRangeChange = ko.observable(false);

@@ -428,3 +428,7 @@ body, html {
     font-size: small;
     padding-top: 14px;
 }
+
+.widget-detail-dialog-text {
+    width: 360px;
+ }

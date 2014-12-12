@@ -119,7 +119,7 @@ role value for that section to represent the appropriate content type.
                                     <!-- Home toolbar start -->
                                     <div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;padding-left: 5px">
                                         <div id="toolbar2"  aria-label="Searching toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
-                                                <input id="sinput" type="text" name="searchInput" style="margin-left: 0px"
+                                                <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: 'Enter search criteria', rootAttributes: {'style': 'min-width:653px; width:653px;'}},
                                                                   dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                                                 <button id="sbtn" style="margin-bottom: 4px;margin-left: 5px;"
@@ -267,8 +267,10 @@ role value for that section to represent the appropriate content type.
                                 <!-- /ko -->
                             </div>
                             <div class="oj-sm-4 oj-col">
-                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: function() { window.open( navigationsPopupModel.homeLink );}">Dashboard Home</a></div>
-                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: exploreDataClicked">Data Visual Analyzer Home</a></div>
+                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Quick Links</div>
+                                <div class="oj-row">---------</div>
+                                <div class="oj-row"><a data-bind="click: function() { window.open( navigationsPopupModel.homeLink );}">Dashboard Home</a></div>
+                                <div class="oj-row"><a data-bind="click: function() { window.open( navigationsPopupModel.dataVisualLink );}">Data Visual Analyzer Home</a></div>
                             </div>
                         </div>
                     </div>

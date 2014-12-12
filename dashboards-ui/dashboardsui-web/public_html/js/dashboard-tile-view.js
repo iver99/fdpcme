@@ -154,20 +154,7 @@ define(['knockout',
             var self = this;
             self.bindingExists = false;
             
-            self.showOrHideTimeSlider = function(timeSliderModel, show) {
-                /*
-                var timeSlider = $('#global-time-slider');
-                if (show) {
-                    timeSlider.show();
-                    if (!self.bindingExists) {
-                        ko.applyBindings({timeSliderModel: timeSliderModel}, timeSlider[0]);
-                        self.bindingExists = true;
-                    }
-                }
-                else {
-                    timeSlider.hide();
-                }
-                */
+            self.showOrHideTimeSlider = function(show) {
                var timeControl = $('#global-time-control');
                if (show){
                    timeControl.show();
@@ -311,6 +298,125 @@ define(['knockout',
                 }
             };
             
+            //Temp codes for widget test for integrators -- start, to be removed in release version
+            self.resultTitle=ko.observable("");
+            self.resultMsg=ko.observable("");
+            self.categoryList=ko.observableArray([]);
+            self.useAbsolutePathForUrls=ko.observable(false);
+            var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+            var allCategories = [];
+            if (ssfUrl === null && ssfUrl !== "") {
+                console.log("Saved Search service is not available! Try again later.");
+            }
+            else {
+                var categoryUrl = ssfUrl + '/categories';
+                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl, async: false,
+                    success: function(data, textStatus){
+                        if (data && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                allCategories.push({label:data[i].name, value:data[i].id});
+                            }
+                            self.categoryList(allCategories);
+                        }
+                    },
+                    error: function(data, textStatus){
+                        console.log('Failed to query categories!');
+                    }
+                });
+            }
+            
+//            self.newWidget = ko.observable({ name: "TestWidget_10",
+//                                description: "Widget for test",
+//                                queryStr: "* | stats count by 'target type','log source'",
+//                                categoryId: allCategories[0].value+"",
+//                                kocName: "test-la-widget-10",
+//                                vmUrl: "http://slc04wjj.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
+//                                templateUrl: "http://slc04wjj.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
+//                                iconUrl: "",
+//                                histogramUrl: ""});
+            self.newWidget = ko.observable({ name: "",
+                                description: "",
+                                queryStr: "",
+                                categoryId: allCategories[0].value+"",
+                                kocName: "",
+                                vmUrl: "",
+                                templateUrl: "",
+                                iconUrl: "",
+                                histogramUrl: ""});
+            
+            self.categoryOptionChangeHandler = function(event, data) {
+                if (data.option === "value") {
+                    if (data.value[0]===999 || data.value[0] === '999') {
+                        self.useAbsolutePathForUrls(true);
+                    }
+                    else {
+                        self.useAbsolutePathForUrls(false);
+                    }
+                }
+            };
+            
+            function showResultInfoDialog(title, msg) {
+                self.resultTitle(title);
+                self.resultMsg(msg);
+                $("#resultInfoDialog").ojDialog("open");
+            };
+            
+            self.createNewWidget = function() {
+                $("#createWidgetDialog").ojDialog("open");
+            };
+            
+            self.saveWidget = function() {
+//                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+                if (ssfUrl === null && ssfUrl !== "") {
+                    console.log("Saved Search service is not available! Failed to create the widget.");
+                    alert("Saved Search service is not available! Failed to create the widget.");
+                    return;
+                }
+                else {
+                    var widgetToSave = ko.toJS(self.newWidget);
+                    var params = [];
+                    if (widgetToSave.kocName && widgetToSave.kocName !== "") {
+                        params.push({name: "WIDGET_KOC_NAME", type: "STRING", value: widgetToSave.kocName});
+                    }
+                    if (widgetToSave.vmUrl && widgetToSave.vmUrl !== "") {
+                        params.push({name: "WIDGET_VIEWMODEL", type: "STRING", value: widgetToSave.vmUrl});
+                    }
+                    if (widgetToSave.templateUrl && widgetToSave.templateUrl !== "") {
+                        params.push({name: "WIDGET_TEMPLATE", type: "STRING", value: widgetToSave.templateUrl});
+                    }
+                    if (widgetToSave.iconUrl && widgetToSave.iconUrl !== "") {
+                        params.push({name: "WIDGET_ICON", type: "STRING", value: widgetToSave.iconUrl});
+                    }
+                    if (widgetToSave.histogramUrl && widgetToSave.histogramUrl !== "") {
+                        params.push({name: "WIDGET_HISTOGRAM", type: "STRING", value: widgetToSave.histogramUrl});
+                    }
+                    params.push({name: "WIDGET_INTG_TESTING", type: "STRING", value: "YES"});
+                    var searchToSave = {name: widgetToSave.name, 
+                        category:{id:(widgetToSave.categoryId instanceof Array ? widgetToSave.categoryId[0] : widgetToSave.categoryId)},
+                                        folder:{id: 999}, description: widgetToSave.description, 
+                                        queryStr: widgetToSave.queryStr, parameters: params};
+                    var saveSearchUrl = ssfUrl + "/search";
+                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, data: ko.toJSON(searchToSave), async: false,
+                        success: function(data, textStatus){
+                            $('#createWidgetDialog').ojDialog('close');
+                            var msg = "Widget created successfully!";
+                            console.log(msg);
+                            showResultInfoDialog("Success", msg);
+                        },
+                        error: function(data, textStatus){
+                            $('#createWidgetDialog').ojDialog('close');
+                            var msg = "Failed to create the widget! \nStatus: " + 
+                                    data.status + "("+data.statusText+"), \nResponseText: "+data.responseText;
+                            console.log(msg);
+                            showResultInfoDialog("Error", msg);
+                        }
+                    });
+                    
+                    refreshWidgets();
+                }
+            };
+            //Temp codes for widget test for integrators -- end
+            
             self.handleDashboardSave = function() {
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
@@ -431,6 +537,10 @@ define(['knockout',
                     var jsonValue = JSON.stringify(outputData);
                     console.log(jsonValue);
                     window.opener.childMessageListener(jsonValue);
+                    if (window.opener.navigationsModelCallBack())
+                    {
+                        navigationsModel(window.opener.navigationsModelCallBack());
+                    }
                 }
             };
             self.deleteFromFavorites = function() {
@@ -441,9 +551,14 @@ define(['knockout',
                     var jsonValue = JSON.stringify(outputData);
                     console.log(jsonValue);
                     window.opener.childMessageListener(jsonValue);
+                    if (window.opener.navigationsModelCallBack())
+                    {
+                        navigationsModel(window.opener.navigationsModelCallBack());
+                    }
                 }
             };
             
+            //Add widget dialog
             self.categoryValue=ko.observableArray();
             var widgetArray = [];
             var laWidgetArray = [];
@@ -451,46 +566,83 @@ define(['knockout',
             var itaWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
-            var dd=1,mh=1,si=1,art=1,sh=1,index=0;
+            var index=0;
             var pageSize = 6;
             var ssfUrl = dfu.discoverSavedSearchServiceUrl();
-            if (ssfUrl && ssfUrl !== '') {
-                var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
-                var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
-                var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
-                $.ajax({
-                    url: laSearchesUrl,
-                    success: function(data, textStatus) {
-                        laWidgetArray = loadWidgets(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Error when querying log analytics searches!');
-                    },
-                    async: false
-                });
-                
-                $.ajax({
-                    url: taSearchesUrl,
-                    success: function(data, textStatus) {
-                        taWidgetArray = loadWidgets(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Error when querying target analytics searches!');
-                    },
-                    async: false
-                });
-                
-                $.ajax({
-                    url: itaSearchesUrl,
-                    success: function(data, textStatus) {
-                        itaWidgetArray = loadWidgets(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Error when querying target analytics searches!');
-                    },
-                    async: false
-                });
-            }
+            var curPage = 1;
+            var totalPage = 0;
+            var naviFromSearchResults = false;
+            self.widgetList = ko.observableArray(widgetArray);
+            self.curPageWidgetList = ko.observableArray(curPageWidgets);
+            self.searchText = ko.observable("");
+//            self.naviPreBtnVisible=ko.observable(false);
+//            self.naviNextBtnVisible=ko.observable(false);
+            self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
+            self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
+
+            self.widgetsCount = ko.observable(0);
+            self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard";}, this);
+
+            self.currentWidget = ko.observable();
+            var widgetClickTimer = null; 
+            
+            refreshWidgets();
+            
+            function refreshWidgets() {
+                widgetArray = [];
+                laWidgetArray = [];
+                taWidgetArray = [];
+                curPageWidgets=[];
+                searchResultArray = [];
+                index=0;
+                if (ssfUrl && ssfUrl !== '') {
+                    var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
+                    var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
+                    var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
+                    $.ajax({
+                        url: laSearchesUrl,
+                        success: function(data, textStatus) {
+                            laWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying log analytics searches!');
+                        },
+                        async: false
+                    });
+
+                    $.ajax({
+                        url: taSearchesUrl,
+                        success: function(data, textStatus) {
+                            taWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying target analytics searches!');
+                        },
+                        async: false
+                    });
+
+                    $.ajax({
+                        url: itaSearchesUrl,
+                        success: function(data, textStatus) {
+                            itaWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying IT analytics searches!');
+                        },
+                        async: false
+                    });                    
+                }
+
+                curPage = 1;
+                totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
+                naviFromSearchResults = false;
+                self.widgetList(widgetArray);
+                self.curPageWidgetList(curPageWidgets);
+                self.searchText("");
+                self.naviPreBtnVisible(curPage === 1 ? false : true);
+                self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
+                self.widgetsCount(widgetArray.length);
+            };
             
             function loadWidgets(data) {
                 var targetWidgetArray = [];
@@ -508,63 +660,8 @@ define(['knockout',
                 }
                 return targetWidgetArray;
             };
-            
-//            for (var i = 0; i < 61; i++)
-//            {
-//                var widget = {id: i};
-//                if (index === 1) {
-//                    widget.type="ta";
-//                    widget.name='Database Diagnostics '+dd;
-//                    taWidgetArray.push(widget);
-//                    dd++;
-//                    index++;
-//                }
-//                else if (index === 2) {
-//                    widget.type="ta";
-//                    widget.name='Middleware Health '+mh;
-//                    taWidgetArray.push(widget);
-//                    mh++;
-//                    index++;
-//                }
-//                else if (index === 3) {
-//                    widget.type="la";
-//                    widget.name='Security Incidents '+si;
-//                    laWidgetArray.push(widget);
-//                    si++;
-//                    index++;
-//                }
-//                else if (index === 4) {
-//                    widget.type="la";
-//                    widget.name='Application Response Time '+art;
-////                    widget.name="Log Analytics"+art;
-//                    laWidgetArray.push(widget);
-//                    art++;
-//                    index++;
-//                }
-//                else if (index === 5) {
-//                    widget.type="la";
-//                    widget.name='Security Histogram '+sh;
-//                    laWidgetArray.push(widget);
-//                    sh++;
-//                    index = 1;
-//                }
-//                
-//                widgetArray.push(widget);
-//                
-//                if (i < pageSize) {
-//                    curPageWidgets.push(widget);
-//                }
-//            }
-            
-            var curPage = 1;
-            var totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
-            var naviFromSearchResults = false;
-            self.widgetList = ko.observableArray(widgetArray);
-            self.curPageWidgetList = ko.observableArray(curPageWidgets);
-            self.searchText = ko.observable("");
-            self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
-            self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
-            
+
+ 
             self.openAddWidgetDialog = function() {
                 $('#addWidgetDialog').ojDialog('open');
             };
@@ -579,20 +676,20 @@ define(['knockout',
                 }
             };
             
-            self.optionChangedHandler = function(event, data) {
-                if (data.option === "value") {
+            self.optionChangedHandler = function(data, event) {
+                if (event.option === "value") {
                     curPageWidgets=[];
                     curPage = 1;
-                     if (data.value[0]==='all') {
+                     if (event.value[0]==='all') {
                         totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
                     }
-                    else if (data.value[0]==='la') {
+                    else if (event.value[0]==='la') {
                         totalPage = (laWidgetArray.length%pageSize === 0 ? laWidgetArray.length/pageSize : Math.floor(laWidgetArray.length/pageSize) + 1);
                     }
-                    else if (data.value[0]==='ta') {
+                    else if (event.value[0]==='ta') {
                         totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
                     }
-                    else if (data.value[0] === 'ita') {
+                    else if (event.value[0] === 'ita') {
                         totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
                     }
                     
@@ -642,9 +739,45 @@ define(['knockout',
                 refreshNaviButton();
             };
             
-            self.widgetDbClicked = function(event,data) {
-                //alert("Widget id: "+event.id+" name: "+event.name+" type:"+event.type);
-                self.tilesViewModel.appendNewTile(event.name, "", 2, event);
+            self.widgetDbClicked = function(data, event) {
+                clearTimeout(widgetClickTimer);
+                self.tilesViewModel.appendNewTile(data.name, "", 2, data);
+            };
+            
+            self.widgetClicked = function(data, event) {
+                clearTimeout(widgetClickTimer);
+                widgetClickTimer = setTimeout(function (){
+                    var _data = ko.toJS(data);
+                    _data.createdOn = dfu.formatUTCDateTime(data.createdOn);
+                    _data.description = '';
+                    _data.owner = '';
+                    _data.queryStr = '';
+                    if (ssfUrl && ssfUrl !== '') {
+                        $.ajax({
+                            url: ssfUrl+'/search/'+data.id,
+                            success: function(widget, textStatus) {
+                                _data.owner = widget.owner ? widget.owner : '';
+                                _data.description = widget.description ? widget.description : '';
+                                _data.queryStr = widget.queryStr ? widget.queryStr : '';
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                console.log('Error when querying saved searches!');
+                            },
+                            async: false
+                        });
+                    }
+                    self.currentWidget(_data);
+                    $('#widgetDetailsDialog').ojDialog('open');
+                }, 300); 
+            };
+            
+            self.closeWidgetDetailsDialog = function() {
+                $('#widgetDetailsDialog').ojDialog('close');
+            };
+            
+            self.addWidgetToDashboard = function() {
+                $('#widgetDetailsDialog').ojDialog('close');
+                self.tilesViewModel.appendNewTile(self.currentWidget().name, "", 2, self.currentWidget());
             };
             
             self.enterSearch = function(d,e){

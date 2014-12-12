@@ -8,7 +8,7 @@ define(['knockout', 'jquery'],
             function TimeSelectorViewModel(params){
                 var me = this;
                 var model = params.model;
-                me.selected = ko.observable("1year");
+                me.selected = ko.observable("1month");
                 me.optionChangedHandler = function(event,data){
                     console.log(data.value);
                     var now = new Date();

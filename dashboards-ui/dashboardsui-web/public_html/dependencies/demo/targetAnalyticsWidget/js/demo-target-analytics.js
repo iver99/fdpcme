@@ -12,7 +12,8 @@ define([
     {
         function DemoTargetAnalytics(params) {
             var self = this;
-            
+            var startTime = params.tile.timeRangeStart ? params.tile.timeRangeStart : null; 
+            var endTime = params.tile.timeRangeEnd ? params.tile.timeRangeEnd : null; 
             var queryString = {"ast":{"query":"simple",
                         "select":[{"item":{"expr":"function","name":"COUNT",
                                            "args":[{"expr":"column","table":"me","column":"meId"}]}},
@@ -54,9 +55,21 @@ define([
             
             fetchResults();
             
-//            function refresh() {
-//                fetchResults();
-//            };
+            params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent){
+                if (dashboardItemChangeEvent){
+                    if (dashboardItemChangeEvent.timeRangeChange){
+                        startTime = dashboardItemChangeEvent.timeRangeChange.viewStartTime;//();
+                        endTime = dashboardItemChangeEvent.timeRangeChange.viewEndTime;//();
+                        refresh(startTime, endTime);
+                    }
+                }
+            };
+            
+            function refresh(startTime, endTime) {
+                self.seriesValue([]);
+                self.groupsValue([]);
+                fetchResults();
+            };
             
             function fetchResults() {
                 $.ajax({type: 'POST', contentType:'application/json',url: taUrl, data: ko.toJSON(queryString),

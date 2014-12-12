@@ -15,14 +15,23 @@ define([
     {
         function DemoLogAnalyticsViewModel(params) {
             var self = this;
-            var startTime = null; 
-            var endTime = null;
+            var startTime = params.tile.timeRangeStart ? params.tile.timeRangeStart : null; 
+            var endTime = params.tile.timeRangeEnd ? params.tile.timeRangeEnd : null; 
+            var timeFilter = {"type":"absolute","startTime":"2014-07-11T10:22:29.000Z","endTime":"2014-12-01T00:00:00.000Z"};
+            if (startTime !== null || endTime !== null) {
+                timeFilter.startTime = startTime;
+                timeFilter.endTime = endTime;
+            }
 //            var qlBaseUrl = 'http://slc00aeg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
 //            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
             var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
-            var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "* | stats count by 'target type','log source'"}, 
+            //severity  in ('error','ERROR','SEVERE','severe', 'warning', 'warn', 'info', 'trace')
+            var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "severity not in ('debug') | stats count by 'target type','log source'"}, 
                 "subSystem":"LOG",
-                "timeFilter" : null};
+                "timeFilter" : timeFilter};
+//            var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "* | timestats count by 'severity'"}, 
+//                            "subSystem":"LOG",
+//                            "timeFilter" : {"type":"absolute","startTime":"2014-07-11T10:22:29.000Z","endTime":"2014-12-01T00:00:00.000Z"}};
             var barSeries = [];
             var barGroups = [];
             var widget = params.tile.widget;
@@ -55,14 +64,16 @@ define([
             params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
                     if (dashboardItemChangeEvent.timeRangeChange){
-                        startTime = dashboardItemChangeEvent.timeRangeChange.viewStartTime();
-                        endTime = dashboardItemChangeEvent.timeRangeChange.viewEndTime();
+                        startTime = dashboardItemChangeEvent.timeRangeChange.viewStartTime;//();
+                        endTime = dashboardItemChangeEvent.timeRangeChange.viewEndTime;//();
                         refresh(startTime, endTime);
                     }
                 }
             };
             
             function refresh(startTime, endTime) {
+                self.seriesValue([]);
+                self.groupsValue([]);
                 self.nodeValues([]);
                 wholeNode = createNode("All", 0, 0);
                 totalValues = 0;
@@ -357,11 +368,11 @@ define([
             };
 
             function getColor(meanIncome) {
-                if (meanIncome < 45000) // 1st quartile
+                if (meanIncome < 10000) // 1st quartile
                     return handler.getValue('1stQuartile');
-                else if (meanIncome < 49000) // 2nd quartile
+                else if (meanIncome < 50000) // 2nd quartile
                     return handler.getValue('2ndQuartile');
-                else if (meanIncome < 56000) // 3rd quartile
+                else if (meanIncome < 100000) // 3rd quartile
                     return handler.getValue('3rdQuartile');
                 else
                     return handler.getValue('4thQuartile');

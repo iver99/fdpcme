@@ -24,13 +24,7 @@ requirejs.config({
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
-        'jqueryui192': '../dependencies/timeslider/js/jquery-ui-1.9.2.min',
         'dfutil':'../dependencies/util/js/df-util',
-        'itacore':'../dependencies/timeslider/js/ita-core',
-        'itautil':'../dependencies/timeslider/js/ita-util',
-        'ojall':'../dependencies/timeslider/js/ojall',
-
-        'timeslider':'../dependencies/timeslider/js',
         'timeselector':'../dependencies/timeselector/js',
         'html2canvas':'../dependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
@@ -75,6 +69,7 @@ requirejs.config({
 var defaultTileHeight = 220;
 var defaultTileRowHeight = defaultTileHeight + 10;
 var defaultColumnsNumber = 4;
+var navigationsModel = {};
 
 /**
  * A top-level require call executed by the Application.
@@ -87,11 +82,6 @@ require(['knockout',
     'dfutil',
     'dashboards/dashboard-tile-model',
     'dashboards/dashboard-tile-view',
-    
-    'timeslider/time-slider-model',
-    'timeslider/time-slider',
-//    'dashboards/dashboard-timeslider-model',
-    'ojall',
     'ojs/ojchart',
     'ojs/ojcomponents',
     'ojs/ojvalidation',    
@@ -113,7 +103,7 @@ require(['knockout',
     'ojs/ojpopup',
     'dashboards/dbstypeahead'
 ],
-        function(ko, $, dfu,dtm, dtv, TimeSliderModel) // this callback gets executed when all required modules are loaded
+        function(ko, $, dfu,dtm, dtv) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("df-time-selector",{
                 viewModel:{require:'../dependencies/timeselector/js/time-selector'},
@@ -270,31 +260,6 @@ require(['knockout',
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
             }
             
-        //
-                var HOUR = 60 * 60 * 1000;
-                
-                // matching the data in sample datasetGroup.
-                var start = new Date(1397145600000), // 2014
-                        end = new Date(1398528000000);
-                
-                /**
-                 * Here is a model that the 'time-slider region' will accept.
-                 * The parameters are observable so that position of the sliding block  
-                 *   will be redrawn after changing the start or end time.
-                 * Also the time-slider provides the event listener 'viewRangeChange'
-                 *   so that we can get the signal to reset the datasetGroup(or queryDescriptorGroup) of the 'timeseries-tool'
-                 */
-                var timeSliderModel = new TimeSliderModel();
-                timeSliderModel.totalStart(start);
-                timeSliderModel.totalEnd(end);
-                timeSliderModel.viewStart(start);
-                timeSliderModel.viewEnd(end);
-                timeSliderModel.scrollStart(start);
-                timeSliderModel.scrollEnd(end);
-                timeSliderModel.relativeTimeUnit(['Week']);
-                //
-//                self.timeSliderModel = timeSliderModel;
-                
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
@@ -316,9 +281,18 @@ require(['knockout',
             var dsbType = dashboardModel && dashboardModel.type ? dashboardModel.type : "normal";
             var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.showTimeSlider);
             
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView, timeSliderModel, dsbWidgets, dsbType);
+            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView, dsbWidgets, dsbType);
             var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, dsbType, tilesViewMode);
-               
+            
+            if (window.opener && window.opener.navigationsModelCallBack) {
+                navigationsModel = ko.observable(window.opener.navigationsModelCallBack());
+                    //console.log("test:"+navigationsModel.homeLink);
+            }
+            else
+            {
+                navigationsModel = ko.observable({});
+            }
+           
             $(document).ready(function() {
                 ko.bindingHandlers.sortableList = {
                     init: function(element, valueAccessor) {
@@ -336,19 +310,20 @@ require(['knockout',
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                 ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
+                ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#dbs_navPopup')[0]);     
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
                 var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
                 if ("true"===includeTimeRangeFilter){
-                   timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, "ON"); 
+                   timeSliderDisplayView.showOrHideTimeSlider("ON"); 
                 }else{
-                   timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, null);  
+                   timeSliderDisplayView.showOrHideTimeSlider(null);  
                 }
                 
                 $("#ckbxTimeRangeFilter").on({
                     'ojoptionchange': function (event, data) {
-                        timeSliderDisplayView.showOrHideTimeSlider(timeSliderModel, data['value']);
+                        timeSliderDisplayView.showOrHideTimeSlider(data['value']);
                     }
                 });
                 
@@ -370,6 +345,17 @@ function updateOnePageHeight(event) {
         onePageTile.height(event.data.height);
         console.log('one page tile height is set to ' + event.data.height);
     }
+};
+
+function truncateString(str, length) {
+    if (str && length > 0 && str.length > length)
+    {
+        var _tlocation = str.indexOf(' ', length);
+        if ( _tlocation <= 0 )
+            _tlocation = length;
+        return str.substring(0, _tlocation) + "...";
+    }
+    return str;
 };
 
 window.addEventListener("message", updateOnePageHeight, false);
