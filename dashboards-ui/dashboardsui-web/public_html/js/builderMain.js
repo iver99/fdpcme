@@ -170,8 +170,8 @@ require(['knockout',
             }); 
             
             ko.components.register("ita-widget",{
-                viewModel:{require:'http://slc06xat.us.oracle.com:7001/ita-tool/widgets/js/controller/qdg-component.js'},
-                template:{require:'text!http://slc06xat.us.oracle.com:7001/ita-tool/widgets/html/qdg-component.html'}
+                viewModel:{require:'/ita-tool/widgets/js/controller/qdg-widget.js'},
+                template:{require:'text!/ita-tool/widgets/html/qdg-widget.html'}
             });
             
             function FooterViewModel() {
