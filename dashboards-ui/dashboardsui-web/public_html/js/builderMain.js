@@ -159,10 +159,10 @@ require(['knockout',
                 template:{require:'text!../dependencies/widgets/iFrame/widget-iframe.html'}
             }); 
             
-            ko.components.register("ita-widget",{
-                viewModel:{require:'/ita-tool/widgets/js/controller/qdg-widget.js'},
-                template:{require:'text!/ita-tool/widgets/html/qdg-widget.html'}
-            });
+//            ko.components.register("ita-widget",{
+//                viewModel:{require:'/ita-tool/widgets/js/controller/qdg-widget.js'},
+//                template:{require:'text!/ita-tool/widgets/html/qdg-widget.html'}
+//            });
             
             function FooterViewModel() {
                 var self = this;
