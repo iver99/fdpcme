@@ -269,6 +269,14 @@ require(['knockout',
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+                self.linkMenuHandle = function(event,item){
+                    $("#links_menu").slideToggle('normal');
+                    item.stopImmediatePropagation();
+                };
+
+                $('body').click(function(){
+                    $("#links_menu").slideUp('normal');
+                });
             }
             
         //
@@ -342,11 +350,14 @@ require(['knockout',
                     }
                 };
                 ko.virtualElements.allowedBindings.stopBinding = true;
-                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+                //header
+                ko.applyBindings(new HeaderViewModel(), $('#demo-appheader-bar')[0]);
+                ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#links_menu')[0]);     
+                //content
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                 ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
-                ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#dbs_navPopup')[0]);     
+                
                 
                 $('#globalBody').show();
                 tilesView.enableDraggable();
