@@ -85,7 +85,7 @@ require(['knockout',
     'ojs/ojchart',
     'ojs/ojcomponents',
     'ojs/ojvalidation',    
-    
+    'ojs/ojdatetimepicker',
     'ojs/ojcore',
     'jqueryui',
     'ojs/ojmodel',
