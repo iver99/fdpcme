@@ -291,30 +291,32 @@ define(['knockout',
                     var viewmodel = null;
                     var rootAsset = null;
                     var rootAssetFound = false;
-                    var worksheetName = 'WS_4_QDG_WIDGET';
-                    var workSheetCreatedBy = 'sysman';
-                    var qdgId = 'chart1';
+                    var worksheetName = null;// = 'Worksheet_11_04_2014_17:19:46';
+                    var workSheetCreatedBy = null;//'sysman';
+                    var qdgId = null;//'REGION_12_11_2014_10:17:07';
                     if (widgetDetails){
                         if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
                             widget.parameters = {};
-                            for(var int=0;i<widgetDetails.parameters.length;i++){
+                            for(var i = 0;i < widgetDetails.parameters.length;i++){
                                 widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
                             }
                             koc_name =  widget.parameters["WIDGET_KOC_NAME"];
                             template =  widget.parameters["WIDGET_TEMPLATE"];
                             viewmodel =  widget.parameters["WIDGET_VIEWMODEL"];
-                            // specific parameters for ita
-                            if (widget.parameters["WORK_SHEET_NAME"])
-                                worksheetName = widget.parameters["WORK_SHEET_NAME"];
-                            if (widget.parameters["CREATED_BY"])
-                                workSheetCreatedBy = widget.parameters["CREATED_BY"];
-                            if (widget.parameters["QDG_ID"])
-                                qdgId = widget.parameters["QDG_ID"];
+                            // specific parameters for ita which is required. Retrieve them from SSF
+                            if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
+                                worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
+                            if (widget.parameters["ITA_WIDGET_CREATEDBY"])
+                                workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
+                            if (widget.parameters["ITA_WIDGET_QDGID"])
+                                qdgId = widget.parameters["ITA_WIDGET_QDGID"];
 
                             var providerName =  widget.parameters["PROVIDER_NAME"];
                             var providerVersion =  widget.parameters["PROVIDER_VERSION"];
                             var providerAssetRoot =  widget.parameters["PROVIDER_ASSET_ROOT"];
                             if (providerName && providerVersion && providerAssetRoot) {
+                                // as all apps will be on same virtual domain, the lookup of assetRoot actually don't needed any more
+                                // for the moment, just keep it here, in case one day we have to lookup from service manager
                                 rootAsset = df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot);
                                 if (rootAsset) {
                                     rootAssetFound = true;
@@ -325,11 +327,16 @@ define(['knockout',
                         }                        
                     }
                     
-                    if (koc_name && rootAssetFound && template && viewmodel){
-                      ko.components.register(koc_name,{
-                           viewModel:{require:viewmodel},
-                           template:{require:'text!'+template}
-                       }); 
+                    // for the 'same virtual domain' scenario, the rootAssetFound will always be false
+                    if (koc_name /*&& rootAssetFound*/ && template && viewmodel){
+                        try {
+                            ko.components.register(koc_name,{
+                                 viewModel:{require:viewmodel},
+                                 template:{require:'text!'+template}
+                             }); 
+                        } catch (e) {
+                            console.log(e.message);
+                        }
                       console.log("widget: "+koc_name+" is registered");
                       console.log("widget template: "+template);
                       console.log("widget viewmodel:: "+viewmodel);
