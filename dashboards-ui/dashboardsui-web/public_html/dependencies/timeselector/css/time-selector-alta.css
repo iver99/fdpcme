@@ -1,0 +1,59 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2014-12-16, 15:37:54
+    Author     : aduan
+*/
+ .time-range-selector-icon {
+    height:10px;width:10px;
+    content:url("../../../css/images/down-triangle-gray.png")
+}
+
+.time-range-selector-button {
+    border-style: solid;
+    text-align: left;
+    width:120px;
+    background-color: white; 
+    background: #F0CAC4;
+    background-image: none;
+}
+
+#time_selector_box { 
+    border:1px;
+    border-radius: 2px;
+    border-color:lightgray;
+    border-style:solid;
+    width:150px;
+    height: 26px; 
+    background-color: white;
+    line-height: 26px;
+    vertical-align: middle;
+} 
+#time_selector_box #time_selector_txt { 
+    float: left; 
+    padding: 0 0 0 5px; 
+    border:0;
+    width: 120px; 
+    height:26px;
+    background: none; 
+    color: #000000;
+    font-weight: bold;
+    font-size: 12px;
+    margin-left: 0;
+    margin-top: 0;
+} 
+#time_selector_box #timeSelectorIcon { 
+    float: right; 
+    width: 10px;
+    height:10px;
+    display: block;
+    margin: 8px 5px 8px 5px;
+} 
+
+#time_selector_box:hover {
+    background-color: #f7f8f9;
+    border: 1px solid #c4ced7;
+}
