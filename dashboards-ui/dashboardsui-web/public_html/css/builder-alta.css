@@ -127,6 +127,24 @@ body, html {
   width: 100%;
 }
 
+@media print and (orientation: landscape), screen and (min-width: 1024px) {
+  .dbd-tile.oj-col.dbd-tile-maximized {
+    width: 100%;
+  }
+}
+
+@media print, screen and (min-width: 768px) {
+  .dbd-tile.oj-col.dbd-tile-maximized {
+    width: 100%;
+  }
+} 
+
+@media print, screen {
+  .dbd-tile.oj-col.dbd-tile-maximized {
+    width: 100%;
+  }    
+}
+
 .dbd-tile-dragging {
   border: 1px solid #ddd;
   height: 280px;
