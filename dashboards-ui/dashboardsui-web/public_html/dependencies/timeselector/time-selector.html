@@ -1,171 +1,72 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>Time Selector</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../../emcpdfui/dependencies/timeselector/css/time-selector-alta.css" type="text/css"/>
-    </head>
-    <body>
-        <div id="global-time-selector" style="width:235px;">
-            <label style="font-weight: bold;float:left;" class="oj-label-inline">Time Range:</label>
-<!--            <button id="timeRangeBtn" 
-                data-bind="ojComponent: {
-                    component:'ojButton', rootAttributes:{class: 'time-range-selector-button'},
-                    icons: {end: 'time-range-selector-icon oj-fwk-icon'}, 
-                            label: label}, click: showTimeSelector">
-            </button>-->
-        <div id="time_selector_box" style="float:right;" data-bind="click:showTimeSelector">
-                <div style="float:left;">
-                    <input id="time_selector_txt" maxlength='100' autofocus="autofocus" readonly
-                       data-bind="ojComponent:{component:'ojInputText',value: label}"/>
-                </div>
-                <div style="float:right;">
-                    <img id="timeSelectorIcon" src="/emcpdfui/css/images/down-triangle-gray.png" alt=" "/>
-                </div>
+<div id="global-time-selector">
+    <label style="font-weight: bold;float:left;" class="oj-label-inline">Show data for:</label>
+    <label style="font-weight: bold;float:left;" class="oj-label-inline" data-bind="text:label"></label>
+    <button id="timeRangeBtn" title="Click to open the time selector" class="oj-button oj-default oj-button-half-chrome"
+        data-bind="ojComponent: {component:'ojButton'}, click: showTimeSelector">
+        <img id="timeSelectorIcon" src="/emcpdfui/css/images/calendar_ena.png" alt=" " 
+             style="width:18px;height:18px;margin: 4px 0 0 0;"/>
+    </button>
+</div>
+<div style="display:none; min-width:295px; min-height:350px" id="timeRangePopup" 
+     data-bind="ojComponent:{component: 'ojPopup', tail: 'simple', 
+                 position: {'my' : 'left top', 'at' : 'right bottom', 'collision' : 'none'}}">
+    <div class="oj-panel">
+            <h3>Relative</h3>
+            <div style="width:50%; float:left;">
+                <a href="#" data-bind="click: function (){relativeTimeSelected('15mins');}" 
+                   style="display:inline-block;padding-top: 5px;">Last 15 Minutes</a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('30mins');}" 
+                   style="display:inline-block;padding-top: 5px;">Last 30 Minutes</a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('60mins');}" 
+                   style="display:inline-block;padding-top: 5px;">Last 60 Minutes</a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('24hrs');}" 
+                   style="display:inline-block;padding-top: 5px;">Last 24 Hours</a>
             </div>
-        </div>
-<!--        <div style="display:none;" id="timeSelectorDialog"
-            data-bind="ojComponent:{component: 'ojDialog', 
-                initialVisibility: 'hide',cancelBehavior:'none',
-                rootAttributes: { style: 'width: 330px; height:450px;'},
-                title: 'Enter Date and Time'}">  
-            <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
-                <div id="dialog-title-id" class="oj-dialog-title">
-                    <span style="font-size: large;font-weight: bold;"><font color="DimGray">Time Range</font></span>
-                    <a href="#" data-bind="click:function(){$('#timeSelectorDialog').ojDialog('close');}" class="df-dialog-header-close">CLOSE</a>
-                </div>
+            <div style="width:50%; float:left;">
+                <a href="#" data-bind="click: function (){relativeTimeSelected('7days');}" 
+                   style="display:inline-block;padding-top: 5px;">Last 7 Days</a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('30days');}" 
+                   style="display:inline-block;padding-top: 5px;">Last 30 Days</a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('90days');}" 
+                   style="display:inline-block;padding-top: 5px;">Last 90 Days</a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('all');}" 
+                   style="display:inline-block;padding-top: 5px;">All Time</a>
             </div>
-            <div class="oj-dialog-body">
-                  <div class="oj-panel">
-                    <h3>Relative</h3>
-                    <div style="width:50%; float:left;">
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('15mins');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 15 Minutes</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('30mins');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 30 Minutes</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('60mins');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 60 Minutes</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('24hrs');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 24 Hours</a>
+          </div>
+        <div class="oj-panel">
+            <h3>Custom</h3>
+               <div id="customset" 
+                data-bind="ojComponent: {component: 'ojRadioset', value: customOption}">
+                    <div style="padding-bottom: 10px;">   
+                        <input id="relative1" type="radio" name="customOpt" value="relative" />
+                        <label for="relative1">Last</label>     
+                        <input data-bind="ojComponent: {component: 'ojInputNumber', min:0, disabled: !isCustomRelative(),
+                            value:timeDuration, rootAttributes: {style:'width:112px;'}}"/>
+                        <select id="timeSelect1" class="oj-select-arrow" style="width: 30px;"
+                                data-bind="ojComponent:{component:'ojSelect',value:timeUnit, disabled: !isCustomRelative()}"> 
+                            <option value="mins">Minutes</option>
+                            <option value="hours">Hours</option>
+                            <option value="days">Days</option>
+                        </select>
+                    </div>   
+                    <div style="width:100%;"> 
+                        <input id="range1" type="radio" name="customOpt" value="absolute"/>
+                        <label for="range1">Range</label> 
+                        <div style="padding-top: 10px;">
+                            <label for="startDate1" class="oj-label-inline" style="width:77px;text-align: right;">Start Date</label>
+                            <input id="startDate1"  autofocus 
+                                   data-bind="ojComponent:{component:'ojInputDateTime', value:startDate, 
+                                        disabled: isCustomRelative, rootAttributes:{style:'width:180px;'}}"/>
+                        </div>
+                        <div>
+                            <label for="endDate1" class="oj-label-inline" style="width:77px;text-align: right;">End Date</label>
+                            <input id="endDate1" data-bind="ojComponent: {component: 'ojInputDateTime', value:endDate, 
+                                                    disabled: isCustomRelative, rootAttributes: {style:'width:180px;'}}"/>
+                        </div>
                     </div>
-                    <div style="width:50%; float:left;">
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('7days');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 7 Days</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('30days');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 30 Days</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('90days');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 90 Days</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('all');}" 
-                           style="display:inline-block;padding-top: 5px;">All Time</a>
-                    </div>
-                  </div>
-                <div class="oj-panel">
-                    <h3>Custom</h3>
-                       <div id="customset" 
-                        data-bind="ojComponent: {component: 'ojRadioset', value: customOption}">
-                            <div style="width:600px;padding-bottom: 10px;">   
-                                <input id="relative" type="radio" name="customOpt" value="relative" />
-                                <label for="relative">Last</label>     
-                                <input data-bind="ojComponent: {component: 'ojInputNumber', min:0,
-                                    value:timeDuration, rootAttributes: {style:'width:112px;'}}"/>
-                                <select id="timeSelect" class="oj-select-arrow" style="width: 30px;"
-                                        data-bind="ojComponent:{component:'ojSelect',value:timeUnit}"> 
-                                    <option value="mins">Minutes</option>
-                                    <option value="hours">Hours</option>
-                                    <option value="days">Days</option>
-                                </select>
-                            </div>   
-                            <div style="width:100%;"> 
-                                <input id="range" type="radio" name="customOpt" value="absolute"/>
-                                <label for="range">Range</label> 
-                                <div style="padding-top: 10px;">
-                                    <label for="startDate" class="oj-label-inline" style="width:77px;text-align: right;">Start Date</label>
-                                    <input id="startDate"  autofocus 
-                                           data-bind="ojComponent:{component:'ojInputDateTime', value:startDate, 
-                                                disabled: isCustomRelative, rootAttributes:{style:'width:180px;'}}"/>
-                                </div>
-                                <div>
-                                    <label for="endDate" class="oj-label-inline" style="width:77px;text-align: right;">End Date</label>
-                                    <input id="endDate" data-bind="ojComponent: {component: 'ojInputDateTime', value:endDate, 
-                                                            disabled: isCustomRelative, rootAttributes: {style:'width:180px;'}}"/>
-                                </div>
-                            </div>
-                       </div>
-                  </div>
-            </div>     
-          <div class="oj-dialog-footer">        
-              <button data-bind="ojComponent: {component: 'ojButton', label: 'OK'}, click: customTimeSelected"> 
-              </button>
-          </div>  
-        </div>-->
-
-        <div style="display:none; min-width:295px; min-height:350px" id="timeRangePopup" 
-             data-bind="ojComponent:{component: 'ojPopup', tail: 'simple', position: {'my' : 'left top', 'at' : 'right bottom', 'collision' : 'none'}}">
-            <div class="oj-panel">
-                    <h3>Relative</h3>
-                    <div style="width:50%; float:left;">
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('15mins');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 15 Minutes</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('30mins');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 30 Minutes</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('60mins');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 60 Minutes</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('24hrs');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 24 Hours</a>
-                    </div>
-                    <div style="width:50%; float:left;">
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('7days');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 7 Days</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('30days');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 30 Days</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('90days');}" 
-                           style="display:inline-block;padding-top: 5px;">Last 90 Days</a><br/>
-                        <a href="#" data-bind="click: function (){relativeTimeSelected('all');}" 
-                           style="display:inline-block;padding-top: 5px;">All Time</a>
-                    </div>
-                  </div>
-                <div class="oj-panel">
-                    <h3>Custom</h3>
-                       <div id="customset" 
-                        data-bind="ojComponent: {component: 'ojRadioset', value: customOption}">
-                            <div style="padding-bottom: 10px;">   
-                                <input id="relative1" type="radio" name="customOpt" value="relative" />
-                                <label for="relative1">Last</label>     
-                                <input data-bind="ojComponent: {component: 'ojInputNumber', min:0, disabled: !isCustomRelative(),
-                                    value:timeDuration, rootAttributes: {style:'width:112px;'}}"/>
-                                <select id="timeSelect1" class="oj-select-arrow" style="width: 30px;"
-                                        data-bind="ojComponent:{component:'ojSelect',value:timeUnit, disabled: !isCustomRelative()}"> 
-                                    <option value="mins">Minutes</option>
-                                    <option value="hours">Hours</option>
-                                    <option value="days">Days</option>
-                                </select>
-                            </div>   
-                            <div style="width:100%;"> 
-                                <input id="range1" type="radio" name="customOpt" value="absolute"/>
-                                <label for="range1">Range</label> 
-                                <div style="padding-top: 10px;">
-                                    <label for="startDate1" class="oj-label-inline" style="width:77px;text-align: right;">Start Date</label>
-                                    <input id="startDate1"  autofocus 
-                                           data-bind="ojComponent:{component:'ojInputDateTime', value:startDate, 
-                                                disabled: isCustomRelative, rootAttributes:{style:'width:180px;'}}"/>
-                                </div>
-                                <div>
-                                    <label for="endDate1" class="oj-label-inline" style="width:77px;text-align: right;">End Date</label>
-                                    <input id="endDate1" data-bind="ojComponent: {component: 'ojInputDateTime', value:endDate, 
-                                                            disabled: isCustomRelative, rootAttributes: {style:'width:180px;'}}"/>
-                                </div>
-                            </div>
-                       </div>
-                  </div>
-            <div class="oj-dialog-footer" style="padding-right: 0px;">        
-                <button data-bind="ojComponent: {component: 'ojButton', label: 'OK'}, click: customTimeSelected"></button>
-            </div> 
-        </div>
-    </body>
-</html>
+               </div>
+          </div>
+    <div class="oj-dialog-footer" style="padding-right: 0px;">        
+        <button data-bind="ojComponent: {component: 'ojButton', label: 'OK'}, click: customTimeSelected"></button>
+    </div> 
+</div>
