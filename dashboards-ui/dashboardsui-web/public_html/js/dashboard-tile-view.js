@@ -815,7 +815,8 @@ define(['knockout',
                 }
                 else {
                     for (var i=0; i<allWidgets.length; i++) {
-                        if (allWidgets[i].name.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1) {
+                        if (allWidgets[i].name.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 || 
+                                (allWidgets[i].description && allWidgets[i].description.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
                             searchResultArray.push(allWidgets[i]);
                         }
                     }

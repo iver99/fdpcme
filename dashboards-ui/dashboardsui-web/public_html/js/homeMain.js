@@ -195,6 +195,15 @@ require(['dbs/dbsmodel',
                     var t = $('#dbs_navPopup');
                     $('#dbs_navPopup').ojPopup('open');//'#linksButton');
                 };
+                
+                self.linkMenuHandle = function(event,item){
+                    $("#links_menu").slideToggle('normal');
+                    item.stopImmediatePropagation();
+                };
+
+                $('body').click(function(){
+                    $("#links_menu").slideUp('normal');
+                });
 
             }
             
@@ -202,56 +211,15 @@ require(['dbs/dbsmodel',
 
             $(document).ready(function() {
                 
-                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
+                ko.applyBindings(new HeaderViewModel(), document.getElementById('demo-appheader-bar'));
+                ko.applyBindings({navigationsPopupModel: dashboardsViewModle.navigationsPopupModel}, document.getElementById('links_menu'));
                 $('#globalBody').show();
-                
                 // Setup bindings for the header and footer then display everything
                 //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));
                 
                 ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                 $('#mainContent').show(); 
                 
-                /*
-                function setMainContentHeight()
-                {
-                    
-                    var _headerWrapperEle = $(document.getElementById('headerWrapper'));
-                    var _mainContentEle = $(document.getElementById('mainContent'));
-                    if (_headerWrapperEle && _mainContentEle)
-                    {
-                        var _sch = $(_mainContentEle).parent().height();
-                        $(_mainContentEle).height(_sch - $(_headerWrapperEle).height() - 20);
-                    }
-                    
-                    $('#dtabs').dbsTabs('setTabsHeight'); 
-                };
-                setMainContentHeight();
-                $(window).resize( setMainContentHeight );
-                */
-                
-                
-                /*
-                var _successFunc = function (){
-                    vm.dashboards = vm.pagingDatasource.getWindowObservable();
-                    ko.applyBindings(vm, document.getElementById('viewContent'));
-                    $('#mainContent').show();  
-                };
-                vm.pagingDatasource.fetch({success: _successFunc});
-                */
-                /*
-                $('div[data-tag]').summaryPanel({
-                    activated: function(event, data) {
-                        console.log("activated");//infobox.infobox('displayTagLinks', event, data.name);
-                    },
-                    deactivated: function() {
-                        console.log("deactivated");//infobox.infobox('hideTagLinks');
-                    }
-                });
-                */
-               
-               //var data = localStorage.getItem('screenShot');
-               //$('#screenshot-test').attr('src', data);
-               
                window.addEventListener('message', childMessageListener, false);
                window.name = 'dashboardhome'; 
                
