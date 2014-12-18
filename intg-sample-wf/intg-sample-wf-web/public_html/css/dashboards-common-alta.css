@@ -1,0 +1,36 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 5, 2014, 7:31:43 PM
+    Author     : miao
+*/
+/* df: Dashboard Framework */
+
+.df-dialog-header-close {
+    float:right;
+    color: red;
+    font-size: xx-small;
+}
+
+a.df-dialog-header-close:visited {
+    color: red;
+}
+
+.df-dialog-header-close-bigger {
+    float:right;
+    color: red;
+    font-size: small;
+}
+
+a.df-dialog-header-close-bigger:visited {
+    color: red;
+}
+
+a:hover {
+ cursor:pointer;
+}
+
+.dbs-nav-mapping-icon-24:before{content:url("images/compassIcon_24.png");}

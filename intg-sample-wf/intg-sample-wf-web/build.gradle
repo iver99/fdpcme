@@ -1,0 +1,78 @@
+apply plugin: 'war'
+
+
+// source 'webapp' directory
+def File sourceWebappDir = new File(project.projectDir, 'public_html')
+// source directories where jet files are copied
+def File sourceJetDestDir = new File(sourceWebappDir, 'dependencies/oraclejet')
+
+project.task("unpackJETFromArtifactory") << {
+    // if the resources/web/js/libs directory is empty - either the first time this task is
+    // run or the directory has been cleaned, then
+    // iterate over the project artifacts and look for the oraclejet.zip,
+    // - downloaded on the local file system (generally found in <user_home_dir>/.gradle)
+    // - unzip to the build/jet directory
+    // - copy over the directories to different common/resources directories
+    // (these directories are specified in the .gitignore file)
+    // - delete the build/jet directory
+    // build directory where the oraclejet.zip will be unzipped
+    
+    def File buildJetUnzipDir = new File(buildDir.absolutePath, 'jet')
+    //first time or if custom cleans removes it
+    sourceJetDestDir.mkdirs()
+
+    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('oraclejet') && files(sourceJetDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildJetUnzipDir.mkdirs()
+            project.copy {
+                from project.zipTree(artifact.file.absolutePath)
+                into buildJetUnzipDir.absolutePath
+            }
+            // Copy each of the unzipped jet directories to
+            // the appropriate source directories
+            // 1. build/jet/ >> public_html/dependencies/oraclejet/
+            project.copy {
+                from  buildJetUnzipDir
+                into sourceJetDestDir.absolutePath
+            }
+            
+            //finally delete the build/jet directory
+            project.delete(buildJetUnzipDir)
+        }
+    }
+}
+
+project.task("cleanJet") << {
+    println 'Cleaning up jet directories ...'
+    println 'oraclejet dir: ' + sourceJetDestDir.absolutePath
+    sourceJetDestDir.deleteDir()
+}
+
+clean.dependsOn cleanJet
+
+war.archiveName "intg-sample-wf-web.war"
+
+war.dependsOn unpackJETFromArtifactory
+
+war {
+        from('public_html') {
+                include '**/*'
+                into('/')
+        }
+        from('src/main/java') {
+                include '**/*'
+                into('WEB-INF/classes')
+        }
+
+}
+
+dependencies {
+        compile(group: 'log4j', name: 'log4j', version: '1.2.17')
+        compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
+        compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.3')
+        compile(group: 'emaas.platform', name: 'registry-client', version: '0.4')
+        compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
+}
+

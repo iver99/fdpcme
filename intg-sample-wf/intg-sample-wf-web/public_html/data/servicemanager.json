@@ -1,0 +1,6 @@
+{
+    "version":"0.1",
+    "serviceName":"SavedSearch",
+    "registryUrls":["http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1"],
+    "serviceUrls":["http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1"]
+}
