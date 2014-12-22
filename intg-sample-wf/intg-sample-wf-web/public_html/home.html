@@ -18,7 +18,7 @@ role value for that section to represent the appropriate content type.
 
 <html lang="en-us">
     <head>
-        <title>Welcome to Oracle EM Dashboards</title>
+        <title>Dashboard Builder Page</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -28,15 +28,11 @@ role value for that section to represent the appropriate content type.
         <!-- These style classes are for demonstration purposes only. -->
         <link rel="stylesheet" href="css/demo-alta-patterns-min.css"/>
 
-        <!-- This is where you would add any app specific styling -->
-        <!--link rel="stylesheet" href="css/override.css" type="text/css"/-->
-        
-        <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dashboards-home-alta.css" type="text/css"/>
-
+        <!--<link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>-->
+        <!--<link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>-->
 
         <!-- RequireJS bootstrap file -->
-        <script data-main="js/homeMain" src="dependencies/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="js/main" src="dependencies/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
@@ -46,44 +42,11 @@ role value for that section to represent the appropriate content type.
                 Template is located in /templates/demoAppHeaderTemplate.html
             -->
             <header id="headerWrapper" role="banner">
-                <style>
-    #links_menu{
-        background-color: white;
-        position: absolute;
-        width: 100%;
-        left:0px;
-        z-index: 1000;
-        max-height: 2000px;
-        display: none;
-        box-shadow: 3px 3px 5px #888888;
-    }
-    #links_menu .oj-row{
-        height:24px;
-        line-height: 24px;
-    }
-    #links_menu .links-content-container{
-        margin : 30px 0;
-        float: left;
-        width: 100%;
-    }
-    #links_menu .iconCircle {
-        background-color: #6f8597;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-    }
-    #links_menu .iconCircle img{
-        padding: 26px;
-        width: 48px;
-        height: 48px;
-    }
-
-                </style>
                 <div class="demo-appheader">
                     <div id="demo-appheader-bar" class="oj-row demo-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                         <!-- logo -->  
-                        <div class="demo-appheader-logo" tabindex="0" >
+                        <div class="demo-appheader-logo" tabindex="0">
                             <div class="demo-appheader-logo-block">
                                 <span role="img" class="oj-icon demo-appheader-logo-oracle" title="Oracle Logo"></span>  
                             </div>
@@ -98,7 +61,6 @@ role value for that section to represent the appropriate content type.
 
                         <!-- Toolbar -->  
                         <div id='demo-appheader-menu-and-toolbar-container' tabindex="0">
-
                             <div id='demo-appheader-menu-container'>
                                 <ul id="demoAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
                                     <!-- ko foreach: globalNavItems -->
@@ -106,37 +68,8 @@ role value for that section to represent the appropriate content type.
                                     <!-- /ko -->
                                 </ul>
                             </div>
-
                             <div class="demo-appheader-toolbar-container">
                                 <div class="demo-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
-
-                                    <!-- koooo foreach: toolbarButtons -->
-                                    <!--button class='oj-button-half-chrome demo-appheader-toolbar-button'
-                                            data-bind="ojComponent: {component:'ojButton', 
-                                                        label: label, 
-                                                        display: 'icons', 
-                                                        icons: {start: iconClass + ' demo-icon-font'}} ">
-                                    </button-->
-                                    <!-- /kooo -->
-                                    <!--button id="linksButton" class='oj-button-half-chrome demo-appheader-toolbar-button'
-                                            data-bind="ojComponent: {component:'ojButton', 
-                                                        label: 'Links', 
-                                                        display: 'icons', 
-                                                        icons: {start: 'dbs-nav-mapping-icon-24 demo-icon-font'}}, 
-                                                        click: function () { $('#dbs_navPopup').ojPopup('open', '#linksButton');}">
-                                    </button-->
-                                    
-                                    <button id="linksButton" class="oj-button-half-chrome demo-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" data-bind="ojComponent: {component:'ojButton', 
-                                            label: 'Links', 
-                                            display: 'icons', 
-                                            icons: {start: 'dbs-nav-mapping-icon-24 demo-icon-font'}}, 
-                                            click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start dbs-nav-mapping-icon-24 demo-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
-
-
-                                    <!-- This is how to add a separator to the toolbar.  
-                                         Be sure to include the role and aria-orientation as shown to make it accessible.  -->
-                                    <span role="separator" class="oj-toolbar-separator"></span>
-
                                     <button id="menubutton"
                                             class='oj-button-half-chrome demo-appheader-toolbar-button'
                                             data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#demoAppheaderGlobalNavMenuId'}">
@@ -145,233 +78,27 @@ role value for that section to represent the appropriate content type.
                             </div>
                         </div>
                     </div>
-                    <!--Nav Menu-->
-                    <div class="menuPullDown oj-component-initnode" id="links_menu">
-                        <div class="links-content-container">
-                            <div class="oj-sm-1 oj-md-offset-1 oj-col links-icon">
-                                <div class = iconCircle>
-                                    <img src="css/images/links_icon1.png" />
-                                </div>
-                            </div>
-                            <div class="oj-sm-2 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Quick Links</div>
-                                <div class="oj-row" style="font-weight: bold">
-                                    <a data-bind="click: function() { window.open( navigationsPopupModel.homeLink );}">Dashboard Home</a>
-                                </div>
-                                <div class="oj-row" style="font-weight: bold">
-                                    <a data-bind="click: function() { window.open( navigationsPopupModel.dataVisualLink );}">Data Visual Analyzer Home</a>
-                                </div>
-                            </div>
-                            <div class="oj-sm-1 oj-col links-icon">
-                                <div class = iconCircle>
-                                    <img src="css/images/links_icon2.png" />
-                                </div>
-                            </div>
-                            <div class="oj-sm-2 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Favorites</div>
-                                <!-- ko foreach: navigationsPopupModel.favorites -->
-                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                <!-- /ko -->
-                            </div>
-                            <div class="oj-sm-1 oj-col links-icon">
-                                <div class = iconCircle>
-                                    <img src="css/images/links_icon3.png" />
-                                </div>
-                            </div>
-                            <div class="oj-sm-3 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Recent Dashboards</div>
-                                <!-- ko foreach: navigationsPopupModel.recents -->
-                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                <!-- /ko -->
-                            </div>
-                        </div>
-                    </div>
-                    <!--Nav Menu-->
                 </div>            
             </header>
-
-            <!-- main content -->
-            <div id="mainContent" style="display: none;">
-                        <div class="main-content-area">
-                            <!--div id="dtabs" data-bind="dbsTabs: {removable: false}"-->
-                                <!-- Home tab start -->
-                                <div id="dhometab" class="dbs-tab-container">
-                                    <!--span>Dashboards</span-->
-                                    <div>
-                                    <!-- Home toolbar start -->
-                                    <div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;padding-left: 5px">
-                                        <div id="toolbar2"  aria-label="Searching toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
-                                                <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
-                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: 'Enter search criteria', rootAttributes: {'style': 'min-width:653px; width:653px;'}},
-                                                                  dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
-                                                <button id="sbtn" style="margin-bottom: 4px;margin-left: 5px;"
-                                                        data-bind="ojComponent: { component:'ojButton'}">
-                                                            <img style="padding-top: 6px" src="css/images/navi_search_16_ena.png" alt="Search"/>
-                                                </button>
+            <div id="main-container" class="oj-col stretch-height">
+                <div class="oj-row stretch-height tile-container" id="tileContainer">
+                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height">
+                        <div class="oj-row dbd-column stretch-height" data-bind="foreach: tiles" id="tiles-row">
+                            <div class="dbd-tile dbd-tile-sortable oj-col">
+                                <div class="dbd-tile-element">
+                                    <div style="width: 100%;padding-top: 5px;">
+                                        <label data-bind="text:title" style="font-size: medium;font-weight: bold;"></label>
+                                    </div>
+                                    <div style="width: 100%;">
+                                        <div data-bind='component:{name:type, params:{tile:$data }}' style="width:100%;height:100%;">
                                         </div>
-                                        <div id="toolbar1"  aria-label="Control toolbar" style="border-left: 0px" data-bind="ojComponent: {component:'ojToolbar'}">
-                                                <button id="cbtn" class="dbs-home-button-create-new-dashboard"
-                                                        data-bind="click: createDashboardClicked, ojComponent: { component:'ojButton', label: 'Create New Dashboard'}"></button>
-                                        </div>
-                                        <div id="toolbar4"  aria-label="Explore Data toolbar" data-bind="ojComponent: {component:'ojToolbar'}" style="border-left: 0">
-                                                <button id="cbtn" style="margin-bottom: 4px;color: black;margin-right: 4px;text-align: right;"
-                                                        data-bind="click: exploreDataClicked, ojComponent: { component:'ojButton', label: 'Explore Data'}"></button>
-                                        </div>                                        
-                                        <!--div id="toolbar3" class="oj-xl-float-end"  aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
-                                                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
-                                        </div-->
-                                    </div>
-                                    <div id="toolbar3" aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
-                                                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
-                                    </div>
-                                    <!-- Home toolbar end -->
-                                    <div id="dtabhomesc" class="dbs-summaries-container">
-                                        <!-- ko foreach: dashboards -->
-                                        <div class="oj-panel dbs-summary-container" 
-                                             data-tag data-bind="dbsDashboardPanel: {
-                                                                   activated: null,
-                                                                   deactivated: null,
-                                                                   deleteClicked: $root.handleDashboardDeleted,
-                                                                   navigated: $root.handleDashboardClicked,
-                                                                   contentTmplate: 'db_summary_tmp',
-                                                                   dashboard: $data
-                                            }"></div>
-                                        <!-- /ko -->
-                                    </div>
-                                    
-                                    <script type="text/html" id="db_summary_tmp">
-                                            <div>
-                                                <ul class="dbs-summary-row">
-                                                    <!-- ko foreach: $data.widgets -->
-                                                    <li class="dbs-summary-row" data-bind="text: title"></li>
-                                                    <!-- /ko -->
-                                                </ul>
-                                            </div>
-                                    </script>
                                     </div>
                                 </div>
-                                <!-- Home tab end -->
-                            <!--/div-->
-                        </div>
-
-                    <!-- Create Dashboard dilog start -->
-                    <div style="display:none" id="cDsbDialog" title="Create Dashboard" 
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
-                        <div class="oj-dialog-header oj-helper-clearfix">
-                            <div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: cancelDashboardCreate">CLOSE</a>
-                            </div>
-                            <span class="oj-dialog-title">Create Dashboard</span>
-                        </div>
-                        <div class="oj-dialog-body">
-                            <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHNameIn">Name</label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <input id="dbsHNameIn" required="true" 
-                                               data-bind="ojComponent: { component: 'ojInputText', value: createDashboardModel.name, rootAttributes: {style:'max-width:420px;'}}">
-                                    </div>
-                                </div>
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHDpIn">Description</label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <textarea id="dbsHDpIn" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:420px;'}}"></textarea>
-                                    </div>
-                                </div>
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="checkboxsetTimeRangeFilter"></label>
-                                    </div>
-                                    <div id="checkboxsetTimeRangeFilter" class="oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
-                                                value: createDashboardModel.timeRangeFilterValue}" >
-                                        <input id="ckbxTimeRangeFilter" type="checkbox" value="ON">
-                                        <label for="ckbxTimeRangeFilter">Include a time control (range and refresh)</label>
-                                    </div>
-                                </div> 
-                                <!--div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="checkboxsetTargetFilter"></label>
-                                    </div>
-                                    <div id='checkboxsetTargetFilter' class="oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
-                                                value: targetFilterValue}" >
-                                        <input id="ckbxTargetFilter" type="checkbox" value="ON">
-                                        <label for="ckbxTargetFilter">Include a target selector</label>
-                                    </div>
-                                </div-->                                 
-                            </div>
-                        </div>
-                        <div id="createDialogFooter" class="oj-dialog-footer">
-                            <button id="createDsb" data-bind="click: confirmDashboardCreate,ojComponent: { component: 'ojButton', label: 'Create', rootAttributes: {style:'margin-right:5px'}}"></button>
-                        </div>
-                    </div>
-                    <!-- Create Dashboard dilog end -->
-                    
-                    <!-- Confirmation dilog start -->
-                    <div style="display:none" id="dbs_cfmDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
-                        <div class="oj-dialog-header oj-helper-clearfix">
-                            <div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: confirmDialogModel.close">CLOSE</a>
-                            </div>
-                            <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
-                        </div>
-                        <div class="oj-dialog-body">
-                            <p data-bind="text: confirmDialogModel.message"></p>
-                        </div>
-                        <div class="oj-dialog-footer">
-                            <button data-bind="click: confirmDialogModel.okFunction, 
-                                               ojComponent: { component: 'ojButton', label: confirmDialogModel.okLabel, rootAttributes: {style:'margin-right:5px'}}"></button>
-                        </div>
-                    </div>
-                    <!-- Confirmation dilog end -->
-                    
-                    <!-- Navigations popup start
-                    <div style="display:none; min-width:500px; min-height:150px" id="dbs_navPopup" 
-                         data-bind="ojComponent:{component: 'ojPopup', tail: 'simple', position: {'my' : 'right top', 'at' : 'left center', 'collision' : 'none'}}">
-                        <div class="oj-row">
-                            <div class="oj-sm-3 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Favorites</div>
-                                <div class="oj-row">---------</div>
-                                
-                                <div class="oj-row"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                
-                            </div>
-                            <div class="oj-sm-4 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Recent Dashboards</div>
-                                <div class="oj-row">---------</div>
-                                
-                                <div class="oj-row"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                
-                            </div>
-                            <div class="oj-sm-4 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Quick Links</div>
-                                <div class="oj-row">---------</div>
-                                <div class="oj-row"><a data-bind="click: function() { window.open( navigationsPopupModel.homeLink );}">Dashboard Home</a></div>
-                                <div class="oj-row"><a data-bind="click: function() { window.open( navigationsPopupModel.dataVisualLink );}">Data Visual Analyzer Home</a></div>
                             </div>
                         </div>
                     </div>
-                     Navigations popup end -->
+                </div>
             </div>
-
-                <!-- Footer section which contains dynamic list of items. Template is located in /templates/demoFooterTemaplate.html-->
-                <!--footer id="footerWrapper" role="contentinfo">
-                    <div class="demo-appfooter">
-                        <div class="oj-row">
-                            <ul>
-                                <-- ko foreach: footerLinks --
-                                <li> <a data-bind="text : name, attr : {id: linkId, href : linkTarget}"> </a> </li>
-                                <-- /ko --
-                            </ul>	
-                            <div class="demo-appfooter-text">Copyright &copy; 2014 Oracle and/or its affiliates. All rights reserved. Oracle JET <span data-bind="text: ojVersion"></span></div>
-                        </div>
-                    </div>
-                </footer-->
-            </div>
-        </body>
-    </html>
+        </div>
+    </body>
+</html>
