@@ -8,63 +8,81 @@ define(['knockout', 'jquery'],
             function TimeSelectorViewModel(params){
                 var me = this;
                 var model = params.model;
+                var min = 60*1000;
+                var hour = 60*min;
+                var day = 24*hour;
                 me.customOption = ko.observable('relative');
                 me.label = ko.observable("Last 30 Days");
-                me.timeUnit = ko.observable('mins');
-                me.timeDuration = ko.observable(0);
-                me.startDate = ko.observable();
-                me.endDate = ko.observable();
+                me.timeUnit = ko.observable('days');
+                me.timeDuration = ko.observable(30);
+                me.startDate = ko.observable(oj.IntlConverterUtils.dateToLocalIso(model.viewStart()));
+                me.endDate = ko.observable(oj.IntlConverterUtils.dateToLocalIso(model.viewEnd()));
                 me.isCustomRelative = ko.computed(function(){return me.customOption() === 'relative';}, me);
                 
                 me.showTimeSelector = function() {
-//                    $("#timeSelectorDialog").ojDialog("open");
-//                    $("#timeRangePopup").ojPopup("open","#timeRangeBtn");
                     $("#timeRangePopup").ojPopup("open","#time_selector_box");
                 };
                 
                 me.relativeTimeSelected = function(relative) {
                     var now = new Date();
                     if (relative === '15mins') {
-                        model.viewStart(new Date(now.getTime() - 15*60*1000));
+                        model.viewStart(new Date(now.getTime() - 15*min));
                         model.viewEnd(now);  
                         me.label("Last 15 Minutes");
+                        me.timeUnit(['mins']);
+                        me.timeDuration(15);
                     }
                     else if (relative === '30mins') {
-                        model.viewStart(new Date(now.getTime() - 30*60*1000));
+                        model.viewStart(new Date(now.getTime() - 30*min));
                         model.viewEnd(now);  
                         me.label("Last 30 Minutes");
+                        me.timeUnit(['mins']);
+                        me.timeDuration(30);
                     }
                     else if (relative === '60mins') {
-                        model.viewStart(new Date(now.getTime() - 60*60*1000));
+                        model.viewStart(new Date(now.getTime() - 60*min));
                         model.viewEnd(now);  
                         me.label("Last 60 Minutes");
+                        me.timeUnit(['mins']);
+                        me.timeDuration(60);
                     }
                     else if (relative === '24hrs') {
-                        model.viewStart(new Date(now.getTime() - 24*60*60*1000));
+                        model.viewStart(new Date(now.getTime() - 24*hour));
                         model.viewEnd(now);  
                         me.label("Last 24 Hours");
+                        me.timeUnit(['hours']);
+                        me.timeDuration(24);
                     }
                     else if (relative === '7days') {
-                        model.viewStart(new Date(now.getTime() - 7*24*60*60*1000));
+                        model.viewStart(new Date(now.getTime() - 7*day));
                         model.viewEnd(now);  
                         me.label("Last 7 Days");
+                        me.timeUnit(['days']);
+                        me.timeDuration(7);
                     }
                     else if (relative === '30days') {
-                        model.viewStart(new Date(now.getTime() - 30*24*60*60*1000));
+                        model.viewStart(new Date(now.getTime() - 30*day));
                         model.viewEnd(now);  
                         me.label("Last 30 Days");
+                        me.timeUnit(['days']);
+                        me.timeDuration(30);
                     }
                     else if (relative === '90days') {
-                        model.viewStart(new Date(now.getTime() - 90*24*60*60*1000));
+                        model.viewStart(new Date(now.getTime() - 90*day));
                         model.viewEnd(now);  
                         me.label("Last 90 Days");
+                        me.timeUnit(['days']);
+                        me.timeDuration(90);
                     }
                     else if (relative === 'all') {
                         model.viewStart(null);
                         model.viewEnd(null);  
                         me.label("All Time");
+                        me.timeUnit(['mins']);
+                        me.timeDuration(0);
+                        me.startDate(null);
+                        me.endDate(null);
                     }
-//                    $("#timeSelectorDialog").ojDialog("close");
                     $("#timeRangePopup").ojPopup("close");
                     model.timeRangeChange(true);
                     resetValues();
@@ -72,15 +90,12 @@ define(['knockout', 'jquery'],
                 
                 me.customTimeSelected = function() {
                     var now = new Date();
-                    var min = 60*1000;
-                    var hour = 60*min;
-                    var day = 24*hour;
                     var unit = me.timeUnit() instanceof Array ? me.timeUnit()[0]:me.timeUnit();
                     if (me.customOption() === 'relative') {
                         if (unit === 'mins') {
                             model.viewStart(new Date(now.getTime() - me.timeDuration()*min));
                         }
-                        else if (unit === 'hrs') {
+                        else if (unit === 'hours') {
                             model.viewStart(new Date(now.getTime() - me.timeDuration()*hour));
                         }
                         else if (unit === 'days') {
@@ -91,9 +106,10 @@ define(['knockout', 'jquery'],
                     else if (me.customOption() === 'absolute') {
                         model.viewStart(new Date(me.startDate()));
                         model.viewEnd(new Date(me.endDate()));
+                        me.timeUnit(['mins']);
+                        me.timeDuration(0);
                     }
                     
-//                    $("#timeSelectorDialog").ojDialog("close");
                     $("#timeRangePopup").ojPopup("close");
                     me.label("Custom");
                     model.timeRangeChange(true);
@@ -101,10 +117,8 @@ define(['knockout', 'jquery'],
                 
                 function resetValues() {
                     me.customOption('relative');
-                    me.timeUnit('mins');
-                    me.timeDuration(0);
-                    me.startDate(null);
-                    me.endDate(null);
+                    me.startDate(oj.IntlConverterUtils.dateToLocalIso(model.viewStart()));
+                    me.endDate(oj.IntlConverterUtils.dateToLocalIso(model.viewEnd()));
                 };
             }
             
