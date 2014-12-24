@@ -197,8 +197,8 @@ require(['knockout',
                 var subscriberWidgetTile = new DashboardTile(self, "demo-subscriber-widget", "Demo Subcriber Widget", "", null);
                 
                 self.tiles = [
-//                    iframeWidgetTile,
-                    laWidgetTile
+                    iframeWidgetTile
+                    ,laWidgetTile
                     ,taWidgetTile
                     ,simpleChartWidgetTile 
                     ,publisherWidgetTile 
