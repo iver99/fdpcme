@@ -2,15 +2,14 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
-import java.math.BigDecimal;
-
-import java.sql.Timestamp;
-
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +20,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * To create ID generator sequence "EMS_DASHBOARD_TILE_ID_SEQ_GEN":
@@ -29,23 +30,34 @@ import javax.persistence.Table;
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTile.findAll", query = "select o from EmsDashboardTile o") })
 @Table(name = "EMS_DASHBOARD_TILE")
-@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_ID_SEQ_GEN",
-                   allocationSize = 50, initialValue = 50)
+@SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
 public class EmsDashboardTile implements Serializable {
     private static final long serialVersionUID = 6307069723661684517L;
-    @Column(name = "CREATION_DATE", nullable = false)
-    private Timestamp creationDate;
-    private BigDecimal height;
+    
+    @Id
+    @Column(name = "TILE_ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboardTile_Id_Seq_Gen")
+    private Long tileId;
+    @Column(nullable = false, length = 64)
+    private String title;
+    @Column
+    private Integer height;
+    @Column
+    private Integer width;
+    @Column(name = "POSITION", nullable = false)
+    private Integer position;
     @Column(name = "IS_MAXIMIZED", nullable = false)
     private Integer isMaximized;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATION_DATE", nullable = false)
+    private Date creationDate;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_MODIFICATION_DATE")
-    private Timestamp lastModificationDate;
+    private Date lastModificationDate;
     @Column(name = "LAST_MODIFIED_BY", length = 128)
     private String lastModifiedBy;
     @Column(nullable = false, length = 128)
     private String owner;
-    @Column(nullable = false)
-    private BigDecimal position;
     @Column(name = "PROVIDER_ASSET_ROOT", length = 64)
     private String providerAssetRoot;
     @Column(name = "PROVIDER_NAME", length = 64)
@@ -54,12 +66,6 @@ public class EmsDashboardTile implements Serializable {
     private String providerVersion;
     @Column(name = "TENANT_ID", nullable = false, length = 32)
     private String tenantId;
-    @Id
-    @Column(name = "TILE_ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboardTile_Id_Seq_Gen")
-    private BigDecimal tileId;
-    @Column(nullable = false, length = 64)
-    private String title;
     @Column(name = "WIDGET_CREATION_TIME", nullable = false, length = 32)
     private String widgetCreationTime;
     @Column(name = "WIDGET_DESCRIPTION", length = 256)
@@ -77,30 +83,30 @@ public class EmsDashboardTile implements Serializable {
     @Column(name = "WIDGET_OWNER", nullable = false, length = 128)
     private String widgetOwner;
     @Column(name = "WIDGET_SOURCE", nullable = false)
-    private BigDecimal widgetSource;
+    private Integer widgetSource;
     @Column(name = "WIDGET_TEMPLATE", nullable = false, length = 1024)
     private String widgetTemplate;
     @Column(name = "WIDGET_UNIQUE_ID", nullable = false, length = 64)
     private String widgetUniqueId;
     @Column(name = "WIDGET_VIEWMODE", nullable = false, length = 1024)
     private String widgetViewmode;
-    private BigDecimal width;
+    
     @ManyToOne
     @JoinColumn(name = "DASHBOARD_ID")
     private EmsDashboard dashboard;
-    @OneToMany(mappedBy = "emsDashboardTile", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<EmsDashboardTileParams> emsDashboardTileParamsList;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardTile", orphanRemoval = true)
+    private List<EmsDashboardTileParams> dashboardTileParamsList;
 
     public EmsDashboardTile() {
     }
 
-    public EmsDashboardTile(Timestamp creationDate, EmsDashboard emsDashboard1, BigDecimal height, Integer isMaximized,
-                            Timestamp lastModificationDate, String lastModifiedBy, String owner, BigDecimal position,
+    public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer height, Integer isMaximized,
+                            Date lastModificationDate, String lastModifiedBy, String owner, Integer position,
                             String providerAssetRoot, String providerName, String providerVersion, String tenantId,
-                            BigDecimal tileId, String title, String widgetCreationTime, String widgetDescription,
+                            Long tileId, String title, String widgetCreationTime, String widgetDescription,
                             String widgetGroupName, String widgetHistogram, String widgetIcon, String widgetKocName,
-                            String widgetName, String widgetOwner, BigDecimal widgetSource, String widgetTemplate,
-                            String widgetUniqueId, String widgetViewmode, BigDecimal width) {
+                            String widgetName, String widgetOwner, Integer widgetSource, String widgetTemplate,
+                            String widgetUniqueId, String widgetViewmode, Integer width) {
         this.creationDate = creationDate;
         this.dashboard = emsDashboard1;
         this.height = height;
@@ -130,20 +136,20 @@ public class EmsDashboardTile implements Serializable {
         this.width = width;
     }
 
-    public Timestamp getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
 
-    public BigDecimal getHeight() {
+    public Integer getHeight() {
         return height;
     }
 
-    public void setHeight(BigDecimal height) {
+    public void setHeight(Integer height) {
         this.height = height;
     }
 
@@ -155,11 +161,11 @@ public class EmsDashboardTile implements Serializable {
         this.isMaximized = isMaximized;
     }
 
-    public Timestamp getLastModificationDate() {
+    public Date getLastModificationDate() {
         return lastModificationDate;
     }
 
-    public void setLastModificationDate(Timestamp lastModificationDate) {
+    public void setLastModificationDate(Date lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
     }
 
@@ -179,11 +185,11 @@ public class EmsDashboardTile implements Serializable {
         this.owner = owner;
     }
 
-    public BigDecimal getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(BigDecimal position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
@@ -219,7 +225,7 @@ public class EmsDashboardTile implements Serializable {
         this.tenantId = tenantId;
     }
 
-    public BigDecimal getTileId() {
+    public Long getTileId() {
         return tileId;
     }
 
@@ -295,11 +301,11 @@ public class EmsDashboardTile implements Serializable {
         this.widgetOwner = widgetOwner;
     }
 
-    public BigDecimal getWidgetSource() {
+    public Integer getWidgetSource() {
         return widgetSource;
     }
 
-    public void setWidgetSource(BigDecimal widgetSource) {
+    public void setWidgetSource(Integer widgetSource) {
         this.widgetSource = widgetSource;
     }
 
@@ -327,11 +333,11 @@ public class EmsDashboardTile implements Serializable {
         this.widgetViewmode = widgetViewmode;
     }
 
-    public BigDecimal getWidth() {
+    public Integer getWidth() {
         return width;
     }
 
-    public void setWidth(BigDecimal width) {
+    public void setWidth(Integer width) {
         this.width = width;
     }
 
@@ -343,23 +349,26 @@ public class EmsDashboardTile implements Serializable {
         this.dashboard = emsDashboard1;
     }
 
-    public List<EmsDashboardTileParams> getEmsDashboardTileParamsList() {
-        return emsDashboardTileParamsList;
+    public List<EmsDashboardTileParams> getDashboardTileParamsList() {
+        return dashboardTileParamsList;
     }
 
-    public void setEmsDashboardTileParamsList(List<EmsDashboardTileParams> emsDashboardTileParamsList) {
-        this.emsDashboardTileParamsList = emsDashboardTileParamsList;
+    public void setDashboardTileParamsList(List<EmsDashboardTileParams> emsDashboardTileParamsList) {
+        this.dashboardTileParamsList = emsDashboardTileParamsList;
     }
 
     public EmsDashboardTileParams addEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams) {
-        getEmsDashboardTileParamsList().add(emsDashboardTileParams);
-        emsDashboardTileParams.setEmsDashboardTile(this);
+        if (this.dashboardTileParamsList == null) {
+            this.dashboardTileParamsList = new ArrayList<EmsDashboardTileParams>();
+        }
+        this.dashboardTileParamsList.add(emsDashboardTileParams);
+        emsDashboardTileParams.setDashboardTile(this);
         return emsDashboardTileParams;
     }
 
     public EmsDashboardTileParams removeEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams) {
-        getEmsDashboardTileParamsList().remove(emsDashboardTileParams);
-        emsDashboardTileParams.setEmsDashboardTile(null);
+        getDashboardTileParamsList().remove(emsDashboardTileParams);
+        emsDashboardTileParams.setDashboardTile(null);
         return emsDashboardTileParams;
     }
 }

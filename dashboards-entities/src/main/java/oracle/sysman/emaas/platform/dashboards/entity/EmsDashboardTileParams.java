@@ -2,9 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
-import java.math.BigDecimal;
-
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @NamedQueries({
@@ -29,23 +29,24 @@ public class EmsDashboardTileParams implements Serializable {
     @Column(name = "PARAM_NAME", nullable = false, length = 64)
     private String paramName;
     @Column(name = "PARAM_TYPE", nullable = false)
-    private BigDecimal paramType;
+    private Integer paramType;
     @Column(name = "PARAM_VALUE_NUM")
-    private BigDecimal paramValueNum;
+    private Integer paramValueNum;
     @Column(name = "PARAM_VALUE_STR", length = 1024)
     private String paramValueStr;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "PARAM_VALUE_TIMESTAMP")
-    private Timestamp paramValueTimestamp;
+    private Date paramValueTimestamp;
     @ManyToOne
     @Id
-    @JoinColumn(name = "TILE_ID")
-    private EmsDashboardTile emsDashboardTile;
+    @JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID")
+    private EmsDashboardTile dashboardTile;
 
     public EmsDashboardTileParams() {
     }
 
-    public EmsDashboardTileParams(Integer isSystem, String paramName, BigDecimal paramType, BigDecimal paramValueNum,
-                                  String paramValueStr, Timestamp paramValueTimestamp,
+    public EmsDashboardTileParams(Integer isSystem, String paramName, Integer paramType, Integer paramValueNum,
+                                  String paramValueStr, Date paramValueTimestamp,
                                   EmsDashboardTile emsDashboardTile) {
         this.isSystem = isSystem;
         this.paramName = paramName;
@@ -53,7 +54,7 @@ public class EmsDashboardTileParams implements Serializable {
         this.paramValueNum = paramValueNum;
         this.paramValueStr = paramValueStr;
         this.paramValueTimestamp = paramValueTimestamp;
-        this.emsDashboardTile = emsDashboardTile;
+        this.dashboardTile = emsDashboardTile;
     }
 
     public Integer getIsSystem() {
@@ -72,19 +73,19 @@ public class EmsDashboardTileParams implements Serializable {
         this.paramName = paramName;
     }
 
-    public BigDecimal getParamType() {
+    public Integer getParamType() {
         return paramType;
     }
 
-    public void setParamType(BigDecimal paramType) {
+    public void setParamType(Integer paramType) {
         this.paramType = paramType;
     }
 
-    public BigDecimal getParamValueNum() {
+    public Integer getParamValueNum() {
         return paramValueNum;
     }
 
-    public void setParamValueNum(BigDecimal paramValueNum) {
+    public void setParamValueNum(Integer paramValueNum) {
         this.paramValueNum = paramValueNum;
     }
 
@@ -96,20 +97,20 @@ public class EmsDashboardTileParams implements Serializable {
         this.paramValueStr = paramValueStr;
     }
 
-    public Timestamp getParamValueTimestamp() {
+    public Date getParamValueTimestamp() {
         return paramValueTimestamp;
     }
 
-    public void setParamValueTimestamp(Timestamp paramValueTimestamp) {
+    public void setParamValueTimestamp(Date paramValueTimestamp) {
         this.paramValueTimestamp = paramValueTimestamp;
     }
 
 
-    public EmsDashboardTile getEmsDashboardTile() {
-        return emsDashboardTile;
+    public EmsDashboardTile getDashboardTile() {
+        return dashboardTile;
     }
 
-    public void setEmsDashboardTile(EmsDashboardTile emsDashboardTile) {
-        this.emsDashboardTile = emsDashboardTile;
+    public void setDashboardTile(EmsDashboardTile emsDashboardTile) {
+        this.dashboardTile = emsDashboardTile;
     }
 }

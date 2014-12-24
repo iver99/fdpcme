@@ -2,16 +2,16 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
-import java.math.BigDecimal;
-
 public class EmsDashboardLastAccessPK implements Serializable {
+    private String tenantId;
     private String accessedBy;
-    private BigDecimal dashboardId;
+    private Long dashboardId;
 
     public EmsDashboardLastAccessPK() {
     }
 
-    public EmsDashboardLastAccessPK(String accessedBy, BigDecimal dashboardId) {
+    public EmsDashboardLastAccessPK(String tenantId, String accessedBy, Long dashboardId) {
+        this.tenantId = tenantId;
         this.accessedBy = accessedBy;
         this.dashboardId = dashboardId;
     }
@@ -20,7 +20,8 @@ public class EmsDashboardLastAccessPK implements Serializable {
         if (other instanceof EmsDashboardLastAccessPK) {
             final EmsDashboardLastAccessPK otherEmsDashboardLastAccessPK = (EmsDashboardLastAccessPK) other;
             final boolean areEqual =
-                (otherEmsDashboardLastAccessPK.accessedBy.equals(accessedBy) &&
+                (otherEmsDashboardLastAccessPK.tenantId.equals(tenantId) &&
+                 otherEmsDashboardLastAccessPK.accessedBy.equals(accessedBy) &&
                  otherEmsDashboardLastAccessPK.dashboardId.equals(dashboardId));
             return areEqual;
         }
@@ -31,6 +32,15 @@ public class EmsDashboardLastAccessPK implements Serializable {
         return super.hashCode();
     }
 
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
     public String getAccessedBy() {
         return accessedBy;
     }
@@ -39,11 +49,11 @@ public class EmsDashboardLastAccessPK implements Serializable {
         this.accessedBy = accessedBy;
     }
 
-    public BigDecimal getDashboardId() {
+    public Long getDashboardId() {
         return dashboardId;
     }
 
-    public void setDashboardId(BigDecimal dashboardId) {
+    public void setDashboardId(Long dashboardId) {
         this.dashboardId = dashboardId;
     }
 }

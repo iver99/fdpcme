@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -198,7 +199,10 @@ public class EmsDashboard implements Serializable {
     }
 
     public EmsDashboardTile addEmsDashboardTile(EmsDashboardTile emsDashboardTile) {
-        getDashboardTileList().add(emsDashboardTile);
+        if (this.dashboardTileList == null) {
+            this.dashboardTileList = new ArrayList<EmsDashboardTile>();
+        }
+        this.dashboardTileList.add(emsDashboardTile);
         emsDashboardTile.setDashboard(this);
         return emsDashboardTile;
     }

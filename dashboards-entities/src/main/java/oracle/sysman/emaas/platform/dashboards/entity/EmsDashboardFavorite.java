@@ -2,9 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
-import java.math.BigDecimal;
-
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardFavorite.findAll", query = "select o from EmsDashboardFavorite o") })
@@ -22,34 +22,36 @@ import javax.persistence.Table;
 @IdClass(EmsDashboardFavoritePK.class)
 public class EmsDashboardFavorite implements Serializable {
     private static final long serialVersionUID = -8636822891842500745L;
-    @Column(name = "CREATION_DATE", nullable = false)
-    private Timestamp creationDate;
+    
     @Id
     @Column(name = "TENANT_ID", nullable = false, length = 32)
     private String tenantId;
     @Id
     @Column(name = "USER_NAME", nullable = false, length = 128)
     private String userName;
-    @ManyToOne
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATION_DATE", nullable = false)
+    private Date creationDate;
     @Id
-    @JoinColumn(name = "DASHBOARD_ID")
-    private EmsDashboard emsDashboard;
+    @ManyToOne
+    @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID")
+    private EmsDashboard dashboard;
 
     public EmsDashboardFavorite() {
     }
 
-    public EmsDashboardFavorite(Timestamp creationDate, EmsDashboard emsDashboard, String tenantId, String userName) {
+    public EmsDashboardFavorite(Date creationDate, EmsDashboard dashboard, String tenantId, String userName) {
         this.creationDate = creationDate;
-        this.emsDashboard = emsDashboard;
+        this.dashboard = dashboard;
         this.tenantId = tenantId;
         this.userName = userName;
     }
 
-    public Timestamp getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -70,11 +72,11 @@ public class EmsDashboardFavorite implements Serializable {
         this.userName = userName;
     }
 
-    public EmsDashboard getEmsDashboard() {
-        return emsDashboard;
+    public EmsDashboard getDashboard() {
+        return dashboard;
     }
 
-    public void setEmsDashboard(EmsDashboard emsDashboard) {
-        this.emsDashboard = emsDashboard;
+    public void setDashboard(EmsDashboard emsDashboard) {
+        this.dashboard = emsDashboard;
     }
 }

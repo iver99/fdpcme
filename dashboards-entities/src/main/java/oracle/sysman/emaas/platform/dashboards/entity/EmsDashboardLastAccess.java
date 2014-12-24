@@ -2,9 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
-import java.math.BigDecimal;
-
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +11,8 @@ import javax.persistence.IdClass;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @NamedQueries({
@@ -24,18 +24,20 @@ public class EmsDashboardLastAccess implements Serializable {
     @Id
     @Column(name = "ACCESSED_BY", nullable = false, length = 128)
     private String accessedBy;
-    @Column(name = "ACCESS_DATE", nullable = false)
-    private Timestamp accessDate;
     @Id
     @Column(name = "DASHBOARD_ID", nullable = false)
-    private BigDecimal dashboardId;
+    private Long dashboardId;
+    @Id
     @Column(name = "TENANT_ID", nullable = false, length = 32)
     private String tenantId;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "ACCESS_DATE", nullable = false)
+    private Date accessDate;
 
     public EmsDashboardLastAccess() {
     }
 
-    public EmsDashboardLastAccess(Timestamp accessDate, String accessedBy, BigDecimal dashboardId, String tenantId) {
+    public EmsDashboardLastAccess(Date accessDate, String accessedBy, Long dashboardId, String tenantId) {
         this.accessDate = accessDate;
         this.accessedBy = accessedBy;
         this.dashboardId = dashboardId;
@@ -50,19 +52,19 @@ public class EmsDashboardLastAccess implements Serializable {
         this.accessedBy = accessedBy;
     }
 
-    public Timestamp getAccessDate() {
+    public Date getAccessDate() {
         return accessDate;
     }
 
-    public void setAccessDate(Timestamp accessDate) {
+    public void setAccessDate(Date accessDate) {
         this.accessDate = accessDate;
     }
 
-    public BigDecimal getDashboardId() {
+    public Long getDashboardId() {
         return dashboardId;
     }
 
-    public void setDashboardId(BigDecimal dashboardId) {
+    public void setDashboardId(Long dashboardId) {
         this.dashboardId = dashboardId;
     }
 

@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class EmsDashboardFavoritePK implements Serializable {
     private String tenantId;
     private String userName;
-    private Long emsDashboard;
+    private Long dashboard;
 
     public EmsDashboardFavoritePK() {
     }
@@ -14,7 +14,7 @@ public class EmsDashboardFavoritePK implements Serializable {
     public EmsDashboardFavoritePK(String tenantId, String userName, Long emsDashboard) {
         this.tenantId = tenantId;
         this.userName = userName;
-        this.emsDashboard = emsDashboard;
+        this.dashboard = emsDashboard;
     }
 
     public boolean equals(Object other) {
@@ -23,7 +23,7 @@ public class EmsDashboardFavoritePK implements Serializable {
             final boolean areEqual =
                 (otherEmsDashboardFavoritePK.tenantId.equals(tenantId) &&
                  otherEmsDashboardFavoritePK.userName.equals(userName) &&
-                 otherEmsDashboardFavoritePK.emsDashboard.equals(emsDashboard));
+                 otherEmsDashboardFavoritePK.dashboard.equals(dashboard));
             return areEqual;
         }
         return false;
@@ -49,11 +49,11 @@ public class EmsDashboardFavoritePK implements Serializable {
         this.userName = userName;
     }
 
-    public Long getEmsDashboard() {
-        return emsDashboard;
+    public Long getDashboard() {
+        return dashboard;
     }
 
-    public void setEmsDashboard(Long emsDashboard) {
-        this.emsDashboard = emsDashboard;
+    public void setDashboard(Long emsDashboard) {
+        this.dashboard = emsDashboard;
     }
 }

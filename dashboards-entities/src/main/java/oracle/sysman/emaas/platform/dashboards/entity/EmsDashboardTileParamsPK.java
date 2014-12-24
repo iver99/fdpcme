@@ -2,18 +2,16 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
-import java.math.BigDecimal;
-
 public class EmsDashboardTileParamsPK implements Serializable {
     private String paramName;
-    private BigDecimal emsDashboardTile;
+    private Long dashboardTile;
 
     public EmsDashboardTileParamsPK() {
     }
 
-    public EmsDashboardTileParamsPK(String paramName, BigDecimal emsDashboardTile) {
+    public EmsDashboardTileParamsPK(String paramName, Long emsDashboardTile) {
         this.paramName = paramName;
-        this.emsDashboardTile = emsDashboardTile;
+        this.dashboardTile = emsDashboardTile;
     }
 
     public boolean equals(Object other) {
@@ -21,7 +19,7 @@ public class EmsDashboardTileParamsPK implements Serializable {
             final EmsDashboardTileParamsPK otherEmsDashboardTileParamsPK = (EmsDashboardTileParamsPK) other;
             final boolean areEqual =
                 (otherEmsDashboardTileParamsPK.paramName.equals(paramName) &&
-                 otherEmsDashboardTileParamsPK.emsDashboardTile.equals(emsDashboardTile));
+                 otherEmsDashboardTileParamsPK.dashboardTile.equals(dashboardTile));
             return areEqual;
         }
         return false;
@@ -39,11 +37,11 @@ public class EmsDashboardTileParamsPK implements Serializable {
         this.paramName = paramName;
     }
 
-    public BigDecimal getEmsDashboardTile() {
-        return emsDashboardTile;
+    public Long getDashboardTile() {
+        return dashboardTile;
     }
 
-    public void setEmsDashboardTile(BigDecimal emsDashboardTile) {
-        this.emsDashboardTile = emsDashboardTile;
+    public void setDashboardTile(Long emsDashboardTile) {
+        this.dashboardTile = emsDashboardTile;
     }
 }
