@@ -5,10 +5,9 @@
  */
 define([
     'knockout', 
-    'jquery',
-    'intgsampleutil'
+    'jquery'
 ],
-    function(ko, $, dfu)
+    function(ko, $)
     {
         function DemoTargetAnalytics(params) {
             var self = this;
@@ -50,8 +49,9 @@ define([
             
             self.seriesValue = ko.observableArray();
             self.groupsValue = ko.observableArray();
-            var taUrl = 'http://slc08vnv.us.oracle.com:7001/targetmodel/0/query/api/v0.1/query';
+//            var taUrl = 'http://slc08vnv.us.oracle.com:7001/targetmodel/0/query/api/v0.1/query';
 //            var taUrl = 'http://slc08upg.us.oracle.com:7001/targetmodel/0/query/api/v0.1/query';
+            var taUrl = 'http://slc07ptu.us.oracle.com:7001/targetmodel/0/query/api/v0.1/query';
             
             fetchResults();
             

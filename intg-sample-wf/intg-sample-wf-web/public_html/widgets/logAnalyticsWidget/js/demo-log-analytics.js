@@ -7,7 +7,7 @@ define([
     'ojs/ojcore',
     'knockout', 
     'jquery',
-    'intgsampleutil',
+    'dependencies/sampleservice/common/js/util/intg-sample-util.js',
     'ojs/ojtreemap',
     'ojs/ojsunburst'
 ],

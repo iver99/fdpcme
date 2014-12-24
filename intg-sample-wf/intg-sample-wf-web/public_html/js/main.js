@@ -23,8 +23,7 @@ requirejs.config({
         'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'dashboards': '.',
-        'intgsampleutil':'../dependencies/common/js/util/intg-sample-util'
+        'dashboards': '.'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -60,10 +59,6 @@ requirejs.config({
     }
 });
 
-var defaultTileHeight = 220;
-var defaultTileRowHeight = defaultTileHeight + 10;
-var defaultColumnsNumber = 4;
-
 /**
  * A top-level require call executed by the Application.
  * Although 'ojcore' and 'knockout' would be loaded in any case (they are specified as dependencies
@@ -72,7 +67,6 @@ var defaultColumnsNumber = 4;
  */
 require(['knockout',
     'jquery',
-    'intgsampleutil',
     'ojs/ojchart',
     'ojs/ojcomponents',
 //    'ojs/ojvalidation',    
@@ -93,7 +87,7 @@ require(['knockout',
 //    'ojs/ojcheckboxset',
 //    'ojs/ojpopup'
 ],
-        function(ko, $, util) // this callback gets executed when all required modules are loaded
+        function(ko, $) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("demo-chart-widget",{
                 viewModel:{require:'../widgets/simpleChartWidget/js/demo-chart-widget'},
@@ -203,7 +197,7 @@ require(['knockout',
                 var subscriberWidgetTile = new DashboardTile(self, "demo-subscriber-widget", "Demo Subcriber Widget", "", null);
                 
                 self.tiles = [
-//                    iframeWidgetTile
+//                    iframeWidgetTile,
                     laWidgetTile
                     ,taWidgetTile
                     ,simpleChartWidgetTile 

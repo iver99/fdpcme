@@ -9,7 +9,7 @@ define(['knockout',
     
     function(ko,$)
     {
-        function DashboardFrameworkUtility() {
+        function DashboardIntgSampleUtil() {
             var self = this;
             
             /**
@@ -80,7 +80,7 @@ define(['knockout',
                 };
 
                 $.ajaxSettings.async = false;
-                $.getJSON('data/servicemanager.json', function(data) {
+                $.getJSON('dependencies/sampleservice/common/data/servicemanager.json', function(data) {
                     if (data.serviceUrls && data.serviceUrls.length > 0) {
                         for (i = 0; i < data.serviceUrls.length && !urlFound; i++) {
                             var serviceUrl = data.serviceUrls[i]+'/'+'instances?servicename='+data.serviceName;
@@ -146,60 +146,6 @@ define(['knockout',
             };
         }
         
-        return new DashboardFrameworkUtility();
+        return new DashboardIntgSampleUtil();
     }
 );
-                
-function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot){
-    //TODO replace below hard coded values
-    if (providerName && providerVersion && providerAssetRoot){
-        if ("DB Analytics"===providerName){
-            return "http://slc08fvg.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html";
-        }else if ("Application Performance Manager Cloud Service"===providerName){
-            return "http://slc04srr.us.oracle.com:7401/apmUi/";
-        } else {
-            var urlFound = false;
-            
-            function fetchServiceAssetRoot(data) {
-                var items = data.items;
-                if (items && items.length > 0) {
-                    for (j = 0; j < items.length && !urlFound; j++) {
-                        var links = items[j].links;
-                        for (k = 0; k < links.length; k++) {
-                            var link = links[k];
-                            if (providerAssetRoot === link.rel) {
-                                return link.href;
-                            }
-                        }
-                    }
-                }
-                return null;
-            }
-
-            var assetRoot;
-            $.ajaxSettings.async = false;
-            $.getJSON('data/servicemanager.json', function(data) {
-                if (data.serviceUrls && data.serviceUrls.length > 0) {
-                    for (i = 0; i < data.serviceUrls.length && !urlFound; i++) {
-                        var serviceUrl = data.serviceUrls[i] + '/'+'instances?servicename=' + providerName;
-                        if (providerVersion)
-                            serviceUrl = serviceUrl + '&version=' + providerVersion;
-                        $.ajax({
-                            url: serviceUrl,
-                            success: function(data, textStatus) {
-                                assetRoot = fetchServiceAssetRoot(data);
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-
-                            },
-                            async: false
-                        });
-                    }
-                }
-            });
-            $.ajaxSettings.async = true;
-            return assetRoot;       
-        }
-    }
-    return "http://jet.us.oracle.com";
-}
