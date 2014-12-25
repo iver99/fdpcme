@@ -4,15 +4,14 @@ import java.io.Serializable;
 
 
 public class EmsDashboardFavoritePK implements Serializable {
-    private String tenantId;
+    //private String tenantId;
     private String userName;
     private Long dashboard;
 
     public EmsDashboardFavoritePK() {
     }
 
-    public EmsDashboardFavoritePK(String tenantId, String userName, Long emsDashboard) {
-        this.tenantId = tenantId;
+    public EmsDashboardFavoritePK(String userName, Long emsDashboard) {
         this.userName = userName;
         this.dashboard = emsDashboard;
     }
@@ -21,7 +20,7 @@ public class EmsDashboardFavoritePK implements Serializable {
         if (other instanceof EmsDashboardFavoritePK) {
             final EmsDashboardFavoritePK otherEmsDashboardFavoritePK = (EmsDashboardFavoritePK) other;
             final boolean areEqual =
-                (otherEmsDashboardFavoritePK.tenantId.equals(tenantId) &&
+                (/*otherEmsDashboardFavoritePK.tenantId.equals(tenantId) &&*/
                  otherEmsDashboardFavoritePK.userName.equals(userName) &&
                  otherEmsDashboardFavoritePK.dashboard.equals(dashboard));
             return areEqual;
@@ -31,14 +30,6 @@ public class EmsDashboardFavoritePK implements Serializable {
 
     public int hashCode() {
         return super.hashCode();
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
     }
 
     public String getUserName() {

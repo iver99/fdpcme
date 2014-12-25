@@ -22,14 +22,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * To create ID generator sequence "EMS_DASHBOARD_ID_SEQ_GEN":
- * CREATE SEQUENCE "EMS_DASHBOARD_ID_SEQ_GEN" INCREMENT BY 50 START WITH 50;
- */
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
+
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o") })
 @Table(name = "EMS_DASHBOARD")
 @SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName="EMS_DASHBOARD_SEQ", allocationSize = 1 )
+@Multitenant(MultitenantType.SINGLE_TABLE)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32)
 public class EmsDashboard implements Serializable {
     private static final long serialVersionUID = 1219062974568988740L;
     
@@ -60,8 +63,8 @@ public class EmsDashboard implements Serializable {
     @Column(name = "SCREEN_SHOT")
     @Lob
     private byte[] screenShot;
-    @Column(name = "TENANT_ID", nullable = false, length = 32)
-    private String tenantId;
+    //@Column(name = "TENANT_ID", nullable = false, length = 32)
+    //private String tenantId;
     @Column(nullable = false)
     private Integer type;
     
@@ -73,7 +76,7 @@ public class EmsDashboard implements Serializable {
 
     public EmsDashboard(Date creationDate, Long dashboardId, Integer deleted, String description,
                         Integer enableTimeRange, Integer isSystem, Date lastModificationDate,
-                        String lastModifiedBy, String name, String owner, byte[] screenShot, String tenantId,
+                        String lastModifiedBy, String name, String owner, byte[] screenShot,
                         Integer type) {
         this.creationDate = creationDate;
         this.dashboardId = dashboardId;
@@ -86,7 +89,6 @@ public class EmsDashboard implements Serializable {
         this.name = name;
         this.owner = owner;
         this.screenShot = screenShot;
-        this.tenantId = tenantId;
         this.type = type;
     }
 
@@ -172,14 +174,6 @@ public class EmsDashboard implements Serializable {
 
     public void setScreenShot(byte[] screenShot) {
         this.screenShot = screenShot;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
     }
 
     public Integer getType() {

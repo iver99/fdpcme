@@ -14,11 +14,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
 @Entity
 @NamedQueries({
               @NamedQuery(name = "EmsDashboardLastAccess.findAll", query = "select o from EmsDashboardLastAccess o") })
 @Table(name = "EMS_DASHBOARD_LAST_ACCESS")
 @IdClass(EmsDashboardLastAccessPK.class)
+@Multitenant(MultitenantType.SINGLE_TABLE)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardLastAccess implements Serializable {
     private static final long serialVersionUID = -3829558525926721782L;
     @Id
@@ -27,9 +33,9 @@ public class EmsDashboardLastAccess implements Serializable {
     @Id
     @Column(name = "DASHBOARD_ID", nullable = false)
     private Long dashboardId;
-    @Id
-    @Column(name = "TENANT_ID", nullable = false, length = 32)
-    private String tenantId;
+    //@Id
+    //@Column(name = "TENANT_ID", nullable = false, length = 32)
+    //private String tenantId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "ACCESS_DATE", nullable = false)
     private Date accessDate;
@@ -37,11 +43,10 @@ public class EmsDashboardLastAccess implements Serializable {
     public EmsDashboardLastAccess() {
     }
 
-    public EmsDashboardLastAccess(Date accessDate, String accessedBy, Long dashboardId, String tenantId) {
+    public EmsDashboardLastAccess(Date accessDate, String accessedBy, Long dashboardId) {
         this.accessDate = accessDate;
         this.accessedBy = accessedBy;
         this.dashboardId = dashboardId;
-        this.tenantId = tenantId;
     }
 
     public String getAccessedBy() {
@@ -68,11 +73,4 @@ public class EmsDashboardLastAccess implements Serializable {
         this.dashboardId = dashboardId;
     }
 
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
 }

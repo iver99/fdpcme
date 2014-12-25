@@ -23,14 +23,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * To create ID generator sequence "EMS_DASHBOARD_TILE_ID_SEQ_GEN":
- * CREATE SEQUENCE "EMS_DASHBOARD_TILE_ID_SEQ_GEN" INCREMENT BY 50 START WITH 50;
- */
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
+
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTile.findAll", query = "select o from EmsDashboardTile o") })
 @Table(name = "EMS_DASHBOARD_TILE")
 @SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
+@Multitenant(MultitenantType.SINGLE_TABLE)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = false)
 public class EmsDashboardTile implements Serializable {
     private static final long serialVersionUID = 6307069723661684517L;
     
@@ -64,8 +67,8 @@ public class EmsDashboardTile implements Serializable {
     private String providerName;
     @Column(name = "PROVIDER_VERSION", length = 64)
     private String providerVersion;
-    @Column(name = "TENANT_ID", nullable = false, length = 32)
-    private String tenantId;
+    //@Column(name = "TENANT_ID", nullable = false, length = 32)
+    //private String tenantId;
     @Column(name = "WIDGET_CREATION_TIME", nullable = false, length = 32)
     private String widgetCreationTime;
     @Column(name = "WIDGET_DESCRIPTION", length = 256)
@@ -102,7 +105,7 @@ public class EmsDashboardTile implements Serializable {
 
     public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer height, Integer isMaximized,
                             Date lastModificationDate, String lastModifiedBy, String owner, Integer position,
-                            String providerAssetRoot, String providerName, String providerVersion, String tenantId,
+                            String providerAssetRoot, String providerName, String providerVersion,
                             Long tileId, String title, String widgetCreationTime, String widgetDescription,
                             String widgetGroupName, String widgetHistogram, String widgetIcon, String widgetKocName,
                             String widgetName, String widgetOwner, Integer widgetSource, String widgetTemplate,
@@ -118,7 +121,6 @@ public class EmsDashboardTile implements Serializable {
         this.providerAssetRoot = providerAssetRoot;
         this.providerName = providerName;
         this.providerVersion = providerVersion;
-        this.tenantId = tenantId;
         this.tileId = tileId;
         this.title = title;
         this.widgetCreationTime = widgetCreationTime;
@@ -215,14 +217,6 @@ public class EmsDashboardTile implements Serializable {
 
     public void setProviderVersion(String providerVersion) {
         this.providerVersion = providerVersion;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
     }
 
     public Long getTileId() {

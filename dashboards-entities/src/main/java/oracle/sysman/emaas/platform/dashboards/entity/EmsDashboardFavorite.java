@@ -16,16 +16,22 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.Multitenant;
+import org.eclipse.persistence.annotations.MultitenantType;
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardFavorite.findAll", query = "select o from EmsDashboardFavorite o") })
 @Table(name = "EMS_DASHBOARD_FAVORITE")
 @IdClass(EmsDashboardFavoritePK.class)
+@Multitenant(MultitenantType.SINGLE_TABLE)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardFavorite implements Serializable {
     private static final long serialVersionUID = -8636822891842500745L;
     
-    @Id
-    @Column(name = "TENANT_ID", nullable = false, length = 32)
-    private String tenantId;
+    //@Id
+    //@Column(name = "TENANT_ID", nullable = false, length = 32)
+    //private String tenantId;
     @Id
     @Column(name = "USER_NAME", nullable = false, length = 128)
     private String userName;
@@ -40,10 +46,9 @@ public class EmsDashboardFavorite implements Serializable {
     public EmsDashboardFavorite() {
     }
 
-    public EmsDashboardFavorite(Date creationDate, EmsDashboard dashboard, String tenantId, String userName) {
+    public EmsDashboardFavorite(Date creationDate, EmsDashboard dashboard, String userName) {
         this.creationDate = creationDate;
         this.dashboard = dashboard;
-        this.tenantId = tenantId;
         this.userName = userName;
     }
 
@@ -54,16 +59,7 @@ public class EmsDashboardFavorite implements Serializable {
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
-
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
+    
     public String getUserName() {
         return userName;
     }

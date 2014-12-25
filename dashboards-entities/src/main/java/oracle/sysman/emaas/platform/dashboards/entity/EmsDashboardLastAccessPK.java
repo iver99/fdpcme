@@ -3,15 +3,14 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 import java.io.Serializable;
 
 public class EmsDashboardLastAccessPK implements Serializable {
-    private String tenantId;
+    //private String tenantId;
     private String accessedBy;
     private Long dashboardId;
 
     public EmsDashboardLastAccessPK() {
     }
 
-    public EmsDashboardLastAccessPK(String tenantId, String accessedBy, Long dashboardId) {
-        this.tenantId = tenantId;
+    public EmsDashboardLastAccessPK(String accessedBy, Long dashboardId) {
         this.accessedBy = accessedBy;
         this.dashboardId = dashboardId;
     }
@@ -20,7 +19,7 @@ public class EmsDashboardLastAccessPK implements Serializable {
         if (other instanceof EmsDashboardLastAccessPK) {
             final EmsDashboardLastAccessPK otherEmsDashboardLastAccessPK = (EmsDashboardLastAccessPK) other;
             final boolean areEqual =
-                (otherEmsDashboardLastAccessPK.tenantId.equals(tenantId) &&
+                (/*otherEmsDashboardLastAccessPK.tenantId.equals(tenantId) &&*/
                  otherEmsDashboardLastAccessPK.accessedBy.equals(accessedBy) &&
                  otherEmsDashboardLastAccessPK.dashboardId.equals(dashboardId));
             return areEqual;
@@ -30,15 +29,6 @@ public class EmsDashboardLastAccessPK implements Serializable {
 
     public int hashCode() {
         return super.hashCode();
-    }
-
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
-    public String getTenantId() {
-        return tenantId;
     }
 
     public String getAccessedBy() {
