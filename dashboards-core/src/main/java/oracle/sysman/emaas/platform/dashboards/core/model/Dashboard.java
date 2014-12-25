@@ -20,7 +20,6 @@ public class Dashboard {
 	private String lastModifiedBy;
 	private String owner;
 	private byte[] screenShot;
-	private String tenantId;
 	private Integer type;
 	
 	private List<Tile> tileList;
@@ -113,14 +112,6 @@ public class Dashboard {
         this.screenShot = screenShot;
     }
 
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
-    }
-
     public Integer getType() {
         return type;
     }
@@ -130,8 +121,6 @@ public class Dashboard {
     }
 
     public List<Tile> getTileList() {
-    	if (tileList == null)
-    		tileList = new ArrayList<Tile>();
         return tileList;
     }
 
@@ -139,10 +128,12 @@ public class Dashboard {
         this.tileList = emsDashboardTileList;
     }
 
-    public Tile addTile(Tile emsDashboardTile) {
-    	getTileList().add(emsDashboardTile);
-        emsDashboardTile.setDashboard(this);
-        return emsDashboardTile;
+    public Tile addTile(Tile tile) {
+    	if (tileList == null)
+    		tileList = new ArrayList<Tile>();
+    	tileList.add(tile);
+        tile.setDashboard(this);
+        return tile;
     }
 
     public Tile removeEmsDashboardTile(Tile emsDashboardTile) {
@@ -151,12 +142,26 @@ public class Dashboard {
         return emsDashboardTile;
     }
     
-    public EmsDashboard getPersistenceEntity() {
+    public EmsDashboard getPersistenceEntity(EmsDashboard ed) {
     	Integer isDeleted = DataFormatUtils.boolean2Integer(this.deleted);
     	Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(this.enableTimeRange);
     	Integer isIsSystem = DataFormatUtils.boolean2Integer(this.isSystem == null);
-    	EmsDashboard ed = new EmsDashboard(creationDate, dashboardId, isDeleted, description, isEnableTimeRange,isIsSystem,
-    			lastModificationDate, lastModifiedBy, name, owner, screenShot, tenantId, type);
+    	if (ed == null)
+    		ed = new EmsDashboard(creationDate, dashboardId, isDeleted, description, isEnableTimeRange,isIsSystem,
+    			lastModificationDate, lastModifiedBy, name, owner, screenShot, type);
+    	else {
+    		ed.setCreationDate(creationDate);
+    		ed.setDeleted(isDeleted);
+    		ed.setDescription(description);
+    		ed.setEnableTimeRange(isEnableTimeRange);
+    		ed.setIsSystem(isIsSystem);
+    		ed.setLastModificationDate(lastModificationDate);
+    		ed.setLastModifiedBy(lastModifiedBy);
+    		ed.setName(name);
+    		ed.setOwner(owner);
+    		ed.setScreenShot(screenShot);
+    		ed.setType(type);
+    	}
     	List<EmsDashboardTile> edtList = new ArrayList<EmsDashboardTile>();
     	if (tileList != null) {
     		for (Tile tile: tileList) {
@@ -187,7 +192,6 @@ public class Dashboard {
     	to.setName(from.getName());
     	to.setOwner(from.getOwner());
     	to.setScreenShot(from.getScreenShot());
-    	to.setTenantId(from.getTenantId());
     	to.setType(from.getType());
     	List<EmsDashboardTile> edtList = from.getDashboardTileList();
     	if (edtList != null) {
