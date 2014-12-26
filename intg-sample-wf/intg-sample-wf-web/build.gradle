@@ -1,5 +1,5 @@
 apply plugin: 'war'
-
+apply plugin: 'maven-publish'
 
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
@@ -68,6 +68,48 @@ war {
 
 }
 
+task buildMockServiceWar(type: War) {
+	
+	appendix = 'MockService'
+	from('public_html') {
+	       include 'dependencies/sampleservice/common/'
+	        into('/')
+	}
+	rootSpec.exclude("**/*.class")
+        rootSpec.exclude("**/*.jar")
+	rootSpec.exclude("**/*.zip")
+	rootSpec.exclude("**/*.MF")
+
+}
+
+ext.filesToPublish = []
+fileTree("build/libs").each { file ->
+     ext.filesToPublish << file
+}
+
+publishing {
+    publications {
+	def i=0
+	for (f in filesToPublish ) {
+	    def fbase = f.getName().split("\\.")[0]
+	    "$fbase"(MavenPublication) {
+		version "${publish_version}"
+	        groupId "${publish_group}"
+		artifact f
+		artifactId fbase
+	    }
+	}
+    }
+    repositories {
+        maven {
+            url "${artifactory_contextUrl}"+'/'+"${publish_repo_key}"
+            credentials {
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+            }
+        }
+    }
+}
 dependencies {
         compile(group: 'log4j', name: 'log4j', version: '1.2.17')
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
