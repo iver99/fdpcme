@@ -92,10 +92,11 @@ public class TileParam {
     
     public EmsDashboardTileParams getPersistentEntity() {
         Integer intIsSystem = DataFormatUtils.boolean2Integer(this.getIsSystem());
-    	BigDecimal bdType = DataFormatUtils.integer2BigDecimal(this.type);
+    	Integer intValue = DataFormatUtils.bigDecimal2Integer(numValue);
     	EmsDashboardTile edt = (tile == null) ? null: tile.getTileEntity();
     	Timestamp tsValue = DataFormatUtils.date2Timestamp(this.getParamValueTimestamp());
-    	EmsDashboardTileParams edtp = new EmsDashboardTileParams(intIsSystem, name, bdType, numValue, strValue, tsValue, edt);
+    	        
+    	EmsDashboardTileParams edtp = new EmsDashboardTileParams(intIsSystem, name, type, intValue, strValue, tsValue, edt);
     	return edtp;
     }
     
@@ -105,10 +106,10 @@ public class TileParam {
     	TileParam tp = new TileParam();
     	tp.setIsSystem(DataFormatUtils.integer2Boolean(edtp.getIsSystem()));
     	tp.setName(edtp.getParamName());
-    	tp.setParamType(DataFormatUtils.bigDecimal2Integer(edtp.getParamType()));
-    	tp.setNumberValue(edtp.getParamValueNum());
+    	tp.setParamType(edtp.getParamType());
+    	tp.setIntegerValue(edtp.getParamValueNum());
     	tp.setStringValue(edtp.getParamValueStr());
-    	tp.setParamValueTimestamp(DataFormatUtils.timestamp2Date(edtp.getParamValueTimestamp()));
+    	tp.setParamValueTimestamp(edtp.getParamValueTimestamp());
     	return null;
     }
 }

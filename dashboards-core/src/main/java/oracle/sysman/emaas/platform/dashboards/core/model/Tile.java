@@ -1,7 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +23,6 @@ public class Tile {
 	private String providerAssetRoot;
 	private String providerName;
 	private String providerVersion;
-	private String tenantId;
 	private Long tileId;
 	private String title;
 	private String widgetCreationTime;
@@ -123,14 +120,6 @@ public class Tile {
 
     public void setProviderVersion(String providerVersion) {
         this.providerVersion = providerVersion;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
     }
 
     public Long getTileId() {
@@ -268,33 +257,37 @@ public class Tile {
 	public void setParameters(List<TileParam> parameters) {
 		this.parameters = parameters;
 	}
+	
+	public TileParam addParameter(TileParam tp) {
+		if (tp == null)
+			return null;
+		if (parameters == null)
+			parameters = new ArrayList<TileParam>();
+		parameters.add(tp);
+		tp.setTile(this);
+		return tp;
+	}
 
 	/**
      * Returns an instance of EmsDashboardTile for current tile object
      * @return
      */
     public EmsDashboardTile getTileEntity() {
-    	Timestamp tsCreateDate = DataFormatUtils.date2Timestamp(creationDate);
-    	EmsDashboard ed = this.getDashboard() == null? null: this.getDashboard().getPersistenceEntity();
-    	BigDecimal bdHeight = DataFormatUtils.integer2BigDecimal(this.getHeight());
+    	EmsDashboard ed = this.getDashboard() == null? null: this.getDashboard().getPersistenceEntity(null);
     	Integer intIsMaximized = DataFormatUtils.boolean2Integer(this.isMaximized);
-    	Timestamp tslastModificationDate = DataFormatUtils.date2Timestamp(new Timestamp(this.lastModificationDate.getTime()));
-    	BigDecimal bdPosition = DataFormatUtils.integer2BigDecimal(this.getPosition());
-    	BigDecimal bdTileId = DataFormatUtils.long2BigDecimal(this.getTileId());
-    	BigDecimal bdWidgetSource = DataFormatUtils.integer2BigDecimal(this.getWidgetSource());
-    	BigDecimal bdWidth = DataFormatUtils.integer2BigDecimal(this.getWidth());
-    	EmsDashboardTile edt = new EmsDashboardTile(tsCreateDate, ed, bdHeight, intIsMaximized, tslastModificationDate,
-    			lastModifiedBy, owner, bdPosition, providerAssetRoot, providerName, providerVersion, tenantId,
-    			bdTileId, title, widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon,
-    			widgetKocName, widgetName, widgetOwner, bdWidgetSource, widgetTemplate, widgetUniqueId, widgetViewmode,
-    			bdWidth);
+    	
+    	EmsDashboardTile edt = new EmsDashboardTile(creationDate, ed, height, intIsMaximized, lastModificationDate,
+    			lastModifiedBy, owner, position, providerAssetRoot, providerName, providerVersion, 
+    			tileId, title, widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon,
+    			widgetKocName, widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode,
+    			width);
     	if (parameters != null) {
     		List<EmsDashboardTileParams> edtpList = new ArrayList<EmsDashboardTileParams>();
     		for (TileParam param: parameters) {
     			EmsDashboardTileParams edtp = param.getPersistentEntity();
     			edtpList.add(edtp);
     		}
-    		edt.setEmsDashboardTileParamsList(edtpList);
+    		edt.setDashboardTileParamsList(edtpList);
     	}
     	return edt;
     }
@@ -303,19 +296,18 @@ public class Tile {
     	if (edt == null)
     		return null;
     	Tile tile = new Tile();
-    	tile.setCreationDate(DataFormatUtils.timestamp2Date(edt.getCreationDate()));
+    	tile.setCreationDate(edt.getCreationDate());
     	tile.setDashboard(Dashboard.valueOf(edt.getDashboard()));
-    	tile.setHeight(DataFormatUtils.bigDecimal2Integer(edt.getHeight()));
+    	tile.setHeight(edt.getHeight());
     	tile.setIsMaximized(DataFormatUtils.integer2Boolean(edt.getIsMaximized()));
-    	tile.setLastModificationDate(DataFormatUtils.timestamp2Date(edt.getLastModificationDate()));
+    	tile.setLastModificationDate(edt.getLastModificationDate());
     	tile.setLastModifiedBy(edt.getLastModifiedBy());
     	tile.setOwner(edt.getOwner());
-    	tile.setPosition(DataFormatUtils.bigDecimal2Integer(edt.getPosition()));
+    	tile.setPosition(edt.getPosition());
     	tile.setProviderAssetRoot(edt.getProviderAssetRoot());
     	tile.setProviderName(edt.getProviderName());
     	tile.setProviderVersion(edt.getProviderVersion());
-    	tile.setTenantId(edt.getTenantId());
-    	tile.setTileId(DataFormatUtils.bigDecimal2Long(edt.getTileId()));
+    	tile.setTileId(edt.getTileId());
     	tile.setTitle(edt.getTitle());
     	tile.setWidgetCreationTime(edt.getWidgetCreationTime());
     	tile.setWidgetDescription(edt.getWidgetDescription());
@@ -325,12 +317,12 @@ public class Tile {
     	tile.setWidgetKocName(edt.getWidgetKocName());
     	tile.setWidgetName(edt.getWidgetName());
     	tile.setWidgetOwner(edt.getWidgetOwner());
-    	tile.setWidgetSource(DataFormatUtils.bigDecimal2Integer(edt.getWidgetSource()));
+    	tile.setWidgetSource(edt.getWidgetSource());
     	tile.setWidgetTemplate(edt.getWidgetTemplate());
     	tile.setWidgetUniqueId(edt.getWidgetUniqueId());
     	tile.setWidgetViewmode(edt.getWidgetViewmode());
-    	tile.setWidth(DataFormatUtils.bigDecimal2Integer(edt.getWidth()));
-    	List<EmsDashboardTileParams> edtpList = edt.getEmsDashboardTileParamsList();
+    	tile.setWidth(edt.getWidth());
+    	List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
     	if (edtpList != null) {
     		List<TileParam> paras = new ArrayList<TileParam>();
     		for (EmsDashboardTileParams edtp: edtpList) {
