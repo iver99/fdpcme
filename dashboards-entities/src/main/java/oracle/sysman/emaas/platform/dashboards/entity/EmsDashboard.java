@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -60,9 +61,10 @@ public class EmsDashboard implements Serializable {
     private String name;
     @Column(nullable = false, length = 128)
     private String owner;
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "SCREEN_SHOT")
     @Lob
-    private byte[] screenShot;
+    private String screenShot;
     //@Column(name = "TENANT_ID", nullable = false, length = 32)
     //private String tenantId;
     @Column(nullable = false)
@@ -76,7 +78,7 @@ public class EmsDashboard implements Serializable {
 
     public EmsDashboard(Date creationDate, Long dashboardId, Integer deleted, String description,
                         Integer enableTimeRange, Integer isSystem, Date lastModificationDate,
-                        String lastModifiedBy, String name, String owner, byte[] screenShot,
+                        String lastModifiedBy, String name, String owner, String screenShot,
                         Integer type) {
         this.creationDate = creationDate;
         this.dashboardId = dashboardId;
@@ -168,11 +170,11 @@ public class EmsDashboard implements Serializable {
         this.owner = owner;
     }
 
-    public byte[] getScreenShot() {
+    public String getScreenShot() {
         return screenShot;
     }
 
-    public void setScreenShot(byte[] screenShot) {
+    public void setScreenShot(String screenShot) {
         this.screenShot = screenShot;
     }
 
