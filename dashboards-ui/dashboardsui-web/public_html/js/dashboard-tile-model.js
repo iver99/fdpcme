@@ -172,7 +172,7 @@ define(['knockout',
             
             self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 self.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
-            }
+            };
         }
         
         function DashboardTilesViewModel(tilesView, urlEditView, widgetsHomRef, dsbType) {
@@ -212,66 +212,65 @@ define(['knockout',
                 var newTile = null;
                 //demo log analytics widget
                 if (widget && widget.category.id === 1) {
+                    newTile = self.registerAndAddWidget(name, description, width, widget);
                     //find KOC name for registration. if valid registration is not detected, use default one.
-                    var href = widget.href;
-                    var widgetDetails = null;
-                    $.ajax({
-                        url: href,
-                        success: function(data, textStatus) {
-                            widgetDetails = data;
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            console.log('Error when get widget details!');
-                        },
-                        async: false
-                    });
-                    var koc_name = null;
-                    var template = null;
-                    var viewmodel = null;
+//                    var href = widget.href;
+//                    var widgetDetails = null;
+//                    $.ajax({
+//                        url: href,
+//                        success: function(data, textStatus) {
+//                            widgetDetails = data;
+//                        },
+//                        error: function(xhr, textStatus, errorThrown){
+//                            console.log('Error when getting widget details!');
+//                        },
+//                        async: false
+//                    });
+//                    var koc_name = null;
+//                    var template = null;
+//                    var viewmodel = null;
 //                    if (widgetDetails){
 //                        if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
-//                           for(var int=0;i<widgetDetails.parameters.length;i++){
-//                               if ("WIDGET_KOC_NAME"==widgetDetails.parameters[i]["name"]){
-//                                    koc_name = widgetDetails.parameters[i]["value"];
-//                               }else if ("WIDGET_TEMPLATE"==widgetDetails.parameters[i]["name"]){
-//                                   template = widgetDetails.parameters[i]["value"];
-//                               }else if ("WIDGET_VIEWMODEL"==widgetDetails.parameters[i]["name"]){
-//                                   viewmodel = widgetDetails.parameters[i]["value"];
-//                               }
-//                           }
-//                        }
+//                            widget.parameters = {};
+//                            for(var i=0;i<widgetDetails.parameters.length;i++){
+//                                widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
+//                            }
+//                            koc_name =  widget.parameters["WIDGET_KOC_NAME"];
+//                            template =  widget.parameters["WIDGET_TEMPLATE"];
+//                            viewmodel =  widget.parameters["WIDGET_VIEWMODEL"];
+//                            var providerName =  widget.parameters["PROVIDER_NAME"];
+//                            var providerVersion =  widget.parameters["PROVIDER_VERSION"];
+//                            var providerAssetRoot =  widget.parameters["PROVIDER_ASSET_ROOT"];
+//                            if (providerName && providerVersion && providerAssetRoot) {
+//                                rootAsset = df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot);
+//                                if (rootAsset) {
+//                                    template = rootAsset + template;
+//                                    viewmodel = rootAsset + viewmodel;
+//                                }
+//                            }
+//                        }                        
 //                    }
-                    if (widgetDetails){
-                        if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
-                           widget.parameters = {};
-                           for(var i=0;i<widgetDetails.parameters.length;i++){
-                               widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
-                           }
-                           koc_name =  widget.parameters["WIDGET_KOC_NAME"];
-                           template =  widget.parameters["WIDGET_TEMPLATE"];
-                           viewmodel =  widget.parameters["WIDGET_VIEWMODEL"];
-                        }                        
-                    }
-                    if (koc_name && template && viewmodel){
-                        if (!ko.components.isRegistered(koc_name)) {
-                            ko.components.register(koc_name,{
-                                  viewModel:{require:viewmodel},
-                                  template:{require:'text!'+template}
-                              }); 
-                        }
-                        console.log("widget: "+koc_name+" is registered");
-                        console.log("widget template: "+template);
-                        console.log("widget viewmodel:: "+viewmodel);
-                      
-                      newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
-                    }else{
-                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
-                    }
+//                    if (koc_name && template && viewmodel){
+//                        if (!ko.components.isRegistered(koc_name)) {
+//                            ko.components.register(koc_name,{
+//                                  viewModel:{require:viewmodel},
+//                                  template:{require:'text!'+template}
+//                              }); 
+//                        }
+//                        console.log("widget: "+koc_name+" is registered");
+//                        console.log("widget template: "+template);
+//                        console.log("widget viewmodel:: "+viewmodel);
+//                      
+//                      newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
+//                    }else{
+//                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
+//                    }
                     
                 }
                 //demo target analytics widget
                 else if (widget && widget.category.id === 2) {
-                    newTile =new DashboardTile(self,"demo-ta-widget",name, description, width, widget);
+                    newTile = self.registerAndAddWidget(name, description, width, widget);
+//                    newTile =new DashboardTile(self,"demo-ta-widget",name, description, width, widget);
                 }
                 else if (widget && widget.category.id === 3) {
                     var href = widget.href;
@@ -350,6 +349,27 @@ define(['knockout',
                         newTile.qdgId = qdgId;
                     }
                 }
+                else if (widget && widget.category.id === 999) {
+                    newTile = self.registerAndAddWidget(name, description, width, widget);
+                }
+                else if (widget && widget.category === 'DashboardsBuiltIn') {
+                    var koc_name = 'dbs-builtin-iframe-widget';
+                    var viewmodel = 'dashboards/../dependencies/widgets/iFrame/js/widget-iframe.js';
+                    var template = 'dashboards/../dependencies/widgets/iFrame/widget-iframe.html';
+                    if (koc_name && template && viewmodel){
+                        if (!ko.components.isRegistered(koc_name)) {
+                            ko.components.register(koc_name,{
+                                  viewModel:{require:viewmodel},
+                                  template:{require:'text!'+template}
+                              }); 
+                        }
+                        console.log("widget: " + koc_name + " is registered");
+                        console.log("widget template: " + template);
+                        console.log("widget viewmodel:: " + viewmodel);
+                      
+                      newTile =new DashboardTile(self, koc_name, name, description, width, widget); 
+                    }
+                }
                 //demo simple chart widget
                 else {
                     newTile =new DashboardTile(self,"demo-chart-widget",name, description, width, widget);
@@ -360,7 +380,70 @@ define(['knockout',
                 }
                 self.tiles.push(newTile);
             };
+            
+            self.registerAndAddWidget = function(name, description, width, widget) {
+                var href = widget.href;
+                var widgetDetails = null;
+                var rootAsset = null;
+                $.ajax({
+                    url: href,
+                    success: function(data, textStatus) {
+                        widgetDetails = data;
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        console.log('Error when getting widget details!');
+                    },
+                    async: false
+                });
+                var koc_name = null;
+                var template = null;
+                var viewmodel = null;
+                if (widgetDetails){
+                    if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+                        widget.parameters = {};
+                        for(var i=0;i<widgetDetails.parameters.length;i++){
+                            widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
+                        }
+                        koc_name =  widget.parameters["WIDGET_KOC_NAME"];
+                        template =  widget.parameters["WIDGET_TEMPLATE"];
+                        viewmodel =  widget.parameters["WIDGET_VIEWMODEL"];
+                        if (widget.category.id !== 999) {
+                            var providerName =  widget.parameters["PROVIDER_NAME"];
+                            var providerVersion =  widget.parameters["PROVIDER_VERSION"];
+                            var providerAssetRoot =  widget.parameters["PROVIDER_ASSET_ROOT"];
+                            if (providerName && providerVersion && providerAssetRoot) {
+                                rootAsset = df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot);
+                                if (rootAsset) {
+                                    template = rootAsset + template;
+                                    viewmodel = rootAsset + viewmodel;
+                                }
+                            }
+                        }
+                    }                        
+                }
+                if (koc_name && template && viewmodel){
+                    if (!ko.components.isRegistered(koc_name)) {
+                        ko.components.register(koc_name,{
+                              viewModel:{require:viewmodel},
+                              template:{require:'text!'+template}
+                          }); 
+                    }
+                    console.log("widget: "+koc_name+" is registered");
+                    console.log("widget template: "+template);
+                    console.log("widget viewmodel:: "+viewmodel);
 
+                    return new DashboardTile(self,koc_name,name, description, width, widget); 
+                }
+                else {
+                    if (widget && widget.category.id === 1) {
+                        return new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
+                    }
+                    else if (widget && widget.category.id === 2) {
+                        return new DashboardTile(self,"demo-ta-widget",name, description, width, widget);
+                    }
+                }
+            };
+            
             self.removeTile = function(tile) {
                 self.tiles.remove(tile);
                 for (var i = 0; i < self.tiles().length; i++) {

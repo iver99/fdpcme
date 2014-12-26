@@ -303,6 +303,7 @@ define(['knockout',
             self.resultMsg=ko.observable("");
             self.categoryList=ko.observableArray([]);
             self.useAbsolutePathForUrls=ko.observable(false);
+            self.providerInfoNeeded = ko.observable(true);
             var ssfUrl = dfu.discoverSavedSearchServiceUrl();
             var allCategories = [];
             if (ssfUrl === null && ssfUrl !== "") {
@@ -325,16 +326,24 @@ define(['knockout',
                 });
             }
             
-//            self.newWidget = ko.observable({ name: "TestWidget_10",
+//            self.newWidget = ko.observable({ 
+//                                providerName: "Log Analytics",
+//                                version: "0.1",
+//                                assetRoot: "asset",
+//                                name: "TestWidget_001",
 //                                description: "Widget for test",
 //                                queryStr: "* | stats count by 'target type','log source'",
 //                                categoryId: allCategories[0].value+"",
-//                                kocName: "test-la-widget-10",
-//                                vmUrl: "http://slc04wjj.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
-//                                templateUrl: "http://slc04wjj.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
+//                                kocName: "test-la-widget-1",
+//                                vmUrl: "dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
+//                                templateUrl: "dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
 //                                iconUrl: "",
 //                                histogramUrl: ""});
-            self.newWidget = ko.observable({ name: "",
+            self.newWidget = ko.observable({
+                                providerName: "",
+                                version: "",
+                                assetRoot: "",
+                                name: "",
                                 description: "",
                                 queryStr: "",
                                 categoryId: allCategories[0].value+"",
@@ -348,9 +357,11 @@ define(['knockout',
                 if (data.option === "value") {
                     if (data.value[0]===999 || data.value[0] === '999') {
                         self.useAbsolutePathForUrls(true);
+                        self.providerInfoNeeded(false);
                     }
                     else {
                         self.useAbsolutePathForUrls(false);
+                        self.providerInfoNeeded(true);
                     }
                 }
             };
@@ -375,6 +386,17 @@ define(['knockout',
                 else {
                     var widgetToSave = ko.toJS(self.newWidget);
                     var params = [];
+                    if (self.providerInfoNeeded()===true) {
+                        if (widgetToSave.providerName && widgetToSave.providerName !== "") {
+                            params.push({name: "PROVIDER_NAME", type: "STRING", value: widgetToSave.providerName});
+                        }
+                        if (widgetToSave.version && widgetToSave.version !== "") {
+                            params.push({name: "PROVIDER_VERSION", type: "STRING", value: widgetToSave.version});
+                        }
+                        if (widgetToSave.assetRoot && widgetToSave.assetRoot !== "") {
+                            params.push({name: "PROVIDER_ASSET_ROOT", type: "STRING", value: widgetToSave.assetRoot});
+                        }
+                    }
                     if (widgetToSave.kocName && widgetToSave.kocName !== "") {
                         params.push({name: "WIDGET_KOC_NAME", type: "STRING", value: widgetToSave.kocName});
                     }
@@ -564,6 +586,7 @@ define(['knockout',
             var laWidgetArray = [];
             var taWidgetArray = [];
             var itaWidgetArray = [];
+            var dbsWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
             var index=0;
@@ -572,6 +595,10 @@ define(['knockout',
             var curPage = 1;
             var totalPage = 0;
             var naviFromSearchResults = false;
+            var dbsBuiltinWidgets = [{id: 1, 
+                    name: 'Dashboards built-in iFrame widget', 
+                    description: 'Dashboards built-in iFrame widget', 
+                    category: 'DashboardsBuiltIn'}];
             self.widgetList = ko.observableArray(widgetArray);
             self.curPageWidgetList = ko.observableArray(curPageWidgets);
             self.searchText = ko.observable("");
@@ -630,7 +657,9 @@ define(['knockout',
                             console.log('Error when querying IT analytics searches!');
                         },
                         async: false
-                    });                    
+                    });    
+                    
+                    dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
                 }
 
                 curPage = 1;
@@ -692,6 +721,9 @@ define(['knockout',
                     else if (event.value[0] === 'ita') {
                         totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
                     }
+                    else if (event.value[0] === 'dbs') {
+                        totalPage = (dbsWidgetArray.length%pageSize === 0 ? dbsWidgetArray.length/pageSize : Math.floor(dbsWidgetArray.length/pageSize) + 1);
+                    }
                     
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
                     self.curPageWidgetList(curPageWidgets);
@@ -749,23 +781,26 @@ define(['knockout',
                 widgetClickTimer = setTimeout(function (){
                     var _data = ko.toJS(data);
                     _data.createdOn = dfu.formatUTCDateTime(data.createdOn);
-                    _data.description = '';
-                    _data.owner = '';
-                    _data.queryStr = '';
-                    if (ssfUrl && ssfUrl !== '') {
-                        $.ajax({
-                            url: ssfUrl+'/search/'+data.id,
-                            success: function(widget, textStatus) {
-                                _data.owner = widget.owner ? widget.owner : '';
-                                _data.description = widget.description ? widget.description : '';
-                                _data.queryStr = widget.queryStr ? widget.queryStr : '';
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                console.log('Error when querying saved searches!');
-                            },
-                            async: false
-                        });
+                    _data.description = data.description ? data.description : '';
+                    _data.owner = data.owner ? data.owner : '';
+                    _data.queryStr = data.queryStr ? data.queryStr : '';
+                    if (_data.category !== 'DashboardsBuiltIn') {
+                        if (ssfUrl && ssfUrl !== '') {
+                            $.ajax({
+                                url: ssfUrl+'/search/'+data.id,
+                                success: function(widget, textStatus) {
+                                    _data.owner = widget.owner ? widget.owner : '';
+                                    _data.description = widget.description ? widget.description : '';
+                                    _data.queryStr = widget.queryStr ? widget.queryStr : '';
+                                },
+                                error: function(xhr, textStatus, errorThrown){
+                                    console.log('Error when querying saved searches!');
+                                },
+                                async: false
+                            });
+                        }
                     }
+                    
                     self.currentWidget(_data);
                     $('#widgetDetailsDialog').ojDialog('open');
                 }, 300); 
@@ -809,6 +844,9 @@ define(['knockout',
                 }
                 else if (category === 'ita') {
                     allWidgets = itaWidgetArray;
+                }
+                else if (category === 'dbs') {
+                    allWidgets = dbsWidgetArray;
                 }
                 if (searchtxt === '') {
                     searchResultArray = allWidgets;
@@ -858,6 +896,9 @@ define(['knockout',
                 }
                 else if (category === 'ita') {
                     allWidgets = itaWidgetArray;
+                }
+                else if (category === 'dbs') {
+                    allWidgets = dbsWidgetArray;
                 }
                 
                 return allWidgets;

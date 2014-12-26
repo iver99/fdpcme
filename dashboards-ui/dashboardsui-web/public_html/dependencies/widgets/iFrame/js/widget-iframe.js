@@ -26,7 +26,8 @@ define([
                 } else {
                     var uniqueId = tile["WIDGET_UNIQUE_ID"];
                     //query from SSF category to get data for URL retrieval
-                    providerName = "DB Analytics"; //TODO
+//                    providerName = "DB Analytics"; //TODO
+                    providerName = "Sample Provider";
                     providerVersion = "0.1"; //TODO
                     providerAssetRoot = "home"; //TODO
                     self.fullUrl = ko.observable(df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));

@@ -23,8 +23,8 @@ define([
                 timeFilter.endTime = endTime;
             }
 //            var qlBaseUrl = 'http://slc00aeg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
-//            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
-            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
+            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
+//            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
             //severity  in ('error','ERROR','SEVERE','severe', 'warning', 'warn', 'info', 'trace')
             var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "severity not in ('debug') | stats count by 'target type','log source'"}, 
                 "subSystem":"LOG",
