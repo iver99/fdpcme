@@ -117,8 +117,12 @@ define(['knockout', 'jquery'],
                 
                 function resetValues() {
                     me.customOption('relative');
-                    me.startDate(oj.IntlConverterUtils.dateToLocalIso(model.viewStart()));
-                    me.endDate(oj.IntlConverterUtils.dateToLocalIso(model.viewEnd()));
+                    if (model.viewStart() !== null) {
+                        me.startDate(oj.IntlConverterUtils.dateToLocalIso(model.viewStart()));
+                    }
+                    if (model.viewEnd() !== null) {
+                        me.endDate(oj.IntlConverterUtils.dateToLocalIso(model.viewEnd()));
+                    }
                 };
             }
             
