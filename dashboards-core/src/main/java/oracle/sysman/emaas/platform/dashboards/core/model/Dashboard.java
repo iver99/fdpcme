@@ -2,13 +2,20 @@ package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 
 public class Dashboard {
+	public static final int DASHBOARD_TYPE_NORMAL   = Integer.valueOf(0);
+	public static final int DASHBOARD_TYPE_ONE_PAGE = Integer.valueOf(1);
+	public static final boolean DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = Boolean.FALSE;
+	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
+	
 	private Long dashboardId;
 	private String name;
 	private Date creationDate;
@@ -19,10 +26,17 @@ public class Dashboard {
 	private Date lastModificationDate;
 	private String lastModifiedBy;
 	private String owner;
-	private byte[] screenShot;
+	private String screenShot;
 	private Integer type;
 	
 	private List<Tile> tileList;
+	
+	public Dashboard() {
+		// defaults for non-null values
+		type = Dashboard.DASHBOARD_TYPE_NORMAL;
+		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
+		deleted = DASHBOARD_DELETED_DEFAULT;
+	}
 
     public Date getCreationDate() {
         return creationDate;
@@ -104,11 +118,11 @@ public class Dashboard {
         this.owner = owner;
     }
 
-    public byte[] getScreenShot() {
+    public String getScreenShot() {
         return screenShot;
     }
 
-    public void setScreenShot(byte[] screenShot) {
+    public void setScreenShot(String screenShot) {
         this.screenShot = screenShot;
     }
 
@@ -146,11 +160,24 @@ public class Dashboard {
     	Integer isDeleted = DataFormatUtils.boolean2Integer(this.deleted);
     	Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(this.enableTimeRange);
     	Integer isIsSystem = DataFormatUtils.boolean2Integer(this.isSystem == null);
-    	if (ed == null)
+    	if (ed == null) {
     		ed = new EmsDashboard(creationDate, dashboardId, isDeleted, description, isEnableTimeRange,isIsSystem,
     			lastModificationDate, lastModifiedBy, name, owner, screenShot, type);
+	//    	List<EmsDashboardTile> edtList = new ArrayList<EmsDashboardTile>();
+	    	if (tileList != null) {
+	    		int i = 0;
+	    		for (Tile tile: tileList) {
+	    			EmsDashboardTile edt = tile.getPersistenceEntity(null);
+	    			edt.setPosition(i++);
+	    			ed.addEmsDashboardTile(edt);
+	//    			edt.setDashboard(ed);
+	//    			edtList.add(edt);
+	    		}
+	//    		ed.setDashboardTileList(edtList);
+	    	}
+    	}
     	else {
-    		ed.setCreationDate(creationDate);
+//    		ed.setCreationDate(creationDate);
     		ed.setDeleted(isDeleted);
     		ed.setDescription(description);
     		ed.setEnableTimeRange(isEnableTimeRange);
@@ -158,19 +185,63 @@ public class Dashboard {
     		ed.setLastModificationDate(lastModificationDate);
     		ed.setLastModifiedBy(lastModifiedBy);
     		ed.setName(name);
-    		ed.setOwner(owner);
+//    		ed.setOwner(owner);
     		ed.setScreenShot(screenShot);
     		ed.setType(type);
-    	}
-    	List<EmsDashboardTile> edtList = new ArrayList<EmsDashboardTile>();
-    	if (tileList != null) {
-    		for (Tile tile: tileList) {
-    			edtList.add(tile.getTileEntity());
-    		}
-    		ed.setDashboardTileList(edtList);
+    		updateEmsDashboardTiles(this.tileList, ed);
     	}
     	return ed;
     }
+	
+	private void updateEmsDashboardTiles(List<Tile> tiles, EmsDashboard ed) {
+		Map<Tile, EmsDashboardTile> rows = new HashMap<Tile, EmsDashboardTile>();
+		// remove deleted tile row in dashboard row first
+		List<EmsDashboardTile> edtList = ed.getDashboardTileList();
+		if (edtList != null) {
+			int edtSize = edtList.size();
+			for (int i = edtSize - 1; i >= 0; i--) {
+				EmsDashboardTile edt = edtList.get(i);
+				boolean isDeleted = true;
+				for (Tile tile: tiles) {
+					if (tile.getTileId() != null && tile.getTileId().equals(edt.getTileId())) {
+						isDeleted = false;
+						rows.put(tile, edt);
+//						// remove existing props
+//						List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
+//						if (edtpList == null)
+//							break;
+//						while (!edt.getDashboardTileParamsList().isEmpty()) {
+//							EmsDashboardTileParams edtp = edt.getDashboardTileParamsList().get(0);
+////							dsf.removeEmsDashboardTileParams(edtp);
+//							edt.getDashboardTileParamsList().remove(edtp);
+////							edt.removeEmsDashboardTileParams(edtp);
+//						}
+						break;
+					}
+				}
+				if (isDeleted) {
+//					ed.removeEmsDashboardTile(edt);
+					ed.getDashboardTileList().remove(edt);
+				}
+			}
+		}
+		
+		if (tiles == null)
+			return;
+		for (Tile tile: tiles) {
+			EmsDashboardTile edt = null;
+			if (!rows.containsKey(tile)) {
+				edt = tile.getPersistenceEntity(null);
+				ed.addEmsDashboardTile(edt);
+				rows.put(tile, edt);
+//				dsf.persistEntity(edt);
+			}
+			else {
+				edt = rows.get(tile);
+				tile.getPersistenceEntity(edt);
+			}
+		}
+	}
     
     public static Dashboard valueOf(EmsDashboard ed) {
     	return valueOf(ed, null);
@@ -198,6 +269,7 @@ public class Dashboard {
     		List<Tile> tileList = new ArrayList<Tile>();
     		for (EmsDashboardTile edt: edtList) {
     			Tile tile = Tile.valueOf(edt);
+    			tile.setDashboard(to);
     			tileList.add(tile);
     		}
     		to.setTileList(tileList);

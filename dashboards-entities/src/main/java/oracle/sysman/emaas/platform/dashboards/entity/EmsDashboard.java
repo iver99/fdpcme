@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +17,7 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -71,6 +71,7 @@ public class EmsDashboard implements Serializable {
     private Integer type;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
+    @OrderBy("position")
     private List<EmsDashboardTile> dashboardTileList;
 
     public EmsDashboard() {
