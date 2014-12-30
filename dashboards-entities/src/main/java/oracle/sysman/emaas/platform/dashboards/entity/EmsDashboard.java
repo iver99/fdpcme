@@ -42,7 +42,7 @@ public class EmsDashboard implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboard_Id_Seq_Gen")
     private Long dashboardId;
     @Column(name = "DELETED")
-    private Integer deleted;
+    private Long deleted;
     @Column(name = "DESCRIPTION", length = 256)
     private String description;
     @Column(name = "ENABLE_TIME_RANGE", nullable = false)
@@ -77,7 +77,7 @@ public class EmsDashboard implements Serializable {
     public EmsDashboard() {
     }
 
-    public EmsDashboard(Date creationDate, Long dashboardId, Integer deleted, String description,
+    public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description,
                         Integer enableTimeRange, Integer isSystem, Date lastModificationDate,
                         String lastModifiedBy, String name, String owner, String screenShot,
                         Integer type) {
@@ -107,11 +107,11 @@ public class EmsDashboard implements Serializable {
         return dashboardId;
     }
 
-    public Integer getDeleted() {
+    public Long getDeleted() {
         return deleted;
     }
 
-    public void setDeleted(Integer deleted) {
+    public void setDeleted(Long deleted) {
         this.deleted = deleted;
     }
 

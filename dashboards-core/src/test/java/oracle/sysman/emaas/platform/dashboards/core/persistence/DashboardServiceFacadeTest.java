@@ -193,7 +193,7 @@ public class DashboardServiceFacadeTest {
         EmsDashboard d = new EmsDashboard();
         d.setName("test");
         d.setCreationDate(new Date());
-        d.setDeleted(0);
+        d.setDeleted(0L);
         d.setDescription("test");
         d.setEnableTimeRange(1);
         d.setIsSystem(1);
