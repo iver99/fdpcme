@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -17,6 +18,10 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardService
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
 
 public class DashboardManager {
 	private static DashboardManager instance;
@@ -45,12 +50,14 @@ public class DashboardManager {
 	public Dashboard saveOrUpdateDashboard(Dashboard dbd, String tenantId) throws DashboardException {
 		if (dbd == null)
 			return null;
-//		EntityManager em = PersistenceManager.getInstance().createEntityManager(tenantId);
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = AppContext.getInstance().getCurrentUser();
+			Dashboard sameName = this.getDashboardByName(dbd.getName(), tenantId);
+			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId()))
+				throw new DashboardException("Dashboard with same name exists already");
 			// init creation date, owner to prevent null insertion
 			Date created = new Date();
 			if (dbd.getCreationDate() == null)
@@ -65,7 +72,7 @@ public class DashboardManager {
 						tile.setOwner(currentUser);
 				}
 			}
-			if (dbd.getDashboardId() == null) {
+			if (dbd.getDashboardId() == null) { // creation
 				Date creationDate = new Date();
 				EmsDashboard ed = dbd.getPersistenceEntity(null);
 				ed.setCreationDate(creationDate);
@@ -169,8 +176,13 @@ public class DashboardManager {
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 		if (ed == null)
 			return;
+
+		EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
+		if (edla != null)
+			dsf.removeEmsDashboardLastAccess(edla);
+		this.removeFavoriteDashboard(dashboardId, tenantId);
 		if (!permanent) {
-			ed.setDeleted(DataFormatUtils.boolean2Integer(Boolean.TRUE));
+			ed.setDeleted(dashboardId);
 			dsf.mergeEmsDashboard(ed);
 		}
 		else
@@ -184,6 +196,14 @@ public class DashboardManager {
 	 * @param tenantId
 	 */
 	public void setDashboardIncludeTimeControl(Long dashboardId, boolean enable, String tenantId) {
+		if (dashboardId == null || dashboardId <= 0)
+			return;
+		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+		if (ed == null)
+			return;
+		ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(enable));
+		dsf.mergeEmsDashboard(ed);
 	}
 	
 	/**
@@ -191,15 +211,48 @@ public class DashboardManager {
 	 * @param dashboardId
 	 * @return
 	 */
-	public Dashboard getDashboard(Long dashboardId, String tenantId) {
+	public Dashboard getDashboardById(Long dashboardId, String tenantId) {
+		if (dashboardId == null || dashboardId <= 0)
+			return null;
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 		if (ed == null)
 			return null;
-		Boolean isDeleted = DataFormatUtils.integer2Boolean(ed.getDeleted());
+		Boolean isDeleted = ed.getDeleted() == null? null : ed.getDeleted() > 0;
 		if (isDeleted != null && isDeleted.booleanValue())
 			return null;
 		return Dashboard.valueOf(ed);
+	}
+	
+	/**
+	 * Returns dashboard instance specified by name for current user
+	 * Please note that same user under single tenant can't have more than one dashboards
+	 * with same name, so this method return single dashboard instance
+	 */
+	public Dashboard getDashboardByName(String name, String tenantId) {
+		if (name == null || "".equals(name))
+			return null;
+		String currentUser = AppContext.getInstance().getCurrentUser();
+		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
+		Object[] params = new Object[]{name, currentUser, new Integer(0)};
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			Query query = em.createQuery(jpql);
+			for (int i = 1; i <= params.length; i++) {
+				query.setParameter(i, params[i-1]);
+			}
+			EmsDashboard ed = (EmsDashboard)query.getSingleResult();
+			return Dashboard.valueOf(ed);
+		}
+		catch (NoResultException e) {
+			return null;
+		}
+		finally {
+			if (em != null)
+				em.close();
+		}
 	}
 	
 	/**
@@ -208,7 +261,13 @@ public class DashboardManager {
 	 * @return
 	 */
 	public List<Dashboard> listAllDashboards(String tenantId) {
-		return null;
+		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+		List<EmsDashboard> edList = dsf.getEmsDashboardFindAll();
+		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
+		for (EmsDashboard ed: edList) {
+			dbdList.add(Dashboard.valueOf(ed));
+		}
+		return dbdList;
 	}
 	
 	/**
@@ -239,10 +298,10 @@ public class DashboardManager {
 			StringBuilder sb = new StringBuilder();
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
-				sb.append(" where p.name LIKE :name");
+				sb.append(" where (p.name LIKE :name");
 				paramMap.put("name", "%" + queryString + "%");
 			} else {
-				sb.append(" where lower(p.name) LIKE :name");
+				sb.append(" where (lower(p.name) LIKE :name");
 				paramMap.put("name", "%" + queryString.toLowerCase(locale) + "%");
 			}
 			if (!ic) {
@@ -252,8 +311,9 @@ public class DashboardManager {
 				sb.append(" or lower(p.description) like :description");
 				paramMap.put("description", "%" + queryString.toLowerCase(locale) + "%");
 			}
-			sb.append(" or lower(p.owner) = :owner");
+			sb.append(" or lower(p.owner) = :owner)");
 			paramMap.put("owner", queryString.toLowerCase(locale));
+			sb.append(" and p.deleted = 0");
 			jpql += sb.toString();
 		}
 		jpql += " order by p.dashboardId asc";
@@ -284,12 +344,75 @@ public class DashboardManager {
 	}
 	
 	/**
+	 * Retrieves last access date for specified dashboard
+	 * @param dashboardId
+	 * @param tenantId
+	 * @return
+	 */
+	public Date getLastAccessDate(Long dashboardId, String tenantId) {
+		EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
+		if (edla != null)
+			return edla.getAccessDate();
+		return null;
+	}
+	
+	/**
+	 * Retrieves last access for specified dashboard
+	 * @param dashboardId
+	 * @param tenantId
+	 * @return
+	 */
+	public EmsDashboardLastAccess getLastAccess(Long dashboardId, String tenantId) {
+		if (dashboardId == null || dashboardId <= 0)
+			return null;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1))
+				return null;
+			em = dsf.getEntityManager();
+			String currentUser = AppContext.getInstance().getCurrentUser();
+			EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
+			EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+			return edla;
+		}
+		finally {
+			if (em != null)
+				em.close();
+		}
+	}
+	
+	/**
 	 * Updates last access date for specified dashboard
 	 * @param dashboardId
 	 * @param tenantId
 	 */
 	public void updateLastAccessDate(Long dashboardId, String tenantId) {
-		
+		if (dashboardId == null || dashboardId <= 0)
+			return;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1))
+				return;
+			em = dsf.getEntityManager();
+			String currentUser = AppContext.getInstance().getCurrentUser();
+			EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
+			EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+			if (edla == null) {
+				edla = new EmsDashboardLastAccess(new Date(), currentUser, dashboardId);
+				dsf.persistEmsDashboardLastAccess(edla);
+			} else {
+				edla.setAccessDate(new Date());
+				dsf.mergeEmsDashboardLastAccess(edla);
+			}
+		}
+		finally {
+			if (em != null)
+				em.close();
+		}
 	}
 	
 	/**
@@ -298,7 +421,30 @@ public class DashboardManager {
 	 * @param tenantId
 	 */
 	public void addFavoriteDashboard(Long dashboardId, String tenantId) {
-		
+		if (dashboardId == null || dashboardId <= 0)
+			return;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1))
+				return;
+			em = dsf.getEntityManager();
+			String currentUser = AppContext.getInstance().getCurrentUser();
+			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			if (edf == null) {
+				edf = new EmsDashboardFavorite(new Date(), ed, currentUser);
+				dsf.persistEmsDashboardFavorite(edf);
+			} else {
+				edf.setCreationDate(new Date());
+				dsf.mergeEmsDashboardFavorite(edf);
+			}
+		}
+		finally {
+			if (em != null)
+				em.close();
+		}
 	}
 	
 	/**
@@ -307,15 +453,52 @@ public class DashboardManager {
 	 * @param tenantId
 	 */
 	public void removeFavoriteDashboard(Long dashboardId, String tenantId) {
-		
+		if (dashboardId == null || dashboardId <= 0)
+			return;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1))
+				return;
+			em = dsf.getEntityManager();
+			String currentUser = AppContext.getInstance().getCurrentUser();
+			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			if (edf != null) {
+				dsf.removeEmsDashboardFavorite(edf);
+			}
+		}
+		finally {
+			if (em != null)
+				em.close();
+		}
 	}
 	
 	/**
-	 * Returns a list of all favorite dashboards
+	 * Returns a list of all favorite dashboards for current user
 	 * @param tenantId
 	 * @return
 	 */
 	public List<Dashboard> getFavoriteDashboards(String tenantId) {
-		return null;
+		String currentUser = AppContext.getInstance().getCurrentUser();
+		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '" + currentUser + "'";
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			Query query = em.createQuery(hql);
+			@SuppressWarnings("unchecked")
+			List<EmsDashboard> edList = query.getResultList();
+			List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
+			for (EmsDashboard ed: edList) {
+				dbdList.add(Dashboard.valueOf(ed));
+			}
+			return dbdList;
+		}
+		finally {
+			if (em != null)
+				em.close();
+		}
 	}
 }

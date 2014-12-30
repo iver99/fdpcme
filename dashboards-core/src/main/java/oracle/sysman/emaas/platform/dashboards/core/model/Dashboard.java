@@ -150,18 +150,17 @@ public class Dashboard {
         return tile;
     }
 
-    public Tile removeEmsDashboardTile(Tile emsDashboardTile) {
-    	getTileList().remove(emsDashboardTile);
-        emsDashboardTile.setDashboard(null);
-        return emsDashboardTile;
+    public Tile removeTile(Tile tile) {
+    	getTileList().remove(tile);
+        return tile;
     }
     
     public EmsDashboard getPersistenceEntity(EmsDashboard ed) {
-    	Integer isDeleted = DataFormatUtils.boolean2Integer(this.deleted);
+//    	Integer isDeleted = DataFormatUtils.boolean2Integer(this.deleted);
     	Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(this.enableTimeRange);
     	Integer isIsSystem = DataFormatUtils.boolean2Integer(this.isSystem == null);
     	if (ed == null) {
-    		ed = new EmsDashboard(creationDate, dashboardId, isDeleted, description, isEnableTimeRange,isIsSystem,
+    		ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange,isIsSystem,
     			lastModificationDate, lastModifiedBy, name, owner, screenShot, type);
 	//    	List<EmsDashboardTile> edtList = new ArrayList<EmsDashboardTile>();
 	    	if (tileList != null) {
@@ -178,7 +177,7 @@ public class Dashboard {
     	}
     	else {
 //    		ed.setCreationDate(creationDate);
-    		ed.setDeleted(isDeleted);
+    		ed.setDeleted(deleted ? this.getDashboardId() : 0);
     		ed.setDescription(description);
     		ed.setEnableTimeRange(isEnableTimeRange);
     		ed.setIsSystem(isIsSystem);
@@ -228,7 +227,8 @@ public class Dashboard {
 		
 		if (tiles == null)
 			return;
-		for (Tile tile: tiles) {
+		for (int i = 0; i < tiles.size(); i++) {
+			Tile tile = tiles.get(i);
 			EmsDashboardTile edt = null;
 			if (!rows.containsKey(tile)) {
 				edt = tile.getPersistenceEntity(null);
@@ -240,6 +240,7 @@ public class Dashboard {
 				edt = rows.get(tile);
 				tile.getPersistenceEntity(edt);
 			}
+			edt.setPosition(i);
 		}
 	}
     
@@ -254,7 +255,7 @@ public class Dashboard {
     		to = new Dashboard();
     	to.setCreationDate(from.getCreationDate());
     	to.setDashboardId(from.getDashboardId());
-    	to.setDeleted(DataFormatUtils.integer2Boolean(from.getDeleted()));
+    	to.setDeleted(from.getDeleted() == null? null : from.getDeleted() > 0);
     	to.setDescription(from.getDescription());
     	to.setEnableTimeRange(DataFormatUtils.integer2Boolean(from.getEnableTimeRange()));
     	to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));

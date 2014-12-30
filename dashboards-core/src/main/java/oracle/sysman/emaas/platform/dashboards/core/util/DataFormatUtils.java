@@ -14,7 +14,7 @@ public class DataFormatUtils {
 	public static Boolean integer2Boolean(Integer i) {
 		if (i == null)
 			return null;
-		return i.intValue() == 1;
+		return i.intValue() != 0;
 	}
 	
 	public static BigDecimal integer2BigDecimal(Integer i) {

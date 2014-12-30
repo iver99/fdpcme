@@ -20,7 +20,7 @@ public class Tile {
 	private Date lastModificationDate;
 	private String lastModifiedBy;
 	private String owner;
-	private int position;
+//	private int position;
 	private String providerAssetRoot;
 	private String providerName;
 	private String providerVersion;
@@ -96,13 +96,13 @@ public class Tile {
         this.owner = owner;
     }
 
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
+//    public Integer getPosition() {
+//        return position;
+//    }
+//
+//    public void setPosition(Integer position) {
+//        this.position = position;
+//    }
 
     public String getProviderAssetRoot() {
         return providerAssetRoot;
@@ -273,6 +273,29 @@ public class Tile {
 		tp.setTile(this);
 		return tp;
 	}
+	
+	public TileParam getParameter(String name) {
+		if (name == null || "".equals(name) || parameters == null)
+			return null;
+		for (TileParam tp: parameters) {
+			if (name.equals(tp.getName()))
+				return tp;
+		}
+		return null;
+	}
+	
+	/**
+	 * Removes a tile parameter specified by the name
+	 * @param index
+	 * @return
+	 */
+	public TileParam removeParameter(String name) {
+		TileParam tp = getParameter(name);
+		if (tp == null)
+			return null;
+		parameters.remove(name);
+		return tp;
+	}
 
 	/**
      * Returns an instance of EmsDashboardTile for current tile object
@@ -283,7 +306,7 @@ public class Tile {
     	
     	if (edt == null) {
 	    	edt = new EmsDashboardTile(creationDate, null, height, intIsMaximized, lastModificationDate,
-	    			lastModifiedBy, owner, position, providerAssetRoot, providerName, providerVersion, 
+	    			lastModifiedBy, owner, 0, providerAssetRoot, providerName, providerVersion, 
 	    			tileId, title, widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon,
 	    			widgetKocName, widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode,
 	    			width);
@@ -297,7 +320,7 @@ public class Tile {
     	else {
     		edt.setHeight(this.getHeight());
     		edt.setIsMaximized(intIsMaximized);
-    		edt.setPosition(this.position);
+//    		edt.setPosition(this.position);
     		edt.setProviderAssetRoot(providerAssetRoot);
     		edt.setProviderName(providerName);
     		edt.setProviderVersion(providerVersion);
@@ -369,7 +392,7 @@ public class Tile {
     	tile.setLastModificationDate(edt.getLastModificationDate());
     	tile.setLastModifiedBy(edt.getLastModifiedBy());
     	tile.setOwner(edt.getOwner());
-    	tile.setPosition(edt.getPosition());
+//    	tile.setPosition(edt.getPosition());
     	tile.setProviderAssetRoot(edt.getProviderAssetRoot());
     	tile.setProviderName(edt.getProviderName());
     	tile.setProviderVersion(edt.getProviderVersion());
