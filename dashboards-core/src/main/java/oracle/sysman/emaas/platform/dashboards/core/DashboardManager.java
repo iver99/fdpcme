@@ -12,8 +12,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
+import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 
 public class DashboardManager {
@@ -43,36 +45,107 @@ public class DashboardManager {
 	public Dashboard saveOrUpdateDashboard(Dashboard dbd, String tenantId) throws DashboardException {
 		if (dbd == null)
 			return null;
-		EntityManager em = PersistenceManager.getInstance().createEntityManager(tenantId);
+//		EntityManager em = PersistenceManager.getInstance().createEntityManager(tenantId);
+		EntityManager em = null;
 		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
 			String currentUser = AppContext.getInstance().getCurrentUser();
+			// init creation date, owner to prevent null insertion
+			Date created = new Date();
+			if (dbd.getCreationDate() == null)
+				dbd.setCreationDate(created);
+			if (dbd.getOwner() == null)
+				dbd.setOwner(currentUser);
+			if (dbd.getTileList() != null) {
+				for (Tile tile: dbd.getTileList()) {
+					if (tile.getCreationDate() == null)
+						tile.setCreationDate(created);
+					if (tile.getOwner() == null)
+						tile.setOwner(currentUser);
+				}
+			}
 			if (dbd.getDashboardId() == null) {
 				Date creationDate = new Date();
-				dbd.setCreationDate(creationDate);
-				dbd.setOwner(currentUser);
 				EmsDashboard ed = dbd.getPersistenceEntity(null);
-				// TODO: persistent to db
-//				em.getTransaction().begin();
-//				em.persist(ed);
-//				em.getTransaction().commit();
-//				em.refresh(ed);
+				ed.setCreationDate(creationDate);
+				ed.setOwner(currentUser);
+				dsf.persistEmsDashboard(ed);
+				dsf.commitTransaction();
 				return Dashboard.valueOf(ed, dbd);
 			}
 			else {
-				// TODO: retrieve dashboard from entity manager
-				EmsDashboard ed = null;
+				EmsDashboard ed = dsf.getEmsDashboardById(dbd.getDashboardId());
+				if (ed == null)
+					throw new DashboardException("Specified dashboard doesnot exist");
+//				ed.setName(dbd.getName());
+//				ed.setDescription(dbd.getDescription());
+//				ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(dbd.getEnableTimeRange()));
+//				ed.setIsSystem(dbd.);
+				dbd.getPersistenceEntity(ed);
+//				updateDashboardTiles(dbd.getTileList(), ed);
 				ed.setLastModificationDate(new Date());
 				ed.setLastModifiedBy(currentUser);
-				
-				// TODO: a lot to be done..
+				if (dbd.getOwner() != null)
+					ed.setOwner(dbd.getOwner());
+				dsf.mergeEntity(ed);
+				dsf.commitTransaction();
+				return Dashboard.valueOf(ed, dbd);
 			}
-		} 
+		}
 		finally {
 			if (em!= null)
 				em.close();
 		}
-		return null;
 	}
+	
+//	private Map<Tile, EmsDashboardTile> updateDashboardTiles(List<Tile> tiles, EmsDashboard ed) {
+//		Map<Tile, EmsDashboardTile> rows = new HashMap<Tile, EmsDashboardTile>();
+//		// remove deleted tile row in dashboard row first
+//		List<EmsDashboardTile> edtList = ed.getDashboardTileList();
+//		if (edtList != null) {
+//			int edtSize = edtList.size();
+//			for (int i = edtSize - 1; i >= 0; i--) {
+//				EmsDashboardTile edt = edtList.get(i);
+//				boolean isDeleted = true;
+//				for (Tile tile: tiles) {
+//					if (tile.getTileId() != null && tile.getTileId().equals(edt.getTileId())) {
+//						isDeleted = false;
+//						rows.put(tile, edt);
+//						// remove existing props
+//						List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
+//						if (edtpList == null)
+//							break;
+//						while (!edt.getDashboardTileParamsList().isEmpty()) {
+//							EmsDashboardTileParams edtp = edt.getDashboardTileParamsList().get(0);
+////							dsf.removeEmsDashboardTileParams(edtp);
+//							edt.getDashboardTileParamsList().remove(edtp);
+////							edt.removeEmsDashboardTileParams(edtp);
+//						}
+//						break;
+//					}
+//				}
+//				if (isDeleted) {
+////					ed.removeEmsDashboardTile(edt);
+//					ed.getDashboardTileList().remove(edt);
+//				}
+//			}
+//		}
+//		
+//		for (Tile tile: tiles) {
+//			EmsDashboardTile edt = null;
+//			if (!rows.containsKey(tile)) {
+//				edt = tile.getPersistenceEntity(null);
+//				ed.addEmsDashboardTile(edt);
+//				rows.put(tile, edt);
+////				dsf.persistEntity(edt);
+//			}
+//			else {
+//				edt = rows.get(tile);
+//			}
+//		}
+//		return rows;
+//	}
 	
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant. Soft deletion is supported
@@ -87,12 +160,21 @@ public class DashboardManager {
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant.
 	 * @param dashboardId id for the dashboard
-	 * @param permernant delete permernantly or not
+	 * @param permanent delete permanently or not
 	 */
-	public void deleteDashboard(Long dashboardId, boolean permernant, String tenantId) {
-		// TODO: delete last access
-//		EmsDashboardLastAccess edla = 
-		// TODO: delete the dashboard
+	public void deleteDashboard(Long dashboardId, boolean permanent, String tenantId) {
+		if (dashboardId == null || dashboardId <= 0)
+			return;
+		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+		if (ed == null)
+			return;
+		if (!permanent) {
+			ed.setDeleted(DataFormatUtils.boolean2Integer(Boolean.TRUE));
+			dsf.mergeEmsDashboard(ed);
+		}
+		else
+			dsf.removeEmsDashboard(ed);
 	}
 	
 	/**
@@ -110,7 +192,14 @@ public class DashboardManager {
 	 * @return
 	 */
 	public Dashboard getDashboard(Long dashboardId, String tenantId) {
-		return null;
+		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+		if (ed == null)
+			return null;
+		Boolean isDeleted = DataFormatUtils.integer2Boolean(ed.getDeleted());
+		if (isDeleted != null && isDeleted.booleanValue())
+			return null;
+		return Dashboard.valueOf(ed);
 	}
 	
 	/**
@@ -150,25 +239,26 @@ public class DashboardManager {
 			StringBuilder sb = new StringBuilder();
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
-				sb.append(" p.name LIKE :name");
+				sb.append(" where p.name LIKE :name");
 				paramMap.put("name", "%" + queryString + "%");
 			} else {
-				sb.append(" lower(p.name) LIKE :name");
+				sb.append(" where lower(p.name) LIKE :name");
 				paramMap.put("name", "%" + queryString.toLowerCase(locale) + "%");
 			}
 			if (!ic) {
-				sb.append(" and p.description like :description");
+				sb.append(" or p.description like :description");
 				paramMap.put("description", "%" + queryString + "%");
 			} else {
-				sb.append(" and lower(p.description) like :description");
+				sb.append(" or lower(p.description) like :description");
 				paramMap.put("description", "%" + queryString.toLowerCase(locale) + "%");
 			}
-			sb.append(" and p.owner = :owner");
-			paramMap.put("owner", queryString);
+			sb.append(" or lower(p.owner) = :owner");
+			paramMap.put("owner", queryString.toLowerCase(locale));
 			jpql += sb.toString();
 		}
-		// TODO: get EntityManager with tenantId
-		EntityManager em = null;
+		jpql += " order by p.dashboardId asc";
+		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+		EntityManager em = dsf.getEntityManager();
 		Query query = em.createQuery(jpql);
 		Iterator<String> paramKeySet = paramMap.keySet().iterator();
 		for (; paramKeySet.hasNext();) {
@@ -176,10 +266,15 @@ public class DashboardManager {
 			Object value = paramMap.get(paramKey);
 			query.setParameter(paramKey, value);
 		}
-		if (page != null && page > 0 && pageSize != null && pageSize >= 0) {
-			query.setFirstResult(page - 1);
+		if (page != null && page > 0 && pageSize != null && pageSize > 0) {
+			int start = (page - 1) * pageSize;
+			long startRow = (Long.valueOf(page) - 1) * Long.valueOf(pageSize);
+			if (startRow > Integer.MAX_VALUE)
+				start = Integer.MAX_VALUE;
+			query.setFirstResult(start);
 			query.setMaxResults(pageSize);
 		}
+		@SuppressWarnings("unchecked")
 		List<EmsDashboard> edList = query.getResultList();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 		for (EmsDashboard ed: edList) {

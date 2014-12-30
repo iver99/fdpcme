@@ -5,10 +5,13 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
 public class TileParam {
+	public static final int PARAM_TYPE_STRING = 1;
+	public static final int PARAM_TYPE_NUMBER = 2;
+	public static final int PARAM_TYPE_TIMESTAMP = 3;
+	
 	private Boolean isSystem;
 	private String name;
 	private Integer type;
@@ -46,6 +49,8 @@ public class TileParam {
     }
 
     public void setNumberValue(BigDecimal paramValueNum) {
+    	if (type == null)
+    		type = PARAM_TYPE_NUMBER;
         this.numValue = paramValueNum;
     }
     
@@ -70,6 +75,8 @@ public class TileParam {
     }
 
     public void setStringValue(String paramValueStr) {
+    	if (type == null)
+    		type = PARAM_TYPE_STRING;
         this.strValue = paramValueStr;
     }
 
@@ -78,6 +85,8 @@ public class TileParam {
     }
 
     public void setParamValueTimestamp(Date paramValueTimestamp) {
+    	if (type == null)
+    		type = PARAM_TYPE_TIMESTAMP;
         this.dateValue = paramValueTimestamp;
     }
 
@@ -90,13 +99,13 @@ public class TileParam {
         this.tile = tile;
     }
     
-    public EmsDashboardTileParams getPersistentEntity() {
+    public EmsDashboardTileParams getPersistentEntity(EmsDashboardTileParams edtp) {
         Integer intIsSystem = DataFormatUtils.boolean2Integer(this.getIsSystem());
     	Integer intValue = DataFormatUtils.bigDecimal2Integer(numValue);
-    	EmsDashboardTile edt = (tile == null) ? null: tile.getTileEntity();
     	Timestamp tsValue = DataFormatUtils.date2Timestamp(this.getParamValueTimestamp());
     	        
-    	EmsDashboardTileParams edtp = new EmsDashboardTileParams(intIsSystem, name, type, intValue, strValue, tsValue, edt);
+    	if (edtp == null)
+    		edtp = new EmsDashboardTileParams(intIsSystem, name, type, intValue, strValue, tsValue, null);
     	return edtp;
     }
     
@@ -110,6 +119,6 @@ public class TileParam {
     	tp.setIntegerValue(edtp.getParamValueNum());
     	tp.setStringValue(edtp.getParamValueStr());
     	tp.setParamValueTimestamp(edtp.getParamValueTimestamp());
-    	return null;
+    	return tp;
     }
 }

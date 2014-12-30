@@ -22,6 +22,20 @@ public class DashboardManagerTest {
 	}
 	
 	@Test
+	public void testCreateSimpleDashboard() throws DashboardException {
+		Dashboard dbd = new Dashboard();
+		dbd.setName("dashboard");
+
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId1 = "tenantId1";
+		dm.saveOrUpdateDashboard(dbd, tenantId1);
+		Assert.assertNotNull(dbd.getDashboardId());
+		
+		// post test
+		dm.removeFavoriteDashboard(dbd.getDashboardId(), tenantId1);
+	}
+	
+	@Test
 	public void testCreateUpdateDashboard() throws DashboardException {
 		String currentUser = AppContext.getInstance().getCurrentUser();
 		Dashboard dbd = new Dashboard();
