@@ -17,14 +17,16 @@ define([
             var self = this;
             var startTime = params.tile.timeRangeStart ? params.tile.timeRangeStart : null; 
             var endTime = params.tile.timeRangeEnd ? params.tile.timeRangeEnd : null; 
-            var timeFilter = {"type":"absolute","startTime":"2014-07-11T10:22:29.000Z","endTime":"2014-12-01T00:00:00.000Z"};
+            var timeFilter = {"type":"absolute","startTime":"2014-11-11T10:22:29.000Z","endTime":"2014-12-01T00:00:00.000Z"};
             if (startTime !== null || endTime !== null) {
                 timeFilter.startTime = startTime;
                 timeFilter.endTime = endTime;
             }
 //            var qlBaseUrl = 'http://slc00aeg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
 //            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
-            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
+//            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
+            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7211/emaas/querylanguage/api/v2/';
+//            var qlBaseUrl = 'http://slc07dgg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
             //severity  in ('error','ERROR','SEVERE','severe', 'warning', 'warn', 'info', 'trace')
             var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "severity not in ('debug') | stats count by 'target type','log source'"}, 
                 "subSystem":"LOG",

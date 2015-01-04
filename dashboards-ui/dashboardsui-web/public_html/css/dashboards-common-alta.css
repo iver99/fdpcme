@@ -34,3 +34,22 @@ a:hover {
 }
 
 .dbs-nav-mapping-icon-24:before{content:url("images/compassIcon_24.png");}
+
+.loadingIndicator{
+    position:fixed;
+    top:0;
+    margin-left:-65px;
+    width:120px;
+    height:15px;
+    left: 50%;
+    z-index:999;
+    background-color: #e6ffe0;
+    padding: 5px;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+    text-align: center;
+    border-style: solid;
+    border-width: 1px;
+    border-top:none;
+    box-shadow: 2px 2px 2px #888888;
+}

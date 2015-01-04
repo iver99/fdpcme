@@ -36,6 +36,7 @@ role value for that section to represent the appropriate content type.
 
     </head>
     <body>
+        <div class="loadingIndicator" id="loading">Loading...</div>
         <div id="globalBody" style="display: none"> <!-- This div helps make sure the footer stays at the bottom of the page -->
 
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
@@ -569,7 +570,7 @@ role value for that section to represent the appropriate content type.
                 <div style="display:none;" id="createWidgetDialog" 
                     data-bind="ojComponent:{component: 'ojDialog', 
                             initialVisibility: 'hide',cancelBehavior:'none',
-                            rootAttributes: { style: 'width: 600px; height:515px;'},
+                            rootAttributes: { style: 'width: 600px; height:550px;'},
                             title: 'Create New Widget'}">  
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div class="oj-dialog-title">
@@ -634,10 +635,10 @@ role value for that section to represent the appropriate content type.
                                                     </td>
                                                     <td>
                                                         <!-- ko if: $parent.useAbsolutePathForUrls() === true -->
-                                                        <label class="oj-label" >Enter the <span style="font-size: medium">full absolute path</span> for below URLs in this category</label>
+                                                        <label class="oj-label" >Enter the <span style="font-size: medium">FULL ABSOLUTE PATH</span> for below URLs in this category. E.g. http://slc04pxi.us.oracle.com:7001/widgets/sample/sampleWidget.html</label>
                                                         <!-- /ko -->
                                                         <!-- ko if: $parent.useAbsolutePathForUrls() === false -->
-                                                        <label class="oj-label" >Enter the <span style="font-size: medium">relative path</span> for below URLs in this category</label>
+                                                        <label class="oj-label" >Enter the <span style="font-size: medium">RELATIVE PATH</span> for below URLs in this category. E.g. /sample/sampleWidget.html</label>
                                                         <!-- /ko -->
                                                     </td>
                                                 </tr>

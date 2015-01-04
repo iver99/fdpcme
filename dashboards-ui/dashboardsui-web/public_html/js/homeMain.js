@@ -213,6 +213,8 @@ require(['dbs/dbsmodel',
                 
                 ko.applyBindings(new HeaderViewModel(), document.getElementById('demo-appheader-bar'));
                 ko.applyBindings({navigationsPopupModel: dashboardsViewModle.navigationsPopupModel}, document.getElementById('links_menu'));
+                $("#loading").hide();
+//                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
                 $('#globalBody').show();
                 // Setup bindings for the header and footer then display everything
                 //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));
