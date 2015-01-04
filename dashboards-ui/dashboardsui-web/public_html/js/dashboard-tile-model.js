@@ -554,7 +554,6 @@ define(['knockout',
                     newTile.timeRangeEnd = self.timeSelectorModel.viewEnd();
                 }
                 */
-                self.tiles.push(newTile);
             };
         
 
