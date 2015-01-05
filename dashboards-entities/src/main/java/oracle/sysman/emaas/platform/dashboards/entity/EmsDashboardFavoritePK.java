@@ -2,49 +2,59 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
+public class EmsDashboardFavoritePK implements Serializable
+{
+	private static final long serialVersionUID = 7034841936424550167L;
 
-public class EmsDashboardFavoritePK implements Serializable {
-    //private String tenantId;
-    private String userName;
-    private Long dashboard;
+	//private String tenantId;
+	private String userName;
+	private Long dashboard;
 
-    public EmsDashboardFavoritePK() {
-    }
+	public EmsDashboardFavoritePK()
+	{
+	}
 
-    public EmsDashboardFavoritePK(String userName, Long emsDashboard) {
-        this.userName = userName;
-        this.dashboard = emsDashboard;
-    }
+	public EmsDashboardFavoritePK(String userName, Long emsDashboard)
+	{
+		this.userName = userName;
+		dashboard = emsDashboard;
+	}
 
-    public boolean equals(Object other) {
-        if (other instanceof EmsDashboardFavoritePK) {
-            final EmsDashboardFavoritePK otherEmsDashboardFavoritePK = (EmsDashboardFavoritePK) other;
-            final boolean areEqual =
-                (/*otherEmsDashboardFavoritePK.tenantId.equals(tenantId) &&*/
-                 otherEmsDashboardFavoritePK.userName.equals(userName) &&
-                 otherEmsDashboardFavoritePK.dashboard.equals(dashboard));
-            return areEqual;
-        }
-        return false;
-    }
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof EmsDashboardFavoritePK) {
+			final EmsDashboardFavoritePK otherEmsDashboardFavoritePK = (EmsDashboardFavoritePK) other;
+			final boolean areEqual = otherEmsDashboardFavoritePK.userName.equals(userName)
+					&& otherEmsDashboardFavoritePK.dashboard.equals(dashboard);
+			return areEqual;
+		}
+		return false;
+	}
 
-    public int hashCode() {
-        return super.hashCode();
-    }
+	public Long getDashboard()
+	{
+		return dashboard;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public String getUserName()
+	{
+		return userName;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	@Override
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 
-    public Long getDashboard() {
-        return dashboard;
-    }
+	public void setDashboard(Long emsDashboard)
+	{
+		dashboard = emsDashboard;
+	}
 
-    public void setDashboard(Long emsDashboard) {
-        this.dashboard = emsDashboard;
-    }
+	public void setUserName(String userName)
+	{
+		this.userName = userName;
+	}
 }

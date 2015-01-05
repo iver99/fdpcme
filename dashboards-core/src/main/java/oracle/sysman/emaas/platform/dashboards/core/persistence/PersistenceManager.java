@@ -8,7 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public class PersistenceManager {
+public class PersistenceManager
+{
 	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
 	 */
@@ -52,16 +53,6 @@ public class PersistenceManager {
 
 		initialize();
 	}
-	
-	private void initialize() {
-		if (IS_TEST_ENV) {
-			Properties props = loadProperties(CONNECTION_PROPS_FILE);
-			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
-		}
-		else {
-			createEntityManagerFactory(PERSISTENCE_UNIT, null);
-		}
-	}
 
 	public synchronized void closeEntityManagerFactory()
 	{
@@ -71,17 +62,30 @@ public class PersistenceManager {
 		}
 	}
 
+	public EntityManager createEntityManager(String tenantId)
+	{
+		if (emf == null) {
+			initialize();
+		}
+		EntityManager em = emf.createEntityManager();
+		em.setProperty("tenant.id", tenantId);
+		return em;
+	}
+
 	public EntityManagerFactory getEntityManagerFactory()
 	{
 		return emf;
 	}
-	
-	public EntityManager createEntityManager(String tenantId) {
-		if (emf == null)
-			initialize();
-		EntityManager em = emf.createEntityManager();
-		em.setProperty("tenant.id", tenantId);
-		return em;
+
+	private void initialize()
+	{
+		if (IS_TEST_ENV) {
+			Properties props = loadProperties(CONNECTION_PROPS_FILE);
+			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
+		}
+		else {
+			createEntityManagerFactory(PERSISTENCE_UNIT, null);
+		}
 	}
 
 	private Properties loadProperties(String testPropsFile)

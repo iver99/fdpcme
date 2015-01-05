@@ -27,186 +27,214 @@ import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
-
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboard.findAll", query = "select o from EmsDashboard o") })
 @Table(name = "EMS_DASHBOARD")
-@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName="EMS_DASHBOARD_SEQ", allocationSize = 1 )
+@SequenceGenerator(name = "EmsDashboard_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32)
-public class EmsDashboard implements Serializable {
-    private static final long serialVersionUID = 1219062974568988740L;
-    
-    @Id
-    @Column(name = "DASHBOARD_ID", nullable = false)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboard_Id_Seq_Gen")
-    private Long dashboardId;
-    @Column(name = "DELETED")
-    private Long deleted;
-    @Column(name = "DESCRIPTION", length = 256)
-    private String description;
-    @Column(name = "ENABLE_TIME_RANGE", nullable = false)
-    private Integer enableTimeRange;
-    @Column(name = "IS_SYSTEM", nullable = false)
-    private Integer isSystem;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATION_DATE", nullable = false)
-    private Date creationDate;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "LAST_MODIFICATION_DATE")
-    private Date lastModificationDate;
-    @Column(name = "LAST_MODIFIED_BY", length = 128)
-    private String lastModifiedBy;
-    @Column(nullable = false, length = 64)
-    private String name;
-    @Column(nullable = false, length = 128)
-    private String owner;
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "SCREEN_SHOT")
-    @Lob
-    private String screenShot;
-    //@Column(name = "TENANT_ID", nullable = false, length = 32)
-    //private String tenantId;
-    @Column(nullable = false)
-    private Integer type;
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
-    @OrderBy("position")
-    private List<EmsDashboardTile> dashboardTileList;
+public class EmsDashboard implements Serializable
+{
+	private static final long serialVersionUID = 1219062974568988740L;
 
-    public EmsDashboard() {
-    }
+	@Id
+	@Column(name = "DASHBOARD_ID", nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboard_Id_Seq_Gen")
+	private Long dashboardId;
+	@Column(name = "DELETED")
+	private Long deleted;
+	@Column(name = "DESCRIPTION", length = 256)
+	private String description;
+	@Column(name = "ENABLE_TIME_RANGE", nullable = false)
+	private Integer enableTimeRange;
+	@Column(name = "IS_SYSTEM", nullable = false)
+	private Integer isSystem;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATION_DATE", nullable = false)
+	private Date creationDate;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "LAST_MODIFICATION_DATE")
+	private Date lastModificationDate;
+	@Column(name = "LAST_MODIFIED_BY", length = 128)
+	private String lastModifiedBy;
+	@Column(nullable = false, length = 64)
+	private String name;
+	@Column(nullable = false, length = 128)
+	private String owner;
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name = "SCREEN_SHOT")
+	@Lob
+	private String screenShot;
+	//@Column(name = "TENANT_ID", nullable = false, length = 32)
+	//private String tenantId;
+	@Column(nullable = false)
+	private Integer type;
 
-    public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description,
-                        Integer enableTimeRange, Integer isSystem, Date lastModificationDate,
-                        String lastModifiedBy, String name, String owner, String screenShot,
-                        Integer type) {
-        this.creationDate = creationDate;
-        this.dashboardId = dashboardId;
-        this.deleted = deleted;
-        this.description = description;
-        this.enableTimeRange = enableTimeRange;
-        this.isSystem = isSystem;
-        this.lastModificationDate = lastModificationDate;
-        this.lastModifiedBy = lastModifiedBy;
-        this.name = name;
-        this.owner = owner;
-        this.screenShot = screenShot;
-        this.type = type;
-    }
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
+	@OrderBy("position")
+	private List<EmsDashboardTile> dashboardTileList;
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
+	public EmsDashboard()
+	{
+	}
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
+	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
+			Integer isSystem, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
+			Integer type)
+	{
+		this.creationDate = creationDate;
+		this.dashboardId = dashboardId;
+		this.deleted = deleted;
+		this.description = description;
+		this.enableTimeRange = enableTimeRange;
+		this.isSystem = isSystem;
+		this.lastModificationDate = lastModificationDate;
+		this.lastModifiedBy = lastModifiedBy;
+		this.name = name;
+		this.owner = owner;
+		this.screenShot = screenShot;
+		this.type = type;
+	}
 
-    public Long getDashboardId() {
-        return dashboardId;
-    }
+	public EmsDashboardTile addEmsDashboardTile(EmsDashboardTile emsDashboardTile)
+	{
+		if (dashboardTileList == null) {
+			dashboardTileList = new ArrayList<EmsDashboardTile>();
+		}
+		dashboardTileList.add(emsDashboardTile);
+		emsDashboardTile.setDashboard(this);
+		return emsDashboardTile;
+	}
 
-    public Long getDeleted() {
-        return deleted;
-    }
+	public Date getCreationDate()
+	{
+		return creationDate;
+	}
 
-    public void setDeleted(Long deleted) {
-        this.deleted = deleted;
-    }
+	public Long getDashboardId()
+	{
+		return dashboardId;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public List<EmsDashboardTile> getDashboardTileList()
+	{
+		return dashboardTileList;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public Long getDeleted()
+	{
+		return deleted;
+	}
 
-    public Integer getEnableTimeRange() {
-        return enableTimeRange;
-    }
+	public String getDescription()
+	{
+		return description;
+	}
 
-    public void setEnableTimeRange(Integer enableTimeRange) {
-        this.enableTimeRange = enableTimeRange;
-    }
+	public Integer getEnableTimeRange()
+	{
+		return enableTimeRange;
+	}
 
-    public Integer getIsSystem() {
-        return isSystem;
-    }
+	public Integer getIsSystem()
+	{
+		return isSystem;
+	}
 
-    public void setIsSystem(Integer isSystem) {
-        this.isSystem = isSystem;
-    }
+	public Date getLastModificationDate()
+	{
+		return lastModificationDate;
+	}
 
-    public Date getLastModificationDate() {
-        return lastModificationDate;
-    }
+	public String getLastModifiedBy()
+	{
+		return lastModifiedBy;
+	}
 
-    public void setLastModificationDate(Date lastModificationDate) {
-        this.lastModificationDate = lastModificationDate;
-    }
+	public String getName()
+	{
+		return name;
+	}
 
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
+	public String getOwner()
+	{
+		return owner;
+	}
 
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
+	public String getScreenShot()
+	{
+		return screenShot;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Integer getType()
+	{
+		return type;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public EmsDashboardTile removeEmsDashboardTile(EmsDashboardTile emsDashboardTile)
+	{
+		getDashboardTileList().remove(emsDashboardTile);
+		emsDashboardTile.setDashboard(null);
+		return emsDashboardTile;
+	}
 
-    public String getOwner() {
-        return owner;
-    }
+	public void setCreationDate(Date creationDate)
+	{
+		this.creationDate = creationDate;
+	}
 
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
+	public void setDashboardTileList(List<EmsDashboardTile> emsDashboardTileList)
+	{
+		dashboardTileList = emsDashboardTileList;
+	}
 
-    public String getScreenShot() {
-        return screenShot;
-    }
+	public void setDeleted(Long deleted)
+	{
+		this.deleted = deleted;
+	}
 
-    public void setScreenShot(String screenShot) {
-        this.screenShot = screenShot;
-    }
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
 
-    public Integer getType() {
-        return type;
-    }
+	public void setEnableTimeRange(Integer enableTimeRange)
+	{
+		this.enableTimeRange = enableTimeRange;
+	}
 
-    public void setType(Integer type) {
-        this.type = type;
-    }
+	public void setIsSystem(Integer isSystem)
+	{
+		this.isSystem = isSystem;
+	}
 
-    public List<EmsDashboardTile> getDashboardTileList() {
-        return dashboardTileList;
-    }
+	public void setLastModificationDate(Date lastModificationDate)
+	{
+		this.lastModificationDate = lastModificationDate;
+	}
 
-    public void setDashboardTileList(List<EmsDashboardTile> emsDashboardTileList) {
-        this.dashboardTileList = emsDashboardTileList;
-    }
+	public void setLastModifiedBy(String lastModifiedBy)
+	{
+		this.lastModifiedBy = lastModifiedBy;
+	}
 
-    public EmsDashboardTile addEmsDashboardTile(EmsDashboardTile emsDashboardTile) {
-        if (this.dashboardTileList == null) {
-            this.dashboardTileList = new ArrayList<EmsDashboardTile>();
-        }
-        this.dashboardTileList.add(emsDashboardTile);
-        emsDashboardTile.setDashboard(this);
-        return emsDashboardTile;
-    }
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
-    public EmsDashboardTile removeEmsDashboardTile(EmsDashboardTile emsDashboardTile) {
-        getDashboardTileList().remove(emsDashboardTile);
-        emsDashboardTile.setDashboard(null);
-        return emsDashboardTile;
-    }
+	public void setOwner(String owner)
+	{
+		this.owner = owner;
+	}
+
+	public void setScreenShot(String screenShot)
+	{
+		this.screenShot = screenShot;
+	}
+
+	public void setType(Integer type)
+	{
+		this.type = type;
+	}
 }
