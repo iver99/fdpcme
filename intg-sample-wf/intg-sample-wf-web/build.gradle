@@ -70,9 +70,9 @@ war {
 
 task buildMockServiceWar(type: War) {
 	
-	appendix = 'MockService'
+	appendix = 'DfIntgMockService'
 	from('public_html') {
-	       include 'dependencies/sampleservice/common/'
+	       include 'dependencies/sampleservicecommon/'
 	        into('/')
 	}
 	rootSpec.exclude("**/*.class")

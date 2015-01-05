@@ -24,7 +24,7 @@ requirejs.config({
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
-        'dfutil':'../dependencies/util/js/df-util',
+        'dfutil':'../dependencies/dfcommon/js/util/df-util',
         'timeselector':'../dependencies/timeselector/js',
         'html2canvas':'../dependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',

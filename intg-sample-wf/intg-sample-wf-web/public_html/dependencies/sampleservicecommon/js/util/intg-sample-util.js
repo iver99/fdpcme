@@ -80,7 +80,7 @@ define(['knockout',
                 };
 
                 $.ajaxSettings.async = false;
-                $.getJSON('dependencies/sampleservice/common/data/servicemanager.json', function(data) {
+                $.getJSON('dependencies/sampleservicecommon/data/servicemanager.json', function(data) {
                     if (data.serviceUrls && data.serviceUrls.length > 0) {
                         for (i = 0; i < data.serviceUrls.length && !urlFound; i++) {
                             var serviceUrl = data.serviceUrls[i]+'/'+'instances?servicename='+data.serviceName;

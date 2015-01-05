@@ -6,7 +6,7 @@
 define([
     'knockout', 
     'jquery',
-    'dependencies/sampleservice/common/js/util/intg-sample-util.js'
+    'dependencies/sampleservicecommon/js/util/intg-sample-util.js'
 ],
     function(ko, $, dfu)
     {
