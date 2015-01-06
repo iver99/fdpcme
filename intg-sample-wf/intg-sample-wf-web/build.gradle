@@ -68,7 +68,7 @@ war {
 
 }
 
-task buildMockServiceWar(type: War) {
+task buildCommonLibWar(type: War) {
 	
 	appendix = 'DfIntgMockService'
 	from('public_html') {
@@ -82,14 +82,13 @@ task buildMockServiceWar(type: War) {
 
 }
 
-ext.filesToPublish = []
+def filesToPublish = []
 fileTree("build/libs").each { file ->
-     ext.filesToPublish << file
+     filesToPublish << file
 }
 
 publishing {
     publications {
-	def i=0
 	for (f in filesToPublish ) {
 	    def fbase = f.getName().split("\\.")[0]
 	    "$fbase"(MavenPublication) {
