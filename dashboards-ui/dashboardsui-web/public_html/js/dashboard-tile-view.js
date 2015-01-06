@@ -564,6 +564,7 @@ define(['knockout',
             var laWidgetArray = [];
             var taWidgetArray = [];
             var itaWidgetArray = [];
+            var demoWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
             var index=0;
@@ -592,6 +593,8 @@ define(['knockout',
                 widgetArray = [];
                 laWidgetArray = [];
                 taWidgetArray = [];
+                itaWidgetArray = [];
+                demoWidgetArray = [];
                 curPageWidgets=[];
                 searchResultArray = [];
                 index=0;
@@ -599,6 +602,7 @@ define(['knockout',
                     var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
                     var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
                     var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
+                    var demoSearchesUrl = ssfUrl + '/searches?categoryId=999';
                     $.ajax({
                         url: laSearchesUrl,
                         success: function(data, textStatus) {
@@ -630,7 +634,17 @@ define(['knockout',
                             console.log('Error when querying IT analytics searches!');
                         },
                         async: false
-                    });                    
+                    });    
+                    $.ajax({
+                        url: demoSearchesUrl,
+                        success: function(data, textStatus) {
+                            demoWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying IT analytics searches!');
+                        },
+                        async: false
+                    });                      
                 }
 
                 curPage = 1;
@@ -692,7 +706,9 @@ define(['knockout',
                     else if (event.value[0] === 'ita') {
                         totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
                     }
-                    
+                    else if (event.value[0] === 'demo') {
+                        totalPage = (demoWidgetArray.length%pageSize === 0 ? demoWidgetArray.length/pageSize : Math.floor(demoWidgetArray.length/pageSize) + 1);
+                    }                    
                     fetchWidgetsForCurrentPage(getAvailableWidgets());
                     self.curPageWidgetList(curPageWidgets);
                     refreshNaviButton();
@@ -810,6 +826,9 @@ define(['knockout',
                 else if (category === 'ita') {
                     allWidgets = itaWidgetArray;
                 }
+                else if (category === 'demo') {
+                    allWidgets = demoWidgetArray;
+                }                
                 if (searchtxt === '') {
                     searchResultArray = allWidgets;
                 }
@@ -859,7 +878,9 @@ define(['knockout',
                 else if (category === 'ita') {
                     allWidgets = itaWidgetArray;
                 }
-                
+                else if (category === 'demo') {
+                    allWidgets = demoWidgetArray;
+                }                
                 return allWidgets;
             };
             
