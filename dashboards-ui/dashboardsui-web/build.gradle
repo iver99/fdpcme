@@ -1,4 +1,6 @@
 apply plugin: 'war'
+apply plugin: 'maven-publish'
+apply plugin: 'artifactory-publish'
 
 
 // source 'webapp' directory
@@ -57,15 +59,57 @@ war.archiveName "dashboardsui-web.war"
 war.dependsOn unpackJETFromArtifactory
 
 war {
-        from('public_html') {
-                include '**/*'
-                into('/')
-        }
-        from('src/main/java') {
-                include '**/*'
-                into('WEB-INF/classes')
-        }
+	from('public_html') {
+	       include '**/*'
+	        into('/')
+	}
+	from('/src/main/java') {
+	        include '**/*'
+	        into('WEB-INF/classes')
+	}
+}
 
+task buildDFCommonLibWar(type: War) {
+	
+	appendix = 'DfIntgCommon'
+	from('public_html') {
+	       include 'dependencies/dfcommon/'
+	        into('/')
+	}
+	rootSpec.exclude("**/*.class")
+        rootSpec.exclude("**/*.jar")
+	rootSpec.exclude("**/*.zip")
+	rootSpec.exclude("**/*.MF")
+
+}
+
+def libsToPublish = []
+fileTree("build/libs").each { file ->
+    libsToPublish << file
+}
+
+
+publishing {
+    publications {
+	for (f in libsToPublish ) {
+	    def fbase = f.getName().split("\\.")[0]
+	    "$fbase"(MavenPublication) {
+		version "${publish_version}"
+	        groupId "${publish_group}"
+		artifact f
+		artifactId fbase
+	    }
+	}
+    }
+    repositories {
+        maven {
+            url "${artifactory_contextUrl}"+'/'+"${publish_repo_key}"
+            credentials {
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+            }
+        }
+    }
 }
 
 dependencies {
