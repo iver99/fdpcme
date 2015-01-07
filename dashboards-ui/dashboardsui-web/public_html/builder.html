@@ -445,6 +445,7 @@ role value for that section to represent the appropriate content type.
                                 <option value="ta">TARGET ANALYTICS</option>
                                 <option value="ita">IT ANALYTICS</option>
                                 <option value="demo">Demo ANALYTICS</option>
+                                <option value="dbs">DASHBOARDS BUILT-IN</option>
                             </select>
                         </div>
                     </div>
@@ -467,8 +468,11 @@ role value for that section to represent the appropriate content type.
                                 <!-- /ko -->
                                 <!-- ko if: category.id===999 -->
                                 <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="itaimg" alt="DEMO Analytics" title="DEMO Analytics" 
+                                <!-- ko if: category==='DashboardsBuiltIn' -->
+                                <input type="image" src="css/images/dashboard-32.png" width="32" id="dbsimg" alt="Dashboards Built-in" title="Dashboards Built-in" 
                                        class="widget-image"/>
                                 <!-- /ko -->                                
+                                <!-- /ko -->
                                 <span data-bind="text:name"> </span>
                                 <!--font color="gray">
                                     <span data-bind="text:name"> </span>
@@ -575,7 +579,7 @@ role value for that section to represent the appropriate content type.
                 <div style="display:none;" id="createWidgetDialog" 
                     data-bind="ojComponent:{component: 'ojDialog', 
                             initialVisibility: 'hide',cancelBehavior:'none',
-                            rootAttributes: { style: 'width: 600px; height:550px;'},
+                            rootAttributes: { style: 'width: 600px; height:630px;'},
                             title: 'Create New Widget'}">  
                     <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div class="oj-dialog-title">
@@ -588,6 +592,33 @@ role value for that section to represent the appropriate content type.
                         <div id="updateSearch" class="frame">
                             <div id="editSearchForm" class="oj-form oj-md-odd-cols-4 oj-md-labels-inline">
                                 <form class="oj-form oj-md-odd-cols-11 oj-md-labels-inline" data-bind="with:newWidget">
+                                    <div class="oj-row">
+                                        <div class="oj-col">
+                                            <label for="providerName" class="oj-label">Provider Name</label>
+                                        </div>
+                                        <div class="oj-col">
+                                            <input id="providerName" maxlength='30' style="width: 400px;" required
+                                                   data-bind="ojComponent:{component:'ojInputText', disabled: !$parent.providerInfoNeeded(), value:providerName}"/>
+                                        </div>
+                                    </div>
+                                    <div class="oj-row">
+                                        <div class="oj-col">
+                                            <label for="version" class="oj-label">Version</label>
+                                        </div>
+                                        <div class="oj-col">
+                                            <input id="version" maxlength='30' style="width: 400px;" required
+                                                   data-bind="ojComponent:{component:'ojInputText',disabled: !$parent.providerInfoNeeded(), value:version}"/>
+                                        </div>
+                                    </div>
+                                    <div class="oj-row">
+                                        <div class="oj-col">
+                                            <label for="assetRoot" class="oj-label">Asset Root</label>
+                                        </div>
+                                        <div class="oj-col">
+                                            <input id="assetRoot" maxlength='30' style="width: 400px;" required
+                                                   data-bind="ojComponent:{component:'ojInputText',disabled: !$parent.providerInfoNeeded(), value:assetRoot}"/>
+                                        </div>
+                                    </div>
                                     <div class="oj-row">
                                         <div class="oj-col">
                                             <label for="searchName" class="oj-label">Name</label>

@@ -6,16 +6,11 @@
 		transaction-type="JTA">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		<jta-data-source>jdbc/emaas_dashboards_ds</jta-data-source>
-		<!-- class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class-->
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
@@ -47,16 +42,11 @@
 	<persistence-unit name="DashboardsTestPU"
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-		<!-- class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategory</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParam</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsCategoryParamPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsFolder</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearch</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParam</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchParamPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccess</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsLastAccessPK</class>
-		<class>oracle.sysman.emaas.platform.savedsearch.entity.EmAnalyticsSearchLastAccess</class-->
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams</class>
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
