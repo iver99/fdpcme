@@ -165,17 +165,15 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
             return "http://slc04srr.us.oracle.com:7401/apmUi/";
         }else if ("IT ANALYTICS"===providerName){
             return "http://slc06xat.us.oracle.com:7001/ita-tool";
-        } else {
-        } 
-        else if ("Sample Provider"===providerName) {
+        }else if ("Sample Provider"===providerName) {
             return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
         }
-        else if ("Log Analytics"===providerName) {
-            return "http://localhost:8383/emcpdfui/";
-        }
-        else if ("Target Analytics"===providerName) {
-            return "http://localhost:8383/emcpdfui/";
-        }
+//        else if ("Log Analytics"===providerName) {
+//            return "http://localhost:8383/emcpdfui/";
+//        }
+//        else if ("Target Analytics"===providerName) {
+//            return "http://localhost:8383/emcpdfui/";
+//        }
         else {
             var urlFound = false;
             
