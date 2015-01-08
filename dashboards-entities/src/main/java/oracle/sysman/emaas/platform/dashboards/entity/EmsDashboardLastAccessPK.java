@@ -2,48 +2,59 @@ package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
 
-public class EmsDashboardLastAccessPK implements Serializable {
-    //private String tenantId;
-    private String accessedBy;
-    private Long dashboardId;
+public class EmsDashboardLastAccessPK implements Serializable
+{
+	private static final long serialVersionUID = 6378570578531917471L;
 
-    public EmsDashboardLastAccessPK() {
-    }
+	//private String tenantId;
+	private String accessedBy;
+	private Long dashboardId;
 
-    public EmsDashboardLastAccessPK(String accessedBy, Long dashboardId) {
-        this.accessedBy = accessedBy;
-        this.dashboardId = dashboardId;
-    }
+	public EmsDashboardLastAccessPK()
+	{
+	}
 
-    public boolean equals(Object other) {
-        if (other instanceof EmsDashboardLastAccessPK) {
-            final EmsDashboardLastAccessPK otherEmsDashboardLastAccessPK = (EmsDashboardLastAccessPK) other;
-            final boolean areEqual =
-                (/*otherEmsDashboardLastAccessPK.tenantId.equals(tenantId) &&*/
-                 otherEmsDashboardLastAccessPK.accessedBy.equals(accessedBy) &&
-                 otherEmsDashboardLastAccessPK.dashboardId.equals(dashboardId));
-            return areEqual;
-        }
-        return false;
-    }
+	public EmsDashboardLastAccessPK(String accessedBy, Long dashboardId)
+	{
+		this.accessedBy = accessedBy;
+		this.dashboardId = dashboardId;
+	}
 
-    public int hashCode() {
-        return super.hashCode();
-    }
+	@Override
+	public boolean equals(Object other)
+	{
+		if (other instanceof EmsDashboardLastAccessPK) {
+			final EmsDashboardLastAccessPK otherEmsDashboardLastAccessPK = (EmsDashboardLastAccessPK) other;
+			final boolean areEqual = otherEmsDashboardLastAccessPK.accessedBy.equals(accessedBy)
+					&& otherEmsDashboardLastAccessPK.dashboardId.equals(dashboardId);
+			return areEqual;
+		}
+		return false;
+	}
 
-    public String getAccessedBy() {
-        return accessedBy;
-    }
+	public String getAccessedBy()
+	{
+		return accessedBy;
+	}
 
-    public void setAccessedBy(String accessedBy) {
-        this.accessedBy = accessedBy;
-    }
+	public Long getDashboardId()
+	{
+		return dashboardId;
+	}
 
-    public Long getDashboardId() {
-        return dashboardId;
-    }
+	@Override
+	public int hashCode()
+	{
+		return super.hashCode();
+	}
 
-    public void setDashboardId(Long dashboardId) {
-        this.dashboardId = dashboardId;
-    }
+	public void setAccessedBy(String accessedBy)
+	{
+		this.accessedBy = accessedBy;
+	}
+
+	public void setDashboardId(Long dashboardId)
+	{
+		this.dashboardId = dashboardId;
+	}
 }

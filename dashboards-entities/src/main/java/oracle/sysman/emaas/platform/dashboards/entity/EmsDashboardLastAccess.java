@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.entity;
 
 import java.io.Serializable;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,58 +18,67 @@ import org.eclipse.persistence.annotations.MultitenantType;
 import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 
 @Entity
-@NamedQueries({
-              @NamedQuery(name = "EmsDashboardLastAccess.findAll", query = "select o from EmsDashboardLastAccess o") })
+@NamedQueries({ @NamedQuery(name = "EmsDashboardLastAccess.findAll", query = "select o from EmsDashboardLastAccess o") })
 @Table(name = "EMS_DASHBOARD_LAST_ACCESS")
 @IdClass(EmsDashboardLastAccessPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsDashboardLastAccess implements Serializable {
-    private static final long serialVersionUID = -3829558525926721782L;
-    @Id
-    @Column(name = "ACCESSED_BY", nullable = false, length = 128)
-    private String accessedBy;
-    @Id
-    @Column(name = "DASHBOARD_ID", nullable = false)
-    private Long dashboardId;
-    //@Id
-    //@Column(name = "TENANT_ID", nullable = false, length = 32)
-    //private String tenantId;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "ACCESS_DATE", nullable = false)
-    private Date accessDate;
+public class EmsDashboardLastAccess implements Serializable
+{
+	private static final long serialVersionUID = -3829558525926721782L;
 
-    public EmsDashboardLastAccess() {
-    }
+	@Id
+	@Column(name = "ACCESSED_BY", nullable = false, length = 128)
+	private String accessedBy;
+	@Id
+	@Column(name = "DASHBOARD_ID", nullable = false)
+	private Long dashboardId;
+	//@Id
+	//@Column(name = "TENANT_ID", nullable = false, length = 32)
+	//private String tenantId;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ACCESS_DATE", nullable = false)
+	private Date accessDate;
 
-    public EmsDashboardLastAccess(Date accessDate, String accessedBy, Long dashboardId) {
-        this.accessDate = accessDate;
-        this.accessedBy = accessedBy;
-        this.dashboardId = dashboardId;
-    }
+	public EmsDashboardLastAccess()
+	{
+	}
 
-    public String getAccessedBy() {
-        return accessedBy;
-    }
+	public EmsDashboardLastAccess(Date accessDate, String accessedBy, Long dashboardId)
+	{
+		this.accessDate = accessDate;
+		this.accessedBy = accessedBy;
+		this.dashboardId = dashboardId;
+	}
 
-    public void setAccessedBy(String accessedBy) {
-        this.accessedBy = accessedBy;
-    }
+	public Date getAccessDate()
+	{
+		return accessDate;
+	}
 
-    public Date getAccessDate() {
-        return accessDate;
-    }
+	public String getAccessedBy()
+	{
+		return accessedBy;
+	}
 
-    public void setAccessDate(Date accessDate) {
-        this.accessDate = accessDate;
-    }
+	public Long getDashboardId()
+	{
+		return dashboardId;
+	}
 
-    public Long getDashboardId() {
-        return dashboardId;
-    }
+	public void setAccessDate(Date accessDate)
+	{
+		this.accessDate = accessDate;
+	}
 
-    public void setDashboardId(Long dashboardId) {
-        this.dashboardId = dashboardId;
-    }
+	public void setAccessedBy(String accessedBy)
+	{
+		this.accessedBy = accessedBy;
+	}
+
+	public void setDashboardId(Long dashboardId)
+	{
+		this.dashboardId = dashboardId;
+	}
 
 }
