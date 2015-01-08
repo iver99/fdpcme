@@ -115,11 +115,11 @@ role value for that section to represent the appropriate content type.
                                                         icons: {start: iconClass + ' demo-icon-font'}} ">
                                     </button-->
                                     <!-- /kooo -->
-                                    <button id="linksButton" class="oj-button-half-chrome demo-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" data-bind="ojComponent: {component:'ojButton', 
+                                    <button id="linksButton" class="oj-button-half-chrome demo-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" style="height:46px" data-bind="ojComponent: {component:'ojButton', 
                                             label: 'Links', 
                                             display: 'icons', 
-                                            icons: {start: 'dbs-nav-mapping-icon-24 demo-icon-font'}}, 
-                                            click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start dbs-nav-mapping-icon-24 demo-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
+                                            icons: {start: 'dbs-nav-mapping-icon-32 demo-icon-font'}}, 
+                                            click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start dbs-nav-mapping-icon-32 demo-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
 
 
                                     <!-- This is how to add a separator to the toolbar.  
@@ -146,11 +146,20 @@ role value for that section to represent the appropriate content type.
                             <div class="oj-sm-2 oj-col">
                                 <div class="oj-row" style="font-weight: bolder; font-size: medium;">Quick Links</div>
                                 <div class="oj-row" style="font-weight: bold">
-                                    <a data-bind="click: function() { window.open( navigationsPopupModel().homeLink );}">Dashboard Home</a>
+                                    <a data-bind="click: function() { window.open( navigationsPopupModel.homeLink );}">Dashboard Home</a>
                                 </div>
                                 <div class="oj-row" style="font-weight: bold">
-                                    <a data-bind="click: function() { window.open( navigationsPopupModel().dataVisualLink );}">Data Visual Analyzer Home</a>
+                                    <a data-bind="click: function() { window.open( navigationsPopupModel.logVisualLink );}">Log Visual Analyzer</a>
                                 </div>
+                                <div class="oj-row" style="font-weight: bold">
+                                    <a data-bind="click: function() { window.open( navigationsPopupModel.targetVisualLink );}">Target Visual Analyzer</a>
+                                </div>
+                                <div class="oj-row" style="font-weight: bold">
+                                    <a data-bind="click: function() { window.open( navigationsPopupModel.flexVisualLink );}">Flex Visual Analyzer</a>
+                                </div>   
+                                <div class="oj-row" style="font-weight: bold">
+                                    <a data-bind="click: function() { window.open( navigationsPopupModel.awrVisualLink );}">AWR Visual Analyzer</a>
+                                </div> 
                             </div>
                             <div class="oj-sm-1 oj-col links-icon">
                                 <div class = iconCircle>

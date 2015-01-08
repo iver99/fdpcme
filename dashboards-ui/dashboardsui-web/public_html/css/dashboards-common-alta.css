@@ -34,6 +34,7 @@ a:hover {
 }
 
 .dbs-nav-mapping-icon-24:before{content:url("images/compassIcon_24.png");}
+.dbs-nav-mapping-icon-32:before{content:url("images/compassIcon_32.png");}
 
 .loadingIndicator{
     position:fixed;

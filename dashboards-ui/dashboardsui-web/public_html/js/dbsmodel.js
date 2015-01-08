@@ -41,7 +41,11 @@ function(temp, tabmodel, oj, ko, $)
     function navigationsPopupModel() {
         var self = this;
         self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
-        self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        self.logVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        self.targetVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        self.flexVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        self.awrVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        
         self.favorites = ko.observableArray();
         self.recents = ko.observableArray();
         self.addFavorite = function(dashboard) {
