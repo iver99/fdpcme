@@ -31,16 +31,16 @@ public class DashboardManagerTest
 		String tenantId1 = "tenantId1";
 		String name = "dashboard " + System.currentTimeMillis();
 		dbd1.setName(name);
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		// change owner
 		dbd1.setOwner("AnotherUser");
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.updateDashboard(dbd1, tenantId1);
 
 		// dif user: can create dashboards with same name
 		// new dashboard default to current user
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName(name);
-		dbd2 = dm.saveOrUpdateDashboard(dbd2, tenantId1);
+		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
 		Assert.assertNotNull(dbd2.getDashboardId());
 
 		// post test
@@ -57,13 +57,13 @@ public class DashboardManagerTest
 		String tenantId2 = "tenantId2";
 		String name = "dashboard in testCreateDashboardSameNameDifTenant()" + System.currentTimeMillis();
 		dbd1.setName(name);
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		Assert.assertNotNull(dbd1);
 
 		// same dashboard names for different tenant
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName(name);
-		dbd2 = dm.saveOrUpdateDashboard(dbd2, tenantId2);
+		dbd2 = dm.saveNewDashboard(dbd2, tenantId2);
 		Assert.assertNotNull(dbd2);
 		Assert.assertEquals(dbd1.getName(), dbd2.getName());
 		Assert.assertNotEquals(dbd1, dbd2);
@@ -85,12 +85,12 @@ public class DashboardManagerTest
 			dbd1 = new Dashboard();
 			String name = "dashboard " + System.currentTimeMillis();
 			dbd1.setName(name);
-			dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+			dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 
 			// same user: can't create dashboards with same name
 			dbd2 = new Dashboard();
 			dbd2.setName(name);
-			dbd2 = dm.saveOrUpdateDashboard(dbd2, tenantId1);
+			dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
 			Assert.assertNull(dbd2.getDashboardId());
 		}
 		finally {
@@ -112,11 +112,21 @@ public class DashboardManagerTest
 
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId1 = "tenantId1";
-		dm.saveOrUpdateDashboard(dbd, tenantId1);
+		dm.saveNewDashboard(dbd, tenantId1);
 		Assert.assertNotNull(dbd.getDashboardId());
+
+		// create a dashboard with dashboard id specified
+		Dashboard dbd2 = new Dashboard();
+		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
+		dbd2.setType(1);
+		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
+		dm.saveNewDashboard(dbd2, tenantId1);
+		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
+		Assert.assertEquals(dbd2.getName(), queried.getName());
 
 		// post test
 		dm.deleteDashboard(dbd.getDashboardId(), true, tenantId1);
+		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 	}
 
 	@Test
@@ -138,7 +148,7 @@ public class DashboardManagerTest
 
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId1 = "tenantId1";
-		dm.saveOrUpdateDashboard(dbd, tenantId1);
+		dm.saveNewDashboard(dbd, tenantId1);
 		dm.updateLastAccessDate(dbd.getDashboardId(), tenantId1);
 
 		Dashboard queried = dm.getDashboardById(dbd.getDashboardId(), tenantId1);
@@ -219,7 +229,7 @@ public class DashboardManagerTest
 		tile1.removeParameter(t1p1.getName());
 		// add new tile parameter to tile1
 		TileParam t1p3 = createParameterForTile(tile1);
-		dm.saveOrUpdateDashboard(dbd, tenantId1);
+		dm.updateDashboard(dbd, tenantId1);
 
 		// check after update
 		queried = dm.getDashboardById(dbd.getDashboardId(), tenantId1);
@@ -248,7 +258,7 @@ public class DashboardManagerTest
 		dbd.getTileList().set(0, tile2);
 		dbd.getTileList().set(1, tile1);
 		tile3 = createTileForDashboard(dbd);
-		dm.saveOrUpdateDashboard(dbd, tenantId1);
+		dm.updateDashboard(dbd, tenantId1);
 		queried = dm.getDashboardById(dbd.getDashboardId(), tenantId1);
 		queriedTiles = queried.getTileList();
 		Assert.assertEquals(queriedTiles.get(0).getTitle(), tile2.getTitle());
@@ -269,7 +279,7 @@ public class DashboardManagerTest
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
 		dbd1.setDescription("dashboard 1");
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 
 		// soft delete and check
 		dm.deleteDashboard(dbd1.getDashboardId(), false, tenantId1);
@@ -280,7 +290,7 @@ public class DashboardManagerTest
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName(name1);
 		dbd2.setDescription("dashboard 2");
-		dbd2 = dm.saveOrUpdateDashboard(dbd2, tenantId1);
+		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
 		queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
 		Assert.assertNotNull(queried.getDashboardId());
@@ -289,7 +299,7 @@ public class DashboardManagerTest
 		Dashboard dbd3 = new Dashboard();
 		dbd3.setName(name1);
 		dbd3.setDescription("dashboard 3");
-		dm.saveOrUpdateDashboard(dbd3, tenantId2);
+		dm.saveNewDashboard(dbd3, tenantId2);
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
 
@@ -315,7 +325,7 @@ public class DashboardManagerTest
 		String tenantId1 = "tenantId1";
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 
 		List<Dashboard> dbList = dm.getFavoriteDashboards(tenantId1);
 		int originSize = dbList == null ? 0 : dbList.size();
@@ -333,7 +343,7 @@ public class DashboardManagerTest
 		String name2 = "name2" + System.currentTimeMillis();
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName(name2);
-		dbd2 = dm.saveOrUpdateDashboard(dbd2, tenantId1);
+		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
 		dm.addFavoriteDashboard(dbd2.getDashboardId(), tenantId1);
 		dbList = dm.getFavoriteDashboards(tenantId1);
 		originSize = dbList == null ? 0 : dbList.size();
@@ -359,7 +369,7 @@ public class DashboardManagerTest
 
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		queried = dm.getDashboardByName(name1, tenantId1);
 		Assert.assertNotNull(queried);
 
@@ -374,9 +384,9 @@ public class DashboardManagerTest
 		// can't query dashboard owned by others
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName(name1);
-		dbd2 = dm.saveOrUpdateDashboard(dbd2, tenantId1);
+		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
 		dbd2.setOwner("other user");
-		dbd2 = dm.saveOrUpdateDashboard(dbd2, tenantId1);
+		dbd2 = dm.updateDashboard(dbd2, tenantId1);
 		queried = dm.getDashboardByName(name1, tenantId1);
 		Assert.assertNull(queried);
 
@@ -393,7 +403,7 @@ public class DashboardManagerTest
 		String tenantId1 = "tenantId1";
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
 
@@ -413,7 +423,7 @@ public class DashboardManagerTest
 		String tenantId1 = "tenantId1";
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNull(lastAccess);
 		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
@@ -446,19 +456,19 @@ public class DashboardManagerTest
 
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName("key1" + System.currentTimeMillis());
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenant1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenant1);
 
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("name" + System.currentTimeMillis());
 		dbd2.setDescription("key2");
-		dbd2 = dm.saveOrUpdateDashboard(dbd2, tenant1);
+		dbd2 = dm.saveNewDashboard(dbd2, tenant1);
 
 		Dashboard dbd3 = new Dashboard();
 		dbd3.setName("name" + System.currentTimeMillis());
 		dbd3.setDescription("key2");
-		dbd3 = dm.saveOrUpdateDashboard(dbd3, tenant1);
+		dbd3 = dm.saveNewDashboard(dbd3, tenant1);
 		dbd3.setOwner("key3");
-		dbd3 = dm.saveOrUpdateDashboard(dbd3, tenant1);
+		dbd3 = dm.updateDashboard(dbd3, tenant1);
 		dbList = dm.listDashboards(null, null, tenant1, false);
 		int allSize = dbList == null ? 0 : dbList.size();
 		Assert.assertEquals(allSize, originSize + 3);
@@ -469,23 +479,23 @@ public class DashboardManagerTest
 
 		Dashboard dbd4 = new Dashboard();
 		dbd4.setName("KEY1" + System.currentTimeMillis());
-		dbd4 = dm.saveOrUpdateDashboard(dbd4, tenant1);
+		dbd4 = dm.saveNewDashboard(dbd4, tenant1);
 
 		Dashboard dbd5 = new Dashboard();
 		dbd5.setName("name" + System.currentTimeMillis());
 		dbd5.setDescription("KEY2");
-		dbd5 = dm.saveOrUpdateDashboard(dbd5, tenant1);
+		dbd5 = dm.saveNewDashboard(dbd5, tenant1);
 
 		Dashboard dbd6 = new Dashboard();
 		dbd6.setName("name" + System.currentTimeMillis());
-		dbd6 = dm.saveOrUpdateDashboard(dbd6, tenant1);
+		dbd6 = dm.saveNewDashboard(dbd6, tenant1);
 		dbd6.setOwner("KEY");
-		dbd6 = dm.saveOrUpdateDashboard(dbd6, tenant1);
+		dbd6 = dm.updateDashboard(dbd6, tenant1);
 
 		// a dashboard in different tenant. shouldn't be queried
 		Dashboard dbd7 = new Dashboard();
 		dbd7.setName("key7" + System.currentTimeMillis());
-		dbd7 = dm.saveOrUpdateDashboard(dbd7, tenant2);
+		dbd7 = dm.saveNewDashboard(dbd7, tenant2);
 
 		// query by key word, case in-sensitive
 		dbList = dm.listDashboards("key", null, null, tenant1, true);
@@ -536,7 +546,7 @@ public class DashboardManagerTest
 		String tenantId1 = "tenantId1";
 		String name = "dashboard in testCreateDashboardSameNameDifTenant()" + System.currentTimeMillis();
 		dbd1.setName(name);
-		dbd1 = dm.saveOrUpdateDashboard(dbd1, tenantId1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 
 		dm.setDashboardIncludeTimeControl(dbd1.getDashboardId(), true, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
