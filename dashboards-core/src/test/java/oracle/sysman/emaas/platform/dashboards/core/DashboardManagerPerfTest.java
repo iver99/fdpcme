@@ -18,7 +18,7 @@ import org.testng.annotations.Test;
  */
 public class DashboardManagerPerfTest
 {
-	private static final long NUM_DASHBOARDS_FOR_PERF_TEST = 100000L;
+	private static final long NUM_DASHBOARDS_FOR_PERF_TEST = 10000L;
 
 	private final String tenantId = "tenant1";
 	private Long dashboard1stId;
@@ -66,7 +66,7 @@ public class DashboardManagerPerfTest
 	}
 
 	@Test
-	public void test2stQueryDashboardById() throws DashboardException
+	public void test2ndQueryDashboardById() throws DashboardException
 	{
 		try {
 			long start = System.currentTimeMillis();
@@ -84,7 +84,24 @@ public class DashboardManagerPerfTest
 	}
 
 	@Test
-	public void test3rdQueryDashboardByString() throws DashboardException
+	public void test3rdQueryDashboardByIdMultiThread()
+	{
+		try {
+			DashboardManagerTestMockup.executeRepeatedly(100, 10, new Runnable() {
+				@Override
+				public void run()
+				{
+					dm.getDashboardById(dashboards.get(dashboards.size() - 1).getDashboardId(), tenantId);
+				}
+			}, null, null);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void test4thQueryDashboardByString() throws DashboardException
 	{
 		try {
 			long start = System.currentTimeMillis();
@@ -98,22 +115,12 @@ public class DashboardManagerPerfTest
 		}
 	}
 
-	/*
-	 * Use this method to see how much time is needed to query a search from 1 million searches.
-	 * Several manual steps are needed before run this method
-	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
-	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
-	 * 2. query your unit test database and change the searchId, searchName and folderId in the method, as
-	 * it's found the JPA cache (or database cache?) have extreme impact on the result
-	 * 3. un-comment the @Test and run with JUnit
-	 */
 	@Test
-	public void test4thSimgleQueryPerformance() throws DashboardException
+	public void test5thSimgleQueryPerformance() throws DashboardException
 	{
 		Long dashboardId = 999L;
 		String dashboardName = "dashboard updated";
 		long start = System.currentTimeMillis();
-		//sm.getSearch(search.getId());
 		dm.getDashboardById(dashboardId, tenantId);
 		long end = System.currentTimeMillis();
 		System.out.println("Time spent to query one dashboard by ID from " + NUM_DASHBOARDS_FOR_PERF_TEST + " dashboards: "
@@ -122,12 +129,12 @@ public class DashboardManagerPerfTest
 		start = System.currentTimeMillis();
 		dm.getDashboardByName(dashboardName, tenantId);
 		end = System.currentTimeMillis();
-		System.out.println("Time spent to query one dashboard by name from " + NUM_DASHBOARDS_FOR_PERF_TEST + " searches: "
+		System.out.println("Time spent to query one dashboard by name from " + NUM_DASHBOARDS_FOR_PERF_TEST + " dashboards: "
 				+ (end - start) + "ms");
 	}
 
 	@Test
-	public void test5thUpdateDashboard() throws DashboardException, InterruptedException
+	public void test6thUpdateDashboard() throws DashboardException, InterruptedException
 	{
 		try {
 			for (int i = 0; i < dashboards.size(); i++) {
@@ -149,17 +156,8 @@ public class DashboardManagerPerfTest
 		}
 	}
 
-	/*
-	 * Use this method to see how much time is needed to query a search from 1 million searches.
-	 * Several manual steps are needed before run this method
-	 * Note: (!!!!!!!!IMPORTANT!!!!!!!!)
-	 * 1. use testCreateSearchPerformance() to create 1 million searches before running into this method
-	 * 2. query your unit test database and change the searchId, searchName and folderId in the method, as
-	 * it's found the JPA cache (or database cache?) have extreme impact on the result
-	 * 3. un-comment the @Test and run with JUnit
-	 */
 	@Test
-	public void test6thDeletePerformance() throws DashboardException
+	public void test7thDeletePerformance() throws DashboardException
 	{
 		try {
 			long start = System.currentTimeMillis();
@@ -168,7 +166,7 @@ public class DashboardManagerPerfTest
 				dm.deleteDashboard(dashboards.get(i).getDashboardId(), tenantId);
 			}
 			System.out.println("Time to delete " + size + " dashboards is " + (System.currentTimeMillis() - start) + "ms");
-			System.out.println("Time to delete one dashboard averagely is " + (System.currentTimeMillis() - start)
+			System.out.println("Average time to delete one dashboard is " + (System.currentTimeMillis() - start)
 					/ Double.valueOf(size) + "ms");
 
 			// hard deletion
