@@ -158,7 +158,11 @@ require(['knockout',
                 viewModel:{require:'../dependencies/widgets/iFrame/js/widget-iframe'},
                 template:{require:'text!../dependencies/widgets/iFrame/widget-iframe.html'}
             }); 
-            
+ 
+            ko.components.register("DF_V1_WIDGET_ONEPAGE",{
+                viewModel:{require:'../dependencies/widgets/onepage/js/onepageModel'},
+                template:{require:'text!../dependencies/widgets/onepage/onepageTemplate.html'}
+            });             
 //            ko.components.register("ita-widget",{
 //                viewModel:{require:'http://slc06xat.us.oracle.com:7001/ita-tool/widgets/js/controller/qdg-component.js'},
 //                template:{require:'text!http://slc06xat.us.oracle.com:7001/ita-tool/widgets/html/qdg-component.html'}

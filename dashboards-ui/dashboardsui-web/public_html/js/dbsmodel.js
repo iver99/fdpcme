@@ -94,6 +94,14 @@ function(temp, tabmodel, oj, ko, $)
             $( "#dbs_cfmDialog" ).ojDialog( "close" );
         };
     }; 
+
+    function comingsoonDialogModel() {
+        var self = this;
+       
+        self.close = function () {
+            $( "#dbs_comingsoonDialog" ).ojDialog( "close" );
+        };
+    };
     
     function DashboardModel(id,name,description,includeTimeRangeFilter,widgets){
         var self = this;
@@ -107,7 +115,22 @@ function(temp, tabmodel, oj, ko, $)
         self.currentPageNum = 1;
         self.openDashboard = function(){
             //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
-            window.open(self.getLink());
+            if ("onePage"===self.type){
+                if (widgets instanceof Array && widgets.length===1 && 
+                        widgets[0].WIDGET_KOC_NAME &&
+                        widgets[0].WIDGET_VIEWMODEL &&
+                        widgets[0].WIDGET_TEMPLATE &&
+                        widgets[0].PROVIDER_NAME &&
+                        widgets[0].PROVIDER_VERSION &&
+                        widgets[0].PROVIDER_ASSET_ROOT
+                        ){
+                    window.open(self.getLink());
+                }else{
+                    $( "#dbs_comingsoonDialog" ).ojDialog( "open" );
+                }              
+            }else{
+                window.open(self.getLink());
+            }
         };
         self.getLink = function() {
             return document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId=' + self.id;
@@ -121,56 +144,52 @@ function(temp, tabmodel, oj, ko, $)
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
         self.navigationsPopupModel = new navigationsPopupModel();
+        self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.dbsArray = [];
         self.filterArray = [];
         self.did = 0;
         
-       var dsb5 = new DashboardModel(5, 'Application', 
-            "A dashboard including 4 widgets. Each widget shows a bar or line chart with random data and is senstive with time range",false, 
-            [{"title":"Application Response Time 1","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":1},{"title":"Security Incidents 1","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Security Incidents 2","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":1},{"title":"Security Histogram 4","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":4}]);
-        
-        var dsb4 = new DashboardModel(4, 'Refresh Demo', 
-        "A dashboard to demonstrate widget refresh by time range change",true,
-        [{"title":"Database Diagnostics","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Security Incidents","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":2},{"title":"Top SQL","WIDGET_KOC_NAME":"demo-chart-widget","TILE_WIDTH":4}]);
-       
-        var dsb2 = new DashboardModel(2, 'Dashboard Events', 
-        'A dashboard to demonstrate widget refresh',false, 
-        [{"title":"Publisher","WIDGET_KOC_NAME":"demo-publisher-widget","TILE_WIDTH":2},{"title":"Subscriber 1","WIDGET_KOC_NAME":"demo-subscriber-widget","TILE_WIDTH":1},{"title":"Subscriber 2","WIDGET_KOC_NAME":"demo-subscriber-widget","TILE_WIDTH":1}]);
-        
-        var dsb3 = new DashboardModel(3, 'Log and Target Data Demo', 
-        "Dashboard includes both LA widgets and TA widgets", true,
-        [{"title":"Logs by source type","WIDGET_KOC_NAME":"demo-la-widget","TILE_WIDTH":2},{"title":"Targets by Type & status","WIDGET_KOC_NAME":"demo-ta-widget","TILE_WIDTH":2}]);       
-
-        var dsb0 = new DashboardModel(0, 'Database Health', 
-        "Dashboard of DB Analytics", false,
-        [{"title":"Home","WIDGET_KOC_NAME":"DF_V1_IFRAME","TILE_WIDTH":2,"PROVIDER_NAME":"DB Analytics","PROVIDER_VERSION":"0.1","PROVIDER_ASSET_ROOT":"home"}]);       
-
-        var dsb1 = new DashboardModel(1, 'Application Performance', 
-        "Dashboard of Application Performance Manager Cloud Service", false,
-        [{"title":"Home","WIDGET_KOC_NAME":"DF_V1_IFRAME","TILE_WIDTH":2,"PROVIDER_NAME":"Application Performance Manager Cloud Service","PROVIDER_VERSION":"0.1","PROVIDER_ASSET_ROOT":"home"}]);       
-
-        dsb0.image = dbaasScreenShot();
-        dsb1.image = apmcsScreenShot();  
-        dsb2.image = middlewareScreenShot();
-        dsb3.image = serverErrorScreenShot();
-        dsb4.image = applicationScreenShot();
-        dsb0.type = "onePage";
-        dsb5.image = databaseScreenShot();
-        dsb1.type = "onePage";
-
-        self.dbsArray.push(dsb0);
-        self.dbsArray.push(dsb1);
-        self.dbsArray.push(dsb2);
-        self.dbsArray.push(dsb3);
-        self.dbsArray.push(dsb4);
-        self.dbsArray.push(dsb5);       
-        self.did=6;
+        var onepageDsbs = [{"name":"Database Performance Analytics",
+                               "screenshot":"images/dbaas_histogram.png"},
+                           {"name":"Database Resource Planning",
+                               "screenshot":"images/resourcePlanning_histogram.png"},
+                           {"name":"End User Analytics",
+                               "screenshot":"images/endUserAnalytics_histogram.png"},
+                           {"name":" Big Data Analytics",
+                               "screenshot":"images/bda_histogram.png"},
+                           {"name":"Application Performance Monitoring",
+                               "screenshot":"images/apmcs_histogram.png"},
+                           {"name":"Security Monitoring and Analytics",
+                               "screenshot":"images/securityEventAnalytics_histogram.png"},
+                           {"name":"Middleware Analytics",
+                               "screenshot":"images/mwAnalytics_histogram.png"},
+                           {"name":"Event Analytics",
+                               "screenshot":"images/eventAnalytics_histogram.png"}];
+        for(var i=0;i<8;i++){
+            var dsb = new DashboardModel(i,onepageDsbs[i].name,onepageDsbs[i].name,false,[{"title":"Home","WIDGET_KOC_NAME":"DF_V1_WIDGET_ONEPAGE","TILE_WIDTH":1}]);
+            dsb.image = onepageDsbs[i].screenshot;
+            dsb.type="onePage";
+            self.dbsArray.push(dsb);
+        }               
+        var dsb = new DashboardModel(8,"AWRWarehouse","AWRWarehouse",false,[
+            {"title":"Home",
+                "WIDGET_KOC_NAME":"DF_V1_WIDGET_ONEPAGE",
+                "WIDGET_VIEWMODEL":"dependencies/widgets/onepage/js/onepageModel",
+                "WIDGET_TEMPLATE":"dependencies/widgets/onepage/onepageTemplate.html",
+                "PROVIDER_NAME":"AWRWarehouse",
+                "PROVIDER_VERSION":"0.1",
+                "PROVIDER_ASSET_ROOT":"home",                
+                "TILE_WIDTH":1}]);
+        dsb.image = "images/awrWH_histogram.png";
+        dsb.type="onePage";
+        self.dbsArray.push(dsb);        
+        self.did=onepageDsbs.length;
         
 //        self.navigationsPopupModel.addFavorite(dsb0);
 //        self.navigationsPopupModel.addFavorite(dsb5);
-        self.navigationsPopupModel.addRecent(dsb0);
-        self.navigationsPopupModel.addRecent(dsb2);
+        self.navigationsPopupModel.addRecent(self.dbsArray[0]);
+        self.navigationsPopupModel.addRecent(self.dbsArray[1]);
         /*
         for (self.did = 7; self.did < 100000; self.did++)
         {

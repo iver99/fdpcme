@@ -166,7 +166,8 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
         }else if ("IT ANALYTICS"===providerName){
             return "http://slc06xat.us.oracle.com:7001/ita-tool";
         }else if ("Sample Provider"===providerName) {
-            return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
+//            return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
+            return "http://jet.us.oracle.com";
         }
 //        else if ("Log Analytics"===providerName) {
 //            return "http://localhost:8383/emcpdfui/";
