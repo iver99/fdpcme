@@ -150,16 +150,16 @@ public class DashboardManager
 			return;
 		}
 
-		EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
-		if (edla != null) {
-			dsf.removeEmsDashboardLastAccess(edla);
-		}
 		removeFavoriteDashboard(dashboardId, tenantId);
 		if (!permanent) {
 			ed.setDeleted(dashboardId);
 			dsf.mergeEmsDashboard(ed);
 		}
 		else {
+			EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
+			if (edla != null) {
+				dsf.removeEmsDashboardLastAccess(edla);
+			}
 			dsf.removeEmsDashboard(ed);
 		}
 	}
@@ -195,6 +195,7 @@ public class DashboardManager
 		if (isDeleted != null && isDeleted.booleanValue()) {
 			return null;
 		}
+		updateLastAccessDate(dashboardId, tenantId);
 		return Dashboard.valueOf(ed);
 	}
 
@@ -357,10 +358,12 @@ public class DashboardManager
 	 */
 	public List<Dashboard> listDashboards(String queryString, Integer page, Integer pageSize, String tenantId, boolean ic)
 	{
-		String jpql = "select p from EmsDashboard p";
+		StringBuilder sb = new StringBuilder(
+				"select p from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy ");
 		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String currentUser = AppContext.getInstance().getCurrentUser();
+		paramMap.put("accessBy", currentUser);
 		if (queryString != null && !"".equals(queryString)) {
-			StringBuilder sb = new StringBuilder();
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
 				sb.append(" where (p.name LIKE :name");
@@ -370,6 +373,7 @@ public class DashboardManager
 				sb.append(" where (lower(p.name) LIKE :name");
 				paramMap.put("name", "%" + queryString.toLowerCase(locale) + "%");
 			}
+
 			if (!ic) {
 				sb.append(" or p.description like :description");
 				paramMap.put("description", "%" + queryString + "%");
@@ -378,12 +382,21 @@ public class DashboardManager
 				sb.append(" or lower(p.description) like :description");
 				paramMap.put("description", "%" + queryString.toLowerCase(locale) + "%");
 			}
+
+			if (!ic) {
+				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where t.title like :tileTitle ) ");
+				paramMap.put("tileTitle", "%" + queryString + "%");
+			}
+			else {
+				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where lower(t.title) like :tileTitle ) ");
+				paramMap.put("tileTitle", "%" + queryString.toLowerCase(locale) + "%");
+			}
 			sb.append(" or lower(p.owner) = :owner)");
 			paramMap.put("owner", queryString.toLowerCase(locale));
-			sb.append(" and p.deleted = 0");
-			jpql += sb.toString();
+			sb.append(" and p.deleted = 0 ");
 		}
-		jpql += " order by p.dashboardId asc";
+		sb.append(" order by CASE WHEN lae.accessDate IS NULL THEN 1 ELSE 0 END, lae.accessDate DESC, p.dashboardId DESC");
+		String jpql = sb.toString();
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();
 		Query query = em.createQuery(jpql);
@@ -493,7 +506,7 @@ public class DashboardManager
 			ed.setCreationDate(dbd.getCreationDate());
 			ed.setOwner(currentUser);
 			dsf.persistEmsDashboard(ed);
-			dsf.commitTransaction();
+			updateLastAccessDate(ed.getDashboardId(), tenantId);
 			return Dashboard.valueOf(ed, dbd);
 		}
 		finally {

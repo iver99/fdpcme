@@ -424,29 +424,31 @@ public class DashboardManagerTest
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
-		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
-		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNotNull(lastAccess);
+		Date lastAccess1 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
+		Assert.assertNotNull(lastAccess1);
+		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
+		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
+		Date lastAccess2 = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
+		Assert.assertNotNull(lastAccess2);
 		Thread.sleep(2000);
-		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
+		//		dm.updateLastAccessDate(dbd1.getDashboardId(), tenantId1);
+		dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Date newLastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertTrue(newLastAccess.getTime() >= lastAccess.getTime() + 1900);
+		Assert.assertTrue(newLastAccess.getTime() >= lastAccess2.getTime() + 1900);
 
-		// delete dashboard
+		// delete dashboard/soft deletion
 		dm.deleteDashboard(dbd1.getDashboardId(), tenantId1);
-		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(lastAccess);
+		Date lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
+		Assert.assertNotNull(lastAccess);
 
-		// delete dashboard
+		// delete dashboard/hard deletion
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNull(lastAccess);
 	}
 
 	@Test
-	public void testListDashboard() throws DashboardException
+	public void testListDashboard() throws DashboardException, InterruptedException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenant1 = "tenant1";
@@ -492,17 +494,29 @@ public class DashboardManagerTest
 		dbd6.setOwner("KEY");
 		dbd6 = dm.updateDashboard(dbd6, tenant1);
 
-		// a dashboard in different tenant. shouldn't be queried
 		Dashboard dbd7 = new Dashboard();
-		dbd7.setName("key7" + System.currentTimeMillis());
-		dbd7 = dm.saveNewDashboard(dbd7, tenant2);
+		dbd7.setName("name" + System.currentTimeMillis());
+		Tile db7tile1 = createTileForDashboard(dbd7);
+		db7tile1.setTitle("key" + System.currentTimeMillis());
+		dbd7 = dm.saveNewDashboard(dbd7, tenant1);
+
+		Dashboard dbd8 = new Dashboard();
+		dbd8.setName("name" + System.currentTimeMillis());
+		Tile db8tile1 = createTileForDashboard(dbd8);
+		db8tile1.setTitle("KEY" + System.currentTimeMillis());
+		dbd8 = dm.saveNewDashboard(dbd8, tenant1);
+
+		// a dashboard in different tenant. shouldn't be queried
+		Dashboard dbd9 = new Dashboard();
+		dbd9.setName("key7" + System.currentTimeMillis());
+		dbd9 = dm.saveNewDashboard(dbd9, tenant2);
 
 		// query by key word, case in-sensitive
 		dbList = dm.listDashboards("key", null, null, tenant1, true);
 		int icSize = dbList == null ? 0 : dbList.size();
-		Assert.assertEquals(icSize, originSize + 6); // dbd7 not in the returned list
+		Assert.assertEquals(icSize, originSize + 8); // dbd9 not in the returned list
 		for (Dashboard dbd : dbList) {
-			if (dbd.getName().equals(dbd7.getName())) {
+			if (dbd.getName().equals(dbd9.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned from other tenant different from current tenant");
 			}
 		}
@@ -510,19 +524,19 @@ public class DashboardManagerTest
 		// query all
 		dbList = dm.listAllDashboards(tenant1);
 		allSize = dbList == null ? 0 : dbList.size();
-		Assert.assertEquals(allSize, originSize + 6);
+		Assert.assertEquals(allSize, originSize + 8);
 		dbList = dm.listDashboards(null, null, tenant1, true);
 		allSize = dbList == null ? 0 : dbList.size();
-		Assert.assertEquals(allSize, originSize + 6);
+		Assert.assertEquals(allSize, originSize + 8);
 
-		// query by page size/number
+		// query by page size/number. ===Need to consider that last accessed one comes first===
 		dbList = dm.listDashboards("key", 1, 3, tenant1, true);
-		Assert.assertEquals(dbList.get(0).getDashboardId(), dbd1.getDashboardId());
+		Assert.assertEquals(dbList.get(0).getDashboardId(), dbd8.getDashboardId());
 		Assert.assertEquals(3, dbList.size());
 
 		// query by page size/number
 		dbList = dm.listDashboards("key", 2, 2, tenant1, true);
-		Assert.assertEquals(dbList.get(0).getDashboardId(), dbd3.getDashboardId());
+		Assert.assertEquals(dbList.get(0).getDashboardId(), dbd6.getDashboardId());
 
 		// query by page size/number
 		dbList = dm.listDashboards("key", Integer.MAX_VALUE, 2, tenant1, true);
@@ -535,7 +549,9 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd4.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd5.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd6.getDashboardId(), true, tenant1);
-		dm.deleteDashboard(dbd7.getDashboardId(), true, tenant2);
+		dm.deleteDashboard(dbd7.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd8.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd9.getDashboardId(), true, tenant2);
 	}
 
 	@Test
