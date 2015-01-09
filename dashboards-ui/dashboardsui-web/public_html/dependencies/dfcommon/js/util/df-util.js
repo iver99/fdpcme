@@ -182,31 +182,49 @@ define(['knockout',
                         }
                     }
                 };
-                
-                $.ajax({
-                    url: 'data/servicemanager.json',
-                    success: function(data, textStatus) {
-                        if (data.serviceUrls && data.serviceUrls.length > 0) {
-                            for (i = 0; i < data.serviceUrls.length; i++) {
-                                var serviceUrl = data.serviceUrls[i]+'/instances';
-                                $.ajax({
-                                    url: serviceUrl,
-                                    success: function(data, textStatus) {
-                                        fetchServiceQuickLinks(data);
-                                    },
-                                    error: function(xhr, textStatus, errorThrown){
-                                        console.log('Failed to get service instances by URL: '+serviceUrl);
-                                    },
-                                    async: false
-                                });
-                            }
+                $.ajaxSettings.async = false;
+                $.getJSON('data/servicemanager.json', function(data) {
+                    if (data.serviceUrls && data.serviceUrls.length > 0) {
+                        for (i = 0; i < data.serviceUrls.length; i++) {
+                            var serviceUrl = data.serviceUrls[i]+'/instances';
+                            $.ajax({
+                                url: serviceUrl,
+                                success: function(data, textStatus) {
+                                    fetchServiceQuickLinks(data);
+                                },
+                                error: function(xhr, textStatus, errorThrown){
+                                    console.log('Failed to get service instances by URL: '+serviceUrl);
+                                },
+                                async: false
+                            });
                         }
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Failed to get service manager configurations.');
-                    },
-                    async: false
+                    }                    
                 });
+                $.ajaxSettings.async = true;
+//                $.ajax({
+//                    url: 'data/servicemanager.json',
+//                    success: function(data, textStatus) {
+//                        if (data.serviceUrls && data.serviceUrls.length > 0) {
+//                            for (i = 0; i < data.serviceUrls.length; i++) {
+//                                var serviceUrl = data.serviceUrls[i]+'/instances';
+//                                $.ajax({
+//                                    url: serviceUrl,
+//                                    success: function(data, textStatus) {
+//                                        fetchServiceQuickLinks(data);
+//                                    },
+//                                    error: function(xhr, textStatus, errorThrown){
+//                                        console.log('Failed to get service instances by URL: '+serviceUrl);
+//                                    },
+//                                    async: false
+//                                });
+//                            }
+//                        }
+//                    },
+//                    error: function(xhr, textStatus, errorThrown){
+//                        console.log('Failed to get service manager configurations.');
+//                    },
+//                    async: false
+//                });
                 
                 for (i = 0; i < quickLinksFromDashboard.length; i++) {
                     quickLinks.push(quickLinksFromDashboard[i]);
