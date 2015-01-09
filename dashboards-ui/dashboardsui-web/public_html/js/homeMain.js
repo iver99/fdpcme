@@ -255,8 +255,10 @@ function childMessageListener(builderData) {
 function navigationsModelCallBack() {
     //console.log("test:"+dashboardsViewModle.getNavigationsModel().homeLink);
     var _model = dashboardsViewModle.getNavigationsModel();
-    return {'homeLink' : _model.homeLink,
-            'dataVisualLink': _model.dataVisualLink,
+    return {
+//            'homeLink' : _model.homeLink,
+//            'dataVisualLink': _model.dataVisualLink,
+            'quickLinks': _model.quickLinks(),
             'favorites': _model.favorites(),
             'recents': _model.recents()};
 };

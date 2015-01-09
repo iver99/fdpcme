@@ -15,11 +15,12 @@ define([
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
+    'dependencies/dfcommon/js/util/df-util.js',
     'ojs/ojknockout', 
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(temp, tabmodel, oj, ko, $)
+function(temp, tabmodel, oj, ko, $, dfu)
 {
     var RECENT_MAX_SIZE = 10;
     
@@ -41,11 +42,8 @@ function(temp, tabmodel, oj, ko, $)
     function navigationsPopupModel() {
         var self = this;
         self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
-        self.logVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
-        self.targetVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
-        self.flexVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
-        self.awrVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
-        
+        self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        self.quickLinks = ko.observableArray(dfu.discoverQuickLinks());
         self.favorites = ko.observableArray();
         self.recents = ko.observableArray();
         self.addFavorite = function(dashboard) {
