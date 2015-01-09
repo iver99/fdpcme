@@ -33,7 +33,7 @@ public class DashboardManager
 
 	/**
 	 * Returns the singleton instance for dashboard manager
-	 * 
+	 *
 	 * @return
 	 */
 	public static DashboardManager getInstance()
@@ -47,7 +47,7 @@ public class DashboardManager
 
 	/**
 	 * Adds a dashboard as favorite
-	 * 
+	 *
 	 * @param dashboardId
 	 * @param tenantId
 	 */
@@ -115,7 +115,7 @@ public class DashboardManager
 	//				}
 	//			}
 	//		}
-	//		
+	//
 	//		for (Tile tile: tiles) {
 	//			EmsDashboardTile edt = null;
 	//			if (!rows.containsKey(tile)) {
@@ -133,7 +133,7 @@ public class DashboardManager
 
 	/**
 	 * Delete a dashboard specified by dashboard id for given tenant.
-	 * 
+	 *
 	 * @param dashboardId
 	 *            id for the dashboard
 	 * @param permanent
@@ -150,16 +150,16 @@ public class DashboardManager
 			return;
 		}
 
-		EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
-		if (edla != null) {
-			dsf.removeEmsDashboardLastAccess(edla);
-		}
 		removeFavoriteDashboard(dashboardId, tenantId);
 		if (!permanent) {
 			ed.setDeleted(dashboardId);
 			dsf.mergeEmsDashboard(ed);
 		}
 		else {
+			EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
+			if (edla != null) {
+				dsf.removeEmsDashboardLastAccess(edla);
+			}
 			dsf.removeEmsDashboard(ed);
 		}
 	}
@@ -177,7 +177,7 @@ public class DashboardManager
 
 	/**
 	 * Returns dashboard instance by specifying the id
-	 * 
+	 *
 	 * @param dashboardId
 	 * @return
 	 */
@@ -195,6 +195,7 @@ public class DashboardManager
 		if (isDeleted != null && isDeleted.booleanValue()) {
 			return null;
 		}
+		updateLastAccessDate(dashboardId, tenantId);
 		return Dashboard.valueOf(ed);
 	}
 
@@ -233,7 +234,7 @@ public class DashboardManager
 
 	/**
 	 * Returns a list of all favorite dashboards for current user
-	 * 
+	 *
 	 * @param tenantId
 	 * @return
 	 */
@@ -264,7 +265,7 @@ public class DashboardManager
 
 	/**
 	 * Retrieves last access for specified dashboard
-	 * 
+	 *
 	 * @param dashboardId
 	 * @param tenantId
 	 * @return
@@ -296,7 +297,7 @@ public class DashboardManager
 
 	/**
 	 * Retrieves last access date for specified dashboard
-	 * 
+	 *
 	 * @param dashboardId
 	 * @param tenantId
 	 * @return
@@ -312,7 +313,7 @@ public class DashboardManager
 
 	/**
 	 * Returns all dashboards
-	 * 
+	 *
 	 * @param tenantId
 	 * @return
 	 */
@@ -329,7 +330,7 @@ public class DashboardManager
 
 	/**
 	 * Returns dashboards for specified page with given page size
-	 * 
+	 *
 	 * @param page
 	 *            number to indicate page number, started from 1
 	 * @param pageSize
@@ -345,7 +346,7 @@ public class DashboardManager
 
 	/**
 	 * Returns dashboards for specified query string, by providing page number and page size
-	 * 
+	 *
 	 * @param queryString
 	 * @param page
 	 *            number to indicate page index, started from 1
@@ -357,10 +358,12 @@ public class DashboardManager
 	 */
 	public List<Dashboard> listDashboards(String queryString, Integer page, Integer pageSize, String tenantId, boolean ic)
 	{
-		String jpql = "select p from EmsDashboard p";
+		StringBuilder sb = new StringBuilder(
+				"select p from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy ");
 		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String currentUser = AppContext.getInstance().getCurrentUser();
+		paramMap.put("accessBy", currentUser);
 		if (queryString != null && !"".equals(queryString)) {
-			StringBuilder sb = new StringBuilder();
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
 				sb.append(" where (p.name LIKE :name");
@@ -370,6 +373,7 @@ public class DashboardManager
 				sb.append(" where (lower(p.name) LIKE :name");
 				paramMap.put("name", "%" + queryString.toLowerCase(locale) + "%");
 			}
+
 			if (!ic) {
 				sb.append(" or p.description like :description");
 				paramMap.put("description", "%" + queryString + "%");
@@ -378,12 +382,21 @@ public class DashboardManager
 				sb.append(" or lower(p.description) like :description");
 				paramMap.put("description", "%" + queryString.toLowerCase(locale) + "%");
 			}
+
+			if (!ic) {
+				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where t.title like :tileTitle ) ");
+				paramMap.put("tileTitle", "%" + queryString + "%");
+			}
+			else {
+				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where lower(t.title) like :tileTitle ) ");
+				paramMap.put("tileTitle", "%" + queryString.toLowerCase(locale) + "%");
+			}
 			sb.append(" or lower(p.owner) = :owner)");
 			paramMap.put("owner", queryString.toLowerCase(locale));
-			sb.append(" and p.deleted = 0");
-			jpql += sb.toString();
+			sb.append(" and p.deleted = 0 ");
 		}
-		jpql += " order by p.dashboardId asc";
+		sb.append(" order by CASE WHEN lae.accessDate IS NULL THEN 1 ELSE 0 END, lae.accessDate DESC, p.dashboardId DESC");
+		String jpql = sb.toString();
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();
 		Query query = em.createQuery(jpql);
@@ -413,7 +426,7 @@ public class DashboardManager
 
 	/**
 	 * Removes a dashboard from favorite list
-	 * 
+	 *
 	 * @param dashboardId
 	 * @param tenantId
 	 */
@@ -445,13 +458,93 @@ public class DashboardManager
 	}
 
 	/**
-	 * Save a newly created dashboard, or update an existing dashboard for given tenant
-	 * 
+	 * Save a newly created dashboard for given tenant
+	 *
+	 * @param dbd
+	 * @param tenantId
+	 * @return the dashboard saved
+	 */
+	public Dashboard saveNewDashboard(Dashboard dbd, String tenantId) throws DashboardException
+	{
+		if (dbd == null) {
+			return null;
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			String currentUser = AppContext.getInstance().getCurrentUser();
+			if (dbd.getDashboardId() != null) {
+				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
+				if (sameId != null) {
+					throw new DashboardException("Dashboard with specified ID exists already");
+				}
+			}
+			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
+			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
+				throw new DashboardException("Dashboard with same name exists already");
+			}
+			// init creation date, owner to prevent null insertion
+			Date created = new Date();
+			if (dbd.getCreationDate() == null) {
+				dbd.setCreationDate(created);
+			}
+			if (dbd.getOwner() == null) {
+				dbd.setOwner(currentUser);
+			}
+			if (dbd.getTileList() != null) {
+				for (Tile tile : dbd.getTileList()) {
+					if (tile.getCreationDate() == null) {
+						tile.setCreationDate(created);
+					}
+					if (tile.getOwner() == null) {
+						tile.setOwner(currentUser);
+					}
+				}
+			}
+			EmsDashboard ed = dbd.getPersistenceEntity(null);
+			ed.setCreationDate(dbd.getCreationDate());
+			ed.setOwner(currentUser);
+			dsf.persistEmsDashboard(ed);
+			updateLastAccessDate(ed.getDashboardId(), tenantId);
+			return Dashboard.valueOf(ed, dbd);
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	/**
+	 * Enables or disables the 'include time control' settings for specified dashboard
+	 *
+	 * @param dashboardId
+	 * @param enable
+	 * @param tenantId
+	 */
+	public void setDashboardIncludeTimeControl(Long dashboardId, boolean enable, String tenantId)
+	{
+		if (dashboardId == null || dashboardId <= 0) {
+			return;
+		}
+		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+		if (ed == null) {
+			return;
+		}
+		ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(enable));
+		dsf.mergeEmsDashboard(ed);
+	}
+
+	/**
+	 * Update an existing dashboard for given tenant
+	 *
 	 * @param dbd
 	 * @param tenantId
 	 * @return the dashboard saved or updated
 	 */
-	public Dashboard saveOrUpdateDashboard(Dashboard dbd, String tenantId) throws DashboardException
+	public Dashboard updateDashboard(Dashboard dbd, String tenantId) throws DashboardException
 	{
 		if (dbd == null) {
 			return null;
@@ -483,35 +576,25 @@ public class DashboardManager
 					}
 				}
 			}
-			if (dbd.getDashboardId() == null) { // creation
-				Date creationDate = new Date();
-				EmsDashboard ed = dbd.getPersistenceEntity(null);
-				ed.setCreationDate(creationDate);
-				ed.setOwner(currentUser);
-				dsf.persistEmsDashboard(ed);
-				dsf.commitTransaction();
-				return Dashboard.valueOf(ed, dbd);
+
+			EmsDashboard ed = dsf.getEmsDashboardById(dbd.getDashboardId());
+			if (ed == null) {
+				throw new DashboardException("Specified dashboard doesnot exist");
 			}
-			else {
-				EmsDashboard ed = dsf.getEmsDashboardById(dbd.getDashboardId());
-				if (ed == null) {
-					throw new DashboardException("Specified dashboard doesnot exist");
-				}
-				//				ed.setName(dbd.getName());
-				//				ed.setDescription(dbd.getDescription());
-				//				ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(dbd.getEnableTimeRange()));
-				//				ed.setIsSystem(dbd.);
-				dbd.getPersistenceEntity(ed);
-				//				updateDashboardTiles(dbd.getTileList(), ed);
-				ed.setLastModificationDate(new Date());
-				ed.setLastModifiedBy(currentUser);
-				if (dbd.getOwner() != null) {
-					ed.setOwner(dbd.getOwner());
-				}
-				dsf.mergeEntity(ed);
-				dsf.commitTransaction();
-				return Dashboard.valueOf(ed, dbd);
+			//				ed.setName(dbd.getName());
+			//				ed.setDescription(dbd.getDescription());
+			//				ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(dbd.getEnableTimeRange()));
+			//				ed.setIsSystem(dbd.);
+			dbd.getPersistenceEntity(ed);
+			//				updateDashboardTiles(dbd.getTileList(), ed);
+			ed.setLastModificationDate(new Date());
+			ed.setLastModifiedBy(currentUser);
+			if (dbd.getOwner() != null) {
+				ed.setOwner(dbd.getOwner());
 			}
+			dsf.mergeEntity(ed);
+			dsf.commitTransaction();
+			return Dashboard.valueOf(ed, dbd);
 		}
 		finally {
 			if (em != null) {
@@ -521,29 +604,8 @@ public class DashboardManager
 	}
 
 	/**
-	 * Enables or disables the 'include time control' settings for specified dashboard
-	 * 
-	 * @param dashboardId
-	 * @param enable
-	 * @param tenantId
-	 */
-	public void setDashboardIncludeTimeControl(Long dashboardId, boolean enable, String tenantId)
-	{
-		if (dashboardId == null || dashboardId <= 0) {
-			return;
-		}
-		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null) {
-			return;
-		}
-		ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(enable));
-		dsf.mergeEmsDashboard(ed);
-	}
-
-	/**
 	 * Updates last access date for specified dashboard
-	 * 
+	 *
 	 * @param dashboardId
 	 * @param tenantId
 	 */
