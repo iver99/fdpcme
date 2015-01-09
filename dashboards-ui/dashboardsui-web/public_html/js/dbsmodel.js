@@ -15,11 +15,12 @@ define([
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
+    'dependencies/util/js/df-util.js',
     'ojs/ojknockout', 
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(temp, tabmodel, oj, ko, $)
+function(temp, tabmodel, oj, ko, $, dfu)
 {
     var RECENT_MAX_SIZE = 10;
     
@@ -42,6 +43,7 @@ function(temp, tabmodel, oj, ko, $)
         var self = this;
         self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
         self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        self.quickLinks = ko.observableArray(dfu.discoverQuickLinks());
         self.favorites = ko.observableArray();
         self.recents = ko.observableArray();
         self.addFavorite = function(dashboard) {

@@ -150,6 +150,72 @@ define(['knockout',
                 }
                 
             };
+            
+            /**
+             * Discover available quick links
+             * @returns {Array} quickLinks
+             */
+            self.discoverQuickLinks = function() {
+                var quickLinks = [];
+                var quickLinksFromDashboard = [];
+                var quickLinksFromIntegrators = [];
+                
+                var fetchServiceQuickLinks = function(data) {
+                    if (data.items && data.items.length > 0) {
+                        for (i = 0; i < data.items.length; i++) {
+                            var serviceItem = data.items[i];
+                            if (serviceItem.links && serviceItem.links.length > 0) {
+                                for (j = 0; j < serviceItem.links.length; j++) {
+                                    var link = serviceItem.links[j];
+                                    if (link.rel === 'quickLink') {
+                                        var linkItem = {name: serviceItem.serviceName,
+                                                            href: link.href};
+                                        if (serviceItem.serviceName === 'Dashboard' && serviceItem.version === '1.0') {
+                                            quickLinksFromDashboard.push(linkItem);
+                                        }
+                                        else {
+                                            quickLinksFromIntegrators.push(linkItem);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                $.ajax({
+                    url: 'data/servicemanager.json',
+                    success: function(data, textStatus) {
+                        if (data.serviceUrls && data.serviceUrls.length > 0) {
+                            for (i = 0; i < data.serviceUrls.length; i++) {
+                                var serviceUrl = data.serviceUrls[i]+'/instances';
+                                $.ajax({
+                                    url: serviceUrl,
+                                    success: function(data, textStatus) {
+                                        fetchServiceQuickLinks(data);
+                                    },
+                                    error: function(xhr, textStatus, errorThrown){
+                                        console.log('Failed to get service instances by URL: '+serviceUrl);
+                                    },
+                                    async: false
+                                });
+                            }
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        console.log('Failed to get service manager configurations.');
+                    },
+                    async: false
+                });
+                
+                for (i = 0; i < quickLinksFromDashboard.length; i++) {
+                    quickLinks.push(quickLinksFromDashboard[i]);
+                }
+                for (j = 0; j < quickLinksFromIntegrators.length; j++) {
+                    quickLinks.push(quickLinksFromIntegrators[j]);
+                }
+                return quickLinks;
+            };
         }
         
         return new DashboardFrameworkUtility();
