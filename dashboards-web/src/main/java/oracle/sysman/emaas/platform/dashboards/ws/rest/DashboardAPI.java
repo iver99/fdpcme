@@ -45,7 +45,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createDashboard(JSONObject dashboard)
 	{
-		System.out.println(dashboard);
+		//System.out.println(dashboard);
 		try {
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
@@ -57,12 +57,11 @@ public class DashboardAPI extends APIBase
 			ErrorEntity error = new ErrorEntity();
 			error.setErrorCode(DashboardErrorConstants.DASHBOARD_COMMON_UI_ERROR_CODE);
 			error.setErrorMessage(MessageUtils.getDefaultBundleString("DASHBOARD_JSON_PARSE_ERROR"));
-			return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
+			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
-			ErrorEntity error = new ErrorEntity(e);
-			return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
+			return buildErrorResponse(new ErrorEntity(e));
 		}
-
 	}
+
 }
