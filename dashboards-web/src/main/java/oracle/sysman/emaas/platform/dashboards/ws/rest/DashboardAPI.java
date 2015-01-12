@@ -10,21 +10,49 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import javax.ws.rs.Path;
+import java.io.IOException;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
+
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * @author wenjzhu
  */
 @Path("/api/v1/dashboards")
-public class DashboardAPI
+public class DashboardAPI extends APIBase
 {
-	private final JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 
 	public DashboardAPI()
 	{
 		super();
 	}
 
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createDashboard(JSONObject dashboard)
+	{
+		System.out.println(dashboard);
+		try {
+			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
+			DashboardManager manager = DashboardManager.getInstance();
+			String tenantId = "test";
+			//manager.
+			return Response.ok(JsonUtil.buildNormalMapper().toJson(d)).build();
+		}
+		catch (IOException e) {
+			return Response.status(404).build();
+		}
+
+	}
 }

@@ -12,15 +12,12 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import javax.ws.rs.Path;
 
-import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
-
 /**
  * @author wenjzhu
  */
 @Path("/api/v1/dashboards/favorites")
-public class FavoriteAPI
+public class FavoriteAPI extends APIBase
 {
-	private final JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
 
 	public FavoriteAPI()
 	{
