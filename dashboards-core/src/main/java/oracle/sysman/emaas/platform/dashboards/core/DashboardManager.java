@@ -13,6 +13,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameIdException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
@@ -21,6 +22,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
@@ -483,6 +485,10 @@ public class DashboardManager
 				if (sameId != null) {
 					throw new DashboardSameIdException();
 				}
+			}
+			//check dashboard name
+			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
+				throw new CommonFunctionalException(MessageUtils.getDefaultBundleString("DASHBOARD_CREATE_INVALID_NAME_ERROR"));
 			}
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
