@@ -10,6 +10,9 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import javax.ws.rs.core.Response;
+
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 
 /**
@@ -18,6 +21,14 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 public class APIBase
 {
 	private final JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
+
+	public Response buildErrorResponse(ErrorEntity error)
+	{
+		if (error == null) {
+			return null;
+		}
+		return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
+	}
 
 	public JsonUtil getJsonUtil()
 	{

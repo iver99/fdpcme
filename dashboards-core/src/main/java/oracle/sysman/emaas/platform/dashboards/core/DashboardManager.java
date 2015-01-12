@@ -506,6 +506,10 @@ public class DashboardManager
 							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
 				}
 			}
+			//check dashboard name
+			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
+				throw new CommonFunctionalException(MessageUtils.getDefaultBundleString("DASHBOARD_CREATE_INVALID_NAME_ERROR"));
+			}
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
