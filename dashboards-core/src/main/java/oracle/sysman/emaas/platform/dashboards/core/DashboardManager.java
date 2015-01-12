@@ -13,10 +13,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameIdException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
@@ -333,37 +335,56 @@ public class DashboardManager
 	}
 
 	/**
-	 * Returns dashboards for specified page with given page size
+	 * Returns dashboards for specified page with given row offset & page size
 	 *
-	 * @param page
-	 *            number to indicate page number, started from 1
+	 * @param offset
+	 *            number to indicate row offset, started from 0
 	 * @param pageSize
 	 * @param tenantId
 	 * @param ic
 	 *            ignore case or not
 	 * @return
+	 * @throws DashboardException
 	 */
-	public List<Dashboard> listDashboards(Integer page, Integer pageSize, String tenantId, boolean ic)
+	public PaginatedDashboards listDashboards(Integer offset, Integer pageSize, String tenantId, boolean ic)
+			throws DashboardException
 	{
-		return listDashboards(null, page, pageSize, tenantId, ic);
+		return listDashboards(null, offset, pageSize, tenantId, ic);
 	}
 
 	/**
 	 * Returns dashboards for specified query string, by providing page number and page size
 	 *
 	 * @param queryString
-	 * @param page
-	 *            number to indicate page index, started from 1
+	 * @param offset
+	 *            number to indicate row index, started from 0
 	 * @param pageSize
 	 * @param tenantId
 	 * @param ic
 	 *            ignore case or not
 	 * @return
 	 */
-	public List<Dashboard> listDashboards(String queryString, Integer page, Integer pageSize, String tenantId, boolean ic)
+	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, String tenantId,
+			boolean ic) throws DashboardException
 	{
+		if (offset != null && offset < 0) {
+			throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET);
+		}
+		int firstResult = 0;
+		if (offset != null) {
+			firstResult = offset.intValue();
+		}
+
+		if (pageSize != null && pageSize <= 0) {
+			throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT);
+		}
+		int maxResults = DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT;
+		if (pageSize != null) {
+			maxResults = pageSize.intValue();
+		}
+
 		StringBuilder sb = new StringBuilder(
-				"select p from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy ");
+				" from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy ");
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		String currentUser = AppContext.getInstance().getCurrentUser();
 		paramMap.put("accessBy", currentUser);
@@ -400,32 +421,37 @@ public class DashboardManager
 			sb.append(" and p.deleted = 0 ");
 		}
 		sb.append(" order by CASE WHEN lae.accessDate IS NULL THEN 1 ELSE 0 END, lae.accessDate DESC, p.dashboardId DESC");
-		String jpql = sb.toString();
+		StringBuilder sbQuery = new StringBuilder(sb);
+		sbQuery.insert(0, "select p ");
+		String jpqlQuery = sbQuery.toString();
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();
-		Query query = em.createQuery(jpql);
-		Iterator<String> paramKeySet = paramMap.keySet().iterator();
-		for (; paramKeySet.hasNext();) {
-			String paramKey = paramKeySet.next();
-			Object value = paramMap.get(paramKey);
-			query.setParameter(paramKey, value);
-		}
-		if (page != null && page > 0 && pageSize != null && pageSize > 0) {
-			int start = (page - 1) * pageSize;
-			long startRow = (Long.valueOf(page) - 1) * Long.valueOf(pageSize);
-			if (startRow > Integer.MAX_VALUE) {
-				start = Integer.MAX_VALUE;
-			}
-			query.setFirstResult(start);
-			query.setMaxResults(pageSize);
-		}
+		Query listQuery = em.createQuery(jpqlQuery);
+		initializeQueryParams(listQuery, paramMap);
+		//		if (page != null && page > 0 && pageSize != null && pageSize > 0) {
+		//			int start = (page - 1) * pageSize;
+		//			long startRow = (Long.valueOf(page) - 1) * Long.valueOf(pageSize);
+		//			if (startRow > Integer.MAX_VALUE) {
+		//				start = Integer.MAX_VALUE;
+		//			}
+		listQuery.setFirstResult(firstResult);
+		listQuery.setMaxResults(maxResults);
+		//		}
 		@SuppressWarnings("unchecked")
-		List<EmsDashboard> edList = query.getResultList();
+		List<EmsDashboard> edList = listQuery.getResultList();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 		for (EmsDashboard ed : edList) {
 			dbdList.add(Dashboard.valueOf(ed));
 		}
-		return dbdList;
+
+		StringBuilder sbCount = new StringBuilder(sb);
+		sbCount.insert(0, "select count(p) ");
+		Query countQuery = em.createQuery(sbCount.toString());
+		initializeQueryParams(countQuery, paramMap);
+		Long totalResults = (Long) countQuery.getSingleResult();
+		PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
+				maxResults, dbdList);
+		return pd;
 	}
 
 	/**
@@ -642,6 +668,19 @@ public class DashboardManager
 			if (em != null) {
 				em.close();
 			}
+		}
+	}
+
+	private void initializeQueryParams(Query query, Map<String, Object> paramMap)
+	{
+		if (query == null || paramMap == null) {
+			return;
+		}
+		Iterator<String> paramKeySet = paramMap.keySet().iterator();
+		for (; paramKeySet.hasNext();) {
+			String paramKey = paramKeySet.next();
+			Object value = paramMap.get(paramKey);
+			query.setParameter(paramKey, value);
 		}
 	}
 }
