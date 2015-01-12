@@ -20,7 +20,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 
 import org.codehaus.jettison.json.JSONObject;
@@ -46,12 +48,16 @@ public class DashboardAPI extends APIBase
 		try {
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
-			String tenantId = "test";
-			//manager.
+			String tenantId = getTenantId();
+			d = manager.saveNewDashboard(d, tenantId);
 			return Response.ok(JsonUtil.buildNormalMapper().toJson(d)).build();
 		}
 		catch (IOException e) {
 			return Response.status(404).build();
+		}
+		catch (DashboardException e) {
+			ErrorEntity error = new ErrorEntity(e);
+			return Response.status(error.getStatusCode()).entity(error).build();
 		}
 
 	}
