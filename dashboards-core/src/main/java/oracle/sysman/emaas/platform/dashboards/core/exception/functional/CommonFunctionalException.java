@@ -24,6 +24,7 @@ public class CommonFunctionalException extends DashboardException
 	private static final long serialVersionUID = 4069848538099583269L;
 	public static final String DASHBOARD_QUERY_INVALID_OFFSET = "DASHBOARD_QUERY_INVALID_OFFSET";
 	public static final String DASHBOARD_QUERY_INVALID_LIMIT = "DASHBOARD_QUERY_INVALID_LIMIT";
+	public static final String DASHBOARD_CREATE_SAME_ID_ERROR = "DASHBOARD_CREATE_SAME_ID_ERROR";
 
 	/**
 	 * Constructs a new <code>CommonFunctionalException</code> with the specified detail message.

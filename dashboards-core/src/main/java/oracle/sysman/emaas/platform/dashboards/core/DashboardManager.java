@@ -14,7 +14,6 @@ import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameIdException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -428,15 +427,8 @@ public class DashboardManager
 		EntityManager em = dsf.getEntityManager();
 		Query listQuery = em.createQuery(jpqlQuery);
 		initializeQueryParams(listQuery, paramMap);
-		//		if (page != null && page > 0 && pageSize != null && pageSize > 0) {
-		//			int start = (page - 1) * pageSize;
-		//			long startRow = (Long.valueOf(page) - 1) * Long.valueOf(pageSize);
-		//			if (startRow > Integer.MAX_VALUE) {
-		//				start = Integer.MAX_VALUE;
-		//			}
 		listQuery.setFirstResult(firstResult);
 		listQuery.setMaxResults(maxResults);
-		//		}
 		@SuppressWarnings("unchecked")
 		List<EmsDashboard> edList = listQuery.getResultList();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
@@ -507,7 +499,7 @@ public class DashboardManager
 			if (dbd.getDashboardId() != null) {
 				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
 				if (sameId != null) {
-					throw new DashboardSameIdException();
+					throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR);
 				}
 			}
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
