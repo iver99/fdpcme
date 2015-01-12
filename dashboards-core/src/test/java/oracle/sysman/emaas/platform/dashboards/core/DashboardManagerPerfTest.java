@@ -3,6 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
 

@@ -12,6 +12,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameIdException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
@@ -477,12 +481,12 @@ public class DashboardManager
 			if (dbd.getDashboardId() != null) {
 				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
 				if (sameId != null) {
-					throw new DashboardException("Dashboard with specified ID exists already");
+					throw new DashboardSameIdException();
 				}
 			}
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
-				throw new DashboardException("Dashboard with same name exists already");
+				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
 			Date created = new Date();
@@ -556,7 +560,7 @@ public class DashboardManager
 			String currentUser = AppContext.getInstance().getCurrentUser();
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
-				throw new DashboardException("Dashboard with same name exists already");
+				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
 			Date created = new Date();
@@ -579,7 +583,7 @@ public class DashboardManager
 
 			EmsDashboard ed = dsf.getEmsDashboardById(dbd.getDashboardId());
 			if (ed == null) {
-				throw new DashboardException("Specified dashboard doesnot exist");
+				throw new DashboardNotFoundException();
 			}
 			//				ed.setName(dbd.getName());
 			//				ed.setDescription(dbd.getDescription());
