@@ -147,6 +147,7 @@ function(temp, tabmodel, oj, ko, $, dfu)
         self.dbsArray = [];
         self.filterArray = [];
         self.did = 0;
+        self.exploreDataLinkList = ko.observableArray(self.navigationsPopupModel.quickLinks());
         
         var onepageDsbs = [{"name":"Database Performance Analytics",
                                "screenshot":"images/dbaas_histogram.png"},
@@ -315,9 +316,13 @@ function(temp, tabmodel, oj, ko, $, dfu)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
-        self.exploreDataClicked = function()
-        {
-            window.open('http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search');
+//        self.exploreDataClicked = function()
+//        {
+//            window.open('http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search');
+//        };
+        
+        self.exploreDataMenuItemSelect = function( event, ui ) {
+            window.open(ui.item.children("a")[0].value);
         };
         
         self.confirmDashboardCreate = function()

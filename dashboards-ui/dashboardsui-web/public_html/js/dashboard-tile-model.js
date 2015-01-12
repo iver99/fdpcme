@@ -277,6 +277,7 @@ define(['knockout',
                         var widgetDetails = null;
                         $.ajax({
                             url: href,
+                            headers: getAuthorizationRequestHeader(),
                             success: function(data, textStatus) {
                                 widgetDetails = data;
                             },

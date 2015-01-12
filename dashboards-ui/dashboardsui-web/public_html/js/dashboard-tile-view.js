@@ -311,7 +311,7 @@ define(['knockout',
             }
             else {
                 var categoryUrl = ssfUrl + '/categories';
-                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl, async: false,
+                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl, headers: getAuthorizationRequestHeader(), async: false,
                     success: function(data, textStatus){
                         if (data && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
@@ -418,7 +418,8 @@ define(['knockout',
                                         folder:{id: 999}, description: widgetToSave.description, 
                                         queryStr: widgetToSave.queryStr, parameters: params};
                     var saveSearchUrl = ssfUrl + "/search";
-                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, data: ko.toJSON(searchToSave), async: false,
+                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
+                        headers: getAuthorizationRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
                             $('#createWidgetDialog').ojDialog('close');
                             var msg = "Widget created successfully!";
@@ -632,6 +633,7 @@ define(['knockout',
                     var demoSearchesUrl = ssfUrl + '/searches?categoryId=999';
                     $.ajax({
                         url: laSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             laWidgetArray = loadWidgets(data);
                         },
@@ -643,6 +645,7 @@ define(['knockout',
 
                     $.ajax({
                         url: taSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             taWidgetArray = loadWidgets(data);
                         },
@@ -654,6 +657,7 @@ define(['knockout',
 
                     $.ajax({
                         url: itaSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             itaWidgetArray = loadWidgets(data);
                         },
@@ -664,6 +668,7 @@ define(['knockout',
                     });    
                     $.ajax({
                         url: demoSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             demoWidgetArray = loadWidgets(data);
                         },
@@ -805,6 +810,7 @@ define(['knockout',
                         if (ssfUrl && ssfUrl !== '') {
                             $.ajax({
                                 url: ssfUrl+'/search/'+data.id,
+                                headers: getAuthorizationRequestHeader(),
                                 success: function(widget, textStatus) {
                                     _data.owner = widget.owner ? widget.owner : '';
                                     _data.description = widget.description ? widget.description : '';
