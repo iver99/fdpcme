@@ -22,6 +22,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
@@ -367,7 +368,8 @@ public class DashboardManager
 			boolean ic) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
-			throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET);
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET));
 		}
 		int firstResult = 0;
 		if (offset != null) {
@@ -375,7 +377,8 @@ public class DashboardManager
 		}
 
 		if (pageSize != null && pageSize <= 0) {
-			throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT);
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT));
 		}
 		int maxResults = DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT;
 		if (pageSize != null) {
@@ -499,7 +502,8 @@ public class DashboardManager
 			if (dbd.getDashboardId() != null) {
 				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
 				if (sameId != null) {
-					throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR);
+					throw new CommonFunctionalException(
+							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
 				}
 			}
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
