@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+
 /**
  * @author guobaochen
  */
@@ -17,6 +19,19 @@ public class ErrorEntity
 {
 	private Integer errorCode;
 	private String errorMessage;
+
+	public ErrorEntity()
+	{
+
+	}
+
+	public ErrorEntity(DashboardException de)
+	{
+		if (de != null) {
+			errorCode = de.getErrorCode();
+			errorMessage = de.getMessage();
+		}
+	}
 
 	public Integer getErrorCode()
 	{
