@@ -21,7 +21,6 @@ public class DashboardErrorConstants
 {
 	public static final Integer DASHBOARD_COMMON_UI_ERROR_CODE = 10000;
 	public static final Integer DASHBOARD_SAME_NAME_EXISTS_ERROR_CODE = 10001;
-	public static final Integer DASHBOARD_CREATE_SAME_ID_ERROR_CODE = 10002;
 
 	public static final Integer DASHBOARD_COMMON_RESOURCE_ERROR_CODE = 20000;
 	public static final Integer DASHBOARD_NOT_FOUND_ERROR_CODE = 20001;

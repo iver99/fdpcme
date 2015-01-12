@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
@@ -454,8 +455,11 @@ public class DashboardManagerTest
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenant1 = "tenant1";
 		String tenant2 = "tenant2";
-		List<Dashboard> dbList = dm.listDashboards(null, null, tenant1, false);
-		int originSize = dbList == null ? 0 : dbList.size();
+		PaginatedDashboards pd = dm.listDashboards(null, null, tenant1, false);
+		Assert.assertNotNull(pd);
+		Assert.assertEquals(0, pd.getOffset());
+		Assert.assertEquals(Integer.valueOf(DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT), pd.getLimit());
+		long originSize = pd.getTotalResults();
 
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName("key1" + System.currentTimeMillis());
@@ -472,12 +476,12 @@ public class DashboardManagerTest
 		dbd3 = dm.saveNewDashboard(dbd3, tenant1);
 		dbd3.setOwner("key3");
 		dbd3 = dm.updateDashboard(dbd3, tenant1);
-		dbList = dm.listDashboards(null, null, tenant1, false);
-		int allSize = dbList == null ? 0 : dbList.size();
+		pd = dm.listDashboards(null, null, tenant1, false);
+		long allSize = pd.getTotalResults();
 		Assert.assertEquals(allSize, originSize + 3);
 		// query by key word, case sensitive
-		dbList = dm.listDashboards("key", null, null, tenant1, false);
-		int caseSensitiveSize = dbList == null ? 0 : dbList.size();
+		pd = dm.listDashboards("key", null, null, tenant1, false);
+		long caseSensitiveSize = pd.getTotalResults();
 		Assert.assertEquals(caseSensitiveSize, originSize + 3);
 
 		Dashboard dbd4 = new Dashboard();
@@ -509,39 +513,48 @@ public class DashboardManagerTest
 
 		// a dashboard in different tenant. shouldn't be queried
 		Dashboard dbd9 = new Dashboard();
-		dbd9.setName("key7" + System.currentTimeMillis());
+		dbd9.setName("key9" + System.currentTimeMillis());
 		dbd9 = dm.saveNewDashboard(dbd9, tenant2);
 
 		// query by key word, case in-sensitive
-		dbList = dm.listDashboards("key", null, null, tenant1, true);
-		int icSize = dbList == null ? 0 : dbList.size();
+		pd = dm.listDashboards("key", null, null, tenant1, true);
+		long icSize = pd.getTotalResults();
 		Assert.assertEquals(icSize, originSize + 8); // dbd9 not in the returned list
-		for (Dashboard dbd : dbList) {
+		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd9.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned from other tenant different from current tenant");
 			}
 		}
 
 		// query all
-		dbList = dm.listAllDashboards(tenant1);
+		List<Dashboard> dbList = dm.listAllDashboards(tenant1);
 		allSize = dbList == null ? 0 : dbList.size();
 		Assert.assertEquals(allSize, originSize + 8);
-		dbList = dm.listDashboards(null, null, tenant1, true);
-		allSize = dbList == null ? 0 : dbList.size();
+		pd = dm.listDashboards(null, null, tenant1, true);
+		allSize = pd.getTotalResults();
 		Assert.assertEquals(allSize, originSize + 8);
 
-		// query by page size/number. ===Need to consider that last accessed one comes first===
-		dbList = dm.listDashboards("key", 1, 3, tenant1, true);
-		Assert.assertEquals(dbList.get(0).getDashboardId(), dbd8.getDashboardId());
-		Assert.assertEquals(3, dbList.size());
+		// query by page size/offset. ===Need to consider that last accessed one comes first===
+		pd = dm.listDashboards("key", 0, 3, tenant1, true);
+		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd8.getDashboardId());
+		Assert.assertEquals(3, pd.getDashboards().size());
+		Assert.assertEquals(3, pd.getLimit().intValue());
+		Assert.assertEquals(3, pd.getCount());
+		Assert.assertEquals(0, pd.getOffset());
+		Assert.assertEquals(allSize, pd.getTotalResults());
 
-		// query by page size/number
-		dbList = dm.listDashboards("key", 2, 2, tenant1, true);
-		Assert.assertEquals(dbList.get(0).getDashboardId(), dbd6.getDashboardId());
+		// query by page size/offset
+		pd = dm.listDashboards("key", 2, 2, tenant1, true);
+		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd6.getDashboardId());
+		Assert.assertEquals(2, pd.getDashboards().size());
+		Assert.assertEquals(2, pd.getLimit().intValue());
+		Assert.assertEquals(2, pd.getCount());
+		Assert.assertEquals(2, pd.getOffset());
+		Assert.assertEquals(allSize, pd.getTotalResults());
 
-		// query by page size/number
-		dbList = dm.listDashboards("key", Integer.MAX_VALUE, 2, tenant1, true);
-		Assert.assertTrue(dbList == null || dbList.isEmpty());
+		// query by page size/offset
+		pd = dm.listDashboards("key", Integer.MAX_VALUE, 2, tenant1, true);
+		Assert.assertTrue(pd.getDashboards() == null || pd.getDashboards().isEmpty());
 
 		// post test
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenant1);

@@ -162,9 +162,14 @@ public class JsonUtil
 	/**
 	 * if object is null , return null if object is null collection, return "[]"
 	 */
-	public String toJson(Object object) throws IOException
+	public String toJson(Object object)
 	{
-		return mapper.writeValueAsString(object);
+		try {
+			return mapper.writeValueAsString(object);
+		}
+		catch (IOException e) {
+			return null;
+		}
 	}
 
 }
