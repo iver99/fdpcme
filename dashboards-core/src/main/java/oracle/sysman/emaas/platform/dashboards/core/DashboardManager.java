@@ -607,12 +607,7 @@ public class DashboardManager
 			if (ed == null) {
 				throw new DashboardNotFoundException();
 			}
-			//				ed.setName(dbd.getName());
-			//				ed.setDescription(dbd.getDescription());
-			//				ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(dbd.getEnableTimeRange()));
-			//				ed.setIsSystem(dbd.);
 			dbd.getPersistenceEntity(ed);
-			//				updateDashboardTiles(dbd.getTileList(), ed);
 			ed.setLastModificationDate(new Date());
 			ed.setLastModifiedBy(currentUser);
 			if (dbd.getOwner() != null) {
