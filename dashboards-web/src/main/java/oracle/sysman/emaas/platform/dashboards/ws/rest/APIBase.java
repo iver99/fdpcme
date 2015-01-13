@@ -20,7 +20,14 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
  */
 public class APIBase
 {
-	private final JsonUtil jsonUtil = JsonUtil.buildNonNullMapper();
+	private final JsonUtil jsonUtil;
+
+	public APIBase()
+	{
+		super();
+		jsonUtil = JsonUtil.buildNonNullMapper();
+		jsonUtil.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+	}
 
 	public Response buildErrorResponse(ErrorEntity error)
 	{

@@ -181,6 +181,32 @@ public class DashboardManager
 		deleteDashboard(dashboardId, false, tenantId);
 	}
 
+	public String getDashboardBase64ScreenShotById(Long dashboardId, String tenantId) throws DashboardException
+	{
+		EntityManager em = null;
+		try {
+			if (dashboardId == null || dashboardId <= 0) {
+				throw new DashboardNotFoundException();
+			}
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null) {
+				throw new DashboardNotFoundException();
+			}
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			if (isDeleted != null && isDeleted.booleanValue()) {
+				throw new DashboardNotFoundException();
+			}
+			return ed.getScreenShot();
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
 	/**
 	 * Returns dashboard instance by specifying the id
 	 *
@@ -189,20 +215,29 @@ public class DashboardManager
 	 */
 	public Dashboard getDashboardById(Long dashboardId, String tenantId)
 	{
-		if (dashboardId == null || dashboardId <= 0) {
-			return null;
+		EntityManager em = null;
+		try {
+			if (dashboardId == null || dashboardId <= 0) {
+				return null;
+			}
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null) {
+				return null;
+			}
+			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
+			if (isDeleted != null && isDeleted.booleanValue()) {
+				return null;
+			}
+			updateLastAccessDate(dashboardId, tenantId);
+			return Dashboard.valueOf(ed);
 		}
-		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null) {
-			return null;
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
-		Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
-		if (isDeleted != null && isDeleted.booleanValue()) {
-			return null;
-		}
-		updateLastAccessDate(dashboardId, tenantId);
-		return Dashboard.valueOf(ed);
 	}
 
 	/**
