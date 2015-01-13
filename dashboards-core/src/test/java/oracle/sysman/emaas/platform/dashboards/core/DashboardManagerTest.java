@@ -110,7 +110,7 @@ public class DashboardManagerTest
 	{
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
-		dbd.setType(1);
+		dbd.setType(Dashboard.DASHBOARD_TYPE_PLAIN);
 
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId1 = "tenantId1";
@@ -120,7 +120,7 @@ public class DashboardManagerTest
 		// create a dashboard with dashboard id specified
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
-		dbd2.setType(1);
+		dbd2.setType(Dashboard.DASHBOARD_TYPE_PLAIN);
 		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
 		dm.saveNewDashboard(dbd2, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
@@ -146,7 +146,8 @@ public class DashboardManagerTest
 
 		Tile tile2 = createTileForDashboard(dbd);
 		TileParam t2p1 = createParameterForTile(tile2);
-		t2p1.setStringValue("tile 2 param 1");
+		//		t2p1.setStringValue("tile 2 param 1");
+		t2p1.setIntegerValue(3);
 
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId1 = "tenantId1";
@@ -207,7 +208,7 @@ public class DashboardManagerTest
 		Assert.assertNotNull(queriedTile2.getParameters());
 		TileParam queriedT2p1 = queriedTile2.getParameter(t2p1.getName());
 		Assert.assertNotNull(queriedT2p1);
-		Assert.assertEquals(queriedT2p1.getStringValue(), t2p1.getStringValue());
+		Assert.assertEquals(queriedT2p1.getIntegerValue(), t2p1.getIntegerValue());
 		Assert.assertEquals(queriedT2p1.getIntegerValue(), t2p1.getIntegerValue());
 		Assert.assertEquals(queriedT2p1.getIsSystem(), t2p1.getIsSystem());
 		Assert.assertEquals(queriedT2p1.getLongValue(), t2p1.getLongValue());

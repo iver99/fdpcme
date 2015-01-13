@@ -499,13 +499,13 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = AppContext.getInstance().getCurrentUser();
-			if (dbd.getDashboardId() != null) {
-				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
-				if (sameId != null) {
-					throw new CommonFunctionalException(
-							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
-				}
-			}
+			//			if (dbd.getDashboardId() != null) {
+			//				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
+			//				if (sameId != null) {
+			//					throw new CommonFunctionalException(
+			//							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
+			//				}
+			//			}
 			//check dashboard name
 			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(MessageUtils.getDefaultBundleString("DASHBOARD_CREATE_INVALID_NAME_ERROR"));

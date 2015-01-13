@@ -4,14 +4,22 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class TileParam
 {
-	public static final int PARAM_TYPE_STRING = 1;
-	public static final int PARAM_TYPE_NUMBER = 2;
-	public static final int PARAM_TYPE_TIMESTAMP = 3;
+	public static final String PARAM_TYPE_STRING = "STRING";
+	public static final String PARAM_TYPE_NUMBER = "NUMBER";
+	public static final String PARAM_TYPE_BOOLEAN = "BOOLEAN";
+
+	public static final Integer PARAM_TYPE_CODE_STRING = 1;
+	public static final Integer PARAM_TYPE_CODE_NUMBER = 2;
+	public static final Integer PARAM_TYPE_CODE_BOOLEAN = 3;
 
 	public static TileParam valueOf(EmsDashboardTileParams edtp)
 	{
@@ -21,19 +29,32 @@ public class TileParam
 		TileParam tp = new TileParam();
 		tp.setIsSystem(DataFormatUtils.integer2Boolean(edtp.getIsSystem()));
 		tp.setName(edtp.getParamName());
-		tp.setParamType(edtp.getParamType());
+		tp.setParamType(DataFormatUtils.tileParamTypeInteger2String(edtp.getParamType()));
 		tp.setIntegerValue(edtp.getParamValueNum());
 		tp.setStringValue(edtp.getParamValueStr());
 		tp.setParamValueTimestamp(edtp.getParamValueTimestamp());
 		return tp;
 	}
 
+	@JsonProperty("systemParameter")
 	private Boolean isSystem;
+
 	private String name;
-	private Integer type;
+
+	private String type;
+
+	@JsonIgnore
 	private String strValue;
+
+	@JsonIgnore
 	private Date dateValue;
+
+	@JsonIgnore
 	private Tile tile;
+
+	// used for json return field 'value'
+	@SuppressWarnings("unused")
+	private String value;
 
 	private BigDecimal numValue;
 
@@ -62,7 +83,7 @@ public class TileParam
 		return numValue;
 	}
 
-	public Integer getParamType()
+	public String getParamType()
 	{
 		return type;
 	}
@@ -72,14 +93,15 @@ public class TileParam
 		return dateValue;
 	}
 
-	public EmsDashboardTileParams getPersistentEntity(EmsDashboardTileParams edtp)
+	public EmsDashboardTileParams getPersistentEntity(EmsDashboardTileParams edtp) throws CommonFunctionalException
 	{
 		Integer intIsSystem = DataFormatUtils.boolean2Integer(getIsSystem());
 		Integer intValue = DataFormatUtils.bigDecimal2Integer(numValue);
 		Timestamp tsValue = DataFormatUtils.date2Timestamp(getParamValueTimestamp());
+		Integer intType = DataFormatUtils.tileParamTypeString2Integer(type);
 
 		if (edtp == null) {
-			edtp = new EmsDashboardTileParams(intIsSystem, name, type, intValue, strValue, tsValue, null);
+			edtp = new EmsDashboardTileParams(intIsSystem, name, intType, intValue, strValue, tsValue, null);
 		}
 		return edtp;
 	}
@@ -92,6 +114,29 @@ public class TileParam
 	public Tile getTile()
 	{
 		return tile;
+	}
+
+	public String getType()
+	{
+		return type;
+	}
+
+	public String getValue()
+	{
+		if (PARAM_TYPE_STRING.equals(type)) {
+			return strValue;
+		}
+		else if (PARAM_TYPE_NUMBER.equals(type)) {
+			return String.valueOf(numValue);
+		}
+		else if (PARAM_TYPE_BOOLEAN.equals(type)) {
+			boolean booleanValue = false;
+			if (numValue != null) {
+				booleanValue = numValue.intValue() > 0 ? true : false;
+			}
+			return String.valueOf(Boolean.valueOf(booleanValue));
+		}
+		return null;
 	}
 
 	public void setIntegerValue(Integer value)
@@ -122,7 +167,7 @@ public class TileParam
 		numValue = paramValueNum;
 	}
 
-	public void setParamType(Integer type)
+	public void setParamType(String type)
 	{
 		this.type = type;
 	}
@@ -130,7 +175,7 @@ public class TileParam
 	public void setParamValueTimestamp(Date paramValueTimestamp)
 	{
 		if (type == null) {
-			type = PARAM_TYPE_TIMESTAMP;
+			type = PARAM_TYPE_BOOLEAN;
 		}
 		dateValue = paramValueTimestamp;
 	}
@@ -146,5 +191,33 @@ public class TileParam
 	public void setTile(Tile tile)
 	{
 		this.tile = tile;
+	}
+
+	public void setType(String type)
+	{
+		this.type = type;
+	}
+
+	public void setValue(String value)
+	{
+		if (PARAM_TYPE_BOOLEAN.equals(type)) {
+			strValue = value;
+		}
+		else if (PARAM_TYPE_NUMBER.equals(type)) {
+			if (value == null || value.equals("")) {
+				numValue = new BigDecimal(0);
+				return;
+			}
+			numValue = new BigDecimal(value);
+		}
+		else if (PARAM_TYPE_BOOLEAN.equals(type)) {
+			int booleanValue = 0; // 0 for false, 1 for true
+			if (value != null && !value.equals("")) {
+				numValue = new BigDecimal(0);
+				return;
+			}
+			booleanValue = Boolean.valueOf(value) ? 1 : 0;
+			numValue = BigDecimal.valueOf(booleanValue);
+		}
 	}
 }
