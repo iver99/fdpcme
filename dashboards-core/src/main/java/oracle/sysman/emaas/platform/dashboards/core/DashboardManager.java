@@ -421,18 +421,18 @@ public class DashboardManager
 		}
 
 		StringBuilder sb = new StringBuilder(
-				" from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy ");
+				" from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy where p.deleted = 0 ");
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		String currentUser = AppContext.getInstance().getCurrentUser();
 		paramMap.put("accessBy", currentUser);
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
-				sb.append(" where (p.name LIKE :name");
+				sb.append(" and (p.name LIKE :name");
 				paramMap.put("name", "%" + queryString + "%");
 			}
 			else {
-				sb.append(" where (lower(p.name) LIKE :name");
+				sb.append(" and (lower(p.name) LIKE :name");
 				paramMap.put("name", "%" + queryString.toLowerCase(locale) + "%");
 			}
 

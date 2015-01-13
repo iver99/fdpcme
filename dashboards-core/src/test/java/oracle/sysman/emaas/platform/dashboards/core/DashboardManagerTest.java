@@ -517,10 +517,18 @@ public class DashboardManagerTest
 		dbd9.setName("key9" + System.currentTimeMillis());
 		dbd9 = dm.saveNewDashboard(dbd9, tenant2);
 
+		// test deleted dashboards shouldn't be queried
+		Dashboard dbd10 = new Dashboard();
+		dbd10.setName("name " + System.currentTimeMillis());
+		Tile db10tile1 = createTileForDashboard(dbd10);
+		db10tile1.setTitle("KEY" + System.currentTimeMillis());
+		dbd10 = dm.saveNewDashboard(dbd10, tenant1);
+		dm.deleteDashboard(dbd10.getDashboardId(), tenant1);
+
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, originSize + 8); // dbd9 not in the returned list
+		Assert.assertEquals(icSize, originSize + 8); // dbd9/10 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd9.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned from other tenant different from current tenant");
@@ -567,6 +575,7 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd7.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd8.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd9.getDashboardId(), true, tenant2);
+		dm.deleteDashboard(dbd10.getDashboardId(), true, tenant1);
 	}
 
 	@Test
@@ -605,11 +614,11 @@ public class DashboardManagerTest
 	private Tile createTileForDashboard(Dashboard dbd) throws InterruptedException
 	{
 		Thread.sleep(2);
-		Tile tile3 = new Tile();
-		tile3.setTitle("tile " + System.currentTimeMillis());
-		initTileWidget(tile3);
-		dbd.addTile(tile3);
-		return tile3;
+		Tile tile = new Tile();
+		tile.setTitle("tile " + System.currentTimeMillis());
+		initTileWidget(tile);
+		dbd.addTile(tile);
+		return tile;
 	}
 
 	private void initTileWidget(Tile tile)
