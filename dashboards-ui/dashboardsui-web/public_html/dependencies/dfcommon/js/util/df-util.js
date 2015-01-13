@@ -95,7 +95,7 @@ define(['knockout',
                                     fetchServiceCallback(data);
                                 },
                                 error: function(xhr, textStatus, errorThrown){
-
+                                    console.error(textStatus);
                                 },
                                 async: false
                             });

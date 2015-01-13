@@ -27,6 +27,7 @@ define([
 //            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
             var qlBaseUrl = 'http://slc08upj.us.oracle.com:7211/emaas/querylanguage/api/v2/';
 //            var qlBaseUrl = 'http://slc07dgg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
+//            var qlBaseUrl = 'http://slc07dgf.us.oracle.com:7501/emaas/querylanguage/api/v2/';
             //severity  in ('error','ERROR','SEVERE','severe', 'warning', 'warn', 'info', 'trace')
             var queryString = {"queries": {"id":"demoEMQLVizQuery",  "queryString" : "severity not in ('debug') | stats count by 'target type','log source'"}, 
                 "subSystem":"LOG",
@@ -43,6 +44,7 @@ define([
                     var searchUrl = ssfUrl + '/search/'+widget.id;
                     $.ajax({
                         url: searchUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             queryString.queries.queryString = data.queryStr;
                         },
@@ -99,11 +101,11 @@ define([
             
             function fetchResults() {
                 $.ajax({type: 'POST', contentType:'application/json',url: qlBaseUrl+'jobs', data: ko.toJSON(queryString),
-                    headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1"},
+                    headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1","Authorization":getAuthorizationRequestHeader().Authorization},
                     success: function(data, textStatus){
                         var resultsUrl = qlBaseUrl + data.job.queries.demoEMQLVizQuery.resultsLink; 
                         $.ajax({type: 'GET', contentType:'application/json',url: resultsUrl,
-                            headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1"},
+                            headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1","Authorization":getAuthorizationRequestHeader().Authorization},
                             success: function(data, textStatus){
                                 if (data.results && data.results.length > 0) {
                                     if (data.columns.length === 3) {
