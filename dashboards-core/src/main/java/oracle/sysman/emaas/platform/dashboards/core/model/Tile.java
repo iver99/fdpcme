@@ -6,9 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Tile
 {
@@ -57,31 +61,75 @@ public class Tile
 		return tile;
 	}
 
+	@JsonIgnore
 	private Date creationDate;
+
 	private Integer height;
+
 	private Boolean isMaximized;
+
+	@JsonIgnore
 	private Date lastModificationDate;
+
+	@JsonIgnore
 	private String lastModifiedBy;
+
+	@JsonIgnore
 	private String owner;
 	//	private int position;
+	@JsonProperty("PROVIDER_ASSET_ROOT")
 	private String providerAssetRoot;
+
+	@JsonProperty("PROVIDER_NAME")
 	private String providerName;
+
+	@JsonProperty("PROVIDER_VERSION")
 	private String providerVersion;
+
+	@JsonProperty("id")
 	private Long tileId;
+
 	private String title;
+
+	@JsonProperty("WIDGET_CREATION_TIME")
 	private String widgetCreationTime;
+
+	@JsonProperty("WIDGET_DESCRIPTION")
 	private String widgetDescription;
+
+	@JsonProperty("WIDGET_GROUP_NAME")
 	private String widgetGroupName;
+
+	@JsonProperty("WIDGET_HISTOGRAM")
 	private String widgetHistogram;
+
+	@JsonProperty("WIDGET_ICON")
 	private String widgetIcon;
+
+	@JsonProperty("WIDGET_KOC_NAME")
 	private String widgetKocName;
+
+	@JsonProperty("WIDGET_NAME")
 	private String widgetName;
+
+	@JsonProperty("WIDGET_OWNER")
 	private String widgetOwner;
+
+	@JsonProperty("WIDGET_SOURCE")
 	private Integer widgetSource;
+
+	@JsonProperty("WIDGET_TEMPLATE")
 	private String widgetTemplate;
+
+	@JsonProperty("WIDGET_UNIQUE_ID")
 	private String widgetUniqueId;
+
+	@JsonProperty("WIDGET_VIEW_MODEL")
 	private String widgetViewmode;
+
 	private Integer width;
+
+	@JsonIgnore
 	private Dashboard dashboard;
 
 	private List<TileParam> parameters;
@@ -160,10 +208,11 @@ public class Tile
 
 	/**
 	 * Returns an instance of EmsDashboardTile for current tile object
-	 * 
+	 *
 	 * @return
+	 * @throws CommonFunctionalException
 	 */
-	public EmsDashboardTile getPersistenceEntity(EmsDashboardTile edt)
+	public EmsDashboardTile getPersistenceEntity(EmsDashboardTile edt) throws CommonFunctionalException
 	{
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
 
@@ -305,11 +354,11 @@ public class Tile
 
 	/**
 	 * Removes a tile parameter specified by the name
-	 * 
+	 *
 	 * @param index
 	 * @return
 	 */
-	 public TileParam removeParameter(String name)
+	public TileParam removeParameter(String name)
 	{
 		TileParam tp = getParameter(name);
 		if (tp == null) {
@@ -317,7 +366,7 @@ public class Tile
 		}
 		parameters.remove(name);
 		return tp;
-	 }
+	}
 
 	public void setCreationDate(Date creationDate)
 	{
@@ -356,8 +405,8 @@ public class Tile
 
 	public void setParameters(List<TileParam> parameters)
 	{
-		 this.parameters = parameters;
-	 }
+		this.parameters = parameters;
+	}
 
 	public void setProviderAssetRoot(String providerAssetRoot)
 	{
@@ -419,7 +468,7 @@ public class Tile
 		this.widgetName = widgetName;
 	}
 
-	 public void setWidgetOwner(String widgetOwner)
+	public void setWidgetOwner(String widgetOwner)
 	{
 		this.widgetOwner = widgetOwner;
 	}
@@ -439,7 +488,7 @@ public class Tile
 		this.widgetUniqueId = widgetUniqueId;
 	}
 
-	 public void setWidgetViewmode(String widgetViewmode)
+	public void setWidgetViewmode(String widgetViewmode)
 	{
 		this.widgetViewmode = widgetViewmode;
 	}
@@ -449,44 +498,44 @@ public class Tile
 		this.width = width;
 	}
 
-	private void updateEmsDashboardTileParams(List<TileParam> paramList, EmsDashboardTile tile)
+	private void updateEmsDashboardTileParams(List<TileParam> paramList, EmsDashboardTile tile) throws CommonFunctionalException
 	{
-		 Map<TileParam, EmsDashboardTileParams> rows = new HashMap<TileParam, EmsDashboardTileParams>();
-		 List<EmsDashboardTileParams> edtpList = tile.getDashboardTileParamsList();
-		 if (edtpList != null) {
-			 int edtSize = edtpList.size();
-			 for (int i = edtSize - 1; i >= 0; i--) {
-				 EmsDashboardTileParams edtp = edtpList.get(i);
-				 boolean isDeleted = true;
-				 for (TileParam param : paramList) {
-					 if (param.getName() != null && param.getName().equals(edtp.getParamName()) && param.getTile() != null
+		Map<TileParam, EmsDashboardTileParams> rows = new HashMap<TileParam, EmsDashboardTileParams>();
+		List<EmsDashboardTileParams> edtpList = tile.getDashboardTileParamsList();
+		if (edtpList != null) {
+			int edtSize = edtpList.size();
+			for (int i = edtSize - 1; i >= 0; i--) {
+				EmsDashboardTileParams edtp = edtpList.get(i);
+				boolean isDeleted = true;
+				for (TileParam param : paramList) {
+					if (param.getName() != null && param.getName().equals(edtp.getParamName()) && param.getTile() != null
 							&& param.getTile().getTileId() != null
 							&& param.getTile().getTileId().equals(edtp.getDashboardTile().getTileId())) {
-						 isDeleted = false;
-						 rows.put(param, edtp);
-						 break;
-					 }
-				 }
-				 if (isDeleted) {
-					 tile.getDashboardTileParamsList().remove(edtp);
-				 }
-			 }
-		 }
+						isDeleted = false;
+						rows.put(param, edtp);
+						break;
+					}
+				}
+				if (isDeleted) {
+					tile.getDashboardTileParamsList().remove(edtp);
+				}
+			}
+		}
 
 		if (paramList == null) {
-			 return;
-		 }
-		 for (TileParam tp : paramList) {
-			 EmsDashboardTileParams edtp = null;
-			 if (!rows.containsKey(tp)) {
-				 edtp = tp.getPersistentEntity(null);
-				 tile.addEmsDashboardTileParams(edtp);
-				 rows.put(tp, edtp);
-			 }
-			 else {
-				 edtp = rows.get(tile);
-				 edtp = tp.getPersistentEntity(edtp);
-			 }
-		 }
-	 }
+			return;
+		}
+		for (TileParam tp : paramList) {
+			EmsDashboardTileParams edtp = null;
+			if (!rows.containsKey(tp)) {
+				edtp = tp.getPersistentEntity(null);
+				tile.addEmsDashboardTileParams(edtp);
+				rows.put(tp, edtp);
+			}
+			else {
+				edtp = rows.get(tile);
+				edtp = tp.getPersistentEntity(edtp);
+			}
+		}
+	}
 }

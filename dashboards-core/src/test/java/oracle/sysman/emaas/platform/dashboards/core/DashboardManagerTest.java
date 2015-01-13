@@ -110,7 +110,7 @@ public class DashboardManagerTest
 	{
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
-		dbd.setType(1);
+		dbd.setType(Dashboard.DASHBOARD_TYPE_PLAIN);
 
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId1 = "tenantId1";
@@ -120,7 +120,7 @@ public class DashboardManagerTest
 		// create a dashboard with dashboard id specified
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
-		dbd2.setType(1);
+		dbd2.setType(Dashboard.DASHBOARD_TYPE_PLAIN);
 		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
 		dm.saveNewDashboard(dbd2, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
@@ -146,7 +146,8 @@ public class DashboardManagerTest
 
 		Tile tile2 = createTileForDashboard(dbd);
 		TileParam t2p1 = createParameterForTile(tile2);
-		t2p1.setStringValue("tile 2 param 1");
+		//		t2p1.setStringValue("tile 2 param 1");
+		t2p1.setIntegerValue(3);
 
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId1 = "tenantId1";
@@ -207,7 +208,7 @@ public class DashboardManagerTest
 		Assert.assertNotNull(queriedTile2.getParameters());
 		TileParam queriedT2p1 = queriedTile2.getParameter(t2p1.getName());
 		Assert.assertNotNull(queriedT2p1);
-		Assert.assertEquals(queriedT2p1.getStringValue(), t2p1.getStringValue());
+		Assert.assertEquals(queriedT2p1.getIntegerValue(), t2p1.getIntegerValue());
 		Assert.assertEquals(queriedT2p1.getIntegerValue(), t2p1.getIntegerValue());
 		Assert.assertEquals(queriedT2p1.getIsSystem(), t2p1.getIsSystem());
 		Assert.assertEquals(queriedT2p1.getLongValue(), t2p1.getLongValue());
@@ -516,10 +517,18 @@ public class DashboardManagerTest
 		dbd9.setName("key9" + System.currentTimeMillis());
 		dbd9 = dm.saveNewDashboard(dbd9, tenant2);
 
+		// test deleted dashboards shouldn't be queried
+		Dashboard dbd10 = new Dashboard();
+		dbd10.setName("name " + System.currentTimeMillis());
+		Tile db10tile1 = createTileForDashboard(dbd10);
+		db10tile1.setTitle("KEY" + System.currentTimeMillis());
+		dbd10 = dm.saveNewDashboard(dbd10, tenant1);
+		dm.deleteDashboard(dbd10.getDashboardId(), tenant1);
+
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, originSize + 8); // dbd9 not in the returned list
+		Assert.assertEquals(icSize, originSize + 8); // dbd9/10 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd9.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned from other tenant different from current tenant");
@@ -566,6 +575,7 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd7.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd8.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd9.getDashboardId(), true, tenant2);
+		dm.deleteDashboard(dbd10.getDashboardId(), true, tenant1);
 	}
 
 	@Test
@@ -604,11 +614,11 @@ public class DashboardManagerTest
 	private Tile createTileForDashboard(Dashboard dbd) throws InterruptedException
 	{
 		Thread.sleep(2);
-		Tile tile3 = new Tile();
-		tile3.setTitle("tile " + System.currentTimeMillis());
-		initTileWidget(tile3);
-		dbd.addTile(tile3);
-		return tile3;
+		Tile tile = new Tile();
+		tile.setTitle("tile " + System.currentTimeMillis());
+		initTileWidget(tile);
+		dbd.addTile(tile);
+		return tile;
 	}
 
 	private void initTileWidget(Tile tile)

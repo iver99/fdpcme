@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.ws;
 
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 
 /**
@@ -48,14 +49,13 @@ public class ErrorEntity
 	public int getStatusCode()
 	{
 		if (errorCode != null) {
-			//int code =  errorCode.intValue();
-			if (errorCode < 20000) {
+			if (errorCode <= DashboardErrorConstants.DASHBOARD_UI_MAX_ERROR_CODE) {
 				return Status.BAD_REQUEST.getStatusCode();
 			}
-			if (errorCode < 30000) {
+			if (errorCode <= DashboardErrorConstants.DASHBOARD_RESOURCE_MAX_ERROR_CODE) {
 				return Status.NOT_FOUND.getStatusCode();
 			}
-			if (errorCode < 40000) {
+			if (errorCode <= DashboardErrorConstants.DASHBOARD_SECURITY_MAX_ERROR_CODE) {
 				return Status.FORBIDDEN.getStatusCode();
 			}
 		}

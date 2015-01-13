@@ -403,7 +403,8 @@ public class DashboardManager
 			boolean ic) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
-			throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET);
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET));
 		}
 		int firstResult = 0;
 		if (offset != null) {
@@ -411,7 +412,8 @@ public class DashboardManager
 		}
 
 		if (pageSize != null && pageSize <= 0) {
-			throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT);
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT));
 		}
 		int maxResults = DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT;
 		if (pageSize != null) {
@@ -419,18 +421,18 @@ public class DashboardManager
 		}
 
 		StringBuilder sb = new StringBuilder(
-				" from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy ");
+				" from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy where p.deleted = 0 ");
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		String currentUser = AppContext.getInstance().getCurrentUser();
 		paramMap.put("accessBy", currentUser);
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
-				sb.append(" where (p.name LIKE :name");
+				sb.append(" and (p.name LIKE :name");
 				paramMap.put("name", "%" + queryString + "%");
 			}
 			else {
-				sb.append(" where (lower(p.name) LIKE :name");
+				sb.append(" and (lower(p.name) LIKE :name");
 				paramMap.put("name", "%" + queryString.toLowerCase(locale) + "%");
 			}
 
@@ -532,12 +534,13 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = AppContext.getInstance().getCurrentUser();
-			if (dbd.getDashboardId() != null) {
-				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
-				if (sameId != null) {
-					throw new CommonFunctionalException(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR);
-				}
-			}
+			//			if (dbd.getDashboardId() != null) {
+			//				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
+			//				if (sameId != null) {
+			//					throw new CommonFunctionalException(
+			//							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
+			//				}
+			//			}
 			//check dashboard name
 			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(MessageUtils.getDefaultBundleString("DASHBOARD_CREATE_INVALID_NAME_ERROR"));
@@ -643,12 +646,7 @@ public class DashboardManager
 			if (ed == null) {
 				throw new DashboardNotFoundException();
 			}
-			//				ed.setName(dbd.getName());
-			//				ed.setDescription(dbd.getDescription());
-			//				ed.setEnableTimeRange(DataFormatUtils.boolean2Integer(dbd.getEnableTimeRange()));
-			//				ed.setIsSystem(dbd.);
 			dbd.getPersistenceEntity(ed);
-			//				updateDashboardTiles(dbd.getTileList(), ed);
 			ed.setLastModificationDate(new Date());
 			ed.setLastModifiedBy(currentUser);
 			if (dbd.getOwner() != null) {

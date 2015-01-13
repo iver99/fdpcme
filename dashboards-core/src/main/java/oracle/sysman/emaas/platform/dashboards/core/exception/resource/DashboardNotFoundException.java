@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.core.exception.resource;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 
 /**
  * @author guobaochen
@@ -27,7 +28,8 @@ public class DashboardNotFoundException extends DashboardException
 	 */
 	public DashboardNotFoundException()
 	{
-		super(DashboardErrorConstants.DASHBOARD_NOT_FOUND_ERROR_CODE, DASHBOARD_NOT_FOUND_ERROR);
+		super(DashboardErrorConstants.DASHBOARD_NOT_FOUND_ERROR_CODE, MessageUtils
+				.getDefaultBundleString(DASHBOARD_NOT_FOUND_ERROR));
 	}
 
 }

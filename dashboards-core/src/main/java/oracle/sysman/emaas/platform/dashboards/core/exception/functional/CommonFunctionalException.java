@@ -25,6 +25,8 @@ public class CommonFunctionalException extends DashboardException
 	public static final String DASHBOARD_QUERY_INVALID_OFFSET = "DASHBOARD_QUERY_INVALID_OFFSET";
 	public static final String DASHBOARD_QUERY_INVALID_LIMIT = "DASHBOARD_QUERY_INVALID_LIMIT";
 	public static final String DASHBOARD_CREATE_SAME_ID_ERROR = "DASHBOARD_CREATE_SAME_ID_ERROR";
+	public static final String DASHBOARD_INVALID_TYPE = "DASHBOARD_INVALID_TYPE";
+	public static final String TILE_PARAM_INVALID_TYPE = "TILE_PARAM_INVALID_TYPE";
 
 	/**
 	 * Constructs a new <code>CommonFunctionalException</code> with the specified detail message.

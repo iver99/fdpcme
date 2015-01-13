@@ -6,14 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class Dashboard
 {
-	public static final int DASHBOARD_TYPE_NORMAL = Integer.valueOf(0);
-	public static final int DASHBOARD_TYPE_ONE_PAGE = Integer.valueOf(1);
+	public static final String DASHBOARD_TYPE_PLAIN = "PLAIN";
+	public static final Integer DASHBOARD_TYPE_CODE_PLAIN = Integer.valueOf(0);
+	public static final String DASHBOARD_TYPE_SOURCELINK = "SOURCELINK";
+	public static final Integer DASHBOARD_TYPE_CODE_SOURCELINK = Integer.valueOf(1);
 	public static final boolean DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = Boolean.FALSE;
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
@@ -22,6 +28,16 @@ public class Dashboard
 		return Dashboard.valueOf(ed, null);
 	}
 
+	/**
+	 * Get a dashboard instance from EmsDashboard instance, by providing the prototype dashboard object
+	 *
+	 * @param from
+	 *            EmsDashboard instance
+	 * @param to
+	 *            prototype Dashboard object, and it's values will be covered by value from EmsDashboard instance, or a new
+	 *            Dashboard instance will be created if it's null
+	 * @return
+	 */
 	public static Dashboard valueOf(EmsDashboard from, Dashboard to)
 	{
 		if (from == null) {
@@ -40,8 +56,9 @@ public class Dashboard
 		to.setLastModifiedBy(from.getLastModifiedBy());
 		to.setName(from.getName());
 		to.setOwner(from.getOwner());
-		to.setScreenShot(from.getScreenShot());
-		to.setType(from.getType());
+		// by default, we'll not load screenshot for query
+		//		to.setScreenShot(from.getScreenShot());
+		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
 		List<EmsDashboardTile> edtList = from.getDashboardTileList();
 		if (edtList != null) {
 			List<Tile> tileList = new ArrayList<Tile>();
@@ -55,27 +72,44 @@ public class Dashboard
 		return to;
 	}
 
+	@JsonProperty("id")
 	private Long dashboardId;
+
 	private String name;
+
+	@JsonProperty("createdOn")
 	private Date creationDate;
+
+	@JsonIgnore
 	private Boolean deleted;
+
 	private String description;
+
 	private Boolean enableTimeRange;
+
+	@JsonProperty("systemDashboard")
 	private Boolean isSystem;
+
+	@JsonProperty("lastModifiedOn")
 	private Date lastModificationDate;
+
 	private String lastModifiedBy;
+
 	private String owner;
 
+	@JsonIgnore
 	private String screenShot;
 
-	private Integer type;
+	private String screenShotHref;
+
+	private String type;
 
 	private List<Tile> tileList;
 
 	public Dashboard()
 	{
 		// defaults for non-null values
-		type = Dashboard.DASHBOARD_TYPE_NORMAL;
+		type = Dashboard.DASHBOARD_TYPE_PLAIN;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
 	}
@@ -140,14 +174,15 @@ public class Dashboard
 		return owner;
 	}
 
-	public EmsDashboard getPersistenceEntity(EmsDashboard ed)
+	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws CommonFunctionalException
 	{
 		//    	Integer isDeleted = DataFormatUtils.boolean2Integer(this.deleted);
 		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem == null);
+		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
-					lastModificationDate, lastModifiedBy, name, owner, screenShot, type);
+					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType);
 			//    	List<EmsDashboardTile> edtList = new ArrayList<EmsDashboardTile>();
 			if (tileList != null) {
 				int i = 0;
@@ -172,7 +207,7 @@ public class Dashboard
 			ed.setName(name);
 			//    		ed.setOwner(owner);
 			ed.setScreenShot(screenShot);
-			ed.setType(type);
+			ed.setType(dashboardType);
 			updateEmsDashboardTiles(tileList, ed);
 		}
 		return ed;
@@ -183,12 +218,17 @@ public class Dashboard
 		return screenShot;
 	}
 
+	public String getScreenShotHref()
+	{
+		return screenShotHref;
+	}
+
 	public List<Tile> getTileList()
 	{
 		return tileList;
 	}
 
-	public Integer getType()
+	public String getType()
 	{
 		return type;
 	}
@@ -254,17 +294,22 @@ public class Dashboard
 		this.screenShot = screenShot;
 	}
 
+	public void setScreenShotHref(String screenShotHref)
+	{
+		this.screenShotHref = screenShotHref;
+	}
+
 	public void setTileList(List<Tile> emsDashboardTileList)
 	{
 		tileList = emsDashboardTileList;
 	}
 
-	public void setType(Integer type)
+	public void setType(String type)
 	{
 		this.type = type;
 	}
 
-	private void updateEmsDashboardTiles(List<Tile> tiles, EmsDashboard ed)
+	private void updateEmsDashboardTiles(List<Tile> tiles, EmsDashboard ed) throws CommonFunctionalException
 	{
 		Map<Tile, EmsDashboardTile> rows = new HashMap<Tile, EmsDashboardTile>();
 		// remove deleted tile row in dashboard row first
