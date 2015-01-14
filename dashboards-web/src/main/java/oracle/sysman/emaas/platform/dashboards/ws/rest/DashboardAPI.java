@@ -61,7 +61,7 @@ public class DashboardAPI extends APIBase
 			String tenantId = getTenantId();
 			d = manager.saveNewDashboard(d, tenantId);
 			updateDashboardAllHref(d);
-			return Response.ok(getJsonUtil().toJson(d)).build();
+			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
 		}
 		catch (IOException e) {
 			ErrorEntity error = new ErrorEntity();
