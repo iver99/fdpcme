@@ -18,13 +18,16 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -42,6 +45,8 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/api/v1/dashboards")
 public class DashboardAPI extends APIBase
 {
+	@Context
+	private UriInfo uriInfo;
 
 	public DashboardAPI()
 	{
@@ -98,6 +103,22 @@ public class DashboardAPI extends APIBase
 	}
 
 	@GET
+	@Path("{id: [1-9][0-9]*}")
+	public Response queryDashboardById(@PathParam("id") long dashboardId)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId = super.getTenantId();
+		try {
+			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
+			updateDashboardHref(dbd);
+			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+	}
+
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboards(@QueryParam("queryString") String queryString,
 			@DefaultValue("") @QueryParam("limit") Integer limit, @DefaultValue("0") @QueryParam("offset") Integer offset)
@@ -120,4 +141,53 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
+	@PUT
+	@Path("{id: [1-9][0-9]*}")
+	public Response updateDashboard(@PathParam("id") long dashboardId, JSONObject inputJson)
+	{
+		Dashboard input = null;
+		try {
+			input = getJsonUtil().fromJson(inputJson.toString(), Dashboard.class);
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			if (e1.getCause() instanceof DashboardException) {
+				return buildErrorResponse(new ErrorEntity((DashboardException) e1.getCause()));
+			}
+		}
+
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId = getTenantId();
+		try {
+			input.setDashboardId(dashboardId);
+			Dashboard dbd = dm.updateDashboard(input, tenantId);
+			updateDashboardHref(dbd);
+			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+	}
+
+	private Dashboard updateDashboardHref(Dashboard dbd)
+	{
+		if (dbd == null) {
+			return null;
+		}
+		String href = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId();
+		dbd.setHref(href);
+		updateDashboardScreenshotHref(dbd);
+		return dbd;
+	}
+
+	private Dashboard updateDashboardScreenshotHref(Dashboard dbd)
+	{
+		if (dbd == null) {
+			return null;
+		}
+		String screenShotUrl = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		dbd.setScreenShotHref(screenShotUrl);
+		return dbd;
+	}
 }

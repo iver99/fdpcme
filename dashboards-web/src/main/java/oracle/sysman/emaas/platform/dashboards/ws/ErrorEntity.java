@@ -15,6 +15,8 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * @author guobaochen
  */
@@ -46,6 +48,7 @@ public class ErrorEntity
 		return errorMessage;
 	}
 
+	@JsonIgnore
 	public int getStatusCode()
 	{
 		if (errorCode != null) {

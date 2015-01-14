@@ -212,23 +212,24 @@ public class DashboardManager
 	 *
 	 * @param dashboardId
 	 * @return
+	 * @throws DashboardException
 	 */
-	public Dashboard getDashboardById(Long dashboardId, String tenantId)
+	public Dashboard getDashboardById(Long dashboardId, String tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
 			if (dashboardId == null || dashboardId <= 0) {
-				return null;
+				throw new DashboardNotFoundException();
 			}
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 			if (ed == null) {
-				return null;
+				throw new DashboardNotFoundException();
 			}
 			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
-				return null;
+				throw new DashboardNotFoundException();
 			}
 			updateLastAccessDate(dashboardId, tenantId);
 			return Dashboard.valueOf(ed);
@@ -403,8 +404,8 @@ public class DashboardManager
 			boolean ic) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
-			throw new CommonFunctionalException(
-					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET));
+			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(MessageUtils
+					.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET)));
 		}
 		int firstResult = 0;
 		if (offset != null) {
@@ -412,8 +413,8 @@ public class DashboardManager
 		}
 
 		if (pageSize != null && pageSize <= 0) {
-			throw new CommonFunctionalException(
-					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT));
+			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(MessageUtils
+					.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT)));
 		}
 		int maxResults = DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT;
 		if (pageSize != null) {
@@ -625,9 +626,9 @@ public class DashboardManager
 			}
 			// init creation date, owner to prevent null insertion
 			Date created = new Date();
-			if (dbd.getCreationDate() == null) {
-				dbd.setCreationDate(created);
-			}
+			//			if (dbd.getCreationDate() == null) {
+			//				dbd.setCreationDate(created);
+			//			}
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
