@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
@@ -286,15 +287,23 @@ public class DashboardManagerTest
 
 		// soft delete and check
 		dm.deleteDashboard(dbd1.getDashboardId(), false, tenantId1);
-		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Assert.assertNull(queried);
+		boolean expectedException = false;
+		try {
+			dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+			expectedException = true;
+		}
+		if (!expectedException) {
+			Assert.fail("Expected exception not happended");
+		}
 
 		// try to insert dashboard with same name after deletion and it should work
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName(name1);
 		dbd2.setDescription("dashboard 2");
 		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
-		queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
+		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
 		Assert.assertNotNull(queried.getDashboardId());
 
@@ -411,8 +420,16 @@ public class DashboardManagerTest
 		Assert.assertNotNull(queried);
 
 		// not existing ones
-		queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
-		Assert.assertNull(queried);
+		boolean expectedException = false;
+		try {
+			queried = dm.getDashboardById(Long.MAX_VALUE, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+			expectedException = true;
+		}
+		if (!expectedException) {
+			Assert.fail("Expected exception not happended");
+		}
 
 		// post test
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
