@@ -46,6 +46,7 @@ define(['knockout',
                             for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
                                 $.ajax({
                                     url: virtualEndpoints[k],
+                                    headers: getAuthorizationRequestHeader(),
                                     success: function(data, textStatus) {
                                         availableUrl = virtualEndpoints[k];
                                         urlFound = true;
@@ -63,6 +64,7 @@ define(['knockout',
                                 for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
                                     $.ajax({
                                         url: canonicalEndpoints[m],
+                                        headers: getAuthorizationRequestHeader(),
                                         success: function(data, textStatus) {
                                             availableUrl = canonicalEndpoints[m];
                                             urlFound = true;
@@ -88,11 +90,12 @@ define(['knockout',
                                 serviceUrl = serviceUrl+'&version='+data.version;
                             $.ajax({
                                 url: serviceUrl,
+                                headers: getAuthorizationRequestHeader(),
                                 success: function(data, textStatus) {
                                     fetchServiceCallback(data);
                                 },
                                 error: function(xhr, textStatus, errorThrown){
-
+                                    console.error(textStatus);
                                 },
                                 async: false
                             });
@@ -156,9 +159,25 @@ define(['knockout',
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-                var quickLinks = [];
-                var quickLinksFromDashboard = [];
-                var quickLinksFromIntegrators = [];
+                return discoverLinks('quickLink');
+            };
+            
+            /**
+             * Discover available visual analyzer links
+             * @returns {Array} visualAnalyzerLinks
+             */
+            self.discoverVisualAnalyzerLinks = function() {
+                return discoverLinks('visualAnalyzer');
+            };
+            
+            /**
+             * Discover available links by rel name
+             * @returns {Array} availableLinks
+             */
+            var discoverLinks = function(relName) {
+                var availableLinks = [];
+                var linksFromDashboard = [];
+                var linksFromIntegrators = [];
                 
                 var fetchServiceQuickLinks = function(data) {
                     if (data.items && data.items.length > 0) {
@@ -167,14 +186,29 @@ define(['knockout',
                             if (serviceItem.links && serviceItem.links.length > 0) {
                                 for (j = 0; j < serviceItem.links.length; j++) {
                                     var link = serviceItem.links[j];
-                                    if (link.rel === 'quickLink') {
-                                        var linkItem = {name: serviceItem.serviceName,
+                                    var linkName = serviceItem.serviceName;
+                                    var isValidQuickLink = false;
+                                    if (link.rel.indexOf('/') > 0) {
+                                        var rel = link.rel.split('/');
+                                        if (rel[0] === relName) {
+                                            isValidQuickLink = true;
+                                            if (rel[1] && rel[1] !== '') {
+                                                linkName = rel[1];
+                                            }
+                                        }
+                                    }
+                                    else if (link.rel === relName) {
+                                        isValidQuickLink = true;
+                                    }
+                                    
+                                    if (isValidQuickLink) {
+                                        var linkItem = {name: linkName,
                                                             href: link.href};
                                         if (serviceItem.serviceName === 'Dashboard' && serviceItem.version === '1.0') {
-                                            quickLinksFromDashboard.push(linkItem);
+                                            linksFromDashboard.push(linkItem);
                                         }
                                         else {
-                                            quickLinksFromIntegrators.push(linkItem);
+                                            linksFromIntegrators.push(linkItem);
                                         }
                                     }
                                 }
@@ -191,6 +225,7 @@ define(['knockout',
                                 var serviceUrl = data.serviceUrls[i]+'/instances';
                                 $.ajax({
                                     url: serviceUrl,
+                                    headers: getAuthorizationRequestHeader(),
                                     success: function(data, textStatus) {
                                         fetchServiceQuickLinks(data);
                                     },
@@ -208,13 +243,13 @@ define(['knockout',
                     async: false
                 });
                 
-                for (i = 0; i < quickLinksFromDashboard.length; i++) {
-                    quickLinks.push(quickLinksFromDashboard[i]);
+                for (i = 0; i < linksFromDashboard.length; i++) {
+                    availableLinks.push(linksFromDashboard[i]);
                 }
-                for (j = 0; j < quickLinksFromIntegrators.length; j++) {
-                    quickLinks.push(quickLinksFromIntegrators[j]);
+                for (j = 0; j < linksFromIntegrators.length; j++) {
+                    availableLinks.push(linksFromIntegrators[j]);
                 }
-                return quickLinks;
+                return availableLinks;
             };
         }
         
@@ -229,16 +264,18 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
             return "http://slc08fvg.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html";
         }else if ("Application Performance Manager Cloud Service"===providerName){
             return "http://slc04srr.us.oracle.com:7401/apmUi/";
-        } 
-        else if ("Sample Provider"===providerName) {
-            return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
+        }else if ("IT ANALYTICS"===providerName){
+            return "http://slc06xat.us.oracle.com:7001/ita-tool";
+        }else if ("Sample Provider"===providerName) {
+//            return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
+            return "http://jet.us.oracle.com";
         }
-        else if ("Log Analytics"===providerName) {
-            return "http://localhost:8383/emcpdfui/";
-        }
-        else if ("Target Analytics"===providerName) {
-            return "http://localhost:8383/emcpdfui/";
-        }
+//        else if ("Log Analytics"===providerName) {
+//            return "http://localhost:8383/emcpdfui/";
+//        }
+//        else if ("Target Analytics"===providerName) {
+//            return "http://localhost:8383/emcpdfui/";
+//        }
         else {
             var urlFound = false;
             
@@ -268,6 +305,7 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
                             serviceUrl = serviceUrl + '&version=' + providerVersion;
                         $.ajax({
                             url: serviceUrl,
+                            headers: getAuthorizationRequestHeader(),
                             success: function(data, textStatus) {
                                 assetRoot = fetchServiceAssetRoot(data);
                             },
@@ -285,3 +323,7 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
     }
     return "http://jet.us.oracle.com";
 }
+
+function getAuthorizationRequestHeader() {
+    return {"Authorization": "Basic d2VibG9naWM6d2VsY29tZTE="};
+};

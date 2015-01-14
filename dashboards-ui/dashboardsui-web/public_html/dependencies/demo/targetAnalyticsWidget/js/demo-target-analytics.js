@@ -72,7 +72,7 @@ define([
             };
             
             function fetchResults() {
-                $.ajax({type: 'POST', contentType:'application/json',url: taUrl, data: ko.toJSON(queryString),
+                $.ajax({type: 'POST', contentType:'application/json',url: taUrl, data: ko.toJSON(queryString),headers: getAuthorizationRequestHeader(),
                     success: function(data, textStatus){
                         querySuccessCallBack(data);
                     },

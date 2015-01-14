@@ -34,3 +34,104 @@ a:hover {
 }
 
 .dbs-nav-mapping-icon-24:before{content:url("images/compassIcon_24.png");}
+.dbs-nav-mapping-icon-32:before{content:url("images/compassIcon_32.png");}
+
+.loadingIndicator{
+    position:fixed;
+    top:0;
+    margin-left:-65px;
+    width:120px;
+    height:15px;
+    left: 50%;
+    z-index:999;
+    background-color: #e6ffe0;
+    padding: 5px;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
+    text-align: center;
+    border-style: solid;
+    border-width: 1px;
+    border-top:none;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+
+.fa-icon-font {
+  font-family: FaFont;
+  font-size: 1.34rem;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.fa-icon-font:before{
+    display: inline-block;
+}
+
+.fa-link:before {
+  content: "\f0c1"; 
+}
+
+.fa-star:before {
+  content: "\f005"; }
+
+.fa-history:before {
+  content: "\f1da"; 
+}
+
+@font-face {
+  font-family: 'FaFont';
+  src: url("fonts/fontawesome-webfont.woff");
+  font-weight: normal;
+  font-style: normal; 
+}
+
+
+#links_menu{
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    left:0px;
+    z-index: 1000;
+    max-height: 2000px;
+    display: none;
+    box-shadow: 3px 3px 5px #888888;
+}
+#links_menu .oj-row{
+    height:24px;
+    line-height: 24px;
+}
+#links_menu .links-content-container{
+    margin : 30px 0;
+    float: left;
+    width: 100%;
+}
+#links_menu .iconCircle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+#iconLink{
+    background-color: #ed813e;
+}
+#iconStar{
+    background-color: #5a68ad;
+}
+#iconHistory{
+    background-color: #3caf85;
+}
+
+#links_menu .iconCircle .fa {
+    font-size: 5em;
+    color: white;
+}

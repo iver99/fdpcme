@@ -79,7 +79,8 @@ require(['dbs/dbsmodel',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
 //    'ojs/ojvalidation'
-//  'ojs/ojselectcombobox',
+    'ojs/ojselectcombobox',
+    'ojs/ojmenu'
 //    'ojs/ojmodel',
 //    'ojs/ojknockout-model',
 //    'ojs/ojselectcombobox',
@@ -213,6 +214,8 @@ require(['dbs/dbsmodel',
                 
                 ko.applyBindings(new HeaderViewModel(), document.getElementById('demo-appheader-bar'));
                 ko.applyBindings({navigationsPopupModel: dashboardsViewModle.navigationsPopupModel}, document.getElementById('links_menu'));
+                $("#loading").hide();
+//                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
                 $('#globalBody').show();
                 // Setup bindings for the header and footer then display everything
                 //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));

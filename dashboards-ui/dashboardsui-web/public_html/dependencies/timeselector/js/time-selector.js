@@ -12,7 +12,8 @@ define(['knockout', 'jquery'],
                 var hour = 60*min;
                 var day = 24*hour;
                 me.customOption = ko.observable('relative');
-                me.label = ko.observable("Last 30 Days");
+//                me.label = ko.observable("Last 30 Days");
+                me.label = ko.observable("Last 60 Minutes");
                 me.timeUnit = ko.observable('days');
                 me.timeDuration = ko.observable(30);
                 me.startDate = ko.observable(oj.IntlConverterUtils.dateToLocalIso(model.viewStart()));

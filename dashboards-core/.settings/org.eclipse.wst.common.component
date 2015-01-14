@@ -2,6 +2,5 @@
     <wb-module deploy-name="dashboards-core">
         <wb-resource deploy-path="/" source-path="/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/.apt_src"/>
     </wb-module>
 </project-modules>
