@@ -27,12 +27,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
-import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
 import org.codehaus.jettison.json.JSONObject;
@@ -64,9 +62,7 @@ public class DashboardAPI extends APIBase
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
 		}
 		catch (IOException e) {
-			ErrorEntity error = new ErrorEntity();
-			error.setErrorCode(DashboardErrorConstants.DASHBOARD_COMMON_UI_ERROR_CODE);
-			error.setErrorMessage(MessageUtils.getDefaultBundleString("DASHBOARD_JSON_PARSE_ERROR"));
+			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
 		catch (DashboardException e) {
@@ -152,11 +148,8 @@ public class DashboardAPI extends APIBase
 			input = getJsonUtil().fromJson(inputJson.toString(), Dashboard.class);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
-			if (e.getCause() instanceof DashboardException) {
-				return buildErrorResponse(new ErrorEntity((DashboardException) e.getCause()));
-			}
-			return Response.status(Status.BAD_REQUEST).entity(e.getLocalizedMessage()).build();
+			ErrorEntity error = new ErrorEntity(e);
+			return buildErrorResponse(error);
 		}
 
 		DashboardManager dm = DashboardManager.getInstance();
