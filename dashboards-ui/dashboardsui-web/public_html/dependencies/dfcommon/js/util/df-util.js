@@ -159,9 +159,25 @@ define(['knockout',
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-                var quickLinks = [];
-                var quickLinksFromDashboard = [];
-                var quickLinksFromIntegrators = [];
+                return discoverLinks('quickLink');
+            };
+            
+            /**
+             * Discover available visual analyzer links
+             * @returns {Array} visualAnalyzerLinks
+             */
+            self.discoverVisualAnalyzerLinks = function() {
+                return discoverLinks('visualAnalyzer');
+            };
+            
+            /**
+             * Discover available links by rel name
+             * @returns {Array} availableLinks
+             */
+            var discoverLinks = function(relName) {
+                var availableLinks = [];
+                var linksFromDashboard = [];
+                var linksFromIntegrators = [];
                 
                 var fetchServiceQuickLinks = function(data) {
                     if (data.items && data.items.length > 0) {
@@ -174,14 +190,14 @@ define(['knockout',
                                     var isValidQuickLink = false;
                                     if (link.rel.indexOf('/') > 0) {
                                         var rel = link.rel.split('/');
-                                        if (rel[0] === 'quickLink') {
+                                        if (rel[0] === relName) {
                                             isValidQuickLink = true;
                                             if (rel[1] && rel[1] !== '') {
                                                 linkName = rel[1];
                                             }
                                         }
                                     }
-                                    else if (link.rel === 'quickLink') {
+                                    else if (link.rel === relName) {
                                         isValidQuickLink = true;
                                     }
                                     
@@ -189,10 +205,10 @@ define(['knockout',
                                         var linkItem = {name: linkName,
                                                             href: link.href};
                                         if (serviceItem.serviceName === 'Dashboard' && serviceItem.version === '1.0') {
-                                            quickLinksFromDashboard.push(linkItem);
+                                            linksFromDashboard.push(linkItem);
                                         }
                                         else {
-                                            quickLinksFromIntegrators.push(linkItem);
+                                            linksFromIntegrators.push(linkItem);
                                         }
                                     }
                                 }
@@ -227,13 +243,13 @@ define(['knockout',
                     async: false
                 });
                 
-                for (i = 0; i < quickLinksFromDashboard.length; i++) {
-                    quickLinks.push(quickLinksFromDashboard[i]);
+                for (i = 0; i < linksFromDashboard.length; i++) {
+                    availableLinks.push(linksFromDashboard[i]);
                 }
-                for (j = 0; j < quickLinksFromIntegrators.length; j++) {
-                    quickLinks.push(quickLinksFromIntegrators[j]);
+                for (j = 0; j < linksFromIntegrators.length; j++) {
+                    availableLinks.push(linksFromIntegrators[j]);
                 }
-                return quickLinks;
+                return availableLinks;
             };
         }
         

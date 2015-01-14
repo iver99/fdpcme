@@ -147,7 +147,7 @@ function(temp, tabmodel, oj, ko, $, dfu)
         self.dbsArray = [];
         self.filterArray = [];
         self.did = 0;
-        self.exploreDataLinkList = ko.observableArray(self.navigationsPopupModel.quickLinks());
+        self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
         
         var onepageDsbs = [{"name":"Database Performance Analytics",
                                "screenshot":"images/dbaas_histogram.png"},
