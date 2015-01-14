@@ -2,7 +2,6 @@ apply plugin: 'war'
 apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
 
-
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
@@ -52,11 +51,60 @@ project.task("cleanJet") << {
     sourceJetDestDir.deleteDir()
 }
 
-clean.dependsOn cleanJet
+def war_number = "${download_number}"
+def download_group = "${download_group}".split(",")
+def download_artifacts = "${download_artifacts}".split(",")
+def download_version = "${download_version}".split(",")
+def download_foldername = "${download_foldername}".split(",")
+
+project.task("unpackWarFromArtifactory") << {
+    
+    for (i in 0..<war_number.toInteger()){
+	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+		if (artifact.name.contains(download_artifacts[i])) {
+		    logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+		    def File buildWarUnzipDir = new File(buildDir.absolutePath, "intgwar"+i)
+		    buildWarUnzipDir.mkdirs()
+		    project.copy {
+		        from project.file(artifact.file.absolutePath)
+		        into buildWarUnzipDir.absolutePath
+		    }
+		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".war", dest:buildWarUnzipDir.absolutePath)
+		    
+		    project.copy {
+		        from  buildWarUnzipDir.absolutePath+"/dependencies/"
+		        into sourceWebappDir.absolutePath+"/dependencies/"
+		    }
+		    
+		    project.delete(buildWarUnzipDir)
+		}
+	    }
+    }
+}
+
+project.task("cleanWar") << {
+    def File warDestDir = new File(sourceWebappDir.absolutePath,"/dependencies")
+    def File tmpdir = warDestDir
+    println 'Cleaning up war directories ...'
+
+    download_foldername.each { folder ->
+        tmpdir = new File(warDestDir.absolutePath,"/"+folder)
+	println 'war dir: ' + tmpdir
+	tmpdir.deleteDir()}
+}
+
+clean.dependsOn cleanJet,cleanWar
 
 war.archiveName "dashboardsui-web.war"
 
-war.dependsOn unpackJETFromArtifactory
+if(war_number.toInteger()>0){
+
+	war.dependsOn unpackJETFromArtifactory, unpackWarFromArtifactory
+}
+else
+{
+	war.dependsOn unpackJETFromArtifactory
+}
 
 war {
 	from('public_html') {
@@ -118,5 +166,9 @@ dependencies {
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.3')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.4')
         compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
+	if(war_number.toInteger()>0){
+	    for (i in 0..<war_number.toInteger())
+		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'war')
+	}
 }
 
