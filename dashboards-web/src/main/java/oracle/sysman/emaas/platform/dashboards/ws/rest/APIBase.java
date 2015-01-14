@@ -10,8 +10,11 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 
@@ -20,6 +23,8 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
  */
 public class APIBase
 {
+	@Context
+	protected UriInfo uriInfo;
 	private final JsonUtil jsonUtil;
 
 	public APIBase()
@@ -47,4 +52,16 @@ public class APIBase
 		return "test";
 	}
 
+	/*
+	 * Updates the specified dashboard by generating all href fields
+	 */
+	protected Dashboard updateDashboardHref(Dashboard dbd)
+	{
+		if (dbd == null) {
+			return null;
+		}
+		String href = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId();
+		dbd.setHref(href);
+		return dbd;
+	}
 }
