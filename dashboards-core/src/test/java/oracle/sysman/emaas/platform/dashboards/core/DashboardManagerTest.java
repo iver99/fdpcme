@@ -201,7 +201,7 @@ public class DashboardManagerTest
 		Assert.assertEquals(queriedT1p1.getIntegerValue(), t1p1.getIntegerValue());
 		Assert.assertEquals(queriedT1p1.getIsSystem(), t1p1.getIsSystem());
 		Assert.assertEquals(queriedT1p1.getLongValue(), t1p1.getLongValue());
-		Assert.assertEquals(queriedT1p1.getParamType(), t1p1.getParamType());
+		Assert.assertEquals(queriedT1p1.getType(), t1p1.getType());
 		Assert.assertEquals(queriedT1p1.getParamValueTimestamp(), t1p1.getParamValueTimestamp());
 
 		Tile queriedTile2 = queriedTiles.get(1);
@@ -212,7 +212,7 @@ public class DashboardManagerTest
 		Assert.assertEquals(queriedT2p1.getIntegerValue(), t2p1.getIntegerValue());
 		Assert.assertEquals(queriedT2p1.getIsSystem(), t2p1.getIsSystem());
 		Assert.assertEquals(queriedT2p1.getLongValue(), t2p1.getLongValue());
-		Assert.assertEquals(queriedT2p1.getParamType(), t2p1.getParamType());
+		Assert.assertEquals(queriedT2p1.getType(), t2p1.getType());
 		Assert.assertEquals(queriedT2p1.getParamValueTimestamp(), t2p1.getParamValueTimestamp());
 
 		//update. Remove existing tile from the dashboard, and add new tile into it
@@ -246,10 +246,10 @@ public class DashboardManagerTest
 		Assert.assertEquals(queriedTile1.getParameters().size(), tile1.getParameters().size());
 		TileParam queriedTile1Params2 = queriedTile1.getParameter(t1p2.getName());
 		Assert.assertEquals(queriedTile1Params2.getStringValue(), t1p2.getStringValue());
-		Assert.assertEquals(queriedTile1Params2.getParamType(), t1p2.getParamType());
+		Assert.assertEquals(queriedTile1Params2.getType(), t1p2.getType());
 		TileParam queriedTile1Params3 = queriedTile1.getParameter(t1p3.getName());
 		Assert.assertEquals(queriedTile1Params3.getStringValue(), t1p3.getStringValue());
-		Assert.assertEquals(queriedTile1Params3.getParamType(), t1p3.getParamType());
+		Assert.assertEquals(queriedTile1Params3.getType(), t1p3.getType());
 		Assert.assertEquals(queriedTiles.get(1).getTitle(), tile3.getTitle());
 
 		// remove, add, and exchange position for 1st two tiles, and add another new one
