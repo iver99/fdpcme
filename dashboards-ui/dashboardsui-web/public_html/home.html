@@ -40,45 +40,13 @@ role value for that section to represent the appropriate content type.
 
     </head>
     <body>
+        <div class="loadingIndicator" id="loading">Loading...</div>
         <div id="globalBody" style="display: none"> <!-- This div helps make sure the footer stays at the bottom of the page -->
 
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
             -->
             <header id="headerWrapper" role="banner">
-                <style>
-    #links_menu{
-        background-color: white;
-        position: absolute;
-        width: 100%;
-        left:0px;
-        z-index: 1000;
-        max-height: 2000px;
-        display: none;
-        box-shadow: 3px 3px 5px #888888;
-    }
-    #links_menu .oj-row{
-        height:24px;
-        line-height: 24px;
-    }
-    #links_menu .links-content-container{
-        margin : 30px 0;
-        float: left;
-        width: 100%;
-    }
-    #links_menu .iconCircle {
-        background-color: #6f8597;
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-    }
-    #links_menu .iconCircle img{
-        padding: 26px;
-        width: 48px;
-        height: 48px;
-    }
-
-                </style>
                 <div class="demo-appheader">
                     <div id="demo-appheader-bar" class="oj-row demo-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
@@ -126,11 +94,11 @@ role value for that section to represent the appropriate content type.
                                                         click: function () { $('#dbs_navPopup').ojPopup('open', '#linksButton');}">
                                     </button-->
                                     
-                                    <button id="linksButton" class="oj-button-half-chrome demo-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" data-bind="ojComponent: {component:'ojButton', 
+                                    <button id="linksButton" class="oj-button-half-chrome demo-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" style="height:43px" data-bind="ojComponent: {component:'ojButton', 
                                             label: 'Links', 
                                             display: 'icons', 
-                                            icons: {start: 'dbs-nav-mapping-icon-24 demo-icon-font'}}, 
-                                            click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start dbs-nav-mapping-icon-24 demo-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
+                                            icons: {start: 'dbs-nav-mapping-icon-32 demo-icon-font'}}, 
+                                            click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start dbs-nav-mapping-icon-32 demo-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
 
 
                                     <!-- This is how to add a separator to the toolbar.  
@@ -148,9 +116,10 @@ role value for that section to represent the appropriate content type.
                     <!--Nav Menu-->
                     <div class="menuPullDown oj-component-initnode" id="links_menu">
                         <div class="links-content-container">
+
                             <div class="oj-sm-1 oj-md-offset-1 oj-col links-icon">
-                                <div class = iconCircle>
-                                    <img src="css/images/links_icon1.png" />
+                                <div class="iconCircle" id="iconLink">
+                                    <i class="fa fa-icon-font fa-link"></i>
                                 </div>
                             </div>
                             <div class="oj-sm-2 oj-col">
@@ -167,9 +136,10 @@ role value for that section to represent the appropriate content type.
                                     <a data-bind="click: function() { window.open( navigationsPopupModel.dataVisualLink );}">Data Visual Analyzer Home</a>
                                 </div>-->
                             </div>
+
                             <div class="oj-sm-1 oj-col links-icon">
-                                <div class = iconCircle>
-                                    <img src="css/images/links_icon2.png" />
+                                <div class="iconCircle" id="iconStar">
+                                    <i class="fa fa-icon-font fa-star"></i>
                                 </div>
                             </div>
                             <div class="oj-sm-2 oj-col">
@@ -178,11 +148,13 @@ role value for that section to represent the appropriate content type.
                                 <div class="oj-row" style="font-weight: bold"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
                                 <!-- /ko -->
                             </div>
+
                             <div class="oj-sm-1 oj-col links-icon">
-                                <div class = iconCircle>
-                                    <img src="css/images/links_icon3.png" />
+                                <div class="iconCircle" id="iconHistory">
+                                    <i class="fa fa-icon-font fa-history"></i>
                                 </div>
                             </div>
+                            
                             <div class="oj-sm-3 oj-col">
                                 <div class="oj-row" style="font-weight: bolder; font-size: medium;">Recent Dashboards</div>
                                 <!-- ko foreach: navigationsPopupModel.recents -->
@@ -205,7 +177,7 @@ role value for that section to represent the appropriate content type.
                                     <div>
                                     <!-- Home toolbar start -->
                                     <div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;padding-left: 5px">
-                                        <div id="toolbar2"  aria-label="Searching toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
+                                        <div id="toolbar2"  aria-label="Searching toolbar" style="float:left;" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
                                                 <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: 'Enter search criteria', rootAttributes: {'style': 'min-width:653px; width:653px;'}},
                                                                   dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
@@ -214,14 +186,24 @@ role value for that section to represent the appropriate content type.
                                                             <img style="padding-top: 6px" src="css/images/navi_search_16_ena.png" alt="Search"/>
                                                 </button>
                                         </div>
-                                        <div id="toolbar1"  aria-label="Control toolbar" style="border-left: 0px" data-bind="ojComponent: {component:'ojToolbar'}">
+                                        <div id="toolbar1"  aria-label="Control toolbar" style="float:left;border-left: 0px" data-bind="ojComponent: {component:'ojToolbar'}">
                                                 <button id="cbtn" class="dbs-home-button-create-new-dashboard"
                                                         data-bind="click: createDashboardClicked, ojComponent: { component:'ojButton', label: 'Create New Dashboard'}"></button>
                                         </div>
-                                        <div id="toolbar4"  aria-label="Explore Data toolbar" data-bind="ojComponent: {component:'ojToolbar'}" style="border-left: 0">
-                                                <button id="cbtn" style="margin-bottom: 4px;color: black;margin-right: 4px;text-align: right;"
-                                                        data-bind="click: exploreDataClicked, ojComponent: { component:'ojButton', label: 'Explore Data'}"></button>
-                                        </div>                                        
+                                        <div id='menubutton-container' style="float:left;padding-left: 5px;padding-top: 3px;">
+                                            <button id="exploreDataBtn"
+                                                    data-bind="ojComponent: {component: 'ojButton', label: 'Explore Data', 
+                                                                             menu: '#exploreDataMenu'}">
+                                            </button>
+                                            <ul id="exploreDataMenu" style="display:none"
+                                                data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
+                                                <!-- ko foreach: exploreDataLinkList -->
+                                                <li>
+                                                    <a href="#" data-bind="text:name,value:href"></a>
+                                                </li>
+                                                <!-- /ko -->
+                                            </ul>
+                                          </div>                                       
                                         <!--div id="toolbar3" class="oj-xl-float-end"  aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
                                                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
                                         </div-->
@@ -334,7 +316,19 @@ role value for that section to represent the appropriate content type.
                         </div>
                     </div>
                     <!-- Confirmation dilog end -->
-                    
+
+                    <div style="display:none" id="dbs_comingsoonDialog"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 300px; min-height:100px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <div class="oj-dialog-header-close-wrapper" >
+                                <a class="df-dialog-header-close" data-bind="click: comingsoonDialogModel.close">CLOSE</a>
+                            </div>
+                            <span class="oj-dialog-title" data-bind="text: 'Information'"></span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <p data-bind="text: 'Coming soon...'"></p>
+                        </div>
+                    </div>                    
                     <!-- Navigations popup start
                     <div style="display:none; min-width:500px; min-height:150px" id="dbs_navPopup" 
                          data-bind="ojComponent:{component: 'ojPopup', tail: 'simple', position: {'my' : 'right top', 'at' : 'left center', 'collision' : 'none'}}">

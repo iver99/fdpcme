@@ -24,7 +24,7 @@ requirejs.config({
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
-        'dfutil':'../dependencies/util/js/df-util',
+        'dfutil':'../dependencies/dfcommon/js/util/df-util',
         'timeselector':'../dependencies/timeselector/js',
         'html2canvas':'../dependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
@@ -134,34 +134,38 @@ require(['knockout',
                 template:{require:'text!../dependencies/demo/iFrameWidget/demo-iframe.html'}
             });    
             
-//            ko.components.register("demo-la-widget",{
-//                viewModel:{require:'../dependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
-//                template:{require:'text!../dependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
-//            });  
-            
             ko.components.register("demo-la-widget",{
-                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js'},
-                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
-            }); 
+                viewModel:{require:'../dependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
+                template:{require:'text!../dependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
+            });  
             
-//            ko.components.register("demo-ta-widget",{
-//                viewModel:{require:'../dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
-//                template:{require:'text!../dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
+//            ko.components.register("demo-la-widget",{
+//                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js'},
+//                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
 //            }); 
             
             ko.components.register("demo-ta-widget",{
-                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics.js'},
-                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
-            });
+                viewModel:{require:'../dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
+                template:{require:'text!../dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
+            }); 
+            
+//            ko.components.register("demo-ta-widget",{
+//                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/targetAnalyticsWidget/js/demo-target-analytics.js'},
+//                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
+//            });
             
             ko.components.register("DF_V1_IFRAME",{
                 viewModel:{require:'../dependencies/widgets/iFrame/js/widget-iframe'},
                 template:{require:'text!../dependencies/widgets/iFrame/widget-iframe.html'}
             }); 
-            
+ 
+            ko.components.register("DF_V1_WIDGET_ONEPAGE",{
+                viewModel:{require:'../dependencies/widgets/onepage/js/onepageModel'},
+                template:{require:'text!../dependencies/widgets/onepage/onepageTemplate.html'}
+            });             
 //            ko.components.register("ita-widget",{
-//                viewModel:{require:'/ita-tool/widgets/js/controller/qdg-widget.js'},
-//                template:{require:'text!/ita-tool/widgets/html/qdg-widget.html'}
+//                viewModel:{require:'http://slc06xat.us.oracle.com:7001/ita-tool/widgets/js/controller/qdg-component.js'},
+//                template:{require:'text!http://slc06xat.us.oracle.com:7001/ita-tool/widgets/html/qdg-component.html'}
 //            });
             
             function FooterViewModel() {
@@ -322,7 +326,7 @@ require(['knockout',
                 ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
                 ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
                 
-                
+                $("#loading").hide();
                 $('#globalBody').show();
                 tilesView.enableDraggable();
                 var timeSliderDisplayView = new dtv.TimeSliderDisplayView();

@@ -11,7 +11,7 @@
   </welcome-file-list>
   <filter>
     <filter-name>CORS.filter</filter-name>
-    <filter-class>oracle.sysman.emSDK.emaas.platform.dashboards.ws.rest.DashboardsCORSFilter</filter-class>
+    <filter-class>oracle.sysman.emaas.platform.dashboards.ws.rest.DashboardsCORSFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>CORS.filter</filter-name>

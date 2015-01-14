@@ -311,7 +311,7 @@ define(['knockout',
             }
             else {
                 var categoryUrl = ssfUrl + '/categories';
-                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl, async: false,
+                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl, headers: getAuthorizationRequestHeader(), async: false,
                     success: function(data, textStatus){
                         if (data && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
@@ -418,7 +418,8 @@ define(['knockout',
                                         folder:{id: 999}, description: widgetToSave.description, 
                                         queryStr: widgetToSave.queryStr, parameters: params};
                     var saveSearchUrl = ssfUrl + "/search";
-                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, data: ko.toJSON(searchToSave), async: false,
+                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
+                        headers: getAuthorizationRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
                             $('#createWidgetDialog').ojDialog('close');
                             var msg = "Widget created successfully!";
@@ -586,6 +587,7 @@ define(['knockout',
             var laWidgetArray = [];
             var taWidgetArray = [];
             var itaWidgetArray = [];
+            var demoWidgetArray = [];
             var dbsWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
@@ -619,6 +621,8 @@ define(['knockout',
                 widgetArray = [];
                 laWidgetArray = [];
                 taWidgetArray = [];
+                itaWidgetArray = [];
+                demoWidgetArray = [];
                 curPageWidgets=[];
                 searchResultArray = [];
                 index=0;
@@ -626,8 +630,10 @@ define(['knockout',
                     var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
                     var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
                     var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
+                    var demoSearchesUrl = ssfUrl + '/searches?categoryId=999';
                     $.ajax({
                         url: laSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             laWidgetArray = loadWidgets(data);
                         },
@@ -639,6 +645,7 @@ define(['knockout',
 
                     $.ajax({
                         url: taSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             taWidgetArray = loadWidgets(data);
                         },
@@ -650,6 +657,7 @@ define(['knockout',
 
                     $.ajax({
                         url: itaSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
                         success: function(data, textStatus) {
                             itaWidgetArray = loadWidgets(data);
                         },
@@ -658,6 +666,17 @@ define(['knockout',
                         },
                         async: false
                     });    
+                    $.ajax({
+                        url: demoSearchesUrl,
+                        headers: getAuthorizationRequestHeader(),
+                        success: function(data, textStatus) {
+                            demoWidgetArray = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when querying IT analytics searches!');
+                        },
+                        async: false
+                    });                      
                     
                     dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
                 }
@@ -721,6 +740,9 @@ define(['knockout',
                     else if (event.value[0] === 'ita') {
                         totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
                     }
+                    else if (event.value[0] === 'demo') {
+                        totalPage = (demoWidgetArray.length%pageSize === 0 ? demoWidgetArray.length/pageSize : Math.floor(demoWidgetArray.length/pageSize) + 1);
+                    }                    
                     else if (event.value[0] === 'dbs') {
                         totalPage = (dbsWidgetArray.length%pageSize === 0 ? dbsWidgetArray.length/pageSize : Math.floor(dbsWidgetArray.length/pageSize) + 1);
                     }
@@ -788,6 +810,7 @@ define(['knockout',
                         if (ssfUrl && ssfUrl !== '') {
                             $.ajax({
                                 url: ssfUrl+'/search/'+data.id,
+                                headers: getAuthorizationRequestHeader(),
                                 success: function(widget, textStatus) {
                                     _data.owner = widget.owner ? widget.owner : '';
                                     _data.description = widget.description ? widget.description : '';
@@ -845,6 +868,9 @@ define(['knockout',
                 else if (category === 'ita') {
                     allWidgets = itaWidgetArray;
                 }
+                else if (category === 'demo') {
+                    allWidgets = demoWidgetArray;
+                }                
                 else if (category === 'dbs') {
                     allWidgets = dbsWidgetArray;
                 }
@@ -897,6 +923,9 @@ define(['knockout',
                 else if (category === 'ita') {
                     allWidgets = itaWidgetArray;
                 }
+                else if (category === 'demo') {
+                    allWidgets = demoWidgetArray;
+                }                
                 else if (category === 'dbs') {
                     allWidgets = dbsWidgetArray;
                 }

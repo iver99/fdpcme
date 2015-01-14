@@ -15,7 +15,6 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -98,7 +97,7 @@ public class JsonUtil
 	 */
 	public <T> T fromJson(String jsonString, Class<T> clazz) throws IOException
 	{
-		if (StringUtils.isEmpty(jsonString)) {
+		if (StringUtil.isEmpty(jsonString)) {
 			return null;
 		}
 
@@ -117,7 +116,7 @@ public class JsonUtil
 	@SuppressWarnings("unchecked")
 	public <T> T fromJson(String jsonString, JavaType javaType) throws IOException
 	{
-		if (StringUtils.isEmpty(jsonString)) {
+		if (StringUtil.isEmpty(jsonString)) {
 			return null;
 		}
 		jsonString = URLDecoder.decode(jsonString, "UTF-8");
