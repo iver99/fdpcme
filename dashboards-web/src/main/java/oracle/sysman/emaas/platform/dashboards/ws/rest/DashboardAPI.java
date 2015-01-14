@@ -60,6 +60,7 @@ public class DashboardAPI extends APIBase
 			DashboardManager manager = DashboardManager.getInstance();
 			String tenantId = getTenantId();
 			d = manager.saveNewDashboard(d, tenantId);
+			updateDashboardAllHref(d);
 			return Response.ok(getJsonUtil().toJson(d)).build();
 		}
 		catch (IOException e) {
@@ -130,6 +131,11 @@ public class DashboardAPI extends APIBase
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, getTenantId(), true);
+			if (pd != null && pd.getDashboards() != null) {
+				for (Dashboard d : pd.getDashboards()) {
+					updateDashboardAllHref(d);
+				}
+			}
 			return Response.ok(getJsonUtil().toJson(pd)).build();
 		}
 		catch (DashboardException e) {

@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -39,7 +40,14 @@ public class FavoriteAPI extends APIBase
 	{
 		DashboardManager manager = DashboardManager.getInstance();
 		List<Dashboard> pd = manager.getFavoriteDashboards(getTenantId());
-		return Response.ok(getJsonUtil().toJson(pd)).build();
+		List<FavoriteEntity> entities = new ArrayList<FavoriteEntity>();
+		if (pd != null) {
+			for (Dashboard dashboard : pd) {
+				updateDashboardHref(dashboard);
+				entities.add(new FavoriteEntity(dashboard));
+			}
+		}
+		return Response.ok(getJsonUtil().toJson(entities)).build();
 	}
 
 }
