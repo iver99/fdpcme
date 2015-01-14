@@ -404,8 +404,8 @@ public class DashboardManager
 			boolean ic) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
-			throw new CommonFunctionalException(
-					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET));
+			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(MessageUtils
+					.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET)));
 		}
 		int firstResult = 0;
 		if (offset != null) {
@@ -413,8 +413,8 @@ public class DashboardManager
 		}
 
 		if (pageSize != null && pageSize <= 0) {
-			throw new CommonFunctionalException(
-					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT));
+			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(MessageUtils
+					.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT)));
 		}
 		int maxResults = DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT;
 		if (pageSize != null) {
@@ -626,9 +626,9 @@ public class DashboardManager
 			}
 			// init creation date, owner to prevent null insertion
 			Date created = new Date();
-			if (dbd.getCreationDate() == null) {
-				dbd.setCreationDate(created);
-			}
+			//			if (dbd.getCreationDate() == null) {
+			//				dbd.setCreationDate(created);
+			//			}
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}

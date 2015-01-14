@@ -8,6 +8,7 @@ import java.util.Map;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 
@@ -97,7 +98,6 @@ public class Dashboard
 
 	private String owner;
 
-	@JsonIgnore
 	private String screenShot;
 
 	private String screenShotHref;
@@ -106,6 +106,7 @@ public class Dashboard
 
 	private String type;
 
+	@JsonProperty("tiles")
 	private List<Tile> tileList;
 
 	public Dashboard()
@@ -205,6 +206,7 @@ public class Dashboard
 		}
 		else {
 			//    		ed.setCreationDate(creationDate);
+			ed.getScreenShot();
 			ed.setDeleted(deleted ? getDashboardId() : 0);
 			ed.setDescription(description);
 			ed.setEnableTimeRange(isEnableTimeRange);
@@ -220,6 +222,7 @@ public class Dashboard
 		return ed;
 	}
 
+	@JsonIgnore
 	public String getScreenShot()
 	{
 		return screenShot;
@@ -301,6 +304,7 @@ public class Dashboard
 		this.owner = owner;
 	}
 
+	@JsonProperty("screenShot")
 	public void setScreenShot(String screenShot)
 	{
 		this.screenShot = screenShot;
@@ -331,25 +335,16 @@ public class Dashboard
 			for (int i = edtSize - 1; i >= 0; i--) {
 				EmsDashboardTile edt = edtList.get(i);
 				boolean isDeleted = true;
-				for (Tile tile : tiles) {
-					if (tile.getTileId() != null && tile.getTileId().equals(edt.getTileId())) {
-						isDeleted = false;
-						rows.put(tile, edt);
-						//						// remove existing props
-						//						List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
-						//						if (edtpList == null)
-						//							break;
-						//						while (!edt.getDashboardTileParamsList().isEmpty()) {
-						//							EmsDashboardTileParams edtp = edt.getDashboardTileParamsList().get(0);
-						////							dsf.removeEmsDashboardTileParams(edtp);
-						//							edt.getDashboardTileParamsList().remove(edtp);
-						////							edt.removeEmsDashboardTileParams(edtp);
-						//						}
-						break;
+				if (tiles != null) {
+					for (Tile tile : tiles) {
+						if (tile.getTileId() != null && tile.getTileId().equals(edt.getTileId())) {
+							isDeleted = false;
+							rows.put(tile, edt);
+							break;
+						}
 					}
 				}
 				if (isDeleted) {
-					//					ed.removeEmsDashboardTile(edt);
 					ed.getDashboardTileList().remove(edt);
 				}
 			}
@@ -362,6 +357,10 @@ public class Dashboard
 			Tile tile = tiles.get(i);
 			EmsDashboardTile edt = null;
 			if (!rows.containsKey(tile)) {
+				if (tile.getTileId() != null) {
+					throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(
+							CommonFunctionalException.DASHBOARD_TILE_INVALID_ID, String.valueOf(tile.getTileId())));
+				}
 				edt = tile.getPersistenceEntity(null);
 				ed.addEmsDashboardTile(edt);
 				rows.put(tile, edt);

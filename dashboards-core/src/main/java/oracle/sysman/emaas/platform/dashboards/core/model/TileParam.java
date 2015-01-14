@@ -6,6 +6,7 @@ import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -29,7 +30,7 @@ public class TileParam
 		TileParam tp = new TileParam();
 		tp.setIsSystem(DataFormatUtils.integer2Boolean(edtp.getIsSystem()));
 		tp.setName(edtp.getParamName());
-		tp.setParamType(DataFormatUtils.tileParamTypeInteger2String(edtp.getParamType()));
+		tp.setType(DataFormatUtils.tileParamTypeInteger2String(edtp.getParamType()));
 		tp.setIntegerValue(edtp.getParamValueNum());
 		tp.setStringValue(edtp.getParamValueStr());
 		tp.setParamValueTimestamp(edtp.getParamValueTimestamp());
@@ -56,8 +57,10 @@ public class TileParam
 	@SuppressWarnings("unused")
 	private String value;
 
+	@JsonIgnore
 	private BigDecimal numValue;
 
+	@JsonIgnore
 	public Integer getIntegerValue()
 	{
 		return DataFormatUtils.bigDecimal2Integer(numValue);
@@ -68,6 +71,7 @@ public class TileParam
 		return isSystem;
 	}
 
+	@JsonIgnore
 	public Long getLongValue()
 	{
 		return DataFormatUtils.bigDecimal2Long(numValue);
@@ -81,11 +85,6 @@ public class TileParam
 	public BigDecimal getNumberValue()
 	{
 		return numValue;
-	}
-
-	public String getParamType()
-	{
-		return type;
 	}
 
 	public Date getParamValueTimestamp()
@@ -106,6 +105,7 @@ public class TileParam
 		return edtp;
 	}
 
+	@JsonIgnore
 	public String getStringValue()
 	{
 		return strValue;
@@ -139,6 +139,7 @@ public class TileParam
 		return null;
 	}
 
+	@JsonIgnore
 	public void setIntegerValue(Integer value)
 	{
 		setNumberValue(DataFormatUtils.integer2BigDecimal(value));
@@ -149,6 +150,7 @@ public class TileParam
 		this.isSystem = isSystem;
 	}
 
+	@JsonIgnore
 	public void setLongValue(Long value)
 	{
 		setNumberValue(DataFormatUtils.long2BigDecimal(value));
@@ -159,17 +161,13 @@ public class TileParam
 		name = paramName;
 	}
 
+	@JsonIgnore
 	public void setNumberValue(BigDecimal paramValueNum)
 	{
 		if (type == null) {
 			type = PARAM_TYPE_NUMBER;
 		}
 		numValue = paramValueNum;
-	}
-
-	public void setParamType(String type)
-	{
-		this.type = type;
 	}
 
 	public void setParamValueTimestamp(Date paramValueTimestamp)
@@ -180,6 +178,7 @@ public class TileParam
 		dateValue = paramValueTimestamp;
 	}
 
+	@JsonIgnore
 	public void setStringValue(String paramValueStr)
 	{
 		if (type == null) {
@@ -198,7 +197,7 @@ public class TileParam
 		this.type = type;
 	}
 
-	public void setValue(String value)
+	public void setValue(String value) throws CommonFunctionalException
 	{
 		if (PARAM_TYPE_BOOLEAN.equals(type)) {
 			strValue = value;
@@ -208,7 +207,13 @@ public class TileParam
 				numValue = new BigDecimal(0);
 				return;
 			}
-			numValue = new BigDecimal(value);
+			try {
+				numValue = new BigDecimal(value);
+			}
+			catch (NumberFormatException e) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.TILE_PARAM_INVALID_NUMBER_VALUE));
+			}
 		}
 		else if (PARAM_TYPE_BOOLEAN.equals(type)) {
 			int booleanValue = 0; // 0 for false, 1 for true

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
@@ -18,6 +19,9 @@ public class Tile
 {
 	public static final int WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
 	public static final int WIDGET_SOURCE_INTEGRATOR = 1;
+	public static final Boolean TILE_DEFAULT_IS_MAX = false;
+	public static final Integer TILE_DEFAULT_WIDTH = 2;
+	public static final Integer TILE_DEFAULT_HEIGHT = 220;
 
 	public static Tile valueOf(EmsDashboardTile edt)
 	{
@@ -86,7 +90,6 @@ public class Tile
 	@JsonProperty("PROVIDER_VERSION")
 	private String providerVersion;
 
-	@JsonProperty("id")
 	private Long tileId;
 
 	private String title;
@@ -132,6 +135,7 @@ public class Tile
 	@JsonIgnore
 	private Dashboard dashboard;
 
+	@JsonProperty("tileParameters")
 	private List<TileParam> parameters;
 
 	public Tile()
@@ -212,46 +216,111 @@ public class Tile
 	 * @return
 	 * @throws CommonFunctionalException
 	 */
-	public EmsDashboardTile getPersistenceEntity(EmsDashboardTile edt) throws CommonFunctionalException
+	public EmsDashboardTile getPersistenceEntity(EmsDashboardTile to) throws CommonFunctionalException
 	{
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
 
-		if (edt == null) {
-			edt = new EmsDashboardTile(creationDate, null, height, intIsMaximized, lastModificationDate, lastModifiedBy, owner,
-					0, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime, widgetDescription,
+		if (title == null || "".equals(title)) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_TILE_TITLE_REQUIRED));
+		}
+		if (width == null) {
+			width = TILE_DEFAULT_WIDTH;
+		}
+		if (height == null) {
+			height = TILE_DEFAULT_HEIGHT;
+		}
+		if (isMaximized == null) {
+			isMaximized = TILE_DEFAULT_IS_MAX;
+		}
+		if (to == null) { // newly created tile
+			if (widgetName == null || "".equals(widgetName)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_NAME_REQUIRED));
+			}
+			if (widgetUniqueId == null || "".equals(widgetUniqueId)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_UNIQUE_ID_REQUIRED));
+			}
+			if (widgetIcon == null || "".equals(widgetIcon)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_ICON_REQUIRED));
+			}
+			if (widgetHistogram == null || "".equals(widgetHistogram)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_HISTOGRAM_REQUIRED));
+			}
+			if (widgetOwner == null || "".equals(widgetOwner)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_OWNER_REQUIRED));
+			}
+			if (widgetCreationTime == null || "".equals(widgetCreationTime)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_CREATIONTIME_REQUIRED));
+			}
+			if (widgetSource == null || "".equals(widgetSource)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_SOURCE_REQUIRED));
+			}
+			if (widgetKocName == null || "".equals(widgetKocName)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_KOC_NAME_REQUIRED));
+			}
+			if (widgetViewmode == null || "".equals(widgetViewmode)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_VIEW_MODEL_REQUIRED));
+			}
+			if (widgetTemplate == null || "".equals(widgetTemplate)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_TEMPLATE_REQUIRED));
+			}
+			if (providerName == null || "".equals(providerName)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.PROVIDER_NAME_REQUIRED));
+			}
+			if (providerVersion == null || "".equals(providerVersion)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.PROVIDER_VERSION_REQUIRED));
+			}
+			if (providerAssetRoot == null || "".equals(providerAssetRoot)) {
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.PROVIDER_ASSET_ROOT_REQUIRED));
+			}
+			to = new EmsDashboardTile(creationDate, null, height, intIsMaximized, lastModificationDate, lastModifiedBy, owner, 0,
+					providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime, widgetDescription,
 					widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner, widgetSource,
 					widgetTemplate, widgetUniqueId, widgetViewmode, width);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(null);
-					edt.addEmsDashboardTileParams(edtp);
+					to.addEmsDashboardTileParams(edtp);
 				}
 			}
 		}
 		else {
-			edt.setHeight(getHeight());
-			edt.setIsMaximized(intIsMaximized);
+			to.setHeight(getHeight());
+			to.setIsMaximized(intIsMaximized);
 			//    		edt.setPosition(this.position);
-			edt.setProviderAssetRoot(providerAssetRoot);
-			edt.setProviderName(providerName);
-			edt.setProviderVersion(providerVersion);
-			edt.setTitle(title);
-			edt.setWidgetCreationTime(widgetCreationTime);
-			edt.setWidgetDescription(widgetDescription);
-			edt.setWidgetGroupName(widgetGroupName);
-			edt.setWidgetHistogram(widgetHistogram);
-			edt.setWidgetIcon(widgetIcon);
-			edt.setWidgetKocName(widgetKocName);
-			edt.setWidgetName(widgetName);
-			edt.setWidgetOwner(widgetOwner);
-			edt.setWidgetSource(intIsMaximized);
-			edt.setWidgetTemplate(widgetTemplate);
-			edt.setWidgetUniqueId(widgetUniqueId);
-			edt.setWidgetViewmode(widgetViewmode);
-			edt.setWidth(intIsMaximized);
-			updateEmsDashboardTileParams(parameters, edt);
+			to.setProviderAssetRoot(providerAssetRoot);
+			to.setProviderName(providerName);
+			to.setProviderVersion(providerVersion);
+			to.setTitle(title);
+			to.setWidgetCreationTime(widgetCreationTime);
+			to.setWidgetDescription(widgetDescription);
+			to.setWidgetGroupName(widgetGroupName);
+			to.setWidgetHistogram(widgetHistogram);
+			to.setWidgetIcon(widgetIcon);
+			to.setWidgetKocName(widgetKocName);
+			to.setWidgetName(widgetName);
+			to.setWidgetOwner(widgetOwner);
+			to.setWidgetSource(intIsMaximized);
+			to.setWidgetTemplate(widgetTemplate);
+			to.setWidgetUniqueId(widgetUniqueId);
+			to.setWidgetViewmode(widgetViewmode);
+			to.setWidth(intIsMaximized);
+			updateEmsDashboardTileParams(parameters, to);
 		}
-		return edt;
+		return to;
 	}
 
 	//    public Integer getPosition() {
@@ -507,13 +576,15 @@ public class Tile
 			for (int i = edtSize - 1; i >= 0; i--) {
 				EmsDashboardTileParams edtp = edtpList.get(i);
 				boolean isDeleted = true;
-				for (TileParam param : paramList) {
-					if (param.getName() != null && param.getName().equals(edtp.getParamName()) && param.getTile() != null
-							&& param.getTile().getTileId() != null
-							&& param.getTile().getTileId().equals(edtp.getDashboardTile().getTileId())) {
-						isDeleted = false;
-						rows.put(param, edtp);
-						break;
+				if (paramList != null) {
+					for (TileParam param : paramList) {
+						if (param.getName() != null && param.getName().equals(edtp.getParamName()) && param.getTile() != null
+								&& param.getTile().getTileId() != null
+								&& param.getTile().getTileId().equals(edtp.getDashboardTile().getTileId())) {
+							isDeleted = false;
+							rows.put(param, edtp);
+							break;
+						}
 					}
 				}
 				if (isDeleted) {
