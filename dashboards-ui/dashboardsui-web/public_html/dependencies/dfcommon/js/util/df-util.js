@@ -46,6 +46,7 @@ define(['knockout',
                             for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
                                 $.ajax({
                                     url: virtualEndpoints[k],
+                                    headers: getAuthorizationRequestHeader(),
                                     success: function(data, textStatus) {
                                         availableUrl = virtualEndpoints[k];
                                         urlFound = true;
@@ -63,6 +64,7 @@ define(['knockout',
                                 for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
                                     $.ajax({
                                         url: canonicalEndpoints[m],
+                                        headers: getAuthorizationRequestHeader(),
                                         success: function(data, textStatus) {
                                             availableUrl = canonicalEndpoints[m];
                                             urlFound = true;
@@ -88,11 +90,12 @@ define(['knockout',
                                 serviceUrl = serviceUrl+'&version='+data.version;
                             $.ajax({
                                 url: serviceUrl,
+                                headers: getAuthorizationRequestHeader(),
                                 success: function(data, textStatus) {
                                     fetchServiceCallback(data);
                                 },
                                 error: function(xhr, textStatus, errorThrown){
-
+                                    console.error(textStatus);
                                 },
                                 async: false
                             });
@@ -167,8 +170,23 @@ define(['knockout',
                             if (serviceItem.links && serviceItem.links.length > 0) {
                                 for (j = 0; j < serviceItem.links.length; j++) {
                                     var link = serviceItem.links[j];
-                                    if (link.rel === 'quickLink') {
-                                        var linkItem = {name: serviceItem.serviceName,
+                                    var linkName = serviceItem.serviceName;
+                                    var isValidQuickLink = false;
+                                    if (link.rel.indexOf('/') > 0) {
+                                        var rel = link.rel.split('/');
+                                        if (rel[0] === 'quickLink') {
+                                            isValidQuickLink = true;
+                                            if (rel[1] && rel[1] !== '') {
+                                                linkName = rel[1];
+                                            }
+                                        }
+                                    }
+                                    else if (link.rel === 'quickLink') {
+                                        isValidQuickLink = true;
+                                    }
+                                    
+                                    if (isValidQuickLink) {
+                                        var linkItem = {name: linkName,
                                                             href: link.href};
                                         if (serviceItem.serviceName === 'Dashboard' && serviceItem.version === '1.0') {
                                             quickLinksFromDashboard.push(linkItem);
@@ -182,49 +200,32 @@ define(['knockout',
                         }
                     }
                 };
-                $.ajaxSettings.async = false;
-                $.getJSON('data/servicemanager.json', function(data) {
-                    if (data.serviceUrls && data.serviceUrls.length > 0) {
-                        for (i = 0; i < data.serviceUrls.length; i++) {
-                            var serviceUrl = data.serviceUrls[i]+'/instances';
-                            $.ajax({
-                                url: serviceUrl,
-                                success: function(data, textStatus) {
-                                    fetchServiceQuickLinks(data);
-                                },
-                                error: function(xhr, textStatus, errorThrown){
-                                    console.log('Failed to get service instances by URL: '+serviceUrl);
-                                },
-                                async: false
-                            });
+                
+                $.ajax({
+                    url: 'data/servicemanager.json',
+                    success: function(data, textStatus) {
+                        if (data.serviceUrls && data.serviceUrls.length > 0) {
+                            for (i = 0; i < data.serviceUrls.length; i++) {
+                                var serviceUrl = data.serviceUrls[i]+'/instances';
+                                $.ajax({
+                                    url: serviceUrl,
+                                    headers: getAuthorizationRequestHeader(),
+                                    success: function(data, textStatus) {
+                                        fetchServiceQuickLinks(data);
+                                    },
+                                    error: function(xhr, textStatus, errorThrown){
+                                        console.log('Failed to get service instances by URL: '+serviceUrl);
+                                    },
+                                    async: false
+                                });
+                            }
                         }
-                    }                    
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        console.log('Failed to get service manager configurations.');
+                    },
+                    async: false
                 });
-                $.ajaxSettings.async = true;
-//                $.ajax({
-//                    url: 'data/servicemanager.json',
-//                    success: function(data, textStatus) {
-//                        if (data.serviceUrls && data.serviceUrls.length > 0) {
-//                            for (i = 0; i < data.serviceUrls.length; i++) {
-//                                var serviceUrl = data.serviceUrls[i]+'/instances';
-//                                $.ajax({
-//                                    url: serviceUrl,
-//                                    success: function(data, textStatus) {
-//                                        fetchServiceQuickLinks(data);
-//                                    },
-//                                    error: function(xhr, textStatus, errorThrown){
-//                                        console.log('Failed to get service instances by URL: '+serviceUrl);
-//                                    },
-//                                    async: false
-//                                });
-//                            }
-//                        }
-//                    },
-//                    error: function(xhr, textStatus, errorThrown){
-//                        console.log('Failed to get service manager configurations.');
-//                    },
-//                    async: false
-//                });
                 
                 for (i = 0; i < quickLinksFromDashboard.length; i++) {
                     quickLinks.push(quickLinksFromDashboard[i]);
@@ -288,6 +289,7 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
                             serviceUrl = serviceUrl + '&version=' + providerVersion;
                         $.ajax({
                             url: serviceUrl,
+                            headers: getAuthorizationRequestHeader(),
                             success: function(data, textStatus) {
                                 assetRoot = fetchServiceAssetRoot(data);
                             },
@@ -305,3 +307,7 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
     }
     return "http://jet.us.oracle.com";
 }
+
+function getAuthorizationRequestHeader() {
+    return {"Authorization": "Basic d2VibG9naWM6d2VsY29tZTE="};
+};

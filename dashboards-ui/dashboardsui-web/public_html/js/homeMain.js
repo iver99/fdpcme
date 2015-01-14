@@ -79,7 +79,8 @@ require(['dbs/dbsmodel',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
 //    'ojs/ojvalidation'
-//  'ojs/ojselectcombobox',
+    'ojs/ojselectcombobox',
+    'ojs/ojmenu'
 //    'ojs/ojmodel',
 //    'ojs/ojknockout-model',
 //    'ojs/ojselectcombobox',
