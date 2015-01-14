@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 
 /**
  * Performance test cases created for dashbaord manager
- * 
+ *
  * @author guobaochen
  */
 public class DashboardManagerPerfTest
@@ -92,7 +92,12 @@ public class DashboardManagerPerfTest
 				@Override
 				public void run()
 				{
-					dm.getDashboardById(dashboards.get(dashboards.size() - 1).getDashboardId(), tenantId);
+					try {
+						dm.getDashboardById(dashboards.get(dashboards.size() - 1).getDashboardId(), tenantId);
+					}
+					catch (DashboardException e) {
+						// for dashboard exception, means dashboard not found. just ignore
+					}
 				}
 			}, null, null);
 		}

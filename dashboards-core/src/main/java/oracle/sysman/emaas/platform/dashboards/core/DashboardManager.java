@@ -212,23 +212,24 @@ public class DashboardManager
 	 *
 	 * @param dashboardId
 	 * @return
+	 * @throws DashboardException
 	 */
-	public Dashboard getDashboardById(Long dashboardId, String tenantId)
+	public Dashboard getDashboardById(Long dashboardId, String tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
 			if (dashboardId == null || dashboardId <= 0) {
-				return null;
+				throw new DashboardNotFoundException();
 			}
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 			if (ed == null) {
-				return null;
+				throw new DashboardNotFoundException();
 			}
 			Boolean isDeleted = ed.getDeleted() == null ? null : ed.getDeleted() > 0;
 			if (isDeleted != null && isDeleted.booleanValue()) {
-				return null;
+				throw new DashboardNotFoundException();
 			}
 			updateLastAccessDate(dashboardId, tenantId);
 			return Dashboard.valueOf(ed);

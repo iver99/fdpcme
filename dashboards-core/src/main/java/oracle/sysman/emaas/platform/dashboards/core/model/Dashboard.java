@@ -102,6 +102,8 @@ public class Dashboard
 
 	private String screenShotHref;
 
+	private String href;
+
 	private String type;
 
 	private List<Tile> tileList;
@@ -147,6 +149,11 @@ public class Dashboard
 	public Boolean getEnableTimeRange()
 	{
 		return enableTimeRange;
+	}
+
+	public String getHref()
+	{
+		return href;
 	}
 
 	public Boolean getIsSystem()
@@ -262,6 +269,11 @@ public class Dashboard
 	public void setEnableTimeRange(Boolean enableTimeRange)
 	{
 		this.enableTimeRange = enableTimeRange;
+	}
+
+	public void setHref(String href)
+	{
+		this.href = href;
 	}
 
 	public void setIsSystem(Boolean isSystem)

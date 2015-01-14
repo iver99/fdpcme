@@ -22,9 +22,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -42,6 +44,8 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/api/v1/dashboards")
 public class DashboardAPI extends APIBase
 {
+	@Context
+	private UriInfo uriInfo;
 
 	public DashboardAPI()
 	{
@@ -98,6 +102,22 @@ public class DashboardAPI extends APIBase
 	}
 
 	@GET
+	@Path("{id: [1-9][0-9]*}")
+	public Response queryDashboardById(@PathParam("id") long dashboardId)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId = super.getTenantId();
+		try {
+			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
+			updateDashboardHref(dbd);
+			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+	}
+
+	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboards(@QueryParam("queryString") String queryString,
 			@DefaultValue("50") @QueryParam("limit") int limit, @DefaultValue("0") @QueryParam("offset") int offset)
@@ -118,6 +138,27 @@ public class DashboardAPI extends APIBase
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+	}
+
+	private Dashboard updateDashboardHref(Dashboard dbd)
+	{
+		if (dbd == null) {
+			return null;
+		}
+		String href = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId();
+		dbd.setHref(href);
+		updateDashboardScreenshotHref(dbd);
+		return dbd;
+	}
+
+	private Dashboard updateDashboardScreenshotHref(Dashboard dbd)
+	{
+		if (dbd == null) {
+			return null;
+		}
+		String screenShotUrl = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		dbd.setScreenShotHref(screenShotUrl);
+		return dbd;
 	}
 
 }
