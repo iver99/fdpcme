@@ -18,6 +18,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -140,6 +141,35 @@ public class DashboardAPI extends APIBase
 		}
 	}
 
+	@PUT
+	@Path("{id: [1-9][0-9]*}")
+	public Response updateDashboard(@PathParam("id") long dashboardId, JSONObject inputJson)
+	{
+		Dashboard input = null;
+		try {
+			input = getJsonUtil().fromJson(inputJson.toString(), Dashboard.class);
+		}
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			if (e1.getCause() instanceof DashboardException) {
+				return buildErrorResponse(new ErrorEntity((DashboardException) e1.getCause()));
+			}
+		}
+
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId = getTenantId();
+		try {
+			input.setDashboardId(dashboardId);
+			Dashboard dbd = dm.updateDashboard(input, tenantId);
+			updateDashboardHref(dbd);
+			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+	}
+
 	private Dashboard updateDashboardHref(Dashboard dbd)
 	{
 		if (dbd == null) {
@@ -160,5 +190,4 @@ public class DashboardAPI extends APIBase
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}
-
 }
