@@ -32,7 +32,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
  * @author wenjzhu
  * @author guobaochen introduce to add favorite, to delete favorite
  */
-@Path("/api/v1/dashboards/favorites")
+@Path("/v1/dashboards/favorites")
 public class FavoriteAPI extends APIBase
 {
 
@@ -41,7 +41,6 @@ public class FavoriteAPI extends APIBase
 		super();
 	}
 
-	@GET
 	@POST
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -89,5 +88,4 @@ public class FavoriteAPI extends APIBase
 		}
 		return Response.ok(getJsonUtil().toJson(entities)).build();
 	}
-
 }

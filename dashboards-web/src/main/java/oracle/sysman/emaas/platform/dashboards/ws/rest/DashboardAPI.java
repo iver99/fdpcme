@@ -39,7 +39,7 @@ import org.codehaus.jettison.json.JSONObject;
  * @author wenjzhu
  * @author guobaochen introduce API to query single dashboard by id, and update specified dashboard
  */
-@Path("/api/v1/dashboards")
+@Path("/v1/dashboards")
 public class DashboardAPI extends APIBase
 {
 	public DashboardAPI()
