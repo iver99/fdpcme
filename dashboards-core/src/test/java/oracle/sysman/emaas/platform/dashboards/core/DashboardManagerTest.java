@@ -345,7 +345,15 @@ public class DashboardManagerTest
 		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
 		dbList = dm.getFavoriteDashboards(tenantId1);
 		Assert.assertEquals(dbList.size(), originSize + 1);
+		// silent operation: re-add+check
+		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		Assert.assertEquals(dbList.size(), originSize + 1);
 		// remove+check
+		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		Assert.assertEquals(dbList.size(), originSize);
+		// silent operation: re-remove+check
 		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
 		dbList = dm.getFavoriteDashboards(tenantId1);
 		Assert.assertEquals(dbList.size(), originSize);

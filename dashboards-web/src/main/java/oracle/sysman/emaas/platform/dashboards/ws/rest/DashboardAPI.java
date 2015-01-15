@@ -75,8 +75,13 @@ public class DashboardAPI extends APIBase
 	public Response deleteDashboard(@PathParam("id") Long dashboardId)
 	{
 		DashboardManager manager = DashboardManager.getInstance();
-		manager.deleteDashboard(dashboardId, getTenantId());
-		return Response.status(Status.OK).build();
+		try {
+			manager.deleteDashboard(dashboardId, getTenantId());
+			return Response.status(Status.OK).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
 	}
 
 	@GET
@@ -97,6 +102,7 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Path("{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@PathParam("id") long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();

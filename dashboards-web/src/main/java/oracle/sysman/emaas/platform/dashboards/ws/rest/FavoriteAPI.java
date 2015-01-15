@@ -13,17 +13,24 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
 /**
  * @author wenjzhu
+ * @author guobaochen introduce to add favorite, to delete favorite
  */
 @Path("/api/v1/dashboards/favorites")
 public class FavoriteAPI extends APIBase
@@ -32,6 +39,39 @@ public class FavoriteAPI extends APIBase
 	public FavoriteAPI()
 	{
 		super();
+	}
+
+	@GET
+	@POST
+	@Path("{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addOneFavoriteDashboard(@PathParam("id") Long dashboardId)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId = getTenantId();
+		try {
+			dm.addFavoriteDashboard(dashboardId, tenantId);
+			return Response.status(Status.OK).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+	}
+
+	@DELETE
+	@Path("{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteOneFavoriteDashboard(@PathParam("id") Long dashboardId)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId = getTenantId();
+		try {
+			dm.removeFavoriteDashboard(dashboardId, tenantId);
+			return Response.status(Status.OK).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
 	}
 
 	@GET

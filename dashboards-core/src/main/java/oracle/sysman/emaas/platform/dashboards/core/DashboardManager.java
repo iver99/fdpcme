@@ -56,18 +56,19 @@ public class DashboardManager
 	 *
 	 * @param dashboardId
 	 * @param tenantId
+	 * @throws DashboardNotFoundException
 	 */
-	public void addFavoriteDashboard(Long dashboardId, String tenantId)
+	public void addFavoriteDashboard(Long dashboardId, String tenantId) throws DashboardNotFoundException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
-			return;
+			throw new DashboardNotFoundException();
 		}
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
-				return;
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
+				throw new DashboardNotFoundException();
 			}
 			em = dsf.getEntityManager();
 			String currentUser = AppContext.getInstance().getCurrentUser();
@@ -77,10 +78,10 @@ public class DashboardManager
 				edf = new EmsDashboardFavorite(new Date(), ed, currentUser);
 				dsf.persistEmsDashboardFavorite(edf);
 			}
-			else {
-				edf.setCreationDate(new Date());
-				dsf.mergeEmsDashboardFavorite(edf);
-			}
+			//			else {
+			//				//				edf.setCreationDate(new Date());
+			//				dsf.mergeEmsDashboardFavorite(edf);
+			//			}
 		}
 		finally {
 			if (em != null) {
@@ -144,8 +145,9 @@ public class DashboardManager
 	 *            id for the dashboard
 	 * @param permanent
 	 *            delete permanently or not
+	 * @throws DashboardException
 	 */
-	public void deleteDashboard(Long dashboardId, boolean permanent, String tenantId)
+	public void deleteDashboard(Long dashboardId, boolean permanent, String tenantId) throws DashboardException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			return;
@@ -155,8 +157,9 @@ public class DashboardManager
 		if (ed == null) {
 			return;
 		}
-
-		removeFavoriteDashboard(dashboardId, tenantId);
+		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
+			removeFavoriteDashboard(dashboardId, tenantId);
+		}
 		if (!permanent) {
 			ed.setDeleted(dashboardId);
 			dsf.mergeEmsDashboard(ed);
@@ -175,8 +178,9 @@ public class DashboardManager
 	 *
 	 * @param dashboardId
 	 * @param tenantId
+	 * @throws DashboardNotFoundException
 	 */
-	public void deleteDashboard(Long dashboardId, String tenantId)
+	public void deleteDashboard(Long dashboardId, String tenantId) throws DashboardException
 	{
 		deleteDashboard(dashboardId, false, tenantId);
 	}
@@ -490,18 +494,19 @@ public class DashboardManager
 	 *
 	 * @param dashboardId
 	 * @param tenantId
+	 * @throws DashboardNotFoundException
 	 */
-	public void removeFavoriteDashboard(Long dashboardId, String tenantId)
+	public void removeFavoriteDashboard(Long dashboardId, String tenantId) throws DashboardNotFoundException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
-			return;
+			throw new DashboardNotFoundException();
 		}
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
-				return;
+			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
+				throw new DashboardNotFoundException();
 			}
 			em = dsf.getEntityManager();
 			String currentUser = AppContext.getInstance().getCurrentUser();

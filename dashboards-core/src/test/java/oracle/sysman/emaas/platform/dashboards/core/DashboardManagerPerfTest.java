@@ -31,7 +31,7 @@ public class DashboardManagerPerfTest
 	}
 
 	@AfterClass
-	public void afterClass()
+	public void afterClass() throws DashboardException
 	{
 		dm.deleteDashboard(dashboard1stId, true, tenantId);
 	}
