@@ -186,7 +186,7 @@ public class DashboardAPI extends APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String screenShotUrl = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}
