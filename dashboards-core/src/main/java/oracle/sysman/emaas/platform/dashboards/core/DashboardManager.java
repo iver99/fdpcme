@@ -358,6 +358,35 @@ public class DashboardManager
 	}
 
 	/**
+	 * Check if the dashboard with spacified id is favorite dashboard or not
+	 * 
+	 * @param dashboardId
+	 * @param tenantId
+	 * @return
+	 * @throws DashboardException
+	 */
+	public boolean isDashboardFavorite(Long dashboardId, String tenantId) throws DashboardException
+	{
+		if (dashboardId == null || dashboardId <= 0) {
+			throw new DashboardNotFoundException();
+		}
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			String currentUser = AppContext.getInstance().getCurrentUser();
+			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			return edf != null;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	/**
 	 * Returns all dashboards
 	 *
 	 * @param tenantId

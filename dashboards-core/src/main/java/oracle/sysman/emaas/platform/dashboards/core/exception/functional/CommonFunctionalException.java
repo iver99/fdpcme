@@ -31,7 +31,7 @@ public class CommonFunctionalException extends DashboardException
 	public static final String TILE_PARAM_INVALID_TYPE = "TILE_PARAM_INVALID_TYPE";
 	public static final String TILE_PARAM_INVALID_NUMBER_VALUE = "TILE_PARAM_INVALID_NUMBER_VALUE";
 
-	// resource message for invalid dashboard for update
+	// i18n resource message for invalid dashboard for update
 	public static final String WIDGET_UNIQUE_ID_REQUIRED = "WIDGET_UNIQUE_ID_REQUIRED";
 	public static final String WIDGET_NAME_REQUIRED = "WIDGET_NAME_REQUIRED";
 	public static final String WIDGET_ICON_REQUIRED = "WIDGET_ICON_REQUIRED";

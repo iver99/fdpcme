@@ -60,7 +60,7 @@ public class APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String href = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId();
+		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
 		dbd.setHref(href);
 		return dbd;
 	}

@@ -88,4 +88,23 @@ public class FavoriteAPI extends APIBase
 		}
 		return Response.ok(getJsonUtil().toJson(entities)).build();
 	}
+
+	@GET
+	@Path("{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response isFavoriteDashboard(@PathParam("id") Long dashboardId)
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		String tenantId = getTenantId();
+		try {
+			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
+			boolean isFavorite = dm.isDashboardFavorite(dbd.getDashboardId(), tenantId);
+			IsFavoriteEntity ife = new IsFavoriteEntity();
+			ife.setIsFavorite(isFavorite);
+			return Response.status(Status.OK).entity(getJsonUtil().toJson(ife)).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+	}
 }
