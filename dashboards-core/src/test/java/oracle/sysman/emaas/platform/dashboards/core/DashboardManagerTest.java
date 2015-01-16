@@ -111,7 +111,7 @@ public class DashboardManagerTest
 	{
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
-		dbd.setType(Dashboard.DASHBOARD_TYPE_PLAIN);
+		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
 
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId1 = "tenantId1";
@@ -121,7 +121,7 @@ public class DashboardManagerTest
 		// create a dashboard with dashboard id specified
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
-		dbd2.setType(Dashboard.DASHBOARD_TYPE_PLAIN);
+		dbd2.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
 		dbd2.setDashboardId(Long.MAX_VALUE); // specify id not existing in database
 		dm.saveNewDashboard(dbd2, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);

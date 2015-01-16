@@ -19,10 +19,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Dashboard
 {
-	public static final String DASHBOARD_TYPE_PLAIN = "PLAIN";
-	public static final Integer DASHBOARD_TYPE_CODE_PLAIN = Integer.valueOf(0);
-	public static final String DASHBOARD_TYPE_SOURCELINK = "SOURCELINK";
-	public static final Integer DASHBOARD_TYPE_CODE_SOURCELINK = Integer.valueOf(1);
+	public static final String DASHBOARD_TYPE_NORMAL = "NORMAL";
+	public static final Integer DASHBOARD_TYPE_CODE_NORMAL = Integer.valueOf(0);
+	public static final String DASHBOARD_TYPE_SINGLEPAGE = "SINGLEPAGE";
+	public static final Integer DASHBOARD_TYPE_CODE_SINGLEPAGE = Integer.valueOf(1);
 	public static final boolean DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = Boolean.FALSE;
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
@@ -114,7 +114,7 @@ public class Dashboard
 	public Dashboard()
 	{
 		// defaults for non-null values
-		type = Dashboard.DASHBOARD_TYPE_PLAIN;
+		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
 	}
