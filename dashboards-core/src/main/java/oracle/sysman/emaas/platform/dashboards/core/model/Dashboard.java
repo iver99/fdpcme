@@ -117,6 +117,7 @@ public class Dashboard
 		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
+		isSystem = Boolean.FALSE;
 	}
 
 	public Tile addTile(Tile tile)
