@@ -1,3 +1,39 @@
 <div id="df_div_widget_iframe" class="oj-panel" style="width:100%;height:100%;background-color: white; border-top: 0px;border-width: 0px">
-    <iframe style="width:99%;height:100%;" id="df_iframe" data-bind="attr: {src: fullUrl}"></iframe>
+    <iframe style="width:99%;height:100%;" id="df_iframe" data-bind="attr: {src: targetUrl}"></iframe>
 </div>
+
+<div style="display:none" 
+     data-bind="attr: {'id': 'iframe_configDialog_' + clientGuid},ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 500px; min-height:120px;'}}">
+    <div class="oj-dialog-header oj-helper-clearfix">
+        <div class="oj-dialog-header-close-wrapper" >
+            <a class="df-dialog-header-close" data-bind="click: close">CLOSE</a>
+        </div>
+        <span class="oj-dialog-title" data-bind="text: 'Configuration'"></span>
+    </div>
+    <div class="oj-dialog-body">
+      <form class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
+         <div class="oj-row">
+             <div class="oj-col">
+                 <label for="tileTitle" class="oj-label">Title</label>
+             </div>
+             <div class="oj-col">
+                 <input id="tileTitle" style="width: 400px;" required
+                        data-bind="ojComponent:{component:'ojInputText', value:title}"/>
+             </div>
+         </div>          
+         <div class="oj-row">
+             <div class="oj-col">
+                 <label for="targetURL" class="oj-label">URL</label>
+             </div>
+             <div class="oj-col">
+                 <input id="targetURL" style="width: 400px;" required
+                        data-bind="ojComponent:{component:'ojInputText', value:fullUrl}"/>
+             </div>
+         </div>
+      </form>     
+    </div>
+    <div class="oj-dialog-footer">        
+        <button data-bind="ojComponent: {component: 'ojButton', label: 'OK'}, click: saveConfiguration"> 
+        </button> 
+    </div>  
+</div> 

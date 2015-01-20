@@ -445,7 +445,7 @@ role value for that section to represent the appropriate content type.
                                 <!-- ko if: category==='DashboardsBuiltIn' -->
                                 <input type="image" src="css/images/dashboard-32.png" width="32" id="dbsimg" alt="Dashboards Built-in" title="Dashboards Built-in" 
                                        class="widget-image"/>
-c                                <!-- /ko -->
+                                <!-- /ko -->
                                 <span data-bind="text:name"> </span>
                                 <!--font color="gray">
                                     <span data-bind="text:name"> </span>
@@ -806,6 +806,9 @@ c                                <!-- /ko -->
                                                 <li id="restore" data-bind="css: { 'oj-disabled': !restoreEnabled()}">
                                                   <a href="#" data-bind="click: $root.restore"><span class="oj-menu-item-icon demo-icon-font"><img src="images/func_restore_16_ena.png" alt="Narrower"/></span>Restore</a>
                                                 </li>
+                                                <li id="configure">
+                                                  <a href="#" data-bind="click: $root.configure"><span class="oj-menu-item-icon demo-icon-font"><img src="images/qual_gear_16_ena.png" alt="Configure"/></span>Configure</a>
+                                                </li>                                                
                                                 <!--<li id="changeUrl">
                                                   <a href="#" data-bind="click: $root.changeUrl"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Change URL</a>
                                                 </li>-->

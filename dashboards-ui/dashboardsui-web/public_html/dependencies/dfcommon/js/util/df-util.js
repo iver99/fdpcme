@@ -12,6 +12,13 @@ define(['knockout',
         function DashboardFrameworkUtility() {
             var self = this;
             
+            self.guid = function() {
+                function S4() {
+                   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                }
+                return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+            };
+            
             /**
             * Returns a random integer between min (inclusive) and max (inclusive)
             * Using Math.round() will give you a non-uniform distribution!
@@ -82,12 +89,15 @@ define(['knockout',
                 };
 
                 $.ajaxSettings.async = false;
-                $.getJSON('data/servicemanager.json', function(data) {
-                    if (data.serviceUrls && data.serviceUrls.length > 0) {
-                        for (i = 0; i < data.serviceUrls.length && !urlFound; i++) {
-                            var serviceUrl = data.serviceUrls[i]+'/'+'instances?servicename='+data.serviceName;
-                            if (data.version)
-                                serviceUrl = serviceUrl+'&version='+data.version;
+                $.getJSON(getRegistrationEndPoint(), function(data) {    
+                    if (data.registryUrls && data.ssfServiceName && data.ssfVersion) {
+                        var urls = data.registryUrls.split(",");
+                        for (i = 0; i < urls.length && !urlFound; i++) {
+                            var serviceUrl = urls[i]+'/'+'instances?serviceName='+data.ssfServiceName;
+                            if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
+                                serviceUrl = urls[i]+'instances?serviceName='+data.ssfServiceName;
+                            }
+                            serviceUrl = serviceUrl+'&version='+data.ssfVersion;
                             $.ajax({
                                 url: serviceUrl,
                                 headers: getAuthorizationRequestHeader(),
@@ -218,11 +228,16 @@ define(['knockout',
                 };
                 
                 $.ajax({
-                    url: 'data/servicemanager.json',
+                    url: getRegistrationEndPoint(),
                     success: function(data, textStatus) {
-                        if (data.serviceUrls && data.serviceUrls.length > 0) {
-                            for (i = 0; i < data.serviceUrls.length; i++) {
-                                var serviceUrl = data.serviceUrls[i]+'/instances';
+                        if (data.registryUrls) {
+                            var urls = data.registryUrls.split(",");
+                            for (i = 0; i < urls.length; i++) {
+                                var serviceUrl = urls[i]+'/'+'instances';
+                                if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
+                                    serviceUrl = urls[i]+'instances';
+                                }
+                                
                                 $.ajax({
                                     url: serviceUrl,
                                     headers: getAuthorizationRequestHeader(),
@@ -297,12 +312,17 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
 
             var assetRoot;
             $.ajaxSettings.async = false;
-            $.getJSON('data/servicemanager.json', function(data) {
-                if (data.serviceUrls && data.serviceUrls.length > 0) {
-                    for (i = 0; i < data.serviceUrls.length && !urlFound; i++) {
-                        var serviceUrl = data.serviceUrls[i] + '/'+'instances?servicename=' + providerName;
+            $.getJSON(getRegistrationEndPoint(), function(data) {
+                if (data.registryUrls) {
+                    var urls = data.registryUrls.split(",");
+                    for (i = 0; i < urls.length && !urlFound; i++) {
+                        var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
+                        if (urls[i].lastIndexOf("/")===urls[i].length){
+                            serviceUrl = urls[i] + 'instances?serviceName=' + providerName;
+                        }
                         if (providerVersion)
                             serviceUrl = serviceUrl + '&version=' + providerVersion;
+                        var error = false;
                         $.ajax({
                             url: serviceUrl,
                             headers: getAuthorizationRequestHeader(),
@@ -310,10 +330,13 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
                                 assetRoot = fetchServiceAssetRoot(data);
                             },
                             error: function(xhr, textStatus, errorThrown){
-
+                                error =true;
                             },
                             async: false
                         });
+                        if (!error){
+                            break;
+                        }
                     }
                 }
             });
@@ -322,6 +345,10 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
         }
     }
     return "http://jet.us.oracle.com";
+}
+
+function getRegistrationEndPoint(){
+    return 'api/configurations/registration';//change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
 }
 
 function getAuthorizationRequestHeader() {

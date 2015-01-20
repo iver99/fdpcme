@@ -7,30 +7,65 @@ define([
     'ojs/ojcore',
     'knockout',
     'jquery',
-    'ojs/ojknockout',
-    'ojs/ojselectcombobox'
+    'dfutil'
 ],
-        function (oj, ko, $)
+        function (oj, ko, $,dfu)
         {
             function IFrameModel(params) {
+                var PNAME_IFRAME_SRC = "iframeSrc";
+                var DEFAULT_URL = "about:blank";
                 var self = this;
                 var tile = params.tile;
-                //Get unique id from WIDGET_UNIQUE_ID
-
-                var providerName = tile.widget["PROVIDER_NAME"];
-                var providerVersion = tile.widget["PROVIDER_VERSION"];
-                var providerAssetRoot = tile.widget["PROVIDER_ASSET_ROOT"];
-
-                if (providerName && providerVersion && providerAssetRoot) {
-                    self.fullUrl = ko.observable(df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
-                } else {
-                    var uniqueId = tile["WIDGET_UNIQUE_ID"];
-                    //query from SSF category to get data for URL retrieval
-//                    providerName = "DB Analytics"; //TODO
-                    providerName = "Sample Provider";
-                    providerVersion = "0.1"; //TODO
-                    providerAssetRoot = "home"; //TODO
-                    self.fullUrl = ko.observable(df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
+                var url = tile.getParameter(PNAME_IFRAME_SRC);
+                if (url===null || url===undefined){
+                    url = DEFAULT_URL;
+                }
+                self.clientGuid = dfu.guid();
+                /**
+                 * Since the same widget can be added to dashboard more than once, 
+                 * we need to specify unqiue id for configuation dialog of each widget with the same type.
+                 * 
+                 */
+                var configDialogId = '#iframe_configDialog_'+self.clientGuid;
+                self.title = ko.observable(tile.title());
+                self.fullUrl=ko.observable(url);
+                self.targetUrl=ko.observable(url);
+                
+                /**
+                 * Open dialog to configure widget
+                 */
+                params.tile.configure = function(){
+                    $(configDialogId).ojDialog('open');
+                }
+                
+                /**
+                 * Save configuration and close configuration dialog
+                 * 
+                 */
+                self.saveConfiguration = function(){
+                   params.tile.title(self.title());
+                   self.targetUrl(self.fullUrl()); 
+                   params.tile.setParameter(PNAME_IFRAME_SRC,self.fullUrl());
+                   $(configDialogId).ojDialog('close');
+                }
+                
+                /**
+                 * Discard configuration and close configuration dialog
+                 * 
+                 */
+                self.close = function(){
+                    self.title(params.tile.title());
+                    self.fullUrl(self.targetUrl()); 
+                    $(configDialogId).ojDialog('close');
+                }
+                
+                /**
+                 * Open dialog for configuration in async way if criteria to open configuration dialog is met.
+                 * Note:
+                 * we can't run tile.configure directly here which will break model intialization and template can't run without model initializtion's completion
+                 */
+                if (DEFAULT_URL===url){
+                    setTimeout(tile.configure,1000);
                 }
             }
             return IFrameModel;

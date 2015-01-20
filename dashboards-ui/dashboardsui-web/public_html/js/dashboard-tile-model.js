@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 define(['knockout',
-        'timeselector/time-selector-model',  
+        'timeselector/time-selector-model', 
+        'dfutil',
         'ojs/ojcore',
         'jquery',
         'jqueryui',
@@ -16,14 +17,9 @@ define(['knockout',
         'canvg'
     ],
     
-    function(ko, TimeSelectorModel)
+    function(ko, TimeSelectorModel,dfu)
     {
-        function guid() {
-            function S4() {
-               return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-            }
-            return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-        }
+
         
         /**
          * 
@@ -139,7 +135,7 @@ define(['knockout',
             self.maximized = ko.observable(false);
             self.shouldHide = ko.observable(false);
             self.tileWidth = ko.observable(width);
-            self.clientGuid = guid();
+            self.clientGuid = dfu.guid();
             self.widerEnabled = ko.computed(function() {
                 return self.tileWidth() < 4;
             });
@@ -152,6 +148,11 @@ define(['knockout',
             self.restoreEnabled = ko.computed(function() {
                 return self.maximized();
             });
+            
+            self.configureEnabled = ko.computed(function() {
+                return typeof(self.configure)==="function";
+            });
+            
             self.tileDisplayClass = ko.computed(function() {
                 var css = 'oj-md-'+(self.tileWidth()*3) + ' oj-sm-'+(self.tileWidth()*3) + ' oj-lg-'+(self.tileWidth()*3);
                 css += self.maximized() ? ' dbd-tile-maximized' : ' ';
@@ -185,8 +186,8 @@ define(['knockout',
              * @returns {String} value of parameter. null if not found
              */
             self.getParameter = function (name) {
-                if (name in customParameters) {
-                    return customParameters[name];
+                if (name in self.customParameters) {
+                    return self.customParameters[name];
                 } else {
                     return null;
                 }
@@ -209,6 +210,8 @@ define(['knockout',
             self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 self.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
+            
+
         }
         
         function DashboardTilesViewModel(tilesView, urlEditView, widgetsHomRef, dsbType) {
@@ -256,9 +259,9 @@ define(['knockout',
                     var provider_asset_root = null;
                     var widget_source = null;
                     if (widget && widget.category === 'DashboardsBuiltIn') {
-                        var koc_name = 'dbs-builtin-iframe-widget';
-                        var viewmodel = 'dashboards/../dependencies/widgets/iFrame/js/widget-iframe.js';
-                        var template = 'dashboards/../dependencies/widgets/iFrame/widget-iframe.html';
+                        var koc_name = 'DF_V1_WIDGET_IFRAME';
+                        var viewmodel = '../dependencies/widgets/iFrame/js/widget-iframe';
+                        var template = '../dependencies/widgets/iFrame/widget-iframe.html';
                         if (koc_name && template && viewmodel){
                             if (!ko.components.isRegistered(koc_name)) {
                                 ko.components.register(koc_name,{
@@ -791,6 +794,12 @@ define(['knockout',
                 
                 self.postTileMenuClicked(tile);
             };
+            
+            self.configure = function(tile){
+                if (tile.configure){
+                    tile.configure();
+                }
+            }
             
             self.changeUrl = function(tile) {
                 urlEditView.setEditedTile(tile);

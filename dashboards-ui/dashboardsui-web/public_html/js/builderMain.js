@@ -154,10 +154,10 @@ require(['knockout',
 //                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/dependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
 //            });
             
-            ko.components.register("DF_V1_IFRAME",{
-                viewModel:{require:'../dependencies/widgets/iFrame/js/widget-iframe'},
-                template:{require:'text!../dependencies/widgets/iFrame/widget-iframe.html'}
-            }); 
+//            ko.components.register("DF_V1_WIDGET_IFRAME",{
+//                viewModel:{require:'../dependencies/widgets/iFrame/js/widget-iframe'},
+//                template:{require:'text!../dependencies/widgets/iFrame/widget-iframe.html'}
+//            }); 
  
             ko.components.register("DF_V1_WIDGET_ONEPAGE",{
                 viewModel:{require:'../dependencies/widgets/onepage/js/onepageModel'},

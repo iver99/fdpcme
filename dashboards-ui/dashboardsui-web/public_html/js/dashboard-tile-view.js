@@ -598,8 +598,8 @@ define(['knockout',
             var totalPage = 0;
             var naviFromSearchResults = false;
             var dbsBuiltinWidgets = [{id: 1, 
-                    name: 'Dashboards built-in iFrame widget', 
-                    description: 'Dashboards built-in iFrame widget', 
+                    name: 'Generic URL Widget', 
+                    description: 'A generic widget to show a web page by a given URL', 
                     category: 'DashboardsBuiltIn'}];
             self.widgetList = ko.observableArray(widgetArray);
             self.curPageWidgetList = ko.observableArray(curPageWidgets);
