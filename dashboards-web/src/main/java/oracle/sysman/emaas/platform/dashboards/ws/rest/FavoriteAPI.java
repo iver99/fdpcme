@@ -43,14 +43,13 @@ public class FavoriteAPI extends APIBase
 
 	@POST
 	@Path("{id: [1-9][0-9]*}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response addOneFavoriteDashboard(@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId = getTenantId();
 		try {
 			dm.addFavoriteDashboard(dashboardId, tenantId);
-			return Response.status(Status.OK).build();
+			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
@@ -59,14 +58,13 @@ public class FavoriteAPI extends APIBase
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteOneFavoriteDashboard(@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String tenantId = getTenantId();
 		try {
 			dm.removeFavoriteDashboard(dashboardId, tenantId);
-			return Response.status(Status.OK).build();
+			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
