@@ -33,28 +33,28 @@ public class DataFormatUtils
 
 	public static String dashboardTypeInteger2String(Integer type)
 	{
-		if (Dashboard.DASHBOARD_TYPE_CODE_SOURCELINK.equals(type)) {
-			return Dashboard.DASHBOARD_TYPE_SOURCELINK;
+		if (Dashboard.DASHBOARD_TYPE_CODE_SINGLEPAGE.equals(type)) {
+			return Dashboard.DASHBOARD_TYPE_SINGLEPAGE;
 		}
 		else {
-			return Dashboard.DASHBOARD_TYPE_PLAIN;
+			return Dashboard.DASHBOARD_TYPE_NORMAL;
 		}
 	}
 
 	public static Integer dashboardTypeString2Integer(String type) throws CommonFunctionalException
 	{
 		if (type == null) { // default
-			return Dashboard.DASHBOARD_TYPE_CODE_PLAIN;
+			return Dashboard.DASHBOARD_TYPE_CODE_NORMAL;
 		}
-		if (!Dashboard.DASHBOARD_TYPE_PLAIN.equals(type) && !Dashboard.DASHBOARD_TYPE_SOURCELINK.equals(type)) {
+		if (!Dashboard.DASHBOARD_TYPE_NORMAL.equals(type) && !Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(type)) {
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_TYPE));
 		}
-		if (Dashboard.DASHBOARD_TYPE_PLAIN.equals(type)) {
-			return Dashboard.DASHBOARD_TYPE_CODE_PLAIN;
+		if (Dashboard.DASHBOARD_TYPE_NORMAL.equals(type)) {
+			return Dashboard.DASHBOARD_TYPE_CODE_NORMAL;
 		}
 		else {
-			return Dashboard.DASHBOARD_TYPE_CODE_SOURCELINK;
+			return Dashboard.DASHBOARD_TYPE_CODE_SINGLEPAGE;
 		}
 	}
 

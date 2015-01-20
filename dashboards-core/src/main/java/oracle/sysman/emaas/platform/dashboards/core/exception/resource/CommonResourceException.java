@@ -23,6 +23,9 @@ public class CommonResourceException extends DashboardException
 {
 	private static final long serialVersionUID = 1159225613176742290L;
 
+	public static final String NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD = "NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD";
+	public static final String NOT_SUPPORT_UPDATE_TYPE_FIELD = "NOT_SUPPORT_UPDATE_TYPE_FIELD";
+
 	/**
 	 * Constructs a new <code>CommonResourceException</code> with the specified detail message.
 	 *

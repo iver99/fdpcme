@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
@@ -17,10 +19,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Dashboard
 {
-	public static final String DASHBOARD_TYPE_PLAIN = "PLAIN";
-	public static final Integer DASHBOARD_TYPE_CODE_PLAIN = Integer.valueOf(0);
-	public static final String DASHBOARD_TYPE_SOURCELINK = "SOURCELINK";
-	public static final Integer DASHBOARD_TYPE_CODE_SOURCELINK = Integer.valueOf(1);
+	public static final String DASHBOARD_TYPE_NORMAL = "NORMAL";
+	public static final Integer DASHBOARD_TYPE_CODE_NORMAL = Integer.valueOf(0);
+	public static final String DASHBOARD_TYPE_SINGLEPAGE = "SINGLEPAGE";
+	public static final Integer DASHBOARD_TYPE_CODE_SINGLEPAGE = Integer.valueOf(1);
 	public static final boolean DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = Boolean.FALSE;
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
@@ -112,7 +114,7 @@ public class Dashboard
 	public Dashboard()
 	{
 		// defaults for non-null values
-		type = Dashboard.DASHBOARD_TYPE_PLAIN;
+		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
 	}
@@ -182,41 +184,40 @@ public class Dashboard
 		return owner;
 	}
 
-	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws CommonFunctionalException
+	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
 	{
-		//    	Integer isDeleted = DataFormatUtils.boolean2Integer(this.deleted);
 		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem == null);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
 					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType);
-			//    	List<EmsDashboardTile> edtList = new ArrayList<EmsDashboardTile>();
 			if (tileList != null) {
 				int i = 0;
 				for (Tile tile : tileList) {
 					EmsDashboardTile edt = tile.getPersistenceEntity(null);
 					edt.setPosition(i++);
 					ed.addEmsDashboardTile(edt);
-					//    			edt.setDashboard(ed);
-					//    			edtList.add(edt);
 				}
-				//    		ed.setDashboardTileList(edtList);
 			}
 		}
 		else {
-			//    		ed.setCreationDate(creationDate);
 			ed.getScreenShot();
 			ed.setDeleted(deleted ? getDashboardId() : 0);
 			ed.setDescription(description);
 			ed.setEnableTimeRange(isEnableTimeRange);
-			ed.setIsSystem(isIsSystem);
+			if (ed.getIsSystem() != null && isIsSystem != null && !isIsSystem.equals(ed.getIsSystem())) {
+				throw new CommonResourceException(
+						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD));
+			}
 			ed.setLastModificationDate(lastModificationDate);
 			ed.setLastModifiedBy(lastModifiedBy);
 			ed.setName(name);
-			//    		ed.setOwner(owner);
 			ed.setScreenShot(screenShot);
-			ed.setType(dashboardType);
+			if (ed.getType() != null && dashboardType != null && !dashboardType.equals(ed.getType())) {
+				throw new CommonResourceException(
+						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
+			}
 			updateEmsDashboardTiles(tileList, ed);
 		}
 		return ed;
@@ -325,7 +326,7 @@ public class Dashboard
 		this.type = type;
 	}
 
-	private void updateEmsDashboardTiles(List<Tile> tiles, EmsDashboard ed) throws CommonFunctionalException
+	private void updateEmsDashboardTiles(List<Tile> tiles, EmsDashboard ed) throws DashboardException
 	{
 		Map<Tile, EmsDashboardTile> rows = new HashMap<Tile, EmsDashboardTile>();
 		// remove deleted tile row in dashboard row first

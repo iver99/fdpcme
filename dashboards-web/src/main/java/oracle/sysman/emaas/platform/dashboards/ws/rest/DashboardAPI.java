@@ -39,7 +39,7 @@ import org.codehaus.jettison.json.JSONObject;
  * @author wenjzhu
  * @author guobaochen introduce API to query single dashboard by id, and update specified dashboard
  */
-@Path("/api/v1/dashboards")
+@Path("/v1/dashboards")
 public class DashboardAPI extends APIBase
 {
 	public DashboardAPI()
@@ -71,16 +71,21 @@ public class DashboardAPI extends APIBase
 	}
 
 	@DELETE
-	@Path("{id: [0-9]*}")
+	@Path("{id: [1-9][0-9]*}")
 	public Response deleteDashboard(@PathParam("id") Long dashboardId)
 	{
 		DashboardManager manager = DashboardManager.getInstance();
-		manager.deleteDashboard(dashboardId, getTenantId());
-		return Response.status(Status.OK).build();
+		try {
+			manager.deleteDashboard(dashboardId, getTenantId());
+			return Response.status(Status.NO_CONTENT).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
 	}
 
 	@GET
-	@Path("{id: [0-9]*}/screenshot")
+	@Path("{id: [1-9][0-9]*}/screenshot")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getDashboardBase64ScreenShot(@PathParam("id") Long dashboardId)
 	{
@@ -97,6 +102,7 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Path("{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@PathParam("id") long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
@@ -141,6 +147,7 @@ public class DashboardAPI extends APIBase
 
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDashboard(@PathParam("id") long dashboardId, JSONObject inputJson)
 	{
 		Dashboard input = null;
@@ -180,7 +187,7 @@ public class DashboardAPI extends APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String screenShotUrl = uriInfo.getBaseUri() + "api/v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}

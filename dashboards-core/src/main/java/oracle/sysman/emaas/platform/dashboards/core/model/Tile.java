@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
@@ -216,7 +217,7 @@ public class Tile
 	 * @return
 	 * @throws CommonFunctionalException
 	 */
-	public EmsDashboardTile getPersistenceEntity(EmsDashboardTile to) throws CommonFunctionalException
+	public EmsDashboardTile getPersistenceEntity(EmsDashboardTile to) throws DashboardException
 	{
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
 
