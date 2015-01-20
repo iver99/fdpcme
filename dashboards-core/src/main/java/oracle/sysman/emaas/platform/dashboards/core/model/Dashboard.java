@@ -188,7 +188,7 @@ public class Dashboard
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
 	{
 		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
-		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem == null);
+		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
