@@ -71,7 +71,7 @@ public class DashboardAPI extends APIBase
 	}
 
 	@DELETE
-	@Path("{id: [0-9]*}")
+	@Path("{id: [1-9][0-9]*}")
 	public Response deleteDashboard(@PathParam("id") Long dashboardId)
 	{
 		DashboardManager manager = DashboardManager.getInstance();
@@ -85,7 +85,7 @@ public class DashboardAPI extends APIBase
 	}
 
 	@GET
-	@Path("{id: [0-9]*}/screenshot")
+	@Path("{id: [1-9][0-9]*}/screenshot")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response getDashboardBase64ScreenShot(@PathParam("id") Long dashboardId)
 	{
