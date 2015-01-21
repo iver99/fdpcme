@@ -480,11 +480,11 @@ public class DashboardManager
 			}
 
 			if (!ic) {
-				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where t.title like :tileTitle ) ");
+				sb.append(" or p.dashboardId in (select t.dashboard.dashboardId from EmsDashboardTile t where t.title like :tileTitle ) ");
 				paramMap.put("tileTitle", "%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where lower(t.title) like :tileTitle ) ");
+				sb.append(" or p.dashboardId in (select t.dashboard.dashboardId from EmsDashboardTile t where lower(t.title) like :tileTitle ) ");
 				paramMap.put("tileTitle", "%" + queryString.toLowerCase(locale) + "%");
 			}
 			sb.append(" or lower(p.owner) = :owner)");
