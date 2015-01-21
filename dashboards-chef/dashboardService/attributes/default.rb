@@ -1,5 +1,5 @@
 #
-#cookbook Name::datasource 
+#cookbook Name::dashboardService 
 #
 
 default["run_dir"] = "/var/opt/ORCLemaas"
