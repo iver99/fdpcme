@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,7 +32,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Table(name = "EMS_DASHBOARD_TILE")
 @SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = false)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardTile implements Serializable
 {
 	private static final long serialVersionUID = 6307069723661684517L;
@@ -94,7 +95,9 @@ public class EmsDashboardTile implements Serializable
 	private String widgetViewmode;
 
 	@ManyToOne
-	@JoinColumn(name = "DASHBOARD_ID")
+	@JoinColumns(value={
+			@JoinColumn(name = "DASHBOARD_ID", referencedColumnName="DASHBOARD_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName="TENANT_ID", insertable=false, updatable=false)})
 	private EmsDashboard dashboard;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardTile", orphanRemoval = true)
 	private List<EmsDashboardTileParams> dashboardTileParamsList;
