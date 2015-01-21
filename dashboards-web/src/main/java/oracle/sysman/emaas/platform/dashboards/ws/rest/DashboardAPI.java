@@ -17,12 +17,15 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -50,13 +53,13 @@ public class DashboardAPI extends APIBase
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createDashboard(JSONObject dashboard)
+	public Response createDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam, JSONObject dashboard)
 	{
 		//System.out.println(dashboard);
 		try {
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
-			String tenantId = getTenantId();
+			String tenantId = getTenantId(tenantIdParam);
 			d = manager.saveNewDashboard(d, tenantId);
 			updateDashboardAllHref(d);
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
@@ -72,11 +75,13 @@ public class DashboardAPI extends APIBase
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
-	public Response deleteDashboard(@PathParam("id") Long dashboardId)
+	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
-			manager.deleteDashboard(dashboardId, getTenantId());
+			String tenantId = getTenantId(tenantIdParam);
+			manager.deleteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
@@ -87,11 +92,13 @@ public class DashboardAPI extends APIBase
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response getDashboardBase64ScreenShot(@PathParam("id") Long dashboardId)
+	public Response getDashboardBase64ScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+			@PathParam("id") Long dashboardId)
 	{
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
-			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, getTenantId());
+			String tenantId = getTenantId(tenantIdParam);
+			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			return Response.ok(ss).build();
 		}
 		catch (DashboardException e) {
@@ -103,11 +110,13 @@ public class DashboardAPI extends APIBase
 	@GET
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryDashboardById(@PathParam("id") long dashboardId)
+	public Response queryDashboardById(@Context HttpHeaders headers,
+			@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam, @PathParam("id") long dashboardId)
+			throws DashboardException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId = super.getTenantId();
 		try {
+			String tenantId = getTenantId(tenantIdParam);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			updateDashboardAllHref(dbd);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
@@ -119,8 +128,9 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryDashboards(@QueryParam("queryString") String queryString,
-			@DefaultValue("") @QueryParam("limit") Integer limit, @DefaultValue("0") @QueryParam("offset") Integer offset)
+	public Response queryDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
+			@DefaultValue("0") @QueryParam("offset") Integer offset)
 	{
 		String qs = null;
 		try {
@@ -132,7 +142,8 @@ public class DashboardAPI extends APIBase
 
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
-			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, getTenantId(), true);
+			String tenantId = getTenantId(tenantIdParam);
+			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
 					updateDashboardAllHref(d);
@@ -148,7 +159,8 @@ public class DashboardAPI extends APIBase
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateDashboard(@PathParam("id") long dashboardId, JSONObject inputJson)
+	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+			@PathParam("id") long dashboardId, JSONObject inputJson)
 	{
 		Dashboard input = null;
 		try {
@@ -160,8 +172,8 @@ public class DashboardAPI extends APIBase
 		}
 
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId = getTenantId();
 		try {
+			String tenantId = getTenantId(tenantIdParam);
 			input.setDashboardId(dashboardId);
 			Dashboard dbd = dm.updateDashboard(input, tenantId);
 			updateDashboardAllHref(dbd);

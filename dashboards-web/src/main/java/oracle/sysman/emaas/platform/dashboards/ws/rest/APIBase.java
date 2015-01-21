@@ -14,7 +14,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 
@@ -47,9 +49,13 @@ public class APIBase
 		return jsonUtil;
 	}
 
-	public String getTenantId()
+	public String getTenantId(String tenantId) throws CommonSecurityException
 	{
-		return "test";
+		if (tenantId == null || "".equals(tenantId)) {
+			throw new CommonSecurityException(
+					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_REQUIRED));
+		}
+		return tenantId;
 	}
 
 	/*

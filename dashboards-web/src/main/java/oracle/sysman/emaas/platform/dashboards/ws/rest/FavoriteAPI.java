@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -43,11 +44,12 @@ public class FavoriteAPI extends APIBase
 
 	@POST
 	@Path("{id: [1-9][0-9]*}")
-	public Response addOneFavoriteDashboard(@PathParam("id") Long dashboardId)
+	public Response addOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId = getTenantId();
 		try {
+			String tenantId = getTenantId(tenantIdParam);
 			dm.addFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -58,11 +60,12 @@ public class FavoriteAPI extends APIBase
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
-	public Response deleteOneFavoriteDashboard(@PathParam("id") Long dashboardId)
+	public Response deleteOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId = getTenantId();
 		try {
+			String tenantId = getTenantId(tenantIdParam);
 			dm.removeFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -73,28 +76,36 @@ public class FavoriteAPI extends APIBase
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllFavoriteDashboards()
+	public Response getAllFavoriteDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam)
 	{
-		DashboardManager manager = DashboardManager.getInstance();
-		List<Dashboard> pd = manager.getFavoriteDashboards(getTenantId());
-		List<FavoriteEntity> entities = new ArrayList<FavoriteEntity>();
-		if (pd != null) {
-			for (Dashboard dashboard : pd) {
-				updateDashboardHref(dashboard);
-				entities.add(new FavoriteEntity(dashboard));
+		try {
+			DashboardManager manager = DashboardManager.getInstance();
+			String tenantId = getTenantId(tenantIdParam);
+			List<Dashboard> pd = manager.getFavoriteDashboards(tenantId);
+			List<FavoriteEntity> entities = new ArrayList<FavoriteEntity>();
+			if (pd != null) {
+				for (Dashboard dashboard : pd) {
+					updateDashboardHref(dashboard);
+					entities.add(new FavoriteEntity(dashboard));
+				}
 			}
+			return Response.ok(getJsonUtil().toJson(entities)).build();
 		}
-		return Response.ok(getJsonUtil().toJson(entities)).build();
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+
 	}
 
 	@GET
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response isFavoriteDashboard(@PathParam("id") Long dashboardId)
+	public Response isFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId = getTenantId();
 		try {
+			String tenantId = getTenantId(tenantIdParam);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			boolean isFavorite = dm.isDashboardFavorite(dbd.getDashboardId(), tenantId);
 			IsFavoriteEntity ife = new IsFavoriteEntity();
