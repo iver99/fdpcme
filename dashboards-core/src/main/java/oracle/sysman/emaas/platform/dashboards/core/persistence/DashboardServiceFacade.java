@@ -139,9 +139,11 @@ public class DashboardServiceFacade
 		commitTransaction();
 		return entity;
 	}
-
+    
+	@SuppressWarnings("rawtypes")
 	public List queryByRange(String jpqlStmt, Class resultClass, Map<String, Object> params, int firstResult, int maxResults)
 	{
+		@SuppressWarnings("unchecked")
 		Query query = resultClass == null ? em.createQuery(jpqlStmt) : em.createQuery(jpqlStmt, resultClass);
 		if (params != null && params.size() > 0) {
 			for (Map.Entry<String, Object> p : params.entrySet()) {
