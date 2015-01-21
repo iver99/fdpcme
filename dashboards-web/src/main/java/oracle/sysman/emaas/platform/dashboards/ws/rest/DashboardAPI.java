@@ -77,7 +77,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
 			manager.deleteDashboard(dashboardId, getTenantId());
-			return Response.status(Status.OK).build();
+			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
@@ -147,6 +147,7 @@ public class DashboardAPI extends APIBase
 
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDashboard(@PathParam("id") long dashboardId, JSONObject inputJson)
 	{
 		Dashboard input = null;

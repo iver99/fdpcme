@@ -359,7 +359,7 @@ public class DashboardManager
 
 	/**
 	 * Check if the dashboard with spacified id is favorite dashboard or not
-	 * 
+	 *
 	 * @param dashboardId
 	 * @param tenantId
 	 * @return
@@ -491,7 +491,7 @@ public class DashboardManager
 			paramMap.put("owner", queryString.toLowerCase(locale));
 			sb.append(" and p.deleted = 0 ");
 		}
-		sb.append(" order by CASE WHEN lae.accessDate IS NULL THEN 1 ELSE 0 END, lae.accessDate DESC, p.dashboardId DESC");
+		sb.append(" order by CASE WHEN lae.accessDate IS NULL THEN 0 ELSE 1 END DESC, lae.accessDate DESC, p.dashboardId DESC");
 		StringBuilder sbQuery = new StringBuilder(sb);
 		sbQuery.insert(0, "select p ");
 		String jpqlQuery = sbQuery.toString();
