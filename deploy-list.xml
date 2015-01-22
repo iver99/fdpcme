@@ -14,14 +14,3 @@
             <destination>Applications</destination> 
      </file> 
 </service-artifacts> 
- 
-<service-artifacts name="dashboardUI"> 
-   
-     <file name='dashboards-ui/dashboardsui-ee/build/libs/emaas-applications-dashboards-ui-0.1' 
-            serviceName='DashboardUI'> 
-            <version>0.1</version> 
-            <extension>ear</extension> 
-            <destination>Applications</destination> 
-     </file>
-
-</service-artifacts> 
