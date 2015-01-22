@@ -97,7 +97,7 @@ bash "deploy_ear" do
     echo "\n hostname= #{node["hostname"]}, fqdn=  #{node["fqdn"]}" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
     set +e
     # Check if service is online
-    curl -s -o out.html -w '%{http_code}' "http://#{node["hostname"]}:#{node["wls_port"]}/emaas/savedsearch/v1" | grep 200
+    curl -s -o out.html -w '%{http_code}' "http://#{node["hostname"]}:#{node["wls_port"]}/emcpdf/api" | grep 200
     if [ $? -eq 0 ]; then
     echo "Application is already deployed" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
     exit 0
@@ -114,9 +114,9 @@ bash "deploy_ear" do
         if  [ -z "$listApp" ]; then
             echo "Performing deployment since the $applicationName is not in the application list" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
-            echo "#{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}"#{node["SAAS_version"]}.ea#{node["SAAS_version"]}.earr >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
+            echo "#{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}-"#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
-            #{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
+            #{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}-#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
         else
             echo "Starting the Application since $applicationName is already on the application list" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
