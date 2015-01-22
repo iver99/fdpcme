@@ -68,14 +68,13 @@ require(['dbs/dbsmodel',
     'ojs/ojknockout-model',
     'ojs/ojcomponents',
     'ojs/ojvalidation',
-    'ojs/ojdatagrid', 
-    'ojs/ojtable',
-    'ojs/ojtable-model',
+//    'ojs/ojdatagrid', 
+//    'ojs/ojtable',
+//    'ojs/ojtable-model',
     'ojs/ojbutton',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'ojs/ojpopup',
-    'dbs/dbstabs',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
 //    'ojs/ojvalidation'
@@ -307,11 +306,15 @@ function truncateString(str, length) {
     return str;
 };
 
-/*
+
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 };
-*/
+
+function getSecurityHeader() {
+    return "test";
+};
+
 function discoverSavedSearchServiceUrl() {
     var availableUrl = null;
     var urlFound = false;
