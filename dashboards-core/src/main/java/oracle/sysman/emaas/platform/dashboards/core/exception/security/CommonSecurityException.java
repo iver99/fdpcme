@@ -23,6 +23,8 @@ public class CommonSecurityException extends DashboardException
 {
 	private static final long serialVersionUID = 6034178675441388401L;
 
+	public static final String X_USER_IDENTITY_DOMAIN_REQUIRED = "X_USER_IDENTITY_DOMAIN_REQUIRED";
+
 	/**
 	 * Constructs a new <code>CommonSecurityException</code> with the specified detail message.
 	 *

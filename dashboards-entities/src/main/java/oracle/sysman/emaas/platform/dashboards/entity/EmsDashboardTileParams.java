@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -15,10 +16,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
+
 @Entity
 @NamedQueries({ @NamedQuery(name = "EmsDashboardTileParams.findAll", query = "select o from EmsDashboardTileParams o") })
 @Table(name = "EMS_DASHBOARD_TILE_PARAMS")
 @IdClass(EmsDashboardTileParamsPK.class)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardTileParams implements Serializable
 {
 	private static final long serialVersionUID = 4988046039963971713L;
@@ -38,7 +42,8 @@ public class EmsDashboardTileParams implements Serializable
 	private Date paramValueTimestamp;
 	@ManyToOne
 	@Id
-	@JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID")
+	@JoinColumns(value = { @JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID") })
 	private EmsDashboardTile dashboardTile;
 
 	public EmsDashboardTileParams()

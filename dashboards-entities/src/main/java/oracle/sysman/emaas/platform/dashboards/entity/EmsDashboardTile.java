@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,7 +32,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
 @Table(name = "EMS_DASHBOARD_TILE")
 @SequenceGenerator(name = "EmsDashboardTile_Id_Seq_Gen", sequenceName = "EMS_DASHBOARD_TILE_SEQ", allocationSize = 1)
 @Multitenant(MultitenantType.SINGLE_TABLE)
-@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = false)
+@TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
 public class EmsDashboardTile implements Serializable
 {
 	private static final long serialVersionUID = 6307069723661684517L;
@@ -66,12 +67,14 @@ public class EmsDashboardTile implements Serializable
 	private String providerName;
 	@Column(name = "PROVIDER_VERSION", length = 64)
 	private String providerVersion;
-	//@Column(name = "TENANT_ID", nullable = false, length = 32)
-	//private String tenantId;
+	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
+	private String tenantId;
 	@Column(name = "WIDGET_CREATION_TIME", nullable = false, length = 32)
 	private String widgetCreationTime;
+
 	@Column(name = "WIDGET_DESCRIPTION", length = 256)
 	private String widgetDescription;
+
 	@Column(name = "WIDGET_GROUP_NAME", length = 64)
 	private String widgetGroupName;
 	@Column(name = "WIDGET_HISTOGRAM", nullable = false, length = 1024)
@@ -92,9 +95,9 @@ public class EmsDashboardTile implements Serializable
 	private String widgetUniqueId;
 	@Column(name = "WIDGET_VIEWMODE", nullable = false, length = 1024)
 	private String widgetViewmode;
-
 	@ManyToOne
-	@JoinColumn(name = "DASHBOARD_ID")
+	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmsDashboard dashboard;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardTile", orphanRemoval = true)
 	private List<EmsDashboardTileParams> dashboardTileParamsList;
@@ -206,6 +209,11 @@ public class EmsDashboardTile implements Serializable
 	public String getProviderVersion()
 	{
 		return providerVersion;
+	}
+
+	public String getTenantId()
+	{
+		return tenantId;
 	}
 
 	public Long getTileId()
@@ -348,6 +356,11 @@ public class EmsDashboardTile implements Serializable
 	public void setProviderVersion(String providerVersion)
 	{
 		this.providerVersion = providerVersion;
+	}
+
+	public void setTenantId(String tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 
 	public void setTitle(String title)
