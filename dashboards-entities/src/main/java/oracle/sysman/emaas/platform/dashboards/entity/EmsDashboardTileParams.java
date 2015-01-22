@@ -42,9 +42,8 @@ public class EmsDashboardTileParams implements Serializable
 	private Date paramValueTimestamp;
 	@ManyToOne
 	@Id
-	@JoinColumns(value={
-	@JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID"),
-	@JoinColumn(name = "TENANT_ID", referencedColumnName="TENANT_ID")})
+	@JoinColumns(value = { @JoinColumn(name = "TILE_ID", referencedColumnName = "TILE_ID"),
+			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID") })
 	private EmsDashboardTile dashboardTile;
 
 	public EmsDashboardTileParams()

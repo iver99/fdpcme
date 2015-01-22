@@ -128,7 +128,7 @@ public class Tile
 	@JsonProperty("WIDGET_UNIQUE_ID")
 	private String widgetUniqueId;
 
-	@JsonProperty("WIDGET_VIEW_MODEL")
+	@JsonProperty("WIDGET_VIEWMODEL")
 	private String widgetViewmode;
 
 	private Integer width;

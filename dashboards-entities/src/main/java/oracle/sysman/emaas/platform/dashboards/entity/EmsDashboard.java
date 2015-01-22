@@ -61,12 +61,13 @@ public class EmsDashboard implements Serializable
 	private String name;
 	@Column(nullable = false, length = 128)
 	private String owner;
-	@Basic(fetch = FetchType.LAZY)
-	@Column(name = "SCREEN_SHOT")
+
 	@Lob
+	@Basic(fetch = FetchType.EAGER)
+	@Column(name = "SCREEN_SHOT", columnDefinition = "CLOB NULL")
 	private String screenShot;
-	//@Column(name = "TENANT_ID", nullable = false, length = 32)
-	//private String tenantId;
+	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
+	private String tenantId;
 	@Column(nullable = false)
 	private Integer type;
 
@@ -166,6 +167,11 @@ public class EmsDashboard implements Serializable
 		return screenShot;
 	}
 
+	public String getTenantId()
+	{
+		return tenantId;
+	}
+
 	public Integer getType()
 	{
 		return type;
@@ -231,6 +237,11 @@ public class EmsDashboard implements Serializable
 	public void setScreenShot(String screenShot)
 	{
 		this.screenShot = screenShot;
+	}
+
+	public void setTenantId(String tenantId)
+	{
+		this.tenantId = tenantId;
 	}
 
 	public void setType(Integer type)
