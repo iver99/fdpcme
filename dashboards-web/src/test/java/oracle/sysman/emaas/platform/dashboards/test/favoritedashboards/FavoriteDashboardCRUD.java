@@ -44,14 +44,17 @@ public class FavoriteDashboardCRUD
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 					.post("/dashboards/favorites/0");
 			System.out.println("Stauts code is :" + res1.getStatusCode());
+			System.out.println("Output is :" + res1.asString());
 			Assert.assertTrue(res1.getStatusCode() == 404);
-			Assert.assertEquals(res1.asString(), "Specified dashboard is not found");
+			//Assert.assertEquals(res1.asString(), "Specified dashboard is not found");
 
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 					.post("/dashboards/favorites/9999999999");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
+			System.out.println("Output is :" + res2.asString());
 			Assert.assertTrue(res2.getStatusCode() == 404);
-			Assert.assertEquals(res2.asString(), "Specified dashboard is not found");
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -79,14 +82,14 @@ public class FavoriteDashboardCRUD
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 201);
 
-			String dashboard_id = res.jsonPath().get("id");
+			String dashboard_id = res.jsonPath().getString("id");
 			System.out.println("											");
 
 			System.out.println("Add the newly created dashboard as favorite dashborad...");
 			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 					.post("/dashboards/favorites/" + dashboard_id);
 			System.out.println("Stauts code is :" + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 200);
+			Assert.assertTrue(res1.getStatusCode() == 204);
 			System.out.println("											");
 
 			System.out.println("Verify if the dashboard has been added as favorite dashborad...");
@@ -139,13 +142,14 @@ public class FavoriteDashboardCRUD
 					.delete("/dashboards/favorites/0");
 			System.out.println("Stauts code is :" + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 404);
-			Assert.assertEquals(res1.asString(), "Specified dashboard is not found");
+			//Assert.assertEquals(res1.asString(), "Specified dashboard is not found");
 
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 					.delete("/dashboards/favorites/9999999999");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 404);
-			Assert.assertEquals(res2.asString(), "Specified dashboard is not found");
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -169,7 +173,7 @@ public class FavoriteDashboardCRUD
 			System.out.println("Stauts code is :" + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
 			List<Integer> origin_id = new ArrayList<Integer>();
-			if (res.jsonPath().get("id") != null && !"".equals(res.jsonPath().get("id"))) {
+			if (res.jsonPath().getString("id") != null && !"".equals(res.jsonPath().getString("id"))) {
 				origin_id = res.jsonPath().get("id");
 			}
 
@@ -182,16 +186,16 @@ public class FavoriteDashboardCRUD
 			System.out.println("==POST operation is done");
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 201);
+			Assert.assertTrue(res1.getStatusCode() == 201);
 
-			String dashboard_id = res1.jsonPath().get("id");
+			String dashboard_id = res1.jsonPath().getString("id");
 			System.out.println("											");
 
 			System.out.println("Add the newly created dashboard as favorite dashborad...");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 					.post("/dashboards/favorites/" + dashboard_id);
 			System.out.println("Stauts code is :" + res2.getStatusCode());
-			Assert.assertTrue(res2.getStatusCode() == 200);
+			Assert.assertTrue(res2.getStatusCode() == 204);
 			System.out.println("											");
 
 			System.out.println("Verify if the dashboard has been added as favorite dashborad...");
@@ -206,11 +210,10 @@ public class FavoriteDashboardCRUD
 
 			if (id.size() - origin_id.size() == 1) {
 				for (int i = 0; i < id.size(); i++) {
-					if (name.get(i).equals("Test_Favorite_Dashboard") && id.get(i).equals(dashboard_id)) {
+					if (name.get(i).equals("Test_Favorite_Dashboard") && id.get(i).toString().equals(dashboard_id)) {
 						System.out.println("cleaning up the dashboard that is created above using DELETE method");
 						Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 								.delete("/dashboards/" + dashboard_id);
-						System.out.println(res5.asString());
 						System.out.println("Status code is: " + res5.getStatusCode());
 						Assert.assertTrue(res5.getStatusCode() == 204);
 					}
@@ -244,13 +247,14 @@ public class FavoriteDashboardCRUD
 					.get("/dashboards/favorites/0");
 			System.out.println("Stauts code is :" + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 404);
-			Assert.assertEquals(res1.asString(), "Specified dashboard is not found");
+			//Assert.assertEquals(res1.asString(), "Specified dashboard is not found");
 
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
 					.get("/dashboards/favorites/9999999999");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 404);
-			Assert.assertEquals(res2.asString(), "Specified dashboard is not found");
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
