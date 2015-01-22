@@ -3,7 +3,7 @@
 <suite name="Dashboards_TestSuite" verbose="1">
 	<test name="DashboardsRestApi">
 		<packages>
-			<!-- package name="oracle.sysman.emSDK.emaas.platform.savedsearch.test.*" /-->
+			<package name="oracle.sysman.emaas.platform.dashboards.test.*" />
 		</packages>
 	</test>
 </suite> 
