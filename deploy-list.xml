@@ -13,4 +13,10 @@
             <extension>tgz</extension> 
             <destination>Applications</destination> 
      </file> 
+      <file name='dashboards-ui/dashboardsui-ee/build/libs/emaas-applications-dashboards-ui-0.1'
+            serviceName='DashboardService'> 
+            <version>0.1</version> 
+            <extension>tgz</extension> 
+            <destination>Applications</destination> 
+     </file> 
 </service-artifacts> 

@@ -2,5 +2,5 @@
  
 <cookbooks> 
   <cookbook name="dashboardService" dir="dashboards-chef"/> 
-  <cookbook name="dashboardUI" dir="dashboards-chef">  
+  <cookbook name="dashboardUI" dir="dashboards-chef"/>  
 </cookbooks> 
