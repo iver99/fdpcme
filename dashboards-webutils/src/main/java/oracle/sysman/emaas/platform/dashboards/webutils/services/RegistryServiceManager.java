@@ -199,8 +199,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private static final String NAV_BASE = "/emcpdf";
-	private static final String NAV_BASE_HOME = "/emcpdf/home.html";
+	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
+	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -235,17 +235,15 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
 		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-		.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+				.virtualEndpoints(applicationUrl + NAV_CONTEXT_ROOT).canonicalEndpoints(applicationUrl + NAV_CONTEXT_ROOT)
+				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
-		//		RegistrationManager.getInstance().initComponent(builder.build());
-		//TODO: hard code authorization token before for debugging registration issue, remove later
-		RegistrationManager.getInstance().withAuthorization("Basic d2VibG9naWM6d2VsY29tZTE=").initComponent(builder.build());
+		RegistrationManager.getInstance().initComponent(builder.build());
 
 		InfoManager.getInstance().getInfo()
-		.setLinks(Arrays.asList(new Link().withRel("home").withHref(applicationUrl + NAV_BASE_HOME)));
+				.setLinks(Arrays.asList(new Link().withRel("base").withHref(applicationUrl + NAV_API_BASE)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
