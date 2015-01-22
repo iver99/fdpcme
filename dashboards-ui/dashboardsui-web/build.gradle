@@ -160,11 +160,29 @@ publishing {
     }
 }
 
+task runQAUITestSuite(type: Test){
+        useTestNG(){
+        dependsOn ':dashboards-ui:dashboardsui-ee:ear'
+        useDefaultListeners = true
+        outputDirectory = file("$buildDir/testngoutput")
+        suites file('testngsuite.xml')
+        }
+}
+
 dependencies {
         compile(group: 'log4j', name: 'log4j', version: '1.2.17')
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.3')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.4')
+
+	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8')
+	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')
+	
+	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1')
+	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0')
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
+
         compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
 	if(war_number.toInteger()>0){
 	    for (i in 0..<war_number.toInteger())
