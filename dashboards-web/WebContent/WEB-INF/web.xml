@@ -19,4 +19,7 @@
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping>
+  <!-- listener>
+    <listener-class>oracle.sysman.emaas.platform.dashboards.webutils.services.DashboardApiBootstrap</listener-class>
+  </listener-->
 </web-app>
