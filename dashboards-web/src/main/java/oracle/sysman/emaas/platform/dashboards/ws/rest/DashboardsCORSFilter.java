@@ -35,12 +35,12 @@ public class DashboardsCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-USER-IDENTITY-DOMAIN");
 		chain.doFilter(request, response);
 	}
 
