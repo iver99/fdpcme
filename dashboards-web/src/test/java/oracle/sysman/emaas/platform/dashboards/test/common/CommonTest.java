@@ -25,6 +25,7 @@ public class CommonTest
 	private final String portno;
 	private final String serveruri;
 	private final String authToken;
+	private final String tenantid;
 
 	/**
 	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
@@ -52,6 +53,7 @@ public class CommonTest
 		HOSTNAME = prop.getProperty("hostname");
 		portno = prop.getProperty("port");
 		authToken = prop.getProperty("authToken");
+		tenantid = prop.getProperty("tenantid");
 		serveruri = "http://" + HOSTNAME + ":" + portno;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = serveruri;
@@ -78,5 +80,10 @@ public class CommonTest
 	public String getServeruri()
 	{
 		return serveruri;
+	}
+
+	public String getTenantid()
+	{
+		return tenantid;
 	}
 }

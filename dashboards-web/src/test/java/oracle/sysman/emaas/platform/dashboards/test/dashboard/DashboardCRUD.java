@@ -4,7 +4,6 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
-import org.codehaus.jettison.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,6 +23,7 @@ public class DashboardCRUD
 	static String portno;
 	static String serveruri;
 	static String authToken;
+	static String tenantid;
 
 	@BeforeClass
 	public static void setUp()
@@ -33,11 +33,155 @@ public class DashboardCRUD
 		portno = ct.getPortno();
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
+		tenantid = ct.getTenantid();
 	}
 
 	@Test
-	public void dashboard_create_emptyTilePara()
+	public void dashboard_create_emptyPara()
 	{
+		try {
+			System.out.println("------------------------------------------");
+			String jsonString1 = "{ \"name\":\"\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when().post("/dashboards");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"Invalid dashboard name. Name can not be empty and must be less than 64 characters");
+			System.out.println("											");
+
+			String jsonString2 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"\"}]}";
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString2).when().post("/dashboards");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "Title for tile is required");
+
+			String jsonString3 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"\"}]}";
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString3).when().post("/dashboards");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 400);
+			Assert.assertEquals(res3.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "'WIDGET_NAME' is required for tile(s) of the dashboard");
+
+			String jsonString4 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"\"}]}";
+			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString4).when().post("/dashboards");
+			System.out.println("Status code is: " + res4.getStatusCode());
+			Assert.assertTrue(res4.getStatusCode() == 400);
+			Assert.assertEquals(res4.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res4.jsonPath().get("errorMessage"),
+					"'WIDGET_UNIQUE_ID' is required for tile(s) of the dashboard");
+
+			String jsonString5 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"\"}]}";
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString5).when().post("/dashboards");
+			System.out.println("Status code is: " + res5.getStatusCode());
+			Assert.assertTrue(res5.getStatusCode() == 400);
+			Assert.assertEquals(res5.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res5.jsonPath().get("errorMessage"), "'WIDGET_ICON' is required for tile(s) of the dashboard");
+
+			String jsonString6 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"\"}]}";
+			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString6).when().post("/dashboards");
+			System.out.println("Status code is: " + res6.getStatusCode());
+			Assert.assertTrue(res6.getStatusCode() == 400);
+			Assert.assertEquals(res6.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res6.jsonPath().get("errorMessage"),
+					"'WIDGET_HISTOGRAM' is required for tile(s) of the dashboard");
+
+			String jsonString7 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"\"}]}";
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString7).when().post("/dashboards");
+			System.out.println("Status code is: " + res7.getStatusCode());
+			Assert.assertTrue(res7.getStatusCode() == 400);
+			Assert.assertEquals(res7.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res7.jsonPath().get("errorMessage"), "'WIDGET_OWNER' is required for tile(s) of the dashboard");
+
+			String jsonString8 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"\"}]}";
+			Response res8 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString8).when().post("/dashboards");
+			System.out.println("Status code is: " + res8.getStatusCode());
+			Assert.assertTrue(res8.getStatusCode() == 400);
+			Assert.assertEquals(res8.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res8.jsonPath().get("errorMessage"), "'WIDGET_OWNER' is required for tile(s) of the dashboard");
+
+			String jsonString9 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":\"\"}]}";
+			Response res9 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString9).when().post("/dashboards");
+			System.out.println("Status code is: " + res9.getStatusCode());
+			Assert.assertTrue(res9.getStatusCode() == 400);
+			Assert.assertEquals(res9.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res9.jsonPath().get("errorMessage"), "'WIDGET_SOURCE' is required for tile(s) of the dashboard");
+
+			String jsonString10 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":0,\"WIDGET_KOC_NAME\":\"\"}]}";
+			Response res10 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString10).when().post("/dashboards");
+			System.out.println("Status code is: " + res10.getStatusCode());
+			Assert.assertTrue(res10.getStatusCode() == 400);
+			Assert.assertEquals(res10.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res10.jsonPath().get("errorMessage"),
+					"'WIDGET_KOC_NAME' is required for tile(s) of the dashboard");
+
+			String jsonString11 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\":\"\"}]}";
+			Response res11 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString11).when().post("/dashboards");
+			System.out.println("Status code is: " + res11.getStatusCode());
+			Assert.assertTrue(res11.getStatusCode() == 400);
+			Assert.assertEquals(res11.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res11.jsonPath().get("errorMessage"),
+					"'WIDGET_VIEW_MODEL' is required for tile(s) of the dashboard");
+
+			String jsonString12 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\":\"\"}]}";
+			Response res12 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString12).when().post("/dashboards");
+			System.out.println("Status code is: " + res12.getStatusCode());
+			Assert.assertTrue(res12.getStatusCode() == 400);
+			Assert.assertEquals(res12.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res12.jsonPath().get("errorMessage"),
+					"'WIDGET_TEMPLATE' is required for tile(s) of the dashboard");
+
+			String jsonString13 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"\"}]}";
+			Response res13 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString13).when().post("/dashboards");
+			System.out.println("Status code is: " + res13.getStatusCode());
+			Assert.assertTrue(res13.getStatusCode() == 400);
+			Assert.assertEquals(res13.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res13.jsonPath().get("errorMessage"), "'PROVIDER_NAME' is required for tile(s) of the dashboard");
+
+			String jsonString14 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"\"}]}";
+			Response res14 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString14).when().post("/dashboards");
+			System.out.println("Status code is: " + res14.getStatusCode());
+			Assert.assertTrue(res14.getStatusCode() == 400);
+			Assert.assertEquals(res14.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res14.jsonPath().get("errorMessage"),
+					"'PROVIDER_VERSION' is required for tile(s) of the dashboard");
+
+			String jsonString15 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"\"}]}";
+			Response res15 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString15).when().post("/dashboards");
+			System.out.println("Status code is: " + res15.getStatusCode());
+			Assert.assertTrue(res15.getStatusCode() == 400);
+			Assert.assertEquals(res15.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res15.jsonPath().get("errorMessage"),
+					"'PROVIDER_ASSET_ROOT' is required for tile(s) of the dashboard");
+
+			String jsonString16 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\":\"2014-11-11T19:20:30.45Z\",  \"WIDGET_SOURCE\":0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"asset\",\"tileParameters\": [{\"name\": \"\"}]}]}";
+			Response res16 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString16).when().post("/dashboards");
+			System.out.println("Status code is: " + res16.getStatusCode());
+			Assert.assertTrue(res16.getStatusCode() == 400);
+			Assert.assertEquals(res16.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res16.jsonPath().get("errorMessage"), "'tileParameters' is required for tile(s) of the dashboard");
+
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
 
 	}
 
@@ -54,8 +198,8 @@ public class DashboardCRUD
 			System.out.println("POST method is in-progress to create a new dashboard");
 
 			String jsonString1 = "{ \"name\":\"Test_Dashboard\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
-					.post("/dashboards");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when().post("/dashboards");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -68,8 +212,8 @@ public class DashboardCRUD
 			dashboard_id = res1.jsonPath().getString("id");
 
 			System.out.println("Verify that the created dashboard will be queried...");
-			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.get("/dashboards/" + dashboard_id);
+			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/" + dashboard_id);
 			System.out.println(res4.asString());
 			System.out.println("Status code is:  " + res4.getStatusCode());
 			Assert.assertTrue(res4.getStatusCode() == 200);
@@ -82,8 +226,8 @@ public class DashboardCRUD
 
 			System.out.println("Verify that creating dashbaord with existed Id won't be successful");
 			String jsonString2 = "{ \"id\":" + dashboard_id + ",\"name\": \"Dashboard_with_existed_ID\"}";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString2).when()
-					.post("/dashboards");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString2).when().post("/dashboards");
 			System.out.println(res2.asString());
 			System.out.println("Status code is:  " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 400);
@@ -94,8 +238,8 @@ public class DashboardCRUD
 
 			System.out.println("Verify that creating dashbaord with existed name won't be successful");
 			String jsonString3 = "{ \"name\":\"Test_Dashboard\"}";
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString3).when()
-					.post("/dashboards");
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString3).when().post("/dashboards");
 			System.out.println(res3.asString());
 			System.out.println("Status code is:  " + res3.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 400);
@@ -104,8 +248,8 @@ public class DashboardCRUD
 			System.out.println("											");
 
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/dashboards/" + dashboard_id);
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + dashboard_id);
 			System.out.println(res5.asString());
 			System.out.println("Status code is: " + res5.getStatusCode());
 			Assert.assertTrue(res5.getStatusCode() == 204);
@@ -130,8 +274,8 @@ public class DashboardCRUD
 			System.out.println("POST method is in-progress to create a new dashboard");
 
 			String jsonString1 = "{\"name\": \"test_dashboard_tile\",\"tiles\":[{\"title\":\"A sample tile for search\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_NAME\": \"iFrame\",\"WIDGET_DESCRIPTION\": \"A widget which can show another page inside a iFrame\",\"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\",\"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\", \"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\": \"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\": \"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\", \"PROVIDER_NAME\": \"X Analytics\", \"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"asset\"}]}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
-					.post("/dashboards");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when().post("/dashboards");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -144,16 +288,16 @@ public class DashboardCRUD
 			System.out.println("											");
 
 			System.out.println("Get the details of the created dashboard...");
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.get("/dashboards/" + dashboard_id);
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/" + dashboard_id);
 			System.out.println(res2.asString());
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			Assert.assertEquals(res2.jsonPath().get("tiles.title[0]"), "A sample tile for search");
 
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/dashboards/" + dashboard_id);
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + dashboard_id);
 			System.out.println(res5.asString());
 			System.out.println("Status code is: " + res5.getStatusCode());
 			Assert.assertTrue(res5.getStatusCode() == 204);
@@ -164,7 +308,7 @@ public class DashboardCRUD
 
 		}
 		catch (Exception e) {
-
+			Assert.fail(e.getLocalizedMessage());
 		}
 
 	}
@@ -175,8 +319,8 @@ public class DashboardCRUD
 		try {
 			System.out.println("");
 			System.out.println("");
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/dashboard/99999999");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboard/99999999");
 			System.out.println("Status code:" + res1.getStatusCode());
 			System.out.println(res1.asString());
 			Assert.assertTrue(res1.getStatusCode() == 404);
@@ -198,7 +342,8 @@ public class DashboardCRUD
 		try {
 			System.out.println("");
 			System.out.println("");
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when().delete("/dashboard/1");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboard/1");
 			System.out.println("Status code:" + res1.getStatusCode());
 			System.out.println(res1.asString());
 			Assert.assertTrue(res1.getStatusCode() == 403);
@@ -218,23 +363,23 @@ public class DashboardCRUD
 	public void dashboard_query_multi()
 	{
 		int totalResults = 0;
-		int offset = 0;
 		int count = 0;
 		int limit = 0;
 		try {
-			//get all dashboard, defalut is to display 20
+			//get all dashboards, default is to display 20
 			System.out.println("List all dashboard...");
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when().get("/dashboards/");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/");
 			Assert.assertTrue(res1.getStatusCode() == 200);
-			List list_dashboards = res1.jsonPath().get("dashboards.name");
+			List<String> list_dashboards = res1.jsonPath().get("dashboards.name");
 			totalResults = res1.jsonPath().getInt("totalResults");
 			limit = res1.jsonPath().getInt("limit");
 			count = res1.jsonPath().getInt("count");
 			Assert.assertEquals(count, list_dashboards.size());
 
 			String jsonString1 = "{ \"name\":\"Test_Dashboard_QueryAll\"}";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
-					.post("/dashboards");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when().post("/dashboards");
 			System.out.println("==POST operation is done");
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -243,7 +388,8 @@ public class DashboardCRUD
 			String dashboard_id = res2.jsonPath().getString("id");
 
 			System.out.println("List the dashboards with ...");
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when()
 					.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			list_dashboards = res3.jsonPath().get("dashboards.name");
@@ -257,8 +403,8 @@ public class DashboardCRUD
 			Assert.assertEquals(res3.jsonPath().getInt("offset"), 0);
 
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/dashboards/" + dashboard_id);
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + dashboard_id);
 			System.out.println(res5.asString());
 			System.out.println("Status code is: " + res5.getStatusCode());
 			Assert.assertTrue(res5.getStatusCode() == 204);
@@ -278,22 +424,22 @@ public class DashboardCRUD
 	public void dashboard_query_multi_invalid_para()
 	{
 		try {
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.get("/dashboards?limit=0");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards?limit=0");
 			Assert.assertTrue(res1.getStatusCode() == 400);
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 10000);
 			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
 					"Invalid parameter 'limit', a number greater than 0 is expected");
 
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.get("/dashboards?limit=-1");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards?limit=-1");
 			Assert.assertTrue(res2.getStatusCode() == 400);
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 10000);
 			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
 					"Invalid parameter 'limit', a number greater than 0 is expected");
 
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.get("/dashboards?limit=-1");
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards?limit=-1");
 			Assert.assertTrue(res3.getStatusCode() == 400);
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 10000);
 			Assert.assertEquals(res3.jsonPath().get("errorMessage"),
@@ -315,8 +461,8 @@ public class DashboardCRUD
 			System.out.println("POST method is in-progress to create a new dashboard");
 
 			String jsonString = "{ \"name\":\"Test_Update_Dashboard\"}";
-			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString).when()
-					.post("/dashboards");
+			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString).when().post("/dashboards");
 			System.out.println(res.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -330,8 +476,8 @@ public class DashboardCRUD
 			System.out.println("Update the created dashboard...");
 
 			String jsonString1 = "{\"name\": \"Test_Update_Dashboard_Edit\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
-					.put("/dashboards/" + dashboard_id);
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when().put("/dashboards/" + dashboard_id);
 			System.out.println(res1.asString());
 			System.out.println("==PUT operation is done");
 			System.out.println("											");
@@ -344,8 +490,8 @@ public class DashboardCRUD
 			System.out.println("											");
 			System.out.println("Update the dashboard with tile...");
 			String jsonString2 = "{\"name\":\"Test_Update_Dashboard_Edit_NewTile\",\"tiles\":[{\"title\":\"Another tile for search\", \"isMaximized\": false,\"width\": 2,\"height\": 220,\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_NAME\": \"iFrame\",\"WIDGET_DESCRIPTION\": \"A widget which can show another page inside a iFrame\",\"WIDGET_GROUP_NAME\": \"Built-in Widgets\",\"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\": \"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\": \"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"asset\"}]}";
-			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString2).when()
-					.put("/dashboards/" + dashboard_id);
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString2).when().put("/dashboards/" + dashboard_id);
 			System.out.println(res2.asString());
 			System.out.println("==PUT operation is done");
 			System.out.println("											");
@@ -362,8 +508,8 @@ public class DashboardCRUD
 			String jsonString3 = "{\"name\":\"Test_Update_Dashboard_Edit_ExistTile\",\"tiles\":[{\"tileId\": "
 					+ tile_id
 					+ ",\"title\":\"Another tile for search_edit\", \"isMaximized\": false,\"width\": 2,\"height\": 220,\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_NAME\": \"iFrame\",\"WIDGET_DESCRIPTION\": \"A widget which can show another page inside a iFrame\",\"WIDGET_GROUP_NAME\": \"Built-in Widgets\",\"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\": \"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\": \"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"asset\",\"tileParameters\": [{\"name\": \"WIDGET_CREATED_BY\",\"systemParameter\":false, \"type\": \"STRING\",\"value\":\"SYSMAN\"}]}]}";
-			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString3).when()
-					.put("/dashboards/" + dashboard_id);
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString3).when().put("/dashboards/" + dashboard_id);
 			System.out.println(res3.asString());
 			System.out.println("==PUT operation is done");
 			System.out.println("											");
@@ -380,8 +526,8 @@ public class DashboardCRUD
 			System.out.println("											");
 			System.out.println("Add a new tile in dashboard");
 			String jsonString4 = "{\"name\":\"Test_Update_Dashboard_Edit_NewTile\",\"tiles\":[{\"title\":\"A sample tile for search\", \"isMaximized\": false,\"width\": 2,\"height\": 220,\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_NAME\": \"iFrame\",\"WIDGET_DESCRIPTION\": \"A widget which can show another page inside a iFrame\",\"WIDGET_GROUP_NAME\": \"Built-in Widgets\",\"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\": \"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\": \"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"asset\",\"tileParameters\": [{\"name\": \"WIDGET_CREATED_BY\",\"systemParameter\":false, \"type\":\"STRING\",\"value\":\"SYSMAN\"}]}]}";
-			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString4).when()
-					.put("/dashboards/" + dashboard_id);
+			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString4).when().put("/dashboards/" + dashboard_id);
 			System.out.println(res4.asString());
 			System.out.println("==PUT operation is done");
 			System.out.println("											");
@@ -400,8 +546,8 @@ public class DashboardCRUD
 			//clean up the created dashboard
 			System.out.println("											");
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/dashboards/" + dashboard_id);
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + dashboard_id);
 			System.out.println(res5.asString());
 			System.out.println("Status code is: " + res5.getStatusCode());
 			Assert.assertTrue(res5.getStatusCode() == 204);
@@ -423,7 +569,8 @@ public class DashboardCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to validate update a non-existed dashboard");
 			String jsonString = "{ \"name\":\"Custom_Dashboard_Edit\" }";
-			Response res = RestAssured.given().log().everything().body(jsonString).when().put("/dashboards/999999999");
+			Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
+					.body(jsonString).when().put("/dashboards/999999999");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -448,7 +595,8 @@ public class DashboardCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to validate update a system dashboard");
 			String jsonString = "{ \"name\":\"Custom_Dashboard_Edit\" }";
-			Response res = RestAssured.given().log().everything().body(jsonString).when().put("/dashboards/1");
+			Response res = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
+					.body(jsonString).when().put("/dashboards/1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 404);
@@ -460,26 +608,26 @@ public class DashboardCRUD
 			System.out.println("This test is to validate update a custom dashboard to the system dashboard");
 			System.out.println("Create a new dashboard...");
 			String jsonString1 = "{ \"name\":\"Test_Custom_Dashboard\"}";
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
-					.post("/dashboards");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString1).when().post("/dashboards");
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			Assert.assertTrue(res1.getStatusCode() == 201);
 			String id = res1.jsonPath().getString("id");
 			System.out.println("Update the dashboard to system dashboard...");
-			String jsonString2 = "{ \"name\":\"Custom_Dashboard_Edit\" }";
-			Response res2 = RestAssured.given().log().everything().body(jsonString2).when().put("/dashboards/" + id);
-			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 404);
-
-			Assert.assertEquals(res.jsonPath().getString("errorCode"), "20000");
-			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not support to update field \"systemDashboard\"");
+			String jsonString2 = "{ \"name\":\"Custom_Dashboard_Edit\", \"systemDashboard\":true }";
+			Response res2 = RestAssured.given().log().everything().header("X-USER-IDENTITY-DOMAIN-NAME", tenantid)
+					.body(jsonString2).when().put("/dashboards/" + id);
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 404);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20000");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Not support to update field \"systemDashboard\"");
 
 			System.out.println("											");
 
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.delete("/dashboards/" + id);
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + id);
 			System.out.println(res5.asString());
 			System.out.println("Status code is: " + res5.getStatusCode());
 			Assert.assertTrue(res5.getStatusCode() == 204);
@@ -495,24 +643,54 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void ping_test() throws JSONException
+	public void headerCheck()
 	{
-		String jsonString4 = "{\"name\":\"Test_Update_Dashboard_Edit_NewTile\",\"tiles\":[{\"title\":\"A sample tile for search\", \"isMaximized\": false,\"width\": 2,\"height\": 220,\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_NAME\": \"iFrame\",\"WIDGET_DESCRIPTION\": \"A widget which can show another page inside a iFrame\",\"WIDGET_GROUP_NAME\": \"Built-in Widgets\",\"WIDGET_ICON\": \"dependencies/built-in/iFrame/images/icon.png\",\"WIDGET_HISTOGRAM\": \"dependencies/built-in/iFrame/images/histogram.png\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\": \"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEW_MODEL\": \"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\": \"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"asset\",\"tileParameters\": [{\"name\": \"WIDGET_CREATED_BY\",\"systemParameter\":false, \"type\":\"STRING\",\"value\":\"SYSMAN\"}]}]}";
-		Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString4).when()
-				.put("/dashboards/57");
-		System.out.println(res4.asString());
-		System.out.println("==PUT operation is done");
-		System.out.println("											");
-		System.out.println("Status code is: " + res4.getStatusCode());
-		Assert.assertTrue(res4.getStatusCode() == 200);
-		//Assert.assertEquals(res4.jsonPath().get("name"), "Test_Update_Dashboard_Edit_NewTile");
-		//Assert.assertNotEquals(res4.jsonPath().get("createOn"), res4.jsonPath().get("lastModifiedOn"));
-		Assert.assertEquals(res4.jsonPath().get("tiles.title[0]"), "A sample tile for search");
-		Assert.assertNotEquals(res4.jsonPath().get("tiles.tileId[0]").toString(), "15");
-		System.out.println("11111");
-		Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].name[0]"), "WIDGET_CREATED_BY");
-		Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].type[0]"), "STRING");
-		Assert.assertEquals(res4.jsonPath().get("tiles.tileParameters[0].systemParameter[0]"), false);
+		try {
+			System.out.println("------------------------------------------");
+			String jsonString1 = "{ \"name\":\"test_header\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+					.post("/dashboards");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 403);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			System.out.println("											");
 
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().body(jsonString1).when()
+					.put("/dashboards/1");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 403);
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			System.out.println("											");
+
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when().get("/dashboards/1");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 403);
+			Assert.assertEquals(res3.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			System.out.println("											");
+
+			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything().when().delete("/dashboards/1");
+			System.out.println("Status code is: " + res4.getStatusCode());
+			Assert.assertTrue(res4.getStatusCode() == 403);
+			Assert.assertEquals(res4.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res4.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			System.out.println("											");
+
+			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything().when().get("/dashboards");
+			System.out.println("Status code is: " + res5.getStatusCode());
+			Assert.assertTrue(res5.getStatusCode() == 403);
+			Assert.assertEquals(res5.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res5.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			System.out.println("											");
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
 	}
 }
