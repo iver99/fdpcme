@@ -24,8 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -53,7 +51,7 @@ public class DashboardAPI extends APIBase
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam, JSONObject dashboard)
+	public Response createDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam, JSONObject dashboard)
 	{
 		//System.out.println(dashboard);
 		try {
@@ -75,7 +73,7 @@ public class DashboardAPI extends APIBase
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
-	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager manager = DashboardManager.getInstance();
@@ -92,7 +90,7 @@ public class DashboardAPI extends APIBase
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot")
 	@Produces(MediaType.TEXT_PLAIN)
-	public Response getDashboardBase64ScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+	public Response getDashboardBase64ScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@PathParam("id") Long dashboardId)
 	{
 		try {
@@ -110,9 +108,8 @@ public class DashboardAPI extends APIBase
 	@GET
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryDashboardById(@Context HttpHeaders headers,
-			@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam, @PathParam("id") long dashboardId)
-			throws DashboardException
+	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@PathParam("id") long dashboardId) throws DashboardException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
@@ -128,7 +125,7 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response queryDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+	public Response queryDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
 			@DefaultValue("0") @QueryParam("offset") Integer offset)
 	{
@@ -159,7 +156,7 @@ public class DashboardAPI extends APIBase
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@PathParam("id") long dashboardId, JSONObject inputJson)
 	{
 		Dashboard input = null;
