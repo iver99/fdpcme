@@ -1,7 +1,7 @@
 <?xml version="1.0"?> 
  
 <service-artifacts name="dashboardService"> 
-    <file name='dashboards-ee/build/libs/emaas-applications-dashboards-api-0.1' 
+    <file name='dashboards-ee/build/libs/emaas-applications-dashboards-api' 
             serviceName='DashboardsService'> 
             <version>0.1</version> 
             <extension>ear</extension> 
@@ -13,7 +13,7 @@
             <extension>tgz</extension> 
             <destination>Applications</destination> 
      </file> 
-      <file name='dashboards-ui/dashboardsui-ee/build/libs/emaas-applications-dashboards-ui-0.1'
+      <file name='dashboards-ui/dashboardsui-ee/build/libs/emaas-applications-dashboards-ui'
             serviceName='DashboardService'> 
             <version>0.1</version> 
             <extension>tgz</extension> 
