@@ -12,6 +12,7 @@ requirejs.config({
     // Path mappings for the logical module names
     paths: {
         'knockout': '../dependencies/oraclejet/js/libs/knockout/knockout-3.2.0',
+        'knockout.mapping': '../dependencies/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
@@ -281,75 +282,84 @@ require(['knockout',
                 dsbId = decodeURIComponent(dsbId);
             }
 
-            var dashboardModel = function(dashboardId) {
-                if (window.opener && window.opener.dashboarDataCallBack) {
-                    return window.opener.dashboarDataCallBack(parseInt(dashboardId));
-                }
-                return undefined;
-            }(dsbId);
-            var dsbName = dashboardModel && dashboardModel.dashboardName ? dashboardModel.dashboardName : "";
-            var dsbDesc = dashboardModel && dashboardModel.dashboardDescription ? dashboardModel.dashboardDescription : "";
-            var dsbWidgets = dashboardModel && dashboardModel.widgets ? dashboardModel.widgets : undefined;
-            var dsbType = dashboardModel && dashboardModel.type ? dashboardModel.type : "normal";
-            var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.showTimeSlider);
-            
-            var tilesViewMode = new dtm.DashboardTilesViewModel(tilesView, urlChangeView, dsbWidgets, dsbType);
-            var toolBarModel = new dtv.ToolBarModel(dsbId, dsbName,dsbDesc,includeTimeRangeFilter, dsbType, tilesViewMode);
-            
-            if (window.opener && window.opener.navigationsModelCallBack) {
-                navigationsModel = ko.observable(window.opener.navigationsModelCallBack());
-                    //console.log("test:"+navigationsModel.homeLink);
-            }
-            else
-            {
-                navigationsModel = ko.observable({});
-            }
-           
+//            var dashboardModel = function(dashboardId) {
+//                if (window.opener && window.opener.dashboarDataCallBack) {
+//                    return window.opener.dashboarDataCallBack(parseInt(dashboardId));
+//                }
+//                return undefined;
+//            }(dsbId);
             $(document).ready(function() {
-                ko.bindingHandlers.sortableList = {
-                    init: function(element, valueAccessor) {
-                        var list = valueAccessor();
-                        tilesView.enableSortable(element, list);
+                dtm.loadDashboard(dsbId, function(dashboard) {
+    //                var dsbName = dashboardModel && dashboardModel.name ? dashboardModel.name : "";
+    //                var dsbDesc = dashboardModel && dashboardModel.description ? dashboardModel.description : "";
+    //                var dsbWidgets = dashboardModel && dashboardModel.tiles ? dashboardModel.tiles : undefined;
+    //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
+    //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
+                    if (dashboard.tiles && dashboard.tiles()) {
+                        for (var i = 0; i < dashboard.tiles().length; i++) {
+                            var tile = dashboard.tiles()[i];
+                            dtm.initializeTileAfterLoad(tile);
+                        }
                     }
-                };
-                ko.bindingHandlers.stopBinding = {
-                    init: function() {
-                        return { controlsDescendantBindings: true};
-                    }
-                };
-                ko.virtualElements.allowedBindings.stopBinding = true;
-                //header
-                ko.applyBindings(new HeaderViewModel(), $('#demo-appheader-bar')[0]);
-                ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#links_menu')[0]);     
-                //content
-                ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
-                ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
-                ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
-                
-                $("#loading").hide();
-                $('#globalBody').show();
-                tilesView.enableDraggable();
-                var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
-                if ("true"===includeTimeRangeFilter){
-                   timeSliderDisplayView.showOrHideTimeSlider("ON"); 
-                }else{
-                   timeSliderDisplayView.showOrHideTimeSlider(null);  
-                }
-                
-                $("#ckbxTimeRangeFilter").on({
-                    'ojoptionchange': function (event, data) {
-                        timeSliderDisplayView.showOrHideTimeSlider(data['value']);
-                    }
-                });
-                
-                toolBarModel.showAddWidgetTooltip();
-                tilesViewMode.postDocumentShow();
+                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
+                    var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
 
-                /*
-                 * Code to test df_util_widget_lookup_assetRootUrl
-                var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
-                console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
-                */
+                    if (window.opener && window.opener.navigationsModelCallBack) {
+                        navigationsModel = ko.observable(window.opener.navigationsModelCallBack());
+                            //console.log("test:"+navigationsModel.homeLink);
+                    }
+                    else
+                    {
+                        navigationsModel = ko.observable({});
+                    }
+
+                    ko.bindingHandlers.sortableList = {
+                        init: function(element, valueAccessor) {
+                            var list = valueAccessor();
+                            tilesView.enableSortable(element, list);
+                        }
+                    };
+                    ko.bindingHandlers.stopBinding = {
+                        init: function() {
+                            return { controlsDescendantBindings: true};
+                        }
+                    };
+                    ko.virtualElements.allowedBindings.stopBinding = true;
+                    //header
+                    ko.applyBindings(new HeaderViewModel(), $('#demo-appheader-bar')[0]);
+                    ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#links_menu')[0]);     
+                    //content
+                    ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
+                    ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
+                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
+
+                    $("#loading").hide();
+                    $('#globalBody').show();
+                    tilesView.enableDraggable();
+                    var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
+                    if (dashboard.enableTimeRange()){
+                       timeSliderDisplayView.showOrHideTimeSlider("ON"); 
+                    }else{
+                       timeSliderDisplayView.showOrHideTimeSlider(null);  
+                    }
+
+                    $("#ckbxTimeRangeFilter").on({
+                        'ojoptionchange': function (event, data) {
+                            timeSliderDisplayView.showOrHideTimeSlider(data['value']);
+                        }
+                    });
+
+                    toolBarModel.showAddWidgetTooltip();
+                    tilesViewMode.postDocumentShow();
+
+                    /*
+                     * Code to test df_util_widget_lookup_assetRootUrl
+                    var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
+                    console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
+                    */
+                }, function(e) {
+                    console.log(e.errorMessage());
+                });
             });
         }
 );
