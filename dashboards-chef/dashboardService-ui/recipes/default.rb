@@ -1,10 +1,10 @@
 
 #Cookbook Name::dataService
 #
-# This recipe calls schema recipe to create the DB schema and datasource recipe to create datasource and deploy ear file in weblogic server
+# This recipe calls  recipe to deploy EAR
 #
 
 
 #Recipe to create Datasource
-include_recipe 'dashboardService::dashboard_eardeploy'
+include_recipe 'dashboardService-ui::dashboard_eardeploy'
 
