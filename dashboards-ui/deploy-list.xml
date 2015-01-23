@@ -1,6 +1,6 @@
 <?xml version="1.0"?> 
  
-<service-artifacts name="dashboardService"> 
+<service-artifacts name="dashboardService-ui"> 
       <file name='../dashboards-ui/dashboardsui-ee/build/libs/emaas-applications-dashboards-ui'
             serviceName='DashboardService-UI'> 
             <version>0.1</version> 
