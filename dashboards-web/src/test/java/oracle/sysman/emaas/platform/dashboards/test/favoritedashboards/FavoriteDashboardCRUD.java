@@ -187,7 +187,7 @@ public class FavoriteDashboardCRUD
 			System.out.println(res1.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
-			System.out.println("Status code is: " + res.getStatusCode());
+			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 201);
 
 			String dashboard_id = res1.jsonPath().getString("id");
@@ -218,9 +218,6 @@ public class FavoriteDashboardCRUD
 								.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + dashboard_id);
 						System.out.println("Status code is: " + res5.getStatusCode());
 						Assert.assertTrue(res5.getStatusCode() == 204);
-					}
-					else {
-						Assert.fail("Get a list of all favorite dashboards failed");
 					}
 				}
 			}
@@ -277,7 +274,8 @@ public class FavoriteDashboardCRUD
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 403);
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 30000);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 			System.out.println("											");
 
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
@@ -285,7 +283,8 @@ public class FavoriteDashboardCRUD
 			System.out.println("Status code is: " + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 403);
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 30000);
-			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 			System.out.println("											");
 
 			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
@@ -293,15 +292,17 @@ public class FavoriteDashboardCRUD
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 403);
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 30000);
-			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"),
+					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 			System.out.println("											");
 
 			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
-					.post("/dashboards/favorites");
+					.get("/dashboards/favorites");
 			System.out.println("Status code is: " + res4.getStatusCode());
 			Assert.assertTrue(res4.getStatusCode() == 403);
 			Assert.assertEquals(res4.jsonPath().get("errorCode"), 30000);
-			Assert.assertEquals(res4.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			Assert.assertEquals(res4.jsonPath().get("errorMessage"),
+					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 			System.out.println("											");
 
 			System.out.println("											");

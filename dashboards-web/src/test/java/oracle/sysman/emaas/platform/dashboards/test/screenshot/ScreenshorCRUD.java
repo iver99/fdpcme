@@ -39,12 +39,13 @@ public class ScreenshorCRUD
 	{
 		try {
 			System.out.println("------------------------------------------");
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/1/screenshot/");
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+					.get("/dashboards/1/screenshot/");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 403);
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 30000);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "'X-USER-IDENTITY-DOMAIN-NAME' is missing in request header");
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -106,16 +107,16 @@ public class ScreenshorCRUD
 	{
 		try {
 			System.out.println("------------------------------------------");
-			System.out.println("Verify if the invalid favorite dashboard would be removed...");
+			System.out.println("Verify get the screen shot with invalid dashboard id");
 
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/0/screenshot");
-			System.out.println("Stauts code is :" + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 404);
-			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			//			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+			//					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/0/screenshot");
+			//			System.out.println("Stauts code is :" + res1.getStatusCode());
+			//			Assert.assertTrue(res1.getStatusCode() == 404);
+			//			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/9999999999/screenshot");
+					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/9999999999/screenshot");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
