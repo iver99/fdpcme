@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojs/ojcore', 'jquery', 'knockout','jqueryui'], 
+define(['ojs/ojcore', 'jquery', 'knockout','jqueryui', 'ojs/ojknockout-model'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
@@ -16,7 +16,7 @@ function(oj, $, ko)
     
 ko.bindingHandlers.dbsDashboardPanel = {
     init: function(element, valueAccessor) {
-        var _value = valueAccessor();
+        var _value = ko.unwrap(valueAccessor());
         /*
         _value.activated = function(event, data) {
                                 console.log('activated');
@@ -30,6 +30,17 @@ ko.bindingHandlers.dbsDashboardPanel = {
         _value.navigated = function(event, data) {
                                 console.log('nagivate clicked');
                             };*/
+        var _data = _value['data'], _dashabord =  _value['data'], _resturl = _dashabord['href'], _dmProperty = 'oj._internalObj', _dProperty = 'attributes';
+        
+        if (_data[_dmProperty]) //oj.KnockoutUtils.map interanl object
+        {
+            _dashabord = _data[_dmProperty][_dProperty];
+            _resturl = _dashabord['href'];
+            _value['dashboard'] = _dashabord;
+            _value['baseRestUrl'] = _resturl;
+            _value['dashboardModel'] = _data[_dmProperty];
+        }
+        
         $(element).dbsDashboardPanel(_value);
                 
     },
@@ -43,9 +54,10 @@ ko.bindingHandlers.dbsDashboardPanel = {
     }
 };
 
-var TITLE_MAX_LENGTH = 25;
-var DESCRIPTION_MAX_LENGTH = 256;
-var WIGDET_NAME_MAX_LENGTH = 30;
+var TITLE_MAX_LENGTH = 25,
+    DESCRIPTION_MAX_LENGTH = 256,
+    WIGDET_NAME_MAX_LENGTH = 30,
+    DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE";
 
 
 $.widget('dbs.dbsDashboardPanel',
@@ -58,7 +70,10 @@ $.widget('dbs.dbsDashboardPanel',
             navigated: null,
             deleteClicked: null,
             contentTmplate: null,
-            dashboard: null
+            dashboard: null,
+            dashboardModel: null,
+            data: null,
+            baseRestUrl: null
         },
         
         classNames:
@@ -177,7 +192,8 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createHeader: function() {
-            var self = this, _element = self.element, _name = self.name; 
+            var self = this, _element = self.element, _name = self.name, 
+                     _isSys = self.options.dashboard['systemDashboard']; 
             var _title = (self.options['dashboard']) ? self._truncateString(self.options['dashboard'].name, TITLE_MAX_LENGTH) : '';
             
             self.headerElement = $("<div></div>").addClass(self.classNames['headerContainer']);
@@ -189,8 +205,7 @@ $.widget('dbs.dbsDashboardPanel',
             
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
-            var _type = self.options.dashboard['type'];
-            if (_type === 'onePage')
+            if (_isSys === 'true')
             {
                 self.lockElement = $("<span></span>").attr({"role": "img"})
                         .css({"cursor": "default"})
@@ -230,18 +245,40 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createContentPages: function() {
-            var self = this;
+            var self = this, _dashboard = self.options['dashboard'], _dmodel = self.options.dashboardModel,
+                    _wdts = _dashboard['widgets'] || _dashboard['tiles'];
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
             //image page
-            var _image = self.options.dashboard['image'];
-            self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage'])
-                    .attr('src', _image);
+            self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']);//.attr('src', _image);
             self.contentPage1Ele = $("<div></div>")//.addClass(self.classNames['active'])
                     .addClass(self.classNames['page']);//.append(self.contentPage1ImgEle);
-            if (_image && _image !== "")
+            self.contentPage1Ele.append(self.contentPage1ImgEle);
+            
+            
+            if (_dmodel['screenShot'])
             {
-                self.contentPage1Ele.append(self.contentPage1ImgEle);
+                var _ss = _dmodel['screenShot'];
+                self.contentPage1ImgEle.attr("src", _ss);
+            }
+            else {
+              $.ajax({
+                   //This will be a page which will return the base64 encoded string
+                   url: self.options['dashboard']['screenShotHref'], 
+                   headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
+                   success: function(response){
+                       var __ss = response;
+                       self.contentPage1ImgEle.attr("src", __ss);
+                       if (_dmodel && __ss)
+                       {
+                           //_dmodel.set("screenShot", _ss);
+                           _dmodel['screenShot'] = __ss;
+                       }
+                   },
+                   error : function(jqXHR, textStatus, errorThrown) {
+                    //console.log("Load image error");
+                   }
+              });
             }
             self.contentPagesEle.append(self.contentPage1Ele);
             //description page
@@ -252,8 +289,8 @@ $.widget('dbs.dbsDashboardPanel',
                     .addClass(self.classNames['page']).append(self.contentPage2CntEle);
             self.contentPagesEle.append(self.contentPage2Ele);
             //widgets page
-            self.contentPage3TlEle = $("<div>Widgets</div>").css({"text-align": "center", "max-height": "16px", "font-weight":"bold"});//.append("<h6>Widgets</h6>");
-            var _wdts = self.options.dashboard.widgets;
+            self.contentPage3TlEle = $("<div></div>").text(getNlsString('DBS_HOME_DSB_PANEL_WIDGETS')).css({"text-align": "center", "max-height": "16px", "font-weight":"bold"});//.append("<h6>Widgets</h6>");
+            
             self.contentPage3CntEle = $("<ul></ul>").addClass("dbs-summary-rows");
             if (_wdts && _wdts.length > 0)
             {
@@ -355,12 +392,12 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _fireDeleteClicked: function(event) {
-            this._trigger('deleteClicked', event, {dashboard: this.options['dashboard']});
+            this._trigger('deleteClicked', event, {dashboard: this.options['dashboard'], dashboardModel: this.options['dashboardModel']});
         },
         
         _fireNavigated: function(event) {
             var self = this;
-            self._trigger('navigated', event, {dashboard: self.options['dashboard']});
+            self._trigger('navigated', event, {dashboard: self.options['dashboard'], dashboardModel: this.options['dashboardModel']});
         },
         
         _destroyComponent: function() {

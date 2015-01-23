@@ -179,20 +179,20 @@ role value for that section to represent the appropriate content type.
                                     <div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;padding-left: 5px">
                                         <div id="toolbar2"  aria-label="Searching toolbar" style="float:left;" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
                                                 <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
-                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: 'Enter search criteria', rootAttributes: {'style': 'min-width:653px; width:653px;'}},
-                                                                  dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
+                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'style': 'min-width:653px; width:653px;'}}" />
+                                                                  <!-- ,dbsTypeAhead: {response: searchResponse, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}"/> -->
                                                 <button id="sbtn" style="margin-bottom: 4px;margin-left: 5px;"
-                                                        data-bind="ojComponent: { component:'ojButton'}">
+                                                        data-bind="click: forceSearch, ojComponent: { component:'ojButton'}">
                                                             <img style="padding-top: 6px" src="css/images/navi_search_16_ena.png" alt="Search"/>
                                                 </button>
                                         </div>
                                         <div id="toolbar1"  aria-label="Control toolbar" style="float:left;border-left: 0px" data-bind="ojComponent: {component:'ojToolbar'}">
                                                 <button id="cbtn" class="dbs-home-button-create-new-dashboard"
-                                                        data-bind="click: createDashboardClicked, ojComponent: { component:'ojButton', label: 'Create New Dashboard'}"></button>
+                                                        data-bind="click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
                                         </div>
                                         <div id='menubutton-container' style="float:left;padding-left: 5px;padding-top: 3px;">
                                             <button id="exploreDataBtn"
-                                                    data-bind="ojComponent: {component: 'ojButton', label: 'Explore Data', 
+                                                    data-bind="ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
                                                                              menu: '#exploreDataMenu'}">
                                             </button>
                                             <ul id="exploreDataMenu" style="display:none"
@@ -220,21 +220,11 @@ role value for that section to represent the appropriate content type.
                                                                    deactivated: null,
                                                                    deleteClicked: $root.handleDashboardDeleted,
                                                                    navigated: $root.handleDashboardClicked,
-                                                                   contentTmplate: 'db_summary_tmp',
-                                                                   dashboard: $data
+                                                                   data: $data
                                             }"></div>
                                         <!-- /ko -->
                                     </div>
                                     
-                                    <script type="text/html" id="db_summary_tmp">
-                                            <div>
-                                                <ul class="dbs-summary-row">
-                                                    <!-- ko foreach: $data.widgets -->
-                                                    <li class="dbs-summary-row" data-bind="text: title"></li>
-                                                    <!-- /ko -->
-                                                </ul>
-                                            </div>
-                                    </script>
                                     </div>
                                 </div>
                                 <!-- Home tab end -->
@@ -242,28 +232,36 @@ role value for that section to represent the appropriate content type.
                         </div>
 
                     <!-- Create Dashboard dilog start -->
-                    <div style="display:none" id="cDsbDialog" title="Create Dashboard" 
+                    <div style="display:none" id="cDsbDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: cancelDashboardCreate">CLOSE</a>
+                                <a class="df-dialog-header-close" data-bind="click: cancelDashboardCreate, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div>
-                            <span class="oj-dialog-title">Create Dashboard</span>
+                            <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TITLE')"></span>
                         </div>
                         <div class="oj-dialog-body">
                             <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
                                 <div class="oj-row">
                                     <div class="oj-col">
-                                        <label for="dbsHNameIn">Name</label>
+                                        <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                     </div>
                                     <div class="oj-col">
-                                        <input id="dbsHNameIn" required="true" 
-                                               data-bind="ojComponent: { component: 'ojInputText', value: createDashboardModel.name, rootAttributes: {style:'max-width:420px;'}}">
+                                        <input id="dbsHNameIn" required  
+                                               data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: tracker, 
+                                               messagesCustom: createMessages, value: createDashboardModel.name, 
+                                               rootAttributes: {style:'max-width:420px;'},
+                                               translations: {'required': {
+                                                        hint: '',
+                                                        messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'), 
+                                                        messageDetail: ''
+                                               }
+                                             }}">
                                     </div>
                                 </div>
                                 <div class="oj-row">
                                     <div class="oj-col">
-                                        <label for="dbsHDpIn">Description</label>
+                                        <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                     </div>
                                     <div class="oj-col">
                                         <textarea id="dbsHDpIn" rows="6"
@@ -277,33 +275,28 @@ role value for that section to represent the appropriate content type.
                                     <div id="checkboxsetTimeRangeFilter" class="oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
                                                 value: createDashboardModel.timeRangeFilterValue}" >
                                         <input id="ckbxTimeRangeFilter" type="checkbox" value="ON">
-                                        <label for="ckbxTimeRangeFilter">Include a time control (range and refresh)</label>
+                                        <label for="ckbxTimeRangeFilter" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TIME_RANGE')"></label>
                                     </div>
                                 </div> 
-                                <!--div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="checkboxsetTargetFilter"></label>
-                                    </div>
-                                    <div id='checkboxsetTargetFilter' class="oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
-                                                value: targetFilterValue}" >
-                                        <input id="ckbxTargetFilter" type="checkbox" value="ON">
-                                        <label for="ckbxTargetFilter">Include a target selector</label>
-                                    </div>
-                                </div-->                                 
+                                                         
                             </div>
                         </div>
                         <div id="createDialogFooter" class="oj-dialog-footer">
-                            <button id="createDsb" data-bind="click: confirmDashboardCreate,ojComponent: { component: 'ojButton', label: 'Create', rootAttributes: {style:'margin-right:5px'}}"></button>
+                            <button id="createDsb" data-bind="click: confirmDashboardCreate, ojComponent: { 
+                                             component: 'ojButton', label: getNlsString('COMMON_TEXT_CREATE'), 
+                                             disabled: createDashboardModel.isDisabled, 
+                                             rootAttributes: {style:'margin-right:5px'} }"></button>
                         </div>
                     </div>
                     <!-- Create Dashboard dilog end -->
                     
                     <!-- Confirmation dilog start -->
                     <div style="display:none" id="dbs_cfmDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                    cancelBehavior: 'none', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: confirmDialogModel.close">CLOSE</a>
+                                <a class="df-dialog-header-close" data-bind="click: confirmDialogModel.close, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div>
                             <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
                         </div>
@@ -321,41 +314,14 @@ role value for that section to represent the appropriate content type.
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 300px; min-height:100px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: comingsoonDialogModel.close">CLOSE</a>
+                                <a class="df-dialog-header-close" data-bind="click: comingsoonDialogModel.close, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div>
-                            <span class="oj-dialog-title" data-bind="text: 'Information'"></span>
+                            <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_COME_SOON_DLG_INFO')"></span>
                         </div>
                         <div class="oj-dialog-body">
-                            <p data-bind="text: 'Coming soon...'"></p>
+                            <p data-bind="text: getNlsString('DBS_HOME_COME_SOON_DLG_BODY')"></p>
                         </div>
                     </div>                    
-                    <!-- Navigations popup start
-                    <div style="display:none; min-width:500px; min-height:150px" id="dbs_navPopup" 
-                         data-bind="ojComponent:{component: 'ojPopup', tail: 'simple', position: {'my' : 'right top', 'at' : 'left center', 'collision' : 'none'}}">
-                        <div class="oj-row">
-                            <div class="oj-sm-3 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Favorites</div>
-                                <div class="oj-row">---------</div>
-                                
-                                <div class="oj-row"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                
-                            </div>
-                            <div class="oj-sm-4 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Recent Dashboards</div>
-                                <div class="oj-row">---------</div>
-                                
-                                <div class="oj-row"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                
-                            </div>
-                            <div class="oj-sm-4 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Quick Links</div>
-                                <div class="oj-row">---------</div>
-                                <div class="oj-row"><a data-bind="click: function() { window.open( navigationsPopupModel.homeLink );}">Dashboard Home</a></div>
-                                <div class="oj-row"><a data-bind="click: function() { window.open( navigationsPopupModel.dataVisualLink );}">Data Visual Analyzer Home</a></div>
-                            </div>
-                        </div>
-                    </div>
-                     Navigations popup end -->
             </div>
 
                 <!-- Footer section which contains dynamic list of items. Template is located in /templates/demoFooterTemaplate.html-->

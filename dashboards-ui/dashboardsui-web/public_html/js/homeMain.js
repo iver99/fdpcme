@@ -15,7 +15,7 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/min',
+        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/debug',
         'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
         'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
         'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',
@@ -68,14 +68,13 @@ require(['dbs/dbsmodel',
     'ojs/ojknockout-model',
     'ojs/ojcomponents',
     'ojs/ojvalidation',
-    'ojs/ojdatagrid', 
-    'ojs/ojtable',
-    'ojs/ojtable-model',
+//    'ojs/ojdatagrid', 
+//    'ojs/ojtable',
+//    'ojs/ojtable-model',
     'ojs/ojbutton',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'ojs/ojpopup',
-    'dbs/dbstabs',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
 //    'ojs/ojvalidation'
@@ -307,11 +306,15 @@ function truncateString(str, length) {
     return str;
 };
 
-/*
+
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 };
-*/
+
+function getSecurityHeader() {
+    return "TenantOPC1";
+};
+
 function discoverSavedSearchServiceUrl() {
     var availableUrl = null;
     var urlFound = false;
