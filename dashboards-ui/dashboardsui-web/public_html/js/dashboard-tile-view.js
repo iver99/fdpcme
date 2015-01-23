@@ -17,8 +17,11 @@ define(['knockout',
         'ojs/ojpopup'
     ],
     
-    function(ko, $, dbsModel, dfu)
+    function(ko, $, dtm, dfu)
     {
+        // dashboard type to keep the same with return data from REST API
+        var SINGLEPAGE_TYPE = "SINGLEPAGE";
+        
         function getPlaceHolder(columns) {
             return $('<div class="dbd-tile oj-col oj-sm-' + columns + ' oj-md-' + columns + ' oj-lg-' + columns + ' dbd-tile-placeholder' + '"><div class="dbd-tile-header dbd-tile-header-placeholder">placeholder</div><div class="dbd-tile-placeholder-inner"></div></div>');
         }
@@ -82,7 +85,7 @@ define(['knockout',
                                 var itemWidth = 1;
                                 if (clone.hasClass('dbd-tile')) {
                                     var itemData = ko.dataFor(clone[0]);
-                                    itemWidth = itemData.tileWidth();
+                                    itemWidth = itemData.width();
                                 }
                                 return getPlaceHolder(itemWidth * 3);
                             },
@@ -164,34 +167,46 @@ define(['knockout',
             };
         }
         
-        function ToolBarModel(dbdId, name, desc,includeTimeRangeFilter, dsbType, tilesViewModel) {
+        function ToolBarModel(dashboard, tilesViewModel) {
             var self = this;
             self.tilesViewModel = tilesViewModel;
             
-            if ("true"===includeTimeRangeFilter){
-                self.includeTimeRangeFilter = ko.observable(["ON"]);
-            }else{
-                self.includeTimeRangeFilter = ko.observable(["OFF"]);
-            }
+            self.includeTimeRangeFilter = ko.pureComputed({
+                read: function() {
+                    if (dashboard.enableTimeRange()) {
+                        return ["ON"];
+                    }else{
+                        return ["OFF"];
+                    }
+                },
+                write: function(value) {
+                    if (value && value.indexOf("ON") >= 0) {
+                        dashboard.enableTimeRange(true);
+                    }
+                    else {
+                        dashboard.enableTimeRange(false);
+                    }
+                }
+            });
             
-            if (dbdId)
-                self.dashboardId = dbdId;
+            if (dashboard.id && dashboard.id())
+                self.dashboardId = dashboard.id();
             else
                 self.dashboardId = 9999; // id is expected to be available always
                     
-            if(name){
-                self.dashboardName = ko.observable(name);
+            if(dashboard.name && dashboard.name()){
+                self.dashboardName = ko.observable(dashboard.name());
             }else{
                 self.dashboardName = ko.observable("Sample Dashboard");
             }
             self.dashboardNameEditing = ko.observable(self.dashboardName());
-            if(desc){
-                self.dashboardDescription = ko.observable(desc);
+            if(dashboard.description && dashboard.description()){
+                self.dashboardDescription = ko.observable(dashboard.description());
             }else{
                 self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
             }
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
-            self.editDisabled = ko.observable(dsbType === "onePage");
+            self.editDisabled = ko.observable(dashboard.type() === SINGLEPAGE_TYPE);
             
             self.rightButtonsAreaClasses = ko.computed(function() {
                 var css = "dbd-pull-right " + (self.editDisabled() ? "dbd-gray" : "");
@@ -223,6 +238,7 @@ define(['knockout',
                 if ($('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-name').removeClass('editing');
                 }
+                dashboard.name(self.dashboardName());
             };
             
             self.cancelChangeDashboardName = function() {
@@ -248,6 +264,7 @@ define(['knockout',
                 if ($('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-description').removeClass('editing');
                 }
+                dashboard.description(self.dashboardDescription());
             };
             
             self.cancelChangeDashboardDescription = function() {
@@ -282,8 +299,8 @@ define(['knockout',
                 
                 var summaryData = new dashboardSummary(name, description);
                 if (tilesViewModel) {
-                    for (var i = 0; i < tilesViewModel.tiles().length; i++) {
-                        var tile = tilesViewModel.tiles()[i];
+                    for (var i = 0; i < tilesViewModel.dashboard.tiles().length; i++) {
+                        var tile = tilesViewModel.dashboard.tiles()[i];
                         var widget = {"title": tile.title()};
                         summaryData.widgets.push(widget);
                     }
@@ -483,102 +500,67 @@ define(['knockout',
                             console.log(jsonValue);
                             window.opener.childMessageListener(jsonValue);
                         }
+                        tilesViewModel.dashboard.screenShot = ko.observable(data);
+                        var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
+                            'ignore': ["createdOn", "href", "owner", 
+                                "screenShotHref", "systemDashboard", "type",
+                                "customParameters", "clientGuid", "dashboard", 
+                                "fireDashboardItemChangeEvent", "getParameter", 
+                                "maximizeEnabled", "narrowerEnabled", 
+                                "onDashboardItemChangeEvent", "restoreEnabled", 
+                                "setParameter", "shouldHide", "systemParameters", 
+                                "tileDisplayClass", "widerEnabled", "widget"]
+                        });
+                        var dashboardId = tilesViewModel.dashboard.id();
+                        dtm.updateDashboard(dashboardId, dashboardJSON);
                     }  
                 });
             };
             
-//            /* event handler for button to get screen shot */
-//            self.handleScreenShotClicked = function(data, event) {
-//                var nodesToRecover = [];
-//                var nodesToRemove = [];
-//                var elems = $('#tiles-row').find('svg');
-//                elems.each(function(index, node) {
-//                    var parentNode = node.parentNode;
-//                    var width = $(node).width();
-//                    var height = $(node).height();
-//                    var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
-//                    var canvas = document.createElement('canvas');
-//                    canvg(canvas, svg);
-//                    nodesToRecover.push({
-//                        parent: parentNode,
-//                        child: node
-//                    });
-//                    parentNode.removeChild(node);
-//                    nodesToRemove.push({
-//                        parent: parentNode,
-//                        child: canvas
-//                    });
-//                    parentNode.appendChild(canvas);
-//                });
-//                html2canvas($('#tiles-row'), {
-//                    onrendered: function(canvas) {
-//                        var ctx = canvas.getContext('2d');
-//                        ctx.webkitImageSmoothingEnabled = false;
-//                        ctx.mozImageSmoothingEnabled = false;
-//                        ctx.imageSmoothingEnabled = false;
-//                        var data = canvas.toDataURL();
-//                        nodesToRemove.forEach(function(pair) {
-//                            pair.parent.removeChild(pair.child);
-//                        });
-//                        nodesToRecover.forEach(function(pair) {
-//                            pair.parent.appendChild(pair.child);
-//                        });
-//                        $('#builder-screenshot-img').attr('src', data);
-//                        if (localStorage.getItem('screenShot'))
-//                            localStorage.removeItem('screenShot');
-//                        else
-//                            localStorage.setItem('screenShot', data);
-//                        $('#screen-shot-dialog').ojDialog('open');
-//                    }  
-//                });
-//            };
-            
-//            self.closeScreenshotDialog = function() {
-//                $('#screen-shot-dialog').ojDialog('close');
-//            };
-//            
-//            self.screenShotZoomOut = function() {
-//                if (!$('#builder-screenshot-img').hasClass('dbd-screenshot-zoomout'))
-//                    $('#builder-screenshot-img').addClass('dbd-screenshot-zoomout');
-//                $('#screen-shot-zoom-out').hide();
-//                $('#screen-shot-zoom-in').show();
-//            };
-//            
-//            self.screenShotZoomIn = function() {
-//                if ($('#builder-screenshot-img').hasClass('dbd-screenshot-zoomout'))
-//                    $('#builder-screenshot-img').removeClass('dbd-screenshot-zoomout');
-//                $('#screen-shot-zoom-in').hide();
-//                $('#screen-shot-zoom-out').show();
-//            };
-            
             self.isFavorite = ko.observable(false);
+            self.initializeIsFavorite = function() {
+                dtm.loadIsFavorite(self.dashboardId, function(isFavorite){
+                    self.isFavorite(isFavorite);
+                }, function(e) {
+                    console.log(e.errorMessage());
+                });
+            }();  
+            
             self.addToFavorites = function() {
-                self.isFavorite(true);
-                var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-                outputData.eventType = "ADD_TO_FAVORITES";
-                if (window.opener && window.opener.childMessageListener) {
-                    var jsonValue = JSON.stringify(outputData);
-                    console.log(jsonValue);
-                    window.opener.childMessageListener(jsonValue);
-                    if (window.opener.navigationsModelCallBack())
-                    {
-                        navigationsModel(window.opener.navigationsModelCallBack());
+                dtm.setAsFavorite(self.dashboardId, function() {
+                    self.isFavorite(true);
+                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+                    outputData.eventType = "ADD_TO_FAVORITES";
+                    if (window.opener && window.opener.childMessageListener) {
+                        var jsonValue = JSON.stringify(outputData);
+                        console.log(jsonValue);
+                        window.opener.childMessageListener(jsonValue);
+                        if (window.opener.navigationsModelCallBack())
+                        {
+                            navigationsModel(window.opener.navigationsModelCallBack());
+                        }
                     }
-                }
+                }, function(e) {
+                    console.log(e.errorMessage());
+                });
             };
             self.deleteFromFavorites = function() {
-                self.isFavorite(false);
-                var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-                outputData.eventType = "REMOVE_FROM_FAVORITES";
-                if (window.opener && window.opener.childMessageListener) {
-                    var jsonValue = JSON.stringify(outputData);
-                    console.log(jsonValue);
-                    window.opener.childMessageListener(jsonValue);
-                    if (window.opener.navigationsModelCallBack())
-                    {
-                        navigationsModel(window.opener.navigationsModelCallBack());
+                dtm.removeFromFavorite(self.dashboardId, function() {
+                    self.isFavorite(false);
+                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+                    outputData.eventType = "REMOVE_FROM_FAVORITES";
+                    if (window.opener && window.opener.childMessageListener) {
+                        var jsonValue = JSON.stringify(outputData);
+                        console.log(jsonValue);
+                        window.opener.childMessageListener(jsonValue);
+                        if (window.opener.navigationsModelCallBack())
+                        {
+                            navigationsModel(window.opener.navigationsModelCallBack());
+                        }
                     }
-                }
+                }, function(e) {
+                    console.log(e.errorMessage());
+                });
             };
             
             //Add widget dialog

@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 define(['knockout',
-        'timeselector/time-selector-model', 
+        'knockout.mapping',
+        'timeselector/time-selector-model',
         'dfutil',
         'ojs/ojcore',
         'jquery',
@@ -17,10 +18,12 @@ define(['knockout',
         'canvg'
     ],
     
-    function(ko, TimeSelectorModel,dfu)
+    function(ko, km, TimeSelectorModel,dfu)
     {
-
+        // dashboard type to keep the same with return data from REST API
+        var SINGLEPAGE_TYPE = "SINGLEPAGE";
         
+        ko.mapping = km;
         /**
          * 
          * @param {ko.observable} startTime: start time of new time range
@@ -121,7 +124,33 @@ define(['knockout',
 
         }
          */
-
+        
+        function initializeTileAfterLoad(tile) {
+            if (!tile)
+                return;
+            
+            registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
+            tile.shouldHide = ko.observable(false);
+            tile.clientGuid = dfu.guid();
+            tile.widerEnabled = ko.computed(function() {
+                return tile.width() < 4;
+            });
+            tile.narrowerEnabled = ko.computed(function() {
+                return tile.width() > 1;
+            });
+            tile.maximizeEnabled = ko.computed(function() {
+                return !tile.isMaximized();
+            });
+            tile.restoreEnabled = ko.computed(function() {
+                return tile.isMaximized();
+            });
+            tile.tileDisplayClass = ko.computed(function() {
+                var css = 'oj-md-'+(tile.width()*3) + ' oj-sm-'+(tile.width()*3) + ' oj-lg-'+(tile.width()*3);
+                css += tile.isMaximized() ? ' dbd-tile-maximized' : ' ';
+                css += tile.shouldHide() ? ' dbd-tile-no-display' : ' ';
+                return css;
+            });
+        }
 
         /**
          *  used for KOC integration
@@ -132,21 +161,22 @@ define(['knockout',
             self.type = type;
             self.title = ko.observable(title);
             self.description = ko.observable(description);
-            self.maximized = ko.observable(false);
+            self.isMaximized = ko.observable(false);
             self.shouldHide = ko.observable(false);
-            self.tileWidth = ko.observable(width);
+            self.width = ko.observable(width);
+            self.height = ko.observable(220);
             self.clientGuid = dfu.guid();
             self.widerEnabled = ko.computed(function() {
-                return self.tileWidth() < 4;
+                return self.width() < 4;
             });
             self.narrowerEnabled = ko.computed(function() {
-                return self.tileWidth() > 1;
+                return self.width() > 1;
             });
             self.maximizeEnabled = ko.computed(function() {
-                return !self.maximized();
+                return !self.isMaximized();
             });
             self.restoreEnabled = ko.computed(function() {
-                return self.maximized();
+                return self.isMaximized();
             });
             
             self.configureEnabled = ko.computed(function() {
@@ -154,13 +184,15 @@ define(['knockout',
             });
             
             self.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(self.tileWidth()*3) + ' oj-sm-'+(self.tileWidth()*3) + ' oj-lg-'+(self.tileWidth()*3);
-                css += self.maximized() ? ' dbd-tile-maximized' : ' ';
+                var css = 'oj-md-'+(self.width()*3) + ' oj-sm-'+(self.width()*3) + ' oj-lg-'+(self.width()*3);
+                css += self.isMaximized() ? ' dbd-tile-maximized' : ' ';
                 css += self.shouldHide() ? ' dbd-tile-no-display' : ' ';
                 return css;
             });
             
-            self.widget = widget;
+//            self.widget = widget;
+            for (var p in widget)
+                self[p] = widget[p];
     
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
@@ -214,32 +246,125 @@ define(['knockout',
 
         }
         
-        function DashboardTilesViewModel(tilesView, urlEditView, widgetsHomRef, dsbType) {
+        function getBaseUrl() {
+//            return "http://slc04pxi.us.oracle.com:7001";
+//            return "http://localhost:7001";
+            return "http://slc00bqs.us.oracle.com:7021";
+        }
+        
+        function getDefaultHeaders() {
+            return {'Content-type': 'application/json', 'X-USER-IDENTITY-DOMAIN-NAME': 'TenantOPC1'};
+        }
+        
+        function loadDashboard(dashboardId, succCallBack, errorCallBack) {
+            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/" + dashboardId;
+            $.ajax(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    var dsb = ko.mapping.fromJS(data);
+                    if (succCallBack)
+                        succCallBack(dsb);
+                },
+                error: function(e) {
+                    if (errorCallBack)
+                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+                }
+            });
+        }
+        
+        function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
+            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/" + dashboardId;
+            $.ajax(url, {
+                type: 'put',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                data: dashboard,
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(e) {
+                    if (errorCallBack)
+                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+                }
+            });
+        }
+        
+        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
+            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/favorites/" + dashboardId;
+            $.ajax(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data.isFavorite);
+                },
+                error: function(e) {
+                    if (errorCallBack)
+                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+                }
+            });
+        }
+        
+        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
+            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/favorites/" + dashboardId;
+            $.ajax(url, {
+                type: 'post',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function() {
+                    if (succCallBack)
+                        succCallBack();
+                },
+                error: function(e) {
+                    if (errorCallBack)
+                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+                }
+            });
+        }
+        
+        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
+            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/favorites/" + dashboardId;
+            $.ajax(url, {
+                type: 'delete',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function() {
+                    if (succCallBack)
+                        succCallBack();
+                },
+                error: function(e) {
+                    if (errorCallBack)
+                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+                }
+            });
+        }
+        
+        function registerComponent(kocName, viewModel, template) {
+            if (!ko.components.isRegistered(kocName)) {
+                ko.components.register(kocName,{
+                  viewModel:{require:viewModel},
+                  template:{require:'text!'+template}
+              }); 
+            }
+        }
+        
+        function DashboardTilesViewModel(dashboard, tilesView, urlEditView) {
             var self = this;
+            
+            self.dashboard = dashboard;
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
-            self.isOnePageType = (dsbType === "onePage");
-            
-            var tileArray = [];
-            if (self.isOnePageType) {
-                var defaultWidgetTitle = (widgetsHomRef && widgetsHomRef.length > 0) ? widgetsHomRef[0].title : "Home";
-                tileArray.push(new DashboardTile(self, widgetsHomRef[0]["WIDGET_KOC_NAME"], defaultWidgetTitle, "", 2,widgetsHomRef[0]));
-            } else if (widgetsHomRef) {
-                for (i = 0; i < widgetsHomRef.length; i++) {
-                    var widget = new DashboardTile(self, widgetsHomRef[i]["WIDGET_KOC_NAME"], widgetsHomRef[i].title, "", widgetsHomRef[i]["TILE_WIDTH"],widgetsHomRef[i]);
-                    widget.timeRangeStart = self.timeSelectorModel.viewStart();
-                    widget.timeRangeEnd = self.timeSelectorModel.viewEnd();
-                    tileArray.push(widget);
-                }
-            }
-
-            self.tiles = ko.observableArray(tileArray);
+            self.isOnePageType = (dashboard.type() === SINGLEPAGE_TYPE);
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
 
             self.isEmpty = function() {
-                return !self.tiles() || self.tiles().length === 0;
+                return !self.dashboard.tiles() || self.dashboard.tiles().length === 0;
             };
             
             self.registerTileRemoveCallback = function(callbackMethod) {
@@ -247,10 +372,29 @@ define(['knockout',
             };
             
             self.appendNewTile = function(name, description, width, widget) {
-//                var newTile =new DashboardTile(name, description, width, document.location.protocol + '//' + document.location.host + "/emcpdfui/dependencies/visualization/dataVisualization.html", charType);
+                // TODO: code to be replaced by real js objects from alvin
+                widget.WIDGET_UNIQUE_ID = "12001";
+                widget.WIDGET_NAME = "Overall CPU Usage";
+                widget.WIDGET_DESCRIPTION = "Overall CPU Usage (%) of target being monitored";
+                widget.WIDGET_GROUP_NAME = "Log Analytics Widgets";
+                widget.WIDGET_ICON = "images/la.png";
+                widget.WIDGET_HISTOGRAM = "overallCpu/images/overallCpu.png";
+                widget.WIDGET_OWNER = "SYSMAN";
+                widget.WIDGET_CREATION_TIME = "2014-11-11T19:20:30.45Z";
+                widget.WIDGET_SOURCE = 1;
+                widget.WIDGET_KOC_NAME = "LA_V1_WIDGET_CPU_OVERALL";
+                widget.WIDGET_VIEWMODEL = '../dependencies/demo/simpleChartWidget/js/demo-chart-widget';
+                widget.WIDGET_TEMPLATE = '../dependencies/demo/simpleChartWidget/demo-chart-widget.html';
+                widget.PROVIDER_NAME = "Log Analytics";
+                widget.PROVIDER_VERSION = "0.2";
+                widget.PROVIDER_ASSET_ROOT = "asset";
+          
                 var newTile = null;
+                            
+                registerComponent(widget.WIDGET_KOC_NAME, widget.WIDGET_VIEWMODEL, widget.WIDGET_TEMPLATE);
+                newTile =new DashboardTile(self,widget.WIDGET_KOC_NAME,name, description, width, widget); 
 
-                if (widget){
+                /*if (widget){
                     var koc_name = null;
                     var template = null;
                     var viewmodel = null;
@@ -339,9 +483,6 @@ define(['knockout',
                         //TODO END
                         
                         if (koc_name && viewmodel && template){
-                            /**
-                             * Dashboard Framework Widget
-                             */
                             if (widget_source===0){
                                 if (!ko.components.isRegistered(koc_name)) {
                                     ko.components.register(koc_name,{
@@ -394,20 +535,20 @@ define(['knockout',
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
 
-                    } else  { 
-                       /**
+                    } /*else  { 
+                       / **
                         * Category with id=999 is used for integration development purpose only
                         * Any widget with categoryId=999 is expected to registerwith absolute path (viewmodel & template)
-                        */
-                        if (koc_name && viewmodel && template){
-                            if (!ko.components.isRegistered(koc_name)) {
-                               ko.components.register(koc_name,{
-                                     viewModel:{require:viewmodel},
-                                     template:{require:'text!'+template}
+                        * /
+                        if (widget.WIDGET_KOC_NAME && widget.WIDGET_VIEWMODEL && widget.WIDGET_TEMPLATE){
+                            if (!ko.components.isRegistered(widget.WIDGET_KOC_NAME)) {
+                               ko.components.register(widget.WIDGET_KOC_NAME,{
+                                     viewModel:{require:widget.WIDGET_VIEWMODEL},
+                                     template:{require:'text!'+widget.WIDGET_TEMPLATE}
                                  }); 
-                               console.log("widget: "+koc_name+" is registered");
-                               console.log("widget template: "+assetRoot+template);
-                               console.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                               console.log("widget: "+widget.WIDGET_KOC_NAME+" is registered");
+                               console.log("widget template: "+assetRoot+widget.WIDGET_TEMPLATE);
+                               console.log("widget viewmodel:: "+assetRoot+widget.WIDGET_VIEWMODEL);    
                            }
                            newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
                         }else{
@@ -420,7 +561,9 @@ define(['knockout',
                     }
                 }else{
                     console.error("Null widget passed to a tile");
-                }
+                }*/
+                if (newTile)
+                   self.dashboard.tiles.push(newTile);
 
                 //====end
                 
@@ -671,9 +814,9 @@ define(['knockout',
             */
            
             self.removeTile = function(tile) {
-                self.tiles.remove(tile);
-                for (var i = 0; i < self.tiles().length; i++) {
-                    var eachTile = self.tiles()[i];
+                self.dashboard.tiles.remove(tile);
+                for (var i = 0; i < self.dashboard.tiles().length; i++) {
+                    var eachTile = self.dashboard.tiles()[i];
                     eachTile.shouldHide(false);
                 }
                 self.tilesView.enableSortable();
@@ -686,15 +829,15 @@ define(['knockout',
             };
             
             self.broadenTile = function(tile) {
-                if (tile.tileWidth() <= 3)
-                    tile.tileWidth(tile.tileWidth() + 1);
+                if (tile.width() <= 3)
+                    tile.width(tile.width() + 1);
                 
                 self.postTileMenuClicked(tile);
             };
             
             self.narrowTile = function(tile) {
-                if (tile.tileWidth() > 1)
-                    tile.tileWidth(tile.tileWidth() - 1);
+                if (tile.width() > 1)
+                    tile.width(tile.width() - 1);
                 
                 self.postTileMenuClicked(tile);
             };
@@ -715,14 +858,14 @@ define(['knockout',
             
             // maximize 1st tile only, used for one-page type dashboard
             self.maximizeFirst = function() {
-                if (self.isOnePageType && self.tiles() && self.tiles().length > 0) {
+                if (self.isOnePageType && self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
                     if (!$('#main-container').hasClass('dbd-one-page')) {
                         $('#main-container').addClass('dbd-one-page');
                     }
                     if (!$('#tiles-row').hasClass('dbd-one-page')) {
                         $('#tiles-row').addClass('dbd-one-page');
                     }
-                    var tile = self.tiles()[0];
+                    var tile = self.dashboard.tiles()[0];
                     
                     var tileId = 'tile' + tile.clientGuid;
                     var iframe = $('#' + tileId + ' div iframe');
@@ -762,13 +905,13 @@ define(['knockout',
             };
             
             self.maximize = function(tile) {
-                for (var i = 0; i < self.tiles().length; i++) {
-                    var eachTile = self.tiles()[i];
+                for (var i = 0; i < self.dashboard.tiles().length; i++) {
+                    var eachTile = self.dashboard.tiles()[i];
                     if (eachTile !== tile)
                         eachTile.shouldHide(true);
                 }
                 tile.shouldHide(false);
-                tile.maximized(true);
+                tile.isMaximized(true);
                 self.tilesView.disableSortable();
                 self.tilesView.disableDraggable();
                 var maximizedTileHeight = self.calculateTilesRowHeight();
@@ -779,14 +922,24 @@ define(['knockout',
                 self.postTileMenuClicked(tile);
             };
             
+            self.initializeMaximization = function() {
+                for (var i = 0; i < self.dashboard.tiles().length; i++) {
+                    var tile = self.dashboard.tiles()[i];
+                    if (tile && tile.isMaximized && tile.isMaximized()) {
+                        self.maximize(tile);
+                        return;
+                    }
+                }
+            }
+            
             self.restore = function(tile) {
                 if (self.tileOriginalHeight) {
                     $('.dbd-tile-maximized .dbd-tile-element').height(self.tileOriginalHeight);
                 }
                 $('#add-widget-button').ojButton('option', 'disabled', false);
-                tile.maximized(false);
-                for (var i = 0; i < self.tiles().length; i++) {
-                    var eachTile = self.tiles()[i];
+                tile.isMaximized(false);
+                for (var i = 0; i < self.dashboard.tiles().length; i++) {
+                    var eachTile = self.dashboard.tiles()[i];
                     eachTile.shouldHide(false);
                 }
                 self.tilesView.enableSortable();
@@ -833,8 +986,8 @@ define(['knockout',
             self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
                     var defArray = [];
-                    for (i = 0; i < self.tiles().length; i++) {
-                        var aTile = self.tiles()[i];
+                    for (i = 0; i < self.dashboard.tiles().length; i++) {
+                        var aTile = self.dashboard.tiles()[i];
                         defArray.push(self.fireDashboardItemChangeEventTo(aTile,dashboardItemChangeEvent));
                     }
 
@@ -850,6 +1003,7 @@ define(['knockout',
             
             self.postDocumentShow = function() {
                 self.maximizeFirst();
+                self.initializeMaximization();
             };
 
             var timeSelectorChangelistener = ko.computed(function(){
@@ -864,35 +1018,7 @@ define(['knockout',
                     self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
-            });            
-            /* event handler for button to get screen shot */
-//            self.screenShotClicked = function(data, event) {
-//                var images = self.images;
-//                var renderWhole = self.renderWholeScreenShot;
-//                var tileFrames = $('.dbd-tile-element div iframe');
-//                var sizeTiles = tileFrames.size();
-//                var handled = 0;
-//                tileFrames.each(function(idx, elem){
-//                    /*try {
-//                        var dom = elem.contentWindow.document;
-//                        var domHead = dom.getElementsByTagName('head').item(0);
-//                        $("<script src='http://localhost:8383/emcpssf/js/libs/html2canvas/html2canvas.js' type='text/javascript'></script>").appendTo(domHead);
-//                    } catch (ex) {
-//                        // Security Error
-//                    }*/
-//                    elem.contentWindow.postMessage({index: idx, type: "screenShot"},"*");
-//                    /*html2canvas(elem.contentWindow.$('body'), {
-//                        onrendered: function(canvas) {  
-//                            var tileData = canvas.toDataURL();
-//                            images.splice(images().length, 0, new DashboardTileImage(tileData));
-//                            handled++;
-//                            if (handled === sizeTiles) {
-//                                renderWhole();
-//                            }
-//                        }  
-//                    });*/
-//                });
-//            };
+            });
         }
         
         function DashboardViewModel() {
@@ -904,7 +1030,15 @@ define(['knockout',
         
         return {"DashboardTile": DashboardTile, 
             "DashboardTilesViewModel": DashboardTilesViewModel,
-            "DashboardViewModel": DashboardViewModel};
+            "DashboardViewModel": DashboardViewModel,
+            "loadDashboard": loadDashboard,
+            "initializeTileAfterLoad": initializeTileAfterLoad,
+            "updateDashboard": updateDashboard,
+            "registerComponent": registerComponent,
+            "loadIsFavorite": loadIsFavorite,
+            "setAsFavorite": setAsFavorite,
+            "removeFromFavorite": removeFromFavorite
+        };
     }
 );
 
