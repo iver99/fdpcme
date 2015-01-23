@@ -97,7 +97,7 @@ bash "deploy_ear" do
     echo "\n hostname= #{node["hostname"]}, fqdn=  #{node["fqdn"]}" >> #{node["log_dir"]}/dashboardUIDatasource.log
     set +e
     # Check if service is online
-    curl -s -o out.html -w '%{http_code}' "http://#{node["hostname"]}:#{node["wls_port"]}/emaas/savedsearch/v1" | grep 200
+    curl -s -o out.html -w '%{http_code}' "http://#{node["hostname"]}:#{node["wls_port"]}/emcpdfui/home.html" | grep 200
     if [ $? -eq 0 ]; then
     echo "Application is already deployed" >> #{node["log_dir"]}/dashboardUIDatasource.log
     exit 0
