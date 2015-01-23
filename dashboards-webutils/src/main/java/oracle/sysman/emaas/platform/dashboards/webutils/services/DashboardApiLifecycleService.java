@@ -12,10 +12,10 @@ package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 
-public class DashboardsApiLifecycleService extends AbstractApplicationLifecycleService
+public class DashboardApiLifecycleService extends AbstractApplicationLifecycleService
 {
 
-	public DashboardsApiLifecycleService()
+	public DashboardApiLifecycleService()
 	{
 		super(new RegistryServiceManager());
 	}

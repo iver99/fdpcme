@@ -348,7 +348,9 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
 }
 
 function getRegistrationEndPoint(){
-    return 'api/configurations/registration';//change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+    //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+//    return 'api/configurations/registration';
+    return 'data/servicemanager.json';
 }
 
 function getAuthorizationRequestHeader() {
