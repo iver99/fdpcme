@@ -53,7 +53,7 @@ define(['knockout',
                             for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
                                 $.ajax({
                                     url: virtualEndpoints[k],
-                                    headers: getAuthorizationRequestHeader(),
+                                    headers: getSavedSearchServiceRequestHeader(),
                                     success: function(data, textStatus) {
                                         availableUrl = virtualEndpoints[k];
                                         urlFound = true;
@@ -71,7 +71,7 @@ define(['knockout',
                                 for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
                                     $.ajax({
                                         url: canonicalEndpoints[m],
-                                        headers: getAuthorizationRequestHeader(),
+                                        headers: getSavedSearchServiceRequestHeader(),
                                         success: function(data, textStatus) {
                                             availableUrl = canonicalEndpoints[m];
                                             urlFound = true;
@@ -114,7 +114,8 @@ define(['knockout',
                 });
 
                 $.ajaxSettings.async = true;
-                return availableUrl;
+//                return availableUrl;
+                return "http://slc04wjj.us.oracle.com:7001/savedsearch/v1";
             };
             
             self.formatUTCDateTime = function(dateString) {
@@ -341,7 +342,8 @@ function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, provi
                 }
             });
             $.ajaxSettings.async = true;
-            return assetRoot;       
+//            return assetRoot;    
+            return 'http://localhost:8383/emcpdfui/';
         }
     }
     return "http://jet.us.oracle.com";
@@ -355,4 +357,8 @@ function getRegistrationEndPoint(){
 
 function getAuthorizationRequestHeader() {
     return {"Authorization": "Basic d2VibG9naWM6d2VsY29tZTE="};
+};
+
+function getSavedSearchServiceRequestHeader() {
+    return {"Authorization": "Basic d2VibG9naWM6d2VsY29tZTE=","X-USER-IDENTITY-DOMAIN":"TenantOPC1"};
 };

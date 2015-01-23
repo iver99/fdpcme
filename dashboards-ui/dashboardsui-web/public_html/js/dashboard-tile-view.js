@@ -311,7 +311,9 @@ define(['knockout',
             }
             else {
                 var categoryUrl = ssfUrl + '/categories';
-                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl, headers: getAuthorizationRequestHeader(), async: false,
+                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl,
+                    headers: getSavedSearchServiceRequestHeader(), 
+                    async: false,
                     success: function(data, textStatus){
                         if (data && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
@@ -326,32 +328,32 @@ define(['knockout',
                 });
             }
             
-//            self.newWidget = ko.observable({ 
-//                                providerName: "Log Analytics",
-//                                version: "0.1",
-//                                assetRoot: "asset",
-//                                name: "TestWidget_001",
-//                                description: "Widget for test",
-//                                queryStr: "* | stats count by 'target type','log source'",
-//                                categoryId: allCategories[0].value+"",
-//                                kocName: "test-la-widget-1",
-//                                vmUrl: "dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
-//                                templateUrl: "dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
-//                                iconUrl: "",
-//                                histogramUrl: ""});
-            self.newWidget = ko.observable({
-                                providerName: "",
-                                version: "",
-                                assetRoot: "",
-                                name: "",
-                                description: "",
-                                queryStr: "",
+            self.newWidget = ko.observable({ 
+                                providerName: "Log Analytics",
+                                version: "1.0",
+                                assetRoot: "assetRoot",
+                                name: "TestWidget_001",
+                                description: "Widget for test",
+                                queryStr: "* | stats count by 'target type','log source'",
                                 categoryId: allCategories[0].value+"",
-                                kocName: "",
-                                vmUrl: "",
-                                templateUrl: "",
+                                kocName: "test-la-widget-1",
+                                vmUrl: "dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
+                                templateUrl: "dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
                                 iconUrl: "",
                                 histogramUrl: ""});
+//            self.newWidget = ko.observable({
+//                                providerName: "",
+//                                version: "",
+//                                assetRoot: "",
+//                                name: "",
+//                                description: "",
+//                                queryStr: "",
+//                                categoryId: allCategories[0].value+"",
+//                                kocName: "",
+//                                vmUrl: "",
+//                                templateUrl: "",
+//                                iconUrl: "",
+//                                histogramUrl: ""});
             
             self.categoryOptionChangeHandler = function(event, data) {
                 if (data.option === "value") {
@@ -416,10 +418,10 @@ define(['knockout',
                     var searchToSave = {name: widgetToSave.name, 
                         category:{id:(widgetToSave.categoryId instanceof Array ? widgetToSave.categoryId[0] : widgetToSave.categoryId)},
                                         folder:{id: 999}, description: widgetToSave.description, 
-                                        queryStr: widgetToSave.queryStr, parameters: params};
+                                        queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
                     var saveSearchUrl = ssfUrl + "/search";
                     $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
-                        headers: getAuthorizationRequestHeader(), data: ko.toJSON(searchToSave), async: false,
+                        headers: getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
                             $('#createWidgetDialog').ojDialog('close');
                             var msg = "Widget created successfully!";
@@ -583,11 +585,17 @@ define(['knockout',
             
             //Add widget dialog
             self.categoryValue=ko.observableArray();
+            self.widgetGroup=ko.observable();
+            self.widgetGroupValue=ko.observable({providerName:"all",providerVersion:"all",name:"all"});
+            self.widgetGroups=ko.observableArray();
             var widgetArray = [];
-            var laWidgetArray = [];
-            var taWidgetArray = [];
-            var itaWidgetArray = [];
-            var demoWidgetArray = [];
+//            var laWidgetArray = [];
+//            var taWidgetArray = [];
+//            var itaWidgetArray = [];
+//            var demoWidgetArray = [];
+            var curGroupWidgets = [];
+            var integratorWidgets = [];
+            var widgetGroupList = [];
             var dbsWidgetArray = [];
             var curPageWidgets=[];
             var searchResultArray = [];
@@ -597,10 +605,20 @@ define(['knockout',
             var curPage = 1;
             var totalPage = 0;
             var naviFromSearchResults = false;
-            var dbsBuiltinWidgets = [{id: 1, 
-                    name: 'Generic URL Widget', 
-                    description: 'A generic widget to show a web page by a given URL', 
-                    category: 'DashboardsBuiltIn'}];
+            var dbsBuiltinWidgets = [{
+                    "WIDGET_UNIQUE_ID": 1,
+                    "WIDGET_NAME": "Generic URL Widget",
+                    "WIDGET_DESCRIPTION": "A generic widget to show a web page by a given URL",
+                    "WIDGET_OWNER": "SYSMAN",
+                    "WIDGET_CREATION_TIME": "2015-01-20T07:07:07.405Z",
+                    "WIDGET_SOURCE": 0,
+                    "WIDGET_GROUP_NAME": "Dashboards Built-In",
+                    "WIDGET_TEMPLATE": "dependencies/widgets/iFrame/widget-iframe.html",
+                    "WIDGET_KOC_NAME": "DF_V1_WIDGET_IFRAME",
+                    "WIDGET_VIEWMODEL": "dependencies/widgets/iFrame/js/widget-iframe",
+                    "PROVIDER_NAME": "DashboardFramework",
+                    "PROVIDER_ASSET_ROOT": "asset",
+                    "PROVIDER_VERSION": "1.0"}];
             self.widgetList = ko.observableArray(widgetArray);
             self.curPageWidgetList = ko.observableArray(curPageWidgets);
             self.searchText = ko.observable("");
@@ -619,64 +637,81 @@ define(['knockout',
             
             function refreshWidgets() {
                 widgetArray = [];
-                laWidgetArray = [];
-                taWidgetArray = [];
-                itaWidgetArray = [];
-                demoWidgetArray = [];
+//                laWidgetArray = [];
+//                taWidgetArray = [];
+//                itaWidgetArray = [];
+//                demoWidgetArray = [];
+                curGroupWidgets = [];
                 curPageWidgets=[];
                 searchResultArray = [];
                 index=0;
+                widgetGroupList = [];
                 if (ssfUrl && ssfUrl !== '') {
-                    var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
-                    var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
-                    var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
-                    var demoSearchesUrl = ssfUrl + '/searches?categoryId=999';
+//                    var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
+//                    var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
+//                    var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
+//                    var demoSearchesUrl = ssfUrl + '/searches?categoryId=999';
+                    var widgetsUrl = ssfUrl + '/widgets';
+                    var widgetgroupsUrl = ssfUrl + '/widgetgroups';
                     $.ajax({
-                        url: laSearchesUrl,
-                        headers: getAuthorizationRequestHeader(),
+                        url: widgetgroupsUrl,
+                        headers: getSavedSearchServiceRequestHeader(),
                         success: function(data, textStatus) {
-                            laWidgetArray = loadWidgets(data);
+                            widgetGroupList = loadWidgetGroups(data);
                         },
                         error: function(xhr, textStatus, errorThrown){
-                            console.log('Error when querying log analytics searches!');
+                            console.log('Error when fetching widgets!');
+                        },
+                        async: false
+                    });
+                    
+                    $.ajax({
+                        url: widgetsUrl,
+                        headers: getSavedSearchServiceRequestHeader(),
+                        success: function(data, textStatus) {
+                            integratorWidgets = loadWidgets(data);
+//                            curGroupWidgets = loadWidgets(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Error when fetching widgets!');
                         },
                         async: false
                     });
 
-                    $.ajax({
-                        url: taSearchesUrl,
-                        headers: getAuthorizationRequestHeader(),
-                        success: function(data, textStatus) {
-                            taWidgetArray = loadWidgets(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            console.log('Error when querying target analytics searches!');
-                        },
-                        async: false
-                    });
-
-                    $.ajax({
-                        url: itaSearchesUrl,
-                        headers: getAuthorizationRequestHeader(),
-                        success: function(data, textStatus) {
-                            itaWidgetArray = loadWidgets(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            console.log('Error when querying IT analytics searches!');
-                        },
-                        async: false
-                    });    
-                    $.ajax({
-                        url: demoSearchesUrl,
-                        headers: getAuthorizationRequestHeader(),
-                        success: function(data, textStatus) {
-                            demoWidgetArray = loadWidgets(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            console.log('Error when querying IT analytics searches!');
-                        },
-                        async: false
-                    });                      
+//                    $.ajax({
+//                        url: taSearchesUrl,
+//                        headers: getAuthorizationRequestHeader(),
+//                        success: function(data, textStatus) {
+//                            taWidgetArray = loadWidgets(data);
+//                        },
+//                        error: function(xhr, textStatus, errorThrown){
+//                            console.log('Error when querying target analytics searches!');
+//                        },
+//                        async: false
+//                    });
+//
+//                    $.ajax({
+//                        url: itaSearchesUrl,
+//                        headers: getAuthorizationRequestHeader(),
+//                        success: function(data, textStatus) {
+//                            itaWidgetArray = loadWidgets(data);
+//                        },
+//                        error: function(xhr, textStatus, errorThrown){
+//                            console.log('Error when querying IT analytics searches!');
+//                        },
+//                        async: false
+//                    });    
+//                    $.ajax({
+//                        url: demoSearchesUrl,
+//                        headers: getAuthorizationRequestHeader(),
+//                        success: function(data, textStatus) {
+//                            demoWidgetArray = loadWidgets(data);
+//                        },
+//                        error: function(xhr, textStatus, errorThrown){
+//                            console.log('Error when querying IT analytics searches!');
+//                        },
+//                        async: false
+//                    });                      
                     
                     dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
                 }
@@ -684,6 +719,7 @@ define(['knockout',
                 curPage = 1;
                 totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
                 naviFromSearchResults = false;
+                self.widgetGroups(widgetGroupList);
                 self.widgetList(widgetArray);
                 self.curPageWidgetList(curPageWidgets);
                 self.searchText("");
@@ -696,7 +732,6 @@ define(['knockout',
                 var targetWidgetArray = [];
                 if (data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
-//                        var widget = {id: data[i].id, name: data[i].name, type: data[i].category.id, href:data[i].href};
                         var widget = data[i];
                         targetWidgetArray.push(widget);
                         widgetArray.push(widget);
@@ -707,6 +742,22 @@ define(['knockout',
                     }
                 }
                 return targetWidgetArray;
+            };
+            
+            function loadWidgetGroups(data) {
+                var targetWidgetGroupArray = [];
+                var groupAll = {value:'all|all|All', label:'All'};
+                var groupDashboardBuiltIn = {value: 'DashboardFramework|1.0|Dashboards Built-In', label:'Dashboards Built-In'};
+                targetWidgetGroupArray.push(groupAll);
+                targetWidgetGroupArray.push(groupDashboardBuiltIn);
+                if (data && data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var widgetGroup = {value:data[i].PROVIDER_NAME+'|'+data[i].PROVIDER_VERSION+'|'+data[i].WIDGET_GROUP_NAME, 
+                            label:data[i].WIDGET_GROUP_NAME};
+                        targetWidgetGroupArray.push(widgetGroup);
+                    }
+                }
+                return targetWidgetGroupArray;
             };
 
  
@@ -728,26 +779,33 @@ define(['knockout',
                 if (event.option === "value") {
                     curPageWidgets=[];
                     curPage = 1;
-                     if (event.value[0]==='all') {
-                        totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
-                    }
-                    else if (event.value[0]==='la') {
-                        totalPage = (laWidgetArray.length%pageSize === 0 ? laWidgetArray.length/pageSize : Math.floor(laWidgetArray.length/pageSize) + 1);
-                    }
-                    else if (event.value[0]==='ta') {
-                        totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
-                    }
-                    else if (event.value[0] === 'ita') {
-                        totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
-                    }
-                    else if (event.value[0] === 'demo') {
-                        totalPage = (demoWidgetArray.length%pageSize === 0 ? demoWidgetArray.length/pageSize : Math.floor(demoWidgetArray.length/pageSize) + 1);
-                    }                    
-                    else if (event.value[0] === 'dbs') {
-                        totalPage = (dbsWidgetArray.length%pageSize === 0 ? dbsWidgetArray.length/pageSize : Math.floor(dbsWidgetArray.length/pageSize) + 1);
-                    }
+//                    var curWidgetGroup = event.value[0];
+//                    var wg = curWidgetGroup.split('|');
+//                    var pname = wg[0];
+//                    var pversion = wg[1];
+//                    var gname = wg[2];
+                    var curGroupWidgets = getAvailableWidgets();
+                    totalPage = (curGroupWidgets.length%pageSize === 0 ? curGroupWidgets.length/pageSize : Math.floor(curGroupWidgets.length/pageSize) + 1);
+//                    if (curWidgetGroupName==='all') {
+//                        totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
+//                    }
+//                    else if (event.value[0]==='la') {
+//                        totalPage = (laWidgetArray.length%pageSize === 0 ? laWidgetArray.length/pageSize : Math.floor(laWidgetArray.length/pageSize) + 1);
+//                    }
+//                    else if (event.value[0]==='ta') {
+//                        totalPage = (taWidgetArray.length%pageSize === 0 ? taWidgetArray.length/pageSize : Math.floor(taWidgetArray.length/pageSize) + 1);
+//                    }
+//                    else if (event.value[0] === 'ita') {
+//                        totalPage = (itaWidgetArray.length%pageSize === 0 ? itaWidgetArray.length/pageSize : Math.floor(itaWidgetArray.length/pageSize) + 1);
+//                    }
+//                    else if (event.value[0] === 'demo') {
+//                        totalPage = (demoWidgetArray.length%pageSize === 0 ? demoWidgetArray.length/pageSize : Math.floor(demoWidgetArray.length/pageSize) + 1);
+//                    }                    
+//                    else if (event.value[0] === 'dbs') {
+//                        totalPage = (dbsWidgetArray.length%pageSize === 0 ? dbsWidgetArray.length/pageSize : Math.floor(dbsWidgetArray.length/pageSize) + 1);
+//                    }
                     
-                    fetchWidgetsForCurrentPage(getAvailableWidgets());
+                    fetchWidgetsForCurrentPage(curGroupWidgets);
                     self.curPageWidgetList(curPageWidgets);
                     refreshNaviButton();
                     naviFromSearchResults = false;
@@ -795,26 +853,23 @@ define(['knockout',
             
             self.widgetDbClicked = function(data, event) {
                 clearTimeout(widgetClickTimer);
-                self.tilesViewModel.appendNewTile(data.name, "", 2, data);
+                self.tilesViewModel.appendNewTile(data.WIDGET_NAME, "", 2, data);
             };
             
             self.widgetClicked = function(data, event) {
                 clearTimeout(widgetClickTimer);
                 widgetClickTimer = setTimeout(function (){
                     var _data = ko.toJS(data);
-                    _data.createdOn = dfu.formatUTCDateTime(data.createdOn);
-                    _data.description = data.description ? data.description : '';
-                    _data.owner = data.owner ? data.owner : '';
-                    _data.queryStr = data.queryStr ? data.queryStr : '';
-                    if (_data.category !== 'DashboardsBuiltIn') {
+                    _data.WIDGET_DESCRIPTION = '';
+                    _data.QUERY_STR = '';
+                    if (_data.WIDGET_GROUP_NAME !== 'Dashboards Built-In') {
                         if (ssfUrl && ssfUrl !== '') {
                             $.ajax({
-                                url: ssfUrl+'/search/'+data.id,
-                                headers: getAuthorizationRequestHeader(),
+                                url: ssfUrl+'/search/'+data.WIDGET_UNIQUE_ID,
+                                headers: getSavedSearchServiceRequestHeader(),
                                 success: function(widget, textStatus) {
-                                    _data.owner = widget.owner ? widget.owner : '';
-                                    _data.description = widget.description ? widget.description : '';
-                                    _data.queryStr = widget.queryStr ? widget.queryStr : '';
+                                    _data.WIDGET_DESCRIPTION = widget.description ? widget.description : '';
+                                    _data.QUERY_STR = widget.queryStr ? widget.queryStr : '';
                                 },
                                 error: function(xhr, textStatus, errorThrown){
                                     console.log('Error when querying saved searches!');
@@ -835,7 +890,7 @@ define(['knockout',
             
             self.addWidgetToDashboard = function() {
                 $('#widgetDetailsDialog').ojDialog('close');
-                self.tilesViewModel.appendNewTile(self.currentWidget().name, "", 2, self.currentWidget());
+                self.tilesViewModel.appendNewTile(self.currentWidget().WIDGET_NAME, "", 2, self.currentWidget());
             };
             
             self.enterSearch = function(d,e){
@@ -847,40 +902,40 @@ define(['knockout',
             
             self.searchWidgets = function() {
                 searchResultArray = [];
-                var allWidgets = [];
+                var allWidgets = getAvailableWidgets();
                 var searchtxt = $.trim(ko.toJS(self.searchText));
-                var category = ko.toJS(self.categoryValue);
-                if (!category || category.length === 0) {
-                    category = 'all';
-                }
-                else {
-                    category = category[0];
-                }
-                if (category === 'all') {
-                    allWidgets = widgetArray;
-                }
-                else if (category === 'la') {
-                    allWidgets = laWidgetArray;
-                }
-                else if (category === 'ta') {
-                    allWidgets = taWidgetArray;
-                }
-                else if (category === 'ita') {
-                    allWidgets = itaWidgetArray;
-                }
-                else if (category === 'demo') {
-                    allWidgets = demoWidgetArray;
-                }                
-                else if (category === 'dbs') {
-                    allWidgets = dbsWidgetArray;
-                }
+//                var category = ko.toJS(self.categoryValue);
+//                if (!category || category.length === 0) {
+//                    category = 'all';
+//                }
+//                else {
+//                    category = category[0];
+//                }
+//                if (category === 'all') {
+//                    allWidgets = widgetArray;
+//                }
+//                else if (category === 'la') {
+//                    allWidgets = laWidgetArray;
+//                }
+//                else if (category === 'ta') {
+//                    allWidgets = taWidgetArray;
+//                }
+//                else if (category === 'ita') {
+//                    allWidgets = itaWidgetArray;
+//                }
+//                else if (category === 'demo') {
+//                    allWidgets = demoWidgetArray;
+//                }                
+//                else if (category === 'dbs') {
+//                    allWidgets = dbsWidgetArray;
+//                }
                 if (searchtxt === '') {
                     searchResultArray = allWidgets;
                 }
                 else {
                     for (var i=0; i<allWidgets.length; i++) {
-                        if (allWidgets[i].name.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 || 
-                                (allWidgets[i].description && allWidgets[i].description.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
+                        if (allWidgets[i].WIDGET_NAME.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1 || 
+                                (allWidgets[i].WIDGET_DESCRIPTION && allWidgets[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(searchtxt.toLowerCase()) > -1)) {
                             searchResultArray.push(allWidgets[i]);
                         }
                     }
@@ -903,34 +958,48 @@ define(['knockout',
             };
             
             function getAvailableWidgets() {
-                var allWidgets = [];
+                var availWidgets = [];
                 var category = ko.toJS(self.categoryValue);
-                if (!category || category.length === 0) {
-                    category = 'all';
+                if (category === null || category === '' || category.length === 0) {
+                    category = 'all|all|All';
                 }
                 else {
                     category = category[0];
                 }
-                if (category === 'all') {
-                    allWidgets = widgetArray;
+                var wg = category.split('|');
+                var providerName = wg[0];
+                var providerVersion = wg[1];
+                var groupName = wg[2];
+                if (providerName==='all' && providerVersion==='all' && groupName === 'All') {
+                    availWidgets = widgetArray;
                 }
-                else if (category === 'la') {
-                    allWidgets = laWidgetArray;
+                else {
+                    for (i = 0; i < widgetArray.length; i++) {
+                        var widget = widgetArray[i];
+                        if (widget.PROVIDER_NAME === providerName &&
+                                widget.PROVIDER_VERSION === providerVersion &&
+                                widget.WIDGET_GROUP_NAME === groupName) {
+                            availWidgets.push(widget);
+                        }
+                    }
                 }
-                else if (category === 'ta') {
-                    allWidgets = taWidgetArray;
-                }
-                else if (category === 'ita') {
-                    allWidgets = itaWidgetArray;
-                }
-                else if (category === 'demo') {
-                    allWidgets = demoWidgetArray;
-                }                
-                else if (category === 'dbs') {
-                    allWidgets = dbsWidgetArray;
-                }
+//                else if (category === 'la') {
+//                    allWidgets = laWidgetArray;
+//                }
+//                else if (category === 'ta') {
+//                    allWidgets = taWidgetArray;
+//                }
+//                else if (category === 'ita') {
+//                    allWidgets = itaWidgetArray;
+//                }
+//                else if (category === 'demo') {
+//                    allWidgets = demoWidgetArray;
+//                }                
+//                else if (category === 'dbs') {
+//                    allWidgets = dbsWidgetArray;
+//                }
                 
-                return allWidgets;
+                return availWidgets;
             };
             
             function refreshNaviButton() {
