@@ -1,2 +1,2 @@
-include 'dashboards-core', 'dashboards-entities','dashboards-web','dashboards-webutils','dashboards-ee','dashboards-schema','dashboards-ui','dashboards-ui:dashboardsui-ee','dashboards-ui:dashboardsui-web','dashboards-ui:dashboardsui-webutils','intg-sample-wf','intg-sample-wf:intg-sample-wf-ee','intg-sample-wf:intg-sample-wf-web','intg-sample-wf:intg-sample-wf-webutils'
+include 'dashboards-core', 'dashboards-entities','dashboards-web','dashboards-webutils','dashboards-ee','dashboards-schema','dashboards-ui','dashboards-ui:dashboardsui-ee','dashboards-ui:dashboardsui-web','dashboards-ui:dashboardsui-webutils'
 
