@@ -23,9 +23,9 @@ define([
                 timeFilter.endTime = endTime;
             }
 //            var qlBaseUrl = 'http://slc00aeg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
-//            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
+            var qlBaseUrl = 'http://slc06fev.us.oracle.com:7001/emaas/querylanguage/api/v2/'; 
 //            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7601/emaas/querylanguage/api/v2/';
-            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7211/emaas/querylanguage/api/v2/';
+//            var qlBaseUrl = 'http://slc08upj.us.oracle.com:7211/emaas/querylanguage/api/v2/';
 //            var qlBaseUrl = 'http://slc07dgg.us.oracle.com:7601/emaas/querylanguage/api/v2/';
 //            var qlBaseUrl = 'http://slc07dgf.us.oracle.com:7501/emaas/querylanguage/api/v2/';
             //severity  in ('error','ERROR','SEVERE','severe', 'warning', 'warn', 'info', 'trace')
@@ -44,7 +44,7 @@ define([
                     var searchUrl = ssfUrl + '/search/'+widget.id;
                     $.ajax({
                         url: searchUrl,
-                        headers: getAuthorizationRequestHeader(),
+                        headers: getSavedSearchServiceRequestHeader(),
                         success: function(data, textStatus) {
                             queryString.queries.queryString = data.queryStr;
                         },

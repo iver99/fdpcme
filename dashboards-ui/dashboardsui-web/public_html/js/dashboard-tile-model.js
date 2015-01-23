@@ -372,40 +372,17 @@ define(['knockout',
             };
             
             self.appendNewTile = function(name, description, width, widget) {
-                // TODO: code to be replaced by real js objects from alvin
-                widget.WIDGET_UNIQUE_ID = "12001";
-                widget.WIDGET_NAME = "Overall CPU Usage";
-                widget.WIDGET_DESCRIPTION = "Overall CPU Usage (%) of target being monitored";
-                widget.WIDGET_GROUP_NAME = "Log Analytics Widgets";
-                widget.WIDGET_ICON = "images/la.png";
-                widget.WIDGET_HISTOGRAM = "overallCpu/images/overallCpu.png";
-                widget.WIDGET_OWNER = "SYSMAN";
-                widget.WIDGET_CREATION_TIME = "2014-11-11T19:20:30.45Z";
-                widget.WIDGET_SOURCE = 1;
-                widget.WIDGET_KOC_NAME = "LA_V1_WIDGET_CPU_OVERALL";
-                widget.WIDGET_VIEWMODEL = '../dependencies/demo/simpleChartWidget/js/demo-chart-widget';
-                widget.WIDGET_TEMPLATE = '../dependencies/demo/simpleChartWidget/demo-chart-widget.html';
-                widget.PROVIDER_NAME = "Log Analytics";
-                widget.PROVIDER_VERSION = "0.2";
-                widget.PROVIDER_ASSET_ROOT = "asset";
-          
                 var newTile = null;
-                            
-                registerComponent(widget.WIDGET_KOC_NAME, widget.WIDGET_VIEWMODEL, widget.WIDGET_TEMPLATE);
-                newTile =new DashboardTile(self,widget.WIDGET_KOC_NAME,name, description, width, widget); 
 
-                /*if (widget){
-                    var koc_name = null;
-                    var template = null;
-                    var viewmodel = null;
-                    var provider_name = null;
-                    var provider_version = null;
-                    var provider_asset_root = null;
-                    var widget_source = null;
-                    if (widget && widget.category === 'DashboardsBuiltIn') {
-                        var koc_name = 'DF_V1_WIDGET_IFRAME';
-                        var viewmodel = '../dependencies/widgets/iFrame/js/widget-iframe';
-                        var template = '../dependencies/widgets/iFrame/widget-iframe.html';
+                if (widget){
+                    var koc_name = widget.WIDGET_KOC_NAME;
+                    var template = widget.WIDGET_TEMPLATE;
+                    var viewmodel = widget.WIDGET_VIEWMODEL;
+                    var provider_name = widget.PROVIDER_NAME;
+                    var provider_version = widget.PROVIDER_VERSION;
+                    var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
+                    var widget_source = widget.WIDGET_SOURCE;
+                    if (widget.WIDGET_GROUP_NAME === 'Dashboards Built-In') {
                         if (koc_name && template && viewmodel){
                             if (!ko.components.isRegistered(koc_name)) {
                                 ko.components.register(koc_name,{
@@ -419,59 +396,30 @@ define(['knockout',
 
                           newTile =new DashboardTile(self, koc_name, name, description, width, widget); 
                         }
-                    }else if (widget.category.id && widget.category.id !== 999) { //====new logic !==999
-                        var href = widget.href;
-                        var widgetDetails = null;
-                        $.ajax({
-                            url: href,
-                            headers: getAuthorizationRequestHeader(),
-                            success: function(data, textStatus) {
-                                widgetDetails = data;
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                console.log('Error when get widget details!');
-                            },
-                            async: false
-                        });
-
-                        if (widgetDetails){
-                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
-                               widget.parameters = {};
-                               for(var i=0;i<widgetDetails.parameters.length;i++){
-                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
-                               }
-                               koc_name =  widget.parameters["WIDGET_KOC_NAME"];
-                               template =  widget.parameters["WIDGET_TEMPLATE"];
-                               viewmodel =  widget.parameters["WIDGET_VIEWMODEL"];
-                               provider_name =  widget.parameters["PROVIDER_NAME"];
-                               provider_version =  widget.parameters["PROVIDER_VERSION"];
-                               provider_asset_root =  widget.parameters["PROVIDER_ASSET_ROOT"]; 
-                               widget_source = widget.parameters["WIDGET_SOURCE"];
-                            }                        
-                        }
+                    }else if (widget.WIDGET_GROUP_NAME !== 'Demo Analytics') { //====new logic !==999
                         var assetRoot = null;
                         //find KOC name for registration. if valid registration is not detected, use default one.
                         if (provider_name===undefined || provider_version===undefined || provider_asset_root===undefined){
-                            if (widget.category.id===1 || widget.category.id===2){
-                                provider_name =  "Dashboard Framework Integratino Demo";
+                            if (widget.WIDGET_GROUP_NAME==='Log Analytics' || widget.WIDGET_GROUP_NAME==='Target Analytics'){
+                                provider_name =  "Dashboard Framework Integration Demo";
                                 provider_version =  "0.1";
                                 provider_asset_root =  "assetRoot"; 
-                            }else if (widget.category.id===3){
+                            }else if (widget.WIDGET_GROUP_NAME==='IT Analytics'){
                                 
                             }                           
                         } 
                         
                         //TODO will remove below later on BEGIN
                         if (koc_name===null || koc_name===undefined || viewmodel===null || viewmodel===undefined || template===null || template===undefined){
-                            if (widget.category.id===1){
+                            if (widget.WIDGET_GROUP_NAME==='Log Analytics'){
                                 koc_name="demo-la-widget";
                                 viewmodel = "/demo/logAnalyticsWidget/js/demo-log-analytics.js";
                                 template ="/demo/logAnalyticsWidget/demo-log-analytics.html";
-                            }else if (widget.category.id===2){
+                            }else if (widget.WIDGET_GROUP_NAME==='Target Analytics'){
                                 koc_name="demo-ta-widget";
                                 viewmodel = "/demo/targetAnalyticsWidget/js/demo-target-analytics.js";
                                 template ="/demo/targetAnalyticsWidget/demo-target-analytics.html";                               
-                            }else if (widget.category.id===3){
+                            }else if (widget.WIDGET_GROUP_NAME==='IT Analytics'){
                                 koc_name="ita-widget";
                                 viewmodel = "/widgets/js/controller/qdg-component.js";
                                 template ="/widgets/html/qdg-component.html";                               
@@ -510,11 +458,36 @@ define(['knockout',
                                 }
 
                                 newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
-                                if (newTile && widget.category.id===3){
+                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
                                     var worksheetName = 'WS_4_QDG_WIDGET';
                                     var workSheetCreatedBy = 'sysman';
                                     var qdgId = 'chart1';
+                                    var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+                                    if (ssfUrl && ssfUrl !== '') {
+                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
+                                        var widgetDetails = null;
+                                        $.ajax({
+                                            url: href,
+                                            headers: getSavedSearchServiceRequestHeader(),
+                                            success: function(data, textStatus) {
+                                                widgetDetails = data;
+                                            },
+                                            error: function(xhr, textStatus, errorThrown){
+                                                console.log('Error when get widget details!');
+                                            },
+                                            async: false
+                                        });
 
+                                        if (widgetDetails){
+                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+                                               widget.parameters = {};
+                                               for(var i=0;i<widgetDetails.parameters.length;i++){
+                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
+                                               }
+                                            }                        
+                                        }
+                                    }
+                                    
                                     // specific parameters for ita which is required. Retrieve them from SSF
                                     if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
                                         worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
@@ -535,20 +508,21 @@ define(['knockout',
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
 
-                    } /*else  { 
-                       / **
+                    } 
+                    else  { 
+                       /**
                         * Category with id=999 is used for integration development purpose only
                         * Any widget with categoryId=999 is expected to registerwith absolute path (viewmodel & template)
-                        * /
-                        if (widget.WIDGET_KOC_NAME && widget.WIDGET_VIEWMODEL && widget.WIDGET_TEMPLATE){
-                            if (!ko.components.isRegistered(widget.WIDGET_KOC_NAME)) {
-                               ko.components.register(widget.WIDGET_KOC_NAME,{
-                                     viewModel:{require:widget.WIDGET_VIEWMODEL},
-                                     template:{require:'text!'+widget.WIDGET_TEMPLATE}
+                        */
+                        if (koc_name && viewmodel && template){
+                            if (!ko.components.isRegistered(koc_name)) {
+                               ko.components.register(koc_name,{
+                                     viewModel:{require:viewmodel},
+                                     template:{require:'text!'+template}
                                  }); 
-                               console.log("widget: "+widget.WIDGET_KOC_NAME+" is registered");
-                               console.log("widget template: "+assetRoot+widget.WIDGET_TEMPLATE);
-                               console.log("widget viewmodel:: "+assetRoot+widget.WIDGET_VIEWMODEL);    
+                               console.log("widget: "+koc_name+" is registered");
+                               console.log("widget template: "+template);
+                               console.log("widget viewmodel:: "+viewmodel);    
                            }
                            newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
                         }else{
@@ -557,13 +531,11 @@ define(['knockout',
                         }
                     }
                     if (newTile){
-                       self.tiles.push(newTile);
+                       self.dashboard.tiles.push(newTile);
                     }
                 }else{
                     console.error("Null widget passed to a tile");
-                }*/
-                if (newTile)
-                   self.dashboard.tiles.push(newTile);
+                }
 
                 //====end
                 
