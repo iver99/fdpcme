@@ -174,7 +174,7 @@ function(dsf, oj, ko, $, dfu)
         self.navigationsPopupModel = new navigationsPopupModel(); // should be removed when nav is ok
         self.comingsoonDialogModel = new comingsoonDialogModel();
         
-        self.pageSize = ko.observable(2);
+        self.pageSize = ko.observable(4);
         
         self.serviceURL = 'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7101/emlacore/resources/dashboards'; //'http://127.0.0.1:7001/emcpdf/resources/api/v1/dashboards'; // //
         
@@ -329,7 +329,7 @@ function(dsf, oj, ko, $, dfu)
             _dbsArray[0].image = "";
             _dbsArray[0].description = "test";
             var _e = $(".dbs-summary-container[aria-dashboard=\""+_dbsArray[0].id+"\"]");
-            _e.dbsDashboardPanel("refresh");*/
+            _e.dbsDashboardPanel("refresh");
             var that = this, _did = parseInt(dsb['dashboardId']);
             
             for (var _i = 0 ; _i < that.dbsArray.length; _i++)
@@ -345,11 +345,12 @@ function(dsf, oj, ko, $, dfu)
                     var _e = $(".dbs-summary-container[aria-dashboard=\""+_did+"\"]");
                     if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
                 }
-            }
+            }*/
         };
         
         self.getDashboard = function (id)
         {
+            /*
             if (id !== 0 && !id) return null;
             for (var _i = 0 ; _i < self.dbsArray.length; _i++)
             {
@@ -357,7 +358,7 @@ function(dsf, oj, ko, $, dfu)
                 {
                     return self.dbsArray[_i];
                 }
-            }
+            }*/
         };
         
         self.addToFavorites = function (id)

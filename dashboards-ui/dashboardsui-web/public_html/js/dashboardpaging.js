@@ -109,22 +109,12 @@ DashboardPaging.prototype._refreshObservableDataWindow = function() {
 
 
 
-/**
- * @export
- * Return the current set of data in the paging window
- * 
- * @returns {Array} the current set of data in the paging window
- */
+
 DashboardPaging.prototype.getWindow = function() {
     return this.dataWindow;
 };
 
-/**
- * @export
- * Get the observable array representing the current set of data in the paging window
- * 
- * @returns {Object} an observable array representing the current data in the paging window
- */
+
 DashboardPaging.prototype.getWindowObservable = function() {
     if (this.observableDataWindow === undefined) {
         this.observableDataWindow = ko.observableArray();
@@ -179,7 +169,7 @@ DashboardPaging.prototype.remove = function(model, options)
     $.ajax({
        url: model.get('href'),
        type: 'DELETE',
-       headers: {"X-USER-IDENTITY-DOMAIN": getSecurityHeader()},
+       headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {
           // Do something with the result
           self.collection.remove(model);
@@ -278,27 +268,13 @@ DashboardPaging.prototype.handleEvent = function(eventType, event)
     DashboardPaging.superclass.handleEvent.call(this, eventType, event);
 };
 
-/**
- * @export
- * Return whether there is more data which can be fetched.
- * @returns {boolean} whether there is more data
- * @expose
- * @memberof! DashboardPaging
- * @instance
- */
+
 DashboardPaging.prototype.hasMore = function()
 {
   return this.startIndex() + this.pageSize < this.totalSize();
 };
 
-/**
- * Calls fetch for the next page of data. No-op if no more data.
- * @throws {Error}
- * @export
- * @expose
- * @memberof! DashboardPaging
- * @instance
- */
+
 DashboardPaging.prototype.next = function()
 {
     if (!this.hasMore()) {
@@ -313,14 +289,7 @@ DashboardPaging.prototype.next = function()
                 self._processSuccess(null)});
 };
 
-/**
- * Calls fetch for the previous page of data. No-op if at the beginning.
- * @throws {Error}
- * @export
- * @expose
- * @memberof! DashboardPaging
- * @instance
- */
+
 DashboardPaging.prototype.previous = function()
 {
     if (this.startIndex() - this.pageSize < 0) {
@@ -335,11 +304,7 @@ DashboardPaging.prototype.previous = function()
                 self._processSuccess(null)});
 };
 
-/**
- * Set or change the number of models in a page
- * 
- * @param {number} n page size
- */
+
 DashboardPaging.prototype.setPageSize = function(n)
 {
   this.pageSize = n;
@@ -349,42 +314,20 @@ DashboardPaging.prototype.setFetchCallback = function(callback) {
     this.fetchCallback = callback;
 };
 
-/**
- * @export
- * Return current start index. -1 if initial fetch has not been done yet.
- * @returns {number} start index
- * @expose
- * @memberof! DashboardPaging
- * @instance
- */
+
 DashboardPaging.prototype.startIndex = function()
 {
   return this.current;
 };
 
-/**
- * @export
- * Return the size of the data locally in the dataSource. -1 if an initial fetch has not been
- * done yet.
- * @returns {number} size of data
- * @expose
- * @memberof! DashboardPaging
- * @instance
- */
+
 DashboardPaging.prototype.size = function()
 {
   var w = this.getWindow();
   return w ? w.length : 0;
 };
 
-/**
- * @export
- * Return the total size of data available, including server side if not local.
- * @returns {number} total size of data
- * @expose
- * @memberof! DashboardPaging
- * @instance
- */
+
 DashboardPaging.prototype.totalSize = function()
 {
     return this.collection.length;

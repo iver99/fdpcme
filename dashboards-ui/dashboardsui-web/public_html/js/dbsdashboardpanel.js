@@ -192,7 +192,8 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createHeader: function() {
-            var self = this, _element = self.element, _name = self.name, _isSys = self.options.dashboard['systemDashboard']; 
+            var self = this, _element = self.element, _name = self.name, 
+                     _isSys = self.options.dashboard['systemDashboard']; 
             var _title = (self.options['dashboard']) ? self._truncateString(self.options['dashboard'].name, TITLE_MAX_LENGTH) : '';
             
             self.headerElement = $("<div></div>").addClass(self.classNames['headerContainer']);
@@ -244,7 +245,7 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createContentPages: function() {
-            var self = this, _dashboard = self.options['dashboard'], 
+            var self = this, _dashboard = self.options['dashboard'], _dmodel = self.options.dashboardModel,
                     _wdts = _dashboard['widgets'] || _dashboard['tiles'];
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
@@ -255,17 +256,24 @@ $.widget('dbs.dbsDashboardPanel',
             self.contentPage1Ele.append(self.contentPage1ImgEle);
             
             
-            if (_dashboard['screenShot'])
+            if (_dmodel['screenShot'])
             {
-                self.contentPage1ImgEle.attr("src", _dashboard['screenShot']);
+                var _ss = _dmodel['screenShot'];
+                self.contentPage1ImgEle.attr("src", _ss);
             }
             else {
               $.ajax({
                    //This will be a page which will return the base64 encoded string
                    url: self.options['dashboard']['screenShotHref'], 
-                   headers: {"X-USER-IDENTITY-DOMAIN": getSecurityHeader()},//Pass the required header information
+                   headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
                    success: function(response){
-                       self.contentPage1ImgEle.attr("src", response);
+                       var __ss = response;
+                       self.contentPage1ImgEle.attr("src", __ss);
+                       if (_dmodel && __ss)
+                       {
+                           //_dmodel.set("screenShot", _ss);
+                           _dmodel['screenShot'] = __ss;
+                       }
                    },
                    error : function(jqXHR, textStatus, errorThrown) {
                     //console.log("Load image error");

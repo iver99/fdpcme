@@ -15,7 +15,7 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/min',
+        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/debug',
         'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
         'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
         'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',

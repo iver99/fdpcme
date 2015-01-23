@@ -42,7 +42,7 @@ function(dm, oj, ko, $)
             console.log("[DashboardCollection] operation: "+ _operation +"  "+__url + " \n      Header: "+getSecurityHeader()); //return __url;
             return {
                     url: __url,
-                    headers: {"X-USER-IDENTITY-DOMAIN": getSecurityHeader()}//Pass the required header information
+                    headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()}//Pass the required header information
                };
         };
         

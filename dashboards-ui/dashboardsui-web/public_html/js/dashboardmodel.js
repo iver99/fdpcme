@@ -10,6 +10,8 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'], fu
 
     DashboardModel = function(attrs, options) {
         var self = this, _attrs = attrs, _options = options || {};
+        this.screenShot = undefined;
+        
         //_options['idAttribute'] = "id";
         
         var _customURL = function(_operation, _col, _opt) {
@@ -23,7 +25,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'], fu
             console.log("[DashboardModel] operation: "+ _operation +"  "+__url + " \n      Header: "+getSecurityHeader()); //return __url;
             return {
                     url: __url,
-                    headers: {"X-USER-IDENTITY-DOMAIN": getSecurityHeader()}//Pass the required header information
+                    headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()}//Pass the required header information
                };
         };
         _options['customURL'] = _customURL;
