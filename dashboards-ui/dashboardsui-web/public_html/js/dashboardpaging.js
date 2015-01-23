@@ -139,6 +139,7 @@ DashboardPaging.prototype.create = function(attributes, options)
                         'forceNew': true,
                         success: function (model, resp, options) {
                             self._fetch(opts);
+                            model.openDashboardPage();
                            /*
                            self.collection.add(model, {at: 0, merge: true}).then(function(val){
                                 self._refreshDataWindow().then(function() {

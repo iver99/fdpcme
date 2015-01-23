@@ -312,7 +312,7 @@ function getNlsString(key, args) {
 };
 
 function getSecurityHeader() {
-    return "test";
+    return "TenantOPC1";
 };
 
 function discoverSavedSearchServiceUrl() {

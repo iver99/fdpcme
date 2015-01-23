@@ -174,7 +174,7 @@ function(dsf, oj, ko, $, dfu)
         self.navigationsPopupModel = new navigationsPopupModel(); // should be removed when nav is ok
         self.comingsoonDialogModel = new comingsoonDialogModel();
         
-        self.pageSize = ko.observable(4);
+        self.pageSize = ko.observable(20);
         
         self.serviceURL = 'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7101/emlacore/resources/dashboards'; //'http://127.0.0.1:7001/emcpdf/resources/api/v1/dashboards'; // //
         
