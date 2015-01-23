@@ -68,7 +68,7 @@ public class PropertyReader
 
 	private static final boolean RUNNING_IN_CONTAINER = PropertyReader.getRunningInContainer();
 
-	public static final String CONFIG_DIR = "/opt/ORCLemaas/Applications/dashboardFramework/api";//getInstallDir() + "config";
+	public static final String CONFIG_DIR = "/opt/ORCLemaas/Applications/DashboardService-API/init";//getInstallDir() + "config";
 
 	public static final String SERVICE_PROPS = "servicemanager.properties";
 }
