@@ -44,7 +44,7 @@ public class FavoriteAPI extends APIBase
 
 	@POST
 	@Path("{id: [1-9][0-9]*}")
-	public Response addOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+	public Response addOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
@@ -60,7 +60,7 @@ public class FavoriteAPI extends APIBase
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
-	public Response deleteOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+	public Response deleteOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
@@ -76,7 +76,7 @@ public class FavoriteAPI extends APIBase
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllFavoriteDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam)
+	public Response getAllFavoriteDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
 	{
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
@@ -100,7 +100,7 @@ public class FavoriteAPI extends APIBase
 	@GET
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response isFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN") String tenantIdParam,
+	public Response isFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
