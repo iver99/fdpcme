@@ -359,7 +359,7 @@ public class DashboardManager
 
 	/**
 	 * Check if the dashboard with spacified id is favorite dashboard or not
-	 * 
+	 *
 	 * @param dashboardId
 	 * @param tenantId
 	 * @return
@@ -437,8 +437,8 @@ public class DashboardManager
 			boolean ic) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
-			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(MessageUtils
-					.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET)));
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET));
 		}
 		int firstResult = 0;
 		if (offset != null) {
@@ -446,8 +446,8 @@ public class DashboardManager
 		}
 
 		if (pageSize != null && pageSize <= 0) {
-			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(MessageUtils
-					.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT)));
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_LIMIT));
 		}
 		int maxResults = DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT;
 		if (pageSize != null) {
@@ -480,18 +480,18 @@ public class DashboardManager
 			}
 
 			if (!ic) {
-				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where t.title like :tileTitle ) ");
+				sb.append(" or p.dashboardId in (select t.dashboard.dashboardId from EmsDashboardTile t where t.title like :tileTitle ) ");
 				paramMap.put("tileTitle", "%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p in (select t.dashboard from EmsDashboardTile t where lower(t.title) like :tileTitle ) ");
+				sb.append(" or p.dashboardId in (select t.dashboard.dashboardId from EmsDashboardTile t where lower(t.title) like :tileTitle ) ");
 				paramMap.put("tileTitle", "%" + queryString.toLowerCase(locale) + "%");
 			}
 			sb.append(" or lower(p.owner) = :owner)");
 			paramMap.put("owner", queryString.toLowerCase(locale));
 			sb.append(" and p.deleted = 0 ");
 		}
-		sb.append(" order by CASE WHEN lae.accessDate IS NULL THEN 1 ELSE 0 END, lae.accessDate DESC, p.dashboardId DESC");
+		sb.append(" order by CASE WHEN lae.accessDate IS NULL THEN 0 ELSE 1 END DESC, lae.accessDate DESC, p.dashboardId DESC");
 		StringBuilder sbQuery = new StringBuilder(sb);
 		sbQuery.insert(0, "select p ");
 		String jpqlQuery = sbQuery.toString();

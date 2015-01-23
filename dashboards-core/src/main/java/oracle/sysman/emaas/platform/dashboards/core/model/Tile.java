@@ -128,7 +128,7 @@ public class Tile
 	@JsonProperty("WIDGET_UNIQUE_ID")
 	private String widgetUniqueId;
 
-	@JsonProperty("WIDGET_VIEW_MODEL")
+	@JsonProperty("WIDGET_VIEWMODEL")
 	private String widgetViewmode;
 
 	private Integer width;
@@ -306,7 +306,7 @@ public class Tile
 			to.setProviderName(providerName);
 			to.setProviderVersion(providerVersion);
 			to.setTitle(title);
-			to.setWidgetCreationTime(widgetCreationTime);
+			//			to.setWidgetCreationTime(widgetCreationTime);
 			to.setWidgetDescription(widgetDescription);
 			to.setWidgetGroupName(widgetGroupName);
 			to.setWidgetHistogram(widgetHistogram);
@@ -318,7 +318,7 @@ public class Tile
 			to.setWidgetTemplate(widgetTemplate);
 			to.setWidgetUniqueId(widgetUniqueId);
 			to.setWidgetViewmode(widgetViewmode);
-			to.setWidth(intIsMaximized);
+			to.setWidth(width);
 			updateEmsDashboardTileParams(parameters, to);
 		}
 		return to;

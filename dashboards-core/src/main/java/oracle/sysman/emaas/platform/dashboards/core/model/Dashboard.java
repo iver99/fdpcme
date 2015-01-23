@@ -117,6 +117,7 @@ public class Dashboard
 		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
+		isSystem = Boolean.FALSE;
 	}
 
 	public Tile addTile(Tile tile)
@@ -187,7 +188,7 @@ public class Dashboard
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
 	{
 		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
-		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem == null);
+		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,

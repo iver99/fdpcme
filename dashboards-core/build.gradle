@@ -1,6 +1,17 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/java'
+        }
+    }
+}
+
 task runDEVTestSuite(type: Test){
         useTestNG(){
         useDefaultListeners = true
