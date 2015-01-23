@@ -176,7 +176,7 @@ function(dsf, oj, ko, $, dfu)
         
         self.pageSize = ko.observable(20);
         
-        self.serviceURL = 'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7101/emlacore/resources/dashboards'; //'http://127.0.0.1:7001/emcpdf/resources/api/v1/dashboards'; // //
+        self.serviceURL = 'http://slc00bqs.us.oracle.com:7021/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7101/emlacore/resources/dashboards'; //'http://127.0.0.1:7001/emcpdf/resources/api/v1/dashboards'; // //
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
         self.dashboards = ko.computed(function() {
