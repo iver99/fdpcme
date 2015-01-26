@@ -67,7 +67,7 @@ public class ConfigurationAPI
 		}
 	}
 
-	private static final String SERVICEMANAGER_FILE = "/opt/ORCLemaas/Applications/dashboardFramework/ui/servicemanager.properties";
+	private static final String SERVICEMANAGER_FILE = "/opt/ORCLemaas/Applications/DashboardService-UI/init/servicemanager.properties";
 
 	private static final Response responseRegistration;
 	private static final Response responseRegistrationError = Response.status(Status.NOT_FOUND)

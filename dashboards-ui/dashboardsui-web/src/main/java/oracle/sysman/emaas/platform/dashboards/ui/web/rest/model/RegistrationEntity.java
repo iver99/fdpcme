@@ -10,6 +10,8 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.web.rest.model;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+
 /**
  * @author miao
  */
@@ -27,6 +29,14 @@ public class RegistrationEntity
 		setRegistryUrls(regValue);
 		setSsfServiceName(ssfServiceName);
 		setSsfVersion(ssfVersion);
+	}
+
+	/**
+	 * @return the authorizationHeader
+	 */
+	public String getAuthToken()
+	{
+		return new String(RegistrationManager.getInstance().getAuthorizationToken());
 	}
 
 	/**
