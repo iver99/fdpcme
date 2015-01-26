@@ -504,6 +504,7 @@ define(['knockout',
                         }
                         tilesViewModel.dashboard.screenShot = ko.observable(data);
                         var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
+                            'include': ['screenShot'],
                             'ignore': ["createdOn", "href", "owner", 
                                 "screenShotHref", "systemDashboard", "type",
                                 "customParameters", "clientGuid", "dashboard", 
