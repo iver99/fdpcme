@@ -7,10 +7,11 @@ define([
     'ojs/ojcore',
     'knockout',
     'jquery',
+    'dfutil',
     'ojs/ojknockout',
     'ojs/ojselectcombobox'
 ],
-        function (oj, ko, $)
+        function (oj, ko, $, dfu)
         {
             function OnePageModel(params) {
                 var self = this;
@@ -22,7 +23,7 @@ define([
                 var providerAssetRoot = tile.widget["PROVIDER_ASSET_ROOT"];
 
                 if (providerName && providerVersion && providerAssetRoot) {
-                    self.fullUrl = ko.observable(df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
+                    self.fullUrl = ko.observable(dfu.df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
                 } else { //TODO: delete
                     var uniqueId = tile["WIDGET_UNIQUE_ID"];
                     //query from SSF category to get data for URL retrieval
@@ -30,7 +31,7 @@ define([
                     providerName = "Sample Provider";
                     providerVersion = "0.1"; //TODO
                     providerAssetRoot = "home"; //TODO
-                    self.fullUrl = ko.observable(df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
+                    self.fullUrl = ko.observable(dfu.df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
                 }
                 if (self.fullUrl()){
                     var url = self.fullUrl();
