@@ -10,8 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -227,23 +229,47 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		logger.info("Post-starting 'Service Registry' application service");
-		String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
-		logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
+		String applicationUrlHttp = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
+		logger.debug("Application URL(http) to register with 'Service Registry': " + applicationUrlHttp);
+		String applicationUrlHttps = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
+		logger.debug("Application URL(https) to register with 'Service Registry': " + applicationUrlHttps);
 
 		logger.info("Building 'Service Registry' configuration");
 		Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
-		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-				.virtualEndpoints(applicationUrl + NAV_CONTEXT_ROOT).canonicalEndpoints(applicationUrl + NAV_CONTEXT_ROOT)
-				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
+		StringBuilder virtualEndPoints = new StringBuilder();
+		StringBuilder canonicalEndPoints = new StringBuilder();
+		if (applicationUrlHttp != null) {
+			virtualEndPoints.append(applicationUrlHttp + NAV_CONTEXT_ROOT);
+			canonicalEndPoints.append(applicationUrlHttp + NAV_CONTEXT_ROOT);
+		}
+		if (applicationUrlHttps != null) {
+			if (virtualEndPoints.length() > 0) {
+				virtualEndPoints.append(",");
+				canonicalEndPoints.append(",");
+			}
+			virtualEndPoints.append(applicationUrlHttps + NAV_CONTEXT_ROOT);
+			canonicalEndPoints.append(applicationUrlHttps + NAV_CONTEXT_ROOT);
+		}
+
+		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
+		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
-		InfoManager.getInstance().getInfo()
-				.setLinks(Arrays.asList(new Link().withRel("base").withHref(applicationUrl + NAV_API_BASE)));
+		List<Link> links = new ArrayList<Link>();
+		if (applicationUrlHttp != null) {
+			links.add(new Link().withRel("base").withHref(applicationUrlHttp + NAV_API_BASE));
+		}
+
+		if (applicationUrlHttps != null) {
+			links.add(new Link().withRel("base").withHref(applicationUrlHttps + NAV_API_BASE));
+		}
+		InfoManager.getInstance().getInfo().setLinks(links);
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();

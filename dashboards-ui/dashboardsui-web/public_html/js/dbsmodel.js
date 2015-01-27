@@ -69,7 +69,7 @@ function(dsf, oj, ko, $, dfu)
     function navigationsPopupModel() {
         var self = this;
         self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
-        self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";
+        self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";//TODO
         self.quickLinks = ko.observableArray(dfu.discoverQuickLinks());
         self.favorites = ko.observableArray();
         self.recents = ko.observableArray();
@@ -176,7 +176,7 @@ function(dsf, oj, ko, $, dfu)
         
         self.pageSize = ko.observable(20);
         
-        self.serviceURL = 'http://slc00bqs.us.oracle.com:7021/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards';//'http://slc04wjl.us.oracle.com:7101/emlacore/resources/dashboards'; //'http://127.0.0.1:7001/emcpdf/resources/api/v1/dashboards'; // //
+        self.serviceURL = dfu.discoverDFRestApiUrl()+"dashboards";
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
         self.dashboards = ko.computed(function() {

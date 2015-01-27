@@ -36,7 +36,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.notice("Post-starting registered application services");
+		logger.notice("Post-starting registered Dashboard Framework REST API services");
 		try {
 			logger.info("Post-starting 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
@@ -56,7 +56,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.notice("Post-stopping registered application services");
+		logger.notice("Post-stopping registered Dashboard Framework REST API services");
 		try {
 			logger.info("Post-stopping 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
@@ -76,7 +76,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.debug("Pre-starting registered application services");
+		logger.debug("Pre-starting registered Dashboard Framework REST API services");
 		try {
 			logger.info("Pre-starting 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {
@@ -96,7 +96,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
-		logger.debug("Pre-stopping registered application services");
+		logger.debug("Pre-stopping registered Dashboard Framework REST API services");
 		try {
 			logger.info("Pre-stopping 'Service Registry'");
 			for (ApplicationServiceManager service : registeredServices) {

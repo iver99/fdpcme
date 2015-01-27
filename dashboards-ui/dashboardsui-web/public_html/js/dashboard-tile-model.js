@@ -468,7 +468,7 @@ define(['knockout',
                                         var widgetDetails = null;
                                         $.ajax({
                                             url: href,
-                                            headers: getSavedSearchServiceRequestHeader(),
+                                            headers: dfu.getSavedSearchServiceRequestHeader(),
                                             success: function(data, textStatus) {
                                                 widgetDetails = data;
                                             },

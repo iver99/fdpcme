@@ -10,8 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -228,27 +230,49 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		logger.info("Post-starting 'Service Registry' application service");
-		String applicationUrl = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
-		logger.debug("Application URL to register with 'Service Registry': " + applicationUrl);
+		String applicationUrlHttp = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
+		logger.debug("Application URL(http) to register with 'Service Registry': " + applicationUrlHttp);
+		String applicationUrlHttps = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
+		logger.debug("Application URL(https) to register with 'Service Registry': " + applicationUrlHttps);
 
 		logger.info("Building 'Service Registry' configuration");
 		Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
-		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-		.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
+		StringBuilder virtualEndPoints = new StringBuilder();
+		StringBuilder canonicalEndPoints = new StringBuilder();
+		if (applicationUrlHttp != null) {
+			virtualEndPoints.append(applicationUrlHttp + NAV_BASE);
+			canonicalEndPoints.append(applicationUrlHttp + NAV_BASE);
+		}
+		if (applicationUrlHttps != null) {
+			if (virtualEndPoints.length() > 0) {
+				virtualEndPoints.append(",");
+				canonicalEndPoints.append(",");
+			}
+			virtualEndPoints.append(applicationUrlHttps + NAV_BASE);
+			canonicalEndPoints.append(applicationUrlHttps + NAV_BASE);
+		}
+
+		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
+		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
 		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
-		InfoManager
-		.getInstance()
-		.getInfo()
-		.setLinks(
-				Arrays.asList(new Link().withRel("home").withHref(applicationUrl + NAV_BASE_HOME),
-						new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrl + NAV_QUICK_LINK)));
+		List<Link> links = new ArrayList<Link>();
+		if (applicationUrlHttp != null) {
+			links.add(new Link().withRel("home").withHref(applicationUrlHttp + NAV_BASE_HOME));
+			links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
+		}
+		if (applicationUrlHttps != null) {
+			links.add(new Link().withRel("home").withHref(applicationUrlHttps + NAV_BASE_HOME));
+			links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
+		}
+
+		InfoManager.getInstance().getInfo().setLinks(links);
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
