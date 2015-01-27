@@ -247,9 +247,9 @@ define(['knockout',
         }
         
         function getBaseUrl() {
-//            return "http://slc04pxi.us.oracle.com:7001";
+            return "http://slc04pxi.us.oracle.com:7001";//TODO
 //            return "http://localhost:7001";
-            return "http://slc00bqs.us.oracle.com:7021";
+//            return "http://slc00bqs.us.oracle.com:7021";
         }
         
         function getDefaultHeaders() {
