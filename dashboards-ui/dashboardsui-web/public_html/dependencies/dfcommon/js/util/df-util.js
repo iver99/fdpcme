@@ -274,10 +274,14 @@ define(['knockout',
                 return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN":"TenantOPC1"};//TODO
             };  
             
+            self.getDashboardsRequestHeader=function() {
+                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"TenantOPC1"};//TODO
+            };  
+            
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 return 'api/configurations/registration';
-            //    return 'data/servicemanager.json';
+                //return 'data/servicemanager.json';
             }
 
             /**

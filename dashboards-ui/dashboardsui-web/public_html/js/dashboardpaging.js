@@ -1,5 +1,5 @@
-define(['ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model'],
-       function(oj, $, ko)
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'ojs/ojknockout-model'],
+       function(dfu, oj, $, ko)
 {
 
 /**
@@ -170,7 +170,7 @@ DashboardPaging.prototype.remove = function(model, options)
     $.ajax({
        url: model.get('href'),
        type: 'DELETE',
-       headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+       headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {
           // Do something with the result
           self.collection.remove(model);
