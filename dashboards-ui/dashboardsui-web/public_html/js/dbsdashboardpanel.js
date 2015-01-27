@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojs/ojcore', 'jquery', 'knockout','jqueryui', 'ojs/ojknockout-model'], 
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout','jqueryui', 'ojs/ojknockout-model'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
         */
-function(oj, $, ko)
+function(dfu, oj, $, ko)
 {
     
 (function ()
@@ -265,7 +265,7 @@ $.widget('dbs.dbsDashboardPanel',
               $.ajax({
                    //This will be a page which will return the base64 encoded string
                    url: self.options['dashboard']['screenShotHref'], 
-                   headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
+                   headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
                    success: function(response){
                        var __ss = response;
                        self.contentPage1ImgEle.attr("src", __ss);
