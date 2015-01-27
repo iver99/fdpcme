@@ -245,6 +245,17 @@ public class DashboardCRUD
 			Assert.assertEquals(res4.jsonPath().getString("tiles"), "[]");
 			System.out.println("											");
 
+			System.out.println("Verify that the created dashboard can't be queried by other tenant");
+			Response res4_1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "Authorization", authToken).when()
+					.get("/dashboards/" + dashboard_id);
+			System.out.println(res4_1.asString());
+			System.out.println("Status code is:  " + res4_1.getStatusCode());
+			Assert.assertTrue(res4_1.getStatusCode() == 404);
+			Assert.assertEquals(res4_1.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res4_1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+
 			System.out.println("Verify that creating dashbaord with existed Id won't be successful");
 			String jsonString2 = "{ \"id\":" + dashboard_id + ",\"name\": \"Dashboard_with_existed_ID\"}";
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
@@ -802,5 +813,77 @@ public class DashboardCRUD
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
 		}
+	}
+
+	@Test
+	public void multi_tentent_queryupdatedelete()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new dashboard");
+
+			String jsonString1 = "{ \"name\":\"Test_Dashboard_multitenant\"}";
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).body(jsonString1).when()
+					.post("/dashboards");
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("											");
+
+			dashboard_id = res1.jsonPath().getString("id");
+
+			System.out.println("Verify that the created dashboard can't be queried by other tenant...");
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "Authorization", authToken).when()
+					.get("/dashboards/" + dashboard_id);
+			System.out.println(res2.asString());
+			System.out.println("Status code is:  " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 404);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+
+			System.out.println("Verify that the created dashboard can't be update by other tenant...");
+			String jsonString2 = "{ \"name\":\"Test_Dashboard_multitenant\"}";
+			Response res3 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "Authorization", authToken).body(jsonString2).when()
+					.put("/dashboards/" + dashboard_id);
+			System.out.println(res3.asString());
+			System.out.println("Status code is:  " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 404);
+			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+
+			System.out.println("Verify that the created dashboard can't be deleted by other tenant...");
+			Response res4 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "Authorization", authToken).when()
+					.delete("/dashboards/" + dashboard_id);
+			System.out.println(res4.asString());
+			System.out.println("Status code is:  " + res4.getStatusCode());
+			Assert.assertTrue(res4.getStatusCode() == 404);
+			Assert.assertEquals(res4.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res4.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).when()
+						.delete("/dashboards/" + dashboard_id);
+				System.out.println(res5.asString());
+				System.out.println("Status code is: " + res5.getStatusCode());
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
+		}
+
 	}
 }
