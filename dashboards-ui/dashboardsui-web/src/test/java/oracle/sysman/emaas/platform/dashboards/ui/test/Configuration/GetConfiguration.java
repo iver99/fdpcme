@@ -49,7 +49,8 @@ public class GetConfiguration
 			System.out.println("GET details of service manager properties");
 			System.out.println("											");
 
-			Response res = RestAssured.given().log().everything().when().get("/configurations/registration");
+			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when()
+					.get("/configurations/registration");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
