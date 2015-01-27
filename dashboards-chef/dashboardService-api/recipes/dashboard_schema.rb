@@ -93,7 +93,7 @@ echo "running the script now" >> #{node["log_dir"]}/dashboardServiceDatasource.l
 echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/dashboardServiceDatasource.log
 echo "CWD:" >> #{node["log_dir"]}/dashboardServiceDatasource.log
 pwd >> #{node["log_dir"]}/dashboardServiceDatasource.log
-for file in emaas_dashboards_init.sql
+for file in emaas_dashboards_create.sql
 do
 #{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/#{node["SAAS_schema_password"]}@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]} << eof_sql > #{node["log_dir"]}/dashboardServicesql.txt 2>&1 >> #{node["log_dir"]}/dashboardServiceDatasource.log
 @$file
