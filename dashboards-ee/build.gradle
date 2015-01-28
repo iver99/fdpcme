@@ -37,6 +37,8 @@ dependencies
 	earlib (group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3') {transitive=false}
 	earlib (group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.5') {transitive=false}
 	earlib (group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.1') {transitive=false}
+	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.1') {transitive=false}
+	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.1') {transitive=false}
 }
 
 // All WLS Related things
