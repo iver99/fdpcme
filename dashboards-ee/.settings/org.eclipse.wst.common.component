@@ -10,10 +10,13 @@
         <dependent-module archiveName="registry-client-0.23.5.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-0.23.5.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="emaas-platform-tenant-sdk-0.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="dashboards-core.jar" deploy-path="/lib" handle="module:/resource/dashboards-core/dashboards-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dashboards-web.war" deploy-path="/" handle="module:/resource/dashboards-web/dashboards-web">
+	<dependent-module archiveName="dashboards-web.war" deploy-path="/" handle="module:/resource/dashboards-web/dashboards-web">
             <dependent-object/>
             <dependency-type>uses</dependency-type>
         </dependent-module>

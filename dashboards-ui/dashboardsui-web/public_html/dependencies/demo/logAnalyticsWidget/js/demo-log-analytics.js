@@ -101,7 +101,7 @@ define([
             
             function fetchResults() {
                 $.ajax({type: 'POST', contentType:'application/json',url: qlBaseUrl+'jobs', data: ko.toJSON(queryString),
-                    headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1","Authorization":getAuthorizationRequestHeader().Authorization},
+                    headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1","Authorization":dfu.getAuthorizationRequestHeader().Authorization},
                     success: function(data, textStatus){
                         var resultsUrl = qlBaseUrl + data.job.queries.demoEMQLVizQuery.resultsLink; 
                         $.ajax({type: 'GET', contentType:'application/json',url: resultsUrl,

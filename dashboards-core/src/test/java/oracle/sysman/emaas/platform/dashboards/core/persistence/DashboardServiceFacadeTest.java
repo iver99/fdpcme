@@ -217,7 +217,8 @@ public class DashboardServiceFacadeTest
 	public void setUp() throws Exception
 	{
 		PersistenceManager.setTestEnv(true);
-		dashboardServiceFacade = new DashboardServiceFacade("mytenant");
+		// tenant id updated to number type
+		dashboardServiceFacade = new DashboardServiceFacade(111L);
 		d = DashboardServiceFacadeTest.newDashboard();
 		t = DashboardServiceFacadeTest.newTile();
 		p = DashboardServiceFacadeTest.newTileParams();

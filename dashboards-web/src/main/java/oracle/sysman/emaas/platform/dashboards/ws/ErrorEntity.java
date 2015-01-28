@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardErrorConstants;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
@@ -31,6 +32,14 @@ public class ErrorEntity
 	public ErrorEntity()
 	{
 
+	}
+
+	public ErrorEntity(BasicServiceMalfunctionException e)
+	{
+		if (e != null) {
+			errorCode = DashboardErrorConstants.DASHBOARD_COMMON_SECURITY_ERROR_CODE;
+			errorMessage = e.getLocalizedMessage();
+		}
 	}
 
 	public ErrorEntity(DashboardException de)

@@ -21,7 +21,7 @@ public class DashboardServiceFacade
 {
 	private final EntityManager em;
 
-	public DashboardServiceFacade(String tenantId)
+	public DashboardServiceFacade(Long tenantId)
 	{
 		final EntityManagerFactory emf = PersistenceManager.getInstance().getEntityManagerFactory();
 		em = emf.createEntityManager();
@@ -139,7 +139,7 @@ public class DashboardServiceFacade
 		commitTransaction();
 		return entity;
 	}
-    
+
 	@SuppressWarnings("rawtypes")
 	public List queryByRange(String jpqlStmt, Class resultClass, Map<String, Object> params, int firstResult, int maxResults)
 	{

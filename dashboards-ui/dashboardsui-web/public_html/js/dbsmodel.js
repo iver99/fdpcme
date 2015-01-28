@@ -122,6 +122,7 @@ function(dsf, oj, ko, $, dfu)
         self.confirmDialogModel = new confirmDialogModel();
         self.navigationsPopupModel = new navigationsPopupModel(); // should be removed when nav is ok
         self.comingsoonDialogModel = new comingsoonDialogModel();
+        self.navLinksNeedRefresh = ko.observable(false);
         
         self.pageSize = ko.observable(20);
         

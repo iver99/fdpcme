@@ -67,7 +67,7 @@ public class EmsDashboard implements Serializable
 	@Column(name = "SCREEN_SHOT", columnDefinition = "CLOB NULL")
 	private String screenShot;
 	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
-	private String tenantId;
+	private Long tenantId;
 	@Column(nullable = false)
 	private Integer type;
 
@@ -167,7 +167,7 @@ public class EmsDashboard implements Serializable
 		return screenShot;
 	}
 
-	public String getTenantId()
+	public Long getTenantId()
 	{
 		return tenantId;
 	}
@@ -239,7 +239,7 @@ public class EmsDashboard implements Serializable
 		this.screenShot = screenShot;
 	}
 
-	public void setTenantId(String tenantId)
+	public void setTenantId(Long tenantId)
 	{
 		this.tenantId = tenantId;
 	}

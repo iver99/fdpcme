@@ -247,13 +247,13 @@ define(['knockout',
         }
         
         function getBaseUrl() {
-//            return "http://slc04pxi.us.oracle.com:7001";
+            return "http://slc04pxi.us.oracle.com:7001";//TODO
 //            return "http://localhost:7001";
-            return "http://slc00bqs.us.oracle.com:7021";
+//            return "http://slc00bqs.us.oracle.com:7021";
         }
         
         function getDefaultHeaders() {
-            return {'Content-type': 'application/json', 'X-USER-IDENTITY-DOMAIN-NAME': 'TenantOPC1'};
+            return {'Content-type': 'application/json', 'X-USER-IDENTITY-DOMAIN-NAME': 'TenantOPC1',"Authorization": dfu.getAuthToken()};
         }
         
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
@@ -444,7 +444,7 @@ define(['knockout',
                                 newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
                              }else if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
-                                    var assetRoot = df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
+                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
                                     if (assetRoot===null){
                                         console.error("Unable to find asset root: PROVIDER_NAME=["+providerName+"], PROVIDER_VERSION=["+providerVersion+"], PROVIDER_ASSET_ROOT=["+providerAssetRoot+"]");
                                     }

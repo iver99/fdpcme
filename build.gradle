@@ -65,6 +65,7 @@ configurations {
 	prebuild_jaxrs { transitive = false }
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
+	prebuild_tenant { transitive = false }
 
 }
 
@@ -108,6 +109,8 @@ dependencies {
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.1'
 	prebuild_wlfullc 'test:wlfullclient:2.6'
+	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.1'
+			'emaas.platform:registry-lookup-client:0.23.5'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -123,6 +126,7 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_jaxrs
    from configurations.prebuild_testng
    from configurations.prebuild_wlfullc
+   from configurations.prebuild_tenant
    into "$afDir"
 }
 
