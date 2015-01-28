@@ -114,8 +114,8 @@ define(['knockout',
                 });
 
                 $.ajaxSettings.async = true;
-//                return availableUrl;
-                return "http://slc04pxi.us.oracle.com:7001/savedsearch/v1";//TODO
+                return availableUrl;
+//                return "http://slc04pxi.us.oracle.com:7001/savedsearch/v1";//TODO
             };
 
             /**
@@ -195,8 +195,8 @@ define(['knockout',
                 });
 
                 $.ajaxSettings.async = true;
-//                return availableUrl;
-                return "http://slc04pxi.us.oracle.com:7001/emcpdf/api/v1/";//TODO
+                return availableUrl;
+//                return "http://slc04pxi.us.oracle.com:7001/emcpdf/api/v1/";//TODO
             };
             
             self.formatUTCDateTime = function(dateString) {
@@ -261,8 +261,8 @@ define(['knockout',
                     async: false
                 });                    
                 }
-//                return self.authToken;
-                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
+                return self.authToken;
+//                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
             };
             
             

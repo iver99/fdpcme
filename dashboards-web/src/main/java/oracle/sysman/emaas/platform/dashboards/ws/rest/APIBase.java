@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
@@ -57,8 +58,9 @@ public class APIBase
 					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_REQUIRED));
 		}
 		// TODO: once the cloud environment is available, return the queried tenant id instead
-		//long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
-		return 1L;
+		long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
+		//		long internalTenantId = 1L;
+		return internalTenantId;
 	}
 
 	/*
