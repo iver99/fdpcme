@@ -386,6 +386,7 @@ define(['knockout',
                 var linksFromIntegrators = [];
                 
                 var fetchServiceQuickLinks = function(data) {
+                    var linkRecords = {};
                     if (data.items && data.items.length > 0) {
                         for (i = 0; i < data.items.length; i++) {
                             var serviceItem = data.items[i];
@@ -411,10 +412,26 @@ define(['knockout',
                                         var linkItem = {name: linkName,
                                                             href: link.href};
                                         if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '1.0') {
-                                            linksFromDashboard.push(linkItem);
+                                            if (linkRecords[linkName]) {
+                                                if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
+                                                    linkRecords[linkName].href = link.href;
+                                                }
+                                            }
+                                            else {
+                                                linksFromDashboard.push(linkItem);
+                                                linkRecords[linkName] = linkItem;
+                                            }
                                         }
                                         else {
-                                            linksFromIntegrators.push(linkItem);
+                                            if (linkRecords[linkName]) {
+                                                if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
+                                                    linkRecords[linkName].href = link.href;
+                                                }
+                                            }
+                                            else {
+                                                linksFromIntegrators.push(linkItem);
+                                                linkRecords[linkName] = linkItem;
+                                            }
                                         }
                                     }
                                 }
