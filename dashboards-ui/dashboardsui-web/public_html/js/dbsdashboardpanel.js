@@ -152,7 +152,7 @@ $.widget('dbs.dbsDashboardPanel',
             setTimeout(function() {
                 if(_element.is(":hover")) {
                     //_element.css("background", "yellow");
-                    self._activate(null);
+                    //self._activate(null);
                 }
                 else
                 {
@@ -205,7 +205,7 @@ $.widget('dbs.dbsDashboardPanel',
             
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
-            if (_isSys === 'true')
+            if (_isSys === true)
             {
                 self.lockElement = $("<span></span>").attr({"role": "img"})
                         .css({"cursor": "default"})
@@ -419,6 +419,10 @@ $.widget('dbs.dbsDashboardPanel',
         
         refresh: function () {
             var self = this;
+            if (self.options.dashboardModel)
+            {
+                self.options.dashboard = self.options.dashboardModel['attributes'];
+            }
             this._deactivate(null);
             self._destroyComponent();
             self._createComponent();
