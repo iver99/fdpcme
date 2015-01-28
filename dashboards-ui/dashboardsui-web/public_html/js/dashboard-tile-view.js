@@ -345,32 +345,32 @@ define(['knockout',
                 });
             }
             
-            self.newWidget = ko.observable({ 
-                                providerName: "Log Analytics",
-                                version: "1.0",
-                                assetRoot: "assetRoot",
-                                name: "TestWidget_001",
-                                description: "Widget for test",
-                                queryStr: "* | stats count by 'target type','log source'",
-                                categoryId: allCategories[0].value+"",
-                                kocName: "test-la-widget-1",
-                                vmUrl: "dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
-                                templateUrl: "dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
-                                iconUrl: "",
-                                histogramUrl: ""});
-//            self.newWidget = ko.observable({
-//                                providerName: "",
-//                                version: "",
-//                                assetRoot: "",
-//                                name: "",
-//                                description: "",
-//                                queryStr: "",
+//            self.newWidget = ko.observable({ 
+//                                providerName: "Log Analytics",
+//                                version: "1.0",
+//                                assetRoot: "assetRoot",
+//                                name: "TestWidget_001",
+//                                description: "Widget for test",
+//                                queryStr: "* | stats count by 'target type','log source'",
 //                                categoryId: allCategories[0].value+"",
-//                                kocName: "",
-//                                vmUrl: "",
-//                                templateUrl: "",
+//                                kocName: "test-la-widget-1",
+//                                vmUrl: "../dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
+//                                templateUrl: "../dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
 //                                iconUrl: "",
 //                                histogramUrl: ""});
+            self.newWidget = ko.observable({
+                                providerName: "",
+                                version: "",
+                                assetRoot: "",
+                                name: "",
+                                description: "",
+                                queryStr: "",
+                                categoryId: allCategories[0].value+"",
+                                kocName: "",
+                                vmUrl: "",
+                                templateUrl: "",
+                                iconUrl: "",
+                                histogramUrl: ""});
             
             self.categoryOptionChangeHandler = function(event, data) {
                 if (data.option === "value") {
