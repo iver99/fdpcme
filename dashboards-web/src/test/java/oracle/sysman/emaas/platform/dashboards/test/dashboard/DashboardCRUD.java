@@ -664,14 +664,16 @@ public class DashboardCRUD
 		try {
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to validate update a non-existed dashboard");
-			String jsonString = "{ \"name\":\"Custom_Dashboard_Edit\" }";
-			Response res = RestAssured.given().log().everything()
+			String jsonString = "{ \"name\":\"Custom_DashboardEdit\" }";
+			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).body(jsonString).when()
 					.put("/dashboards/999999999");
 
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println(res.asString());
+
+			Assert.assertTrue(res.getStatusCode() == 404);
+
 			Assert.assertEquals(res.jsonPath().getString("errorCode"), "20001");
 			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 			System.out.println("											");
@@ -693,7 +695,7 @@ public class DashboardCRUD
 			System.out.println("------------------------------------------");
 			System.out.println("This test is to validate update a system dashboard");
 			String jsonString = "{ \"name\":\"Custom_Dashboard_Edit\" }";
-			Response res = RestAssured.given().log().everything()
+			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).body(jsonString).when()
 					.put("/dashboards/1");
 
@@ -701,7 +703,7 @@ public class DashboardCRUD
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println(res.asString());
 			Assert.assertEquals(res.jsonPath().getString("errorCode"), "20000");
-			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not allow to update system Dashboard");
+			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not support to update field \"systemDashboard\"");
 			System.out.println("											");
 
 			System.out.println("This test is to validate update a custom dashboard to the system dashboard");
@@ -716,7 +718,7 @@ public class DashboardCRUD
 			dashboard_id = res1.jsonPath().getString("id");
 			System.out.println("Update the dashboard to system dashboard...");
 			String jsonString2 = "{ \"name\":\"Custom_Dashboard_Edit\", \"systemDashboard\":true }";
-			Response res2 = RestAssured.given().log().everything()
+			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).body(jsonString2).when()
 					.put("/dashboards/" + dashboard_id);
 			System.out.println("Status code is: " + res2.getStatusCode());
