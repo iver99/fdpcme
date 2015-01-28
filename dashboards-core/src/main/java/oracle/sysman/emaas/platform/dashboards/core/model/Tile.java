@@ -18,12 +18,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Tile
 {
-	public static final int WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
-	public static final int WIDGET_SOURCE_INTEGRATOR = 1;
-	public static final Boolean TILE_DEFAULT_IS_MAX = false;
-	public static final Integer TILE_DEFAULT_WIDTH = 2;
-	public static final Integer TILE_DEFAULT_HEIGHT = 220;
-
 	public static Tile valueOf(EmsDashboardTile edt)
 	{
 		if (edt == null) {
@@ -59,12 +53,21 @@ public class Tile
 		if (edtpList != null) {
 			List<TileParam> paras = new ArrayList<TileParam>(edtpList.size());
 			for (EmsDashboardTileParams edtp : edtpList) {
-				paras.add(TileParam.valueOf(edtp));
+				TileParam tp = TileParam.valueOf(edtp);
+				tp.setTile(tile);
+				paras.add(tp);
 			}
 			tile.setParameters(paras);
 		}
 		return tile;
 	}
+
+	public static final int WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
+	public static final int WIDGET_SOURCE_INTEGRATOR = 1;
+	public static final Boolean TILE_DEFAULT_IS_MAX = false;
+	public static final Integer TILE_DEFAULT_WIDTH = 2;
+
+	public static final Integer TILE_DEFAULT_HEIGHT = 220;
 
 	@JsonIgnore
 	private Date creationDate;
@@ -243,14 +246,14 @@ public class Tile
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_UNIQUE_ID_REQUIRED));
 			}
-			if (widgetIcon == null || "".equals(widgetIcon)) {
-				throw new CommonFunctionalException(
-						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_ICON_REQUIRED));
-			}
-			if (widgetHistogram == null || "".equals(widgetHistogram)) {
-				throw new CommonFunctionalException(
-						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_HISTOGRAM_REQUIRED));
-			}
+			//			if (widgetIcon == null || "".equals(widgetIcon)) {
+			//				throw new CommonFunctionalException(
+			//						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_ICON_REQUIRED));
+			//			}
+			//			if (widgetHistogram == null || "".equals(widgetHistogram)) {
+			//				throw new CommonFunctionalException(
+			//						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_HISTOGRAM_REQUIRED));
+			//			}
 			if (widgetOwner == null || "".equals(widgetOwner)) {
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.WIDGET_OWNER_REQUIRED));
@@ -293,7 +296,7 @@ public class Tile
 					widgetTemplate, widgetUniqueId, widgetViewmode, width);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
-					EmsDashboardTileParams edtp = param.getPersistentEntity(null);
+					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
 					to.addEmsDashboardTileParams(edtp);
 				}
 			}
@@ -600,13 +603,13 @@ public class Tile
 		for (TileParam tp : paramList) {
 			EmsDashboardTileParams edtp = null;
 			if (!rows.containsKey(tp)) {
-				edtp = tp.getPersistentEntity(null);
+				edtp = tp.getPersistentEntity(tile, null);
 				tile.addEmsDashboardTileParams(edtp);
 				rows.put(tp, edtp);
 			}
 			else {
-				edtp = rows.get(tile);
-				edtp = tp.getPersistentEntity(edtp);
+				edtp = rows.get(tp);
+				edtp = tp.getPersistentEntity(tile, edtp);
 			}
 		}
 	}

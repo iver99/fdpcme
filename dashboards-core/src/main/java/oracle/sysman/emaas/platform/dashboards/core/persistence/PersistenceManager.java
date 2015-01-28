@@ -62,7 +62,7 @@ public class PersistenceManager
 		}
 	}
 
-	public EntityManager createEntityManager(String tenantId)
+	public EntityManager createEntityManager(Long tenantId)
 	{
 		if (emf == null) {
 			initialize();

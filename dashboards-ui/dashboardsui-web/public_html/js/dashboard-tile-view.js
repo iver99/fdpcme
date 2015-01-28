@@ -329,7 +329,7 @@ define(['knockout',
             else {
                 var categoryUrl = ssfUrl + '/categories';
                 $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl,
-                    headers: getSavedSearchServiceRequestHeader(), 
+                    headers: dfu.getSavedSearchServiceRequestHeader(), 
                     async: false,
                     success: function(data, textStatus){
                         if (data && data.length > 0) {
@@ -345,32 +345,32 @@ define(['knockout',
                 });
             }
             
-            self.newWidget = ko.observable({ 
-                                providerName: "Log Analytics",
-                                version: "1.0",
-                                assetRoot: "assetRoot",
-                                name: "TestWidget_001",
-                                description: "Widget for test",
-                                queryStr: "* | stats count by 'target type','log source'",
-                                categoryId: allCategories[0].value+"",
-                                kocName: "test-la-widget-1",
-                                vmUrl: "dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
-                                templateUrl: "dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
-                                iconUrl: "",
-                                histogramUrl: ""});
-//            self.newWidget = ko.observable({
-//                                providerName: "",
-//                                version: "",
-//                                assetRoot: "",
-//                                name: "",
-//                                description: "",
-//                                queryStr: "",
+//            self.newWidget = ko.observable({ 
+//                                providerName: "Log Analytics",
+//                                version: "1.0",
+//                                assetRoot: "assetRoot",
+//                                name: "TestWidget_001",
+//                                description: "Widget for test",
+//                                queryStr: "* | stats count by 'target type','log source'",
 //                                categoryId: allCategories[0].value+"",
-//                                kocName: "",
-//                                vmUrl: "",
-//                                templateUrl: "",
+//                                kocName: "test-la-widget-1",
+//                                vmUrl: "../dependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
+//                                templateUrl: "../dependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
 //                                iconUrl: "",
 //                                histogramUrl: ""});
+            self.newWidget = ko.observable({
+                                providerName: "",
+                                version: "",
+                                assetRoot: "",
+                                name: "",
+                                description: "",
+                                queryStr: "",
+                                categoryId: allCategories[0].value+"",
+                                kocName: "",
+                                vmUrl: "",
+                                templateUrl: "",
+                                iconUrl: "",
+                                histogramUrl: ""});
             
             self.categoryOptionChangeHandler = function(event, data) {
                 if (data.option === "value") {
@@ -438,7 +438,7 @@ define(['knockout',
                                         queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
                     var saveSearchUrl = ssfUrl + "/search";
                     $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
-                        headers: getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
+                        headers: dfu.getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
                             $('#createWidgetDialog').ojDialog('close');
                             var msg = "Widget created successfully!";
@@ -504,6 +504,7 @@ define(['knockout',
                         }
                         tilesViewModel.dashboard.screenShot = ko.observable(data);
                         var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
+                            'include': ['screenShot'],
                             'ignore': ["createdOn", "href", "owner", 
                                 "screenShotHref", "systemDashboard", "type",
                                 "customParameters", "clientGuid", "dashboard", 
@@ -637,7 +638,7 @@ define(['knockout',
                     var widgetgroupsUrl = ssfUrl + '/widgetgroups';
                     $.ajax({
                         url: widgetgroupsUrl,
-                        headers: getSavedSearchServiceRequestHeader(),
+                        headers: dfu.getSavedSearchServiceRequestHeader(),
                         success: function(data, textStatus) {
                             widgetGroupList = loadWidgetGroups(data);
                         },
@@ -649,7 +650,7 @@ define(['knockout',
                     
                     $.ajax({
                         url: widgetsUrl,
-                        headers: getSavedSearchServiceRequestHeader(),
+                        headers: dfu.getSavedSearchServiceRequestHeader(),
                         success: function(data, textStatus) {
                             integratorWidgets = loadWidgets(data);
 //                            curGroupWidgets = loadWidgets(data);
@@ -848,7 +849,7 @@ define(['knockout',
                         if (ssfUrl && ssfUrl !== '') {
                             $.ajax({
                                 url: ssfUrl+'/search/'+data.WIDGET_UNIQUE_ID,
-                                headers: getSavedSearchServiceRequestHeader(),
+                                headers: dfu.getSavedSearchServiceRequestHeader(),
                                 success: function(widget, textStatus) {
                                     _data.WIDGET_DESCRIPTION = widget.description ? widget.description : '';
                                     _data.QUERY_STR = widget.queryStr ? widget.queryStr : '';

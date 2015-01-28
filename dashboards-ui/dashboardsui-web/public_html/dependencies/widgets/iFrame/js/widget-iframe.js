@@ -16,10 +16,13 @@ define([
                 var DEFAULT_URL = "about:blank";
                 var self = this;
                 var tile = params.tile;
-                var url = tile.getParameter(PNAME_IFRAME_SRC);
-                if (url===null || url===undefined){
+                var param = tile.getParameter(PNAME_IFRAME_SRC);
+                if (param===null || param===undefined){
                     url = DEFAULT_URL;
+                }else{
+                    url = param.value;
                 }
+
                 self.clientGuid = dfu.guid();
                 /**
                  * Since the same widget can be added to dashboard more than once, 

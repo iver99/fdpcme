@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojs/ojcore', 'jquery', 'knockout','jqueryui', 'ojs/ojknockout-model'], 
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout','jqueryui', 'ojs/ojknockout-model'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
         */
-function(oj, $, ko)
+function(dfu, oj, $, ko)
 {
     
 (function ()
@@ -152,7 +152,7 @@ $.widget('dbs.dbsDashboardPanel',
             setTimeout(function() {
                 if(_element.is(":hover")) {
                     //_element.css("background", "yellow");
-                    self._activate(null);
+                    //self._activate(null);
                 }
                 else
                 {
@@ -205,7 +205,7 @@ $.widget('dbs.dbsDashboardPanel',
             
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
-            if (_isSys === 'true')
+            if (_isSys === true)
             {
                 self.lockElement = $("<span></span>").attr({"role": "img"})
                         .css({"cursor": "default"})
@@ -265,7 +265,7 @@ $.widget('dbs.dbsDashboardPanel',
               $.ajax({
                    //This will be a page which will return the base64 encoded string
                    url: self.options['dashboard']['screenShotHref'], 
-                   headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
+                   headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
                    success: function(response){
                        var __ss = response;
                        self.contentPage1ImgEle.attr("src", __ss);
@@ -419,6 +419,10 @@ $.widget('dbs.dbsDashboardPanel',
         
         refresh: function () {
             var self = this;
+            if (self.options.dashboardModel)
+            {
+                self.options.dashboard = self.options.dashboardModel['attributes'];
+            }
             this._deactivate(null);
             self._destroyComponent();
             self._createComponent();

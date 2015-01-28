@@ -21,6 +21,7 @@
 			<property name="eclipselink.logging.logger"
 				value="org.eclipse.persistence.logging.DefaultSessionLog" />
 			<property name="eclipselink.logging.level" value="INFO" />
+			<property name="eclipselink.cache.shared.default" value="false"/>
 			<property name="eclipselink.jdbc.cache-statements.size"
 				value="65535" />
 			<property name="eclipselink.orm.validate.schema" value="true" />
@@ -56,6 +57,8 @@
 			<property name="eclipselink.logging.logger"
 				value="org.eclipse.persistence.logging.DefaultSessionLog" />
 			<property name="eclipselink.logging.level" value="FINE" />
+			<property name="eclipselink.logging.parameters" value="true"/>
+			<property name="eclipselink.cache.shared.default" value="false"/>
 			<property name="eclipselink.jdbc.cache-statements.size"
 				value="65535" />
 			<property name="eclipselink.orm.validate.schema" value="true" />
@@ -65,7 +68,7 @@
 			<property name="eclipselink.logging.timestamp" value="true" />
 			<property name="eclipselink.session.include.descriptor.queries"
 				value="true" />
-			<property name="eclipselink.cache.size.default" value="65535" />			
+			<property name="eclipselink.cache.size.default" value="65535" />		
 		</properties>
 	</persistence-unit>
 

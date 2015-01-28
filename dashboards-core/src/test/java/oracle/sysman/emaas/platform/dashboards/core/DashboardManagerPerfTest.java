@@ -21,7 +21,7 @@ public class DashboardManagerPerfTest
 {
 	private static final long NUM_DASHBOARDS_FOR_PERF_TEST = 10000L;
 
-	private final String tenantId = "tenant1";
+	private final Long tenantId = 11L;
 	private Long dashboard1stId;
 	private final DashboardManager dm = DashboardManager.getInstance();
 	private final List<Dashboard> dashboards = new ArrayList<Dashboard>();

@@ -15,7 +15,7 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/debug',
+        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/min',
         'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
         'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
         'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',
@@ -23,6 +23,7 @@ requirejs.config({
         'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'dfutil':'../dependencies/dfcommon/js/util/df-util',
         'dbs': '../js'
     },
     // Shim configurations for modules that do not expose AMD
@@ -96,7 +97,13 @@ require(['dbs/dbsmodel',
 ],
         function(model, ko, $, oj) // this callback gets executed when all required modules are loaded
         {
-
+            if (!ko.components.isRegistered('df-nav-links')) {
+                ko.components.register("df-nav-links",{
+                    viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
+                    template:{require:'text!../dependencies/navlinks/navigation-links.html'}
+                });
+            }
+            
             function FooterViewModel() {
                 var self = this;
 
@@ -191,12 +198,14 @@ require(['dbs/dbsmodel',
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+                self.navLinksNeedRefresh = ko.observable(false);
                 self.openLinksPopup = function (event) {
                     var t = $('#dbs_navPopup');
                     $('#dbs_navPopup').ojPopup('open');//'#linksButton');
                 };
                 
                 self.linkMenuHandle = function(event,item){
+                    self.navLinksNeedRefresh(true);
                     $("#links_menu").slideToggle('normal');
                     item.stopImmediatePropagation();
                 };
@@ -208,11 +217,13 @@ require(['dbs/dbsmodel',
             }
             
             dashboardsViewModle = new model.ViewModel();
+            headerViewModel = new HeaderViewModel();
 
             $(document).ready(function() {
                 
-                ko.applyBindings(new HeaderViewModel(), document.getElementById('demo-appheader-bar'));
-                ko.applyBindings({navigationsPopupModel: dashboardsViewModle.navigationsPopupModel}, document.getElementById('links_menu'));
+                ko.applyBindings(headerViewModel, document.getElementById('demo-appheader-bar'));
+//                ko.applyBindings({navigationsPopupModel: dashboardsViewModle.navigationsPopupModel}, document.getElementById('links_menu'));
+                ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));
                 $("#loading").hide();
 //                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
                 $('#globalBody').show();
@@ -311,119 +322,5 @@ function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 };
 
-function getSecurityHeader() {
-    return "TenantOPC1";
-};
-
-function discoverSavedSearchServiceUrl() {
-    var availableUrl = null;
-    var urlFound = false;
-    
-    var fetchServiceCallback = function(data) {
-        var items = data.items;
-        if (items && items.length > 0) {
-            for (j = 0; j < items.length && !urlFound; j++) {
-                var virtualEndpoints = items[j].virtualEndpoints;
-                for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
-                    $.ajax({
-                        url: virtualEndpoints[k],
-                        success: function(data, textStatus) {
-                            availableUrl = virtualEndpoints[k];
-                            urlFound = true;
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-
-                        }
-                        ,
-                        async: false
-                    });
-                }
-
-                if (!urlFound) {
-                    var canonicalEndpoints = items[j].canonicalEndpoints;
-                    for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
-                        $.ajax({
-                            url: canonicalEndpoints[m],
-                            success: function(data, textStatus) {
-                                availableUrl = canonicalEndpoints[m];
-                                urlFound = true;
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-
-                            }
-                            ,
-                            async: false
-                        });
-                    }
-                }
-            }
-        }
-    };
-    
-    $.ajaxSettings.async = false;
-    $.getJSON('data/servicemanager.json', function(data) {
-        if (data.serviceUrls && data.serviceUrls.length > 0) {
-            for (i = 0; i < data.serviceUrls.length && !urlFound; i++) {
-                var serviceUrl = data.serviceUrls[i]+'/'+'instances?servicename='+data.serviceName;
-                if (data.version)
-                    serviceUrl = serviceUrl+'&version='+data.version;
-                $.ajax({
-                    url: serviceUrl,
-                    success: function(data, textStatus) {
-                        fetchServiceCallback(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        
-                    },
-                    async: false
-                });
-            }
-        }
-    });
-    
-    $.ajaxSettings.async = true;
-    return availableUrl;
-}
-
-function formatUTCDateTime(dateString) {
-    var monthArray = [
-        getNlsString('MONTH_JAN'),
-        getNlsString('MONTH_FEB'),
-        getNlsString('MONTH_MAR'),
-        getNlsString('MONTH_APR'),
-        getNlsString('MONTH_MAY'),
-        getNlsString('MONTH_JUN'),
-        getNlsString('MONTH_JUL'),
-        getNlsString('MONTH_AUG'),
-        getNlsString('MONTH_SEP'),
-        getNlsString('MONTH_OCT'),
-        getNlsString('MONTH_NOV'),
-        getNlsString('MONTH_DEC')
-    ];
-    var year, month, day, hour, min, sec, dn;
-    var dt = dateString.split('T');
-    if (dt && dt.length === 2) {
-        var yd = dt[0].split('-');
-        var time = dt[1].split(':'); 
-        if (yd && yd.length === 3) {
-            year = yd[0];
-            month=parseInt(yd[1]);
-            day=parseInt(yd[2]);
-        }
-        if (time && time.length === 3) {
-            hour=parseInt(time[0]);
-            if (hour > 12) {
-                dn=getNlsString('TIME_PM');
-                hour = hour%12;
-            }
-            else {
-                dn=getNlsString('TIME_AM');
-            }
-            min=time[1];
-            sec=(time[2].split('.'))[0];
-        }
-    }
-    return monthArray[month-1]+' '+day+', '+year+' '+hour+':'+min+':'+sec+' '+dn+' '+getNlsString('TIME_ZONE_UTC');
-}
 
 

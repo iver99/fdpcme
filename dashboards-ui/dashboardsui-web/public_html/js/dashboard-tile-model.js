@@ -129,7 +129,10 @@ define(['knockout',
             if (!tile)
                 return;
             
-            registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
+            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT());
+            var kocVM = assetRoot + tile.WIDGET_VIEWMODEL();
+            var kocTemplate = assetRoot + tile.WIDGET_TEMPLATE();
+            registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
             tile.shouldHide = ko.observable(false);
             tile.clientGuid = dfu.guid();
             tile.widerEnabled = ko.computed(function() {
@@ -203,8 +206,8 @@ define(['knockout',
              */
             self.onDashboardItemChangeEvent = null;
             
-            self.customParameters = {};
-            self.systemParameters = {};
+//            self.customParameters = {};
+//            self.systemParameters = {};
             
             /**
              * Get value of tile Custom Parameter according to given name. This function only retrieves Custom Parameters.
@@ -215,14 +218,27 @@ define(['knockout',
              * System parameters and custom parameters are stored in different pool, 
              * so it is possible that one System parameter has the same name as another customer parameter
              * @param {String} name
-             * @returns {String} value of parameter. null if not found
+             * @returns {object} value of parameter. null if not found
              */
             self.getParameter = function (name) {
-                if (name in self.customParameters) {
-                    return self.customParameters[name];
-                } else {
+                if (name===null || name===undefined){
                     return null;
                 }
+                if (self.tileParameters){
+                    for (var i=0;i<self.tileParameters.length;i++){
+                        var tp = self.tileParameters[i];
+                        if (tp.name===name){
+                            return tp;
+                        }
+                    }
+                }
+                return null;
+
+//                if (name in self.customParameters) {
+//                    return self.customParameters[name];
+//                } else {
+//                    return null;
+//                }
             }
             
             /**
@@ -235,7 +251,24 @@ define(['knockout',
                 if (name===undefined || name===null || value===undefined || value===null){
                     console.error("Invaild value: name=["+name,"] value=["+value+"]");
                 }else{
-                    self.customParameters[name] = value;
+                    var found = false;
+                    if (self.tileParameters){
+                        for (var i=0;i<self.tileParameters.length;i++){
+                            var tp = self.tileParameters[i];
+                            if (tp.name===name){
+                                tp.value = value;
+                                found =true;
+                            }
+                        } 
+                        if (!found){
+                            self.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
+                        }
+                    }else{
+                        self.tileParameters=[];
+                        self.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
+                    }
+//                    
+//                    self.customParameters[name] = value;
                 }
             }
             
@@ -247,17 +280,18 @@ define(['knockout',
         }
         
         function getBaseUrl() {
-//            return "http://slc04pxi.us.oracle.com:7001";
+            return dfu.discoverDFRestApiUrl();
+//            return "http://slc04pxi.us.oracle.com:7001";//TODO
 //            return "http://localhost:7001";
-            return "http://slc00bqs.us.oracle.com:7021";
+//            return "http://slc00bqs.us.oracle.com:7021";
         }
         
         function getDefaultHeaders() {
-            return {'Content-type': 'application/json', 'X-USER-IDENTITY-DOMAIN-NAME': 'TenantOPC1'};
+            return {'Content-type': 'application/json', 'X-USER-IDENTITY-DOMAIN-NAME': 'TenantOPC1',"Authorization": dfu.getAuthToken()};
         }
         
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/" + dashboardId;
+            var url = getBaseUrl() + "dashboards/" + dashboardId;
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -275,7 +309,7 @@ define(['knockout',
         }
         
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/" + dashboardId;
+            var url = getBaseUrl() + "dashboards/" + dashboardId;
             $.ajax(url, {
                 type: 'put',
                 dataType: "json",
@@ -293,7 +327,7 @@ define(['knockout',
         }
         
         function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/favorites/" + dashboardId;
+            var url = getBaseUrl() + "dashboards/favorites/" + dashboardId;
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -310,7 +344,7 @@ define(['knockout',
         }
         
         function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/favorites/" + dashboardId;
+            var url = getBaseUrl() + "dashboards/favorites/" + dashboardId;
             $.ajax(url, {
                 type: 'post',
                 dataType: "json",
@@ -327,7 +361,7 @@ define(['knockout',
         }
         
         function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "/emcpdf/api/v1/dashboards/favorites/" + dashboardId;
+            var url = getBaseUrl() + "dashboards/favorites/" + dashboardId;
             $.ajax(url, {
                 type: 'delete',
                 dataType: "json",
@@ -444,7 +478,7 @@ define(['knockout',
                                 newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
                              }else if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
-                                    var assetRoot = df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
+                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
                                     if (assetRoot===null){
                                         console.error("Unable to find asset root: PROVIDER_NAME=["+providerName+"], PROVIDER_VERSION=["+providerVersion+"], PROVIDER_ASSET_ROOT=["+providerAssetRoot+"]");
                                     }
@@ -468,7 +502,7 @@ define(['knockout',
                                         var widgetDetails = null;
                                         $.ajax({
                                             url: href,
-                                            headers: getSavedSearchServiceRequestHeader(),
+                                            headers: dfu.getSavedSearchServiceRequestHeader(),
                                             success: function(data, textStatus) {
                                                 widgetDetails = data;
                                             },

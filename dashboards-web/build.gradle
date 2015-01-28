@@ -47,7 +47,7 @@ task restDoc {
  
     // Configure task input and output to not generate the doc again when the 
     // source file have not changed
-    inputs.files 'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/rest',  'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/navigation'
+    inputs.files 'src/main/java/oracle/sysman/emaas/platform/dashboards/ws/rest'
     outputs.dir restDocOutputDir
 }
 restDoc << {
@@ -66,7 +66,7 @@ restDoc << {
     }  
 
     // Run the enunciate task
-    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/',
+    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emaas/platform/dashboards/ws/',
             classpathRef: 'enunciateRuntimePath',
             verbose: 'true', 
             debug: 'true', 
@@ -130,6 +130,11 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0')
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
+	
+	providedCompile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3')
+	providedCompile(group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3')
+	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.5')
+	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.1')
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	restDoc(

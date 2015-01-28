@@ -7,6 +7,7 @@ import java.util.Date;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -92,15 +93,20 @@ public class TileParam
 		return dateValue;
 	}
 
-	public EmsDashboardTileParams getPersistentEntity(EmsDashboardTileParams edtp) throws CommonFunctionalException
+	public EmsDashboardTileParams getPersistentEntity(EmsDashboardTile tile, EmsDashboardTileParams edtp)
+			throws CommonFunctionalException
 	{
-		Integer intIsSystem = DataFormatUtils.boolean2Integer(getIsSystem());
 		Integer intValue = DataFormatUtils.bigDecimal2Integer(numValue);
 		Timestamp tsValue = DataFormatUtils.date2Timestamp(getParamValueTimestamp());
-		Integer intType = DataFormatUtils.tileParamTypeString2Integer(type);
-
 		if (edtp == null) {
-			edtp = new EmsDashboardTileParams(intIsSystem, name, intType, intValue, strValue, tsValue, null);
+			Integer intIsSystem = DataFormatUtils.boolean2Integer(getIsSystem());
+			Integer intType = DataFormatUtils.tileParamTypeString2Integer(type);
+			edtp = new EmsDashboardTileParams(intIsSystem, name, intType, intValue, strValue, tsValue, tile);
+		}
+		else {
+			edtp.setParamValueStr(strValue);
+			edtp.setParamValueTimestamp(tsValue);
+			edtp.setParamValueNum(intValue);
 		}
 		return edtp;
 	}

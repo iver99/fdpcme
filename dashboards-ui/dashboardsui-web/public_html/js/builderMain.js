@@ -106,6 +106,10 @@ require(['knockout',
 ],
         function(ko, $, dfu,dtm, dtv) // this callback gets executed when all required modules are loaded
         {
+            ko.components.register("df-nav-links",{
+                viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
+                template:{require:'text!../dependencies/navlinks/navigation-links.html'}
+            });
             ko.components.register("df-time-selector",{
                 viewModel:{require:'../dependencies/timeselector/js/time-selector'},
                 template:{require:'text!../dependencies/timeselector/time-selector.html'}
@@ -263,7 +267,9 @@ require(['knockout',
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+                self.navLinksNeedRefresh = ko.observable(false);
                 self.linkMenuHandle = function(event,item){
+                    self.navLinksNeedRefresh(true);
                     $("#links_menu").slideToggle('normal');
                     item.stopImmediatePropagation();
                 };
@@ -303,6 +309,7 @@ require(['knockout',
                     }
                     var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
+                    var headerViewModel = new HeaderViewModel();
 
                     if (window.opener && window.opener.navigationsModelCallBack) {
                         navigationsModel = ko.observable(window.opener.navigationsModelCallBack());
@@ -326,8 +333,9 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
                     //header
-                    ko.applyBindings(new HeaderViewModel(), $('#demo-appheader-bar')[0]);
-                    ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#links_menu')[0]);     
+                    ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]);
+//                    ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#links_menu')[0]);     
+                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                     ko.applyBindings(tilesViewMode, $('#main-container')[0]);   

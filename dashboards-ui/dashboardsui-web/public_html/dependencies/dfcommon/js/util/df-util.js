@@ -53,7 +53,7 @@ define(['knockout',
                             for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
                                 $.ajax({
                                     url: virtualEndpoints[k],
-                                    headers: getSavedSearchServiceRequestHeader(),
+                                    headers: self.getSavedSearchServiceRequestHeader(),
                                     success: function(data, textStatus) {
                                         availableUrl = virtualEndpoints[k];
                                         urlFound = true;
@@ -71,7 +71,7 @@ define(['knockout',
                                 for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
                                     $.ajax({
                                         url: canonicalEndpoints[m],
-                                        headers: getSavedSearchServiceRequestHeader(),
+                                        headers: self.getSavedSearchServiceRequestHeader(),
                                         success: function(data, textStatus) {
                                             availableUrl = canonicalEndpoints[m];
                                             urlFound = true;
@@ -89,7 +89,7 @@ define(['knockout',
                 };
 
                 $.ajaxSettings.async = false;
-                $.getJSON(getRegistrationEndPoint(), function(data) {    
+                $.getJSON(self.getRegistrationEndPoint(), function(data) {    
                     if (data.registryUrls && data.ssfServiceName && data.ssfVersion) {
                         var urls = data.registryUrls.split(",");
                         for (i = 0; i < urls.length && !urlFound; i++) {
@@ -100,7 +100,7 @@ define(['knockout',
                             serviceUrl = serviceUrl+'&version='+data.ssfVersion;
                             $.ajax({
                                 url: serviceUrl,
-                                headers: getAuthorizationRequestHeader(),
+                                headers: self.getAuthorizationRequestHeader(),
                                 success: function(data, textStatus) {
                                     fetchServiceCallback(data);
                                 },
@@ -114,8 +114,89 @@ define(['knockout',
                 });
 
                 $.ajaxSettings.async = true;
-//                return availableUrl;
-                return "http://slc04wjj.us.oracle.com:7001/savedsearch/v1";
+                return availableUrl;
+//                return "http://slc04pxi.us.oracle.com:7001/savedsearch/v1";//TODO
+            };
+
+            /**
+             * Discover available Saved Search service URL
+             * @returns {String} url
+             */
+            self.discoverDFRestApiUrl = function() {
+                var availableUrl = null;
+                var urlFound = false;
+
+                var fetchServiceCallback = function(data) {
+                    var items = data.items;
+                    if (items && items.length > 0) {
+                        for (j = 0; j < items.length && !urlFound; j++) {
+                            var virtualEndpoints = items[j].virtualEndpoints;
+                            for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
+                                $.ajax({
+                                    url: virtualEndpoints[k],
+                                    headers: self.getSavedSearchServiceRequestHeader(),
+                                    success: function(data, textStatus) {
+                                        availableUrl = virtualEndpoints[k];
+                                        urlFound = true;
+                                    },
+                                    error: function(xhr, textStatus, errorThrown){
+
+                                    }
+                                    ,
+                                    async: false
+                                });
+                            }
+
+                            if (!urlFound) {
+                                var canonicalEndpoints = items[j].canonicalEndpoints;
+                                for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
+                                    $.ajax({
+                                        url: canonicalEndpoints[m],
+                                        headers: self.getSavedSearchServiceRequestHeader(),
+                                        success: function(data, textStatus) {
+                                            availableUrl = canonicalEndpoints[m];
+                                            urlFound = true;
+                                        },
+                                        error: function(xhr, textStatus, errorThrown){
+
+                                        }
+                                        ,
+                                        async: false
+                                    });
+                                }
+                            }
+                        }
+                    }
+                };
+
+                $.ajaxSettings.async = false;
+                $.getJSON(self.getRegistrationEndPoint(), function(data) {    
+                    if (data.registryUrls && 'Dashboard-API' && '1.0') {
+                        var urls = data.registryUrls.split(",");
+                        for (i = 0; i < urls.length && !urlFound; i++) {
+                            var serviceUrl = urls[i]+'/'+'instances?serviceName='+'Dashboard-API';
+                            if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
+                                serviceUrl = urls[i]+'instances?serviceName='+'Dashboard-API';
+                            }
+                            serviceUrl = serviceUrl+'&version='+'1.0';
+                            $.ajax({
+                                url: serviceUrl,
+                                headers: self.getAuthorizationRequestHeader(),
+                                success: function(data, textStatus) {
+                                    fetchServiceCallback(data);
+                                },
+                                error: function(xhr, textStatus, errorThrown){
+                                    console.error(textStatus);
+                                },
+                                async: false
+                            });
+                        }
+                    }
+                });
+
+                $.ajaxSettings.async = true;
+                return availableUrl;
+//                return "http://slc04pxi.us.oracle.com:7001/emcpdf/api/v1/";//TODO
             };
             
             self.formatUTCDateTime = function(dateString) {
@@ -164,7 +245,45 @@ define(['knockout',
                 }
                 
             };
+            self.authToken = null;
+            self.getAuthToken = function() {
+                if (self.authToken===null){
+                $.ajax({
+                    url: self.getRegistrationEndPoint(),
+                    success: function(data, textStatus) {
+                        if (data.authToken) {
+                            self.authToken = data.authToken;
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        console.log('Failed to get authToken.');
+                    },
+                    async: false
+                });                    
+                }
+                return self.authToken;
+//                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
+            };
             
+            
+            self.getAuthorizationRequestHeader=function() {
+                return {"Authorization": self.getAuthToken()};
+            };
+            
+            self.getSavedSearchServiceRequestHeader=function() {
+                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"TenantOPC1"};//TODO
+            };  
+            
+            self.getDashboardsRequestHeader=function() {
+                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"TenantOPC1"};//TODO
+            };  
+            
+            self.getRegistrationEndPoint=function(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                return 'api/configurations/registration';
+//                return 'data/servicemanager.json';
+            }
+
             /**
              * Discover available quick links
              * @returns {Array} quickLinks
@@ -181,6 +300,82 @@ define(['knockout',
                 return discoverLinks('visualAnalyzer');
             };
             
+            self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
+                //TODO replace below hard coded values
+                if (providerName && providerVersion && providerAssetRoot){
+                    if ("DB Analytics"===providerName){
+                        return "http://slc08fvg.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html";
+                    }else if ("Application Performance Manager Cloud Service"===providerName){
+                        return "http://slc04srr.us.oracle.com:7401/apmUi/";
+                    }else if ("IT ANALYTICS"===providerName){
+                        return "http://slc06xat.us.oracle.com:7001/ita-tool";
+                    }else if ("Sample Provider"===providerName) {
+            //            return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
+                        return "http://jet.us.oracle.com";
+                    }
+            //        else if ("Log Analytics"===providerName) {
+            //            return "http://localhost:8383/emcpdfui/";
+            //        }
+            //        else if ("Target Analytics"===providerName) {
+            //            return "http://localhost:8383/emcpdfui/";
+            //        }
+                    else {
+                        var urlFound = false;
+
+                        function fetchServiceAssetRoot(data) {
+                            var items = data.items;
+                            if (items && items.length > 0) {
+                                for (j = 0; j < items.length && !urlFound; j++) {
+                                    var links = items[j].links;
+                                    for (k = 0; k < links.length; k++) {
+                                        var link = links[k];
+                                        if (providerAssetRoot === link.rel) {
+                                            return link.href;
+                                        }
+                                    }
+                                }
+                            }
+                            return null;
+                        }
+
+                        var assetRoot;
+                        $.ajaxSettings.async = false;
+                        $.getJSON(self.getRegistrationEndPoint(), function(data) {
+                            if (data.registryUrls) {
+                                var urls = data.registryUrls.split(",");
+                                for (i = 0; i < urls.length && !urlFound; i++) {
+                                    var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
+                                    if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
+                                        serviceUrl = urls[i] + 'instances?serviceName=' + providerName;
+                                    }
+                                    if (providerVersion)
+                                        serviceUrl = serviceUrl + '&version=' + providerVersion;
+                                    var error = false;
+                                    $.ajax({
+                                        url: serviceUrl,
+                                        headers: self.getAuthorizationRequestHeader(),
+                                        success: function(data, textStatus) {
+                                            assetRoot = fetchServiceAssetRoot(data);
+                                        },
+                                        error: function(xhr, textStatus, errorThrown){
+                                            error =true;
+                                        },
+                                        async: false
+                                    });
+                                    if (!error){
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                        $.ajaxSettings.async = true;
+            //            return assetRoot;    
+                        return document.location.protocol + '//' + document.location.host + '/emcpdfui/';
+                    }
+                }
+                return "http://jet.us.oracle.com";
+            }
+            
             /**
              * Discover available links by rel name
              * @returns {Array} availableLinks
@@ -191,6 +386,7 @@ define(['knockout',
                 var linksFromIntegrators = [];
                 
                 var fetchServiceQuickLinks = function(data) {
+                    var linkRecords = {};
                     if (data.items && data.items.length > 0) {
                         for (i = 0; i < data.items.length; i++) {
                             var serviceItem = data.items[i];
@@ -215,11 +411,27 @@ define(['knockout',
                                     if (isValidQuickLink) {
                                         var linkItem = {name: linkName,
                                                             href: link.href};
-                                        if (serviceItem.serviceName === 'Dashboard' && serviceItem.version === '1.0') {
-                                            linksFromDashboard.push(linkItem);
+                                        if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '1.0') {
+                                            if (linkRecords[linkName]) {
+                                                if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
+                                                    linkRecords[linkName].href = link.href;
+                                                }
+                                            }
+                                            else {
+                                                linksFromDashboard.push(linkItem);
+                                                linkRecords[linkName] = linkItem;
+                                            }
                                         }
                                         else {
-                                            linksFromIntegrators.push(linkItem);
+                                            if (linkRecords[linkName]) {
+                                                if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
+                                                    linkRecords[linkName].href = link.href;
+                                                }
+                                            }
+                                            else {
+                                                linksFromIntegrators.push(linkItem);
+                                                linkRecords[linkName] = linkItem;
+                                            }
                                         }
                                     }
                                 }
@@ -227,10 +439,8 @@ define(['knockout',
                         }
                     }
                 };
-                
-                $.ajax({
-                    url: getRegistrationEndPoint(),
-                    success: function(data, textStatus) {
+                $.ajaxSettings.async = false;
+                $.getJSON(self.getRegistrationEndPoint(),function(data) {
                         if (data.registryUrls) {
                             var urls = data.registryUrls.split(",");
                             for (i = 0; i < urls.length; i++) {
@@ -241,7 +451,7 @@ define(['knockout',
                                 
                                 $.ajax({
                                     url: serviceUrl,
-                                    headers: getAuthorizationRequestHeader(),
+                                    headers: self.getAuthorizationRequestHeader(),
                                     success: function(data, textStatus) {
                                         fetchServiceQuickLinks(data);
                                     },
@@ -252,12 +462,8 @@ define(['knockout',
                                 });
                             }
                         }
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Failed to get service manager configurations.');
-                    },
-                    async: false
-                });
+                    });
+                $.ajaxSettings.async = true;
                 
                 for (i = 0; i < linksFromDashboard.length; i++) {
                     availableLinks.push(linksFromDashboard[i]);
@@ -272,93 +478,4 @@ define(['knockout',
         return new DashboardFrameworkUtility();
     }
 );
-                
-function df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot){
-    //TODO replace below hard coded values
-    if (providerName && providerVersion && providerAssetRoot){
-        if ("DB Analytics"===providerName){
-            return "http://slc08fvg.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html";
-        }else if ("Application Performance Manager Cloud Service"===providerName){
-            return "http://slc04srr.us.oracle.com:7401/apmUi/";
-        }else if ("IT ANALYTICS"===providerName){
-            return "http://slc06xat.us.oracle.com:7001/ita-tool";
-        }else if ("Sample Provider"===providerName) {
-//            return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
-            return "http://jet.us.oracle.com";
-        }
-//        else if ("Log Analytics"===providerName) {
-//            return "http://localhost:8383/emcpdfui/";
-//        }
-//        else if ("Target Analytics"===providerName) {
-//            return "http://localhost:8383/emcpdfui/";
-//        }
-        else {
-            var urlFound = false;
-            
-            function fetchServiceAssetRoot(data) {
-                var items = data.items;
-                if (items && items.length > 0) {
-                    for (j = 0; j < items.length && !urlFound; j++) {
-                        var links = items[j].links;
-                        for (k = 0; k < links.length; k++) {
-                            var link = links[k];
-                            if (providerAssetRoot === link.rel) {
-                                return link.href;
-                            }
-                        }
-                    }
-                }
-                return null;
-            }
 
-            var assetRoot;
-            $.ajaxSettings.async = false;
-            $.getJSON(getRegistrationEndPoint(), function(data) {
-                if (data.registryUrls) {
-                    var urls = data.registryUrls.split(",");
-                    for (i = 0; i < urls.length && !urlFound; i++) {
-                        var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
-                        if (urls[i].lastIndexOf("/")===urls[i].length){
-                            serviceUrl = urls[i] + 'instances?serviceName=' + providerName;
-                        }
-                        if (providerVersion)
-                            serviceUrl = serviceUrl + '&version=' + providerVersion;
-                        var error = false;
-                        $.ajax({
-                            url: serviceUrl,
-                            headers: getAuthorizationRequestHeader(),
-                            success: function(data, textStatus) {
-                                assetRoot = fetchServiceAssetRoot(data);
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                error =true;
-                            },
-                            async: false
-                        });
-                        if (!error){
-                            break;
-                        }
-                    }
-                }
-            });
-            $.ajaxSettings.async = true;
-//            return assetRoot;    
-            return 'http://localhost:8383/emcpdfui/';
-        }
-    }
-    return "http://jet.us.oracle.com";
-}
-
-function getRegistrationEndPoint(){
-    //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-//    return 'api/configurations/registration';
-    return 'data/servicemanager.json';
-}
-
-function getAuthorizationRequestHeader() {
-    return {"Authorization": "Basic d2VibG9naWM6d2VsY29tZTE="};
-};
-
-function getSavedSearchServiceRequestHeader() {
-    return {"Authorization": "Basic d2VibG9naWM6d2VsY29tZTE=","X-USER-IDENTITY-DOMAIN":"TenantOPC1"};
-};

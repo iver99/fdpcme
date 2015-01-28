@@ -58,7 +58,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @throws DashboardNotFoundException
 	 */
-	public void addFavoriteDashboard(Long dashboardId, String tenantId) throws DashboardNotFoundException
+	public void addFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardNotFoundException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			throw new DashboardNotFoundException();
@@ -147,7 +147,7 @@ public class DashboardManager
 	 *            delete permanently or not
 	 * @throws DashboardException
 	 */
-	public void deleteDashboard(Long dashboardId, boolean permanent, String tenantId) throws DashboardException
+	public void deleteDashboard(Long dashboardId, boolean permanent, Long tenantId) throws DashboardException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			return;
@@ -180,12 +180,12 @@ public class DashboardManager
 	 * @param tenantId
 	 * @throws DashboardNotFoundException
 	 */
-	public void deleteDashboard(Long dashboardId, String tenantId) throws DashboardException
+	public void deleteDashboard(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		deleteDashboard(dashboardId, false, tenantId);
 	}
 
-	public String getDashboardBase64ScreenShotById(Long dashboardId, String tenantId) throws DashboardException
+	public String getDashboardBase64ScreenShotById(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
@@ -218,7 +218,7 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public Dashboard getDashboardById(Long dashboardId, String tenantId) throws DashboardException
+	public Dashboard getDashboardById(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		EntityManager em = null;
 		try {
@@ -235,7 +235,7 @@ public class DashboardManager
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				throw new DashboardNotFoundException();
 			}
-			updateLastAccessDate(dashboardId, tenantId);
+			updateLastAccessDate(dashboardId, tenantId, dsf);
 			return Dashboard.valueOf(ed);
 		}
 		finally {
@@ -249,7 +249,7 @@ public class DashboardManager
 	 * Returns dashboard instance specified by name for current user Please note that same user under single tenant can't have
 	 * more than one dashboards with same name, so this method return single dashboard instance
 	 */
-	public Dashboard getDashboardByName(String name, String tenantId)
+	public Dashboard getDashboardByName(String name, Long tenantId)
 	{
 		if (name == null || "".equals(name)) {
 			return null;
@@ -284,7 +284,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return
 	 */
-	public List<Dashboard> getFavoriteDashboards(String tenantId)
+	public List<Dashboard> getFavoriteDashboards(Long tenantId)
 	{
 		String currentUser = AppContext.getInstance().getCurrentUser();
 		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
@@ -316,7 +316,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return
 	 */
-	public EmsDashboardLastAccess getLastAccess(Long dashboardId, String tenantId)
+	public EmsDashboardLastAccess getLastAccess(Long dashboardId, Long tenantId)
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			return null;
@@ -348,7 +348,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return
 	 */
-	public Date getLastAccessDate(Long dashboardId, String tenantId)
+	public Date getLastAccessDate(Long dashboardId, Long tenantId)
 	{
 		EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
 		if (edla != null) {
@@ -365,7 +365,7 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public boolean isDashboardFavorite(Long dashboardId, String tenantId) throws DashboardException
+	public boolean isDashboardFavorite(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			throw new DashboardNotFoundException();
@@ -392,7 +392,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return
 	 */
-	public List<Dashboard> listAllDashboards(String tenantId)
+	public List<Dashboard> listAllDashboards(Long tenantId)
 	{
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		List<EmsDashboard> edList = dsf.getEmsDashboardFindAll();
@@ -415,7 +415,7 @@ public class DashboardManager
 	 * @return
 	 * @throws DashboardException
 	 */
-	public PaginatedDashboards listDashboards(Integer offset, Integer pageSize, String tenantId, boolean ic)
+	public PaginatedDashboards listDashboards(Integer offset, Integer pageSize, Long tenantId, boolean ic)
 			throws DashboardException
 	{
 		return listDashboards(null, offset, pageSize, tenantId, ic);
@@ -433,7 +433,7 @@ public class DashboardManager
 	 *            ignore case or not
 	 * @return
 	 */
-	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, String tenantId,
+	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
@@ -525,7 +525,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @throws DashboardNotFoundException
 	 */
-	public void removeFavoriteDashboard(Long dashboardId, String tenantId) throws DashboardNotFoundException
+	public void removeFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardNotFoundException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			throw new DashboardNotFoundException();
@@ -559,7 +559,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return the dashboard saved
 	 */
-	public Dashboard saveNewDashboard(Dashboard dbd, String tenantId) throws DashboardException
+	public Dashboard saveNewDashboard(Dashboard dbd, Long tenantId) throws DashboardException
 	{
 		if (dbd == null) {
 			return null;
@@ -623,7 +623,7 @@ public class DashboardManager
 	 * @param enable
 	 * @param tenantId
 	 */
-	public void setDashboardIncludeTimeControl(Long dashboardId, boolean enable, String tenantId)
+	public void setDashboardIncludeTimeControl(Long dashboardId, boolean enable, Long tenantId)
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			return;
@@ -644,12 +644,13 @@ public class DashboardManager
 	 * @param tenantId
 	 * @return the dashboard saved or updated
 	 */
-	public Dashboard updateDashboard(Dashboard dbd, String tenantId) throws DashboardException
+	public Dashboard updateDashboard(Dashboard dbd, Long tenantId) throws DashboardException
 	{
 		if (dbd == null) {
 			return null;
 		}
 		EntityManager em = null;
+		EmsDashboard ed = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
@@ -677,18 +678,17 @@ public class DashboardManager
 				}
 			}
 
-			EmsDashboard ed = dsf.getEmsDashboardById(dbd.getDashboardId());
+			ed = dsf.getEmsDashboardById(dbd.getDashboardId());
 			if (ed == null) {
 				throw new DashboardNotFoundException();
 			}
-			dbd.getPersistenceEntity(ed);
+			ed = dbd.getPersistenceEntity(ed);
 			ed.setLastModificationDate(new Date());
 			ed.setLastModifiedBy(currentUser);
 			if (dbd.getOwner() != null) {
 				ed.setOwner(dbd.getOwner());
 			}
-			dsf.mergeEntity(ed);
-			dsf.commitTransaction();
+			dsf.mergeEmsDashboard(ed);
 			return Dashboard.valueOf(ed, dbd);
 		}
 		finally {
@@ -704,35 +704,41 @@ public class DashboardManager
 	 * @param dashboardId
 	 * @param tenantId
 	 */
-	public void updateLastAccessDate(Long dashboardId, String tenantId)
+	public void updateLastAccessDate(Long dashboardId, Long tenantId)
 	{
-		if (dashboardId == null || dashboardId <= 0) {
-			return;
-		}
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
-				return;
-			}
-			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
-			EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
-			EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
-			if (edla == null) {
-				edla = new EmsDashboardLastAccess(new Date(), currentUser, dashboardId);
-				dsf.persistEmsDashboardLastAccess(edla);
-			}
-			else {
-				edla.setAccessDate(new Date());
-				dsf.mergeEmsDashboardLastAccess(edla);
-			}
+			updateLastAccessDate(dashboardId, tenantId, dsf);
 		}
 		finally {
 			if (em != null) {
 				em.close();
 			}
+		}
+	}
+
+	public void updateLastAccessDate(Long dashboardId, Long tenantId, DashboardServiceFacade dsf)
+	{
+		if (dashboardId == null || dashboardId <= 0) {
+			return;
+		}
+		EntityManager em = null;
+		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+		if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+			return;
+		}
+		em = dsf.getEntityManager();
+		String currentUser = AppContext.getInstance().getCurrentUser();
+		EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
+		EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+		if (edla == null) {
+			edla = new EmsDashboardLastAccess(new Date(), currentUser, dashboardId);
+			dsf.persistEmsDashboardLastAccess(edla);
+		}
+		else {
+			edla.setAccessDate(new Date());
+			dsf.mergeEmsDashboardLastAccess(edla);
 		}
 	}
 

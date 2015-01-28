@@ -104,49 +104,7 @@ role value for that section to represent the appropriate content type.
                     
                     <!--Nav Menu-->
                     <div class="menuPullDown oj-component-initnode" id="links_menu">
-                        <div class="links-content-container">
-                            <div class="oj-sm-1 oj-md-offset-1 oj-col links-icon">
-                                <div class="iconCircle" id="iconLink">
-                                    <i class="fa fa-icon-font fa-link"></i>
-                                </div>
-                            </div>
-                            <div class="oj-sm-2 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Quick Links</div>
-                                    <!-- ko foreach: navigationsPopupModel().quickLinks -->
-                                    <div class="oj-row" style="font-weight: bold">
-                                        <a data-bind="click: function() {window.open($data.href);}, text: truncateString($data.name, 20)"></a>
-                                    </div>
-                                    <!-- /ko -->
-<!--                                <div class="oj-row" style="font-weight: bold">
-                                    <a data-bind="click: function() { window.open( navigationsPopupModel().homeLink );}">Dashboard Home</a>
-                                </div>
-                                <div class="oj-row" style="font-weight: bold">
-                                    <a data-bind="click: function() { window.open( navigationsPopupModel().dataVisualLink );}">Data Visual Analyzer Home</a>
-                                </div>-->
-                            </div>
-                            <div class="oj-sm-1 oj-col links-icon">
-                                <div class="iconCircle" id="iconStar">
-                                    <i class="fa fa-icon-font fa-star"></i>
-                                </div>
-                            </div>
-                            <div class="oj-sm-2 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Favorites</div>
-                                <!-- ko foreach: navigationsPopupModel().favorites -->
-                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                <!-- /ko -->
-                            </div>
-                            <div class="oj-sm-1 oj-col links-icon">
-                                <div class="iconCircle" id="iconHistory">
-                                    <i class="fa fa-icon-font fa-history"></i>
-                                </div>
-                            </div>
-                            <div class="oj-sm-3 oj-col">
-                                <div class="oj-row" style="font-weight: bolder; font-size: medium;">Recent Dashboards</div>
-                                <!-- ko foreach: navigationsPopupModel().recents -->
-                                <div class="oj-row" style="font-weight: bold"><a data-bind="click: function() {  $data.openDashboard(); }, text: truncateString($data.name, 20)"></a></div>
-                                <!-- /ko -->
-                            </div>
-                        </div>
+                        <df-nav-links params="{navLinksNeedRefresh:$data.navLinksNeedRefresh}"></df-nav-links>
                     </div>
                     <!--Nav Menu-->
                 </div>            
@@ -226,14 +184,14 @@ role value for that section to represent the appropriate content type.
                         <button id="dashboard-nav-home" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
                                   data-bind="click: handleGobackHomepage, ojComponent: {
                                         component:'ojButton'
-                            }" title="Home">
+                            }" title="Navigate to Home">
                             <img src="css/images/navi_home_24_hov@2x.png" alt="Home" style="width: 70%; margin: -5px;" class="dbd-not-gray"/>
                         </button>
                         <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
                                   data-bind="click: openAddWidgetDialog,ojComponent: {
                                         disabled: editDisabled,
                                         component:'ojButton'
-                            }" title="Create">
+                            }" title="Add Widgets">
                             <img src="css/images/qual_plus_24_mono.png" alt="add a widget"/>
                           </button>
                           <button id="dashboard-settings" class="oj-button oj-default oj-button-half-chrome dbd-translucency"
@@ -241,7 +199,7 @@ role value for that section to represent the appropriate content type.
                                         component:'ojButton', 
                                         disabled: editDisabled,
                                         icons: {start:'dbd-toolbar-icon-settings'}
-                            }" title="Settings">
+                            }" title="Change Settings">
                             <img src="css/images/qual_gear_24_mono.png" alt="configure dashboard"/>
                           </button>
                           <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
@@ -249,7 +207,7 @@ role value for that section to represent the appropriate content type.
                                         component:'ojButton', 
                                         disabled: editDisabled,
                                         icons: {start:'dbd-toolbar-icon-settings'}
-                            }" title="Save">
+                            }" title="Save Dashboard">
                             <img src="css/images/func_floppy_24.png" alt="Save"/>
                           </button>
                         <!-- ko if: isFavorite()===false -->

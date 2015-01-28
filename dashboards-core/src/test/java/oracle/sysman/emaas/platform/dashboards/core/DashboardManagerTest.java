@@ -31,7 +31,7 @@ public class DashboardManagerTest
 		// EMCPDF-85	Diff user is able to create dashboard with the same name for the same tenant
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 1234L;
 		String name = "dashboard " + System.currentTimeMillis();
 		dbd1.setName(name);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
@@ -56,8 +56,8 @@ public class DashboardManagerTest
 	{
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId1 = "tenantId1";
-		String tenantId2 = "tenantId2";
+		Long tenantId1 = 1234L;
+		Long tenantId2 = 12345L;
 		String name = "dashboard in testCreateDashboardSameNameDifTenant()" + System.currentTimeMillis();
 		dbd1.setName(name);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
@@ -82,7 +82,7 @@ public class DashboardManagerTest
 		Dashboard dbd1 = null;
 		Dashboard dbd2 = null;
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 1234L;
 
 		try {
 			dbd1 = new Dashboard();
@@ -107,16 +107,20 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateSimpleDashboard() throws DashboardException
+	public void testCreateSimpleDashboard() throws DashboardException, InterruptedException
 	{
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
+		Tile t1 = createTileForDashboard(dbd);
+		createParameterForTile(t1);
 
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 1234L;
 		dm.saveNewDashboard(dbd, tenantId1);
+		//		dbd = dm.getDashboardById(10253L, tenantId1);
 		Assert.assertNotNull(dbd.getDashboardId());
+		dm.updateDashboard(dbd, tenantId1);
 
 		// create a dashboard with dashboard id specified
 		Dashboard dbd2 = new Dashboard();
@@ -151,11 +155,12 @@ public class DashboardManagerTest
 		t2p1.setIntegerValue(3);
 
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 1234L;
 		dm.saveNewDashboard(dbd, tenantId1);
 		dm.updateLastAccessDate(dbd.getDashboardId(), tenantId1);
 
 		Dashboard queried = dm.getDashboardById(dbd.getDashboardId(), tenantId1);
+		dm.updateDashboard(queried, tenantId1);
 
 		Assert.assertNotNull(queried);
 		Assert.assertEquals(queried.getName(), dbd.getName());
@@ -278,8 +283,8 @@ public class DashboardManagerTest
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
-		String tenantId1 = "tenantId1";
-		String tenantId2 = "tenantId2";
+		Long tenantId1 = 11L;
+		Long tenantId2 = 12L;
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
 		dbd1.setDescription("dashboard 1");
@@ -334,7 +339,7 @@ public class DashboardManagerTest
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 11L;
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
@@ -381,8 +386,8 @@ public class DashboardManagerTest
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
-		String tenantId1 = "tenantId1";
-		String tenantId2 = "tenantId2";
+		Long tenantId1 = 11L;
+		Long tenantId2 = 12L;
 
 		Dashboard queried = dm.getDashboardByName(name1, tenantId1);
 		Assert.assertNull(queried);
@@ -420,7 +425,7 @@ public class DashboardManagerTest
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 11L;
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
@@ -448,7 +453,7 @@ public class DashboardManagerTest
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 11L;
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
@@ -479,8 +484,8 @@ public class DashboardManagerTest
 	public void testListDashboard() throws DashboardException, InterruptedException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenant1 = "tenant1";
-		String tenant2 = "tenant2";
+		Long tenant1 = 11L;
+		Long tenant2 = 12L;
 		PaginatedDashboards pd = dm.listDashboards(null, null, tenant1, false);
 		Assert.assertNotNull(pd);
 		Assert.assertEquals(0, pd.getOffset());
@@ -608,7 +613,7 @@ public class DashboardManagerTest
 	{
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
-		String tenantId1 = "tenantId1";
+		Long tenantId1 = 11L;
 		String name = "dashboard in testCreateDashboardSameNameDifTenant()" + System.currentTimeMillis();
 		dbd1.setName(name);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
