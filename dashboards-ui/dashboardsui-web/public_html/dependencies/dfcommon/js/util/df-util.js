@@ -283,8 +283,8 @@ define(['knockout',
                     async: false
                 });                    
                 }
-//                return self.authToken;
-                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
+                return self.authToken;
+//                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
             };
             
             
