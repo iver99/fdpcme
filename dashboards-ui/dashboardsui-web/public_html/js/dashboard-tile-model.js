@@ -129,7 +129,10 @@ define(['knockout',
             if (!tile)
                 return;
             
-            registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
+            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT());
+            var kocVM = assetRoot + tile.WIDGET_VIEWMODEL();
+            var kocTemplate = assetRoot + tile.WIDGET_TEMPLATE();
+            registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
             tile.shouldHide = ko.observable(false);
             tile.clientGuid = dfu.guid();
             tile.widerEnabled = ko.computed(function() {
