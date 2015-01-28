@@ -48,40 +48,54 @@ define(['knockout',
                 var fetchServiceCallback = function(data) {
                     var items = data.items;
                     if (items && items.length > 0) {
-                        for (j = 0; j < items.length && !urlFound; j++) {
+                        for (var j = 0; j < items.length && !urlFound; j++) {
                             var virtualEndpoints = items[j].virtualEndpoints;
-                            for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
-                                $.ajax({
-                                    url: virtualEndpoints[k],
-                                    headers: self.getSavedSearchServiceRequestHeader(),
-                                    success: function(data, textStatus) {
-                                        availableUrl = virtualEndpoints[k];
-                                        urlFound = true;
-                                    },
-                                    error: function(xhr, textStatus, errorThrown){
-
-                                    }
-                                    ,
-                                    async: false
-                                });
+                            for (var k = 0; k < virtualEndpoints.length && !urlFound; k++) {
+                                var url = virtualEndpoints[k];
+                                if (url.indexOf("http:")===0 || url.indexOf("https:")===0){
+                                    availableUrl = virtualEndpoints[k];
+                                    urlFound = true;                                    
+                                }
+//                                $.ajax({
+//                                    url: virtualEndpoints[k],
+//                                    headers: self.getSavedSearchServiceRequestHeader(),
+//                                    success: function(data, textStatus) {
+//                                        availableUrl = virtualEndpoints[k];
+//                                        urlFound = true;
+//                                    },
+//                                    error: function(xhr, textStatus, errorThrown){
+//
+//                                    }
+//                                    ,
+//                                    async: false
+//                                });
                             }
 
                             if (!urlFound) {
                                 var canonicalEndpoints = items[j].canonicalEndpoints;
-                                for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
-                                    $.ajax({
-                                        url: canonicalEndpoints[m],
-                                        headers: self.getSavedSearchServiceRequestHeader(),
-                                        success: function(data, textStatus) {
-                                            availableUrl = canonicalEndpoints[m];
-                                            urlFound = true;
-                                        },
-                                        error: function(xhr, textStatus, errorThrown){
-
-                                        }
-                                        ,
-                                        async: false
-                                    });
+                                if (canonicalEndpoints.length>0){
+                                    availableUrl = canonicalEndpoints[0];
+                                    urlFound = true;
+                                }                                
+                                for (var m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
+                                    var url = canonicalEndpoints[m];
+                                    if (url.indexOf("http:")===0 || url.indexOf("https:")===0){
+                                        availableUrl = canonicalEndpoints[m];
+                                        urlFound = true;                                    
+                                    }                                    
+//                                    $.ajax({
+//                                        url: canonicalEndpoints[m],
+//                                        headers: self.getSavedSearchServiceRequestHeader(),
+//                                        success: function(data, textStatus) {
+//                                            availableUrl = canonicalEndpoints[m];
+//                                            urlFound = true;
+//                                        },
+//                                        error: function(xhr, textStatus, errorThrown){
+//
+//                                        }
+//                                        ,
+//                                        async: false
+//                                    });
                                 }
                             }
                         }
@@ -92,7 +106,7 @@ define(['knockout',
                 $.getJSON(self.getRegistrationEndPoint(), function(data) {    
                     if (data.registryUrls && data.ssfServiceName && data.ssfVersion) {
                         var urls = data.registryUrls.split(",");
-                        for (i = 0; i < urls.length && !urlFound; i++) {
+                        for (var i = 0; i < urls.length && !urlFound; i++) {
                             var serviceUrl = urls[i]+'/'+'instances?serviceName='+data.ssfServiceName;
                             if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                 serviceUrl = urls[i]+'instances?serviceName='+data.ssfServiceName;
@@ -129,41 +143,49 @@ define(['knockout',
                 var fetchServiceCallback = function(data) {
                     var items = data.items;
                     if (items && items.length > 0) {
-                        for (j = 0; j < items.length && !urlFound; j++) {
+                        for (var j = 0; j < items.length && !urlFound; j++) {
                             var virtualEndpoints = items[j].virtualEndpoints;
-                            for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
-                                $.ajax({
-                                    url: virtualEndpoints[k],
-                                    headers: self.getSavedSearchServiceRequestHeader(),
-                                    success: function(data, textStatus) {
-                                        availableUrl = virtualEndpoints[k];
-                                        urlFound = true;
-                                    },
-                                    error: function(xhr, textStatus, errorThrown){
-
-                                    }
-                                    ,
-                                    async: false
-                                });
+                            if (virtualEndpoints.length>0){
+                                availableUrl = virtualEndpoints[0];
+                                urlFound = true;
                             }
+//                            for (k = 0; k < virtualEndpoints.length && !urlFound; k++) {
+//                                $.ajax({
+//                                    url: virtualEndpoints[k],
+//                                    headers: self.getSavedSearchServiceRequestHeader(),
+//                                    success: function(data, textStatus) {
+//                                        availableUrl = virtualEndpoints[k];
+//                                        urlFound = true;
+//                                    },
+//                                    error: function(xhr, textStatus, errorThrown){
+//
+//                                    }
+//                                    ,
+//                                    async: false
+//                                });
+//                            }
 
                             if (!urlFound) {
                                 var canonicalEndpoints = items[j].canonicalEndpoints;
-                                for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
-                                    $.ajax({
-                                        url: canonicalEndpoints[m],
-                                        headers: self.getSavedSearchServiceRequestHeader(),
-                                        success: function(data, textStatus) {
-                                            availableUrl = canonicalEndpoints[m];
-                                            urlFound = true;
-                                        },
-                                        error: function(xhr, textStatus, errorThrown){
-
-                                        }
-                                        ,
-                                        async: false
-                                    });
-                                }
+                                if (canonicalEndpoints.length>0){
+                                    availableUrl = canonicalEndpoints[0];
+                                    urlFound = true;
+                                }                                
+//                                for (m = 0; m < canonicalEndpoints.length && !urlFound; m++) {
+//                                    $.ajax({
+//                                        url: canonicalEndpoints[m],
+//                                        headers: self.getSavedSearchServiceRequestHeader(),
+//                                        success: function(data, textStatus) {
+//                                            availableUrl = canonicalEndpoints[m];
+//                                            urlFound = true;
+//                                        },
+//                                        error: function(xhr, textStatus, errorThrown){
+//
+//                                        }
+//                                        ,
+//                                        async: false
+//                                    });
+//                                }
                             }
                         }
                     }
@@ -173,7 +195,7 @@ define(['knockout',
                 $.getJSON(self.getRegistrationEndPoint(), function(data) {    
                     if (data.registryUrls && 'Dashboard-API' && '1.0') {
                         var urls = data.registryUrls.split(",");
-                        for (i = 0; i < urls.length && !urlFound; i++) {
+                        for (var i = 0; i < urls.length && !urlFound; i++) {
                             var serviceUrl = urls[i]+'/'+'instances?serviceName='+'Dashboard-API';
                             if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                 serviceUrl = urls[i]+'instances?serviceName='+'Dashboard-API';
@@ -261,8 +283,8 @@ define(['knockout',
                     async: false
                 });                    
                 }
-                return self.authToken;
-//                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
+//                return self.authToken;
+                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
             };
             
             
@@ -325,9 +347,9 @@ define(['knockout',
                         function fetchServiceAssetRoot(data) {
                             var items = data.items;
                             if (items && items.length > 0) {
-                                for (j = 0; j < items.length && !urlFound; j++) {
+                                for (var j = 0; j < items.length && !urlFound; j++) {
                                     var links = items[j].links;
-                                    for (k = 0; k < links.length; k++) {
+                                    for (var k = 0; k < links.length; k++) {
                                         var link = links[k];
                                         if (providerAssetRoot === link.rel) {
                                             return link.href;
@@ -343,7 +365,7 @@ define(['knockout',
                         $.getJSON(self.getRegistrationEndPoint(), function(data) {
                             if (data.registryUrls) {
                                 var urls = data.registryUrls.split(",");
-                                for (i = 0; i < urls.length && !urlFound; i++) {
+                                for (var i = 0; i < urls.length && !urlFound; i++) {
                                     var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
                                     if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                         serviceUrl = urls[i] + 'instances?serviceName=' + providerName;
@@ -388,10 +410,10 @@ define(['knockout',
                 var fetchServiceQuickLinks = function(data) {
                     var linkRecords = {};
                     if (data.items && data.items.length > 0) {
-                        for (i = 0; i < data.items.length; i++) {
+                        for (var i = 0; i < data.items.length; i++) {
                             var serviceItem = data.items[i];
                             if (serviceItem.links && serviceItem.links.length > 0) {
-                                for (j = 0; j < serviceItem.links.length; j++) {
+                                for (var j = 0; j < serviceItem.links.length; j++) {
                                     var link = serviceItem.links[j];
                                     var linkName = serviceItem.serviceName;
                                     var isValidQuickLink = false;
@@ -443,7 +465,7 @@ define(['knockout',
                 $.getJSON(self.getRegistrationEndPoint(),function(data) {
                         if (data.registryUrls) {
                             var urls = data.registryUrls.split(",");
-                            for (i = 0; i < urls.length; i++) {
+                            for (var i = 0; i < urls.length; i++) {
                                 var serviceUrl = urls[i]+'/'+'instances';
                                 if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                     serviceUrl = urls[i]+'instances';
@@ -465,10 +487,10 @@ define(['knockout',
                     });
                 $.ajaxSettings.async = true;
                 
-                for (i = 0; i < linksFromDashboard.length; i++) {
+                for (var i = 0; i < linksFromDashboard.length; i++) {
                     availableLinks.push(linksFromDashboard[i]);
                 }
-                for (j = 0; j < linksFromIntegrators.length; j++) {
+                for (var j = 0; j < linksFromIntegrators.length; j++) {
                     availableLinks.push(linksFromIntegrators[j]);
                 }
                 return availableLinks;
