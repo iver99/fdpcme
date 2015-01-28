@@ -201,7 +201,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
+	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
 	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
@@ -242,16 +242,16 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		StringBuilder virtualEndPoints = new StringBuilder();
 		StringBuilder canonicalEndPoints = new StringBuilder();
 		if (applicationUrlHttp != null) {
-			virtualEndPoints.append(applicationUrlHttp + NAV_CONTEXT_ROOT);
-			canonicalEndPoints.append(applicationUrlHttp + NAV_CONTEXT_ROOT);
+			virtualEndPoints.append(applicationUrlHttp + NAV_API_BASE);
+			canonicalEndPoints.append(applicationUrlHttp + NAV_API_BASE);
 		}
 		if (applicationUrlHttps != null) {
 			if (virtualEndPoints.length() > 0) {
 				virtualEndPoints.append(",");
 				canonicalEndPoints.append(",");
 			}
-			virtualEndPoints.append(applicationUrlHttps + NAV_CONTEXT_ROOT);
-			canonicalEndPoints.append(applicationUrlHttps + NAV_CONTEXT_ROOT);
+			virtualEndPoints.append(applicationUrlHttps + NAV_API_BASE);
+			canonicalEndPoints.append(applicationUrlHttps + NAV_API_BASE);
 		}
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
