@@ -59,7 +59,9 @@ public class Tile
 		if (edtpList != null) {
 			List<TileParam> paras = new ArrayList<TileParam>(edtpList.size());
 			for (EmsDashboardTileParams edtp : edtpList) {
-				paras.add(TileParam.valueOf(edtp));
+				TileParam tp = TileParam.valueOf(edtp);
+				tp.setTile(tile);
+				paras.add(tp);
 			}
 			tile.setParameters(paras);
 		}
@@ -293,7 +295,7 @@ public class Tile
 					widgetTemplate, widgetUniqueId, widgetViewmode, width);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
-					EmsDashboardTileParams edtp = param.getPersistentEntity(null);
+					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
 					to.addEmsDashboardTileParams(edtp);
 				}
 			}
@@ -600,13 +602,13 @@ public class Tile
 		for (TileParam tp : paramList) {
 			EmsDashboardTileParams edtp = null;
 			if (!rows.containsKey(tp)) {
-				edtp = tp.getPersistentEntity(null);
+				edtp = tp.getPersistentEntity(tile, null);
 				tile.addEmsDashboardTileParams(edtp);
 				rows.put(tp, edtp);
 			}
 			else {
-				edtp = rows.get(tile);
-				edtp = tp.getPersistentEntity(edtp);
+				edtp = rows.get(tp);
+				edtp = tp.getPersistentEntity(tile, edtp);
 			}
 		}
 	}

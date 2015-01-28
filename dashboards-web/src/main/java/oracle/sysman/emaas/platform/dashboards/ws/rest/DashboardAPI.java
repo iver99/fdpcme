@@ -28,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -57,7 +58,7 @@ public class DashboardAPI extends APIBase
 		try {
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			d = manager.saveNewDashboard(d, tenantId);
 			updateDashboardAllHref(d);
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
@@ -69,6 +70,10 @@ public class DashboardAPI extends APIBase
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
+			return buildErrorResponse(new ErrorEntity(e));
+		}
 	}
 
 	@DELETE
@@ -78,11 +83,15 @@ public class DashboardAPI extends APIBase
 	{
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			manager.deleteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -95,11 +104,15 @@ public class DashboardAPI extends APIBase
 	{
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			return Response.ok(ss).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 
@@ -113,12 +126,16 @@ public class DashboardAPI extends APIBase
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			updateDashboardAllHref(dbd);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -139,7 +156,7 @@ public class DashboardAPI extends APIBase
 
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
@@ -149,6 +166,10 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(pd)).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -170,13 +191,17 @@ public class DashboardAPI extends APIBase
 
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			input.setDashboardId(dashboardId);
 			Dashboard dbd = dm.updateDashboard(input, tenantId);
 			updateDashboardAllHref(dbd);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}

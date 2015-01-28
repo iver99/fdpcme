@@ -67,8 +67,6 @@ public class EmsDashboardTile implements Serializable
 	private String providerName;
 	@Column(name = "PROVIDER_VERSION", length = 64)
 	private String providerVersion;
-	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
-	private String tenantId;
 	@Column(name = "WIDGET_CREATION_TIME", nullable = false, length = 32)
 	private String widgetCreationTime;
 
@@ -211,11 +209,6 @@ public class EmsDashboardTile implements Serializable
 		return providerVersion;
 	}
 
-	public String getTenantId()
-	{
-		return tenantId;
-	}
-
 	public Long getTileId()
 	{
 		return tileId;
@@ -356,11 +349,6 @@ public class EmsDashboardTile implements Serializable
 	public void setProviderVersion(String providerVersion)
 	{
 		this.providerVersion = providerVersion;
-	}
-
-	public void setTenantId(String tenantId)
-	{
-		this.tenantId = tenantId;
 	}
 
 	public void setTitle(String title)
