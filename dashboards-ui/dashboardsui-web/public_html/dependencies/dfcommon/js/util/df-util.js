@@ -370,7 +370,7 @@ define(['knockout',
                         });
                         $.ajaxSettings.async = true;
             //            return assetRoot;    
-                        return 'http://localhost:8383/emcpdfui/';
+                        return document.location.protocol + '//' + document.location.host + '/emcpdfui/';
                     }
                 }
                 return "http://jet.us.oracle.com";
