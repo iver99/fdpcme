@@ -23,7 +23,7 @@ function(dfu, oj, ko, $)
             if (!__url) {
                 __url = null;
             }
-            console.log("[DashboardModel] operation: "+ _operation +"  "+__url + " \n      Header: "+getSecurityHeader()); //return __url;
+            //console.log("[DashboardModel] operation: "+ _operation +"  "+__url + " \n      Header: " + JSON.stringify(dfu.getDashboardsRequestHeader())); //return __url;
             return {
                     url: __url,
                     headers: dfu.getDashboardsRequestHeader()//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()}//Pass the required header information

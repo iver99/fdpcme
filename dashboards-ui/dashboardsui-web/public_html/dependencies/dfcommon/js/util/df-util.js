@@ -345,7 +345,7 @@ define(['knockout',
                                 var urls = data.registryUrls.split(",");
                                 for (i = 0; i < urls.length && !urlFound; i++) {
                                     var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
-                                    if (urls[i].lastIndexOf("/")===urls[i].length){
+                                    if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                         serviceUrl = urls[i] + 'instances?serviceName=' + providerName;
                                     }
                                     if (providerVersion)
@@ -370,7 +370,7 @@ define(['knockout',
                         });
                         $.ajaxSettings.async = true;
             //            return assetRoot;    
-                        return 'http://localhost:8383/emcpdfui/';
+                        return document.location.protocol + '//' + document.location.host + '/emcpdfui/';
                     }
                 }
                 return "http://jet.us.oracle.com";
