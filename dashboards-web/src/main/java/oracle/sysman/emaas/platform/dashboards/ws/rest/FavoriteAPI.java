@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -49,11 +50,15 @@ public class FavoriteAPI extends APIBase
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			dm.addFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -65,11 +70,15 @@ public class FavoriteAPI extends APIBase
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			dm.removeFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -80,7 +89,7 @@ public class FavoriteAPI extends APIBase
 	{
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			List<Dashboard> pd = manager.getFavoriteDashboards(tenantId);
 			List<FavoriteEntity> entities = new ArrayList<FavoriteEntity>();
 			if (pd != null) {
@@ -94,6 +103,10 @@ public class FavoriteAPI extends APIBase
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
+			return buildErrorResponse(new ErrorEntity(e));
+		}
 
 	}
 
@@ -105,7 +118,7 @@ public class FavoriteAPI extends APIBase
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
-			String tenantId = getTenantId(tenantIdParam);
+			Long tenantId = getTenantId(tenantIdParam);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			boolean isFavorite = dm.isDashboardFavorite(dbd.getDashboardId(), tenantId);
 			IsFavoriteEntity ife = new IsFavoriteEntity();
@@ -113,6 +126,10 @@ public class FavoriteAPI extends APIBase
 			return Response.status(Status.OK).entity(getJsonUtil().toJson(ife)).build();
 		}
 		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			e.printStackTrace();
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}

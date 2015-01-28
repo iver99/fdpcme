@@ -23,23 +23,6 @@ function(dsf, oj, ko, $, dfu)
 {
     var RECENT_MAX_SIZE = 10;
     
-    ko.extenders.defaultIfNull = function(target, defaultValue) {
-    var result = ko.computed({
-        read: target,
-        write: function(newValue) {
-            if (!newValue) {
-                target(defaultValue);
-            } else {
-                target(newValue);
-            }
-        }
-    });
-
-    result(target());
-
-    return result;
-    };
-    
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -128,40 +111,6 @@ function(dsf, oj, ko, $, dfu)
         };
     };
     
-    function DashboardModel(id,name,description,includeTimeRangeFilter,widgets){
-        var self = this;
-        self.id = id;
-        self.name = name;
-        self.description = description;
-        self.type = 0;
-        self.widgets = widgets;
-        self.image = undefined; //"http://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png";
-        self.includeTimeRangeFilter = includeTimeRangeFilter===null?false:includeTimeRangeFilter;
-        self.currentPageNum = 1;
-        self.openDashboard = function(){
-            //window.open(document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?name='+encodeURIComponent(self.name)+"&description="+encodeURIComponent(self.description));
-            if ("onePage"===self.type){
-                if (widgets instanceof Array && widgets.length===1 && 
-                        widgets[0].WIDGET_KOC_NAME &&
-                        widgets[0].WIDGET_VIEWMODEL &&
-                        widgets[0].WIDGET_TEMPLATE &&
-                        widgets[0].PROVIDER_NAME &&
-                        widgets[0].PROVIDER_VERSION &&
-                        widgets[0].PROVIDER_ASSET_ROOT
-                        ){
-                    window.open(self.getLink());
-                }else{
-                    $( "#dbs_comingsoonDialog" ).ojDialog( "open" );
-                }              
-            }else{
-                window.open(self.getLink());
-            }
-        };
-        self.getLink = function() {
-            return document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId=' + self.id;
-        };
-    };
-    
     function ViewModel() {
         
         var self = this;
@@ -173,10 +122,12 @@ function(dsf, oj, ko, $, dfu)
         self.confirmDialogModel = new confirmDialogModel();
         self.navigationsPopupModel = new navigationsPopupModel(); // should be removed when nav is ok
         self.comingsoonDialogModel = new comingsoonDialogModel();
+        self.navLinksNeedRefresh = ko.observable(false);
         
         self.pageSize = ko.observable(20);
         
         self.serviceURL = dfu.discoverDFRestApiUrl()+"dashboards";
+        //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
         self.dashboards = ko.computed(function() {
@@ -313,7 +264,7 @@ function(dsf, oj, ko, $, dfu)
         
         self.searchResponse = function (event, data)
         {
-            console.log("searchResponse: "+data.content.collection.length);
+            //console.log("searchResponse: "+data.content.collection.length);
             self.datasource = data.content;
             self.pagingDatasource(data.content['pagingDS']);
         };
@@ -321,31 +272,25 @@ function(dsf, oj, ko, $, dfu)
         self.forceSearch = function (event, data)
         {
             $("#sinput").dbsTypeAhead("forceSearch");
+            //self.updateDashboard({id:10058});
         };
         
         self.updateDashboard = function (dsb)
-        {/*
-            _dbsArray[0].name = "test";
-            _dbsArray[0].image = "";
-            _dbsArray[0].description = "test";
-            var _e = $(".dbs-summary-container[aria-dashboard=\""+_dbsArray[0].id+"\"]");
-            _e.dbsDashboardPanel("refresh");
-            var that = this, _did = parseInt(dsb['dashboardId']);
-            
-            for (var _i = 0 ; _i < that.dbsArray.length; _i++)
+        {
+            var _id = dsb.id;
+            if (_id && self.datasource['pagingDS'])
             {
-                if (_did === that.dbsArray[_i].id)
-                {
-                    that.dbsArray[_i].name = dsb.dashboardName;
-                    that.dbsArray[_i].description = dsb.dashboardDescription;
-                    that.dbsArray[_i].type = dsb.type;
-                    that.dbsArray[_i].includeTimeRangeFilter = dsb.includeTimeRangeFilter;
-                    that.dbsArray[_i].image = dsb.screenShot;
-                    that.dbsArray[_i].widgets = dsb.widgets;
-                    var _e = $(".dbs-summary-container[aria-dashboard=\""+_did+"\"]");
-                    if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
-                }
-            }*/
+                self.datasource['pagingDS'].refreshModel(_id, {
+                    success: function(model) {
+                        model.set("name", "test");
+                        var _e = $(".dbs-summary-container[aria-dashboard=\""+_id+"\"]");
+                        if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
+                    },
+                    error: function() {
+                        //console.log("Error on update dashboard");
+                    }
+                });
+            }
         };
         
         self.getDashboard = function (id)
@@ -359,24 +304,6 @@ function(dsf, oj, ko, $, dfu)
                     return self.dbsArray[_i];
                 }
             }*/
-        };
-        
-        self.addToFavorites = function (id)
-        {
-            var _dsb = self.getDashboard(id);
-            if (_dsb && _dsb !== null)
-            {
-                self.navigationsPopupModel.addFavorite(_dsb);
-            }
-        };
-        
-        self.removeFromFavorites = function (id)
-        {
-            var _dsb = self.getDashboard(id);
-            if (_dsb && _dsb !== null)
-            {
-                self.navigationsPopupModel.removeFavorite(_dsb);
-            }
         };
         
         self.getNavigationsModel = function()

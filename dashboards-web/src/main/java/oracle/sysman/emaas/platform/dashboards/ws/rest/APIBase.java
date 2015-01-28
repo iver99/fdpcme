@@ -14,6 +14,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
@@ -49,13 +50,15 @@ public class APIBase
 		return jsonUtil;
 	}
 
-	public String getTenantId(String tenantId) throws CommonSecurityException
+	public Long getTenantId(String tenantId) throws CommonSecurityException, BasicServiceMalfunctionException
 	{
 		if (tenantId == null || "".equals(tenantId)) {
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_REQUIRED));
 		}
-		return tenantId;
+		// TODO: once the cloud environment is available, return the queried tenant id instead
+		//long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
+		return 1L;
 	}
 
 	/*

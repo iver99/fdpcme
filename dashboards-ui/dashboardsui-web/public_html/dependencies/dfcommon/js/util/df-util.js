@@ -281,7 +281,7 @@ define(['knockout',
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 return 'api/configurations/registration';
-                //return 'data/servicemanager.json';
+//                return 'data/servicemanager.json';
             }
 
             /**
@@ -345,7 +345,7 @@ define(['knockout',
                                 var urls = data.registryUrls.split(",");
                                 for (i = 0; i < urls.length && !urlFound; i++) {
                                     var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
-                                    if (urls[i].lastIndexOf("/")===urls[i].length){
+                                    if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                         serviceUrl = urls[i] + 'instances?serviceName=' + providerName;
                                     }
                                     if (providerVersion)
@@ -370,7 +370,7 @@ define(['knockout',
                         });
                         $.ajaxSettings.async = true;
             //            return assetRoot;    
-                        return 'http://localhost:8383/emcpdfui/';
+                        return document.location.protocol + '//' + document.location.host + '/emcpdfui/';
                     }
                 }
                 return "http://jet.us.oracle.com";
@@ -410,7 +410,7 @@ define(['knockout',
                                     if (isValidQuickLink) {
                                         var linkItem = {name: linkName,
                                                             href: link.href};
-                                        if (serviceItem.serviceName === 'Dashboard' && serviceItem.version === '1.0') {
+                                        if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '1.0') {
                                             linksFromDashboard.push(linkItem);
                                         }
                                         else {
@@ -422,10 +422,8 @@ define(['knockout',
                         }
                     }
                 };
-                
-                $.ajax({
-                    url: self.getRegistrationEndPoint(),
-                    success: function(data, textStatus) {
+                $.ajaxSettings.async = false;
+                $.getJSON(self.getRegistrationEndPoint(),function(data) {
                         if (data.registryUrls) {
                             var urls = data.registryUrls.split(",");
                             for (i = 0; i < urls.length; i++) {
@@ -447,12 +445,8 @@ define(['knockout',
                                 });
                             }
                         }
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Failed to get service manager configurations.');
-                    },
-                    async: false
-                });
+                    });
+                $.ajaxSettings.async = true;
                 
                 for (i = 0; i < linksFromDashboard.length; i++) {
                     availableLinks.push(linksFromDashboard[i]);
