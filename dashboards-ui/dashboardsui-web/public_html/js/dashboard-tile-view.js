@@ -329,7 +329,7 @@ define(['knockout',
             else {
                 var categoryUrl = ssfUrl + '/categories';
                 $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl,
-                    headers: getSavedSearchServiceRequestHeader(), 
+                    headers: dfu.getSavedSearchServiceRequestHeader(), 
                     async: false,
                     success: function(data, textStatus){
                         if (data && data.length > 0) {
@@ -438,7 +438,7 @@ define(['knockout',
                                         queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
                     var saveSearchUrl = ssfUrl + "/search";
                     $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
-                        headers: getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
+                        headers: dfu.getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
                             $('#createWidgetDialog').ojDialog('close');
                             var msg = "Widget created successfully!";
@@ -638,7 +638,7 @@ define(['knockout',
                     var widgetgroupsUrl = ssfUrl + '/widgetgroups';
                     $.ajax({
                         url: widgetgroupsUrl,
-                        headers: getSavedSearchServiceRequestHeader(),
+                        headers: dfu.getSavedSearchServiceRequestHeader(),
                         success: function(data, textStatus) {
                             widgetGroupList = loadWidgetGroups(data);
                         },
@@ -650,7 +650,7 @@ define(['knockout',
                     
                     $.ajax({
                         url: widgetsUrl,
-                        headers: getSavedSearchServiceRequestHeader(),
+                        headers: dfu.getSavedSearchServiceRequestHeader(),
                         success: function(data, textStatus) {
                             integratorWidgets = loadWidgets(data);
 //                            curGroupWidgets = loadWidgets(data);
@@ -849,7 +849,7 @@ define(['knockout',
                         if (ssfUrl && ssfUrl !== '') {
                             $.ajax({
                                 url: ssfUrl+'/search/'+data.WIDGET_UNIQUE_ID,
-                                headers: getSavedSearchServiceRequestHeader(),
+                                headers: dfu.getSavedSearchServiceRequestHeader(),
                                 success: function(widget, textStatus) {
                                     _data.WIDGET_DESCRIPTION = widget.description ? widget.description : '';
                                     _data.QUERY_STR = widget.queryStr ? widget.queryStr : '';

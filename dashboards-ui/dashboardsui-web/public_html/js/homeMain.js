@@ -15,7 +15,7 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/debug',
+        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/min',
         'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
         'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
         'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',
@@ -23,6 +23,7 @@ requirejs.config({
         'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'dfutil':'../dependencies/dfcommon/js/util/df-util',
         'dbs': '../js'
     },
     // Shim configurations for modules that do not expose AMD

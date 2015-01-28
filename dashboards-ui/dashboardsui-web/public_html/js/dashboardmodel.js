@@ -1,6 +1,7 @@
 
 
-define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'], function(oj, ko, $)
+define(['dfutil', 'ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'], 
+function(dfu, oj, ko, $)
 {
 /**
  * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
@@ -25,7 +26,7 @@ define(['ojs/ojcore', 'knockout', 'jquery', 'ojs/ojknockout', 'ojs/ojmodel'], fu
             console.log("[DashboardModel] operation: "+ _operation +"  "+__url + " \n      Header: "+getSecurityHeader()); //return __url;
             return {
                     url: __url,
-                    headers: {"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()}//Pass the required header information
+                    headers: dfu.getDashboardsRequestHeader()//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()}//Pass the required header information
                };
         };
         _options['customURL'] = _customURL;

@@ -39,7 +39,7 @@ public class ScreenshorCRUD
 	{
 		try {
 			System.out.println("------------------------------------------");
-			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().when()
+			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything().header("Authorization",authToken).when()
 					.get("/dashboards/1/screenshot/");
 			System.out.println("Status code is: " + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 403);
@@ -65,7 +65,7 @@ public class ScreenshorCRUD
 
 			String jsonString = "{ \"name\":\"Test_Dashboard_ScreenShot\", \"screenShot\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABYwAAAJACAYAAA\"}";
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString).when().post("/dashboards");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).body(jsonString).when().post("/dashboards");
 			System.out.println(res.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -77,7 +77,7 @@ public class ScreenshorCRUD
 
 			System.out.println("Verify if the dashboard has screen shot...");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/" + dashboard_id + "/screenshot/");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).when().get("/dashboards/" + dashboard_id + "/screenshot/");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			System.out.println(res2.asString());
@@ -86,7 +86,7 @@ public class ScreenshorCRUD
 
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + dashboard_id);
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).when().delete("/dashboards/" + dashboard_id);
 			System.out.println(res5.asString());
 			System.out.println("Status code is: " + res5.getStatusCode());
 			Assert.assertTrue(res5.getStatusCode() == 204);
@@ -110,13 +110,13 @@ public class ScreenshorCRUD
 			System.out.println("Verify get the screen shot with invalid dashboard id");
 
 			//			Response res1 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-			//					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/0/screenshot");
+			//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).when().get("/dashboards/0/screenshot");
 			//			System.out.println("Stauts code is :" + res1.getStatusCode());
 			//			Assert.assertTrue(res1.getStatusCode() == 404);
 			//			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/9999999999/screenshot");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).when().get("/dashboards/9999999999/screenshot");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
@@ -139,7 +139,7 @@ public class ScreenshorCRUD
 
 			String jsonString = "{ \"name\":\"Test_Dashboard_ScreenShot\"}";
 			Response res = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).body(jsonString).when().post("/dashboards");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).body(jsonString).when().post("/dashboards");
 			System.out.println(res.asString());
 			System.out.println("==POST operation is done");
 			System.out.println("											");
@@ -151,7 +151,7 @@ public class ScreenshorCRUD
 
 			System.out.println("Verify if the dashboard has screen shot...");
 			Response res2 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().get("/dashboards/" + dashboard_id + "/screenshot/");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).when().get("/dashboards/" + dashboard_id + "/screenshot/");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			Assert.assertEquals(res2.asString(), "");
@@ -160,7 +160,7 @@ public class ScreenshorCRUD
 
 			System.out.println("cleaning up the dashboard that is created above using DELETE method");
 			Response res5 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.header("X-USER-IDENTITY-DOMAIN-NAME", tenantid).when().delete("/dashboards/" + dashboard_id);
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"Authorization",authToken).when().delete("/dashboards/" + dashboard_id);
 			System.out.println(res5.asString());
 			System.out.println("Status code is: " + res5.getStatusCode());
 			Assert.assertTrue(res5.getStatusCode() == 204);

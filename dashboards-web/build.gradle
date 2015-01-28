@@ -47,7 +47,7 @@ task restDoc {
  
     // Configure task input and output to not generate the doc again when the 
     // source file have not changed
-    inputs.files 'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/rest',  'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/navigation'
+    inputs.files 'src/main/java/oracle/sysman/emaas/platform/dashboards/ws/rest'
     outputs.dir restDocOutputDir
 }
 restDoc << {
@@ -66,7 +66,7 @@ restDoc << {
     }  
 
     // Run the enunciate task
-    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emSDK/emaas/platform/dashboards/ws/',
+    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emaas/platform/dashboards/ws/',
             classpathRef: 'enunciateRuntimePath',
             verbose: 'true', 
             debug: 'true', 
