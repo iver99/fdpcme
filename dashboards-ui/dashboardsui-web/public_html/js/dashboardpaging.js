@@ -41,7 +41,7 @@ DashboardPaging.prototype._refreshDataWindow = function() {
     var _isShow = this.showPagingObservable();
     if (_isShow !== true && this.pageSize < this.totalSize()) this.showPagingObservable(true); //show paging
     if (_isShow === true && this.pageSize >= this.totalSize()) this.showPagingObservable(false); //show paging
-    console.log("[DashboardPaging] show paging? " + this.showPagingObservable());
+    //console.log("[DashboardPaging] show paging? " + this.showPagingObservable());
     
     this.dataWindow = new Array(this._getSize());
     
@@ -123,6 +123,19 @@ DashboardPaging.prototype.getWindowObservable = function() {
     return this.observableDataWindow;
 };
 
+DashboardPaging.prototype.refreshModel = function(modelId, options)
+{
+    var opts = options || {};
+    var self = this;
+    self.collection.get(modelId).then(
+                function (model){
+                    if (model)
+                    {
+                        model.fetch(options);
+                    }
+                });
+};
+
 DashboardPaging.prototype.create = function(attributes, options)
 {
     var opts = options || {};
@@ -191,10 +204,12 @@ DashboardPaging.prototype.remove = function(model, options)
     
 };
 
+
+
 DashboardPaging.prototype.fetch = function(options)
 {
         // super
-    console.log("[DashboardPaging] calling fetch options - fetchType: "+options['fetchType']+  " startIndex: "+options['startIndex'] + " pageSize: " + options['pageSize']);
+    //console.log("[DashboardPaging] calling fetch options - fetchType: "+options['fetchType']+  " startIndex: "+options['startIndex'] + " pageSize: " + options['pageSize']);
      /*   var self = this, _forceFetch = options['forceFetch'], _isInit = ((options['fetchType'] && options['fetchType'] === 'init') ? true : false), _startIndex = self.startIndex(), _pageSize = self.pageSize;
         if (_forceFetch !== true)
         {
@@ -217,11 +232,11 @@ DashboardPaging.prototype.fetch = function(options)
     {
         if (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize))
         {
-            console.log("[DashboardPaging] resolve fetch");
+            //console.log("[DashboardPaging] resolve fetch");
             return this._refreshDataWindow().then(function() {self._processSuccess(opts)});
         }
     }
-    console.log("[DashboardPaging] called fetch");
+    //console.log("[DashboardPaging] called fetch");
     self._fetch(options);
 };
 
