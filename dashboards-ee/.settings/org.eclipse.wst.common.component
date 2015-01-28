@@ -10,10 +10,16 @@
         <dependent-module archiveName="registry-client-0.23.5.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-0.23.5.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="httpcore-4.3.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/httpcore-4.3.jar">
+        <dependent-module archiveName="httpclient-4.3.1.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/httpclient-4.3.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="httpclient-4.3.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/httpclient-4.3.1.jar">
+        <dependent-module archiveName="httpcore-4.3.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/httpcore-4.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="httpcore-4.3.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/httpcore-4.3.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-logging-1.1.1.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/commons-logging-1.1.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="emaas-platform-tenant-sdk-0.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.1.jar">

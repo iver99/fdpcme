@@ -75,9 +75,9 @@ public class EmsDashboardTile implements Serializable
 
 	@Column(name = "WIDGET_GROUP_NAME", length = 64)
 	private String widgetGroupName;
-	@Column(name = "WIDGET_HISTOGRAM", nullable = false, length = 1024)
+	@Column(name = "WIDGET_HISTOGRAM", length = 1024)
 	private String widgetHistogram;
-	@Column(name = "WIDGET_ICON", nullable = false, length = 1024)
+	@Column(name = "WIDGET_ICON", length = 1024)
 	private String widgetIcon;
 	@Column(name = "WIDGET_KOC_NAME", nullable = false, length = 256)
 	private String widgetKocName;

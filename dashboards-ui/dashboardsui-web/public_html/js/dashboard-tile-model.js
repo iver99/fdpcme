@@ -203,8 +203,8 @@ define(['knockout',
              */
             self.onDashboardItemChangeEvent = null;
             
-            self.customParameters = {};
-            self.systemParameters = {};
+//            self.customParameters = {};
+//            self.systemParameters = {};
             
             /**
              * Get value of tile Custom Parameter according to given name. This function only retrieves Custom Parameters.
@@ -215,14 +215,27 @@ define(['knockout',
              * System parameters and custom parameters are stored in different pool, 
              * so it is possible that one System parameter has the same name as another customer parameter
              * @param {String} name
-             * @returns {String} value of parameter. null if not found
+             * @returns {object} value of parameter. null if not found
              */
             self.getParameter = function (name) {
-                if (name in self.customParameters) {
-                    return self.customParameters[name];
-                } else {
+                if (name===null || name===undefined){
                     return null;
                 }
+                if (self.tileParameters){
+                    for (var i=0;i<self.tileParameters.length;i++){
+                        var tp = self.tileParameters[i];
+                        if (tp.name===name){
+                            return tp;
+                        }
+                    }
+                }
+                return null;
+
+//                if (name in self.customParameters) {
+//                    return self.customParameters[name];
+//                } else {
+//                    return null;
+//                }
             }
             
             /**
@@ -235,7 +248,24 @@ define(['knockout',
                 if (name===undefined || name===null || value===undefined || value===null){
                     console.error("Invaild value: name=["+name,"] value=["+value+"]");
                 }else{
-                    self.customParameters[name] = value;
+                    var found = false;
+                    if (self.tileParameters){
+                        for (var i=0;i<self.tileParameters.length;i++){
+                            var tp = self.tileParameters[i];
+                            if (tp.name===name){
+                                tp.value = value;
+                                found =true;
+                            }
+                        } 
+                        if (!found){
+                            self.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
+                        }
+                    }else{
+                        self.tileParameters=[];
+                        self.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
+                    }
+//                    
+//                    self.customParameters[name] = value;
                 }
             }
             
