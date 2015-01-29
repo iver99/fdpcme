@@ -222,7 +222,6 @@ require(['dbs/dbsmodel',
             $(document).ready(function() {
                 
                 ko.applyBindings(headerViewModel, document.getElementById('demo-appheader-bar'));
-//                ko.applyBindings({navigationsPopupModel: dashboardsViewModle.navigationsPopupModel}, document.getElementById('links_menu'));
                 ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));
                 $("#loading").hide();
 //                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
@@ -254,24 +253,13 @@ function childMessageListener(builderData) {
     if (_o.eventType && _o.eventType === 'SAVE') {
         dashboardsViewModle.updateDashboard(_o);
     }
-    else if (_o.eventType && _o.dashboardId && _o.eventType === 'ADD_TO_FAVORITES') {
-        dashboardsViewModle.addToFavorites(parseInt(_o.dashboardId));
-    }
-    else if (_o.eventType && _o.dashboardId && _o.eventType === 'REMOVE_FROM_FAVORITES') {
-        dashboardsViewModle.removeFromFavorites(parseInt(_o.dashboardId));
-    }
+//    else if (_o.eventType && _o.dashboardId && _o.eventType === 'ADD_TO_FAVORITES') {
+//        dashboardsViewModle.addToFavorites(parseInt(_o.dashboardId));
+//    }
+//    else if (_o.eventType && _o.dashboardId && _o.eventType === 'REMOVE_FROM_FAVORITES') {
+//        dashboardsViewModle.removeFromFavorites(parseInt(_o.dashboardId));
+//    }
     
-};
-
-function navigationsModelCallBack() {
-    //console.log("test:"+dashboardsViewModle.getNavigationsModel().homeLink);
-    var _model = dashboardsViewModle.getNavigationsModel();
-    return {
-//            'homeLink' : _model.homeLink,
-//            'dataVisualLink': _model.dataVisualLink,
-            'quickLinks': _model.quickLinks(),
-            'favorites': _model.favorites(),
-            'recents': _model.recents()};
 };
 
 /**

@@ -70,7 +70,6 @@ requirejs.config({
 var defaultTileHeight = 220;
 var defaultTileRowHeight = defaultTileHeight + 10;
 var defaultColumnsNumber = 4;
-var navigationsModel = {};
 
 /**
  * A top-level require call executed by the Application.
@@ -311,15 +310,6 @@ require(['knockout',
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
 
-                    if (window.opener && window.opener.navigationsModelCallBack) {
-                        navigationsModel = ko.observable(window.opener.navigationsModelCallBack());
-                            //console.log("test:"+navigationsModel.homeLink);
-                    }
-                    else
-                    {
-                        navigationsModel = ko.observable({});
-                    }
-
                     ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
                             var list = valueAccessor();
@@ -333,8 +323,7 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
                     //header
-                    ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]);
-//                    ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#links_menu')[0]);     
+                    ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]); 
                     ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
