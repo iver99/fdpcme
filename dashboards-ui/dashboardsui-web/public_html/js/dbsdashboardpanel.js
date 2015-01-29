@@ -54,7 +54,7 @@ ko.bindingHandlers.dbsDashboardPanel = {
     }
 };
 
-var TITLE_MAX_LENGTH = 25,
+var TITLE_MAX_LENGTH = 34,
     DESCRIPTION_MAX_LENGTH = 256,
     WIGDET_NAME_MAX_LENGTH = 30,
     DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE";
