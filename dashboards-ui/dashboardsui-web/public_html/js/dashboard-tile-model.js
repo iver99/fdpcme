@@ -22,6 +22,7 @@ define(['knockout',
     {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
+        var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
         
         ko.mapping = km;
         /**
@@ -131,10 +132,10 @@ define(['knockout',
             
             var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT());
             var kocVM = tile.WIDGET_VIEWMODEL();
-            if (tile.WIDGET_SOURCE() !== 0)
+            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                 kocVM = assetRoot + kocVM;
             var kocTemplate = tile.WIDGET_TEMPLATE();
-            if (tile.WIDGET_SOURCE() !== 0)
+            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                 kocTemplate = assetRoot + kocTemplate;
             registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
             tile.shouldHide = ko.observable(false);
