@@ -242,7 +242,14 @@ define(['knockout',
         }
 
         /**
-         *  used for KOC integration
+         *  Object used to represents a dashboard tile created by clicking adding widget
+         *  
+         *  @param dashboard which dashboard the tile is inside
+         *  @param type type of the dashboard
+         *  @param title title for the tile
+         *  @param description description string for the tile
+         *  @param width width for the tile
+         *  @param widget widget from which the tile is to be created
          */
         function DashboardTile(dashboard,type, title, description, width, widget) {
             var self = this;
