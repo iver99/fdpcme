@@ -504,9 +504,12 @@ define(['knockout',
                         }
                         tilesViewModel.dashboard.screenShot = ko.observable(data);
                         var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
-                            'include': ['screenShot'],
+                            'include': ['screenShot', 'description', 'height', 
+                                'isMaximized', 'title', 'type', 'width', 
+                                'tileParameters', 'name', 'systemParameter', 
+                                'tileId', 'value'],
                             'ignore': ["createdOn", "href", "owner", 
-                                "screenShotHref", "systemDashboard", "type",
+                                "screenShotHref", "systemDashboard",
                                 "customParameters", "clientGuid", "dashboard", 
                                 "fireDashboardItemChangeEvent", "getParameter", 
                                 "maximizeEnabled", "narrowerEnabled", 
@@ -515,7 +518,9 @@ define(['knockout',
                                 "tileDisplayClass", "widerEnabled", "widget"]
                         });
                         var dashboardId = tilesViewModel.dashboard.id();
-                        dtm.updateDashboard(dashboardId, dashboardJSON);
+                        dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
+                            console.log(error.errorMessage());
+                        });
                     }  
                 });
             };

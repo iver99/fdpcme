@@ -130,8 +130,12 @@ define(['knockout',
                 return;
             
             var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT());
-            var kocVM = assetRoot + tile.WIDGET_VIEWMODEL();
-            var kocTemplate = assetRoot + tile.WIDGET_TEMPLATE();
+            var kocVM = tile.WIDGET_VIEWMODEL();
+            if (tile.WIDGET_SOURCE() !== 0)
+                kocVM = assetRoot + kocVM;
+            var kocTemplate = tile.WIDGET_TEMPLATE();
+            if (tile.WIDGET_SOURCE() !== 0)
+                kocTemplate = assetRoot + kocTemplate;
             registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
             tile.shouldHide = ko.observable(false);
             tile.clientGuid = dfu.guid();
@@ -147,55 +151,16 @@ define(['knockout',
             tile.restoreEnabled = ko.computed(function() {
                 return tile.isMaximized();
             });
+            
+            tile.configureEnabled = ko.computed(function() {
+                return typeof(tile.configure)==="function";
+            });
             tile.tileDisplayClass = ko.computed(function() {
                 var css = 'oj-md-'+(tile.width()*3) + ' oj-sm-'+(tile.width()*3) + ' oj-lg-'+(tile.width()*3);
                 css += tile.isMaximized() ? ' dbd-tile-maximized' : ' ';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : ' ';
                 return css;
             });
-        }
-
-        /**
-         *  used for KOC integration
-         */
-        function DashboardTile(dashboard,type, title, description, width, widget) {
-            var self = this;
-            self.dashboard = dashboard;
-            self.type = type;
-            self.title = ko.observable(title);
-            self.description = ko.observable(description);
-            self.isMaximized = ko.observable(false);
-            self.shouldHide = ko.observable(false);
-            self.width = ko.observable(width);
-            self.height = ko.observable(220);
-            self.clientGuid = dfu.guid();
-            self.widerEnabled = ko.computed(function() {
-                return self.width() < 4;
-            });
-            self.narrowerEnabled = ko.computed(function() {
-                return self.width() > 1;
-            });
-            self.maximizeEnabled = ko.computed(function() {
-                return !self.isMaximized();
-            });
-            self.restoreEnabled = ko.computed(function() {
-                return self.isMaximized();
-            });
-            
-            self.configureEnabled = ko.computed(function() {
-                return typeof(self.configure)==="function";
-            });
-            
-            self.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(self.width()*3) + ' oj-sm-'+(self.width()*3) + ' oj-lg-'+(self.width()*3);
-                css += self.isMaximized() ? ' dbd-tile-maximized' : ' ';
-                css += self.shouldHide() ? ' dbd-tile-no-display' : ' ';
-                return css;
-            });
-            
-//            self.widget = widget;
-            for (var p in widget)
-                self[p] = widget[p];
     
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
@@ -205,9 +170,6 @@ define(['knockout',
              * Integrator will get a parameter: params by which integrator can access tile related properties/method/function
              */
             self.onDashboardItemChangeEvent = null;
-            
-//            self.customParameters = {};
-//            self.systemParameters = {};
             
             /**
              * Get value of tile Custom Parameter according to given name. This function only retrieves Custom Parameters.
@@ -220,13 +182,14 @@ define(['knockout',
              * @param {String} name
              * @returns {object} value of parameter. null if not found
              */
-            self.getParameter = function (name) {
+            tile.getParameter = function (name) {
                 if (name===null || name===undefined){
                     return null;
                 }
-                if (self.tileParameters){
-                    for (var i=0;i<self.tileParameters.length;i++){
-                        var tp = self.tileParameters[i];
+                if (tile.tileParameters){
+                    var parameters = ko.toJS(tile.tileParameters);
+                    for (var i=0;i<parameters.length;i++){
+                        var tp = parameters[i];
                         if (tp.name===name){
                             return tp;
                         }
@@ -247,42 +210,60 @@ define(['knockout',
              * @param {String} value
              * @returns {undefined}
              */
-            self.setParameter = function(name, value){
+            tile.setParameter = function(name, value){
                 if (name===undefined || name===null || value===undefined || value===null){
                     console.error("Invaild value: name=["+name,"] value=["+value+"]");
                 }else{
                     var found = false;
-                    if (self.tileParameters){
-                        for (var i=0;i<self.tileParameters.length;i++){
-                            var tp = self.tileParameters[i];
+                    if (tile.tileParameters){
+                        for (var i=0;i<tile.tileParameters.length;i++){
+                            var tp = tile.tileParameters[i];
                             if (tp.name===name){
                                 tp.value = value;
                                 found =true;
                             }
                         } 
                         if (!found){
-                            self.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
+                            tile.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
                         }
                     }else{
-                        self.tileParameters=[];
-                        self.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
+                        tile.tileParameters=[];
+                        tile.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
                     }
 //                    
 //                    self.customParameters[name] = value;
                 }
             }
             
-            self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
-                self.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+            tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
+                tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
-            
+        }
 
+        /**
+         *  used for KOC integration
+         */
+        function DashboardTile(dashboard,type, title, description, width, widget) {
+            var self = this;
+            self.dashboard = dashboard;
+            self.type = type;
+            self.title = ko.observable(title);
+            self.description = ko.observable(description);
+            self.isMaximized = ko.observable(false);
+            self.width = ko.observable(width);
+            self.height = ko.observable(220);
+            
+            var kowidget = ko.mapping.fromJS(widget);
+            for (var p in kowidget)
+                self[p] = kowidget[p];
+            
+            initializeTileAfterLoad(self);
         }
         
         function getBaseUrl() {
             return dfu.discoverDFRestApiUrl();
 //            return "http://slc04pxi.us.oracle.com:7001";//TODO
-//            return "http://localhost:7001";
+//            return "http://localhost:7001/emcpdf/api/v1/";
 //            return "http://slc00bqs.us.oracle.com:7021";
         }
         
