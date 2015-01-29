@@ -607,6 +607,7 @@ define(['knockout',
                     "PROVIDER_NAME": "DashboardFramework",
                     "PROVIDER_ASSET_ROOT": "asset",
                     "PROVIDER_VERSION": "1.0"}];
+            var assetRootList = {};
             self.widgetList = ko.observableArray(widgetArray);
             self.curPageWidgetList = ko.observableArray(curPageWidgets);
             self.searchText = ko.observable("");
@@ -634,6 +635,7 @@ define(['knockout',
                 searchResultArray = [];
                 index=0;
                 widgetGroupList = [];
+                assetRootList = {};
                 if (ssfUrl && ssfUrl !== '') {
 //                    var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
 //                    var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
@@ -721,6 +723,34 @@ define(['knockout',
                 if (data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var widget = data[i];
+                        if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
+                           if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
+                               widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='Target Analytics') {
+                               widget.WIDGET_ICON = 'css/images/targets_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='IT Analytics') {
+                               widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='Demo Analytics') {
+                               widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='Dashboards Built-In') {
+                               widget.WIDGET_ICON = 'css/images/dashboard-32.png';
+                           }
+                           else {
+                               widget.WIDGET_ICON = 'css/images/widgets_alt.png';
+                           }
+                        }
+                        else {
+                            var pname = widget.PROVIDER_NAME;
+                            var pversion = widget.PROVIDER_VERSION;
+                            var gname = widget.WIDGET_GROUP_NAME;
+                            var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
+                            widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
+                        }
+                        
                         targetWidgetArray.push(widget);
                         widgetArray.push(widget);
                         if (index < pageSize) {
@@ -735,14 +765,25 @@ define(['knockout',
             function loadWidgetGroups(data) {
                 var targetWidgetGroupArray = [];
                 var groupAll = {value:'all|all|All', label:'All'};
-                var groupDashboardBuiltIn = {value: 'DashboardFramework|1.0|Dashboards Built-In', label:'Dashboards Built-In'};
+                var pname = 'DashboardFramework';
+                var pversion = '1.0';
+                var gname = 'Dashboards Built-In';
+                var assetRoot = '';
+                var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                 targetWidgetGroupArray.push(groupAll);
                 targetWidgetGroupArray.push(groupDashboardBuiltIn);
+                assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
                 if (data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
-                        var widgetGroup = {value:data[i].PROVIDER_NAME+'|'+data[i].PROVIDER_VERSION+'|'+data[i].WIDGET_GROUP_NAME, 
-                            label:data[i].WIDGET_GROUP_NAME};
+                        pname = data[i].PROVIDER_NAME;
+                        pversion = data[i].PROVIDER_VERSION;
+                        gname = data[i].WIDGET_GROUP_NAME;
+                        var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
+                            label:gname};
                         targetWidgetGroupArray.push(widgetGroup);
+                        
+                        assetRoot = dfu.df_util_widget_lookup_assetRootUrl(pname, pversion, data[i].PROVIDER_ASSET_ROOT);
+                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
                     }
                 }
                 return targetWidgetGroupArray;

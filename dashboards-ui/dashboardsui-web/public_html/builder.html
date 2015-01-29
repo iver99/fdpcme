@@ -387,26 +387,8 @@ role value for that section to represent the appropriate content type.
                         <div class=" widget-container" data-bind="attr:{title: name}, 
                                                         event: { dblclick: $parent.widgetDbClicked, click: $parent.widgetClicked}">
                             <div>
-                                <!-- ko if: WIDGET_GROUP_NAME==='Log Analytics' -->
-                                <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="laimg" alt="Log Analytics" title="Log Analytics" 
+                                <input type="image" data-bind="attr:{src: WIDGET_ICON, alt: WIDGET_GROUP_NAME, title: WIDGET_GROUP_NAME}" width="32"
                                        class="widget-image"/>
-                                <!-- /ko -->
-                                <!-- ko if: WIDGET_GROUP_NAME==='Target Analytics' -->
-                                <input type="image" src="css/images/targets_16_ena.png" width="32" id="taimg" alt="Target Analytics" title="Target Analytics" 
-                                       class="widget-image"/>
-                                <!-- /ko -->
-                                <!-- ko if: WIDGET_GROUP_NAME === 'IT Analytics' -->
-                                <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="itaimg" alt="IT Analytics" title="IT Analytics" 
-                                       class="widget-image"/>
-                                <!-- /ko -->
-                                <!-- ko if: WIDGET_GROUP_NAME==='Demo Analytics' -->
-                                <input type="image" src="css/images/navi_logs_16_ena.png" width="32" id="itaimg" alt="DEMO Analytics" title="DEMO Analytics" 
-                                       class="widget-image"/>
-                                <!-- /ko -->   
-                                <!-- ko if: WIDGET_GROUP_NAME==='Dashboards Built-In' -->
-                                <input type="image" src="css/images/dashboard-32.png" width="32" id="dbsimg" alt="Dashboards Built-in" title="Dashboards Built-in" 
-                                       class="widget-image"/>
-                                <!-- /ko -->
                                 <span data-bind="text:WIDGET_NAME"> </span>
                                 <!--font color="gray">
                                     <span data-bind="text:name"> </span>
