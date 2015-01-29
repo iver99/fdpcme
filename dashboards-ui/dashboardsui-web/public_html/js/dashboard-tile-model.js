@@ -170,7 +170,7 @@ define(['knockout',
              * Note:
              * Integrator will get a parameter: params by which integrator can access tile related properties/method/function
              */
-            self.onDashboardItemChangeEvent = null;
+            tile.onDashboardItemChangeEvent = null;
             
             /**
              * Get value of tile Custom Parameter according to given name. This function only retrieves Custom Parameters.
@@ -232,7 +232,7 @@ define(['knockout',
                         tile.tileParameters.push({"name":name,"type":"STRING","value":value,"systemParameter":false});
                     }
 //                    
-//                    self.customParameters[name] = value;
+//                    tile.customParameters[name] = value;
                 }
             }
             
@@ -918,7 +918,7 @@ define(['knockout',
                         return;
                     }
                 }
-            }
+            };
             
             self.restore = function(tile) {
                 if (self.tileOriginalHeight) {
@@ -940,7 +940,7 @@ define(['knockout',
                 if (tile.configure){
                     tile.configure();
                 }
-            }
+            };
             
             self.changeUrl = function(tile) {
                 urlEditView.setEditedTile(tile);
@@ -995,10 +995,10 @@ define(['knockout',
             };
 
             var timeSelectorChangelistener = ko.computed(function(){
-                    return {
-                        timeRangeChange:self.timeSelectorModel.timeRangeChange()
-                    };
-                });
+                return {
+                    timeRangeChange:self.timeSelectorModel.timeRangeChange()
+                };
+            });
                 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
