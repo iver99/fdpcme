@@ -46,11 +46,12 @@ public class FavoriteAPI extends APIBase
 	@POST
 	@Path("{id: [1-9][0-9]*}")
 	public Response addOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@PathParam("id") Long dashboardId)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			dm.addFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -66,11 +67,12 @@ public class FavoriteAPI extends APIBase
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
 	public Response deleteOneFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@PathParam("id") Long dashboardId)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			dm.removeFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -85,11 +87,13 @@ public class FavoriteAPI extends APIBase
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAllFavoriteDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam)
+	public Response getAllFavoriteDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			List<Dashboard> pd = manager.getFavoriteDashboards(tenantId);
 			List<FavoriteEntity> entities = new ArrayList<FavoriteEntity>();
 			if (pd != null) {
@@ -114,11 +118,12 @@ public class FavoriteAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response isFavoriteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@PathParam("id") Long dashboardId)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			boolean isFavorite = dm.isDashboardFavorite(dbd.getDashboardId(), tenantId);
 			IsFavoriteEntity ife = new IsFavoriteEntity();

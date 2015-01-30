@@ -20,6 +20,8 @@ define(['knockout',
     
     function(ko, km, TimeSelectorModel,dfu)
     {
+        var dtm = this;
+        
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
@@ -275,8 +277,29 @@ define(['knockout',
 //            return "http://slc00bqs.us.oracle.com:7021";
         }
         
+        function initializeFromCookie() {
+            var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
+            var userTenantPrefix = "X-REMOTE-USER=";
+            var cookieArray = document.cookie.split(';');
+            for (var i = 0; i < cookieArray.length; i++) {
+                var c = cookieArray[i];
+                if (c.indexOf(tenantNamePrefix) !== -1) {
+                    dtm.tenantName = c.substring(c.indexOf(tenantNamePrefix) + tenantNamePrefix.length, c.length);
+                } else if (c.indexOf(userTenantPrefix) !== -1) {
+                    dtm.userTenant = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
+                }
+            }
+        }
+        
         function getDefaultHeaders() {
-            return {'Content-type': 'application/json', 'X-USER-IDENTITY-DOMAIN-NAME': 'TenantOPC1',"Authorization": dfu.getAuthToken()};
+            var headers = {
+                'Content-type': 'application/json',
+                'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1',
+                'Authorization': dfu.getAuthToken()
+            };
+            if (dtm.userTenant)
+                headers['X-REMOTE-USER'] = dtm.userTenant;
+            return headers;
         }
         
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
@@ -377,7 +400,7 @@ define(['knockout',
         
         function DashboardTilesViewModel(dashboard, tilesView, urlEditView) {
             var self = this;
-            
+                        
             self.dashboard = dashboard;
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
@@ -1027,6 +1050,7 @@ define(['knockout',
             "DashboardTilesViewModel": DashboardTilesViewModel,
             "DashboardViewModel": DashboardViewModel,
             "loadDashboard": loadDashboard,
+            "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "updateDashboard": updateDashboard,
             "registerComponent": registerComponent,
