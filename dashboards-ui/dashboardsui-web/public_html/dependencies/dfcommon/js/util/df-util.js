@@ -197,14 +197,14 @@ define(['knockout',
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.registryUrls){
 //                $.getJSON(self.getRegistrationEndPoint(), function(data) {    
-//                    if (data.registryUrls && 'Dashboard-API' && '1.0') {
+//                    if (data.registryUrls && 'Dashboard-API' && '0.1') {
                         var urls = regInfo.registryUrls.split(",");
                         for (var i = 0; i < urls.length && !urlFound; i++) {
                             var serviceUrl = urls[i]+'/'+'instances?serviceName='+'Dashboard-API';
                             if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                 serviceUrl = urls[i]+'instances?serviceName='+'Dashboard-API';
                             }
-                            serviceUrl = serviceUrl+'&version='+'1.0';
+                            serviceUrl = serviceUrl+'&version='+'0.1';
                             $.ajax({
                                 url: serviceUrl,
                                 headers: self.getAuthorizationRequestHeader(),
@@ -435,7 +435,7 @@ define(['knockout',
                                     if (isValidQuickLink) {
                                         var linkItem = {name: linkName,
                                                             href: link.href};
-                                        if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '1.0') {
+                                        if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '0.1') {
                                             if (linkRecords[linkName]) {
                                                 if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
                                                     linkRecords[linkName].href = link.href;
