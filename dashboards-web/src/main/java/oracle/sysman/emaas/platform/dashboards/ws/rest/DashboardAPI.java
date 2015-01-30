@@ -98,7 +98,7 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDashboardBase64ScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@PathParam("id") Long dashboardId)
 	{
@@ -106,7 +106,8 @@ public class DashboardAPI extends APIBase
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
-			return Response.ok(ss).build();
+			String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
+			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
 		}
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
