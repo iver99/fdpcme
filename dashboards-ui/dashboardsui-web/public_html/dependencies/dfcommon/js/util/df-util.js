@@ -280,12 +280,12 @@ define(['knockout',
                 }
             };
             
-            self.getDefaultHeader = function initializeFromCookie() {
+            self.getDefaultHeader = function() {
                 var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
                 var userTenantPrefix = "X-REMOTE-USER=";
                 var cookieArray = document.cookie.split(';');
                 var tenantName="TenantOPC1"; //in case tenant name is not got
-                var userName="SYSMAN"; //in case use name is not got
+                var userName="TenantOPC1.SYSMAN"; //in case use name is not got
                 for (var i = 0; i < cookieArray.length; i++) {
                     var c = cookieArray[i];
                     if (c.indexOf(tenantNamePrefix) !== -1) {
