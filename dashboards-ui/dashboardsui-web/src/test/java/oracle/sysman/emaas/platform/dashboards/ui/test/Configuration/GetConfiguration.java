@@ -57,8 +57,8 @@ public class GetConfiguration
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println(res.asString());
 			Assert.assertNotNull(res.jsonPath().get("registryUrls"));
-			Assert.assertNotNull(res.jsonPath().get("ssfServiceName"));
-			Assert.assertNotNull(res.jsonPath().get("ssfVersion"));
+			//Assert.assertNotNull(res.jsonPath().get("ssfServiceName"));
+			//Assert.assertNotNull(res.jsonPath().get("ssfVersion"));
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
