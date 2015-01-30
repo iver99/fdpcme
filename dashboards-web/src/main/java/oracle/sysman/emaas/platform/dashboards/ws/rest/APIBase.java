@@ -18,6 +18,7 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionE
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 
@@ -60,6 +61,22 @@ public class APIBase
 		//		long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
 		long internalTenantId = 1L;
 		return internalTenantId;
+	}
+
+	public String initializeUserContext(String userTenant) throws CommonSecurityException
+	{
+		if (userTenant == null || "".equals(userTenant)) {
+			throw new CommonSecurityException(
+					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
+		}
+		int idx = userTenant.indexOf(".");
+		if (idx <= 0) {
+			throw new CommonSecurityException(
+					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
+		}
+		String userName = userTenant.substring(0, idx);
+		UserContext.setCurrentUser(userName);
+		return userName;
 	}
 
 	/*

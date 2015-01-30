@@ -23,6 +23,7 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardService
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
@@ -71,7 +72,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
+			String currentUser = UserContext.getCurrentUser();
 			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
 			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
 			if (edf == null) {
@@ -254,7 +255,7 @@ public class DashboardManager
 		if (name == null || "".equals(name)) {
 			return null;
 		}
-		String currentUser = AppContext.getInstance().getCurrentUser();
+		String currentUser = UserContext.getCurrentUser();
 		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
 		Object[] params = new Object[] { name, currentUser, new Integer(0) };
 		EntityManager em = null;
@@ -286,7 +287,7 @@ public class DashboardManager
 	 */
 	public List<Dashboard> getFavoriteDashboards(Long tenantId)
 	{
-		String currentUser = AppContext.getInstance().getCurrentUser();
+		String currentUser = UserContext.getCurrentUser();
 		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
 				+ currentUser + "'";
 		EntityManager em = null;
@@ -329,7 +330,7 @@ public class DashboardManager
 				return null;
 			}
 			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
+			String currentUser = UserContext.getCurrentUser();
 			EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
 			EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
 			return edla;
@@ -374,7 +375,7 @@ public class DashboardManager
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
+			String currentUser = UserContext.getCurrentUser();
 			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
 			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
 			return edf != null;
@@ -457,7 +458,7 @@ public class DashboardManager
 		StringBuilder sb = new StringBuilder(
 				" from EmsDashboard p left join EmsDashboardLastAccess lae on p.dashboardId=lae.dashboardId and lae.accessedBy=:accessBy where p.deleted = 0 ");
 		Map<String, Object> paramMap = new HashMap<String, Object>();
-		String currentUser = AppContext.getInstance().getCurrentUser();
+		String currentUser = UserContext.getCurrentUser();
 		paramMap.put("accessBy", currentUser);
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
@@ -538,7 +539,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
+			String currentUser = UserContext.getCurrentUser();
 			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
 			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
 			if (edf != null) {
@@ -568,7 +569,7 @@ public class DashboardManager
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
+			String currentUser = UserContext.getCurrentUser();
 			//			if (dbd.getDashboardId() != null) {
 			//				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
 			//				if (sameId != null) {
@@ -654,7 +655,7 @@ public class DashboardManager
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
+			String currentUser = UserContext.getCurrentUser();
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
 				throw new DashboardSameNameException();
@@ -729,7 +730,7 @@ public class DashboardManager
 			return;
 		}
 		em = dsf.getEntityManager();
-		String currentUser = AppContext.getInstance().getCurrentUser();
+		String currentUser = UserContext.getCurrentUser();
 		EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
 		EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
 		if (edla == null) {

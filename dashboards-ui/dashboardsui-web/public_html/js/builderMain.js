@@ -286,6 +286,8 @@ require(['knockout',
             if (dsbId) {
                 dsbId = decodeURIComponent(dsbId);
             }
+            
+            dtm.initializeFromCookie();
 
 //            var dashboardModel = function(dashboardId) {
 //                if (window.opener && window.opener.dashboarDataCallBack) {
