@@ -54,9 +54,9 @@ ko.bindingHandlers.dbsDashboardPanel = {
     }
 };
 
-var TITLE_MAX_LENGTH = 25,
+var TITLE_MAX_LENGTH = 34,
     DESCRIPTION_MAX_LENGTH = 256,
-    WIGDET_NAME_MAX_LENGTH = 30,
+    WIGDET_NAME_MAX_LENGTH = 34,
     DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE";
 
 
@@ -202,6 +202,11 @@ $.widget('dbs.dbsDashboardPanel',
             self.titleElement = $("<div><h2>" + _title + "</h2></div>")
                                   .addClass(self.classNames['headerTitle']);
             self.headerElement.append(self.titleElement); 
+            if (self.options['dashboard'].name &&  self.options['dashboard'].name.length > TITLE_MAX_LENGTH)
+            {
+                //self.headerElement.attr("dbstooltip", self.options['dashboard'].name);
+                self.headerElement.attr("title", self.options['dashboard'].name);
+            }
             
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
@@ -295,9 +300,13 @@ $.widget('dbs.dbsDashboardPanel',
             if (_wdts && _wdts.length > 0)
             {
                 $.each(_wdts, function( index, widget ) {
-                    self.contentPage3CntEle
-                            .append($("<li ></li>")
-                            .text(self._truncateString(widget['title'], WIGDET_NAME_MAX_LENGTH)));
+                    var __tileEle = $("<li ></li>")
+                            .text(self._truncateString(widget['title'], WIGDET_NAME_MAX_LENGTH));
+                    if (widget['title'] && widget['title'].length > WIGDET_NAME_MAX_LENGTH)
+                    {
+                        __tileEle.attr("title", widget['title']);
+                    }
+                    self.contentPage3CntEle.append(__tileEle);
                 //alert( index + ": " + value ); 
                 });
             }

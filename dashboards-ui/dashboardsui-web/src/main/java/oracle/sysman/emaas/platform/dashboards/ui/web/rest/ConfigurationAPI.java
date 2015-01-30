@@ -75,12 +75,12 @@ public class ConfigurationAPI
 	private static final Response responseRegisgtryUrlsNotFound = Response.status(Status.NOT_FOUND)
 			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR))
 			.build();
-	private static final Response responseSSFServiceNameNotFound = Response.status(Status.NOT_FOUND)
-			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR))
-			.build();
-	private static final Response responseSSFVersionNotFound = Response.status(Status.NOT_FOUND)
-			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR))
-			.build();
+	//	private static final Response responseSSFServiceNameNotFound = Response.status(Status.NOT_FOUND)
+	//			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR))
+	//			.build();
+	//	private static final Response responseSSFVersionNotFound = Response.status(Status.NOT_FOUND)
+	//			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR))
+	//			.build();
 	static {
 		Map<String, String> svMap = ConfigurationAPI.getServiceManagerContent();
 		if (svMap == null) {
@@ -89,20 +89,18 @@ public class ConfigurationAPI
 		else if (!svMap.containsKey(RegistrationEntity.NAME_REGISTRYUTILS)) {
 			responseRegistration = responseRegisgtryUrlsNotFound;
 		}
-		else if (!svMap.containsKey(RegistrationEntity.NAME_SSF_SERVICENAME)) {
-			responseRegistration = responseSSFServiceNameNotFound;
-		}
-		else if (!svMap.containsKey(RegistrationEntity.NAME_SSF_VERSION)) {
-			responseRegistration = responseSSFVersionNotFound;
-		}
+		//		else if (!svMap.containsKey(RegistrationEntity.NAME_SSF_SERVICENAME)) {
+		//			responseRegistration = responseSSFServiceNameNotFound;
+		//		}
+		//		else if (!svMap.containsKey(RegistrationEntity.NAME_SSF_VERSION)) {
+		//			responseRegistration = responseSSFVersionNotFound;
+		//		}
 		else {
 			String registryUrls = svMap.get(RegistrationEntity.NAME_REGISTRYUTILS);
-			String ssfServiceName = svMap.get(RegistrationEntity.NAME_SSF_SERVICENAME);
-			String ssfVersion = svMap.get(RegistrationEntity.NAME_SSF_VERSION);
-			responseRegistration = Response
-					.status(Status.OK)
-					.entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity(registryUrls, ssfServiceName, ssfVersion)))
-					.build();
+			//			String ssfServiceName = svMap.get(RegistrationEntity.NAME_SSF_SERVICENAME);
+			//			String ssfVersion = svMap.get(RegistrationEntity.NAME_SSF_VERSION);
+			responseRegistration = Response.status(Status.OK)
+					.entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity(registryUrls))).build();
 		}
 	}
 
