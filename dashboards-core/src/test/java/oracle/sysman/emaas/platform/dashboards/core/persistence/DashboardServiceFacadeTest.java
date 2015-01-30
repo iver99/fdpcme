@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
@@ -217,6 +218,7 @@ public class DashboardServiceFacadeTest
 	public void setUp() throws Exception
 	{
 		PersistenceManager.setTestEnv(true);
+		UserContext.setCurrentUser("SYSMAN");
 		// tenant id updated to number type
 		dashboardServiceFacade = new DashboardServiceFacade(111L);
 		d = DashboardServiceFacadeTest.newDashboard();
@@ -252,6 +254,7 @@ public class DashboardServiceFacadeTest
 			dashboardServiceFacade.removeEmsDashboard(d);
 		}
 		dashboardServiceFacade.commitTransaction();
+		UserContext.clearCurrentUser();
 	}
 
 	@Test
