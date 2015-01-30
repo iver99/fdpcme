@@ -113,7 +113,7 @@ define(['knockout',
                             if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                 serviceUrl = urls[i]+'instances?serviceName='+'SavedSearch';
                             }
-                            serviceUrl = serviceUrl+'&version='+'1.0';//TODO HARD_CODE
+                            serviceUrl = serviceUrl+'&version='+'0.1';//TODO HARD_CODE
                             $.ajax({
                                 url: serviceUrl,
                                 headers: self.getAuthorizationRequestHeader(),
@@ -273,8 +273,8 @@ define(['knockout',
 
             self.getAuthToken = function() {
                 if (self.getRegistrationInfo() && self.getRegistrationInfo().authToken){
-//                    return self.getRegistrationInfo().authToken;
-                    return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
+                    return self.getRegistrationInfo().authToken;
+//                    return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
                 }else{
                     return null;
                 }
