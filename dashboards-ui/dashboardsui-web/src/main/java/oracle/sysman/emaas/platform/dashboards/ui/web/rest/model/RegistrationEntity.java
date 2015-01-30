@@ -18,17 +18,23 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 public class RegistrationEntity
 {
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
-	public static final String NAME_SSF_SERVICENAME = "ssfServiceName";
-	public static final String NAME_SSF_VERSION = "ssfVersion";
+	//	public static final String NAME_SSF_SERVICENAME = "ssfServiceName";
+	//	public static final String NAME_SSF_VERSION = "ssfVersion";
 	private String registryUrls;
-	private String ssfServiceName;
-	private String ssfVersion;
 
-	public RegistrationEntity(String regValue, String ssfServiceName, String ssfVersion)
+	//	private String ssfServiceName;
+	//	private String ssfVersion;
+
+	//	public RegistrationEntity(String regValue, String ssfServiceName, String ssfVersion)
+	//	{
+	//		setRegistryUrls(regValue);
+	//		setSsfServiceName(ssfServiceName);
+	//		setSsfVersion(ssfVersion);
+	//	}
+
+	public RegistrationEntity(String regValue)
 	{
 		setRegistryUrls(regValue);
-		setSsfServiceName(ssfServiceName);
-		setSsfVersion(ssfVersion);
 	}
 
 	/**
@@ -47,21 +53,21 @@ public class RegistrationEntity
 		return registryUrls;
 	}
 
-	/**
-	 * @return the ssfServiceName
-	 */
-	public String getSsfServiceName()
-	{
-		return ssfServiceName;
-	}
-
-	/**
-	 * @return the ssfVersion
-	 */
-	public String getSsfVersion()
-	{
-		return ssfVersion;
-	}
+	//	/**
+	//	 * @return the ssfServiceName
+	//	 */
+	//	public String getSsfServiceName()
+	//	{
+	//		return ssfServiceName;
+	//	}
+	//
+	//	/**
+	//	 * @return the ssfVersion
+	//	 */
+	//	public String getSsfVersion()
+	//	{
+	//		return ssfVersion;
+	//	}
 
 	/**
 	 * @param registryUrls
@@ -72,21 +78,21 @@ public class RegistrationEntity
 		this.registryUrls = registryUrls;
 	}
 
-	/**
-	 * @param ssfServiceName
-	 *            the ssfServiceName to set
-	 */
-	public void setSsfServiceName(String ssfServiceName)
-	{
-		this.ssfServiceName = ssfServiceName;
-	}
-
-	/**
-	 * @param ssfVersion
-	 *            the ssfVersion to set
-	 */
-	public void setSsfVersion(String ssfVersion)
-	{
-		this.ssfVersion = ssfVersion;
-	}
+	//	/**
+	//	 * @param ssfServiceName
+	//	 *            the ssfServiceName to set
+	//	 */
+	//	public void setSsfServiceName(String ssfServiceName)
+	//	{
+	//		this.ssfServiceName = ssfServiceName;
+	//	}
+	//
+	//	/**
+	//	 * @param ssfVersion
+	//	 *            the ssfVersion to set
+	//	 */
+	//	public void setSsfVersion(String ssfVersion)
+	//	{
+	//		this.ssfVersion = ssfVersion;
+	//	}
 }
