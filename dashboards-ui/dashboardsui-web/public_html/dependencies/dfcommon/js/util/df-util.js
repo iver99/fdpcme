@@ -280,17 +280,33 @@ define(['knockout',
                 }
             };
             
-            
+            self.getDefaultHeader = function() {
+                var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
+                var userTenantPrefix = "X-REMOTE-USER=";
+                var cookieArray = document.cookie.split(';');
+                var tenantName="TenantOPC1"; //in case tenant name is not got
+                var userName="TenantOPC1.SYSMAN"; //in case use name is not got
+                for (var i = 0; i < cookieArray.length; i++) {
+                    var c = cookieArray[i];
+                    if (c.indexOf(tenantNamePrefix) !== -1) {
+                        tenantName = c.substring(c.indexOf(tenantNamePrefix) + tenantNamePrefix.length, c.length);
+                    } else if (c.indexOf(userTenantPrefix) !== -1) {
+                        userName = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
+                    }
+                }
+                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":tenantName,"X-REMOTE-USER":userName};
+            }
+
             self.getAuthorizationRequestHeader=function() {
                 return {"Authorization": self.getAuthToken()};
             };
             
             self.getSavedSearchServiceRequestHeader=function() {
-                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"TenantOPC1"};//TODO
+                return self.getDefaultHeader();
             };  
             
             self.getDashboardsRequestHeader=function() {
-                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"TenantOPC1"};//TODO
+                return self.getDefaultHeader();
             };  
             
             self.registrationInfo = null;
