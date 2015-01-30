@@ -620,6 +620,7 @@ define(['knockout',
             self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard";}, this);
 
             self.currentWidget = ko.observable();
+            self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
             var widgetClickTimer = null; 
             
             refreshWidgets();
@@ -843,6 +844,10 @@ define(['knockout',
             
             self.gotoCreateNewWidget = function(){
                 return window.open("http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search");
+            };
+            
+            self.exploreDataMenuItemSelect = function( event, ui ) {
+                window.open(ui.item.children("a")[0].value);
             };
             
             self.naviPrevious = function() {
