@@ -34,7 +34,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
@@ -57,7 +57,7 @@ public class DashboardsUiCORSFilter implements Filter
 		}
 		else {
 			// default value for X-REMOTE-USER
-			userTenant = DEFAULT_USER + "." + DEFAULT_TENANT;
+			userTenant = DEFAULT_TENANT + "." + DEFAULT_USER;
 		}
 		Cookie userNameCookie = new Cookie(COOKIE_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		hRes.addCookie(userNameCookie);

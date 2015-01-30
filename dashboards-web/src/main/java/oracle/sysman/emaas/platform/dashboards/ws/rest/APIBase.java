@@ -74,7 +74,7 @@ public class APIBase
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
 		}
-		String userName = userTenant.substring(0, idx);
+		String userName = userTenant.substring(idx + 1, userTenant.length());
 		UserContext.setCurrentUser(userName);
 		return userName;
 	}
