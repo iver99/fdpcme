@@ -236,6 +236,10 @@ public class DashboardManager
 			if (isDeleted != null && isDeleted.booleanValue()) {
 				throw new DashboardNotFoundException();
 			}
+			String currentUser = UserContext.getCurrentUser();
+			if (!currentUser.equals(ed.getOwner())) {
+				throw new DashboardNotFoundException();
+			}
 			updateLastAccessDate(dashboardId, tenantId, dsf);
 			return Dashboard.valueOf(ed);
 		}
