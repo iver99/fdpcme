@@ -492,7 +492,7 @@ define(['knockout',
                                  if (!ko.components.isRegistered(koc_name)) {
                                     var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
                                     if (assetRoot===null){
-                                        console.error("Unable to find asset root: PROVIDER_NAME=["+providerName+"], PROVIDER_VERSION=["+providerVersion+"], PROVIDER_ASSET_ROOT=["+providerAssetRoot+"]");
+                                        console.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                     }
                                     ko.components.register(koc_name,{
                                           viewModel:{require:assetRoot+viewmodel},
