@@ -48,7 +48,7 @@ public class DashboardsUiCORSFilter implements Filter
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADRE);
 
 		// default value incase there is no OAM header
-		String tenant = DEFAULT_USER;
+		String tenant = DEFAULT_TENANT;
 		if (userTenant != null && userTenant.indexOf(".") > 0) {
 			int idx = userTenant.indexOf(".");
 			if (idx > 0) {
@@ -61,7 +61,7 @@ public class DashboardsUiCORSFilter implements Filter
 		}
 		Cookie userNameCookie = new Cookie(COOKIE_X_USER_IDENTITY_DOMAIN_NAME, tenant);
 		hRes.addCookie(userNameCookie);
-		//X-REMOTE-USER should contain <tenant name>.<login name>, keep the original value then
+		//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
 		Cookie tenantCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
 		hRes.addCookie(tenantCookie);
 		chain.doFilter(request, response);
