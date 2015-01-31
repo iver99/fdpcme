@@ -302,7 +302,9 @@ define(['knockout',
             };
             
             self.getSavedSearchServiceRequestHeader=function() {
-                return self.getDefaultHeader();
+                var header = self.getDefaultHeader();
+                delete header['X-REMOTE-USER'];//Remove this if X-REMOTE-USER is enabled in SSF
+                return header;
             };  
             
             self.getDashboardsRequestHeader=function() {
