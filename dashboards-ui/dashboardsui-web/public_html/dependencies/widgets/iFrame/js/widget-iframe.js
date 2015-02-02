@@ -17,8 +17,10 @@ define([
                 var self = this;
                 var tile = params.tile;
                 var param = tile.getParameter(PNAME_IFRAME_SRC);
+                var showCfgDialog = false;
                 if (param===null || param===undefined){
                     url = DEFAULT_URL;
+                    showCfgDialog = true;
                 }else{
                     url = param.value;
                 }
@@ -67,7 +69,7 @@ define([
                  * Note:
                  * we can't run tile.configure directly here which will break model intialization and template can't run without model initializtion's completion
                  */
-                if (DEFAULT_URL===url){
+                if (showCfgDialog){
                     params.tile.setParameter(PNAME_IFRAME_SRC,self.fullUrl());
                     setTimeout(tile.configure,1000);
                 }
