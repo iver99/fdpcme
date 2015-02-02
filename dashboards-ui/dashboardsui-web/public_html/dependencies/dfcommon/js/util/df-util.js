@@ -334,7 +334,14 @@ define(['knockout',
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-                return discoverLinks('quickLink');
+//                return discoverLinks('quickLink');
+            	var rep = self.getRegistrationInfo();
+                if (rep && rep.quickLinks) {
+                    return rep.quickLinks;
+                }
+                else {
+                    return [];
+                }
             };
             
             /**
@@ -342,7 +349,14 @@ define(['knockout',
              * @returns {Array} visualAnalyzerLinks
              */
             self.discoverVisualAnalyzerLinks = function() {
-                return discoverLinks('visualAnalyzer');
+//                return discoverLinks('visualAnalyzer');
+            	var rep = self.getRegistrationInfo();
+                if (rep && rep.visualAnalyzers) {
+                    return rep.visualAnalyzers;
+                }
+                else {
+                    return [];
+                }
             };
             
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){

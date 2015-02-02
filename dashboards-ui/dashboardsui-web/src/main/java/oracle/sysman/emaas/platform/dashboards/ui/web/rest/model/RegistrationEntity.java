@@ -11,10 +11,15 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web.rest.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
@@ -28,6 +33,11 @@ public class RegistrationEntity
 	public static final String NAME_SSF_VERSION = "0.1";
 	public static final String NAME_DASHBOARD_API_SERVICENAME = "Dashboard-API";
 	public static final String NAME_DASHBOARD_API_VERSION = "0.1";
+	public static final String NAME_QUICK_LINK = "quickLink";
+	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
+	public static final String NAME_DASHBOARD_UI_VERSION = "0.1";
+
 	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
@@ -111,6 +121,14 @@ public class RegistrationEntity
 		return endPoint;
 	}
 
+	/*
+	* @return Quick links discovered from service manager
+	 */
+	public List<LinkEntity> getQuickLinks()
+	{
+		return lookupLinksWithRelPrefix(NAME_QUICK_LINK);
+	}
+
 	/**
 	 * @return the registryUrls
 	 */
@@ -118,6 +136,22 @@ public class RegistrationEntity
 	{
 		return registryUrls;
 	}
+
+	//	/**
+	//	 * @return the ssfServiceName
+	//	 */
+	//	public String getSsfServiceName()
+	//	{
+	//		return ssfServiceName;
+	//	}
+	//
+	//	/**
+	//	 * @return the ssfVersion
+	//	 */
+	//	public String getSsfVersion()
+	//	{
+	//		return ssfVersion;
+	//	}
 
 	/**
 	 * @return the rest API end point for SSF
@@ -162,31 +196,6 @@ public class RegistrationEntity
 	}
 
 	//	/**
-	//	 * @return the ssfServiceName
-	//	 */
-	//	public String getSsfServiceName()
-	//	{
-	//		return ssfServiceName;
-	//	}
-	//
-	//	/**
-	//	 * @return the ssfVersion
-	//	 */
-	//	public String getSsfVersion()
-	//	{
-	//		return ssfVersion;
-	//	}
-
-	/**
-	 * @param registryUrls
-	 *            the registryUrls to set
-	 */
-	public void setRegistryUrls(String registryUrls)
-	{
-		this.registryUrls = registryUrls;
-	}
-
-	//	/**
 	//	 * @param ssfServiceName
 	//	 *            the ssfServiceName to set
 	//	 */
@@ -203,4 +212,85 @@ public class RegistrationEntity
 	//	{
 	//		this.ssfVersion = ssfVersion;
 	//	}
+
+	/**
+	 * @return Visual analyzer links discovered from service manager
+	 */
+	public List<LinkEntity> getVisualAnalyzers()
+	{
+		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
+	}
+
+	/**
+	 * @param registryUrls
+	 *            the registryUrls to set
+	 */
+	public void setRegistryUrls(String registryUrls)
+	{
+		this.registryUrls = registryUrls;
+	}
+
+	private void addToLinksMap(Map<String, Link> linksMap, List<Link> links)
+	{
+		for (Link link : links) {
+			if (!linksMap.containsKey(link.getRel())) {
+				linksMap.put(link.getRel(), link);
+			}
+			else if (linksMap.get(link.getRel()).getHref().toLowerCase().startsWith("http://")
+					&& link.getHref().toLowerCase().startsWith("https://")) {
+				linksMap.put(link.getRel(), link);
+			}
+		}
+	}
+
+	private String getLinkName(String rel)
+	{
+		String name = "";
+		if (rel.indexOf("/") > 0) {
+			String[] relArray = rel.split("/");
+			name = relArray[1];
+		}
+
+		return name;
+	}
+
+	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix)
+	{
+		List<LinkEntity> linkList = new ArrayList<LinkEntity>();
+
+		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
+		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix);
+		Map<String, Link> linksMap = new HashMap<String, Link>();
+		Map<String, Link> dashboardLinksMap = new HashMap<String, Link>();
+		for (InstanceInfo instance : instanceList) {
+			List<Link> links = instance.getLinksWithRelPrefix(linkPrefix);
+			if (NAME_DASHBOARD_UI_SERVICENAME.equals(instance.getServiceName())
+					&& NAME_DASHBOARD_UI_VERSION.equals(instance.getVersion())) {
+				addToLinksMap(dashboardLinksMap, links);
+			}
+			else {
+				addToLinksMap(linksMap, links);
+			}
+		}
+
+		Iterator<Map.Entry<String, Link>> iterDashboardLinks = dashboardLinksMap.entrySet().iterator();
+		while (iterDashboardLinks.hasNext()) {
+			Map.Entry<String, Link> entry = iterDashboardLinks.next();
+			Link val = entry.getValue();
+			LinkEntity le = new LinkEntity(getLinkName(val.getRel()), val.getHref());
+			linkList.add(le);
+		}
+
+		Iterator<Map.Entry<String, Link>> iterLinks = linksMap.entrySet().iterator();
+		while (iterLinks.hasNext()) {
+			Map.Entry<String, Link> entry = iterLinks.next();
+			Link val = entry.getValue();
+			LinkEntity le = new LinkEntity(getLinkName(val.getRel()), val.getHref());
+			if (!dashboardLinksMap.containsKey(val.getRel())) {
+				linkList.add(le);
+			}
+		}
+
+		return linkList;
+	}
 }

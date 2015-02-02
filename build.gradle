@@ -74,8 +74,8 @@ dependencies {
 	prebuild_log4j 'log4j:log4j:1.2.17'
 	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.0'
-	prebuild_servicemanager 'emaas.platform:registry-client:0.23.5',
-                                'emaas.platform:registry-lookup-client:0.23.5'
+	prebuild_servicemanager 'emaas.platform:registry-client:0.23.6',
+                                'emaas.platform:registry-lookup-client:0.23.6'
 	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.weblogic:ojdbc6:12.1.2-0-0',
 				'javax.transaction:javax.transaction-api:1.2',

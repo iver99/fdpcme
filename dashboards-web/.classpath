@@ -42,7 +42,7 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/xml-path-1.9.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/rest-assured-common-2.3.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-1.2.17.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.5.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-core"/>
 	<classpathentry kind="output" path="build/classes"/>
