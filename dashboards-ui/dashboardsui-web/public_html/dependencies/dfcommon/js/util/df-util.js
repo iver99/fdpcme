@@ -314,7 +314,9 @@ define(['knockout',
                         userName = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
                     }
                 }
-                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":tenantName,"X-REMOTE-USER":userName};
+                var defHeader = {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":tenantName,"X-REMOTE-USER":userName};
+                console.log("Sent Header: "+defHeader);
+                return defHeader;
             }
 
             self.getAuthorizationRequestHeader=function() {

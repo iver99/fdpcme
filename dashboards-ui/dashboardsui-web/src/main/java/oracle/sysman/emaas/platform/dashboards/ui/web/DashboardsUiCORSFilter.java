@@ -34,7 +34,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
@@ -52,7 +52,7 @@ public class DashboardsUiCORSFilter implements Filter
 		if (userTenant != null && userTenant.indexOf(".") > 0) {
 			int idx = userTenant.indexOf(".");
 			if (idx > 0) {
-				tenant = userTenant.substring(idx + 1, userTenant.length());
+				tenant = userTenant.substring(0, idx);
 			}
 		}
 		else {
