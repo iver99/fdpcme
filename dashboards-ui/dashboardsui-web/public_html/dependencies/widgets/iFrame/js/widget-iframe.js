@@ -68,6 +68,7 @@ define([
                  * we can't run tile.configure directly here which will break model intialization and template can't run without model initializtion's completion
                  */
                 if (DEFAULT_URL===url){
+                    params.tile.setParameter(PNAME_IFRAME_SRC,self.fullUrl());
                     setTimeout(tile.configure,1000);
                 }
             }

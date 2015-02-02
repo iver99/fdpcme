@@ -22,6 +22,10 @@ public class ErrorEntity
 	public static final int CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR_CODE = 1101;
 	public static final int CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR_CODE = 1102;
 	public static final int CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR_CODE = 1103;
+	public static final int REGISTRY_LOOKUP_GENERIC_ERROR_CODE = 2000;
+
+	public static final int UNKNOWN_ERROR_CODE = 9999;
+
 	public static final ErrorEntity CONFIGURATIONS_GENERIC_ERROR = new ErrorEntity(CONFIGURATIONS_GENERIC_ERROR_CODE,
 			MessageUtils.getDefaultBundleString("CONFIGURATIONS_GENERIC_ERROR"));
 	public static final ErrorEntity CONFIGURATIONS_REGISTRATION_ERROR = new ErrorEntity(CONFIGURATIONS_REGISTRATION_ERROR_CODE,
@@ -35,6 +39,10 @@ public class ErrorEntity
 	public static final ErrorEntity CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR = new ErrorEntity(
 			CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR_CODE,
 			MessageUtils.getDefaultBundleString("CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR"));
+
+	public static final ErrorEntity REGISTRY_LOOKUP_GENERIC_ERROR = new ErrorEntity(REGISTRY_LOOKUP_GENERIC_ERROR_CODE,
+			MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_GENERIC_ERROR"));
+
 	private Integer errorCode;
 	private String errorMessage;
 

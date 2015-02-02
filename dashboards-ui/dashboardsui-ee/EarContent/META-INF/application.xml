@@ -4,7 +4,7 @@
   <module>
     <web>
       <web-uri>dashboardsui-web.war</web-uri>
-      <context-root>emcpdfui</context-root>
+      <context-root>emsaasui/emcpdfui</context-root>
     </web>
   </module>
 </application>

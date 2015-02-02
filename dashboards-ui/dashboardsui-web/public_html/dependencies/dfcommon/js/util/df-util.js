@@ -42,6 +42,15 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
+                var rep = self.getRegistrationInfo();
+                if (rep && rep.ssfRestApiEndPoint){
+                    return rep.ssfRestApiEndPoint;
+                }else{
+                    console.log("Failed to discovery SSF REST API end point");
+                    return null;
+                }
+                /*
+                if (true) return "https://slc06wfs.us.oracle.com:7002/savedsearch/v1";//REMOVE
                 var availableUrl = null;
                 var urlFound = false;
 
@@ -132,6 +141,7 @@ define(['knockout',
 //                $.ajaxSettings.async = true;
                 return availableUrl;
 //                return "http://slc04pxi.us.oracle.com:7001/savedsearch/v1";//TODO
+                */
             };
 
             /**
@@ -139,6 +149,14 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverDFRestApiUrl = function() {
+                var rep = self.getRegistrationInfo();
+                if (rep && rep.dfRestApiEndPoint){
+                    return rep.dfRestApiEndPoint;
+                }else{
+                    console.log("Failed to discovery DF REST API end point");
+                    return null;
+                }
+                /*
                 var availableUrl = null;
                 var urlFound = false;
 
@@ -222,7 +240,9 @@ define(['knockout',
 //                $.ajaxSettings.async = true;
                 return availableUrl;
 //                return "http://slc04pxi.us.oracle.com:7001/emcpdf/api/v1/";//TODO
+                */  
             };
+              
             
             self.formatUTCDateTime = function(dateString) {
                 if (dateString && dateString !== '') {
@@ -272,12 +292,12 @@ define(['knockout',
             };
 
             self.getAuthToken = function() {
-                if (self.getRegistrationInfo() && self.getRegistrationInfo().authToken){
-                    return self.getRegistrationInfo().authToken;
-//                    return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
-                }else{
-                    return null;
-                }
+                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
+//                if (self.getRegistrationInfo() && self.getRegistrationInfo().authToken){
+//                    return self.getRegistrationInfo().authToken;
+//                }else{
+//                    return null;
+//                }
             };
             
             self.getDefaultHeader = function() {
@@ -362,6 +382,25 @@ define(['knockout',
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
                 var assetRoot = null;
                 if (providerName && providerVersion && providerAssetRoot){
+                    var url = "api/registry/lookup/link?serviceName="+providerName+"&version="+providerVersion+"&rel="+providerAssetRoot;
+                    $.ajax(url,{
+                            success:function(data, textStatus,jqXHR) {
+                                if (data){
+                                    assetRoot = data.href;
+                                }else{
+                                    console.log("Got NULL assetRoot by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
+
+                                }
+                            },
+                            error:function(xhr, textStatus, errorThrown){
+                                console.log("Error to discover assetRoot: "+textStatus+" by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
+                            },
+                            async:false
+                        });
+                }
+                return assetRoot;
+                /*
+                if (providerName && providerVersion && providerAssetRoot){
                     var urlFound = false;
 
                     function fetchServiceAssetRoot(data) {
@@ -414,13 +453,16 @@ define(['knockout',
 //                    $.ajaxSettings.async = true;
                 }
                 return assetRoot;
+                */
             }
             
             /**
              * Discover available links by rel name
              * @returns {Array} availableLinks
              */
+            /*
             var discoverLinks = function(relName) {
+                if (true) return [];//REMOVE
                 var availableLinks = [];
                 var linksFromDashboard = [];
                 var linksFromIntegrators = [];
@@ -515,6 +557,7 @@ define(['knockout',
                 }
                 return availableLinks;
             };
+            */
         }
         
         return new DashboardFrameworkUtility();

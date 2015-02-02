@@ -21,7 +21,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 
 /**
  * @author miao
@@ -66,18 +65,18 @@ public class RegistrationEntity
 	//		setSsfVersion(ssfVersion);
 	//	}
 
-	public RegistrationEntity(String regValue)
-	{
-		setRegistryUrls(regValue);
-	}
+	//	public RegistrationEntity(String regValue)
+	//	{
+	//		setRegistryUrls(regValue);
+	//	}
 
-	/**
-	 * @return the authorizationHeader
-	 */
-	public String getAuthToken()
-	{
-		return new String(RegistrationManager.getInstance().getAuthorizationToken());
-	}
+	//	/**
+	//	 * @return the authorizationHeader
+	//	 */
+	//	public String getAuthToken()
+	//	{
+	//		return new String(RegistrationManager.getInstance().getAuthorizationToken());
+	//	}
 
 	/**
 	 * @return the rest API end point for dashboard framework
@@ -122,20 +121,20 @@ public class RegistrationEntity
 	}
 
 	/*
-	* @return Quick links discovered from service manager
+	 * @return Quick links discovered from service manager
 	 */
 	public List<LinkEntity> getQuickLinks()
 	{
 		return lookupLinksWithRelPrefix(NAME_QUICK_LINK);
 	}
 
-	/**
-	 * @return the registryUrls
-	 */
-	public String getRegistryUrls()
-	{
-		return registryUrls;
-	}
+	//	/**
+	//	 * @return the registryUrls
+	//	 */
+	//	public String getRegistryUrls()
+	//	{
+	//		return registryUrls;
+	//	}
 
 	//	/**
 	//	 * @return the ssfServiceName
@@ -221,14 +220,14 @@ public class RegistrationEntity
 		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
 	}
 
-	/**
-	 * @param registryUrls
-	 *            the registryUrls to set
-	 */
-	public void setRegistryUrls(String registryUrls)
-	{
-		this.registryUrls = registryUrls;
-	}
+	//	/**
+	//	 * @param registryUrls
+	//	 *            the registryUrls to set
+	//	 */
+	//	public void setRegistryUrls(String registryUrls)
+	//	{
+	//		this.registryUrls = registryUrls;
+	//	}
 
 	private void addToLinksMap(Map<String, Link> linksMap, List<Link> links)
 	{

@@ -36,7 +36,7 @@ define(['knockout', 'jquery', 'dfutil'],
                 };
                 
                 function getDashboardOpenLink(dashboardId) {
-                    return document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId=' + dashboardId;
+                    return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + dashboardId;
                 };
                 
                 function refreshLinks() {
