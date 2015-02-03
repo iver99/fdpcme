@@ -249,7 +249,6 @@ function(dsf, oj, ko, $, dfu)
             {
                 self.datasource['pagingDS'].refreshModel(_id, {
                     success: function(model) {
-                        model.set("name", "test");
                         var _e = $(".dbs-summary-container[aria-dashboard=\""+_id+"\"]");
                         if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
                     },
