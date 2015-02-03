@@ -60,7 +60,7 @@ var dashboardsViewModle = undefined;
  * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
  * objects in the callback
  */
-require(['dbs/dbsmodel', 
+require(['dbs/dbsmodel',
     'knockout',
     'jquery',
     'ojs/ojcore',
@@ -231,6 +231,7 @@ require(['dbs/dbsmodel',
                 
                 ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                 $('#mainContent').show(); 
+                
                 
                window.addEventListener('message', childMessageListener, false);
                window.name = 'dashboardhome'; 
