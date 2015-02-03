@@ -568,6 +568,11 @@ public class DashboardManagerTest
 		Dashboard dbd11 = new Dashboard();
 		dbd11.setName("key11" + System.currentTimeMillis());
 		dbd11.setIsSystem(true);
+		Tile tile1 = createTileForDashboard(dbd11);
+		tile1.setHeight(12);
+		tile1.setIsMaximized(true);
+		TileParam t1p1 = createParameterForTile(tile1);
+		t1p1.setStringValue("tile 1 param 1");
 		dbd11 = dm.saveNewDashboard(dbd11, tenant1);
 		dbd11.setOwner("OTHER");
 		dbd11 = dm.updateDashboard(dbd11, tenant1);
@@ -599,6 +604,10 @@ public class DashboardManagerTest
 		// query by page size/offset. ===Need to consider that last accessed one comes first===
 		pd = dm.listDashboards("key", 0, 3, tenant1, true);
 		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd11.getDashboardId());
+		// check that tiles are retrieved successfully
+		Assert.assertNotNull(pd.getDashboards().get(0).getTileList().get(0));
+		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
+		Assert.assertEquals(dbd11.getTileList().get(0).getTileId(), dbd11tile1.getTileId());
 		Assert.assertEquals(3, pd.getDashboards().size());
 		Assert.assertEquals(3, pd.getLimit().intValue());
 		Assert.assertEquals(3, pd.getCount());
