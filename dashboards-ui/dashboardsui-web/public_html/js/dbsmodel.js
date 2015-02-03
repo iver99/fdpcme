@@ -21,7 +21,6 @@ define([
 ],
 function(dsf, oj, ko, $, dfu)
 {
-    var RECENT_MAX_SIZE = 10;
     
     function createDashboardDialogModel() {
         var self = this;
@@ -241,7 +240,6 @@ function(dsf, oj, ko, $, dfu)
         self.forceSearch = function (event, data)
         {
             $("#sinput").dbsTypeAhead("forceSearch");
-            //self.updateDashboard({id:10058});
         };
         
         self.updateDashboard = function (dsb)
