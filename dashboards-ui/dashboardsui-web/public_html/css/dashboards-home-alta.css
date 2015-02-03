@@ -65,7 +65,9 @@
 }
 
 .dbs-summary-header-title {
-    text-align: center;
+    //text-align: center;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .dbs-summary-header-title.active {

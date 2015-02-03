@@ -27,6 +27,7 @@ public class DashboardsUiApplication extends Application
 	{
 		Set<Class<?>> s = new HashSet<Class<?>>();
 		s.add(ConfigurationAPI.class);
+		s.add(RegistryLookupAPI.class);
 		return s;
 	}
 }

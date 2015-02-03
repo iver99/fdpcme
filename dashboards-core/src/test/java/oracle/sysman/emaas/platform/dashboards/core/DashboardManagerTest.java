@@ -10,7 +10,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -23,6 +23,7 @@ public class DashboardManagerTest
 {
 	static {
 		PersistenceManager.setTestEnv(true);
+		UserContext.setCurrentUser("SYSMAN");
 	}
 
 	@Test
@@ -139,7 +140,7 @@ public class DashboardManagerTest
 	@Test
 	public void testCreateUpdateDashboard() throws DashboardException, InterruptedException
 	{
-		String currentUser = AppContext.getInstance().getCurrentUser();
+		String currentUser = UserContext.getCurrentUser();
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateUpdateDashboard()" + System.currentTimeMillis());
 

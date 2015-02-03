@@ -201,9 +201,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private static final String NAV_BASE = "/emcpdfui";
-	private static final String NAV_BASE_HOME = "/emcpdfui/home.html";
-	private static final String NAV_QUICK_LINK = "/emcpdfui/home.html";
+	private static final String NAV_BASE = "/emsaasui/emcpdfui";
+	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
+	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 

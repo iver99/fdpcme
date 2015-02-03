@@ -6,6 +6,7 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -28,6 +29,7 @@ public class DashboardManagerPerfTest
 
 	static {
 		PersistenceManager.setTestEnv(true);
+		UserContext.setCurrentUser("SYSMAN");
 	}
 
 	@AfterClass

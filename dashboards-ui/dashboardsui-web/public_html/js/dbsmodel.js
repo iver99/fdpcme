@@ -48,35 +48,7 @@ function(dsf, oj, ko, $, dfu)
             return false;
         };
     };
-    
-    function navigationsPopupModel() {
-        var self = this;
-        self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
-        self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";//TODO
-        self.quickLinks = ko.observableArray(dfu.discoverQuickLinks());
-        self.favorites = ko.observableArray();
-        self.recents = ko.observableArray();
-        self.addFavorite = function(dashboard) {
-            if (self.favorites.indexOf(dashboard) < 0)
-            {
-                self.favorites.push(dashboard);
-            }
-        };
-        self.removeFavorite = function(dashboard) {
-            self.favorites.remove(function(item) { return item.id === dashboard.id; });
-        };
-        self.addRecent = function(dashboard) {
-            if (self.recents.indexOf(dashboard) < 0)
-            {
-                if (self.recents().length >= RECENT_MAX_SIZE) self.recents.shift();
-                self.recents.unshift(dashboard);
-            }
-        };
-        self.removeRecent = function(dashboard) {
-            self.recents.remove(function(item) { return item.id === dashboard.id; });
-        };
-    };
-    
+        
     function confirmDialogModel(title, okLabel, message, okFunction) {
         var self = this;
         //self.style = ko.observable('min-width: 450px; min-height:150px;');
@@ -120,9 +92,7 @@ function(dsf, oj, ko, $, dfu)
         self.selectedDashboard = ko.observable(null);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
-        self.navigationsPopupModel = new navigationsPopupModel(); // should be removed when nav is ok
         self.comingsoonDialogModel = new comingsoonDialogModel();
-        self.navLinksNeedRefresh = ko.observable(false);
         
         self.pageSize = ko.observable(20);
         
@@ -148,7 +118,6 @@ function(dsf, oj, ko, $, dfu)
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
-            //self.navigationsPopupModel.addRecent(data.dashboard);
             //data.dashboard.openDashboard();
             data.dashboardModel.openDashboardPage();
         };
@@ -306,10 +275,6 @@ function(dsf, oj, ko, $, dfu)
             }*/
         };
         
-        self.getNavigationsModel = function()
-        {
-            return self.navigationsPopupModel;
-        };
     };
     
     

@@ -8,6 +8,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -18,6 +20,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DashboardsUiCORSFilter implements Filter
 {
+	private static final String OAM_REMOTE_USER_HEADRE = "OAM_REMOTE_USER";
+	private static final String DEFAULT_USER = "SYSMAN";
+	private static final String DEFAULT_TENANT = "TenantOPC1";
+
+	private static final String COOKIE_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+	private static final String COOKIE_X_REMOTE_USER = "X-REMOTE-USER";
+
 	@Override
 	public void destroy()
 	{
@@ -30,7 +39,31 @@ public class DashboardsUiCORSFilter implements Filter
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		hRes.addHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER");
+		hRes.addHeader("Access-Control-Allow-Credentials", "true");
+
+		// handling the OAM info from SSO
+		HttpServletRequest httpReq = (HttpServletRequest) request;
+		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADRE);
+
+		// default value incase there is no OAM header
+		String tenant = DEFAULT_TENANT;
+		if (userTenant != null && userTenant.indexOf(".") > 0) {
+			int idx = userTenant.indexOf(".");
+			if (idx > 0) {
+				tenant = userTenant.substring(0, idx);
+			}
+		}
+		else {
+			// default value for X-REMOTE-USER
+			userTenant = DEFAULT_TENANT + "." + DEFAULT_USER;
+		}
+		Cookie userNameCookie = new Cookie(COOKIE_X_USER_IDENTITY_DOMAIN_NAME, tenant);
+		hRes.addCookie(userNameCookie);
+		//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
+		Cookie tenantCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
+		hRes.addCookie(tenantCookie);
 		chain.doFilter(request, response);
 	}
 
