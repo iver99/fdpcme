@@ -353,6 +353,7 @@ public class DashboardServiceFacadeTest
 	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#queryByRange(java.lang.String, java.lang.Class, java.util.Map, int, int)}
 	 * .
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void testQueryByRange()
 	{
 		String sql = "select o from EmsDashboard o where o.name = :name";

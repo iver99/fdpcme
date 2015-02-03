@@ -577,7 +577,7 @@ public class DashboardManager
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			String currentUser = AppContext.getInstance().getCurrentUser();
+			String currentUser = UserContext.getCurrentUser();
 			if (dbd.getDashboardId() != null) {
 				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
 				if (sameId != null) {
