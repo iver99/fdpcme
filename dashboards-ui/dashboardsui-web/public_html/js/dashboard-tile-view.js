@@ -206,7 +206,7 @@ define(['knockout',
                 self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
             }
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
-            self.editDisabled = ko.observable(dashboard.type() === SINGLEPAGE_TYPE);
+            self.editDisabled = ko.observable(dashboard.type() === SINGLEPAGE_TYPE || dashboard.systemDashboard());
             
             self.rightButtonsAreaClasses = ko.computed(function() {
                 var css = "dbd-pull-right " + (self.editDisabled() ? "dbd-gray" : "");
@@ -223,7 +223,7 @@ define(['knockout',
             }, this);
             
             self.editDashboardName = function() {
-                if (!$('#builder-dbd-description').hasClass('editing')) {
+                if (!self.editDisabled() && !$('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-name').addClass('editing');
                     $('#builder-dbd-name-input').focus();
                 }
@@ -249,7 +249,7 @@ define(['knockout',
             };
             
             self.editDashboardDescription = function() {
-                if (!$('#builder-dbd-name').hasClass('editing')) {
+                if (!self.editDisabled() && !$('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-description').addClass('editing');
                     $('#builder-dbd-description-input').focus();
                 }
@@ -312,6 +312,11 @@ define(['knockout',
                 if (window.opener) {
                     var goBack = window.open('', 'dashboardhome');
                     goBack.focus();
+                }
+                else {
+                    var home = window.open('./home.html', 'dashboardhome');
+                    window.opener = home;
+                    home.focus();
                 }
             };
             
