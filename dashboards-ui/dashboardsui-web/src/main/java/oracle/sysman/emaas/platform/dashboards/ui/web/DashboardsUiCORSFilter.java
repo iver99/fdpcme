@@ -24,6 +24,7 @@ public class DashboardsUiCORSFilter implements Filter
 	private static final String DEFAULT_USER = "SYSMAN";
 	private static final String DEFAULT_TENANT = "TenantOPC1";
 
+	//	private static final String AUTHORIZATION_HEADER = "Authorization"; //header name needed for authorization
 	private static final String COOKIE_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	private static final String COOKIE_X_REMOTE_USER = "X-REMOTE-USER";
 
@@ -38,10 +39,22 @@ public class DashboardsUiCORSFilter implements Filter
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
-		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
+		hRes.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER");
 		hRes.addHeader("Access-Control-Allow-Credentials", "true");
+
+		//handle Authorization header
+		/*
+		if (LookupManager.getInstance().getAuthorizationToken() != null) {
+			if (!hRes.containsHeader(AUTHORIZATION_HEADER)) {
+				String token = new String(LookupManager.getInstance().getAuthorizationToken());
+				if (token != null) {
+					hRes.addHeader(AUTHORIZATION_HEADER, token);
+				}
+			}
+		}
+		 */
 
 		// handling the OAM info from SSO
 		HttpServletRequest httpReq = (HttpServletRequest) request;

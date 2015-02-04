@@ -12,6 +12,51 @@ define(['knockout',
         function DashboardFrameworkUtility() {
             var self = this;
             
+            /**
+             * catenate root and path to build full path
+             * e.g.
+             * root=http://host:port/root/
+             * path=home.html
+             * output=http://host:port/root/home.html
+             * 
+             * root=http://host:port/root
+             * path=home.html
+             * output=http://host:port/root/home.html
+             * 
+             * root=http://host:port/root/
+             * path=/home.html
+             * output=http://host:port/root/home.html
+             * 
+             * @param {type} root
+             * @param {type} path
+             * @returns {String}
+             */
+            self.buildFullUrl=function(root, path){
+                if (root===null || root===undefined){
+                    console.log("Warning: root is null, path="+path);
+                    return path;
+                }
+                
+                if (path===null || path===undefined){
+                    sole.log("Warning: path is null, root="+root);
+                    return root;
+                }
+                
+                if (typeof root=="string" && typeof path=="string"){
+                    var expRoot = root;
+                    var expPath = path;
+                    if (root.charAt(root.length-1)==='/'){
+                        expRoot = root.substring(0,root.length-2);
+                    }
+                    if (path.charAt(0)==='/'){
+                        expPath = path.substring(1);                        
+                    }
+                    return expRoot+"/"+expPath;
+                }else{
+                    return root+"/"+path;
+                }
+            }
+            
             self.guid = function() {
                 function S4() {
                    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -314,8 +359,8 @@ define(['knockout',
                         userName = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
                     }
                 }
-                var defHeader = {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":tenantName,"X-REMOTE-USER":userName};
-                console.log("Sent Header: "+defHeader);
+                var defHeader = {/*"Authorization": self.getAuthToken(),*/"X-USER-IDENTITY-DOMAIN-NAME":tenantName,"X-REMOTE-USER":userName};
+                console.log("Sent Header: "+JSON.stringify(defHeader));
                 return defHeader;
             }
 
