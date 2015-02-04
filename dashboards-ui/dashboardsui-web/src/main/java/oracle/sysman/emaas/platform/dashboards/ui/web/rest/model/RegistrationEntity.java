@@ -21,6 +21,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.RegistryLookupUtil;
 
 /**
  * @author miao
@@ -84,7 +85,7 @@ public class RegistrationEntity
 	 */
 	public String getDfRestApiEndPoint()
 	{
-		return getRestApiEndPoint(NAME_DASHBOARD_API_SERVICENAME, NAME_DASHBOARD_API_VERSION);
+		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME, NAME_DASHBOARD_API_VERSION);
 	}
 
 	/*
@@ -101,7 +102,7 @@ public class RegistrationEntity
 	 */
 	public String getSsfRestApiEndPoint() throws Exception
 	{
-		return getRestApiEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
+		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
 		//		if (true) {
 		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
 		//		}
@@ -169,33 +170,6 @@ public class RegistrationEntity
 	//	{
 	//		this.ssfVersion = ssfVersion;
 	//	}
-
-	private String getExternalEndPoint(SanitizedInstanceInfo instance)
-	{
-		if (instance == null) {
-			return null;
-		}
-		String endPoint = null;
-		List<String> endpoints = new ArrayList<String>();
-		// virtual end points contains the URLs to the service that may be reached from outside the cloud
-		List<String> virtualEndpoints = instance.getVirtualEndpoints();
-		endpoints.addAll(virtualEndpoints);
-		List<String> canonicalEndpoints = instance.getCanonicalEndpoints();
-		endpoints.addAll(canonicalEndpoints);
-		if (endpoints != null && endpoints.size() > 0) {
-			for (String ep : endpoints) {
-				if (ep.startsWith("https://")) {
-					return ep;
-				}
-				if (endPoint == null) {
-					endPoint = ep;
-				}
-			}
-		}
-
-		return endPoint;
-	}
-
 	//	/**
 	//	 * @param registryUrls
 	//	 *            the registryUrls to set
@@ -204,48 +178,6 @@ public class RegistrationEntity
 	//	{
 	//		this.registryUrls = registryUrls;
 	//	}
-
-	private String getInternalEndPoint(InstanceInfo instance)
-	{
-		if (instance == null) {
-			return null;
-		}
-		String endPoint = null;
-		List<String> endpoints = new ArrayList<String>();
-		// virtual end points contains the URLs to the service that may be reached from outside the cloud
-		List<String> virtualEndpoints = instance.getVirtualEndpoints();
-		endpoints.addAll(virtualEndpoints);
-		List<String> canonicalEndpoints = instance.getCanonicalEndpoints();
-		endpoints.addAll(canonicalEndpoints);
-		if (endpoints != null && endpoints.size() > 0) {
-			for (String ep : endpoints) {
-				if (ep.startsWith("https://")) {
-					return ep;
-				}
-				if (endPoint == null) {
-					endPoint = ep;
-				}
-			}
-		}
-
-		return endPoint;
-	}
-
-	private String getInternalEndPoint(List<InstanceInfo> instances)
-	{
-		if (instances == null) {
-			return null;
-		}
-		String endPoint = null;
-		for (InstanceInfo instance : instances) {
-			endPoint = getInternalEndPoint(instance);
-			if (endPoint != null) {
-				return endPoint;
-			}
-		}
-		return endPoint;
-	}
-
 	private String getLinkName(String rel)
 	{
 		String name = "";
@@ -255,51 +187,6 @@ public class RegistrationEntity
 		}
 
 		return name;
-	}
-
-	private List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
-	{
-		List<Link> matched = new ArrayList<Link>();
-		if (relPrefix != null) {
-			for (Link link : instance.getLinks()) {
-				if (link.getRel() != null ? link.getRel().startsWith(relPrefix) : "".startsWith(relPrefix)) {
-					matched.add(link);
-				}
-			}
-		}
-		return matched;
-	}
-
-	private String getRestApiEndPoint(String serviceName, String version)
-	{
-		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		SanitizedInstanceInfo sanitizedInstance;
-		InstanceInfo internalInstance = null;
-		try {
-			internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
-			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
-			if (sanitizedInstance == null) {
-				return getInternalEndPoint(internalInstance);
-				//				return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
-				// this happens when
-				//    1. no instance exists based on the query criteria
-				// or
-				//    2. the selected instance does not expose any safe endpoints that are externally routeable (e.g., no HTTPS virtualEndpoints)
-				//
-				// In this case, need to trigger the failover scheme, or alternatively, one could use the plural form of the lookup, and loop through the returned instances
-			}
-			else {
-				return getExternalEndPoint(sanitizedInstance);
-			}
-		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			if (internalInstance != null) {
-				return getInternalEndPoint(internalInstance);
-			}
-		}
-		return null;
 	}
 
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix)
@@ -317,7 +204,7 @@ public class RegistrationEntity
 				SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
 						.getSanitizedInstanceInfo(internalInstance);
 				if (sanitizedInstance != null) {
-					links = getLinksWithRelPrefix(linkPrefix, sanitizedInstance);
+					links = RegistryLookupUtil.getLinksWithRelPrefix(linkPrefix, sanitizedInstance);
 				}
 			}
 			catch (Exception e) {
