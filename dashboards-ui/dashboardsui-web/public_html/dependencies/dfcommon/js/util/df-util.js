@@ -440,7 +440,7 @@ define(['knockout',
                                 }
                             },
                             error:function(xhr, textStatus, errorThrown){
-                                console.log("Error to discover assetRoot: "+textStatus+" by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
+                                console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
                             },
                             async:false
                         });
