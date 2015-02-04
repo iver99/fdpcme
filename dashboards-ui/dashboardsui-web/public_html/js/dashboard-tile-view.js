@@ -327,7 +327,7 @@ define(['knockout',
                 console.log("Saved Search service is not available! Try again later.");
             }
             else {
-                var categoryUrl = ssfUrl + '/categories';
+                var categoryUrl = dfu.buildFullUrl(ssfUrl,'categories');
                 $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl,
                     headers: dfu.getSavedSearchServiceRequestHeader(), 
                     async: false,
@@ -642,8 +642,8 @@ define(['knockout',
 //                    var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
 //                    var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
 //                    var demoSearchesUrl = ssfUrl + '/searches?categoryId=999';
-                    var widgetsUrl = ssfUrl + '/widgets';
-                    var widgetgroupsUrl = ssfUrl + '/widgetgroups';
+                    var widgetsUrl = dfu.buildFullUrl(ssfUrl,'widgets');
+                    var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
                     $.ajax({
                         url: widgetgroupsUrl,
                         headers: dfu.getSavedSearchServiceRequestHeader(),
@@ -899,7 +899,7 @@ define(['knockout',
                     if (_data.WIDGET_GROUP_NAME !== 'Dashboards Built-In') {
                         if (ssfUrl && ssfUrl !== '') {
                             $.ajax({
-                                url: ssfUrl+'/search/'+data.WIDGET_UNIQUE_ID,
+                                url: dfu.buildFullUrl(ssfUrl,'search/'+data.WIDGET_UNIQUE_ID),
                                 headers: dfu.getSavedSearchServiceRequestHeader(),
                                 success: function(widget, textStatus) {
                                     _data.WIDGET_DESCRIPTION = widget.description ? widget.description : '';

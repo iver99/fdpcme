@@ -294,8 +294,8 @@ define(['knockout',
         function getDefaultHeaders() {
             var headers = {
                 'Content-type': 'application/json',
-                'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1',
-                'Authorization': dfu.getAuthToken()
+                'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1'
+                /*,'Authorization': dfu.getAuthToken()*/
             };
             if (dtm.userTenant)
                 headers['X-REMOTE-USER'] = dtm.userTenant;
@@ -303,7 +303,7 @@ define(['knockout',
         }
         
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "dashboards/" + dashboardId;
+            var url = dfu.buildFullUrl(getBaseUrl(),"dashboards/" + dashboardId);
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -321,7 +321,7 @@ define(['knockout',
         }
         
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "dashboards/" + dashboardId;
+            var url = dfu.buildFullUrl(getBaseUrl(), "dashboards/" + dashboardId);
             $.ajax(url, {
                 type: 'put',
                 dataType: "json",
@@ -339,7 +339,7 @@ define(['knockout',
         }
         
         function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "dashboards/favorites/" + dashboardId;
+            var url = dfu.buildFullUrl(getBaseUrl(), "dashboards/favorites/" + dashboardId);
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -356,7 +356,7 @@ define(['knockout',
         }
         
         function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "dashboards/favorites/" + dashboardId;
+            var url = dfu.buildFullUrl(getBaseUrl(), "dashboards/favorites/" + dashboardId);
             $.ajax(url, {
                 type: 'post',
                 dataType: "json",
@@ -373,7 +373,7 @@ define(['knockout',
         }
         
         function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = getBaseUrl() + "dashboards/favorites/" + dashboardId;
+            var url = dfu.buildFullUrl(getBaseUrl() , "dashboards/favorites/" + dashboardId);
             $.ajax(url, {
                 type: 'delete',
                 dataType: "json",
