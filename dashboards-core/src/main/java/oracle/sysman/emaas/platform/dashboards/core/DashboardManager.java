@@ -204,7 +204,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			String currentUser = UserContext.getCurrentUser();
-			if (!currentUser.equals(ed.getOwner())) {
+			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
 				throw new DashboardNotFoundException();
 			}
 			return ed.getScreenShot();
