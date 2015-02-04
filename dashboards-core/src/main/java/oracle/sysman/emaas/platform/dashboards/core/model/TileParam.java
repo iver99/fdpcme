@@ -108,6 +108,10 @@ public class TileParam
 			edtp.setParamValueTimestamp(tsValue);
 			edtp.setParamValueNum(intValue);
 		}
+		if (edtp.getParamName() == null || "".equals(edtp.getParamName())) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.TILE_PARAM_NAME_REQUIRED));
+		}
 		return edtp;
 	}
 

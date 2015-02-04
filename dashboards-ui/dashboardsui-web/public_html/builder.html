@@ -117,7 +117,7 @@ role value for that section to represent the appropriate content type.
                        role="toolbar">
                     <div id="builder-toolbar-left" class="dbd-pull-left">
                         <div id="builder-dbd-name">
-                            <div id="builder-dbd-name-display-area" class="dbd-display-area">
+                            <div id="builder-dbd-name-display-area" class="dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
                                 <span data-bind="text: dashboardName, event: { dblclick: editDashboardName }"></span>
                                 <button id="builder-dbd-name-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                           data-bind="click:editDashboardName,ojComponent: {
@@ -148,7 +148,7 @@ role value for that section to represent the appropriate content type.
                               </div>
                         </div>
                         <div id="builder-dbd-description">
-                            <div id="builder-dbd-description-display-area" class="dbd-display-area">
+                            <div id="builder-dbd-description-display-area" class="dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
                                 <span data-bind="text: dashboardDescription, event: { dblclick: editDashboardDescription }" 
                                       class="dbd-display-area-text dbd-translucency"></span>
                                 <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
@@ -226,9 +226,10 @@ role value for that section to represent the appropriate content type.
                         <!-- /ko -->
                           <button id="dashboard-new-widget" class="oj-button oj-default oj-button-half-chrome"
                                   data-bind="click: createNewWidget, ojComponent: {
-                                        component:'ojButton'
+                                      disabled: editDisabled,  
+                                      component:'ojButton'
                             }" title="Create new widget">
-                            <img src="css/images/tab_new_raised-24.png" alt="Create new widget" class="dbd-not-gray"/>
+                            <img src="css/images/tab_new_raised-24.png" alt="Create new widget" data-bind="css: {'dbd-not-gray': !editDisabled()}"/>
                           </button>
                           <button id="dashboard-help" class="oj-button oj-default oj-button-half-chrome" title="Help">
                               <span title=".oj-fwk-icon-help" role="img" class="oj-fwk-icon-help oj-fwk-icon"></span>
@@ -738,8 +739,9 @@ role value for that section to represent the appropriate content type.
                                     <span class="dbd-tile-title" data-bind="text: title"></span>
                                     <div class="dbd-pull-right">
                                         <div class="dbd-btn-group">
-                                            <button class="oj-button-half-chrome dbd-tile-action"
-                                                    data-bind="attr: {'id': 'actionButton' + clientGuid}, ojComponent: {component: 'ojButton', label: '', menu: '#tileMenu' + clientGuid, disabled: $root.disableTilesOperateMenu}">
+                                            <button class="oj-button-half-chrome dbd-tile-action" title="actions"
+                                                    data-bind="attr: {'id': 'actionButton' + clientGuid}, 
+                                                                ojComponent: {component: 'ojButton', label: '', menu: '#tileMenu' + clientGuid, disabled: $root.disableTilesOperateMenu}">
                                                 <img src="images/func_threebullets_16_ena.png" alt="Edit"/>
                                             </button>
                                             <ul style="display:none"

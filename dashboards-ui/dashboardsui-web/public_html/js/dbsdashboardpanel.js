@@ -272,9 +272,9 @@ $.widget('dbs.dbsDashboardPanel',
                    url: self.options['dashboard']['screenShotHref'], 
                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
                    success: function(response){
-                       var __ss = response;
+                       var __ss = (response.screenShot ? response.screenShot : undefined);
                        self.contentPage1ImgEle.attr("src", __ss);
-                       if (_dmodel && __ss)
+                       if (_dmodel)
                        {
                            //_dmodel.set("screenShot", _ss);
                            _dmodel['screenShot'] = __ss;
