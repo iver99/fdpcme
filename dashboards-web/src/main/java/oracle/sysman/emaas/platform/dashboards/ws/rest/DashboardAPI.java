@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.RegistryLookupUtil;
 
 import org.codehaus.jettison.json.JSONObject;
 
@@ -109,8 +110,9 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(userTenant);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
-			String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
-			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
+			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
+			String externalBase = RegistryLookupUtil.getServiceExternalEndPoint("Dashboard-API", "0.1");//TODO find servicen info from central place or shared API.
+			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(externalBase, ss))).build();
 		}
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
