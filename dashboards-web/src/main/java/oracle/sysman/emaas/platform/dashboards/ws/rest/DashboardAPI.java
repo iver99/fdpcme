@@ -112,7 +112,8 @@ public class DashboardAPI extends APIBase
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
 			String externalBase = RegistryLookupUtil.getServiceExternalEndPoint("Dashboard-API", "0.1");//TODO find servicen info from central place or shared API.
-			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(externalBase, ss))).build();
+			String screenShotUrl = externalBase + "dashboards/" + dashboardId + "/screenshot";
+			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
 		}
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
