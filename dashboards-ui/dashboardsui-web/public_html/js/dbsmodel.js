@@ -46,6 +46,12 @@ function(dsf, oj, ko, $, dfu)
             }
             return false;
         };
+        
+        self.keydown = function (d, e) {
+           if (e.keyCode === 13) {
+              $( "#cDsbDialog" ).ojDialog( "close" );
+           }
+        };
     };
         
     function confirmDialogModel(title, okLabel, message, okFunction) {
@@ -71,6 +77,12 @@ function(dsf, oj, ko, $, dfu)
         
         self.close = function () {
             $( "#dbs_cfmDialog" ).ojDialog( "close" );
+        };
+        
+        self.keydown = function (d, e) {
+           if (e.keyCode === 13) {
+             self.close();
+           }
         };
     }; 
 
