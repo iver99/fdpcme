@@ -46,7 +46,7 @@ define(['knockout',
                     var expRoot = root;
                     var expPath = path;
                     if (root.charAt(root.length-1)==='/'){
-                        expRoot = root.substring(0,root.length-2);
+                        expRoot = root.substring(0,root.length-1);
                     }
                     if (path.charAt(0)==='/'){
                         expPath = path.substring(1);                        
