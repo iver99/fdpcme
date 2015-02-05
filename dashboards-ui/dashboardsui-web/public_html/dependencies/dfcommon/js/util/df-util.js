@@ -188,6 +188,18 @@ define(['knockout',
 //                return "http://slc04pxi.us.oracle.com:7001/savedsearch/v1";//TODO
                 */
             };
+            
+            self.discoverLogoutRestApiUrl = function() {
+                return self.df_util_widget_lookup_assetRootUrl('SecurityService', '0.1', 'sso.logout');
+//                var reginfo = self.getRegistrationInfo();
+//                if (reginfo && reginfo.logoutRestApiEndPoint)
+//                    return reginfo.logoutRestApiEndPoint + "/securityutil/ssoLogout";
+//                else {
+//                    console.log("Failed to discovery logout end point");
+//                    return null;
+//                }
+//                
+            };
 
             /**
              * Discover available Saved Search service URL
@@ -345,7 +357,7 @@ define(['knockout',
 //                }
             };
             
-            self.getDefaultHeader = function() {
+            self.getUserTenant = function() {
                 var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
                 var userTenantPrefix = "X-REMOTE-USER=";
                 var cookieArray = document.cookie.split(';');
@@ -359,9 +371,32 @@ define(['knockout',
                         userName = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
                     }
                 }
-                var defHeader = {/*"Authorization": self.getAuthToken(),*/"X-USER-IDENTITY-DOMAIN-NAME":tenantName,"X-REMOTE-USER":userName};
+                return {"tenant": tenantName, "tenantUser": userName};
+            };
+            
+            self.getDefaultHeader = function() {
+                var info = self.getUserTenant();
+                var defHeader = {/*"Authorization": self.getAuthToken(),*/"X-USER-IDENTITY-DOMAIN-NAME":info.tenant,"X-REMOTE-USER":info.tenantUser};
                 console.log("Sent Header: "+JSON.stringify(defHeader));
                 return defHeader;
+            };
+            
+            self.getUserName = function() {
+                var info = self.getUserTenant();
+                if (info && info.tenantUser) {
+                    var idx = info.tenantUser.indexOf('.');
+                    if (idx !== -1) {
+                        return info.tenantUser.substring(idx + 1, info.tenantUser.length);
+                    }
+                }
+                return null;
+            };
+            
+            self.getTenantName = function() {
+                var info = self.getUserTenant();
+                if (info && info.tenant)
+                    return info.tenant;
+                return null;
             }
 
             self.getAuthorizationRequestHeader=function() {

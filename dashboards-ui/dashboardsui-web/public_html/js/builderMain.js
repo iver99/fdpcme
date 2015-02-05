@@ -202,6 +202,15 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
+            
+                self.handleSignout = function() {
+                    //Logout current user by using a wellknown URL
+                    var currentUrl = window.location.href;
+                    var cutoffIndex = currentUrl.indexOf("builder.html");
+                    if (cutoffIndex > 0)
+                        currentUrl = currentUrl.substring(0, cutoffIndex) + "home.html";
+                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + currentUrl;
+                };
 
                 // 
                 // Dropdown menu states
@@ -230,7 +239,12 @@ require(['knockout',
                 // 
                 var toolbarData = {
                     // user name in toolbar
-                    "userName": "emaas.user@oracle.com",
+                    "userName": function() {
+                        var userName = dfu.getUserName();
+                        if (userName)
+                            return userName + " (" + dfu.getTenantName() + ")";
+                        return "emaas.user@oracle.com";
+                    }(),
                     "toolbar_buttons": [
                         {
                             "label": "toolbar_button1",
@@ -246,16 +260,20 @@ require(['knockout',
                     // Data for global nav dropdown menu embedded in toolbar.
                     "global_nav_dropdown_items": [
                         {"label": "preferences",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "help",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "about",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "sign out",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": self.handleSignout
                         }
                     ]
                 };
