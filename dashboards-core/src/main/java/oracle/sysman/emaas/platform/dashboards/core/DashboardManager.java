@@ -155,8 +155,8 @@ public class DashboardManager
 		}
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null) {
-			return;
+		if (ed == null || (ed.getDeleted() != null && ed.getDeleted() > 0)) {
+			throw new DashboardNotFoundException();
 		}
 		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
 			removeFavoriteDashboard(dashboardId, tenantId);

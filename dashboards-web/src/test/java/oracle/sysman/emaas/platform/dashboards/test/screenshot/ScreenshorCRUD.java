@@ -92,27 +92,10 @@ public class ScreenshorCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "X-REMOTE-USER", "errortenant" + "." + remoteuser,
 							"Authorization", authToken).when().get("/dashboards/" + dashboard_id + "/screenshot/");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
-			Assert.assertTrue(res2.getStatusCode() == 404);
-			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
-			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			Assert.assertTrue(res2.getStatusCode() == 403);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
 			System.out.println("											");
-
-			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
-			System.out.println(res5.asString());
-			System.out.println("Status code is: " + res5.getStatusCode());
-			Assert.assertTrue(res5.getStatusCode() == 204);
-
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -131,6 +114,9 @@ public class ScreenshorCRUD
 				System.out.println("Status code is: " + res5.getStatusCode());
 				Assert.assertTrue(res5.getStatusCode() == 204);
 			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
 		}
 
 	}
@@ -196,23 +182,6 @@ public class ScreenshorCRUD
 			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
 			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 			System.out.println("											");
-
-			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
-			System.out.println(res5.asString());
-			System.out.println("Status code is: " + res5.getStatusCode());
-			Assert.assertTrue(res5.getStatusCode() == 204);
-
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -231,6 +200,9 @@ public class ScreenshorCRUD
 				System.out.println("Status code is: " + res5.getStatusCode());
 				Assert.assertTrue(res5.getStatusCode() == 204);
 			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
 		}
 	}
 
@@ -273,23 +245,6 @@ public class ScreenshorCRUD
 			Assert.assertEquals(res2.jsonPath().getString("screenShot"),
 					"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABYwAAAJACAYAAA");
 			System.out.println("											");
-
-			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
-			System.out.println(res5.asString());
-			System.out.println("Status code is: " + res5.getStatusCode());
-			Assert.assertTrue(res5.getStatusCode() == 204);
-
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -308,6 +263,9 @@ public class ScreenshorCRUD
 				System.out.println("Status code is: " + res5.getStatusCode());
 				Assert.assertTrue(res5.getStatusCode() == 204);
 			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
 		}
 
 	}
@@ -383,23 +341,6 @@ public class ScreenshorCRUD
 			//Assert.assertEquals(res2.jsonPath().getString("screenShot"), null);
 			//Assert.assertEquals(res2.asString(), "Specified dashboard screenshot does not exist");
 			System.out.println("											");
-
-			System.out.println("cleaning up the dashboard that is created above using DELETE method");
-			Response res5 = RestAssured
-					.given()
-					.contentType(ContentType.JSON)
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
-			System.out.println(res5.asString());
-			System.out.println("Status code is: " + res5.getStatusCode());
-			Assert.assertTrue(res5.getStatusCode() == 204);
-
-			System.out.println("											");
-			System.out.println("------------------------------------------");
-			System.out.println("											");
-
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -418,6 +359,9 @@ public class ScreenshorCRUD
 				System.out.println("Status code is: " + res5.getStatusCode());
 				Assert.assertTrue(res5.getStatusCode() == 204);
 			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
 		}
 	}
 
