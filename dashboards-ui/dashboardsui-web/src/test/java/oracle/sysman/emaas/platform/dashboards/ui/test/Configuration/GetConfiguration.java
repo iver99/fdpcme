@@ -56,9 +56,14 @@ public class GetConfiguration
 			System.out.println("Status code is: " + res.getStatusCode());
 			Assert.assertTrue(res.getStatusCode() == 200);
 			System.out.println(res.asString());
-			Assert.assertNotNull(res.jsonPath().get("registryUrls"));
+			//Assert.assertNotNull(res.jsonPath().get("registryUrls"));
 			//Assert.assertNotNull(res.jsonPath().get("ssfServiceName"));
 			//Assert.assertNotNull(res.jsonPath().get("ssfVersion"));
+			Assert.assertNotNull(res.jsonPath().get("dfRestApiEndPoint"));
+			Assert.assertNotNull(res.jsonPath().get("ssfRestApiEndPoint"));
+			Assert.assertNotNull(res.jsonPath().get("quickLinks"));
+			Assert.assertNotNull(res.jsonPath().get("visualAnalyzers"));
+
 			System.out.println("											");
 			System.out.println("------------------------------------------");
 			System.out.println("											");
