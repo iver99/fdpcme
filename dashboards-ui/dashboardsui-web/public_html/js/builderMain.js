@@ -30,7 +30,8 @@ requirejs.config({
         'html2canvas':'../dependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
         'canvg-stackblur':'../dependencies/canvg/StackBlur',
-        'canvg':'../dependencies/canvg/canvg'
+        'canvg':'../dependencies/canvg/canvg',
+        'emcta':'../../emcta/ta/js'
 
     },
     // Shim configurations for modules that do not expose AMD
