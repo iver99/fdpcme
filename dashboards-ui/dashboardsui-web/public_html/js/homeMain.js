@@ -194,8 +194,10 @@ require(['dbs/dbsmodel',
 
                 self.appId = appName.id;
                 self.appName = appName.name;
+                self.cloudNameLabel = "Product Name";
                 self.cloudName = cloudName;
                 self.userName = ko.observable(toolbarData.userName);
+                self.toolbarButtonsLabel = "Logged-in User";
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
                 self.navLinksNeedRefresh = ko.observable(false);
