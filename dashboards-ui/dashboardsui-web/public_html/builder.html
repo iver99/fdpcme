@@ -66,7 +66,7 @@ role value for that section to represent the appropriate content type.
                             <div id='demo-appheader-menu-container'>
                                 <ul id="demoAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
                                     <!-- ko foreach: globalNavItems -->
-                                    <li> <a data-bind="text: label, href: url"> <span class=""></span>  </a></li>
+                                    <li> <a data-bind="text: label, href: url, click: onclick"> <span class=""></span>  </a></li>
                                     <!-- /ko -->
                                 </ul>
                             </div>
@@ -170,7 +170,7 @@ role value for that section to represent the appropriate content type.
                                     <span role="img"
                                         class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
-                                  <button id="builder-dbd-name-cancel" class="oj-button oj-default oj-button-half-chrome"
+                                  <button id="builder-dbd-description-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardDescription, ojComponent: {
                                                 component:'ojButton'
                                     }" title="Cancel">
