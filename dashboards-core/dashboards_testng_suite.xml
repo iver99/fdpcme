@@ -3,7 +3,6 @@
 <suite name="dashboards-Core" parallel="tests">
 	<test name="dashboards Model">
 		<classes>
-		    <class name="oracle.sysman.emaas.platform.dashboards.core.DashboardManagerPerfTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.DashboardManagerTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacadeTest" />
 		</classes>
