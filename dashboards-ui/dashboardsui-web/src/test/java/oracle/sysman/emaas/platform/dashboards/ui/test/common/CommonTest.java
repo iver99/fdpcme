@@ -45,7 +45,7 @@ public class CommonTest
 		serveruri = "http://" + HOSTNAME + ":" + portno;
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = serveruri;
-		RestAssured.basePath = "/emcpdfui/api";
+		RestAssured.basePath = "/emsaasui/emcpdfui/api";
 		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 
 	}

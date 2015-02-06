@@ -441,7 +441,7 @@ define(['knockout',
                         category:{id:(widgetToSave.categoryId instanceof Array ? widgetToSave.categoryId[0] : widgetToSave.categoryId)},
                                         folder:{id: 999}, description: widgetToSave.description, 
                                         queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
-                    var saveSearchUrl = ssfUrl + "/search";
+                    var saveSearchUrl = dfu.buildFullUrl(ssfUrl,"search");
                     $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
                         headers: dfu.getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
