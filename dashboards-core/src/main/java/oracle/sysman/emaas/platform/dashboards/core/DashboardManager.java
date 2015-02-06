@@ -155,7 +155,10 @@ public class DashboardManager
 		}
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null || (ed.getDeleted() != null && ed.getDeleted() > 0)) {
+		if (ed == null) {
+			throw new DashboardNotFoundException();
+		}
+		if (permanent == false && ed.getDeleted() != null && ed.getDeleted() > 0) {
 			throw new DashboardNotFoundException();
 		}
 		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
@@ -587,8 +590,8 @@ public class DashboardManager
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
 			if (dbd.getDashboardId() != null) {
-				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
-				if (sameId != null) {
+				EmsDashboard sameId = dsf.getEmsDashboardById(dbd.getDashboardId());
+				if (sameId != null && sameId.getDeleted() <= 0) {
 					throw new CommonFunctionalException(
 							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
 				}
