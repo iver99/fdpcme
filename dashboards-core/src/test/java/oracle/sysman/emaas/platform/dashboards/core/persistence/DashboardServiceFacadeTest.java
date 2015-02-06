@@ -97,9 +97,26 @@ public class DashboardServiceFacadeTest
 		Assert.assertNotNull(emsdashboardtileparams.getIsSystem());
 		Assert.assertNotNull(emsdashboardtileparams.getParamName());
 		Assert.assertNotNull(emsdashboardtileparams.getParamType());
-		Assert.assertNotNull(emsdashboardtileparams.getParamValueNum());
-		Assert.assertNotNull(emsdashboardtileparams.getParamValueStr());
-		Assert.assertNotNull(emsdashboardtileparams.getParamValueTimestamp());
+		//it is not reasonable that a parameter has non-null value of all NUM/STR/TIME column
+		//After QA test case execution and run DEV test case again, below will fail.
+		//		Assert.assertNotNull(emsdashboardtileparams.getParamValueNum());
+		//		Assert.assertNotNull(emsdashboardtileparams.getParamValueStr());
+		//		Assert.assertNotNull(emsdashboardtileparams.getParamValueTimestamp());
+		Integer num = emsdashboardtileparams.getParamValueNum();
+		String str = emsdashboardtileparams.getParamValueStr();
+		Date time = emsdashboardtileparams.getParamValueTimestamp();
+		switch (emsdashboardtileparams.getParamType().intValue()) {
+			case 1:
+				Assert.assertNotNull(str);
+				break;
+			case 2:
+				Assert.assertNotNull(num);
+				break;
+			case 3:
+				Assert.assertNotNull(time);
+				break;
+		}
+
 		Assert.assertNotNull(emsdashboardtileparams.getDashboardTile());
 	}
 
@@ -172,15 +189,23 @@ public class DashboardServiceFacadeTest
 		return tile;
 	}
 
-	private static EmsDashboardTileParams newTileParams()
+	private static EmsDashboardTileParams newTileParams(Integer type)
 	{
 		EmsDashboardTileParams p = new EmsDashboardTileParams();
 		p.setIsSystem(0);
 		p.setParamName("paramName");
-		p.setParamType(0);
-		p.setParamValueNum(1);
-		p.setParamValueStr("paramValueStr");
-		p.setParamValueTimestamp(new Date());
+		p.setParamType(type);
+		switch (type.intValue()) {
+			case 1:
+				p.setParamValueStr("paramValueStr");
+				break;
+			case 2:
+				p.setParamValueNum(1);
+				break;
+			case 3:
+				p.setParamValueTimestamp(new Date());
+				break;
+		}
 		return p;
 	}
 
@@ -211,6 +236,8 @@ public class DashboardServiceFacadeTest
 	//	public static void tearDownAfterClass() throws Exception {
 	//	}
 
+	private static int testSeq = 1;
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -223,7 +250,7 @@ public class DashboardServiceFacadeTest
 		dashboardServiceFacade = new DashboardServiceFacade(111L);
 		d = DashboardServiceFacadeTest.newDashboard();
 		t = DashboardServiceFacadeTest.newTile();
-		p = DashboardServiceFacadeTest.newTileParams();
+		p = DashboardServiceFacadeTest.newTileParams(testSeq++ % 3 + 1);
 		t.addEmsDashboardTileParams(p);
 		d.addEmsDashboardTile(t);
 		f = DashboardServiceFacadeTest.newFavorite(d);
