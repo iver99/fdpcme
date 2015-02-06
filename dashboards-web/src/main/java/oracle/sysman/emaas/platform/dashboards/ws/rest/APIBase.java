@@ -21,6 +21,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 
 /**
@@ -102,7 +103,9 @@ public class APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
+		String externalBase = DashboardAPIUtil.getExternalAPIBase();
+		String href = externalBase + "dashboards/" + dbd.getDashboardId();
+		//		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
 		dbd.setHref(href);
 		return dbd;
 	}
