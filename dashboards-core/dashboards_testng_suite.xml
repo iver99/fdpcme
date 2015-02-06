@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="dashboards-Core" parallel="tests">
 	<test name="dashboards Model">
-		<classes>		    
+		<classes>
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.DashboardManagerTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacadeTest" />
 		</classes>
