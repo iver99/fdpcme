@@ -18,22 +18,16 @@ define([
                 var tile = params.tile;
                 //Get unique id from WIDGET_UNIQUE_ID
 
-                var providerName = tile.widget["PROVIDER_NAME"];
-                var providerVersion = tile.widget["PROVIDER_VERSION"];
-                var providerAssetRoot = tile.widget["PROVIDER_ASSET_ROOT"];
+                var providerName = tile.PROVIDER_NAME();
+                var providerVersion = tile.PROVIDER_VERSION();
+                var providerAssetRoot = tile.PROVIDER_ASSET_ROOT();
 
                 if (providerName && providerVersion && providerAssetRoot) {
                     self.fullUrl = ko.observable(dfu.df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
-                } else { //TODO: delete
-                    var uniqueId = tile["WIDGET_UNIQUE_ID"];
-                    //query from SSF category to get data for URL retrieval
-//                    providerName = "DB Analytics"; //TODO
-                    providerName = "Sample Provider";
-                    providerVersion = "0.1"; //TODO
-                    providerAssetRoot = "home"; //TODO
-                    self.fullUrl = ko.observable(dfu.df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
+                } else { 
+                    self.fullUrl = ko.observable("about:blank");
                 }
-                if (self.fullUrl()){
+                if (self.fullUrl() && self.fullUrl()!=="about:blank"){
                     var url = self.fullUrl();
                      if (url.length>"displayMode=dashboard".length){
                         if (url.indexOf("displayMode=dashboard")<0){

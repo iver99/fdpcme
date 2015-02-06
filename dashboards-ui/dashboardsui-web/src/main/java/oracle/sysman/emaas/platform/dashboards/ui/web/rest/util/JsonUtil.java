@@ -172,6 +172,7 @@ public class JsonUtil
 			return mapper.writeValueAsString(object);
 		}
 		catch (IOException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

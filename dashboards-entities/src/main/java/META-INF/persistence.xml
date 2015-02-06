@@ -18,6 +18,7 @@
 			<property name="eclipselink.jdbc.cache-statements" value="true" />
 			<property name="eclipselink.weaving" value="true" />
 			<property name="eclipselink.jdbc.native-sql" value="true" />
+			<property name="eclipselink.jdbc.allow-native-sql-queries" value="true"/>
 			<property name="eclipselink.logging.logger"
 				value="org.eclipse.persistence.logging.DefaultSessionLog" />
 			<property name="eclipselink.logging.level" value="INFO" />
@@ -54,6 +55,7 @@
 			<property name="eclipselink.jdbc.batch-writing" value="Oracle-JDBC" />
 			<property name="eclipselink.jdbc.cache-statements" value="true" />
 			<property name="eclipselink.jdbc.native-sql" value="true" />
+			<property name="eclipselink.jdbc.allow-native-sql-queries" value="true"/>
 			<property name="eclipselink.logging.logger"
 				value="org.eclipse.persistence.logging.DefaultSessionLog" />
 			<property name="eclipselink.logging.level" value="FINE" />

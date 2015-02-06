@@ -12,6 +12,51 @@ define(['knockout',
         function DashboardFrameworkUtility() {
             var self = this;
             
+            /**
+             * catenate root and path to build full path
+             * e.g.
+             * root=http://host:port/root/
+             * path=home.html
+             * output=http://host:port/root/home.html
+             * 
+             * root=http://host:port/root
+             * path=home.html
+             * output=http://host:port/root/home.html
+             * 
+             * root=http://host:port/root/
+             * path=/home.html
+             * output=http://host:port/root/home.html
+             * 
+             * @param {type} root
+             * @param {type} path
+             * @returns {String}
+             */
+            self.buildFullUrl=function(root, path){
+                if (root===null || root===undefined){
+                    console.log("Warning: root is null, path="+path);
+                    return path;
+                }
+                
+                if (path===null || path===undefined){
+                    sole.log("Warning: path is null, root="+root);
+                    return root;
+                }
+                
+                if (typeof root=="string" && typeof path=="string"){
+                    var expRoot = root;
+                    var expPath = path;
+                    if (root.charAt(root.length-1)==='/'){
+                        expRoot = root.substring(0,root.length-1);
+                    }
+                    if (path.charAt(0)==='/'){
+                        expPath = path.substring(1);                        
+                    }
+                    return expRoot+"/"+expPath;
+                }else{
+                    return root+"/"+path;
+                }
+            }
+            
             self.guid = function() {
                 function S4() {
                    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -42,6 +87,15 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
+                var rep = self.getRegistrationInfo();
+                if (rep && rep.ssfRestApiEndPoint){
+                    return rep.ssfRestApiEndPoint;
+                }else{
+                    console.log("Failed to discovery SSF REST API end point");
+                    return null;
+                }
+                /*
+                if (true) return "https://slc06wfs.us.oracle.com:7002/savedsearch/v1";//REMOVE
                 var availableUrl = null;
                 var urlFound = false;
 
@@ -102,16 +156,18 @@ define(['knockout',
                     }
                 };
 
-                $.ajaxSettings.async = false;
-                $.getJSON(self.getRegistrationEndPoint(), function(data) {    
-                    if (data.registryUrls && data.ssfServiceName && data.ssfVersion) {
-                        var urls = data.registryUrls.split(",");
+//                $.ajaxSettings.async = false;
+                var regInfo = self.getRegistrationInfo();
+                if (regInfo && regInfo.registryUrls){
+//                $.getJSON(self.getRegistrationEndPoint(), function(data) {    
+//                    if (data.registryUrls) {
+                        var urls = regInfo.registryUrls.split(",");
                         for (var i = 0; i < urls.length && !urlFound; i++) {
-                            var serviceUrl = urls[i]+'/'+'instances?serviceName='+data.ssfServiceName;
+                            var serviceUrl = urls[i]+'/'+'instances?serviceName='+'SavedSearch';
                             if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
-                                serviceUrl = urls[i]+'instances?serviceName='+data.ssfServiceName;
+                                serviceUrl = urls[i]+'instances?serviceName='+'SavedSearch';
                             }
-                            serviceUrl = serviceUrl+'&version='+data.ssfVersion;
+                            serviceUrl = serviceUrl+'&version='+'0.1';//TODO HARD_CODE
                             $.ajax({
                                 url: serviceUrl,
                                 headers: self.getAuthorizationRequestHeader(),
@@ -124,12 +180,25 @@ define(['knockout',
                                 async: false
                             });
                         }
-                    }
-                });
-
-                $.ajaxSettings.async = true;
+//                    }
+//                });
+                }
+//                $.ajaxSettings.async = true;
                 return availableUrl;
 //                return "http://slc04pxi.us.oracle.com:7001/savedsearch/v1";//TODO
+                */
+            };
+            
+            self.discoverLogoutRestApiUrl = function() {
+                return self.df_util_widget_lookup_assetRootUrl('SecurityService', '0.1', 'sso.logout');
+//                var reginfo = self.getRegistrationInfo();
+//                if (reginfo && reginfo.logoutRestApiEndPoint)
+//                    return reginfo.logoutRestApiEndPoint + "/securityutil/ssoLogout";
+//                else {
+//                    console.log("Failed to discovery logout end point");
+//                    return null;
+//                }
+//                
             };
 
             /**
@@ -137,6 +206,14 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverDFRestApiUrl = function() {
+                var rep = self.getRegistrationInfo();
+                if (rep && rep.dfRestApiEndPoint){
+                    return rep.dfRestApiEndPoint;
+                }else{
+                    console.log("Failed to discovery DF REST API end point");
+                    return null;
+                }
+                /*
                 var availableUrl = null;
                 var urlFound = false;
 
@@ -191,16 +268,18 @@ define(['knockout',
                     }
                 };
 
-                $.ajaxSettings.async = false;
-                $.getJSON(self.getRegistrationEndPoint(), function(data) {    
-                    if (data.registryUrls && 'Dashboard-API' && '1.0') {
-                        var urls = data.registryUrls.split(",");
+//                $.ajaxSettings.async = false;
+                var regInfo = self.getRegistrationInfo();
+                if (regInfo && regInfo.registryUrls){
+//                $.getJSON(self.getRegistrationEndPoint(), function(data) {    
+//                    if (data.registryUrls && 'Dashboard-API' && '0.1') {
+                        var urls = regInfo.registryUrls.split(",");
                         for (var i = 0; i < urls.length && !urlFound; i++) {
                             var serviceUrl = urls[i]+'/'+'instances?serviceName='+'Dashboard-API';
                             if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
                                 serviceUrl = urls[i]+'instances?serviceName='+'Dashboard-API';
                             }
-                            serviceUrl = serviceUrl+'&version='+'1.0';
+                            serviceUrl = serviceUrl+'&version='+'0.1';
                             $.ajax({
                                 url: serviceUrl,
                                 headers: self.getAuthorizationRequestHeader(),
@@ -213,13 +292,14 @@ define(['knockout',
                                 async: false
                             });
                         }
-                    }
-                });
-
-                $.ajaxSettings.async = true;
+//                });
+                }
+//                $.ajaxSettings.async = true;
                 return availableUrl;
 //                return "http://slc04pxi.us.oracle.com:7001/emcpdf/api/v1/";//TODO
+                */  
             };
+              
             
             self.formatUTCDateTime = function(dateString) {
                 if (dateString && dateString !== '') {
@@ -267,39 +347,84 @@ define(['knockout',
                 }
                 
             };
-            self.authToken = null;
+
             self.getAuthToken = function() {
-                if (self.authToken===null){
-                $.ajax({
-                    url: self.getRegistrationEndPoint(),
-                    success: function(data, textStatus) {
-                        if (data.authToken) {
-                            self.authToken = data.authToken;
-                        }
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Failed to get authToken.');
-                    },
-                    async: false
-                });                    
-                }
-                return self.authToken;
-//                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO
+                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
+//                if (self.getRegistrationInfo() && self.getRegistrationInfo().authToken){
+//                    return self.getRegistrationInfo().authToken;
+//                }else{
+//                    return null;
+//                }
             };
             
+            self.getUserTenant = function() {
+                var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
+                var userTenantPrefix = "X-REMOTE-USER=";
+                var cookieArray = document.cookie.split(';');
+                var tenantName="TenantOPC1"; //in case tenant name is not got
+                var userName="TenantOPC1.SYSMAN"; //in case use name is not got
+                for (var i = 0; i < cookieArray.length; i++) {
+                    var c = cookieArray[i];
+                    if (c.indexOf(tenantNamePrefix) !== -1) {
+                        tenantName = c.substring(c.indexOf(tenantNamePrefix) + tenantNamePrefix.length, c.length);
+                    } else if (c.indexOf(userTenantPrefix) !== -1) {
+                        userName = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
+                    }
+                }
+                return {"tenant": tenantName, "tenantUser": userName};
+            };
             
+            self.getDefaultHeader = function() {
+                var info = self.getUserTenant();
+                var defHeader = {/*"Authorization": self.getAuthToken(),*/"X-USER-IDENTITY-DOMAIN-NAME":info.tenant,"X-REMOTE-USER":info.tenantUser};
+                console.log("Sent Header: "+JSON.stringify(defHeader));
+                return defHeader;
+            };
+            
+            self.getUserName = function() {
+                var info = self.getUserTenant();
+                if (info && info.tenantUser) {
+                    var idx = info.tenantUser.indexOf('.');
+                    if (idx !== -1) {
+                        return info.tenantUser.substring(idx + 1, info.tenantUser.length);
+                    }
+                }
+                return null;
+            };
+            
+            self.getTenantName = function() {
+                var info = self.getUserTenant();
+                if (info && info.tenant)
+                    return info.tenant;
+                return null;
+            }
+
             self.getAuthorizationRequestHeader=function() {
                 return {"Authorization": self.getAuthToken()};
             };
             
             self.getSavedSearchServiceRequestHeader=function() {
-                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"TenantOPC1"};//TODO
+                var header = self.getDefaultHeader();
+                delete header['X-REMOTE-USER'];//Remove this if X-REMOTE-USER is enabled in SSF
+                return header;
             };  
             
             self.getDashboardsRequestHeader=function() {
-                return {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"TenantOPC1"};//TODO
+                return self.getDefaultHeader();
             };  
             
+            self.registrationInfo = null;
+            self.getRegistrationInfo=function(){
+                
+                if (self.registrationInfo===null){
+                    $.ajaxSettings.async = false;
+                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
+                        self.registrationInfo = data;
+                    });
+                    $.ajaxSettings.async = true; 
+                }
+                return self.registrationInfo;
+            }
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 return 'api/configurations/registration';
@@ -311,7 +436,14 @@ define(['knockout',
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-                return discoverLinks('quickLink');
+//                return discoverLinks('quickLink');
+            	var rep = self.getRegistrationInfo();
+                if (rep && rep.quickLinks) {
+                    return rep.quickLinks;
+                }
+                else {
+                    return [];
+                }
             };
             
             /**
@@ -319,52 +451,62 @@ define(['knockout',
              * @returns {Array} visualAnalyzerLinks
              */
             self.discoverVisualAnalyzerLinks = function() {
-                return discoverLinks('visualAnalyzer');
+//                return discoverLinks('visualAnalyzer');
+            	var rep = self.getRegistrationInfo();
+                if (rep && rep.visualAnalyzers) {
+                    return rep.visualAnalyzers;
+                }
+                else {
+                    return [];
+                }
             };
             
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
-                //TODO replace below hard coded values
+                var assetRoot = null;
                 if (providerName && providerVersion && providerAssetRoot){
-                    if ("DB Analytics"===providerName){
-                        return "http://slc08fvg.us.oracle.com:7001/db-analytics-war/html/db-analytics-home.html";
-                    }else if ("Application Performance Manager Cloud Service"===providerName){
-                        return "http://slc04srr.us.oracle.com:7401/apmUi/";
-                    }else if ("IT ANALYTICS"===providerName){
-                        return "http://slc06xat.us.oracle.com:7001/ita-tool";
-                    }else if ("Sample Provider"===providerName) {
-            //            return "http://slc03ruf.us.oracle.com/www/demo/ta/analytics.html";
-                        return "http://jet.us.oracle.com";
-                    }
-            //        else if ("Log Analytics"===providerName) {
-            //            return "http://localhost:8383/emcpdfui/";
-            //        }
-            //        else if ("Target Analytics"===providerName) {
-            //            return "http://localhost:8383/emcpdfui/";
-            //        }
-                    else {
-                        var urlFound = false;
+                    var url = "api/registry/lookup/link?serviceName="+providerName+"&version="+providerVersion+"&rel="+providerAssetRoot;
+                    $.ajax(url,{
+                            success:function(data, textStatus,jqXHR) {
+                                if (data){
+                                    assetRoot = data.href;
+                                }else{
+                                    console.log("Got NULL assetRoot by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
 
-                        function fetchServiceAssetRoot(data) {
-                            var items = data.items;
-                            if (items && items.length > 0) {
-                                for (var j = 0; j < items.length && !urlFound; j++) {
-                                    var links = items[j].links;
-                                    for (var k = 0; k < links.length; k++) {
-                                        var link = links[k];
-                                        if (providerAssetRoot === link.rel) {
-                                            return link.href;
-                                        }
+                                }
+                            },
+                            error:function(xhr, textStatus, errorThrown){
+                                console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
+                            },
+                            async:false
+                        });
+                }
+                return assetRoot;
+                /*
+                if (providerName && providerVersion && providerAssetRoot){
+                    var urlFound = false;
+
+                    function fetchServiceAssetRoot(data) {
+                        var items = data.items;
+                        if (items && items.length > 0) {
+                            for (var j = 0; j < items.length && !urlFound; j++) {
+                                var links = items[j].links;
+                                for (var k = 0; k < links.length; k++) {
+                                    var link = links[k];
+                                    if (providerAssetRoot === link.rel) {
+                                        return link.href;
                                     }
                                 }
                             }
-                            return null;
                         }
+                        return null;
+                    }
 
-                        var assetRoot;
-                        $.ajaxSettings.async = false;
-                        $.getJSON(self.getRegistrationEndPoint(), function(data) {
-                            if (data.registryUrls) {
-                                var urls = data.registryUrls.split(",");
+    //                    $.ajaxSettings.async = false;
+                    var regInfo = self.getRegistrationInfo();
+                    if (regInfo && regInfo.registryUrls){
+    //                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
+    //                        if (data.registryUrls) {
+                                var urls = regInfo.registryUrls.split(",");
                                 for (var i = 0; i < urls.length && !urlFound; i++) {
                                     var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
                                     if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
@@ -388,21 +530,21 @@ define(['knockout',
                                         break;
                                     }
                                 }
-                            }
-                        });
-                        $.ajaxSettings.async = true;
-            //            return assetRoot;    
-                        return document.location.protocol + '//' + document.location.host + '/emcpdfui/';
                     }
+//                    });
+//                    $.ajaxSettings.async = true;
                 }
-                return "http://jet.us.oracle.com";
+                return assetRoot;
+                */
             }
             
             /**
              * Discover available links by rel name
              * @returns {Array} availableLinks
              */
+            /*
             var discoverLinks = function(relName) {
+                if (true) return [];//REMOVE
                 var availableLinks = [];
                 var linksFromDashboard = [];
                 var linksFromIntegrators = [];
@@ -433,7 +575,7 @@ define(['knockout',
                                     if (isValidQuickLink) {
                                         var linkItem = {name: linkName,
                                                             href: link.href};
-                                        if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '1.0') {
+                                        if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '0.1') {
                                             if (linkRecords[linkName]) {
                                                 if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
                                                     linkRecords[linkName].href = link.href;
@@ -461,10 +603,12 @@ define(['knockout',
                         }
                     }
                 };
-                $.ajaxSettings.async = false;
-                $.getJSON(self.getRegistrationEndPoint(),function(data) {
-                        if (data.registryUrls) {
-                            var urls = data.registryUrls.split(",");
+                var regInfo = self.getRegistrationInfo();
+                if (regInfo && regInfo.registryUrls){
+//                $.ajaxSettings.async = false;
+//                $.getJSON(self.getRegistrationEndPoint(),function(data) {
+//                        if (data.registryUrls) {
+                            var urls = regInfo.registryUrls.split(",");
                             for (var i = 0; i < urls.length; i++) {
                                 var serviceUrl = urls[i]+'/'+'instances';
                                 if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
@@ -483,9 +627,9 @@ define(['knockout',
                                     async: false
                                 });
                             }
-                        }
-                    });
-                $.ajaxSettings.async = true;
+                }
+//                    });
+//                $.ajaxSettings.async = true;
                 
                 for (var i = 0; i < linksFromDashboard.length; i++) {
                     availableLinks.push(linksFromDashboard[i]);
@@ -495,6 +639,7 @@ define(['knockout',
                 }
                 return availableLinks;
             };
+            */
         }
         
         return new DashboardFrameworkUtility();

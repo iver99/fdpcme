@@ -30,7 +30,8 @@ requirejs.config({
         'html2canvas':'../dependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
         'canvg-stackblur':'../dependencies/canvg/StackBlur',
-        'canvg':'../dependencies/canvg/canvg'
+        'canvg':'../dependencies/canvg/canvg',
+        'emcta':'../../emcta/ta/js'
 
     },
     // Shim configurations for modules that do not expose AMD
@@ -70,7 +71,6 @@ requirejs.config({
 var defaultTileHeight = 220;
 var defaultTileRowHeight = defaultTileHeight + 10;
 var defaultColumnsNumber = 4;
-var navigationsModel = {};
 
 /**
  * A top-level require call executed by the Application.
@@ -203,6 +203,15 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
+            
+                self.handleSignout = function() {
+                    //Logout current user by using a wellknown URL
+                    var currentUrl = window.location.href;
+                    var cutoffIndex = currentUrl.indexOf("builder.html");
+                    if (cutoffIndex > 0)
+                        currentUrl = currentUrl.substring(0, cutoffIndex) + "home.html";
+                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + currentUrl;
+                };
 
                 // 
                 // Dropdown menu states
@@ -231,7 +240,12 @@ require(['knockout',
                 // 
                 var toolbarData = {
                     // user name in toolbar
-                    "userName": "emaas.user@oracle.com",
+                    "userName": function() {
+                        var userName = dfu.getUserName();
+                        if (userName)
+                            return userName + " (" + dfu.getTenantName() + ")";
+                        return "emaas.user@oracle.com";
+                    }(),
                     "toolbar_buttons": [
                         {
                             "label": "toolbar_button1",
@@ -247,16 +261,20 @@ require(['knockout',
                     // Data for global nav dropdown menu embedded in toolbar.
                     "global_nav_dropdown_items": [
                         {"label": "preferences",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "help",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "about",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "sign out",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": self.handleSignout
                         }
                     ]
                 };
@@ -287,6 +305,8 @@ require(['knockout',
             if (dsbId) {
                 dsbId = decodeURIComponent(dsbId);
             }
+            
+            dtm.initializeFromCookie();
 
 //            var dashboardModel = function(dashboardId) {
 //                if (window.opener && window.opener.dashboarDataCallBack) {
@@ -311,15 +331,6 @@ require(['knockout',
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
 
-                    if (window.opener && window.opener.navigationsModelCallBack) {
-                        navigationsModel = ko.observable(window.opener.navigationsModelCallBack());
-                            //console.log("test:"+navigationsModel.homeLink);
-                    }
-                    else
-                    {
-                        navigationsModel = ko.observable({});
-                    }
-
                     ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
                             var list = valueAccessor();
@@ -333,8 +344,7 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
                     //header
-                    ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]);
-//                    ko.applyBindings({navigationsPopupModel: navigationsModel}, $('#links_menu')[0]);     
+                    ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]); 
                     ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);

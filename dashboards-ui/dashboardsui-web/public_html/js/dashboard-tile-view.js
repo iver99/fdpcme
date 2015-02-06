@@ -206,7 +206,7 @@ define(['knockout',
                 self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
             }
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
-            self.editDisabled = ko.observable(dashboard.type() === SINGLEPAGE_TYPE);
+            self.editDisabled = ko.observable(dashboard.type() === SINGLEPAGE_TYPE || dashboard.systemDashboard());
             
             self.rightButtonsAreaClasses = ko.computed(function() {
                 var css = "dbd-pull-right " + (self.editDisabled() ? "dbd-gray" : "");
@@ -223,7 +223,7 @@ define(['knockout',
             }, this);
             
             self.editDashboardName = function() {
-                if (!$('#builder-dbd-description').hasClass('editing')) {
+                if (!self.editDisabled() && !$('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-name').addClass('editing');
                     $('#builder-dbd-name-input').focus();
                 }
@@ -249,7 +249,7 @@ define(['knockout',
             };
             
             self.editDashboardDescription = function() {
-                if (!$('#builder-dbd-name').hasClass('editing')) {
+                if (!self.editDisabled() && !$('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-description').addClass('editing');
                     $('#builder-dbd-description-input').focus();
                 }
@@ -313,6 +313,11 @@ define(['knockout',
                     var goBack = window.open('', 'dashboardhome');
                     goBack.focus();
                 }
+                else {
+                    var home = window.open('./home.html', 'dashboardhome');
+                    window.opener = home;
+                    home.focus();
+                }
             };
             
             //Temp codes for widget test for integrators -- start, to be removed in release version
@@ -327,7 +332,7 @@ define(['knockout',
                 console.log("Saved Search service is not available! Try again later.");
             }
             else {
-                var categoryUrl = ssfUrl + '/categories';
+                var categoryUrl = dfu.buildFullUrl(ssfUrl,'categories');
                 $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl,
                     headers: dfu.getSavedSearchServiceRequestHeader(), 
                     async: false,
@@ -436,7 +441,7 @@ define(['knockout',
                         category:{id:(widgetToSave.categoryId instanceof Array ? widgetToSave.categoryId[0] : widgetToSave.categoryId)},
                                         folder:{id: 999}, description: widgetToSave.description, 
                                         queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
-                    var saveSearchUrl = ssfUrl + "/search";
+                    var saveSearchUrl = dfu.buildFullUrl(ssfUrl,"search");
                     $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
                         headers: dfu.getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
@@ -504,9 +509,12 @@ define(['knockout',
                         }
                         tilesViewModel.dashboard.screenShot = ko.observable(data);
                         var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
-                            'include': ['screenShot'],
+                            'include': ['screenShot', 'description', 'height', 
+                                'isMaximized', 'title', 'type', 'width', 
+                                'tileParameters', 'name', 'systemParameter', 
+                                'tileId', 'value'],
                             'ignore': ["createdOn", "href", "owner", 
-                                "screenShotHref", "systemDashboard", "type",
+                                "screenShotHref", "systemDashboard",
                                 "customParameters", "clientGuid", "dashboard", 
                                 "fireDashboardItemChangeEvent", "getParameter", 
                                 "maximizeEnabled", "narrowerEnabled", 
@@ -515,7 +523,9 @@ define(['knockout',
                                 "tileDisplayClass", "widerEnabled", "widget"]
                         });
                         var dashboardId = tilesViewModel.dashboard.id();
-                        dtm.updateDashboard(dashboardId, dashboardJSON);
+                        dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
+                            console.log(error.errorMessage());
+                        });
                     }  
                 });
             };
@@ -532,17 +542,17 @@ define(['knockout',
             self.addToFavorites = function() {
                 dtm.setAsFavorite(self.dashboardId, function() {
                     self.isFavorite(true);
-                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-                    outputData.eventType = "ADD_TO_FAVORITES";
-                    if (window.opener && window.opener.childMessageListener) {
-                        var jsonValue = JSON.stringify(outputData);
-                        console.log(jsonValue);
-                        window.opener.childMessageListener(jsonValue);
-                        if (window.opener.navigationsModelCallBack())
-                        {
-                            navigationsModel(window.opener.navigationsModelCallBack());
-                        }
-                    }
+//                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+//                    outputData.eventType = "ADD_TO_FAVORITES";
+//                    if (window.opener && window.opener.childMessageListener) {
+//                        var jsonValue = JSON.stringify(outputData);
+//                        console.log(jsonValue);
+//                        window.opener.childMessageListener(jsonValue);
+//                        if (window.opener.navigationsModelCallBack())
+//                        {
+//                            navigationsModel(window.opener.navigationsModelCallBack());
+//                        }
+//                    }
                 }, function(e) {
                     console.log(e.errorMessage());
                 });
@@ -550,17 +560,17 @@ define(['knockout',
             self.deleteFromFavorites = function() {
                 dtm.removeFromFavorite(self.dashboardId, function() {
                     self.isFavorite(false);
-                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-                    outputData.eventType = "REMOVE_FROM_FAVORITES";
-                    if (window.opener && window.opener.childMessageListener) {
-                        var jsonValue = JSON.stringify(outputData);
-                        console.log(jsonValue);
-                        window.opener.childMessageListener(jsonValue);
-                        if (window.opener.navigationsModelCallBack())
-                        {
-                            navigationsModel(window.opener.navigationsModelCallBack());
-                        }
-                    }
+//                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+//                    outputData.eventType = "REMOVE_FROM_FAVORITES";
+//                    if (window.opener && window.opener.childMessageListener) {
+//                        var jsonValue = JSON.stringify(outputData);
+//                        console.log(jsonValue);
+//                        window.opener.childMessageListener(jsonValue);
+//                        if (window.opener.navigationsModelCallBack())
+//                        {
+//                            navigationsModel(window.opener.navigationsModelCallBack());
+//                        }
+//                    }
                 }, function(e) {
                     console.log(e.errorMessage());
                 });
@@ -602,6 +612,7 @@ define(['knockout',
                     "PROVIDER_NAME": "DashboardFramework",
                     "PROVIDER_ASSET_ROOT": "asset",
                     "PROVIDER_VERSION": "1.0"}];
+            var assetRootList = {};
             self.widgetList = ko.observableArray(widgetArray);
             self.curPageWidgetList = ko.observableArray(curPageWidgets);
             self.searchText = ko.observable("");
@@ -614,6 +625,7 @@ define(['knockout',
             self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard";}, this);
 
             self.currentWidget = ko.observable();
+            self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
             var widgetClickTimer = null; 
             
             refreshWidgets();
@@ -629,13 +641,14 @@ define(['knockout',
                 searchResultArray = [];
                 index=0;
                 widgetGroupList = [];
+                assetRootList = {};
                 if (ssfUrl && ssfUrl !== '') {
 //                    var laSearchesUrl = ssfUrl + '/searches?categoryId=1';
 //                    var taSearchesUrl = ssfUrl + '/searches?categoryId=2';
 //                    var itaSearchesUrl = ssfUrl + '/searches?categoryId=3';
 //                    var demoSearchesUrl = ssfUrl + '/searches?categoryId=999';
-                    var widgetsUrl = ssfUrl + '/widgets';
-                    var widgetgroupsUrl = ssfUrl + '/widgetgroups';
+                    var widgetsUrl = dfu.buildFullUrl(ssfUrl,'widgets');
+                    var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
                     $.ajax({
                         url: widgetgroupsUrl,
                         headers: dfu.getSavedSearchServiceRequestHeader(),
@@ -716,6 +729,34 @@ define(['knockout',
                 if (data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         var widget = data[i];
+                        if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
+                           if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
+                               widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='Target Analytics') {
+                               widget.WIDGET_ICON = 'css/images/targets_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='IT Analytics') {
+                               widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='Demo Analytics') {
+                               widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                           }
+                           else if (widget.WIDGET_GROUP_NAME==='Dashboards Built-In') {
+                               widget.WIDGET_ICON = 'css/images/dashboard-32.png';
+                           }
+                           else {
+                               widget.WIDGET_ICON = 'css/images/widgets_alt.png';
+                           }
+                        }
+                        else {
+                            var pname = widget.PROVIDER_NAME;
+                            var pversion = widget.PROVIDER_VERSION;
+                            var gname = widget.WIDGET_GROUP_NAME;
+                            var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
+                            widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
+                        }
+                        
                         targetWidgetArray.push(widget);
                         widgetArray.push(widget);
                         if (index < pageSize) {
@@ -730,14 +771,25 @@ define(['knockout',
             function loadWidgetGroups(data) {
                 var targetWidgetGroupArray = [];
                 var groupAll = {value:'all|all|All', label:'All'};
-                var groupDashboardBuiltIn = {value: 'DashboardFramework|1.0|Dashboards Built-In', label:'Dashboards Built-In'};
+                var pname = 'DashboardFramework';
+                var pversion = '1.0';
+                var gname = 'Dashboards Built-In';
+                var assetRoot = '';
+                var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                 targetWidgetGroupArray.push(groupAll);
                 targetWidgetGroupArray.push(groupDashboardBuiltIn);
+                assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
                 if (data && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
-                        var widgetGroup = {value:data[i].PROVIDER_NAME+'|'+data[i].PROVIDER_VERSION+'|'+data[i].WIDGET_GROUP_NAME, 
-                            label:data[i].WIDGET_GROUP_NAME};
+                        pname = data[i].PROVIDER_NAME;
+                        pversion = data[i].PROVIDER_VERSION;
+                        gname = data[i].WIDGET_GROUP_NAME;
+                        var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
+                            label:gname};
                         targetWidgetGroupArray.push(widgetGroup);
+                        
+                        assetRoot = dfu.df_util_widget_lookup_assetRootUrl(pname, pversion, data[i].PROVIDER_ASSET_ROOT);
+                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
                     }
                 }
                 return targetWidgetGroupArray;
@@ -799,6 +851,10 @@ define(['knockout',
                 return window.open("http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search");
             };
             
+            self.exploreDataMenuItemSelect = function( event, ui ) {
+                window.open(ui.item.children("a")[0].value);
+            };
+            
             self.naviPrevious = function() {
                 if (curPage === 1) {
                     self.naviPreBtnVisible(false);
@@ -848,7 +904,7 @@ define(['knockout',
                     if (_data.WIDGET_GROUP_NAME !== 'Dashboards Built-In') {
                         if (ssfUrl && ssfUrl !== '') {
                             $.ajax({
-                                url: ssfUrl+'/search/'+data.WIDGET_UNIQUE_ID,
+                                url: dfu.buildFullUrl(ssfUrl,'search/'+data.WIDGET_UNIQUE_ID),
                                 headers: dfu.getSavedSearchServiceRequestHeader(),
                                 success: function(widget, textStatus) {
                                     _data.WIDGET_DESCRIPTION = widget.description ? widget.description : '';

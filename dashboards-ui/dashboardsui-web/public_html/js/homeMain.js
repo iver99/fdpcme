@@ -60,10 +60,11 @@ var dashboardsViewModle = undefined;
  * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
  * objects in the callback
  */
-require(['dbs/dbsmodel', 
+require(['dbs/dbsmodel',
     'knockout',
     'jquery',
     'ojs/ojcore',
+    'dfutil',
     'ojs/ojmodel',
     'ojs/ojknockout',
     'ojs/ojknockout-model',
@@ -95,7 +96,7 @@ require(['dbs/dbsmodel',
 //    'ojs/ojtreemap',
 //    'ojs/ojvalidation'
 ],
-        function(model, ko, $, oj) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu) // this callback gets executed when all required modules are loaded
         {
             if (!ko.components.isRegistered('df-nav-links')) {
                 ko.components.register("df-nav-links",{
@@ -134,6 +135,15 @@ require(['dbs/dbsmodel',
 
             function HeaderViewModel() {
                 var self = this;
+            
+                self.handleSignout = function() {
+                    //Logout current user by using a wellknown URL
+                    var currentUrl = window.location.href;
+                    var cutoffIndex = currentUrl.indexOf("?");
+                    if (cutoffIndex > 0)
+                            currentUrl = currentUrl.substring(0, cutoffIndex);
+                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + currentUrl;
+                };
 
                 // 
                 // Dropdown menu states
@@ -162,7 +172,12 @@ require(['dbs/dbsmodel',
                 // 
                 var toolbarData = {
                     // user name in toolbar
-                    "userName": "emaas.user@oracle.com",
+                    "userName": function() {
+                        var userName = dfu.getUserName();
+                        if (userName)
+                            return userName + " (" + dfu.getTenantName() + ")";
+                        return "emaas.user@oracle.com";
+                    }(),
                     "toolbar_buttons": [
                         {
                             "label": "toolbar_button1",
@@ -178,16 +193,20 @@ require(['dbs/dbsmodel',
                     // Data for global nav dropdown menu embedded in toolbar.
                     "global_nav_dropdown_items": [
                         {"label": "preferences",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "help",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "about",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "sign out",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": self.handleSignout
                         }
                     ]
                 }
@@ -222,7 +241,6 @@ require(['dbs/dbsmodel',
             $(document).ready(function() {
                 
                 ko.applyBindings(headerViewModel, document.getElementById('demo-appheader-bar'));
-//                ko.applyBindings({navigationsPopupModel: dashboardsViewModle.navigationsPopupModel}, document.getElementById('links_menu'));
                 ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));
                 $("#loading").hide();
 //                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
@@ -232,6 +250,7 @@ require(['dbs/dbsmodel',
                 
                 ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                 $('#mainContent').show(); 
+                
                 
                window.addEventListener('message', childMessageListener, false);
                window.name = 'dashboardhome'; 
@@ -254,24 +273,13 @@ function childMessageListener(builderData) {
     if (_o.eventType && _o.eventType === 'SAVE') {
         dashboardsViewModle.updateDashboard(_o);
     }
-    else if (_o.eventType && _o.dashboardId && _o.eventType === 'ADD_TO_FAVORITES') {
-        dashboardsViewModle.addToFavorites(parseInt(_o.dashboardId));
-    }
-    else if (_o.eventType && _o.dashboardId && _o.eventType === 'REMOVE_FROM_FAVORITES') {
-        dashboardsViewModle.removeFromFavorites(parseInt(_o.dashboardId));
-    }
+//    else if (_o.eventType && _o.dashboardId && _o.eventType === 'ADD_TO_FAVORITES') {
+//        dashboardsViewModle.addToFavorites(parseInt(_o.dashboardId));
+//    }
+//    else if (_o.eventType && _o.dashboardId && _o.eventType === 'REMOVE_FROM_FAVORITES') {
+//        dashboardsViewModle.removeFromFavorites(parseInt(_o.dashboardId));
+//    }
     
-};
-
-function navigationsModelCallBack() {
-    //console.log("test:"+dashboardsViewModle.getNavigationsModel().homeLink);
-    var _model = dashboardsViewModle.getNavigationsModel();
-    return {
-//            'homeLink' : _model.homeLink,
-//            'dataVisualLink': _model.dataVisualLink,
-            'quickLinks': _model.quickLinks(),
-            'favorites': _model.favorites(),
-            'recents': _model.recents()};
 };
 
 /**

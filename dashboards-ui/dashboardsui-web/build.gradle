@@ -171,9 +171,8 @@ task runQAUITestSuite(type: Test){
 
 dependencies {
         compile(group: 'log4j', name: 'log4j', version: '1.2.17')
-        compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-        compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.5')
-        compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.5')
+        compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')
+        compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
 
 	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8')
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')
@@ -182,7 +181,8 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0')
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
-
+        providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5')
+        providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0')
         compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
 	if(war_number.toInteger()>0){
 	    for (i in 0..<war_number.toInteger())

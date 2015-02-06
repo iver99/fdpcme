@@ -8,10 +8,10 @@
         <dependent-module archiveName="dashboardsui-webutils.jar" deploy-path="/lib" handle="module:/resource/dashboardsui-webutils/dashboardsui-webutils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-lookup-client-0.23.5.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.5.jar">
+        <dependent-module archiveName="registry-lookup-client-0.23.6.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-client-0.23.5.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-0.23.5.jar">
+        <dependent-module archiveName="registry-client-0.23.6.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-0.23.6.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="log4j-1.2.17.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-1.2.17.jar">

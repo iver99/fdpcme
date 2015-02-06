@@ -41,7 +41,8 @@ public class DashboardsCORSFilter implements Filter
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		hRes.addHeader("Access-Control-Allow-Methods", "HEAD, OPTIONS, GET, POST, PUT, DELETE"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
-				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,Authorization,x-sso-client");
+				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,X-REMOTE-USER,Authorization,x-sso-client");
+		hRes.addHeader("Access-Control-Allow-Credentials", "true");
 		chain.doFilter(request, response);
 	}
 
