@@ -334,7 +334,7 @@ $.widget('dbs.dbsDashboardPanel',
                             self._goToPage(1);
                             event.stopPropagation();
                         }
-                    }).attr(TAB_INDEX_ATTR, '0');
+                    }).attr(TAB_INDEX_ATTR, '0').attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'));
             self.contentCtlsEle.append(self.contentCtl1Ele);
             self.contentCtl2Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
@@ -347,7 +347,7 @@ $.widget('dbs.dbsDashboardPanel',
                             self._goToPage(2);
                             event.stopPropagation();
                         }
-                    }).attr(TAB_INDEX_ATTR, '0');
+                    }).attr(TAB_INDEX_ATTR, '0').attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'));
             self.contentCtlsEle.append(self.contentCtl2Ele);
             self.contentCtl3Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
@@ -360,7 +360,7 @@ $.widget('dbs.dbsDashboardPanel',
                             self._goToPage(3);
                             event.stopPropagation();
                         }
-                    }).attr(TAB_INDEX_ATTR, '0');
+                    }).attr(TAB_INDEX_ATTR, '0').attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_WIDGETS'));
             self.contentCtlsEle.append(self.contentCtl3Ele);
         },
         
