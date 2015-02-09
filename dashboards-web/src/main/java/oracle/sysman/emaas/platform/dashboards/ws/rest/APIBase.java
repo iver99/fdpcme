@@ -21,6 +21,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.JsonUtil;
 
 /**
@@ -59,9 +60,19 @@ public class APIBase
 					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_REQUIRED));
 		}
 		// TODO: once the cloud environment is available, return the queried tenant id instead
-		long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
-		//		long internalTenantId = 1L;
-		return internalTenantId;
+		try {
+			long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
+			//		long internalTenantId = 1L;
+			return internalTenantId;
+		}
+		catch (BasicServiceMalfunctionException e) {
+			throw e;
+		}
+		catch (Exception e) {
+			throw new CommonSecurityException(MessageUtils.getDefaultBundleString(
+					CommonSecurityException.TENANT_NAME_NOT_RECOGNIZED, tenantId), e);
+		}
+
 	}
 
 	public String initializeUserContext(String userTenant) throws CommonSecurityException
@@ -92,7 +103,9 @@ public class APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
+		String externalBase = DashboardAPIUtil.getExternalAPIBase();
+		String href = externalBase + "dashboards/" + dbd.getDashboardId();
+		//		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
 		dbd.setHref(href);
 		return dbd;
 	}

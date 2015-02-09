@@ -20,7 +20,7 @@ define({
       "COMMON_SERVER_ERROR": "Error on accessing server",
       "DBS_HOME_SEARCH_ARIA_LABEL": "Search for a Dashboard",
       "DBS_HOME_SEARCH_PLACE_HODE": "Enter search criteria",
-      "DBS_HOME_CREATE_BTN_LABEL": "Create New Dashboard",
+      "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
       "DBS_HOME_EXPLORE_BTN_LABEL": "Explore Data",
       "DBS_HOME_CREATE_DLG_TITLE": "Create Dashboard",
       "DBS_HOME_CREATE_DLG_NAME": "Name",

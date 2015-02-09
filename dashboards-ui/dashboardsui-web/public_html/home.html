@@ -70,7 +70,7 @@ role value for that section to represent the appropriate content type.
                             <div id='demo-appheader-menu-container'>
                                 <ul id="demoAppheaderGlobalNavMenuId" data-bind="attr: { 'aria-label': toolbarButtonsLabel }, ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
                                     <!-- ko foreach: globalNavItems -->
-                                    <li> <a data-bind="text: label, href: url"> <span class=""></span>  </a></li>
+                                    <li> <a data-bind="text: label, href: url, click: onclick"> <span class=""></span>  </a></li>
                                     <!-- /ko -->
                                 </ul>
                             </div>
@@ -266,11 +266,11 @@ role value for that section to represent the appropriate content type.
                     <!-- Confirmation dilog end -->
 
                     <div style="display:none" id="dbs_comingsoonDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 300px; min-height:100px;'}}">
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',rootAttributes: { style: 'min-width: 300px; min-height:100px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
-                            <div class="oj-dialog-header-close-wrapper" >
+                            <!--div class="oj-dialog-header-close-wrapper" >
                                 <a class="df-dialog-header-close" data-bind="click: comingsoonDialogModel.close, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
-                            </div>
+                            </div-->
                             <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_COME_SOON_DLG_INFO')"></span>
                         </div>
                         <div class="oj-dialog-body">

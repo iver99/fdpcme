@@ -64,6 +64,7 @@ require(['dbs/dbsmodel',
     'knockout',
     'jquery',
     'ojs/ojcore',
+    'dfutil',
     'ojs/ojmodel',
     'ojs/ojknockout',
     'ojs/ojknockout-model',
@@ -95,7 +96,7 @@ require(['dbs/dbsmodel',
 //    'ojs/ojtreemap',
 //    'ojs/ojvalidation'
 ],
-        function(model, ko, $, oj) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu) // this callback gets executed when all required modules are loaded
         {
             if (!ko.components.isRegistered('df-nav-links')) {
                 ko.components.register("df-nav-links",{
@@ -134,6 +135,15 @@ require(['dbs/dbsmodel',
 
             function HeaderViewModel() {
                 var self = this;
+            
+                self.handleSignout = function() {
+                    //Logout current user by using a wellknown URL
+                    var currentUrl = window.location.href;
+                    var cutoffIndex = currentUrl.indexOf("?");
+                    if (cutoffIndex > 0)
+                            currentUrl = currentUrl.substring(0, cutoffIndex);
+                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + currentUrl;
+                };
 
                 // 
                 // Dropdown menu states
@@ -162,7 +172,12 @@ require(['dbs/dbsmodel',
                 // 
                 var toolbarData = {
                     // user name in toolbar
-                    "userName": "emaas.user@oracle.com",
+                    "userName": function() {
+                        var userName = dfu.getUserName();
+                        if (userName)
+                            return userName + " (" + dfu.getTenantName() + ")";
+                        return "emaas.user@oracle.com";
+                    }(),
                     "toolbar_buttons": [
                         {
                             "label": "toolbar_button1",
@@ -178,16 +193,20 @@ require(['dbs/dbsmodel',
                     // Data for global nav dropdown menu embedded in toolbar.
                     "global_nav_dropdown_items": [
                         {"label": "preferences",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "help",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "about",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": ""
                         },
                         {"label": "sign out",
-                            "url": "#"
+                            "url": "#",
+                            "onclick": self.handleSignout
                         }
                     ]
                 }

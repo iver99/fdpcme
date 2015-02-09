@@ -110,7 +110,7 @@ dependencies {
 			'com.jayway.restassured:rest-assured:2.3.1'
 	prebuild_wlfullc 'test:wlfullclient:2.6'
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.1'
-			'emaas.platform:registry-lookup-client:0.23.5'
+			'emaas.platform:registry-lookup-client:0.23.6'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -158,8 +158,8 @@ project(':dashboards-web'){
 		compile project(':dashboards-core')
 				
 		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-    		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.5') 
-		compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.5') 
+    		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6') 
+		compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6') 
 		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
 			module('commons-net:commons-net:1.4.1'){
 				dependencies 'oro:oro:2.0.8:jar'

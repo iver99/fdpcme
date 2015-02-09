@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
 import org.codehaus.jettison.json.JSONObject;
 
@@ -109,7 +110,9 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(userTenant);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
-			String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
+			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
+			String externalBase = DashboardAPIUtil.getExternalAPIBase();
+			String screenShotUrl = externalBase + "dashboards/" + dashboardId + "/screenshot";
 			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
 		}
 		catch (DashboardException e) {
@@ -228,7 +231,9 @@ public class DashboardAPI extends APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		//		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		String externalBase = DashboardAPIUtil.getExternalAPIBase();
+		String screenShotUrl = externalBase + "dashboards/" + dbd.getDashboardId() + "/screenshot";
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}

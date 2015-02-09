@@ -156,7 +156,10 @@ public class DashboardManager
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 		if (ed == null) {
-			return;
+			throw new DashboardNotFoundException();
+		}
+		if (permanent == false && ed.getDeleted() != null && ed.getDeleted() > 0) {
+			throw new DashboardNotFoundException();
 		}
 		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
 			removeFavoriteDashboard(dashboardId, tenantId);
@@ -466,41 +469,42 @@ public class DashboardManager
 
 		StringBuilder sb = new StringBuilder(
 				" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
-						+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1) le on p.dashboard_Id=le.dashboard_Id "
-						+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.owner = ?3 or p.is_system = ?4) ");
+						+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
+						+ "where p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or p.is_system = ?5) ");
 		//		Map<String, Object> paramMap = new HashMap<String, Object>();
 		List<Object> paramList = new ArrayList<Object>();
 		String currentUser = UserContext.getCurrentUser();
 		paramList.add(currentUser);
+		paramList.add(tenantId);
 		paramList.add(tenantId);
 		paramList.add(currentUser);
 		paramList.add(1);
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
-				sb.append(" and (p.name LIKE ?5");
+				sb.append(" and (p.name LIKE ?6");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" and (lower(p.name) LIKE ?5");
+				sb.append(" and (lower(p.name) LIKE ?6");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 
 			if (!ic) {
-				sb.append(" or p.description like ?6");
+				sb.append(" or p.description like ?7");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or lower(p.description) like ?6");
+				sb.append(" or lower(p.description) like ?7");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?7 )) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?8 )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?7 )) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?8 )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 			//			sb.append(" or lower(p.owner) = :owner)");
@@ -586,8 +590,8 @@ public class DashboardManager
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
 			if (dbd.getDashboardId() != null) {
-				Dashboard sameId = getDashboardById(dbd.getDashboardId(), tenantId);
-				if (sameId != null) {
+				EmsDashboard sameId = dsf.getEmsDashboardById(dbd.getDashboardId());
+				if (sameId != null && sameId.getDeleted() <= 0) {
 					throw new CommonFunctionalException(
 							MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_CREATE_SAME_ID_ERROR));
 				}
