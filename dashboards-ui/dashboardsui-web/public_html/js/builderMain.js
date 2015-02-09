@@ -31,7 +31,9 @@ requirejs.config({
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
         'canvg-stackblur':'../dependencies/canvg/StackBlur',
         'canvg':'../dependencies/canvg/canvg',
+        'd3':'../dependencies/d3/d3.min',
         'emcta':'../../emcta/ta/js'
+        
 
     },
     // Shim configurations for modules that do not expose AMD

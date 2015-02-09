@@ -57,7 +57,8 @@ ko.bindingHandlers.dbsDashboardPanel = {
 var TITLE_MAX_LENGTH = 34,
     DESCRIPTION_MAX_LENGTH = 256,
     WIGDET_NAME_MAX_LENGTH = 34,
-    DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE";
+    DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE",
+    TAB_INDEX_ATTR = "tabindex";
 
 
 $.widget('dbs.dbsDashboardPanel',
@@ -255,7 +256,7 @@ $.widget('dbs.dbsDashboardPanel',
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
             //image page
-            self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']);//.attr('src', _image);
+            self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']).attr('alt', "");
             self.contentPage1Ele = $("<div></div>")//.addClass(self.classNames['active'])
                     .addClass(self.classNames['page']);//.append(self.contentPage1ImgEle);
             self.contentPage1Ele.append(self.contentPage1ImgEle);
@@ -327,21 +328,39 @@ $.widget('dbs.dbsDashboardPanel',
                     .bind('click.' + _name, function (event) {
                         self._goToPage(1);
                         event.stopPropagation();
-                    });
+                    }).keydown(function(event){ 
+                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
+                        if (keyCode === 13) { // enter key
+                            self._goToPage(1);
+                            event.stopPropagation();
+                        }
+                    }).attr(TAB_INDEX_ATTR, '0');
             self.contentCtlsEle.append(self.contentCtl1Ele);
             self.contentCtl2Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
                     .bind('click.' + _name, function (event) {
                         self._goToPage(2);
                         event.stopPropagation();
-                    });
+                    }).keydown(function(event){ 
+                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
+                        if (keyCode === 13) { // enter key
+                            self._goToPage(2);
+                            event.stopPropagation();
+                        }
+                    }).attr(TAB_INDEX_ATTR, '0');
             self.contentCtlsEle.append(self.contentCtl2Ele);
             self.contentCtl3Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
                     .bind('click.' + _name, function (event) {
                         self._goToPage(3);
                         event.stopPropagation();
-                    });
+                    }).keydown(function(event){ 
+                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
+                        if (keyCode === 13) { // enter key
+                            self._goToPage(3);
+                            event.stopPropagation();
+                        }
+                    }).attr(TAB_INDEX_ATTR, '0');
             self.contentCtlsEle.append(self.contentCtl3Ele);
         },
         

@@ -60,7 +60,7 @@ role value for that section to represent the appropriate content type.
                                 <span style="" class="demo-appheader-appname" data-bind="text: appName"></span>
                             </div>
                             <div class="demo-appheader-appname-block">
-                                <span  style="font-size: 15px" data-bind="text: cloudName"></span>
+                                <span  style="font-size: 15px" data-bind="text: cloudName, attr: { 'aria-label': cloudNameLabel }"></span>
                             </div>
                         </div>
 
@@ -68,7 +68,7 @@ role value for that section to represent the appropriate content type.
                         <div id='demo-appheader-menu-and-toolbar-container' tabindex="0">
 
                             <div id='demo-appheader-menu-container'>
-                                <ul id="demoAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
+                                <ul id="demoAppheaderGlobalNavMenuId" data-bind="attr: { 'aria-label': toolbarButtonsLabel }, ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
                                     <!-- ko foreach: globalNavItems -->
                                     <li> <a data-bind="text: label, href: url, click: onclick"> <span class=""></span>  </a></li>
                                     <!-- /ko -->
@@ -134,7 +134,8 @@ role value for that section to represent the appropriate content type.
                                         <div id="toolbar2"  aria-label="Searching toolbar" style="float:left;" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
                                                 <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'style': 'min-width:653px; width:653px;'}}
-                                                                  ,dbsTypeAhead: {response: searchResponse, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}"/>
+                                                                  ,dbsTypeAhead: {response: searchResponse, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
+                                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
                                                 <button id="sbtn" style="margin-bottom: 4px;margin-left: 5px;"
                                                         data-bind="click: forceSearch, ojComponent: { component:'ojButton'}">
                                                             <img style="padding-top: 6px" src="css/images/navi_search_16_ena.png" alt="Search"/>
@@ -187,10 +188,10 @@ role value for that section to represent the appropriate content type.
 
                     <!-- Create Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <!--div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: cancelDashboardCreate, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
+                                <a class="df-dialog-header-close" tabindex="0" data-bind="click: cancelDashboardCreate, event: { keydown: createDashboardModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div-->
                             <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TITLE')"></span>
                         </div>
@@ -247,10 +248,10 @@ role value for that section to represent the appropriate content type.
                     <!-- Confirmation dilog start -->
                     <div style="display:none" id="dbs_cfmDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
-                                    rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <!--div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: confirmDialogModel.close, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
+                                <a class="df-dialog-header-close" tabindex="0" data-bind="click: confirmDialogModel.close, event: { keydown: confirmDialogModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div-->
                             <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
                         </div>
