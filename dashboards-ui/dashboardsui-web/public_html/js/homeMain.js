@@ -199,31 +199,33 @@ require(['dbs/dbsmodel',
                     ],
                     // Data for global nav dropdown menu embedded in toolbar.
                     "global_nav_dropdown_items": [
-                        {"label": "preferences",
+                        {"label": "Preferences",
                             "url": "#",
                             "onclick": ""
                         },
-                        {"label": "help",
+                        {"label": "Help",
                             "url": "#",
                             "onclick": ""
                         },
-                        {"label": "about",
+                        {"label": "About",
                             "url": "#",
                             "onclick": ""
                         },
-                        {"label": "sign out",
+                        {"label": "Sign out",
                             "url": "#",
                             "onclick": self.handleSignout
                         }
                     ]
-                }
-
+                };
+                
+                self.producLabel = "Product Name";
+                self.toolbarLabel = "Toolbar";
+                self.toolbarButtonsLabel = "Logged-in User";
+                
                 self.appId = appName.id;
                 self.appName = appName.name;
-                self.cloudNameLabel = "Product Name";
                 self.cloudName = cloudName;
                 self.userName = ko.observable(toolbarData.userName);
-                self.toolbarButtonsLabel = "Logged-in User";
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
                 self.navLinksNeedRefresh = ko.observable(false);

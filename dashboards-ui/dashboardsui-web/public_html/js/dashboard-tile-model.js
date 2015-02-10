@@ -832,6 +832,32 @@ define(['knockout',
             };
             */
            
+           self.menuItemSelect = function(event, ui) {
+               var tile = ko.dataFor(ui.item[0]);
+               if (!tile)
+                   return;
+               switch (ui.item.attr("id")) {
+                   case "delete":
+                       self.removeTile(tile);
+                       break;
+                   case "wider":
+                       self.broadenTile(tile);
+                       break;
+                   case "narrower":
+                       self.narrowTile(tile);
+                       break;
+                   case "maximize":
+                       self.maximize(tile);
+                       break;
+                   case "restore":
+                       self.restore(tile);
+                       break;
+                   case "configure":
+                       self.configure(tile);
+                       break;
+               }
+           };
+           
             self.removeTile = function(tile) {
                 self.dashboard.tiles.remove(tile);
                 for (var i = 0; i < self.dashboard.tiles().length; i++) {

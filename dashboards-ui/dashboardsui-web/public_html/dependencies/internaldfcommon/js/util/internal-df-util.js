@@ -42,7 +42,7 @@ define(['knockout',
                     return root;
                 }
                 
-                if (typeof root==="string" && typeof path==="string"){
+                if (typeof root=="string" && typeof path=="string"){
                     var expRoot = root;
                     var expPath = path;
                     if (root.charAt(root.length-1)==='/'){
@@ -55,15 +55,6 @@ define(['knockout',
                 }else{
                     return root+"/"+path;
                 }
-            }
-            
-//            self.smUrl = "http://slc07hgf.us.oracle.com:7001/registry/servicemanager/registry/v1";
-            self.smUrl = "https://slc07hcn.us.oracle.com:4443/registry";//TODO
-//            self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
-            self.authToken = "Basic Q2xvdWRJbmZyYS5PQ0xPVUQ5X0VNQUFTX0lOVEVSX1NWQ19BUFBJRDpXZWxjb21lMSE=";//TODO
-            self.initialize = function(smUrl, authToken){
-//                self.smUrl = smUrl;
-//                self.authToken = authToken;
             }
             
             self.guid = function() {
@@ -90,144 +81,15 @@ define(['knockout',
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
                 return results === null ? "" : results[1];                
             };
- 
-            /**
-             * 
-             * Discover URL from Service Manager Registry
-             * 
-             * SM URL example: https://slc07hcn.us.oracle.com:4443/registry
-             * SM Entry example:
-             * 
-                {
-                    "total": 1,
-                    "items": [
-                        {
-                            "links": [
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/fd8210a3-51e2-4f04-94e9-baba99003fcd/",
-                                    "rel": "navigation"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/sso/fd8210a3-51e2-4f04-94e9-baba99003fcd/",
-                                    "rel": "sso.navigation"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/fd8210a3-51e2-4f04-94e9-baba99003fcd/search",
-                                    "rel": "search"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/sso/fd8210a3-51e2-4f04-94e9-baba99003fcd/search",
-                                    "rel": "sso.search"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/fd8210a3-51e2-4f04-94e9-baba99003fcd/folder",
-                                    "rel": "folder"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/sso/fd8210a3-51e2-4f04-94e9-baba99003fcd/folder",
-                                    "rel": "sso.folder"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/fd8210a3-51e2-4f04-94e9-baba99003fcd/category",
-                                    "rel": "category"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/sso/fd8210a3-51e2-4f04-94e9-baba99003fcd/category",
-                                    "rel": "sso.category"
-                                },
-                                {
-                                    "href": "https://slc07hcn.us.oracle.com:4443/microservice/sso/fd8210a3-51e2-4f04-94e9-baba99003fcd/",
-                                    "rel": "sso.endpoint/virtual"
-                                }
-                            ],
-                            "serviceName": "SavedSearch",
-                            "uuid": "fd8210a3-51e2-4f04-94e9-baba99003fcd",
-                            "score": 0,
-                            "virtualEndpoints": [
-                                "https://slc07hcn.us.oracle.com:4443/microservice/fd8210a3-51e2-4f04-94e9-baba99003fcd/"
-                            ],
-                            "canonicalEndpoints": [],
-                            "dataTypes": [],
-                            "characteristics": {},
-                            "version": "0.1"
-                        }
-                    ],
-                    "count": 1
-                }
-             * @param {type} serviceName
-             * @param {type} version
-             * @param {type} rel
-             * @returns {unresolved}
-             */
-            self.discoverUrl = function(serviceName, version, rel){
-                if (typeof self.smUrl!=="string"){
-                     console.log("Error: Failed to discovery URL, SM URL="+self.smUrl);
-                    return null;                    
-                }
-
-                if (typeof self.authToken!=="string"){
-                    console.log("Error: Failed to discovery URL, authToken="+self.authToken);
-                    return null;
-                }
-                
-                if (serviceName===null || serviceName===undefined){
-                    console.log("Error: Failed to discovery URL, serviceName="+serviceName);
-                    return null;
-                }
-                var searchUrl = self.buildFullUrl(self.smUrl,"instances")+"?serviceName="+serviceName;
-                if (typeof version==="string"){
-                    searchUrl = searchUrl +"&version="+version;
-                }
-
-                var result =null;
-                $.ajax(searchUrl,{
-                    headers:self.getSMRequestHeader(),
-                    success:function(data, textStatus,jqXHR) {
-                        result = data;
-                    },
-                    error:function(xhr, textStatus, errorThrown){
-                        console.log("Error: URL not found due to error: "+textStatus);
-                    },
-                    async:false
-                });
-                
-                var url = null;
-                if (result && result.total>0){
-                    if (typeof rel==="string"){
-                        if (Array.isArray(result.items[0].links) && result.items[0].links.length>0){
-                            for(var i=0;i<result.items[0].links.length;i++){
-                                var link = result.items[0].links[i];
-                                if (link.rel===rel){
-                                    console.log("URL found by serviceName="+serviceName+", version="+version+", rel="+rel); 
-                                    return link.href;
-                                }
-                            }
-                        }
-                    }else{
-                        var virtualEndpoints = result.items[0].virtualEndpoints;
-                        if (Array.isArray(virtualEndpoints) && virtualEndpoints.length>0){
-                            console.log("URL found by serviceName="+serviceName+", version="+version); 
-                            return virtualEndpoints[0];
-                        }else{
-                            var canonicalEndpoints = result.items[0].canonicalEndpoints;
-                            if (Array.isArray(canonicalEndpoints) && canonicalEndpoints.length>0){
-                                console.log("URL found by serviceName="+serviceName+", version="+version); 
-                                return canonicalEndpoints[0];
-                            }
-                        }
-                    }
-                }
-                console.log("Warning: URL not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
-                return null;
-            }
+            
             /**
              * Discover available Saved Search service URL
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
-                var url = self.discoverUrl("SavedSearch","0.1");//TODO find SSF service somewhere
-                if (url){
-                    return url;
+                var rep = self.getRegistrationInfo();
+                if (rep && rep.ssfRestApiEndPoint){
+                    return rep.ssfRestApiEndPoint;
                 }else{
                     console.log("Failed to discovery SSF REST API end point");
                     return null;
@@ -327,9 +189,17 @@ define(['knockout',
                 */
             };
             
-            self.discoverLogoutUrl = function() {
-                return self.discoverUrl('SecurityService', '0.1', 'sso.logout');
-//                return 'http://slc08upg.us.oracle.com:7001/securityservices/regmanager/securityutil/ssoLogout';
+            self.discoverLogoutRestApiUrl = function() {
+//                return self.df_util_widget_lookup_assetRootUrl('SecurityService', '0.1', 'sso.logout');
+                return 'http://slc08upg.us.oracle.com:7001/securityservices/regmanager/securityutil/ssoLogout';
+//                var reginfo = self.getRegistrationInfo();
+//                if (reginfo && reginfo.logoutRestApiEndPoint)
+//                    return reginfo.logoutRestApiEndPoint + "/securityutil/ssoLogout";
+//                else {
+//                    console.log("Failed to discovery logout end point");
+//                    return null;
+//                }
+//                
             };
 
             /**
@@ -337,9 +207,9 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverDFRestApiUrl = function() {
-                var url = self.discoverUrl("Dashboard-API","0.1");//TODO find Dashboard API service somewhere
-                if (url){
-                    return url;
+                var rep = self.getRegistrationInfo();
+                if (rep && rep.dfRestApiEndPoint){
+                    return rep.dfRestApiEndPoint;
                 }else{
                     console.log("Failed to discovery DF REST API end point");
                     return null;
@@ -480,8 +350,7 @@ define(['knockout',
             };
 
             self.getAuthToken = function() {
-                return self.authToken;
-//                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
+                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
 //                if (self.getRegistrationInfo() && self.getRegistrationInfo().authToken){
 //                    return self.getRegistrationInfo().authToken;
 //                }else{
@@ -504,12 +373,6 @@ define(['knockout',
                     }
                 }
                 return {"tenant": tenantName, "tenantUser": userName};
-            };
-            
-            self.getSMRequestHeader = function() {
-                var defHeader = {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"dummy"};
-                console.log("Sent Header: "+JSON.stringify(defHeader));
-                return defHeader;
             };
             
             self.getDefaultHeader = function() {
@@ -551,19 +414,37 @@ define(['knockout',
                 return self.getDefaultHeader();
             };  
             
+            self.registrationInfo = null;
+            self.getRegistrationInfo=function(){
+                
+                if (self.registrationInfo===null){
+                    $.ajaxSettings.async = false;
+                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
+                        self.registrationInfo = data;
+                    });
+                    $.ajaxSettings.async = true; 
+                }
+                return self.registrationInfo;
+            }
+            self.getRegistrationEndPoint=function(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+//                return 'api/configurations/registration';
+                return 'data/servicemanager.json';
+            }
+
             /**
              * Discover available quick links
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-                return discoverLinks('quickLink');
-//            	var rep = self.getRegistrationInfo();
-//                if (rep && rep.quickLinks) {
-//                    return rep.quickLinks;
-//                }
-//                else {
-//                    return [];
-//                }
+//                return discoverLinks('quickLink');
+            	var rep = self.getRegistrationInfo();
+                if (rep && rep.quickLinks) {
+                    return rep.quickLinks;
+                }
+                else {
+                    return [];
+                }
             };
             
             /**
@@ -571,51 +452,100 @@ define(['knockout',
              * @returns {Array} visualAnalyzerLinks
              */
             self.discoverVisualAnalyzerLinks = function() {
-                return discoverLinks('visualAnalyzer');
-//            	var rep = self.getRegistrationInfo();
-//                if (rep && rep.visualAnalyzers) {
-//                    return rep.visualAnalyzers;
-//                }
-//                else {
-//                    return [];
-//                }
+//                return discoverLinks('visualAnalyzer');
+            	var rep = self.getRegistrationInfo();
+                if (rep && rep.visualAnalyzers) {
+                    return rep.visualAnalyzers;
+                }
+                else {
+                    return [];
+                }
             };
             
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
-                var assetRoot = discoverUrl(providerName,providerVersion,providerAssetRoot);
-                if (assetRoot){
-                    return assetRoot;
-                }else{
-                    console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
-                    return assetRoot;
+                var assetRoot = null;
+                if (providerName && providerVersion && providerAssetRoot){
+                    var url = "api/registry/lookup/link?serviceName="+providerName+"&version="+providerVersion+"&rel="+providerAssetRoot;
+                    $.ajax(url,{
+                            success:function(data, textStatus,jqXHR) {
+                                if (data){
+                                    assetRoot = data.href;
+                                }else{
+                                    console.log("Got NULL assetRoot by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
+
+                                }
+                            },
+                            error:function(xhr, textStatus, errorThrown){
+                                console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
+                            },
+                            async:false
+                        });
                 }
-//                var assetRoot = null;
-//                if (providerName && providerVersion && providerAssetRoot){
-//                    var url = "api/registry/lookup/link?serviceName="+providerName+"&version="+providerVersion+"&rel="+providerAssetRoot;
-//                    $.ajax(url,{
-//                            success:function(data, textStatus,jqXHR) {
-//                                if (data){
-//                                    assetRoot = data.href;
-//                                }else{
-//                                    console.log("Got NULL assetRoot by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
-//
-//                                }
-//                            },
-//                            error:function(xhr, textStatus, errorThrown){
-//                                console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
-//                            },
-//                            async:false
-//                        });
-//                }
-//                return assetRoot;
+                return assetRoot;
+                /*
+                if (providerName && providerVersion && providerAssetRoot){
+                    var urlFound = false;
+
+                    function fetchServiceAssetRoot(data) {
+                        var items = data.items;
+                        if (items && items.length > 0) {
+                            for (var j = 0; j < items.length && !urlFound; j++) {
+                                var links = items[j].links;
+                                for (var k = 0; k < links.length; k++) {
+                                    var link = links[k];
+                                    if (providerAssetRoot === link.rel) {
+                                        return link.href;
+                                    }
+                                }
+                            }
+                        }
+                        return null;
+                    }
+
+    //                    $.ajaxSettings.async = false;
+                    var regInfo = self.getRegistrationInfo();
+                    if (regInfo && regInfo.registryUrls){
+    //                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
+    //                        if (data.registryUrls) {
+                                var urls = regInfo.registryUrls.split(",");
+                                for (var i = 0; i < urls.length && !urlFound; i++) {
+                                    var serviceUrl = urls[i] + '/'+'instances?serviceName=' + providerName;
+                                    if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
+                                        serviceUrl = urls[i] + 'instances?serviceName=' + providerName;
+                                    }
+                                    if (providerVersion)
+                                        serviceUrl = serviceUrl + '&version=' + providerVersion;
+                                    var error = false;
+                                    $.ajax({
+                                        url: serviceUrl,
+                                        headers: self.getAuthorizationRequestHeader(),
+                                        success: function(data, textStatus) {
+                                            assetRoot = fetchServiceAssetRoot(data);
+                                        },
+                                        error: function(xhr, textStatus, errorThrown){
+                                            error =true;
+                                        },
+                                        async: false
+                                    });
+                                    if (!error){
+                                        break;
+                                    }
+                                }
+                    }
+//                    });
+//                    $.ajaxSettings.async = true;
+                }
+                return assetRoot;
+                */
             }
             
             /**
              * Discover available links by rel name
              * @returns {Array} availableLinks
              */
-
+            /*
             var discoverLinks = function(relName) {
+                if (true) return [];//REMOVE
                 var availableLinks = [];
                 var linksFromDashboard = [];
                 var linksFromIntegrators = [];
@@ -674,19 +604,33 @@ define(['knockout',
                         }
                     }
                 };
-                var serviceUrl = self.buildFullUrl(self.smUrl,'instances');
-
-                $.ajax({
-                    url: serviceUrl,
-                    headers: self.getAuthorizationRequestHeader(),
-                    success: function(data, textStatus) {
-                        fetchServiceQuickLinks(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Failed to get service instances by URL: '+serviceUrl);
-                    },
-                    async: false
-                });                
+                var regInfo = self.getRegistrationInfo();
+                if (regInfo && regInfo.registryUrls){
+//                $.ajaxSettings.async = false;
+//                $.getJSON(self.getRegistrationEndPoint(),function(data) {
+//                        if (data.registryUrls) {
+                            var urls = regInfo.registryUrls.split(",");
+                            for (var i = 0; i < urls.length; i++) {
+                                var serviceUrl = urls[i]+'/'+'instances';
+                                if (urls[i].lastIndexOf("/")===(urls[i].length-1)){
+                                    serviceUrl = urls[i]+'instances';
+                                }
+                                
+                                $.ajax({
+                                    url: serviceUrl,
+                                    headers: self.getAuthorizationRequestHeader(),
+                                    success: function(data, textStatus) {
+                                        fetchServiceQuickLinks(data);
+                                    },
+                                    error: function(xhr, textStatus, errorThrown){
+                                        console.log('Failed to get service instances by URL: '+serviceUrl);
+                                    },
+                                    async: false
+                                });
+                            }
+                }
+//                    });
+//                $.ajaxSettings.async = true;
                 
                 for (var i = 0; i < linksFromDashboard.length; i++) {
                     availableLinks.push(linksFromDashboard[i]);
@@ -696,6 +640,7 @@ define(['knockout',
                 }
                 return availableLinks;
             };
+            */
         }
         
         return new DashboardFrameworkUtility();

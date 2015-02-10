@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
+define(['knockout', 'jquery', 'dfutil'],
         function (ko, $, dfu) {
             function BrandingBarViewModel(params) {
+                dfu.initialize(params.smUrl);
                 var ssoLogoutEndUrl = params.ssoLogoutEndUrl ? params.ssoLogoutEndUrl : '';
                 if (!ko.components.isRegistered('nav-links-widget')) {
                     ko.components.register("nav-links-widget",{
@@ -22,8 +23,8 @@ define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
 //                    var cutoffIndex = currentUrl.indexOf("builder.html");
 //                    if (cutoffIndex > 0)
 //                        currentUrl = currentUrl.substring(0, cutoffIndex) + "home.html";
-//                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + currentUrl;
-                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + ssoLogoutEndUrl;
+//                    window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + currentUrl;
+                    window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
                 };
 
                 // 

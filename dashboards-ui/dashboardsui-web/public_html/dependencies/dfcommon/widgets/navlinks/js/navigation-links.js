@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
+define(['knockout', 'jquery', 'dfutil'],
         function (ko, $, dfu) {
             function NavigationLinksViewModel(params) {
                 var self = this;
