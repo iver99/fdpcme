@@ -31,8 +31,8 @@ requirejs.config({
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
         'canvg-stackblur':'../dependencies/canvg/StackBlur',
         'canvg':'../dependencies/canvg/canvg',
+        'd3':'../dependencies/d3/d3.min',
         'emcta':'../../emcta/ta/js'
-
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -342,13 +342,26 @@ require(['knockout',
                             return { controlsDescendantBindings: true};
                         }
                     };
+                    ko.bindingHandlers.enterpress = {
+                        init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+                            var allBindings = allBindingsAccessor();
+                            $(element).keypress(function (event) {
+                                var keyCode = (event.which ? event.which : event.keyCode);
+                                if (keyCode === 13) {
+                                    allBindings.enterpress.call(viewModel);
+                                    return false;
+                                }
+                                return true;
+                            });
+                        }
+                    };
                     ko.virtualElements.allowedBindings.stopBinding = true;
                     //header
                     ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]); 
                     ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
-                    ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
+                    ko.applyBindings(tilesViewMode, $('#global-html')[0]);   
                     ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
 
                     $("#loading").hide();
