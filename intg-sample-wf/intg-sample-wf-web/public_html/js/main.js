@@ -89,6 +89,11 @@ require(['knockout',
 ],
         function(ko, $) // this callback gets executed when all required modules are loaded
         {
+            ko.components.register("header-bar-widget",{
+                viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+            });
+            
             ko.components.register("demo-chart-widget",{
                 viewModel:{require:'../widgets/simpleChartWidget/js/demo-chart-widget'},
                 template:{require:'text!../widgets/simpleChartWidget/demo-chart-widget.html'}
@@ -260,7 +265,7 @@ require(['knockout',
             
             $(document).ready(function() {
                 
-                ko.applyBindings(new HeaderViewModel(), $('#demo-appheader-bar')[0]);
+                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new MainViewModel(), $('#main-container')[0]);      
                 
                 $('#globalBody').show();

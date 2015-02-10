@@ -98,10 +98,17 @@ require(['dbs/dbsmodel',
 ],
         function(model, ko, $, oj, dfu) // this callback gets executed when all required modules are loaded
         {
-            if (!ko.components.isRegistered('df-nav-links')) {
-                ko.components.register("df-nav-links",{
-                    viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
-                    template:{require:'text!../dependencies/navlinks/navigation-links.html'}
+//            if (!ko.components.isRegistered('df-nav-links')) {
+//                ko.components.register("df-nav-links",{
+//                    viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
+//                    template:{require:'text!../dependencies/navlinks/navigation-links.html'}
+//                });
+//            }
+            
+            if (!ko.components.isRegistered('header-bar-widget')) {
+                ko.components.register("header-bar-widget",{
+                    viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
             }
             
@@ -242,8 +249,8 @@ require(['dbs/dbsmodel',
 
             $(document).ready(function() {
                 
-                ko.applyBindings(headerViewModel, document.getElementById('demo-appheader-bar'));
-                ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));
+                ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
+//                ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));
                 $("#loading").hide();
 //                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
                 $('#globalBody').show();

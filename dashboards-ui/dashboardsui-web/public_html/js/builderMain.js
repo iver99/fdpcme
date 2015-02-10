@@ -106,10 +106,16 @@ require(['knockout',
 ],
         function(ko, $, dfu,dtm, dtv) // this callback gets executed when all required modules are loaded
         {
-            ko.components.register("df-nav-links",{
-                viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
-                template:{require:'text!../dependencies/navlinks/navigation-links.html'}
-            });
+//            ko.components.register("df-nav-links",{
+//                viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
+//                template:{require:'text!../dependencies/navlinks/navigation-links.html'}
+//            });
+            if (!ko.components.isRegistered('header-bar-widget')) {
+                ko.components.register("header-bar-widget",{
+                    viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                });
+            }
             ko.components.register("df-time-selector",{
                 viewModel:{require:'../dependencies/timeselector/js/time-selector'},
                 template:{require:'text!../dependencies/timeselector/time-selector.html'}
@@ -344,8 +350,8 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
                     //header
-                    ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]); 
-                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
+                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
+//                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                     ko.applyBindings(tilesViewMode, $('#main-container')[0]);   
