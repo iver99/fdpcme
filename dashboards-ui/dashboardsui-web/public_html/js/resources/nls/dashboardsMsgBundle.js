@@ -33,7 +33,9 @@ define({
       "DBS_HOME_CFM_DLG_DELETE_DSB_MSG": "Do you want to delete the selected dashboard '{0}'?",
       "DBS_HOME_CFM_DLG_DELETE_DSB_ERROR": "Error for deleting dashboard.",
       "DBS_HOME_DSB_PANEL_WIDGETS": "Widgets",
-      
+      "DBS_HOME_DSB_PAGE_SCREEN_SHOT": "Screen shot",
+      "DBS_HOME_DSB_PAGE_DESCRIPTION": "Description",
+      "DBS_HOME_DSB_PAGE_WIDGETS": "Widgets"
 },
   "fr": true,
   "cs": true
