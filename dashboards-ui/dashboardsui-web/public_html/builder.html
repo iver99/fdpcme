@@ -135,14 +135,14 @@ role value for that section to represent the appropriate content type.
                                 <button id="builder-dbd-name-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardName,ojComponent: {
                                                 component:'ojButton'
-                                    }" title="Ok"  tabindex="0">
+                                    }" title="Ok" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
                                   <button id="builder-dbd-name-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardName, ojComponent: {
                                                 component:'ojButton'
-                                    }" title="Cancel"  tabindex="0">
+                                    }" title="Cancel" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
                                   </button>
@@ -150,7 +150,7 @@ role value for that section to represent the appropriate content type.
                         </div>
                         <div id="builder-dbd-description">
                             <div id="builder-dbd-description-display-area" class="dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
-                                <span data-bind="text: dashboardDescription, event: { dblclick: editDashboardDescription }" 
+                                <span data-bind="text: dashboardDescription, event: { dblclick: editDashboardDescription }, enterpress: editDashboardDescription" 
                                       class="dbd-display-area-text"  tabindex="0"></span>
                                 <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                           data-bind="click: editDashboardDescription,ojComponent: {
@@ -167,14 +167,14 @@ role value for that section to represent the appropriate content type.
                                 <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardDescription,ojComponent: {
                                                 component:'ojButton'
-                                    }" title="Ok"  tabindex="0">
+                                    }" title="Ok" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
                                   <button id="builder-dbd-description-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardDescription, ojComponent: {
                                                 component:'ojButton'
-                                    }" title="Cancel"  tabindex="0">
+                                    }" title="Cancel" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
                                   </button>

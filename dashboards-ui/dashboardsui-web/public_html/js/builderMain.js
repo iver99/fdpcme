@@ -260,19 +260,19 @@ require(['knockout',
                     ],
                     // Data for global nav dropdown menu embedded in toolbar.
                     "global_nav_dropdown_items": [
-                        {"label": "preferences",
+                        {"label": "Preferences",
                             "url": "#",
                             "onclick": ""
                         },
-                        {"label": "help",
+                        {"label": "Help",
                             "url": "#",
                             "onclick": ""
                         },
-                        {"label": "about",
+                        {"label": "About",
                             "url": "#",
                             "onclick": ""
                         },
-                        {"label": "sign out",
+                        {"label": "Sign out",
                             "url": "#",
                             "onclick": self.handleSignout
                         }
