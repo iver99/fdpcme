@@ -308,18 +308,6 @@ define(['knockout',
                 return summaryData;
             };
             
-            self.handleGobackHomepage = function() {
-                if (window.opener) {
-                    var goBack = window.open('', 'dashboardhome');
-                    goBack.focus();
-                }
-                else {
-                    var home = window.open('./home.html', 'dashboardhome');
-                    window.opener = home;
-                    home.focus();
-                }
-            };
-            
             //Temp codes for widget test for integrators -- start, to be removed in release version
             self.resultTitle=ko.observable("");
             self.resultMsg=ko.observable("");
