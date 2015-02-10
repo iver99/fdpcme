@@ -18,6 +18,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -35,14 +36,22 @@ public class DashboardsCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
+		HttpServletRequest hReq = (HttpServletRequest) request;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
+		if (hReq.getHeader("Origin") != null) {
+			// allow cookies
+			hRes.addHeader("Access-Control-Allow-Credentials", "true");
+		}
+		else {
+			// non-specific origin, cannot support cookies
+		}
+
 		hRes.addHeader("Access-Control-Allow-Methods", "HEAD, OPTIONS, GET, POST, PUT, DELETE"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,X-REMOTE-USER,Authorization,x-sso-client");
-		hRes.addHeader("Access-Control-Allow-Credentials", "true");
 		chain.doFilter(request, response);
 	}
 
