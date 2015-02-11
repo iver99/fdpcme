@@ -26,14 +26,14 @@ function(dsf, oj, ko, $, dfu)
         var self = this;
         self.name = ko.observable(undefined);
         self.description = ko.observable('');
-        self.timeRangeFilterValue = ko.observable(["OFF"]);
+        self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);
         self.isDisabled = ko.observable(false);
         
         self.clear = function() {
             self.name(undefined);
             self.description('');
-            self.timeRangeFilterValue(["OFF"]);
+            self.timeRangeFilterValue(["ON"]);
             self.targetFilterValue(["OFF"]);
             self.isDisabled(false);
         };
