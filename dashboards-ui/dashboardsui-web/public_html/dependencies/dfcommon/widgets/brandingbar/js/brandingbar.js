@@ -6,8 +6,7 @@
 define(['knockout', 'jquery', 'dfutil'],
         function (ko, $, dfu) {
             function BrandingBarViewModel(params) {
-                dfu.initialize(params.smUrl, params.authToken);
-                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(params.smUrl,params.authToken);
                 if (!ko.components.isRegistered('nav-links-widget')) {
                     ko.components.register("nav-links-widget",{
                         viewModel:{require:'../dependencies/dfcommon/widgets/navlinks/js/navigation-links'},
@@ -18,7 +17,7 @@ define(['knockout', 'jquery', 'dfutil'],
                 var self = this;
             
                 self.handleSignout = function() {
-                    window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
+                    window.location.href = dfu.discoverLogoutUrl(params.smUrl,params.authToken) + "?endUrl=" + ssoLogoutEndUrl;
                 };
 
                 // 
