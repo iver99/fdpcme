@@ -86,6 +86,14 @@ a:hover {
   content: "\f1da"; 
 }
 
+.fa-chevron-left:before {
+  content: "\f053";
+}
+
+.fa-chevron-right:before {
+  content: "\f054";
+}
+
 @font-face {
   font-family: 'FaFont';
   src: url("fonts/fontawesome-webfont.woff");

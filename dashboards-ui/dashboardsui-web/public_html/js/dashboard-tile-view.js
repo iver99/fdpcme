@@ -264,7 +264,10 @@ define(['knockout',
                 if ($('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-description').removeClass('editing');
                 }
-                dashboard.description(self.dashboardDescription());
+                if (!dashboard.description)
+                    dashboard.description = ko.observable(self.dashboardDescription());
+                else
+                    dashboard.description(self.dashboardDescription());
             };
             
             self.cancelChangeDashboardDescription = function() {
