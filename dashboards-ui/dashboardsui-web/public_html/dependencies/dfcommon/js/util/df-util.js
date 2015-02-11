@@ -330,8 +330,7 @@ define(['knockout',
             };
             
             self.discoverLogoutUrl = function(smUrl, authToken) {
-//                return self.discoverUrl('SecurityService', '0.1', 'sso.logout',smUrl, authToken);
-                return 'http://slc08upg.us.oracle.com:7001/securityservices/regmanager/securityutil/ssoLogout';
+                return self.discoverUrl('SecurityService', '0.1', 'sso.logout',smUrl, authToken);
             };
 
             /**
@@ -602,7 +601,7 @@ define(['knockout',
             };
             
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot,smUrl, authToken){
-                var assetRoot = discoverUrl(providerName,providerVersion,providerAssetRoot,smUrl, authToken);
+                var assetRoot = self.discoverUrl(providerName,providerVersion,providerAssetRoot,smUrl, authToken);
                 if (assetRoot){
                     return assetRoot;
                 }else{
