@@ -89,9 +89,13 @@ require(['knockout',
 ],
         function(ko, $) // this callback gets executed when all required modules are loaded
         {
+//            ko.components.register("header-bar-widget",{
+//                viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+//                template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+//            });
             ko.components.register("header-bar-widget",{
-                viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                viewModel:{require:'../app/df/dfcommon/widgets/brandingbar/js/brandingbar'},
+                template:{require:'text!../app/df/dfcommon/widgets/brandingbar/brandingbar.html'}
             });
             
             ko.components.register("demo-chart-widget",{
@@ -126,7 +130,8 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-
+                self.smUrl = "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+                self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
                 // 
                 // Dropdown menu states
                 // 

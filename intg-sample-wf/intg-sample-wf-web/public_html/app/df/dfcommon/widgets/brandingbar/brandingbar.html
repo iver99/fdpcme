@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Oracle Enterprise Manager Cloud Service</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <!-- These style classes are for demonstration purposes only. -->
+        <link rel="stylesheet" href="dependencies/dfcommon/css/demo-alta-patterns-min.css"/>
+        <link rel="stylesheet" href="dependencies/dfcommon/css/dashboards-common-alta.css" type="text/css"/>
+    </head>
+    <body>
+        <div class="demo-appheader">
+            <div id="demo-appheader-bar" class="oj-row demo-appheader-lite" style="max-width: 1920px;padding-left: 10px">
+
+                <!-- logo -->  
+                <div class="demo-appheader-logo" tabindex="0" data-bind="attr: {title: appName + ' ' + cloudName}">
+                    <div class="demo-appheader-logo-block">
+                        <span role="img" class="oj-icon demo-appheader-logo-oracle" title="Oracle Logo"></span>  
+                    </div>
+
+                    <div class="demo-appheader-appname-block">
+                        <span style="" class="demo-appheader-appname" data-bind="text: appName"></span>
+                    </div>
+                    <div class="demo-appheader-appname-block">
+                        <span  style="font-size: 15px" data-bind="text: cloudName"></span>
+                    </div>
+                </div>
+
+                <!-- Toolbar -->  
+                <div id='demo-appheader-menu-and-toolbar-container' tabindex="0">
+
+                    <div id='demo-appheader-menu-container'>
+                        <ul id="demoAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
+                            <!-- ko foreach: globalNavItems -->
+                            <li> <a data-bind="text: label, href: url, click: onclick"> <span class=""></span>  </a></li>
+                            <!-- /ko -->
+                        </ul>
+                    </div>
+
+                    <div class="demo-appheader-toolbar-container">
+                        <div class="demo-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
+                            <button id="linksButton" class="oj-button-half-chrome demo-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" style="height:43px" data-bind="ojComponent: {component:'ojButton', 
+                                    label: 'Links', 
+                                    display: 'icons', 
+                                    icons: {start: 'nav-mapping-icon-32 demo-icon-font'}}, 
+                                    click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start nav-mapping-icon-32 demo-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
+
+                            <!-- This is how to add a separator to the toolbar.  
+                                 Be sure to include the role and aria-orientation as shown to make it accessible.  -->
+                            <span role="separator" class="oj-toolbar-separator"></span>
+
+                            <button id="menubutton"
+                                    class='oj-button-half-chrome demo-appheader-toolbar-button'
+                                    data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#demoAppheaderGlobalNavMenuId'}">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Nav Menu-->
+            <div class="menuPullDown oj-component-initnode" id="links_menu">
+                <nav-links-widget params="{navLinksNeedRefresh:navLinksNeedRefresh,authToken:authToken,registryUrl:registryUrl}"></nav-links-widget>
+            </div>
+            <!--Nav Menu-->
+        </div>  
+    </body>
+</html>
