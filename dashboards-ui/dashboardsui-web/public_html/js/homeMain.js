@@ -23,8 +23,9 @@ requirejs.config({
         'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'dfutil':'../dependencies/dfcommon/js/util/df-util',
-        'dbs': '../js'
+        'dfutil':'../dependencies/internaldfcommon/js/util/internal-df-util',
+        'dbs': '../js',
+        'require':'../dependencies/oraclejet/js/libs/require/require'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -104,8 +105,8 @@ require(['dbs/dbsmodel',
 //                    template:{require:'text!../dependencies/navlinks/navigation-links.html'}
 //                });
 //            }
-            if (!ko.components.isRegistered('header-bar-widget')) {
-                ko.components.register("header-bar-widget",{
+            if (!ko.components.isRegistered('df-oracle-branding-bar')) {
+                ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
                     template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
@@ -141,8 +142,8 @@ require(['dbs/dbsmodel',
  
             function HeaderViewModel() {
                 var self = this;
-                self.smUrl = "http://slc07hgf.us.oracle.com:7001/registry/servicemanager/registry/v1";
-                self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
+                self.smUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
             }
 
            

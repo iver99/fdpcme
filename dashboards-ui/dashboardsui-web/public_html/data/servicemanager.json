@@ -4,6 +4,7 @@
     "registryUrls":"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",
     "serviceUrls":"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",
     "authToken": "Basic d2VibG9naWM6d2VsY29tZTE=",
+    "registryUrl": "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",
     "quickLinks": [
         {
             "name": "Target Visual Analyzer",

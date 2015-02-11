@@ -3,16 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 'jquery', 'dfutil'],
-        function (ko, $, dfu) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util'],
+        function (localrequire, ko, $, dfumodel) {
             function BrandingBarViewModel(params) {
-                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(params.smUrl,params.authToken);
+                var dfu = new dfumodel();
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(params.registryUrl,params.authToken);
+                var registryUrl = params.registryUrl;
+                var authToken = params.authToken;
+                var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
+                var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
                 if (!ko.components.isRegistered('nav-links-widget')) {
                     ko.components.register("nav-links-widget",{
-                        viewModel:{require:'../dependencies/dfcommon/widgets/navlinks/js/navigation-links'},
-                        template:{require:'text!../dependencies/dfcommon/widgets/navlinks/navigation-links.html'}
+//                        viewModel:{require:'../dependencies/dfcommon/widgets/navlinks/js/navigation-links'},
+//                        template:{require:'text!../dependencies/dfcommon/widgets/navlinks/navigation-links.html'}
+                        viewModel:{require:vmPath.substring(0, vmPath.length-3)},
+                        template:{require:'text!'+templatePath}
                     });
                 }
+                
+                function getFilePath(requireContext, relPath) {
+                    var pathArray;
+                    pathArray = requireContext.toUrl(relPath).split('/');
+                    pathArray.shift();
+                    return pathArray.join('/');
+                };
                 
                 var self = this;
             
@@ -93,6 +107,8 @@ define(['knockout', 'jquery', 'dfutil'],
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
                 self.navLinksNeedRefresh = ko.observable(false);
+                self.registryUrl = ko.observable(registryUrl);
+                self.authToken = ko.observable(authToken);
                 self.linkMenuHandle = function(event,item){
                     self.navLinksNeedRefresh(true);
                     $("#links_menu").slideToggle('normal');

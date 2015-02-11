@@ -55,7 +55,7 @@ define(['knockout',
                 }else{
                     return root+"/"+path;
                 }
-            }
+            };
             
 //            self.smUrl = "http://slc07hgf.us.oracle.com:7001/registry/servicemanager/registry/v1";
 //            self.smUrl = "https://slc07hcn.us.oracle.com:4443/registry";//TODO
@@ -161,7 +161,7 @@ define(['knockout',
              * @param {type} rel
              * @returns {unresolved}
              */
-            self.discoverUrl = function(serviceName, version, rel,smUrl, authToken){
+            self.discoverUrl = function(serviceName, version, rel, smUrl, authToken){
                 if (typeof smUrl!=="string"){
                      console.log("Error: Failed to discovery URL, SM URL="+smUrl);
                     return null;                    
@@ -183,7 +183,7 @@ define(['knockout',
 
                 var result =null;
                 $.ajax(searchUrl,{
-                    headers:self.getSMRequestHeader(),
+                    headers:self.getSMRequestHeader(authToken),
                     success:function(data, textStatus,jqXHR) {
                         result = data;
                     },
@@ -221,13 +221,13 @@ define(['knockout',
                 }
                 console.log("Warning: URL not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
                 return null;
-            }
+            };
             /**
              * Discover available Saved Search service URL
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function(smUrl, authToken) {
-                var url = self.discoverUrl("SavedSearch","0.1",smUrl, authToken);//TODO find SSF service somewhere
+                var url = self.discoverUrl("SavedSearch","0.1",null, smUrl, authToken);//TODO find SSF service somewhere
                 if (url){
                     return url;
                 }else{
@@ -330,8 +330,8 @@ define(['knockout',
             };
             
             self.discoverLogoutUrl = function(smUrl, authToken) {
-                return self.discoverUrl('SecurityService', '0.1', 'sso.logout',smUrl, authToken);
-//                return 'http://slc08upg.us.oracle.com:7001/securityservices/regmanager/securityutil/ssoLogout';
+//                return self.discoverUrl('SecurityService', '0.1', 'sso.logout',smUrl, authToken);
+                return 'http://slc08upg.us.oracle.com:7001/securityservices/regmanager/securityutil/ssoLogout';
             };
 
             /**
@@ -346,27 +346,28 @@ define(['knockout',
                     return null;
                 }     */
             self.discoverDFHomeUrl = function(smUrl, authToken) {
-                var url = self.discoverUrl("Dashboard-UI","0.1",smUrl, authToken);//TODO find Dashboard API service somewhere
+                var url = self.discoverUrl("Dashboard-UI","0.1",'home', smUrl, authToken);//TODO find Dashboard API service somewhere
                 if (url){
                     return url;
                 }else{
                     console.log("Failed to discovery Dashboard Home");
                     return null;
                 }
-            }    
+            };    
             /**
              * Discover available Saved Search service URL
-             * @returns {String} url
-                self.discoverDFRestApiUrl = function() {
-                var url = self.discoverUrl("Dashboard-API","0.1");//TODO find Dashboard API service somewhere
-                if (url){
-                    return url;
-                }else{
-                    console.log("Failed to discovery DF REST API end point");
-                    return null;
-                }     */
+             * @returns {String} url */
+//                self.discoverDFRestApiUrl = function() {
+//                var url = self.discoverUrl("Dashboard-API","0.1");//TODO find Dashboard API service somewhere
+//                if (url){
+//                    return url;
+//                }else{
+//                    console.log("Failed to discovery DF REST API end point");
+//                    return null;
+//                }
             self.discoverDFRestApiUrl = function(smUrl, authToken) {
-                var url = self.discoverUrl("Dashboard-API","0.1",smUrl, authToken);//TODO find Dashboard API service somewhere
+                var url = self.discoverUrl("Dashboard-API","0.1",null, smUrl, authToken);//TODO find Dashboard API service somewhere
+                
                 if (url){
                     return url;
                 }else{
@@ -554,7 +555,7 @@ define(['knockout',
                 if (info && info.tenant)
                     return info.tenant;
                 return null;
-            }
+            };
 
             self.getAuthorizationRequestHeader=function(authToken) {
                 return {"Authorization": authToken};
@@ -717,7 +718,8 @@ define(['knockout',
             };
         }
         
-        return new DashboardFrameworkUtility();
+//        return new DashboardFrameworkUtility();
+        return DashboardFrameworkUtility;
     }
 );
 
