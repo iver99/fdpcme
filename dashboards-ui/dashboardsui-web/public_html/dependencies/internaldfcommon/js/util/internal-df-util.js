@@ -115,6 +115,9 @@ define(['knockout',
                 return results === null ? "" : results[1];                
             };
             
+            self.guid = function(){
+                return dfu.guid();
+            }
             /**
              * catenate root and path to build full path
              * e.g.
