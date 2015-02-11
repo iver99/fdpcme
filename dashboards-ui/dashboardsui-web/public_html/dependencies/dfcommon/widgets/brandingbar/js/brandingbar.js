@@ -6,8 +6,8 @@
 define(['knockout', 'jquery', 'dfutil'],
         function (ko, $, dfu) {
             function BrandingBarViewModel(params) {
-                dfu.initialize(params.smUrl);
-                var ssoLogoutEndUrl = params.ssoLogoutEndUrl ? params.ssoLogoutEndUrl : '';
+                dfu.initialize(params.smUrl, params.authToken);
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
                 if (!ko.components.isRegistered('nav-links-widget')) {
                     ko.components.register("nav-links-widget",{
                         viewModel:{require:'../dependencies/dfcommon/widgets/navlinks/js/navigation-links'},
@@ -18,12 +18,6 @@ define(['knockout', 'jquery', 'dfutil'],
                 var self = this;
             
                 self.handleSignout = function() {
-                    //Logout current user by using a wellknown URL
-//                    var currentUrl = window.location.href;
-//                    var cutoffIndex = currentUrl.indexOf("builder.html");
-//                    if (cutoffIndex > 0)
-//                        currentUrl = currentUrl.substring(0, cutoffIndex) + "home.html";
-//                    window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + currentUrl;
                     window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
                 };
 

@@ -58,13 +58,15 @@ define(['knockout',
             }
             
 //            self.smUrl = "http://slc07hgf.us.oracle.com:7001/registry/servicemanager/registry/v1";
-            self.smUrl = "https://slc07hcn.us.oracle.com:4443/registry";//TODO
+//            self.smUrl = "https://slc07hcn.us.oracle.com:4443/registry";//TODO
 //            self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
-            self.authToken = "Basic Q2xvdWRJbmZyYS5PQ0xPVUQ5X0VNQUFTX0lOVEVSX1NWQ19BUFBJRDpXZWxjb21lMSE=";//TODO
-            self.initialize = function(smUrl, authToken){
+//            self.authToken = "Basic Q2xvdWRJbmZyYS5PQ0xPVUQ5X0VNQUFTX0lOVEVSX1NWQ19BUFBJRDpXZWxjb21lMSE=";//TODO
+//            self.smUrl = null;
+//            self.authToken = null;
+//            self.initialize = function(smUrl, authToken){
 //                self.smUrl = smUrl;
 //                self.authToken = authToken;
-            }
+//            }
             
             self.guid = function() {
                 function S4() {
@@ -159,14 +161,14 @@ define(['knockout',
              * @param {type} rel
              * @returns {unresolved}
              */
-            self.discoverUrl = function(serviceName, version, rel){
-                if (typeof self.smUrl!=="string"){
-                     console.log("Error: Failed to discovery URL, SM URL="+self.smUrl);
+            self.discoverUrl = function(serviceName, version, rel,smUrl, authToken){
+                if (typeof smUrl!=="string"){
+                     console.log("Error: Failed to discovery URL, SM URL="+smUrl);
                     return null;                    
                 }
 
-                if (typeof self.authToken!=="string"){
-                    console.log("Error: Failed to discovery URL, authToken="+self.authToken);
+                if (typeof authToken!=="string"){
+                    console.log("Error: Failed to discovery URL, authToken="+authToken);
                     return null;
                 }
                 
@@ -174,7 +176,7 @@ define(['knockout',
                     console.log("Error: Failed to discovery URL, serviceName="+serviceName);
                     return null;
                 }
-                var searchUrl = self.buildFullUrl(self.smUrl,"instances")+"?serviceName="+serviceName;
+                var searchUrl = self.buildFullUrl(smUrl,"instances")+"?serviceName="+serviceName;
                 if (typeof version==="string"){
                     searchUrl = searchUrl +"&version="+version;
                 }
@@ -224,8 +226,8 @@ define(['knockout',
              * Discover available Saved Search service URL
              * @returns {String} url
              */
-            self.discoverSavedSearchServiceUrl = function() {
-                var url = self.discoverUrl("SavedSearch","0.1");//TODO find SSF service somewhere
+            self.discoverSavedSearchServiceUrl = function(smUrl, authToken) {
+                var url = self.discoverUrl("SavedSearch","0.1",smUrl, authToken);//TODO find SSF service somewhere
                 if (url){
                     return url;
                 }else{
@@ -327,17 +329,44 @@ define(['knockout',
                 */
             };
             
-            self.discoverLogoutUrl = function() {
-                return self.discoverUrl('SecurityService', '0.1', 'sso.logout');
+            self.discoverLogoutUrl = function(smUrl, authToken) {
+                return self.discoverUrl('SecurityService', '0.1', 'sso.logout',smUrl, authToken);
 //                return 'http://slc08upg.us.oracle.com:7001/securityservices/regmanager/securityutil/ssoLogout';
             };
 
             /**
              * Discover available Saved Search service URL
              * @returns {String} url
-             */
-            self.discoverDFRestApiUrl = function() {
+                self.discoverDFRestApiUrl = function() {
                 var url = self.discoverUrl("Dashboard-API","0.1");//TODO find Dashboard API service somewhere
+                if (url){
+                    return url;
+                }else{
+                    console.log("Failed to discovery DF REST API end point");
+                    return null;
+                }     */
+            self.discoverDFHomeUrl = function(smUrl, authToken) {
+                var url = self.discoverUrl("Dashboard-UI","0.1",smUrl, authToken);//TODO find Dashboard API service somewhere
+                if (url){
+                    return url;
+                }else{
+                    console.log("Failed to discovery Dashboard Home");
+                    return null;
+                }
+            }    
+            /**
+             * Discover available Saved Search service URL
+             * @returns {String} url
+                self.discoverDFRestApiUrl = function() {
+                var url = self.discoverUrl("Dashboard-API","0.1");//TODO find Dashboard API service somewhere
+                if (url){
+                    return url;
+                }else{
+                    console.log("Failed to discovery DF REST API end point");
+                    return null;
+                }     */
+            self.discoverDFRestApiUrl = function(smUrl, authToken) {
+                var url = self.discoverUrl("Dashboard-API","0.1",smUrl, authToken);//TODO find Dashboard API service somewhere
                 if (url){
                     return url;
                 }else{
@@ -479,16 +508,6 @@ define(['knockout',
                 
             };
 
-            self.getAuthToken = function() {
-                return self.authToken;
-//                return "Basic d2VibG9naWM6d2VsY29tZTE=";//TODO HARD_CODE
-//                if (self.getRegistrationInfo() && self.getRegistrationInfo().authToken){
-//                    return self.getRegistrationInfo().authToken;
-//                }else{
-//                    return null;
-//                }
-            };
-            
             self.getUserTenant = function() {
                 var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
                 var userTenantPrefix = "X-REMOTE-USER=";
@@ -506,15 +525,15 @@ define(['knockout',
                 return {"tenant": tenantName, "tenantUser": userName};
             };
             
-            self.getSMRequestHeader = function() {
-                var defHeader = {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":"dummy"};
+            self.getSMRequestHeader = function(authToken) {
+                var defHeader = {"Authorization": authToken,"X-USER-IDENTITY-DOMAIN-NAME":"dummy"};
                 console.log("Sent Header: "+JSON.stringify(defHeader));
                 return defHeader;
             };
             
-            self.getDefaultHeader = function() {
+            self.getDefaultHeader = function(authToken) {
                 var info = self.getUserTenant();
-                var defHeader = {"Authorization": self.getAuthToken(),"X-USER-IDENTITY-DOMAIN-NAME":info.tenant,"X-REMOTE-USER":info.tenantUser};
+                var defHeader = {"Authorization": authToken,"X-USER-IDENTITY-DOMAIN-NAME":info.tenant,"X-REMOTE-USER":info.tenantUser};
                 console.log("Sent Header: "+JSON.stringify(defHeader));
                 return defHeader;
             };
@@ -537,26 +556,26 @@ define(['knockout',
                 return null;
             }
 
-            self.getAuthorizationRequestHeader=function() {
-                return {"Authorization": self.getAuthToken()};
+            self.getAuthorizationRequestHeader=function(authToken) {
+                return {"Authorization": authToken};
             };
             
-            self.getSavedSearchServiceRequestHeader=function() {
-                var header = self.getDefaultHeader();
+            self.getSavedSearchServiceRequestHeader=function(authToken) {
+                var header = self.getDefaultHeader(authToken);
                 delete header['X-REMOTE-USER'];//Remove this if X-REMOTE-USER is enabled in SSF
                 return header;
             };  
             
-            self.getDashboardsRequestHeader=function() {
-                return self.getDefaultHeader();
+            self.getDashboardsRequestHeader=function(authToken) {
+                return self.getDefaultHeader(authToken);
             };  
             
             /**
              * Discover available quick links
              * @returns {Array} quickLinks
              */
-            self.discoverQuickLinks = function() {
-                return discoverLinks('quickLink');
+            self.discoverQuickLinks = function(smUrl, authToken) {
+                return discoverLinks('quickLink',smUrl, authToken);
 //            	var rep = self.getRegistrationInfo();
 //                if (rep && rep.quickLinks) {
 //                    return rep.quickLinks;
@@ -570,8 +589,8 @@ define(['knockout',
              * Discover available visual analyzer links
              * @returns {Array} visualAnalyzerLinks
              */
-            self.discoverVisualAnalyzerLinks = function() {
-                return discoverLinks('visualAnalyzer');
+            self.discoverVisualAnalyzerLinks = function(smUrl, authToken) {
+                return discoverLinks('visualAnalyzer',smUrl, authToken);
 //            	var rep = self.getRegistrationInfo();
 //                if (rep && rep.visualAnalyzers) {
 //                    return rep.visualAnalyzers;
@@ -581,8 +600,8 @@ define(['knockout',
 //                }
             };
             
-            self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
-                var assetRoot = discoverUrl(providerName,providerVersion,providerAssetRoot);
+            self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot,smUrl, authToken){
+                var assetRoot = discoverUrl(providerName,providerVersion,providerAssetRoot,smUrl, authToken);
                 if (assetRoot){
                     return assetRoot;
                 }else{
@@ -615,7 +634,7 @@ define(['knockout',
              * @returns {Array} availableLinks
              */
 
-            var discoverLinks = function(relName) {
+            var discoverLinks = function(relName,smUrl, authToken) {
                 var availableLinks = [];
                 var linksFromDashboard = [];
                 var linksFromIntegrators = [];
@@ -674,13 +693,13 @@ define(['knockout',
                         }
                     }
                 };
-                var serviceUrl = self.buildFullUrl(self.smUrl,'instances');
+                var serviceUrl = self.buildFullUrl(smUrl,'instances');
 
                 $.ajax({
                     url: serviceUrl,
-                    headers: self.getAuthorizationRequestHeader(),
+                    headers: {'Authorization':authToken},
                     success: function(data, textStatus) {
-                        fetchServiceQuickLinks(data);
+                        fetchServiceQuickLinks(data,smUrl, authToken);
                     },
                     error: function(xhr, textStatus, errorThrown){
                         console.log('Failed to get service instances by URL: '+serviceUrl);

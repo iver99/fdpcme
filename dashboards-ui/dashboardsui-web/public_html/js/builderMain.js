@@ -178,7 +178,7 @@ require(['knockout',
 //                viewModel:{require:'http://slc06xat.us.oracle.com:7001/ita-tool/widgets/js/controller/qdg-component.js'},
 //                template:{require:'text!http://slc06xat.us.oracle.com:7001/ita-tool/widgets/html/qdg-component.html'}
 //            });
-            
+
             function FooterViewModel() {
                 var self = this;
 
@@ -207,6 +207,7 @@ require(['knockout',
                 this.linkTarget = linkTarget;
             }
 
+            /*
             function HeaderViewModel() {
                 var self = this;
             
@@ -302,7 +303,8 @@ require(['knockout',
                     $("#links_menu").slideUp('normal');
                 });
             }
-            
+            */
+    
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
@@ -335,7 +337,7 @@ require(['knockout',
                     }
                     var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
-                    var headerViewModel = new HeaderViewModel();
+//                    var headerViewModel = new HeaderViewModel();
 
                     ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
@@ -363,7 +365,7 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
                     //header
-                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
+//                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
 //                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
