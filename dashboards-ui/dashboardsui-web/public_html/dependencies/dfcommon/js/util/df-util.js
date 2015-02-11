@@ -695,10 +695,9 @@ define(['knockout',
                     }
                 };
                 var serviceUrl = self.buildFullUrl(smUrl,'instances');
-
                 $.ajax({
                     url: serviceUrl,
-                    headers: {'Authorization':authToken},
+                    headers: self.getSMRequestHeader(authToken),
                     success: function(data, textStatus) {
                         fetchServiceQuickLinks(data,smUrl, authToken);
                     },
