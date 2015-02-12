@@ -123,9 +123,15 @@ function(dsf, oj, ko, $, dfu)
         
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL);
         self.datasource = self.dsFactory.build("", self.pageSize());
-        self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 'success': function() {
+        self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
+            'success': function() {
                 self.pagingDatasource( self.datasource['pagingDS'] );
-        }} );
+                if (self.datasource['pagingDS'].totalSize() <= 0)
+                {
+                    $('#cbtn-tooltip').ojPopup('open', "#cbtn");
+                }
+            }
+        } );
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
