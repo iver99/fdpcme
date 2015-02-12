@@ -562,7 +562,6 @@ define(['knockout',
             
             self.getSavedSearchServiceRequestHeader=function(authToken) {
                 var header = self.getDefaultHeader(authToken);
-                delete header['X-REMOTE-USER'];//Remove this if X-REMOTE-USER is enabled in SSF
                 return header;
             };  
             
