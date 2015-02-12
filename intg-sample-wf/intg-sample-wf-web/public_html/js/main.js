@@ -89,6 +89,17 @@ require(['knockout',
 ],
         function(ko, $) // this callback gets executed when all required modules are loaded
         {
+            if (!ko.components.isRegistered("df-oracle-branding-bar")) {
+                ko.components.register("df-oracle-branding-bar",{
+                    viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                });
+//            ko.components.register("df-oracle-branding-bar",{
+//                viewModel:{require:'../app/df/dfcommon/widgets/brandingbar/js/brandingbar'},
+//                template:{require:'text!../app/df/dfcommon/widgets/brandingbar/brandingbar.html'}
+//            });
+            }
+            
             ko.components.register("demo-chart-widget",{
                 viewModel:{require:'../widgets/simpleChartWidget/js/demo-chart-widget'},
                 template:{require:'text!../widgets/simpleChartWidget/demo-chart-widget.html'}
@@ -121,7 +132,8 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-
+                self.registryUrl = "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+                self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
                 // 
                 // Dropdown menu states
                 // 
@@ -260,7 +272,7 @@ require(['knockout',
             
             $(document).ready(function() {
                 
-                ko.applyBindings(new HeaderViewModel(), $('#demo-appheader-bar')[0]);
+                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new MainViewModel(), $('#main-container')[0]);      
                 
                 $('#globalBody').show();

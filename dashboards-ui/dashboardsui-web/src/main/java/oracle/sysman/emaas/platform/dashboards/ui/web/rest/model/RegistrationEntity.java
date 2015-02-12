@@ -37,8 +37,9 @@ public class RegistrationEntity
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
 	public static final String NAME_DASHBOARD_UI_VERSION = "0.1";
-
-	private String registryUrls;
+	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
+	public static final String NAME_REGISTRY__VERSION = "0.1";
+	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
 	static {
@@ -71,13 +72,13 @@ public class RegistrationEntity
 	//		setRegistryUrls(regValue);
 	//	}
 
-	//	/**
-	//	 * @return the authorizationHeader
-	//	 */
-	//	public String getAuthToken()
-	//	{
-	//		return new String(RegistrationManager.getInstance().getAuthorizationToken());
-	//	}
+	/**
+	 * @return the authorizationHeader
+	 */
+	public String getAuthToken()
+	{
+		return new String(LookupManager.getInstance().getAuthorizationToken());
+	}
 
 	/**
 	 * @return the rest API end point for dashboard framework
@@ -97,6 +98,14 @@ public class RegistrationEntity
 	}
 
 	/**
+	 * @return the registryUrl
+	 */
+	public String getRegistryUrl()
+	{
+		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_REGISTRY_SERVICENAME, NAME_REGISTRY__VERSION);
+	}
+
+	/**
 	 * @return the rest API end point for SSF
 	 * @throws Exception
 	 */
@@ -107,14 +116,6 @@ public class RegistrationEntity
 		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
 		//		}
 	}
-
-	//	/**
-	//	 * @return the registryUrls
-	//	 */
-	//	public String getRegistryUrls()
-	//	{
-	//		return registryUrls;
-	//	}
 
 	//	/**
 	//	 * @return the ssfServiceName

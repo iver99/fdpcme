@@ -25,7 +25,7 @@ requirejs.config({
         'text': '../dependencies/oraclejet/js/libs/require/text',
         'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
-        'dfutil':'../dependencies/dfcommon/js/util/df-util',
+        'dfutil':'../dependencies/internaldfcommon/js/util/internal-df-util',
         'timeselector':'../dependencies/timeselector/js',
         'html2canvas':'../dependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../dependencies/canvg/rgbcolor',
@@ -106,10 +106,16 @@ require(['knockout',
 ],
         function(ko, $, dfu,dtm, dtv) // this callback gets executed when all required modules are loaded
         {
-            ko.components.register("df-nav-links",{
-                viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
-                template:{require:'text!../dependencies/navlinks/navigation-links.html'}
-            });
+//            ko.components.register("df-nav-links",{
+//                viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
+//                template:{require:'text!../dependencies/navlinks/navigation-links.html'}
+//            });
+            if (!ko.components.isRegistered('df-oracle-branding-bar')) {
+                ko.components.register("df-oracle-branding-bar",{
+                    viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                });
+            }
             ko.components.register("df-time-selector",{
                 viewModel:{require:'../dependencies/timeselector/js/time-selector'},
                 template:{require:'text!../dependencies/timeselector/time-selector.html'}
@@ -172,7 +178,7 @@ require(['knockout',
 //                viewModel:{require:'http://slc06xat.us.oracle.com:7001/ita-tool/widgets/js/controller/qdg-component.js'},
 //                template:{require:'text!http://slc06xat.us.oracle.com:7001/ita-tool/widgets/html/qdg-component.html'}
 //            });
-            
+
             function FooterViewModel() {
                 var self = this;
 
@@ -201,102 +207,14 @@ require(['knockout',
                 this.linkTarget = linkTarget;
             }
 
+            
             function HeaderViewModel() {
                 var self = this;
+                self.smUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
+            };
             
-                self.handleSignout = function() {
-                    //Logout current user by using a wellknown URL
-                    var currentUrl = window.location.href;
-                    var cutoffIndex = currentUrl.indexOf("builder.html");
-                    if (cutoffIndex > 0)
-                        currentUrl = currentUrl.substring(0, cutoffIndex) + "home.html";
-                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + currentUrl;
-                };
-
-                // 
-                // Dropdown menu states
-                // 
-                self.selectedMenuItem = ko.observable("(None selected yet)");
-
-                self.menuItemSelect = function(event, ui) {
-                    switch (ui.item.attr("id")) {
-                        case "open":
-                            this.selectedMenuItem(ui.item.children("a").text());
-                            break;
-                        default:
-                            // this.selectedMenuItem(ui.item.children("a").text());
-                    }
-                };
-
-                // Data for application name
-                var appName = {
-                    "id": "qs",
-                    "name": "Enterprise Manager"
-                };
-
-                var cloudName ="Cloud Service";
-                // 
-                // Toolbar buttons
-                // 
-                var toolbarData = {
-                    // user name in toolbar
-                    "userName": function() {
-                        var userName = dfu.getUserName();
-                        if (userName)
-                            return userName + " (" + dfu.getTenantName() + ")";
-                        return "emaas.user@oracle.com";
-                    }(),
-                    "toolbar_buttons": [
-                        {
-                            "label": "toolbar_button1",
-                            "iconClass": "demo-palette-icon-24",
-                            "url": "#"
-                        },
-                        {
-                            "label": "toolbar_button2",
-                            "iconClass": "demo-gear-icon-16",
-                            "url": "#"
-                        }
-                    ],
-                    // Data for global nav dropdown menu embedded in toolbar.
-                    "global_nav_dropdown_items": [
-                        {"label": "Preferences",
-                            "url": "#",
-                            "onclick": ""
-                        },
-                        {"label": "Help",
-                            "url": "#",
-                            "onclick": ""
-                        },
-                        {"label": "About",
-                            "url": "#",
-                            "onclick": ""
-                        },
-                        {"label": "Sign out",
-                            "url": "#",
-                            "onclick": self.handleSignout
-                        }
-                    ]
-                };
-
-                self.appId = appName.id;
-                self.appName = appName.name;
-                self.cloudName = cloudName;
-                self.userName = ko.observable(toolbarData.userName);
-                self.toolbarButtons = toolbarData.toolbar_buttons;
-                self.globalNavItems = toolbarData.global_nav_dropdown_items;
-                self.navLinksNeedRefresh = ko.observable(false);
-                self.linkMenuHandle = function(event,item){
-                    self.navLinksNeedRefresh(true);
-                    $("#links_menu").slideToggle('normal');
-                    item.stopImmediatePropagation();
-                };
-
-                $('body').click(function(){
-                    $("#links_menu").slideUp('normal');
-                });
-            }
-            
+    
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
@@ -357,8 +275,8 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
                     //header
-                    ko.applyBindings(headerViewModel, $('#demo-appheader-bar')[0]); 
-                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
+                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
+//                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                     ko.applyBindings(tilesViewMode, $('#global-html')[0]);   

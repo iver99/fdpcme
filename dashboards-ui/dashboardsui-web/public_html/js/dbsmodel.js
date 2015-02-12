@@ -14,7 +14,7 @@ define([
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
-    'dependencies/dfcommon/js/util/df-util.js',
+    'dfutil',
     'ojs/ojknockout', 
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
