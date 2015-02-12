@@ -159,6 +159,10 @@ define(['knockout',
                 return dfu.getDashboardsRequestHeader(self.getAuthToken());
             };
             
+            self.getUserTenant = function() {
+                return dfu.getUserTenant();
+            };
+            
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.registryUrl && regInfo.authToken){
