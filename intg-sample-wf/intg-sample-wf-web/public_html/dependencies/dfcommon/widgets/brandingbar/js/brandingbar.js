@@ -3,27 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
-        function (ko, $, dfu) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util'],
+        function (localrequire, ko, $, dfumodel) {
             function BrandingBarViewModel(params) {
-                var ssoLogoutEndUrl = params.ssoLogoutEndUrl ? params.ssoLogoutEndUrl : '';
+                var dfu = new dfumodel();
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(params.registryUrl,params.authToken);
+                var registryUrl = params.registryUrl;
+                var authToken = params.authToken;
+                var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
+                var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
                 if (!ko.components.isRegistered('nav-links-widget')) {
                     ko.components.register("nav-links-widget",{
-                        viewModel:{require:'../dependencies/dfcommon/widgets/navlinks/js/navigation-links'},
-                        template:{require:'text!../dependencies/dfcommon/widgets/navlinks/navigation-links.html'}
+//                        viewModel:{require:'../dependencies/dfcommon/widgets/navlinks/js/navigation-links'},
+//                        template:{require:'text!../dependencies/dfcommon/widgets/navlinks/navigation-links.html'}
+                        viewModel:{require:vmPath.substring(0, vmPath.length-3)},
+                        template:{require:'text!'+templatePath}
                     });
                 }
+                
+                function getFilePath(requireContext, relPath) {
+                    var pathArray;
+                    pathArray = requireContext.toUrl(relPath).split('/');
+                    pathArray.shift();
+                    return pathArray.join('/');
+                };
                 
                 var self = this;
             
                 self.handleSignout = function() {
-                    //Logout current user by using a wellknown URL
-//                    var currentUrl = window.location.href;
-//                    var cutoffIndex = currentUrl.indexOf("builder.html");
-//                    if (cutoffIndex > 0)
-//                        currentUrl = currentUrl.substring(0, cutoffIndex) + "home.html";
-//                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + currentUrl;
-                    window.location.href = dfu.discoverLogoutRestApiUrl() + "?endUrl=" + ssoLogoutEndUrl;
+                    window.location.href = dfu.discoverLogoutUrl(params.smUrl,params.authToken) + "?endUrl=" + ssoLogoutEndUrl;
                 };
 
                 // 
@@ -99,6 +107,8 @@ define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
                 self.navLinksNeedRefresh = ko.observable(false);
+                self.registryUrl = ko.observable(registryUrl);
+                self.authToken = ko.observable(authToken);
                 self.linkMenuHandle = function(event,item){
                     self.navLinksNeedRefresh(true);
                     $("#links_menu").slideToggle('normal');

@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
-        function (ko, $, dfu) {
+define(['knockout', 'jquery', '../../../js/util/df-util'],
+        function (ko, $, dfumodel) {
             function NavigationLinksViewModel(params) {
                 var self = this;
                 var quickLinkList = [];
                 var recentList = [];
                 var favoriteList = [];
                 var maxRecentSize = 10;
+                var smUrl = params.registryUrl();
+                var authToken = params.authToken();
+                var dfu = new dfumodel();
                 
                 self.quickLinks = ko.observableArray();
                 self.favorites = ko.observableArray();
@@ -29,7 +32,7 @@ define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
                     }
                 });
                 
-                refreshLinks();
+//                refreshLinks();
                 
                 self.refresh = function() {
                     refreshLinks();
@@ -39,17 +42,28 @@ define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
                     return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + dashboardId;
                 };
                 
+                self.truncateString =function(str, length) {
+                    if (str && length > 0 && str.length > length)
+                    {
+                        var _tlocation = str.indexOf(' ', length);
+                        if ( _tlocation <= 0 )
+                            _tlocation = length;
+                        return str.substring(0, _tlocation) + "...";
+                    }
+                    return str;
+                };
+                
                 function refreshLinks() {
                     recentList = [];
                     favoriteList = [];
-                    quickLinkList = dfu.discoverQuickLinks();
+                    quickLinkList = dfu.discoverQuickLinks(smUrl, authToken);
                     
-                    var dashboardUrl = dfu.discoverDFRestApiUrl();
+                    var dashboardUrl = dfu.discoverDFRestApiUrl(smUrl, authToken);
                     if (dashboardUrl && dashboardUrl !== '') {
                         var favoritesUrl = dashboardUrl + 'dashboards/favorites';
                         $.ajax({
                             url: favoritesUrl,
-                            headers: dfu.getDashboardsRequestHeader(),
+                            headers: dfu.getDashboardsRequestHeader(authToken),
                             success: function(data, textStatus) {
                                 if (data && data instanceof Array) {
                                     for (i = 0; i < data.length; i++) {
@@ -68,7 +82,7 @@ define(['knockout', 'jquery', 'dependencies/dfcommon/js/util/df-util.js'],
                         var recentCnt = 0;
                         $.ajax({
                             url: recentDashboardsUrl,
-                            headers: dfu.getDashboardsRequestHeader(),
+                            headers: dfu.getDashboardsRequestHeader(authToken),
                             success: function(data, textStatus) {
                                 if (data && data.dashboards instanceof Array) {
                                     for (i = 0; i < data.dashboards.length && recentCnt < maxRecentSize; i++) {
