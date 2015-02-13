@@ -295,10 +295,14 @@ define(['knockout',
             var headers = {
                 'Content-type': 'application/json',
                 'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1'
-                /*,'Authorization': dfu.getAuthToken()*/
+                ,'Authorization': dfu.getAuthToken()
             };
-            if (dtm.userTenant)
+//            dtm.userTenant='TenantOPC1.SYSMAN';
+            if (dtm.userTenant){
                 headers['X-REMOTE-USER'] = dtm.userTenant;
+            }else{
+                console.log("Warning: user name is not found: "+dtm.userTenant);
+            }
             return headers;
         }
         
