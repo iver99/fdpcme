@@ -33,7 +33,8 @@ default["wls_admin_user"] = "weblogic"
 default["wls_admin_password"] = "password1"
 default["wls_memory_config"]="-Xms512m -Xmx1024m -XX:CompileThreshold=8000 -XX:PermSize=128m -XX:MaxPermSize=256m"
 
-default["myApplicationName"]="emaas-applications-dashboards-ui-0.1"
+default["SAAS_version"] = "1.0.0"
+default["myApplicationName"]="emaas-applications-dashboards-ui-#{node["SAAS_version"]}"
 default["target"]="#{node["wls_adminserver_name"]}"
 
 default["dbhome"]="#{node["infra_dir"]}/rdbms/12.1.0" 
