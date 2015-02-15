@@ -63,6 +63,6 @@ default["SAAS_entityNamingDomain"]="DatabaseTenantMapping"
 default["SAAS_entityNamingKey"]="tenantid"
 
 default["SAAS_earSelfCheck"]="emaas"
-default["SAAS_earfile"]="emaas-applications-dashboards-ui-0.1"
+default["SAAS_earfile"]="emaas-applications-dashboards-ui-#{node["SAAS_version"]}"
 default["SAAS_deploymentUuid"]="0"
 
