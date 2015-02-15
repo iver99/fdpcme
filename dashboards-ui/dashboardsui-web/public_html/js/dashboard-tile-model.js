@@ -743,8 +743,8 @@ define(['knockout',
                 }
                 else if (widget && widget.category === 'DashboardsBuiltIn') {
                     var koc_name = 'dbs-builtin-iframe-widget';
-                    var viewmodel = 'dashboards/../dependencies/widgets/iFrame/js/widget-iframe.js';
-                    var template = 'dashboards/../dependencies/widgets/iFrame/widget-iframe.html';
+                    var viewmodel = 'dashboards/../emcsDependencies/widgets/iFrame/js/widget-iframe.js';
+                    var template = 'dashboards/../emcsDependencies/widgets/iFrame/widget-iframe.html';
                     if (koc_name && template && viewmodel){
                         if (!ko.components.isRegistered(koc_name)) {
                             ko.components.register(koc_name,{
