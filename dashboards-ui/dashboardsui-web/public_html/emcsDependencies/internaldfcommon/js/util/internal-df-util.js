@@ -30,7 +30,7 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
-                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
+//                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.registryUrl && regInfo.authToken){
                     return dfu.discoverSavedSearchServiceUrl(regInfo.registryUrl, regInfo.authToken);
