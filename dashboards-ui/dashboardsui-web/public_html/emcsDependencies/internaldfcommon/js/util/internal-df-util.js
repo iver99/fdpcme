@@ -5,20 +5,32 @@
  */
 define(['knockout',
         'jquery',
-        '../dependencies/dfcommon/js/util/df-util'
+        '../emcsDependencies/dfcommon/js/util/df-util'
     ],
     
-    function(ko,$,dfumodel)
+    function(ko, $, dfumodel)
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
-            var dfu = new dfumodel();
+            var userTenant = getUserTenantFromCookie();
+            var userName = getUserName(userTenant);
+            var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
+            var dfu = new dfumodel(userName, tenantName);
+            
+            self.getUserName = function() {
+                return userName;
+            };
+            
+            self.getTenantName = function() {
+                return tenantName;
+            };
 
             /**
              * Discover available Saved Search service URL
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
+                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.registryUrl && regInfo.authToken){
                     return dfu.discoverSavedSearchServiceUrl(regInfo.registryUrl, regInfo.authToken);
@@ -26,19 +38,6 @@ define(['knockout',
                     console.log("Failed to discovery SSF REST API end point");
                     return null;
                 }
-            };
-            
-            self.discoverLogoutRestApiUrl = function() {
-//                return dfu.df_util_widget_lookup_assetRootUrl('SecurityService', '0.1', 'sso.logout');
-                var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    return dfu.df_util_widget_lookup_assetRootUrl('SecurityService', '0.1', 'sso.logout', regInfo.registryUrl, regInfo.authToken);
-                } else {
-                    console.log("Failed to discovery logout end point");
-                    return null;
-                };
-                
-//                return 'http://slc08upg.us.oracle.com:7001/securityservices/regmanager/securityutil/ssoLogout';
             };
 
             /**
@@ -80,7 +79,6 @@ define(['knockout',
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-//                return discoverLinks('quickLink');
             	var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.registryUrl && regInfo.authToken){
                     return dfu.discoverQuickLinks(regInfo.registryUrl, regInfo.authToken);
@@ -95,7 +93,6 @@ define(['knockout',
              * @returns {Array} visualAnalyzerLinks
              */
             self.discoverVisualAnalyzerLinks = function() {
-//                return discoverLinks('visualAnalyzer');
             	var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.registryUrl && regInfo.authToken){
                     return dfu.discoverVisualAnalyzerLinks(regInfo.registryUrl, regInfo.authToken);
@@ -116,8 +113,21 @@ define(['knockout',
             };
             
             self.guid = function(){
-                return dfu.guid();
-            }
+                function S4() {
+                   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                }
+                
+                return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+            };
+            
+            /**
+            * Returns a random integer between min (inclusive) and max (inclusive)
+            * Using Math.round() will give you a non-uniform distribution!
+            */
+            self.getRandomInt = function(min,max){
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            };
+            
             /**
              * catenate root and path to build full path
              * e.g.
@@ -159,8 +169,12 @@ define(['knockout',
                 return dfu.getDashboardsRequestHeader(self.getAuthToken());
             };
             
+            self.getAuthorizationRequestHeader=function() {
+                return {"Authorization": self.getAuthToken()};
+            };
+            
             self.getUserTenant = function() {
-                return dfu.getUserTenant();
+                return userTenant;
             };
             
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
@@ -189,6 +203,33 @@ define(['knockout',
 //                        });
 //                }
 //                return assetRoot;
+            };
+            
+            function getUserTenantFromCookie() {
+                var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
+                var userTenantPrefix = "X-REMOTE-USER=";
+                var cookieArray = document.cookie.split(';');
+                var tenantName="TenantOPC1"; //in case tenant name is not got
+                var userName="TenantOPC1.SYSMAN"; //in case use name is not got
+                for (var i = 0; i < cookieArray.length; i++) {
+                    var c = cookieArray[i];
+                    if (c.indexOf(tenantNamePrefix) !== -1) {
+                        tenantName = c.substring(c.indexOf(tenantNamePrefix) + tenantNamePrefix.length, c.length);
+                    } else if (c.indexOf(userTenantPrefix) !== -1) {
+                        userName = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
+                    }
+                }
+                return {"tenant": tenantName, "tenantUser": userName};
+            };
+            
+            function getUserName(userTenant) {
+                if (userTenant && userTenant.tenantUser) {
+                    var idx = userTenant.tenantUser.indexOf('.');
+                    if (idx !== -1) {
+                        return userTenant.tenantUser.substring(idx + 1, userTenant.tenantUser.length);
+                    }
+                }
+                return null;
             };
         }
         

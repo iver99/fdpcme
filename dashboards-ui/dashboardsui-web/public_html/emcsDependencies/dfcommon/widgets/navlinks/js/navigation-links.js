@@ -1,8 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 define(['knockout', 'jquery', '../../../js/util/df-util'],
         function (ko, $, dfumodel) {
             function NavigationLinksViewModel(params) {
@@ -11,9 +6,12 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var recentList = [];
                 var favoriteList = [];
                 var maxRecentSize = 10;
-                var smUrl = params.registryUrl();
-                var authToken = params.authToken();
-                var dfu = new dfumodel();
+                var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
+                var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+                var registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
+                var authToken = $.isFunction(params.authToken) ? params.authToken() : params.authToken;
+                
+                var dfu = new dfumodel(userName, tenantName);
                 
                 self.quickLinks = ko.observableArray();
                 self.favorites = ko.observableArray();
@@ -31,8 +29,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                         params.navLinksNeedRefresh(false);
                     }
                 });
-                
-//                refreshLinks();
                 
                 self.refresh = function() {
                     refreshLinks();
@@ -53,12 +49,18 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     return str;
                 };
                 
+                self.openLink = function(data, event) {
+                    if (data && data.href) {
+                        window.location.href = data.href;
+                    }
+                };
+                
                 function refreshLinks() {
                     recentList = [];
                     favoriteList = [];
-                    quickLinkList = dfu.discoverQuickLinks(smUrl, authToken);
+                    quickLinkList = dfu.discoverQuickLinks(registryUrl, authToken);
                     
-                    var dashboardUrl = dfu.discoverDFRestApiUrl(smUrl, authToken);
+                    var dashboardUrl = dfu.discoverDFRestApiUrl(registryUrl, authToken);
                     if (dashboardUrl && dashboardUrl !== '') {
                         var favoritesUrl = dashboardUrl + 'dashboards/favorites';
                         $.ajax({
