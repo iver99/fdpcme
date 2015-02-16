@@ -20,7 +20,7 @@ public class StringUtil
 		if (s == null) {
 			return true;
 		}
-		if (s.trim() == "") {
+		if ("".equals(s.trim())) {
 			return true;
 		}
 		return false;

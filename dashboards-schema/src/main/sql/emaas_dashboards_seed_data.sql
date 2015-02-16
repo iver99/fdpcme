@@ -148,17 +148,17 @@ dbhealth_screenshot);
 Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
   WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
 values (1,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../dependencies/widgets/onepage/js/onepageModel','../dependencies/widgets/onepage/onepageTemplate.html','ApmUI','0.1','home');
+  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','ApmUI','0.1','home');
 
 Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
   WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
 values (2,2,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../dependencies/widgets/onepage/js/onepageModel','../dependencies/widgets/onepage/onepageTemplate.html','EmcitasApplication','0.1','verticalApplication.db-perf');
+  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../dependencies/widgets/onepage/onepageTemplate.html','EmcitasApplication','0.1','verticalApplication.db-perf');
 
 Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
   WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
 values (3,3,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../dependencies/widgets/onepage/js/onepageModel','../dependencies/widgets/onepage/onepageTemplate.html','EmcitasApplication','0.1','verticalApplication.db-resource');
+  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplication','0.1','verticalApplication.db-resource');
 
 Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
 values (1,'SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
