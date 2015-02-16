@@ -49,6 +49,12 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     return str;
                 };
                 
+                self.openLink = function(data, event) {
+                    if (data && data.href) {
+                        window.location.href = data.href;
+                    }
+                };
+                
                 function refreshLinks() {
                     recentList = [];
                     favoriteList = [];
