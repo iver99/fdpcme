@@ -136,11 +136,6 @@ require(['knockout',
                 template:{require:'text!../emcsDependencies/demo/subscriberWidget/demo-subscriber.html'}
             });
             
-            ko.components.register("demo-iframe-widget",{
-                viewModel:{require:'../emcsDependencies/demo/iFrameWidget/js/demo-iframe'},
-                template:{require:'text!../emcsDependencies/demo/iFrameWidget/demo-iframe.html'}
-            });    
-            
             ko.components.register("demo-la-widget",{
                 viewModel:{require:'../emcsDependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
                 template:{require:'text!../emcsDependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
@@ -161,10 +156,10 @@ require(['knockout',
 //                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
 //            });
             
-//            ko.components.register("DF_V1_WIDGET_IFRAME",{
-//                viewModel:{require:'../emcsDependencies/widgets/iFrame/js/widget-iframe'},
-//                template:{require:'text!../emcsDependencies/widgets/iFrame/widget-iframe.html'}
-//            }); 
+            ko.components.register("DF_V1_WIDGET_IFRAME",{
+                viewModel:{require:'../emcsDependencies/widgets/iFrame/js/widget-iframe'},
+                template:{require:'text!../emcsDependencies/widgets/iFrame/widget-iframe.html'}
+            }); 
  
             ko.components.register("DF_V1_WIDGET_ONEPAGE",{
                 viewModel:{require:'../emcsDependencies/widgets/onepage/js/onepageModel'},
