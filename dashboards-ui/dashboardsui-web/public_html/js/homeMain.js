@@ -11,21 +11,21 @@
 requirejs.config({
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../dependencies/oraclejet/js/libs/knockout/knockout-3.2.0',
-        'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
-        'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
-        'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/min',
-        'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
-        'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
-        'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',
-        'crossroads': '../dependencies/oraclejet/js/libs/crossroads/crossroads.min',
-        'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
-        'text': '../dependencies/oraclejet/js/libs/require/text',
-        'promise': '../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'dfutil':'../dependencies/internaldfcommon/js/util/internal-df-util',
+        'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.2.0',
+        'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
+        'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
+        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.0.0/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.0.0/resources',
+        'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
+        'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
+        'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
+        'text': '../emcsDependencies/oraclejet/js/libs/require/text',
+        'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
         'dbs': '../js',
-        'require':'../dependencies/oraclejet/js/libs/require/require'
+        'require':'../emcsDependencies/oraclejet/js/libs/require/require'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -101,14 +101,14 @@ require(['dbs/dbsmodel',
         {
 //            if (!ko.components.isRegistered('df-nav-links')) {
 //                ko.components.register("df-nav-links",{
-//                    viewModel:{require:'../dependencies/navlinks/js/navigation-links'},
-//                    template:{require:'text!../dependencies/navlinks/navigation-links.html'}
+//                    viewModel:{require:'../emcsDependencies/navlinks/js/navigation-links'},
+//                    template:{require:'text!../emcsDependencies/navlinks/navigation-links.html'}
 //                });
 //            }
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
             }
             
@@ -142,10 +142,12 @@ require(['dbs/dbsmodel',
  
             function HeaderViewModel() {
                 var self = this;
-                self.smUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+                self.registryUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
                 self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
+                self.userName = dfu.getUserName();
+                self.tenantName = dfu.getTenantName();
+                self.appName = "Dashboard Framework";
             }
-
            
             dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();

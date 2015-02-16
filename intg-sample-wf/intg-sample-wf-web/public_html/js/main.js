@@ -134,6 +134,9 @@ require(['knockout',
                 var self = this;
                 self.registryUrl = "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
                 self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
+                self.userName = "SYSMAN";
+                self.tenantName = "TenantOPC1";
+                self.appName = "Integration Sample";
                 // 
                 // Dropdown menu states
                 // 
@@ -147,12 +150,6 @@ require(['knockout',
                         default:
                             // this.selectedMenuItem(ui.item.children("a").text());
                     }
-                };
-
-                // Data for application name
-                var appName = {
-                    "id": "qs",
-                    "name": "Enterprise Manager"
                 };
 
                 var cloudName ="Cloud Service";
@@ -190,9 +187,8 @@ require(['knockout',
                         }
                     ]
                 };
-
-                self.appId = appName.id;
-                self.appName = appName.name;
+                
+                self.productName = "Enterprise Manager";
                 self.cloudName = cloudName;
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
