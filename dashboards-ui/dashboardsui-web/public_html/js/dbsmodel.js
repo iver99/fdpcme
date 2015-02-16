@@ -105,7 +105,7 @@ function(dsf, oj, ko, $, dfu)
         self.confirmDialogModel = new confirmDialogModel();
         self.comingsoonDialogModel = new comingsoonDialogModel();
         
-        self.pageSize = ko.observable(20);
+        self.pageSize = ko.observable(120);
         
         self.serviceURL = dfu.discoverDFRestApiUrl()+"dashboards";
         //console.log("Service url: "+self.serviceURL);
