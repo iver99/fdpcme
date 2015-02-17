@@ -275,7 +275,7 @@ define(['knockout',
 
                 var result =null;
                 $.ajax(searchUrl,{
-                    headers:self.getSMRequestHeader(),
+                    headers:dfu.getSMRequestHeader(),
                     success:function(data, textStatus,jqXHR) {
                         result = data;
                     },
