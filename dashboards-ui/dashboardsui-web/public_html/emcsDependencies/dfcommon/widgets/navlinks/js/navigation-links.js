@@ -6,11 +6,12 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var recentList = [];
                 var favoriteList = [];
                 var maxRecentSize = 10;
+                var maxFavoriteSize = 5;
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
                 var authToken = $.isFunction(params.authToken) ? params.authToken() : params.authToken;
-                
+                var dashboardUrl = null;
                 var dfu = new dfumodel(userName, tenantName);
                 
                 self.quickLinks = ko.observableArray();
@@ -55,31 +56,131 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     }
                 };
                 
+                /**
+                * Discover available quick links by rel name 'quickLink'
+                * @param {String} smUrl
+                * @param {String} authToken
+                * @returns {Array} availableLinks
+                */
+                function discoverQuickLinks(smUrl, authToken) {
+                    var relName = 'quickLink';
+                    var availableLinks = [];
+                    var linksFromDashboard = [];
+                    var linksFromIntegrators = [];
+
+                    var fetchServiceQuickLinks = function(data) {
+                        var linkRecords = {};
+                        if (data.items && data.items.length > 0) {
+                             for (var i = 0; i < data.items.length; i++) {
+                                var serviceItem = data.items[i];
+                                if (serviceItem.links && serviceItem.links.length > 0) {
+                                    for (var j = 0; j < serviceItem.links.length; j++) {
+                                        var link = serviceItem.links[j];
+                                        var linkName = serviceItem.serviceName;
+                                        var isValidQuickLink = false;
+                                        if (link.rel.indexOf('/') > 0) {
+                                            var rel = link.rel.split('/');
+                                            if (rel[0] === relName) {
+                                                isValidQuickLink = true;
+                                                if (rel[1] && rel[1] !== '') {
+                                                    linkName = rel[1];
+                                                }
+                                            }
+                                        }
+                                        else if (link.rel === relName) {
+                                            isValidQuickLink = true;
+                                        }
+
+                                        if (isValidQuickLink) {
+                                            var linkItem = {name: linkName,
+                                                             href: link.href};
+                                            if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '0.1') {
+                                                if (linkRecords[linkName]) {
+                                                    if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
+                                                        linkRecords[linkName].href = link.href;
+                                                    }
+                                                }
+                                                else {
+                                                    linksFromDashboard.push(linkItem);
+                                                    linkRecords[linkName] = linkItem;
+                                                }
+                                            }
+                                            else {
+                                                if (linkRecords[linkName]) {
+                                                    if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
+                                                        linkRecords[linkName].href = link.href;
+                                                    }
+                                                }
+                                                else {
+                                                    linksFromIntegrators.push(linkItem);
+                                                    linkRecords[linkName] = linkItem;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                             for (var i = 0; i < linksFromDashboard.length; i++) {
+                                 availableLinks.push(linksFromDashboard[i]);
+                             }
+                             for (var j = 0; j < linksFromIntegrators.length; j++) {
+                                 availableLinks.push(linksFromIntegrators[j]);
+                             }
+                             self.quickLinks(availableLinks);
+                        }
+                    };                   
+                    var serviceUrl = dfu.buildFullUrl(smUrl,'instances');
+                    $.ajax({
+                        url: serviceUrl,
+                        headers: dfu.getSMRequestHeader(authToken),
+                        success: function(data, textStatus) {
+                            fetchServiceQuickLinks(data);
+                        },
+                        error: function(xhr, textStatus, errorThrown){
+                            console.log('Failed to get service instances by URL: '+serviceUrl);
+                            self.quickLinks(quickLinkList);
+                        },
+                        async: true
+                    });                
+                };
+                
                 function refreshLinks() {
                     recentList = [];
                     favoriteList = [];
-                    quickLinkList = dfu.discoverQuickLinks(registryUrl, authToken);
                     
-                    var dashboardUrl = dfu.discoverDFRestApiUrl(registryUrl, authToken);
+                    //Fetch available quick links from service manager registry
+                    if (self.quickLinks().length === 0) {
+                        discoverQuickLinks(registryUrl, authToken);
+                    }
+                    
+                    //Fetch favorite dashboards
+                    if (dashboardUrl === null)
+                        dashboardUrl = dfu.discoverDFRestApiUrl(registryUrl, authToken);
                     if (dashboardUrl && dashboardUrl !== '') {
                         var favoritesUrl = dashboardUrl + 'dashboards/favorites';
+                        var favoriteCnt = 0;
                         $.ajax({
                             url: favoritesUrl,
                             headers: dfu.getDashboardsRequestHeader(authToken),
                             success: function(data, textStatus) {
                                 if (data && data instanceof Array) {
-                                    for (i = 0; i < data.length; i++) {
+                                    for (i = 0; i < data.length && favoriteCnt < maxFavoriteSize; i++) {
                                         data[i].href = getDashboardOpenLink(data[i].id);
                                         favoriteList.push(data[i]);
+                                        favoriteCnt++;
                                     }
                                 }
+                                self.favorites(favoriteList);
                             },
                             error: function(xhr, textStatus, errorThrown){
                                 console.log('Error when fetching favorite dashboards!');
+                                self.favorites(favoriteList);
                             },
-                            async: false
+                            async: true
                         });
-
+                        
+                        //Fetch recent dashboards 
                         var recentDashboardsUrl = dashboardUrl + 'dashboards';
                         var recentCnt = 0;
                         $.ajax({
@@ -93,16 +194,15 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                                         recentCnt++;
                                     }
                                 }
+                                self.recents(recentList);
                             },
                             error: function(xhr, textStatus, errorThrown){
                                 console.log('Error when fetching recent dashboards!');
+                                self.recents(recentList);
                             },
-                            async: false
+                            async: true
                         });
                     }
-                    self.quickLinks(quickLinkList);
-                    self.favorites(favoriteList);
-                    self.recents(recentList);
                 };                          
             }
             return NavigationLinksViewModel;
