@@ -10,6 +10,14 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 self.cloudName = "Cloud Service";
                 self.appName = $.isFunction(params.appName) ? params.appName() : params.appName;
                 self.userTenantName = self.userName && self.tenantName ? self.userName + " (" + self.tenantName + ")" : "emaas.user@oracle.com";
+                var dfu = new dfumodel(self.userName, self.tenantName);
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(self.registryUrl, self.authToken);
+                
+                //SSO logout handler
+                self.handleSignout = function() {
+                    window.location.href = dfu.discoverLogoutUrl(self.registryUrl, self.authToken) + "?endUrl=" + ssoLogoutEndUrl;
+                };
+                
                 self.globalNavItems = [
                     {"label": "preferences",
                         "url": "#",
@@ -29,8 +37,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     }
                 ];
                 
-                var dfu = new dfumodel(self.userName, self.tenantName);
-                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(self.registryUrl, self.authToken);
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
                 var cssFile = getFilePath(localrequire, '../../../css/dashboards-common-alta.css');
@@ -44,13 +50,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     });
                 }
                 
-                /**
-                * SSO logout handler
-                */
-                self.handleSignout = function() {
-                    window.location.href = dfu.discoverLogoutUrl(registryUrl, authToken) + "?endUrl=" + ssoLogoutEndUrl;
-                };
-
                 // Dropdown menu states
                 self.selectedMenuItem = ko.observable("(None selected yet)");
                 
