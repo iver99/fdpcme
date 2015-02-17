@@ -199,7 +199,81 @@ role value for that section to represent the appropriate content type.
                         </div>
                     </div>
                     <!-- Confirmation dilog end -->
-
+                    
+                    <!-- welcome dialog start -->
+                    <div style="height: 500px; background-color: white;" id="overviewDialog" 
+                         data-bind="ojComponent:{
+                            component: 'ojDialog', 
+                            initialVisibility: (welcomeDialogModel.showWelcome === true ? 'show' : 'hide'),
+                            rootAttributes: { style: 'width: 900px; height: 520px; background-color:white'}}" >
+                        <div class="oj-dialog-header oj-helper-clearfix" style="background-color: white;background-image: none;border-color: white;">
+                        </div>
+                    <!--div id="ojDialogPlaceHolderHeader-overviewDialog" style="display: none;"></div-->
+                    <div class="oj-dialog-body" style="background-color:white">
+                    <div align="center"> 
+                        <span data-bind="text:'Welcome, ' + welcomeDialogModel.userName + '!'" style="font-size:24px;"></span> 
+                    </div>
+                    <table style="width:100%; height:300px; vertical-align:top; margin-top:80px;">
+                    <tbody>
+                        <tr style="height:103px; ">
+                            <td width="33%" class="dbs-welcome-centeredImage">
+                                <img src="css/images/browse.png" alt="browse">                    
+                            </td>
+                            <td width="33%" class="dbs-welcome-centeredImage">
+                                <img src="css/images/build.png" alt="build">                    
+                            </td>
+                            <td width="33%" class="dbs-welcome-centeredImage">
+                                <img src="css/images/explore.png" alt="explore">                    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><div style="margin-top: 20px"></div></td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <td width="33%">
+                                <div class="dbs-welcome-content">                                
+                                    <!--h3 style="text-align: center;">
+                                        Browse
+                                    </h3-->
+                                    <p style="text-align: center; font-size: 14px;"> 
+                                        <a data-bind="click: welcomeDialogModel.browseClicked">Browse</a> through our rich gallery of analytics solutions.
+                                    </p>
+                                </div>
+                            </td><td width="33%">
+                                <div class="dbs-welcome-content">                                
+                                    <!--h3 style="text-align: center;">Build</h3-->
+                                    <p style="text-align: center; font-size: 14px;"> 
+                                        <a data-bind="click: welcomeDialogModel.buildClicked">Build</a> custom and personal dashboards using our out-of-the box widgets.
+                                    </p>
+                                </div>
+                            </td>
+                            <td width="33%">
+                                <div class="dbs-welcome-content">                                
+                                    <!--h3 style="text-align: center;">Explore</h3-->
+                                    <p style="text-align: center; font-size: 14px;"> 
+                                        <a data-bind="click: welcomeDialogModel.exploreClicked">Explore</a> data, set visualization controls, and save widgets.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><div style="margin-top: 40px"></div></td>
+                        </tr>
+                        <tr style="vertical-align: top">
+                            <td colspan="3">
+                                <div align="center">
+                                    <button id="overviewClose"
+                                            data-bind="ojComponent: {component: 'ojButton', label: 'Got it!', rootAttributes:{class:'dbs-home-button'}}, 
+                                            click:function(){$('#overviewDialog').ojDialog('close');}"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    </table>  
+                    </div>
+                    </div>
+                    <!-- welcome dialog end -->
+                    
                     <div style="display:none" id="dbs_comingsoonDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',rootAttributes: { style: 'min-width: 300px; min-height:100px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">

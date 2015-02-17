@@ -94,10 +94,33 @@ function(dsf, oj, ko, $, dfu)
         };
     };
     
+    function welcomeDialogModel() {
+        var self = this;
+        self.showWelcome = true;
+        self.userName = "SYSMAN";
+        
+        self.browseClicked = function() {
+            $('#overviewDialog').ojDialog('close');
+        };
+        self.buildClicked = function() {
+            $('#overviewDialog').ojDialog('close');
+            $('#cbtn').focus();
+        };
+        self.exploreClicked = function() {
+            $('#overviewDialog').ojDialog('close');
+            $('#exploreDataBtn').focus();
+        };
+        self.gotClicked = function() {
+            self.showWelcome = false;
+            $('#overviewDialog').ojDialog('close');
+        };
+    };
+    
     function ViewModel() {
         
         var self = this;
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
+        self.welcomeDialogModel = new welcomeDialogModel();
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
