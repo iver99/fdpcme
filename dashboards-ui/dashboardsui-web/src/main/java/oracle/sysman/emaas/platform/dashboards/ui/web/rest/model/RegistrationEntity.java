@@ -38,7 +38,8 @@ public class RegistrationEntity
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
 	public static final String NAME_DASHBOARD_UI_VERSION = "0.1";
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
-	public static final String NAME_REGISTRY__VERSION = "0.1";
+	public static final String NAME_REGISTRY_VERSION = "0.1";
+	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
@@ -102,7 +103,9 @@ public class RegistrationEntity
 	 */
 	public String getRegistryUrl()
 	{
-		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_REGISTRY_SERVICENAME, NAME_REGISTRY__VERSION);
+		Link link = RegistryLookupUtil.getServiceExternalLink(NAME_REGISTRY_SERVICENAME, NAME_REGISTRY_VERSION,
+				NAME_REGISTRY_REL_SSO);
+		return link != null ? link.getHref() : null;
 	}
 
 	/**
