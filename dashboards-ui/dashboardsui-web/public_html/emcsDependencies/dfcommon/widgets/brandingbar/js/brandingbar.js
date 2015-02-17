@@ -31,7 +31,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         "url": "#",
                         "onclick": ""
                     },
-                    {"label": "Sign out",
+                    {"label": "Sign Out",
                         "url": "#",
                         "onclick": self.handleSignout
                     }
