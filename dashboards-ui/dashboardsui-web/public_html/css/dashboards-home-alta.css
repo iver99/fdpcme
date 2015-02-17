@@ -68,8 +68,10 @@
 }
 
 .dbs-summary-container.active {
-    border: solid thick;
-    border-color: #85bbe7; 
+    /*border: solid thick;*/
+    /*border-color: #85bbe7;*/ 
+    border: solid thin;
+    border-color: #0572ce;
     cursor: pointer;
 }
 
