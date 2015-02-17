@@ -19,19 +19,19 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 };
                 
                 self.globalNavItems = [
-                    {"label": "preferences",
+                    {"label": "Preferences",
                         "url": "#",
                         "onclick": ""
                     },
-                    {"label": "help",
+                    {"label": "Help",
                         "url": "#",
                         "onclick": ""
                     },
-                    {"label": "about",
+                    {"label": "About",
                         "url": "#",
                         "onclick": ""
                     },
-                    {"label": "sign out",
+                    {"label": "Sign out",
                         "url": "#",
                         "onclick": self.handleSignout
                     }
