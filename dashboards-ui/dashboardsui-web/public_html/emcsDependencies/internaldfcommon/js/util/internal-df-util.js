@@ -33,7 +33,7 @@ define(['knockout',
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    var url = dfu.discoverUrl("SavedSearch","0.1",null, regInfo.registryUrl, regInfo.authToken);
+                    var url = dfu.discoverUrl("SavedSearch","0.1","sso.endpoint/virtual", regInfo.registryUrl, regInfo.authToken);
                     if (url){
                         return url;
                     }else{

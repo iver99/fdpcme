@@ -142,7 +142,7 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function(smUrl, authToken) {
-                var url = self.discoverUrl("Dashboard-UI","0.1",'home', smUrl, authToken);
+                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home', smUrl, authToken);
                 if (url){
                     return url;
                 }else{
@@ -158,7 +158,7 @@ define(['knockout',
              * @returns {String} url 
              */
             self.discoverDFRestApiUrl = function(smUrl, authToken) {
-                var url = self.discoverUrl("Dashboard-API","0.1",null, smUrl, authToken);
+                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual", smUrl, authToken);
                 
                 if (url){
                     return url;
@@ -174,7 +174,7 @@ define(['knockout',
              * @returns {Object} 
              */
             self.getSMRequestHeader = function(authToken) {
-                var defHeader = {"Authorization": authToken,"X-USER-IDENTITY-DOMAIN-NAME":"dummy"};
+                var defHeader = {/*"Authorization": authToken,*/"X-USER-IDENTITY-DOMAIN-NAME":"dummy"};
                 console.log("Sent Header: "+JSON.stringify(defHeader));
                 return defHeader;
             };
@@ -185,7 +185,7 @@ define(['knockout',
              * @returns {Object} 
              */
             self.getDefaultHeader = function(authToken) {
-                var defHeader = {"Authorization": authToken,
+                var defHeader = {/*"Authorization": authToken,*/
                     "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
                     "X-REMOTE-USER":self.tenantName+'.'+self.userName};
                 console.log("Sent Header: "+JSON.stringify(defHeader));
