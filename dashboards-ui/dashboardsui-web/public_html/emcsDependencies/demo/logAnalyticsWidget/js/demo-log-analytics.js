@@ -101,11 +101,13 @@ define([
             
             function fetchResults() {
                 $.ajax({type: 'POST', contentType:'application/json',url: qlBaseUrl+'jobs', data: ko.toJSON(queryString),
-                    headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1","Authorization":dfu.getAuthorizationRequestHeader().Authorization},
+                    headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1"
+                        ,"Authorization":"Basic d2VibG9naWM6d2VsY29tZTE="},
                     success: function(data, textStatus){
                         var resultsUrl = qlBaseUrl + data.job.queries.demoEMQLVizQuery.resultsLink; 
                         $.ajax({type: 'GET', contentType:'application/json',url: resultsUrl,
-                            headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1","Authorization":dfu.getAuthorizationRequestHeader().Authorization},
+                            headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1"
+                                ,"Authorization":"Basic d2VibG9naWM6d2VsY29tZTE="},
                             success: function(data, textStatus){
                                 if (data.results && data.results.length > 0) {
                                     if (data.columns.length === 3) {

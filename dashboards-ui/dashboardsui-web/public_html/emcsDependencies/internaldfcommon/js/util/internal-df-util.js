@@ -32,8 +32,8 @@ define(['knockout',
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    var url = dfu.discoverUrl("SavedSearch","0.1","sso.endpoint/virtual", regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    var url = dfu.discoverUrl("SavedSearch","0.1","sso.endpoint/virtual", regInfo.registryUrl);
                     if (url){
                         return url;
                     }else{
@@ -52,8 +52,8 @@ define(['knockout',
              */
             self.discoverDFRestApiUrl = function() {
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    return dfu.discoverDFRestApiUrl(regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    return dfu.discoverDFRestApiUrl(regInfo.registryUrl);
                 }else{
                     console.log("Failed to discovery DF REST API end point");
                     return null;
@@ -86,8 +86,8 @@ define(['knockout',
              */
             self.discoverQuickLinks = function() {
             	var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    return discoverLinks('quickLink',regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    return discoverLinks('quickLink',regInfo.registryUrl);
                 }
                 else {
                     return [];
@@ -100,8 +100,8 @@ define(['knockout',
              */
             self.discoverVisualAnalyzerLinks = function() {
             	var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    return discoverLinks('visualAnalyzer',regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    return discoverLinks('visualAnalyzer',regInfo.registryUrl);
                 }
                 else {
                     return [];
@@ -156,12 +156,7 @@ define(['knockout',
             self.buildFullUrl=function(root, path){
                 return dfu.buildFullUrl(root, path);
             };
-            
-            self.getAuthToken = function() {
-                var regInfo = self.getRegistrationInfo();
-                return regInfo && regInfo.authToken ? regInfo.authToken : '';
-            };
-            
+                        
             self.getRegistryUrl = function() {
                 var regInfo = self.getRegistrationInfo();
                 return regInfo && regInfo.registryUrl ? regInfo.registryUrl : '';
@@ -169,21 +164,16 @@ define(['knockout',
             
             /**
              * Get request header for Saved Search Service API call
-             * @param {String} authToken
              * @returns {Object} 
              */
             self.getSavedSearchServiceRequestHeader=function() {
-                return dfu.getDefaultHeader(self.getAuthToken());
+                return dfu.getDefaultHeader();
             };
             
             self.getDashboardsRequestHeader = function() {
-                return dfu.getDashboardsRequestHeader(self.getAuthToken());
+                return dfu.getDashboardsRequestHeader();
             };
-            
-            self.getAuthorizationRequestHeader=function() {
-                return {"Authorization": self.getAuthToken()};
-            };
-            
+                        
             self.getUserTenant = function() {
                 return userTenant;
             };
@@ -197,8 +187,8 @@ define(['knockout',
              */
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot, regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot, regInfo.registryUrl);
                     if (assetRoot){
                         return assetRoot;
                     }else{
@@ -260,10 +250,9 @@ define(['knockout',
              * Discover available links by rel name
              * @param {String} relName
              * @param {String} smUrl
-             * @param {String} authToken
              * @returns {Array} availableLinks
              */
-            function discoverLinks(relName, smUrl, authToken) {
+            function discoverLinks(relName, smUrl) {
                 var availableLinks = [];
                 var linksFromDashboard = [];
                 var linksFromIntegrators = [];
@@ -325,7 +314,7 @@ define(['knockout',
                 var serviceUrl = self.buildFullUrl(smUrl,'instances');
                 $.ajax({
                     url: serviceUrl,
-                    headers: dfu.getSMRequestHeader(authToken),
+                    headers: dfu.getSMRequestHeader(),
                     success: function(data, textStatus) {
                         fetchServiceQuickLinks(data);
                     },
