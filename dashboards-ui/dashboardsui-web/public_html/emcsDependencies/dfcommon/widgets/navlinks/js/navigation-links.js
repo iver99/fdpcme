@@ -10,7 +10,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
-                var authToken = $.isFunction(params.authToken) ? params.authToken() : params.authToken;
                 var dashboardUrl = null;
                 var dfu = new dfumodel(userName, tenantName);
                 
@@ -59,10 +58,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 /**
                 * Discover available quick links by rel name 'quickLink'
                 * @param {String} smUrl
-                * @param {String} authToken
                 * @returns {Array} availableLinks
                 */
-                function discoverQuickLinks(smUrl, authToken) {
+                function discoverQuickLinks(smUrl) {
                     var relName = 'quickLink';
                     var availableLinks = [];
                     var linksFromDashboard = [];
@@ -133,7 +131,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     var serviceUrl = dfu.buildFullUrl(smUrl,'instances');
                     $.ajax({
                         url: serviceUrl,
-                        headers: dfu.getSMRequestHeader(authToken),
+                        headers: dfu.getSMRequestHeader(),
                         success: function(data, textStatus) {
                             fetchServiceQuickLinks(data);
                         },
@@ -151,18 +149,18 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     
                     //Fetch available quick links from service manager registry
                     if (self.quickLinks().length === 0) {
-                        discoverQuickLinks(registryUrl, authToken);
+                        discoverQuickLinks(registryUrl);
                     }
                     
                     //Fetch favorite dashboards
                     if (dashboardUrl === null)
-                        dashboardUrl = dfu.discoverDFRestApiUrl(registryUrl, authToken);
+                        dashboardUrl = dfu.discoverDFRestApiUrl(registryUrl);
                     if (dashboardUrl && dashboardUrl !== '') {
                         var favoritesUrl = dashboardUrl + 'dashboards/favorites';
                         var favoriteCnt = 0;
                         $.ajax({
                             url: favoritesUrl,
-                            headers: dfu.getDashboardsRequestHeader(authToken),
+                            headers: dfu.getDashboardsRequestHeader(),
                             success: function(data, textStatus) {
                                 if (data && data instanceof Array) {
                                     for (i = 0; i < data.length && favoriteCnt < maxFavoriteSize; i++) {
@@ -185,7 +183,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                         var recentCnt = 0;
                         $.ajax({
                             url: recentDashboardsUrl,
-                            headers: dfu.getDashboardsRequestHeader(authToken),
+                            headers: dfu.getDashboardsRequestHeader(),
                             success: function(data, textStatus) {
                                 if (data && data.dashboards instanceof Array) {
                                     for (i = 0; i < data.dashboards.length && recentCnt < maxRecentSize; i++) {
