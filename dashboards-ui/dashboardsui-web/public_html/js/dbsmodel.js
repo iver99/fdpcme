@@ -97,7 +97,7 @@ function(dsf, oj, ko, $, dfu)
     function welcomeDialogModel() {
         var self = this;
         self.showWelcome = true;
-        self.userName = "SYSMAN";
+        self.userName = dfu.getUserName();
         
         self.browseClicked = function() {
             $('#overviewDialog').ojDialog('close');
