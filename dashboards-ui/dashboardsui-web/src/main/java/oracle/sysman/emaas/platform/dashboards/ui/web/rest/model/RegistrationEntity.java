@@ -76,10 +76,10 @@ public class RegistrationEntity
 	/**
 	 * @return the authorizationHeader
 	 */
-	public String getAuthToken()
-	{
-		return new String(LookupManager.getInstance().getAuthorizationToken());
-	}
+	//	public String getAuthToken()
+	//	{
+	//		return new String(LookupManager.getInstance().getAuthorizationToken());
+	//	}
 
 	/**
 	 * @return the rest API end point for dashboard framework
