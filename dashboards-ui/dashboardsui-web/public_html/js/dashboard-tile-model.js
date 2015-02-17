@@ -140,6 +140,15 @@ define(['knockout',
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                 kocTemplate = assetRoot + kocTemplate;
             registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+
+            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                var visualAnalyzerUrl = dfu.discoverQuickLink(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),"visualAnalyzer");
+                if (visualAnalyzerUrl){
+                    tile.configure = function(){
+                        window.open(visualAnalyzerUrl);
+                    }
+                }
+            }
             tile.shouldHide = ko.observable(false);
             tile.clientGuid = dfu.guid();
             tile.widerEnabled = ko.computed(function() {

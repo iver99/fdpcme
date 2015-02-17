@@ -247,6 +247,62 @@ define(['knockout',
             };
             
             /**
+             * Discover quick link
+             * @param {type} serviceName
+             * @param {type} version
+             * @param {type} rel
+             * @returns {result@arr;items@arr;links.href}
+             */
+            self.discoverQuickLink = function(serviceName, version, rel){
+                var regInfo = self.getRegistrationInfo();
+                var smUrl = null;
+                if (regInfo && regInfo.registryUrl){
+                    smUrl = regInfo.registryUrl;
+                }
+                if (typeof smUrl!=="string"){
+                     console.log("Error: Failed to discovery link, SM URL="+smUrl);
+                    return null;                    
+                }
+                if (serviceName===null || serviceName===undefined){
+                    console.log("Error: Failed to discovery link, serviceName="+serviceName);
+                    return null;
+                }
+                var searchUrl = self.buildFullUrl(smUrl,"instances")+"?serviceName="+serviceName;
+                
+                if (typeof version==="string"){
+                    searchUrl = searchUrl +"&version="+version;
+                }
+
+                var result =null;
+                $.ajax(searchUrl,{
+                    headers:self.getSMRequestHeader(),
+                    success:function(data, textStatus,jqXHR) {
+                        result = data;
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        console.log("Error: link not found due to error: "+textStatus);
+                    },
+                    async:false
+                });
+                
+                if (result && result.total>0){
+                    if (typeof rel==="string"){
+                        if (Array.isArray(result.items[0].links) && result.items[0].links.length>0){
+                            for(var i=0;i<result.items[0].links.length;i++){
+                                var link = result.items[0].links[i];
+                                if (link.rel.indexOf(rel)===0){
+                                    console.log("link found by serviceName="+serviceName+", version="+version+", rel="+rel); 
+                                    return link.href;
+                                }
+                            }
+                        }
+                    }
+                }
+                console.log("Warning: link not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
+                return null;
+            };
+            
+            /**
              * Discover available links by rel name
              * @param {String} relName
              * @param {String} smUrl
