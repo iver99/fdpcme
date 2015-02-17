@@ -145,7 +145,7 @@ define(['knockout',
                 var visualAnalyzerUrl = dfu.discoverQuickLink(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),"visualAnalyzer");
                 if (visualAnalyzerUrl){
                     tile.configure = function(){
-                        window.open(visualAnalyzerUrl);
+                        window.open(visualAnalyzerUrl+"?widgetId="+tile.WIDGET_UNIQUE_ID());
                     }
                 }
             }
