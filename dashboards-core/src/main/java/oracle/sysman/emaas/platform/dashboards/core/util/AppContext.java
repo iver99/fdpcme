@@ -16,10 +16,10 @@ public class AppContext
 
 	}
 
-	public String getCurrentUser()
-	{
-		return "SYSMAN";
-	}
+	//	public String getCurrentUser()
+	//	{
+	//		return "SYSMAN";
+	//	}
 
 	public Locale getLocale()
 	{

@@ -44,7 +44,8 @@
     vertical-align: top;
     background: #ffffff;
     border: 1px solid #d6dfe6;
-    border-color: #d6dfe6;
+    /*border-color: #d6dfe6;*/
+    border-color: #999999;    
     border-radius: 1px;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -65,7 +66,9 @@
 }
 
 .dbs-summary-header-title {
-    text-align: center;
+    //text-align: center;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .dbs-summary-header-title.active {

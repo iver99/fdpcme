@@ -24,8 +24,8 @@ dependencies
 	deploy (project(path:':dashboards-ui:dashboardsui-web', configuration:'archives')) {transitive = false}
 	
 	earlib (project(':dashboards-ui:dashboardsui-webutils')){transitive = false} 
-	earlib(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.5') {transitive=false }
-	earlib(group: 'emaas.platform', name: 'registry-client', version: '0.23.5') {transitive=false }	
+	earlib(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6') {transitive=false }
+	earlib(group: 'emaas.platform', name: 'registry-client', version: '0.23.6') {transitive=false }	
 	earlib (group: 'log4j', name: 'log4j', version: '1.2.17') {transitive=false }
 }
 

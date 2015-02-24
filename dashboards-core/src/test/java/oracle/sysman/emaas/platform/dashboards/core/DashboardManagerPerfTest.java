@@ -6,6 +6,7 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -28,6 +29,7 @@ public class DashboardManagerPerfTest
 
 	static {
 		PersistenceManager.setTestEnv(true);
+		UserContext.setCurrentUser("SYSMAN");
 	}
 
 	@AfterClass
@@ -122,12 +124,18 @@ public class DashboardManagerPerfTest
 	}
 
 	@Test
-	public void test5thSimgleQueryPerformance() throws DashboardException
+	public void test5thSimgleQueryPerformance()
 	{
+		// better to update the dashboardId in your own environment manually
 		Long dashboardId = 999L;
 		String dashboardName = "dashboard updated";
 		long start = System.currentTimeMillis();
-		dm.getDashboardById(dashboardId, tenantId);
+		try {
+			dm.getDashboardById(dashboardId, tenantId);
+		}
+		catch (DashboardException e) {
+			// for dashboard exception, means dashboard not found. just ignore
+		}
 		long end = System.currentTimeMillis();
 		System.out.println("Time spent to query one dashboard by ID from " + NUM_DASHBOARDS_FOR_PERF_TEST + " dashboards: "
 				+ (end - start) + "ms");

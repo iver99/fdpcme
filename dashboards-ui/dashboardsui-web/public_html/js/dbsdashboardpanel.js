@@ -54,10 +54,11 @@ ko.bindingHandlers.dbsDashboardPanel = {
     }
 };
 
-var TITLE_MAX_LENGTH = 25,
+var TITLE_MAX_LENGTH = 34,
     DESCRIPTION_MAX_LENGTH = 256,
-    WIGDET_NAME_MAX_LENGTH = 30,
-    DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE";
+    WIGDET_NAME_MAX_LENGTH = 34,
+    DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE",
+    TAB_INDEX_ATTR = "tabindex";
 
 
 $.widget('dbs.dbsDashboardPanel',
@@ -202,6 +203,11 @@ $.widget('dbs.dbsDashboardPanel',
             self.titleElement = $("<div><h2>" + _title + "</h2></div>")
                                   .addClass(self.classNames['headerTitle']);
             self.headerElement.append(self.titleElement); 
+            if (self.options['dashboard'].name &&  self.options['dashboard'].name.length > TITLE_MAX_LENGTH)
+            {
+                //self.headerElement.attr("dbstooltip", self.options['dashboard'].name);
+                self.headerElement.attr("title", self.options['dashboard'].name);
+            }
             
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
@@ -250,7 +256,7 @@ $.widget('dbs.dbsDashboardPanel',
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
             //image page
-            self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']);//.attr('src', _image);
+            self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']).attr('alt', "");
             self.contentPage1Ele = $("<div></div>")//.addClass(self.classNames['active'])
                     .addClass(self.classNames['page']);//.append(self.contentPage1ImgEle);
             self.contentPage1Ele.append(self.contentPage1ImgEle);
@@ -267,9 +273,9 @@ $.widget('dbs.dbsDashboardPanel',
                    url: self.options['dashboard']['screenShotHref'], 
                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
                    success: function(response){
-                       var __ss = response;
+                       var __ss = (response.screenShot ? response.screenShot : undefined);
                        self.contentPage1ImgEle.attr("src", __ss);
-                       if (_dmodel && __ss)
+                       if (_dmodel)
                        {
                            //_dmodel.set("screenShot", _ss);
                            _dmodel['screenShot'] = __ss;
@@ -295,9 +301,13 @@ $.widget('dbs.dbsDashboardPanel',
             if (_wdts && _wdts.length > 0)
             {
                 $.each(_wdts, function( index, widget ) {
-                    self.contentPage3CntEle
-                            .append($("<li ></li>")
-                            .text(self._truncateString(widget['title'], WIGDET_NAME_MAX_LENGTH)));
+                    var __tileEle = $("<li ></li>")
+                            .text(self._truncateString(widget['title'], WIGDET_NAME_MAX_LENGTH));
+                    if (widget['title'] && widget['title'].length > WIGDET_NAME_MAX_LENGTH)
+                    {
+                        __tileEle.attr("title", widget['title']);
+                    }
+                    self.contentPage3CntEle.append(__tileEle);
                 //alert( index + ": " + value ); 
                 });
             }
@@ -318,21 +328,39 @@ $.widget('dbs.dbsDashboardPanel',
                     .bind('click.' + _name, function (event) {
                         self._goToPage(1);
                         event.stopPropagation();
-                    });
+                    }).keydown(function(event){ 
+                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
+                        if (keyCode === 13) { // enter key
+                            self._goToPage(1);
+                            event.stopPropagation();
+                        }
+                    }).attr(TAB_INDEX_ATTR, '0').attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'));
             self.contentCtlsEle.append(self.contentCtl1Ele);
             self.contentCtl2Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
                     .bind('click.' + _name, function (event) {
                         self._goToPage(2);
                         event.stopPropagation();
-                    });
+                    }).keydown(function(event){ 
+                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
+                        if (keyCode === 13) { // enter key
+                            self._goToPage(2);
+                            event.stopPropagation();
+                        }
+                    }).attr(TAB_INDEX_ATTR, '0').attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'));
             self.contentCtlsEle.append(self.contentCtl2Ele);
             self.contentCtl3Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
                     .bind('click.' + _name, function (event) {
                         self._goToPage(3);
                         event.stopPropagation();
-                    });
+                    }).keydown(function(event){ 
+                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
+                        if (keyCode === 13) { // enter key
+                            self._goToPage(3);
+                            event.stopPropagation();
+                        }
+                    }).attr(TAB_INDEX_ATTR, '0').attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_WIDGETS'));
             self.contentCtlsEle.append(self.contentCtl3Ele);
         },
         

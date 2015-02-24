@@ -21,20 +21,19 @@ define([
 ],
 function(dsf, oj, ko, $, dfu)
 {
-    var RECENT_MAX_SIZE = 10;
     
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
         self.description = ko.observable('');
-        self.timeRangeFilterValue = ko.observable(["OFF"]);
+        self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);
         self.isDisabled = ko.observable(false);
         
         self.clear = function() {
             self.name(undefined);
             self.description('');
-            self.timeRangeFilterValue(["OFF"]);
+            self.timeRangeFilterValue(["ON"]);
             self.targetFilterValue(["OFF"]);
             self.isDisabled(false);
         };
@@ -47,36 +46,14 @@ function(dsf, oj, ko, $, dfu)
             }
             return false;
         };
-    };
-    
-    function navigationsPopupModel() {
-        var self = this;
-        self.homeLink = document.location.protocol + '//' + document.location.host + '/emcpdfui/home.html';
-        self.dataVisualLink = "http://slc08upj.us.oracle.com:7201/emlacore/faces/core-logan-observation-search";//TODO
-        self.quickLinks = ko.observableArray(dfu.discoverQuickLinks());
-        self.favorites = ko.observableArray();
-        self.recents = ko.observableArray();
-        self.addFavorite = function(dashboard) {
-            if (self.favorites.indexOf(dashboard) < 0)
-            {
-                self.favorites.push(dashboard);
-            }
-        };
-        self.removeFavorite = function(dashboard) {
-            self.favorites.remove(function(item) { return item.id === dashboard.id; });
-        };
-        self.addRecent = function(dashboard) {
-            if (self.recents.indexOf(dashboard) < 0)
-            {
-                if (self.recents().length >= RECENT_MAX_SIZE) self.recents.shift();
-                self.recents.unshift(dashboard);
-            }
-        };
-        self.removeRecent = function(dashboard) {
-            self.recents.remove(function(item) { return item.id === dashboard.id; });
+        
+        self.keydown = function (d, e) {
+           if (e.keyCode === 13) {
+              $( "#cDsbDialog" ).ojDialog( "close" );
+           }
         };
     };
-    
+        
     function confirmDialogModel(title, okLabel, message, okFunction) {
         var self = this;
         //self.style = ko.observable('min-width: 450px; min-height:150px;');
@@ -101,6 +78,12 @@ function(dsf, oj, ko, $, dfu)
         self.close = function () {
             $( "#dbs_cfmDialog" ).ojDialog( "close" );
         };
+        
+        self.keydown = function (d, e) {
+           if (e.keyCode === 13) {
+             self.close();
+           }
+        };
     }; 
 
     function comingsoonDialogModel() {
@@ -120,9 +103,7 @@ function(dsf, oj, ko, $, dfu)
         self.selectedDashboard = ko.observable(null);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
-        self.navigationsPopupModel = new navigationsPopupModel(); // should be removed when nav is ok
         self.comingsoonDialogModel = new comingsoonDialogModel();
-        self.navLinksNeedRefresh = ko.observable(false);
         
         self.pageSize = ko.observable(20);
         
@@ -148,7 +129,6 @@ function(dsf, oj, ko, $, dfu)
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
-            //self.navigationsPopupModel.addRecent(data.dashboard);
             //data.dashboard.openDashboard();
             data.dashboardModel.openDashboardPage();
         };
@@ -272,7 +252,6 @@ function(dsf, oj, ko, $, dfu)
         self.forceSearch = function (event, data)
         {
             $("#sinput").dbsTypeAhead("forceSearch");
-            //self.updateDashboard({id:10058});
         };
         
         self.updateDashboard = function (dsb)
@@ -282,7 +261,6 @@ function(dsf, oj, ko, $, dfu)
             {
                 self.datasource['pagingDS'].refreshModel(_id, {
                     success: function(model) {
-                        model.set("name", "test");
                         var _e = $(".dbs-summary-container[aria-dashboard=\""+_id+"\"]");
                         if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
                     },
@@ -306,10 +284,6 @@ function(dsf, oj, ko, $, dfu)
             }*/
         };
         
-        self.getNavigationsModel = function()
-        {
-            return self.navigationsPopupModel;
-        };
     };
     
     

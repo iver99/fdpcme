@@ -18,8 +18,9 @@ define({
       "COMMON_TEXT_ERROR": "Error",
       "COMMON_REQUIRE_ERROR": "{0} is required",
       "COMMON_SERVER_ERROR": "Error on accessing server",
+      "DBS_HOME_SEARCH_ARIA_LABEL": "Search for a Dashboard",
       "DBS_HOME_SEARCH_PLACE_HODE": "Enter search criteria",
-      "DBS_HOME_CREATE_BTN_LABEL": "Create New Dashboard",
+      "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
       "DBS_HOME_EXPLORE_BTN_LABEL": "Explore Data",
       "DBS_HOME_CREATE_DLG_TITLE": "Create Dashboard",
       "DBS_HOME_CREATE_DLG_NAME": "Name",
@@ -32,7 +33,9 @@ define({
       "DBS_HOME_CFM_DLG_DELETE_DSB_MSG": "Do you want to delete the selected dashboard '{0}'?",
       "DBS_HOME_CFM_DLG_DELETE_DSB_ERROR": "Error for deleting dashboard.",
       "DBS_HOME_DSB_PANEL_WIDGETS": "Widgets",
-      
+      "DBS_HOME_DSB_PAGE_SCREEN_SHOT": "Screen shot",
+      "DBS_HOME_DSB_PAGE_DESCRIPTION": "Description",
+      "DBS_HOME_DSB_PAGE_WIDGETS": "Widgets"
 },
   "fr": true,
   "cs": true

@@ -1,13 +1,17 @@
 <div id="df_div_widget_iframe" class="oj-panel" style="width:100%;height:100%;background-color: white; border-top: 0px;border-width: 0px">
-    <iframe style="width:99%;height:100%;" id="df_iframe" data-bind="attr: {src: targetUrl}"></iframe>
+    <div class="oj-row" style="height:100%;">
+        <div class="oj-col oj-sm-12" style="height:100%;">
+            <iframe style="width:99%;height:100%;" id="df_iframe" data-bind="attr: {src: targetUrl}"></iframe>
+        </div>
+    </div>
 </div>
 
 <div style="display:none" 
-     data-bind="attr: {'id': 'iframe_configDialog_' + clientGuid},ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'none', rootAttributes: { style: 'min-width: 500px; min-height:120px;'}}">
+     data-bind="attr: {'id': 'iframe_configDialog_' + clientGuid},ojComponent:{component: 'ojDialog', initialVisibility: 'hide',rootAttributes: { style: 'min-width: 500px; min-height:120px;'}}">
     <div class="oj-dialog-header oj-helper-clearfix">
-        <div class="oj-dialog-header-close-wrapper" >
+<!--        <div class="oj-dialog-header-close-wrapper" >
             <a class="df-dialog-header-close" data-bind="click: close">CLOSE</a>
-        </div>
+        </div>-->
         <span class="oj-dialog-title" data-bind="text: 'Configuration'"></span>
     </div>
     <div class="oj-dialog-body">

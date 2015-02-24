@@ -11,7 +11,6 @@ define(['knockout', 'jquery', 'dfutil'],
                 var recentList = [];
                 var favoriteList = [];
                 var maxRecentSize = 10;
-//                self.needRefresh = params.navLinksNeedRefresh
                 
                 self.quickLinks = ko.observableArray();
                 self.favorites = ko.observableArray();
@@ -37,7 +36,7 @@ define(['knockout', 'jquery', 'dfutil'],
                 };
                 
                 function getDashboardOpenLink(dashboardId) {
-                    return document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId=' + dashboardId;
+                    return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + dashboardId;
                 };
                 
                 function refreshLinks() {
@@ -88,16 +87,7 @@ define(['knockout', 'jquery', 'dfutil'],
                     self.quickLinks(quickLinkList);
                     self.favorites(favoriteList);
                     self.recents(recentList);
-                };          
-//                var openDashboard = function(href) {
-//                    window.open("http://localhost:8383/emcpdfui/builder.html?dashboardId=10001");
-//                };
-//                var dashboard = [{name: "Dashboard Test", 
-//                            openDashboard: openDashboard}];
-//                self.quickLinks([{href:"http://www.baidu.com", name: "Baidu"}]);
-//                self.favorites(dashboard);
-//                self.recents(dashboard);
-                
+                };                          
             }
             return NavigationLinksViewModel;
         });

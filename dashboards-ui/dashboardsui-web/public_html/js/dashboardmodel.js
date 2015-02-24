@@ -71,7 +71,7 @@ function(dfu, oj, ko, $)
     {
         var _id = this.get('id');
         if (!_id) return null;
-        return document.location.protocol + '//' + document.location.host + '/emcpdfui/builder.html?dashboardId=' + _id;
+        return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
     };
 
     return {'DashboardModel': DashboardModel};

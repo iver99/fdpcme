@@ -10,7 +10,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -23,6 +23,7 @@ public class DashboardManagerTest
 {
 	static {
 		PersistenceManager.setTestEnv(true);
+		UserContext.setCurrentUser("SYSMAN");
 	}
 
 	@Test
@@ -139,7 +140,7 @@ public class DashboardManagerTest
 	@Test
 	public void testCreateUpdateDashboard() throws DashboardException, InterruptedException
 	{
-		String currentUser = AppContext.getInstance().getCurrentUser();
+		String currentUser = UserContext.getCurrentUser();
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateUpdateDashboard()" + System.currentTimeMillis());
 
@@ -321,17 +322,37 @@ public class DashboardManagerTest
 		Assert.assertNotNull(queried);
 
 		// try to delete dashboard owned by other user, and the deletion actually has no effect
-		dm.deleteDashboard(dbd3.getDashboardId(), false, tenantId1);
+		try {
+			dm.deleteDashboard(dbd3.getDashboardId(), false, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
-		dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId1);
+		try {
+			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
 
 		// post test
-		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
-		dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId2);
+		try {
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+		try {
+			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+		try {
+			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId2);
+		}
+		catch (DashboardNotFoundException e) {
+		}
 	}
 
 	@Test
@@ -377,8 +398,16 @@ public class DashboardManagerTest
 		Assert.assertEquals(dbList.size(), originSize - 1);
 
 		// post test
-		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+		try {
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+		try {
+			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
 	}
 
 	@Test
@@ -416,8 +445,16 @@ public class DashboardManagerTest
 		Assert.assertNull(queried);
 
 		// post test
-		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+		try {
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+		try {
+			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
 	}
 
 	@Test
@@ -430,6 +467,14 @@ public class DashboardManagerTest
 		dbd1.setName(name1);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
+		Assert.assertNotNull(queried);
+
+		// able to query system dashboard
+		Dashboard dbd2 = new Dashboard();
+		dbd2.setName("name2" + System.currentTimeMillis());
+		dbd2.setIsSystem(true);
+		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
+		queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
 
 		// not existing ones
@@ -445,7 +490,16 @@ public class DashboardManagerTest
 		}
 
 		// post test
-		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		try {
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+		try {
+			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
 	}
 
 	@Test
@@ -475,7 +529,11 @@ public class DashboardManagerTest
 		Assert.assertNotNull(lastAccess);
 
 		// delete dashboard/hard deletion
-		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		try {
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
 		lastAccess = dm.getLastAccessDate(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNull(lastAccess);
 	}
@@ -505,8 +563,6 @@ public class DashboardManagerTest
 		dbd3.setName("name" + System.currentTimeMillis());
 		dbd3.setDescription("key2");
 		dbd3 = dm.saveNewDashboard(dbd3, tenant1);
-		dbd3.setOwner("key3");
-		dbd3 = dm.updateDashboard(dbd3, tenant1);
 		pd = dm.listDashboards(null, null, tenant1, false);
 		long allSize = pd.getTotalResults();
 		Assert.assertEquals(allSize, originSize + 3);
@@ -524,6 +580,7 @@ public class DashboardManagerTest
 		dbd5.setDescription("KEY2");
 		dbd5 = dm.saveNewDashboard(dbd5, tenant1);
 
+		// owned by others, shouldn't be queried
 		Dashboard dbd6 = new Dashboard();
 		dbd6.setName("name" + System.currentTimeMillis());
 		dbd6 = dm.saveNewDashboard(dbd6, tenant1);
@@ -555,27 +612,62 @@ public class DashboardManagerTest
 		dbd10 = dm.saveNewDashboard(dbd10, tenant1);
 		dm.deleteDashboard(dbd10.getDashboardId(), tenant1);
 
+		// owned by others, but is system dashboard. should be queried
+		Dashboard dbd11 = new Dashboard();
+		dbd11.setName("key11" + System.currentTimeMillis());
+		dbd11.setIsSystem(true);
+		Tile tile1 = createTileForDashboard(dbd11);
+		tile1.setHeight(12);
+		tile1.setIsMaximized(true);
+		TileParam t1p1 = createParameterForTile(tile1);
+		t1p1.setStringValue("tile 1 param 1");
+		dbd11 = dm.saveNewDashboard(dbd11, tenant1);
+		dbd11.setOwner("OTHER");
+		dbd11 = dm.updateDashboard(dbd11, tenant1);
+
+		// owned by others, system dashboard, but from different tenant. should be queried
+		Dashboard dbd12 = new Dashboard();
+		dbd12.setName("key12" + System.currentTimeMillis());
+		dbd12.setIsSystem(true);
+		dbd12 = dm.saveNewDashboard(dbd12, tenant2);
+		dbd12.setOwner("OTHER_DIF_TENANT");
+		dbd12 = dm.updateDashboard(dbd12, tenant2);
+
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, originSize + 8); // dbd9/10 not in the returned list
+		Assert.assertEquals(icSize, originSize + 8); // dbd6/dbd9/10/12 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
+			if (dbd.getName().equals(dbd6.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned: owned by others");
+			}
 			if (dbd.getName().equals(dbd9.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned from other tenant different from current tenant");
+			}
+			if (dbd.getName().equals(dbd10.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned: deleted");
+			}
+			if (dbd.getName().equals(dbd12.getName())) {
+				AssertJUnit
+				.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 		}
 
 		// query all
 		List<Dashboard> dbList = dm.listAllDashboards(tenant1);
 		allSize = dbList == null ? 0 : dbList.size();
-		Assert.assertEquals(allSize, originSize + 8);
+		Assert.assertEquals(allSize, originSize + 9);// dbd9/10/12 not in the returned list
 		pd = dm.listDashboards(null, null, tenant1, true);
 		allSize = pd.getTotalResults();
 		Assert.assertEquals(allSize, originSize + 8);
 
 		// query by page size/offset. ===Need to consider that last accessed one comes first===
 		pd = dm.listDashboards("key", 0, 3, tenant1, true);
-		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd8.getDashboardId());
+		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd11.getDashboardId());
+		// check that tiles are retrieved successfully
+		Assert.assertNotNull(pd.getDashboards().get(0).getTileList().get(0));
+		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
+		Assert.assertEquals(dbd11.getTileList().get(0).getTileId(), dbd11tile1.getTileId());
 		Assert.assertEquals(3, pd.getDashboards().size());
 		Assert.assertEquals(3, pd.getLimit().intValue());
 		Assert.assertEquals(3, pd.getCount());
@@ -584,7 +676,7 @@ public class DashboardManagerTest
 
 		// query by page size/offset
 		pd = dm.listDashboards("key", 2, 2, tenant1, true);
-		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd6.getDashboardId());
+		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd7.getDashboardId());
 		Assert.assertEquals(2, pd.getDashboards().size());
 		Assert.assertEquals(2, pd.getLimit().intValue());
 		Assert.assertEquals(2, pd.getCount());
@@ -606,6 +698,7 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd8.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd9.getDashboardId(), true, tenant2);
 		dm.deleteDashboard(dbd10.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd11.getDashboardId(), true, tenant1);
 	}
 
 	@Test

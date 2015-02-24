@@ -34,6 +34,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
 import org.codehaus.jettison.json.JSONObject;
 
@@ -52,13 +53,14 @@ public class DashboardAPI extends APIBase
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam, JSONObject dashboard)
+	public Response createDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, JSONObject dashboard)
 	{
-		//System.out.println(dashboard);
 		try {
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			d = manager.saveNewDashboard(d, tenantId);
 			updateDashboardAllHref(d);
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
@@ -79,11 +81,12 @@ public class DashboardAPI extends APIBase
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
 	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@PathParam("id") Long dashboardId)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
 	{
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			manager.deleteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -98,15 +101,19 @@ public class DashboardAPI extends APIBase
 
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot")
-	@Produces(MediaType.TEXT_PLAIN)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDashboardBase64ScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@PathParam("id") Long dashboardId)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
 	{
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
-			return Response.ok(ss).build();
+			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
+			String externalBase = DashboardAPIUtil.getExternalAPIBase();
+			String screenShotUrl = externalBase + "dashboards/" + dashboardId + "/screenshot";
+			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
 		}
 		catch (DashboardException e) {
 			return buildErrorResponse(new ErrorEntity(e));
@@ -122,11 +129,12 @@ public class DashboardAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@PathParam("id") long dashboardId) throws DashboardException
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") long dashboardId) throws DashboardException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			updateDashboardAllHref(dbd);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
@@ -143,8 +151,8 @@ public class DashboardAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
-			@DefaultValue("0") @QueryParam("offset") Integer offset)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("queryString") String queryString,
+			@DefaultValue("") @QueryParam("limit") Integer limit, @DefaultValue("0") @QueryParam("offset") Integer offset)
 	{
 		String qs = null;
 		try {
@@ -157,6 +165,7 @@ public class DashboardAPI extends APIBase
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
@@ -178,7 +187,7 @@ public class DashboardAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@PathParam("id") long dashboardId, JSONObject inputJson)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") long dashboardId, JSONObject inputJson)
 	{
 		Dashboard input = null;
 		try {
@@ -192,6 +201,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(userTenant);
 			input.setDashboardId(dashboardId);
 			Dashboard dbd = dm.updateDashboard(input, tenantId);
 			updateDashboardAllHref(dbd);
@@ -221,7 +231,9 @@ public class DashboardAPI extends APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		//		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
+		String externalBase = DashboardAPIUtil.getExternalAPIBase();
+		String screenShotUrl = externalBase + "dashboards/" + dbd.getDashboardId() + "/screenshot";
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}

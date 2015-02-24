@@ -54,8 +54,8 @@ public class TileParam
 	@JsonIgnore
 	private Tile tile;
 
-	// used for json return field 'value'
 	@SuppressWarnings("unused")
+	@JsonProperty("value")
 	private String value;
 
 	@JsonIgnore
@@ -107,6 +107,10 @@ public class TileParam
 			edtp.setParamValueStr(strValue);
 			edtp.setParamValueTimestamp(tsValue);
 			edtp.setParamValueNum(intValue);
+		}
+		if (edtp.getParamName() == null || "".equals(edtp.getParamName())) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.TILE_PARAM_NAME_REQUIRED));
 		}
 		return edtp;
 	}
@@ -205,7 +209,7 @@ public class TileParam
 
 	public void setValue(String value) throws CommonFunctionalException
 	{
-		if (PARAM_TYPE_BOOLEAN.equals(type)) {
+		if (PARAM_TYPE_STRING.equals(type)) {
 			strValue = value;
 		}
 		else if (PARAM_TYPE_NUMBER.equals(type)) {
