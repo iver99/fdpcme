@@ -5,7 +5,7 @@
         <artifact name="cookbook" loc="dashboards-chef/dashboardService-ui" />
         <artifact name="software" loc="dashboards-ui/deploy-list.xml" />
 </Service>
-<Service Name="DashboardService-API" Version="1.0.0" >
+<Service Name="DashboardService-API" Version="1.0.0" type="schema,app" >
         <artifact name="softwarejson" loc="software-definitions/DashboardService-API.json" /> 
         <artifact name="cookbook" loc="dashboards-chef/dashboardService-api" />
         <artifact name="software" loc="dashboards-ee/deploy-list.xml" />
