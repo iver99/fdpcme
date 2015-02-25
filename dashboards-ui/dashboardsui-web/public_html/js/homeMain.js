@@ -146,7 +146,7 @@ require(['dbs/dbsmodel',
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
-                self.appName = "Dashboard Framework";
+                self.appName = "";
             }
            
             dashboardsViewModle = new model.ViewModel();
