@@ -117,25 +117,20 @@ war {
 	}
 }
 
-task buildDFCommonLibWar(type: War) {
-	
-	appendix = 'DfIntgCommon'
-	from('public_html') {
-	       include 'dependencies/dfcommon/'
-	        into('/')
-	}
-	rootSpec.exclude("**/*.class")
-        rootSpec.exclude("**/*.jar")
-	rootSpec.exclude("**/*.zip")
-	rootSpec.exclude("**/*.MF")
-
+task buildDFCommonLibZip(type: Zip){
+	baseName = 'dashboard-framework'
+	appendix = 'ui'
+	classifier = 'common'
+	from 'public_html/emcsDependencies/dfcommon/'
+	into 'build/libs'
 }
 
 def libsToPublish = []
-fileTree("build/libs").each { file ->
+//fileTree publishfiles = fileTree("build/libs") + fileTree("build/distributions")
+fileTree publishfiles = fileTree("build/distributions")
+publishfiles.each { file ->
     libsToPublish << file
 }
-
 
 publishing {
     publications {
