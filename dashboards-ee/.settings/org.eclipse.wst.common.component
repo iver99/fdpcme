@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="dashboards-ee">
         <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
-        <dependent-module archiveName="log4j-1.2.17.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-1.2.17.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="registry-lookup-client-0.23.6.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -11,9 +8,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="httpclient-4.3.1.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/httpclient-4.3.1.jar">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="httpcore-4.3.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/httpcore-4.3.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="httpcore-4.3.jar" deploy-path="/lib" handle="module:/classpath/var/SSF/dependencies/artifactory/httpcore-4.3.jar">
@@ -36,6 +30,12 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dashboards-entities.jar" deploy-path="/lib" handle="module:/resource/dashboards-entities/dashboards-entities">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="log4j-core-2.0.2.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-core-2.0.2.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="log4j-api-2.0.2.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-api-2.0.2.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>
