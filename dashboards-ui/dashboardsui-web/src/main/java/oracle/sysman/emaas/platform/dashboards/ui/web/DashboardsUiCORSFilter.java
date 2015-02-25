@@ -35,7 +35,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -49,7 +49,7 @@ public class DashboardsUiCORSFilter implements Filter
 		}
 		hRes.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
-				"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER，X-SSO-CLIENT");
+				"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,X-SSO-CLIENT");
 
 		//handle Authorization header
 		/*
@@ -79,11 +79,30 @@ public class DashboardsUiCORSFilter implements Filter
 			// default value for X-REMOTE-USER
 			userTenant = DEFAULT_TENANT + "." + DEFAULT_USER;
 		}
-		Cookie userNameCookie = new Cookie(COOKIE_X_USER_IDENTITY_DOMAIN_NAME, tenant);
-		hRes.addCookie(userNameCookie);
-		//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
-		Cookie tenantCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
-		hRes.addCookie(tenantCookie);
+		// check to avoid duplicated cookies
+		boolean domainNameExists = false, remoteUserExists = false;
+		if (hReq.getCookies() != null) {
+			for (Cookie cookie : hReq.getCookies()) {
+				if (COOKIE_X_USER_IDENTITY_DOMAIN_NAME.equals(cookie.getName())) {
+					domainNameExists = true;
+				}
+				if (COOKIE_X_REMOTE_USER.equals(cookie.getName())) {
+					remoteUserExists = true;
+				}
+				if (domainNameExists && remoteUserExists) {
+					break;
+				}
+			}
+		}
+		if (!domainNameExists) {
+			Cookie userNameCookie = new Cookie(COOKIE_X_USER_IDENTITY_DOMAIN_NAME, tenant);
+			hRes.addCookie(userNameCookie);
+		}
+		if (!remoteUserExists) {
+			//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
+			Cookie tenantCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
+			hRes.addCookie(tenantCookie);
+		}
 		chain.doFilter(request, response);
 	}
 

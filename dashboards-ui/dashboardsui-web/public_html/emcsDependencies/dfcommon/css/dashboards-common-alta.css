@@ -1,0 +1,168 @@
+/* 
+    Created on : 2015-2-13, 20:37:08
+    Author     : aduan
+*/
+.nav-mapping-icon-32:before{content:url("../images/compassIcon_32.png");}
+
+.fa-icon-font {
+  font-family: FaFont;
+  font-size: 1.34rem;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.fa-icon-font:before{
+    display: inline-block;
+}
+
+.fa-link:before {
+  content: "\f0c1"; 
+}
+
+.fa-star:before {
+  content: "\f005"; }
+
+.fa-history:before {
+  content: "\f1da"; 
+}
+
+@font-face {
+  font-family: 'FaFont';
+  src: url("fonts/fontawesome-webfont.woff");
+  font-weight: normal;
+  font-style: normal; 
+}
+
+
+#links_menu{
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    left:0px;
+    z-index: 1000;
+    max-height: 2000px;
+    display: none;
+    box-shadow: 3px 3px 5px #888888;
+}
+#links_menu .oj-row{
+    height:24px;
+    line-height: 24px;
+}
+#links_menu .links-content-container{
+    margin : 30px 0;
+    float: left;
+    width: 100%;
+}
+#links_menu .iconCircle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+#iconLink{
+    background-color: #ed813e;
+}
+#iconStar{
+    background-color: #5a68ad;
+}
+#iconHistory{
+    background-color: #3caf85;
+}
+
+#links_menu .iconCircle .fa {
+    font-size: 5em;
+    color: white;
+}
+
+.emaas-appheader-appname-table-cell-middle{
+    display:table-cell;
+    vertical-align: middle;
+}
+
+.emaas-appheader-lite .emaas-appheader-logo {
+    margin-top: 9px; 
+    margin-bottom: 5px; 
+    float:left;
+    outline:none;
+}
+
+.emaas-appheader-lite .emaas-appheader-appname {
+    font-size: 15px;
+    font-weight: bold;
+    color: #454545;
+}
+
+.emaas-appheader-logo-oracle {
+    width: 158px;
+    height: 20px;
+}
+
+.emaas-appheader-logo-oracle:before{
+    content:url("../images/oracle_logo_lrg.png")
+}
+
+.emaas-appheader {
+    background-color: #f5f5f5;
+    border-bottom-style: solid;
+    border-bottom-color: #fff;
+    border-bottom-width: 1px;
+    box-shadow: 0 3px 3px rgba(0,0,0,0.1);
+    position: relative;
+    margin-bottom: 1px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.emaas-appheader-toolbar-container .oj-toolbar {
+    display: inline-block;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.emaas-appheader-lite .oj-toolbar {
+    margin-top: 0px;
+}
+
+.emaas-appheader-toolbar-container{
+    text-align:right;
+    float:right;
+}
+
+.emaas-appheader-toolbar{
+    height:44px
+}
+
+.emaas-icon-font{
+    font-family:AppFont;
+    font-size:1.34rem;
+    line-height:1;
+    display:inline-block;
+    font-weight:normal;
+    speak:none;
+    font-style:normal;
+    font-variant:normal;
+    text-transform:none;
+    text-align:center;
+    -moz-box-sizing:content-box;
+    box-sizing:content-box;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale
+}
+
+.emaas-icon-font:before{
+    display:inline-block
+}
+
+.emaas-appheader-toolbar-button:hover {
+    cursor: pointer;
+}

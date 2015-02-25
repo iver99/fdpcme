@@ -5,7 +5,7 @@ apply plugin: 'artifactory-publish'
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
-def File sourceJetDestDir = new File(sourceWebappDir, 'dependencies/oraclejet')
+def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
 
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
@@ -33,7 +33,7 @@ project.task("unpackJETFromArtifactory") << {
             }
             // Copy each of the unzipped jet directories to
             // the appropriate source directories
-            // 1. build/jet/ >> public_html/dependencies/oraclejet/
+            // 1. build/jet/ >> public_html/emcsDependencies/oraclejet/
             project.copy {
                 from  buildJetUnzipDir
                 into sourceJetDestDir.absolutePath
@@ -72,8 +72,8 @@ project.task("unpackWarFromArtifactory") << {
 		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".war", dest:buildWarUnzipDir.absolutePath)
 		    
 		    project.copy {
-		        from  buildWarUnzipDir.absolutePath+"/dependencies/"
-		        into sourceWebappDir.absolutePath+"/dependencies/"
+		        from  buildWarUnzipDir.absolutePath+"/emcsDependencies/"
+		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
 		    }
 		    
 		    project.delete(buildWarUnzipDir)
@@ -83,7 +83,7 @@ project.task("unpackWarFromArtifactory") << {
 }
 
 project.task("cleanWar") << {
-    def File warDestDir = new File(sourceWebappDir.absolutePath,"/dependencies")
+    def File warDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
     def File tmpdir = warDestDir
     println 'Cleaning up war directories ...'
 

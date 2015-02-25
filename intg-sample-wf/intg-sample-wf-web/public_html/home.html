@@ -18,7 +18,7 @@ role value for that section to represent the appropriate content type.
 
 <html lang="en-us">
     <head>
-        <title>Dashboard Builder Page</title>
+        <title>Dashboard Builder Page</title> 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -41,47 +41,11 @@ role value for that section to represent the appropriate content type.
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
             -->
-            <header id="headerWrapper" role="banner">
-                <div class="demo-appheader">
-                    <div id="demo-appheader-bar" class="oj-row demo-appheader-lite" style="max-width: 1920px;padding-left: 10px">
-
-                        <!-- logo -->  
-                        <div class="demo-appheader-logo" tabindex="0">
-                            <div class="demo-appheader-logo-block">
-                                <span role="img" class="oj-icon demo-appheader-logo-oracle" title="Oracle Logo"></span>  
-                            </div>
-
-                            <div class="demo-appheader-appname-block">
-                                <span style="" class="demo-appheader-appname" data-bind="text: appName"></span>
-                            </div>
-                            <div class="demo-appheader-appname-block">
-                                <span  style="font-size: 15px" data-bind="text: cloudName"></span>
-                            </div>
-                        </div>
-
-                        <!-- Toolbar -->  
-                        <div id='demo-appheader-menu-and-toolbar-container' tabindex="0">
-                            <div id='demo-appheader-menu-container'>
-                                <ul id="demoAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
-                                    <!-- ko foreach: globalNavItems -->
-                                    <li> <a data-bind="text: label, href: url"> <span class=""></span>  </a></li>
-                                    <!-- /ko -->
-                                </ul>
-                            </div>
-                            <div class="demo-appheader-toolbar-container">
-                                <div class="demo-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
-                                    <button id="menubutton"
-                                            class='oj-button-half-chrome demo-appheader-toolbar-button'
-                                            data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#demoAppheaderGlobalNavMenuId'}">
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>            
+            <header id="headerWrapper" role="banner"> 
+                <df-oracle-branding-bar params="{registryUrl:registryUrl,authToken: authToken, userName: userName, tenantName : tenantName, appName : appName}"></df-oracle-branding-bar>
             </header>
             <div id="main-container" class="oj-col stretch-height">
-                <div class="oj-row stretch-height tile-container" id="tileContainer">
+<!--                <div class="oj-row stretch-height tile-container" id="tileContainer">
                     <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height">
                         <div class="oj-row dbd-column stretch-height" data-bind="foreach: tiles" id="tiles-row">
                             <div class="dbd-tile dbd-tile-sortable oj-col">
@@ -97,7 +61,7 @@ role value for that section to represent the appropriate content type.
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </body>

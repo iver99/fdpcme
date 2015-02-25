@@ -140,6 +140,15 @@ define(['knockout',
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                 kocTemplate = assetRoot + kocTemplate;
             registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+
+            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                var visualAnalyzerUrl = dfu.discoverQuickLink(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),"visualAnalyzer");
+                if (visualAnalyzerUrl){
+                    tile.configure = function(){
+                        window.open(visualAnalyzerUrl+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                    }
+                }
+            }
             tile.shouldHide = ko.observable(false);
             tile.clientGuid = dfu.guid();
             tile.widerEnabled = ko.computed(function() {
@@ -295,10 +304,14 @@ define(['knockout',
             var headers = {
                 'Content-type': 'application/json',
                 'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1'
-                /*,'Authorization': dfu.getAuthToken()*/
+//                ,'Authorization': dfu.getAuthToken()
             };
-            if (dtm.userTenant)
+//            dtm.userTenant='TenantOPC1.SYSMAN';
+            if (dtm.userTenant){
                 headers['X-REMOTE-USER'] = dtm.userTenant;
+            }else{
+                console.log("Warning: user name is not found: "+dtm.userTenant);
+            }
             return headers;
         }
         
@@ -739,8 +752,8 @@ define(['knockout',
                 }
                 else if (widget && widget.category === 'DashboardsBuiltIn') {
                     var koc_name = 'dbs-builtin-iframe-widget';
-                    var viewmodel = 'dashboards/../dependencies/widgets/iFrame/js/widget-iframe.js';
-                    var template = 'dashboards/../dependencies/widgets/iFrame/widget-iframe.html';
+                    var viewmodel = 'dashboards/../emcsDependencies/widgets/iFrame/js/widget-iframe.js';
+                    var template = 'dashboards/../emcsDependencies/widgets/iFrame/widget-iframe.html';
                     if (koc_name && template && viewmodel){
                         if (!ko.components.isRegistered(koc_name)) {
                             ko.components.register(koc_name,{
