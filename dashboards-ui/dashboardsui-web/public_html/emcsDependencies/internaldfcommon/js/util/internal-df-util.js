@@ -32,8 +32,8 @@ define(['knockout',
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    var url = dfu.discoverUrl("SavedSearch","0.1",null, regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    var url = dfu.discoverUrl("SavedSearch","0.1","sso.endpoint/virtual", regInfo.registryUrl);
                     if (url){
                         return url;
                     }else{
@@ -52,8 +52,8 @@ define(['knockout',
              */
             self.discoverDFRestApiUrl = function() {
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    return dfu.discoverDFRestApiUrl(regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    return dfu.discoverDFRestApiUrl(regInfo.registryUrl);
                 }else{
                     console.log("Failed to discovery DF REST API end point");
                     return null;
@@ -86,8 +86,8 @@ define(['knockout',
              */
             self.discoverQuickLinks = function() {
             	var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    return discoverLinks('quickLink',regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    return discoverLinks('quickLink',regInfo.registryUrl);
                 }
                 else {
                     return [];
@@ -100,8 +100,8 @@ define(['knockout',
              */
             self.discoverVisualAnalyzerLinks = function() {
             	var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    return discoverLinks('visualAnalyzer',regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    return discoverLinks('visualAnalyzer',regInfo.registryUrl);
                 }
                 else {
                     return [];
@@ -156,12 +156,7 @@ define(['knockout',
             self.buildFullUrl=function(root, path){
                 return dfu.buildFullUrl(root, path);
             };
-            
-            self.getAuthToken = function() {
-                var regInfo = self.getRegistrationInfo();
-                return regInfo && regInfo.authToken ? regInfo.authToken : '';
-            };
-            
+                        
             self.getRegistryUrl = function() {
                 var regInfo = self.getRegistrationInfo();
                 return regInfo && regInfo.registryUrl ? regInfo.registryUrl : '';
@@ -169,21 +164,16 @@ define(['knockout',
             
             /**
              * Get request header for Saved Search Service API call
-             * @param {String} authToken
              * @returns {Object} 
              */
             self.getSavedSearchServiceRequestHeader=function() {
-                return dfu.getDefaultHeader(self.getAuthToken());
+                return dfu.getDefaultHeader();
             };
             
             self.getDashboardsRequestHeader = function() {
-                return dfu.getDashboardsRequestHeader(self.getAuthToken());
+                return dfu.getDashboardsRequestHeader();
             };
-            
-            self.getAuthorizationRequestHeader=function() {
-                return {"Authorization": self.getAuthToken()};
-            };
-            
+                        
             self.getUserTenant = function() {
                 return userTenant;
             };
@@ -197,8 +187,8 @@ define(['knockout',
              */
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl && regInfo.authToken){
-                    var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot, regInfo.registryUrl, regInfo.authToken);
+                if (regInfo && regInfo.registryUrl){
+                    var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot, regInfo.registryUrl);
                     if (assetRoot){
                         return assetRoot;
                     }else{
@@ -257,13 +247,68 @@ define(['knockout',
             };
             
             /**
+             * Discover quick link
+             * @param {type} serviceName
+             * @param {type} version
+             * @param {type} rel
+             * @returns {result@arr;items@arr;links.href}
+             */
+            self.discoverQuickLink = function(serviceName, version, rel){
+                var regInfo = self.getRegistrationInfo();
+                var smUrl = null;
+                if (regInfo && regInfo.registryUrl){
+                    smUrl = regInfo.registryUrl;
+                }
+                if (typeof smUrl!=="string"){
+                     console.log("Error: Failed to discovery link, SM URL="+smUrl);
+                    return null;                    
+                }
+                if (serviceName===null || serviceName===undefined){
+                    console.log("Error: Failed to discovery link, serviceName="+serviceName);
+                    return null;
+                }
+                var searchUrl = self.buildFullUrl(smUrl,"instances")+"?serviceName="+serviceName;
+                
+                if (typeof version==="string"){
+                    searchUrl = searchUrl +"&version="+version;
+                }
+
+                var result =null;
+                $.ajax(searchUrl,{
+                    headers:dfu.getSMRequestHeader(),
+                    success:function(data, textStatus,jqXHR) {
+                        result = data;
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        console.log("Error: link not found due to error: "+textStatus);
+                    },
+                    async:false
+                });
+                
+                if (result && result.total>0){
+                    if (typeof rel==="string"){
+                        if (Array.isArray(result.items[0].links) && result.items[0].links.length>0){
+                            for(var i=0;i<result.items[0].links.length;i++){
+                                var link = result.items[0].links[i];
+                                if (link.rel.indexOf(rel)===0){
+                                    console.log("link found by serviceName="+serviceName+", version="+version+", rel="+rel); 
+                                    return link.href;
+                                }
+                            }
+                        }
+                    }
+                }
+                console.log("Warning: link not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
+                return null;
+            };
+            
+            /**
              * Discover available links by rel name
              * @param {String} relName
              * @param {String} smUrl
-             * @param {String} authToken
              * @returns {Array} availableLinks
              */
-            function discoverLinks(relName, smUrl, authToken) {
+            function discoverLinks(relName, smUrl) {
                 var availableLinks = [];
                 var linksFromDashboard = [];
                 var linksFromIntegrators = [];
@@ -325,7 +370,7 @@ define(['knockout',
                 var serviceUrl = self.buildFullUrl(smUrl,'instances');
                 $.ajax({
                     url: serviceUrl,
-                    headers: dfu.getSMRequestHeader(authToken),
+                    headers: dfu.getSMRequestHeader(),
                     success: function(data, textStatus) {
                         fetchServiceQuickLinks(data);
                     },

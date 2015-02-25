@@ -21,7 +21,7 @@ body, html {
 
 .dbd-column {
   padding-left: 1.5em;
-  padding-top: 2em;
+  padding-top: 0.2em;
   margin: 0px 50px 10px;
   overflow: auto;
 }
