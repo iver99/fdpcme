@@ -170,7 +170,8 @@ task runQAUITestSuite(type: Test){
 }
 
 dependencies {
-        compile(group: 'log4j', name: 'log4j', version: '1.2.17')
+        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2')
+        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2')
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
 

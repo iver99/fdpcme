@@ -6,7 +6,8 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboards-ee"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-1.2.17.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-core-2.0.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.2.jar"/>
 	<classpathentry exported="true" kind="var" path="DSB_HOME/dependencies/artifactory/javax.persistence-2.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/testng-6.8.8.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/ojdbc6-12.1.2-0-0.jar"/>

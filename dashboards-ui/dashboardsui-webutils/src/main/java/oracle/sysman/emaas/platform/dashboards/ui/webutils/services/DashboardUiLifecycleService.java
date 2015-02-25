@@ -17,7 +17,7 @@ public class DashboardUiLifecycleService extends AbstractApplicationLifecycleSer
 
 	public DashboardUiLifecycleService()
 	{
-		super(new RegistryServiceManager());
+		super(new RegistryServiceManager(), new LoggingServiceManager());
 	}
 
 }

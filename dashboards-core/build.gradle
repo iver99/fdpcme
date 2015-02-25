@@ -25,7 +25,8 @@ dependencies {
 	
 	testRuntime(group: 'com.oracle.weblogic', name: 'ojdbc6', version: '12.1.2-0-0')
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8')
-	compile(group: 'log4j', name: 'log4j', version: '1.2.16')
+	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2')
+	compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2')
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.0')
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2') 
 	compile(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2')
