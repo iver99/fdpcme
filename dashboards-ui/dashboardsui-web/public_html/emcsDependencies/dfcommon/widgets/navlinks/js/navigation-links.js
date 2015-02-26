@@ -66,7 +66,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                             self.quickLinks(data.quickLinks);
                         }
                     };                   
-                    var serviceUrl = "/emsaasui/api/configurations/registration";
+                    var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
                     $.ajax({
                         url: serviceUrl,
 //                        headers: dfu.getSMRequestHeader(),

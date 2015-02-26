@@ -47,7 +47,7 @@ define(['knockout',
             self.discoverDFRestApiUrl = function() {
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.dfRestApiEndPoint){
-                    return regInfo.Info.dfResdfRestApiEndPoint;
+                    return regInfo.dfRestApiEndPoint;
                 }else{
                     console.log("Failed to discovery DF REST API end point");
                     return null;
