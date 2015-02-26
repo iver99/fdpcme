@@ -5,7 +5,7 @@ ext.archivesBaseName = archiveBaseName
  
 // SQL Source directories 
 ext.sqlDir = file('src/main/sql')
-version = '0.1'
+version = '1.0.0'
  
 ext.schemaDistDir = "${serviceDistDir}/${archiveBaseName}" 
  
