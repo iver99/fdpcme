@@ -296,7 +296,7 @@ define(['knockout',
                 return null;
             };
             
-        
+        }
         return new InternalDashboardFrameworkUtility();
     }
 );
