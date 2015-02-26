@@ -19,6 +19,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.EndpointEntity;
 
 /**
  * @author miao
@@ -38,7 +39,7 @@ public class RegistryLookupUtil
 		return matched;
 	}
 
-	public static String getServiceExternalEndPoint(String serviceName, String version)
+	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version)
 	{
 		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		SanitizedInstanceInfo sanitizedInstance;
@@ -47,7 +48,8 @@ public class RegistryLookupUtil
 			internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
 			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
 			if (sanitizedInstance == null) {
-				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
+				String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
+				return new EndpointEntity(serviceName, version, url);
 				//				return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
 				// this happens when
 				//    1. no instance exists based on the query criteria
@@ -57,14 +59,16 @@ public class RegistryLookupUtil
 				// In this case, need to trigger the failover scheme, or alternatively, one could use the plural form of the lookup, and loop through the returned instances
 			}
 			else {
-				return RegistryLookupUtil.getExternalEndPoint(sanitizedInstance);
+				String url = RegistryLookupUtil.getExternalEndPoint(sanitizedInstance);
+				return new EndpointEntity(serviceName, version, url);
 			}
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			if (internalInstance != null) {
-				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
+				String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
+				return new EndpointEntity(serviceName, version, url);
 			}
 		}
 		return null;

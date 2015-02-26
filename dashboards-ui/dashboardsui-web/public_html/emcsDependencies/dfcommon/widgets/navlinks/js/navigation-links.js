@@ -9,7 +9,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var maxFavoriteSize = 5;
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                var registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
+//                var registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
                 var dashboardUrl = null;
                 var dfu = new dfumodel(userName, tenantName);
                 
@@ -60,78 +60,16 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 * @param {String} smUrl
                 * @returns {Array} availableLinks
                 */
-                function discoverQuickLinks(smUrl) {
-                    var relName = 'quickLink';
-                    var availableLinks = [];
-                    var linksFromDashboard = [];
-                    var linksFromIntegrators = [];
-
+                function discoverQuickLinks() {
                     var fetchServiceQuickLinks = function(data) {
-                        var linkRecords = {};
-                        if (data.items && data.items.length > 0) {
-                             for (var i = 0; i < data.items.length; i++) {
-                                var serviceItem = data.items[i];
-                                if (serviceItem.links && serviceItem.links.length > 0) {
-                                    for (var j = 0; j < serviceItem.links.length; j++) {
-                                        var link = serviceItem.links[j];
-                                        var linkName = serviceItem.serviceName;
-                                        var isValidQuickLink = false;
-                                        if (link.rel.indexOf('/') > 0) {
-                                            var rel = link.rel.split('/');
-                                            if (rel[0] === relName) {
-                                                isValidQuickLink = true;
-                                                if (rel[1] && rel[1] !== '') {
-                                                    linkName = rel[1];
-                                                }
-                                            }
-                                        }
-                                        else if (link.rel === relName) {
-                                            isValidQuickLink = true;
-                                        }
-
-                                        if (isValidQuickLink) {
-                                            var linkItem = {name: linkName,
-                                                             href: link.href};
-                                            if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '0.1') {
-                                                if (linkRecords[linkName]) {
-                                                    if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
-                                                        linkRecords[linkName].href = link.href;
-                                                    }
-                                                }
-                                                else {
-                                                    linksFromDashboard.push(linkItem);
-                                                    linkRecords[linkName] = linkItem;
-                                                }
-                                            }
-                                            else {
-                                                if (linkRecords[linkName]) {
-                                                    if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
-                                                        linkRecords[linkName].href = link.href;
-                                                    }
-                                                }
-                                                else {
-                                                    linksFromIntegrators.push(linkItem);
-                                                    linkRecords[linkName] = linkItem;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                             for (var i = 0; i < linksFromDashboard.length; i++) {
-                                 availableLinks.push(linksFromDashboard[i]);
-                             }
-                             for (var j = 0; j < linksFromIntegrators.length; j++) {
-                                 availableLinks.push(linksFromIntegrators[j]);
-                             }
-                             self.quickLinks(availableLinks);
+                        if (data.quickLinks && data.quickLinks.length > 0) {
+                            self.quickLinks(data.quickLinks);
                         }
                     };                   
-                    var serviceUrl = dfu.buildFullUrl(smUrl,'instances');
+                    var serviceUrl = "/emsaasui/api/configurations/registration";
                     $.ajax({
                         url: serviceUrl,
-                        headers: dfu.getSMRequestHeader(),
+//                        headers: dfu.getSMRequestHeader(),
                         success: function(data, textStatus) {
                             fetchServiceQuickLinks(data);
                         },
@@ -149,12 +87,12 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     
                     //Fetch available quick links from service manager registry
                     if (self.quickLinks().length === 0) {
-                        discoverQuickLinks(registryUrl);
+                        discoverQuickLinks();
                     }
                     
                     //Fetch favorite dashboards
                     if (dashboardUrl === null)
-                        dashboardUrl = dfu.discoverDFRestApiUrl(registryUrl);
+                        dashboardUrl = dfu.discoverDFRestApiUrl();
                     if (dashboardUrl && dashboardUrl !== '') {
                         var favoritesUrl = dashboardUrl + 'dashboards/favorites';
                         var favoriteCnt = 0;

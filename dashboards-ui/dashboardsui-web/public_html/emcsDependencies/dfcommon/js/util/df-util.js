@@ -53,7 +53,23 @@ define(['knockout',
                     return root+"/"+path;
                 }
             };
- 
+
+//            self.registrationInfo = null;
+//            self.getRegistrationInfo=function(){
+//                
+//                if (self.registrationInfo===null){
+//                    $.ajaxSettings.async = false;
+//                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
+//                        self.registrationInfo = data;
+//                    });
+//                    $.ajaxSettings.async = true; 
+//                }
+//                return self.registrationInfo;
+//            };
+//            
+//            self.getRegistrationEndPoint=function(){
+//                return '/emsaasui/api/configurations/registration';
+//            };            
             /**
              * 
              * Discover URL from Service Manager Registry
@@ -63,24 +79,23 @@ define(['knockout',
              * @param {String} smUrl
              * @returns {String} result
              */
-            self.discoverUrl = function(serviceName, version, rel, smUrl){
-                if (typeof smUrl!=="string"){
-                     console.log("Error: Failed to discovery URL, SM URL="+smUrl);
-                    return null;                    
-                }
-                
+            self.discoverUrl = function(serviceName, version, rel){
                 if (serviceName===null || serviceName===undefined){
                     console.log("Error: Failed to discovery URL, serviceName="+serviceName);
                     return null;
                 }
-                var searchUrl = self.buildFullUrl(smUrl,"instances")+"?serviceName="+serviceName;
-                if (typeof version==="string"){
-                    searchUrl = searchUrl +"&version="+version;
+                if (version===null || version===undefined){
+                    console.log("Error: Failed to discovery URL, version="+version);
+                    return null;
                 }
 
                 var result =null;
-                $.ajax(searchUrl,{
-                    headers:self.getSMRequestHeader(),
+                var url ="/emsaasui/emcpdfui/api/registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                if (typeof rel==="string"){
+                    url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                }
+
+                $.ajax(url,{
                     success:function(data, textStatus,jqXHR) {
                         result = data;
                     },
@@ -90,29 +105,13 @@ define(['knockout',
                     async:false
                 });
                 
-                if (result && result.total>0){
+                if (result){
                     if (typeof rel==="string"){
-                        if (Array.isArray(result.items[0].links) && result.items[0].links.length>0){
-                            for(var i=0;i<result.items[0].links.length;i++){
-                                var link = result.items[0].links[i];
-                                if (link.rel===rel){
-                                    console.log("URL found by serviceName="+serviceName+", version="+version+", rel="+rel); 
-                                    return link.href;
-                                }
-                            }
-                        }
+                        console.log("Link found by serviceName="+serviceName+", version="+version+", rel="+rel); 
+                        return result.href;
                     }else{
-                        var virtualEndpoints = result.items[0].virtualEndpoints;
-                        if (Array.isArray(virtualEndpoints) && virtualEndpoints.length>0){
-                            console.log("URL found by serviceName="+serviceName+", version="+version); 
-                            return virtualEndpoints[0];
-                        }else{
-                            var canonicalEndpoints = result.items[0].canonicalEndpoints;
-                            if (Array.isArray(canonicalEndpoints) && canonicalEndpoints.length>0){
-                                console.log("URL found by serviceName="+serviceName+", version="+version); 
-                                return canonicalEndpoints[0];
-                            }
-                        }
+                        console.log("EndPoint found by serviceName="+serviceName+", version="+version+", rel="+rel);
+                        return result.href;
                     }
                 }
                 console.log("Warning: URL not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
@@ -124,8 +123,8 @@ define(['knockout',
              * @param {String} smUrl
              * @returns {String}
              */
-            self.discoverLogoutUrl = function(smUrl) {
-                return self.discoverUrl('SecurityService', '0.1', 'sso.logout', smUrl);
+            self.discoverLogoutUrl = function() {
+                return self.discoverUrl('SecurityService', '0.1', 'sso.logout');
             };
 
             /**
@@ -133,8 +132,8 @@ define(['knockout',
              * @param {String} smUrl
              * @returns {String} url
              */
-            self.discoverDFHomeUrl = function(smUrl) {
-                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home', smUrl);
+            self.discoverDFHomeUrl = function() {
+                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home');
                 if (url){
                     return url;
                 }else{
@@ -148,8 +147,8 @@ define(['knockout',
              * @param {String} smUrl
              * @returns {String} url 
              */
-            self.discoverDFRestApiUrl = function(smUrl) {
-                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual", smUrl);
+            self.discoverDFRestApiUrl = function() {
+                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual");
                 
                 if (url){
                     return url;
@@ -157,16 +156,6 @@ define(['knockout',
                     console.log("Failed to discovery DF REST API end point");
                     return null;
                 }
-            };
-            
-            /**
-             * Get request header for query from Service Manager
-             * @returns {Object} 
-             */
-            self.getSMRequestHeader = function() {
-                var defHeader = {"X-USER-IDENTITY-DOMAIN-NAME":"dummy"};
-                console.log("Sent Header: "+JSON.stringify(defHeader));
-                return defHeader;
             };
             
             /**

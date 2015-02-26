@@ -87,7 +87,9 @@ public class RegistrationEntity
 	 */
 	public String getDfRestApiEndPoint()
 	{
-		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME, NAME_DASHBOARD_API_VERSION);
+		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
+				NAME_DASHBOARD_API_VERSION);
+		return entity != null ? entity.getHref() : null;
 	}
 
 	/*
@@ -101,12 +103,12 @@ public class RegistrationEntity
 	/**
 	 * @return the registryUrl
 	 */
-	public String getRegistryUrl()
-	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(NAME_REGISTRY_SERVICENAME, NAME_REGISTRY_VERSION,
-				NAME_REGISTRY_REL_SSO);
-		return link != null ? link.getHref() : null;
-	}
+	//	public String getRegistryUrl()
+	//	{
+	//		Link link = RegistryLookupUtil.getServiceExternalLink(NAME_REGISTRY_SERVICENAME, NAME_REGISTRY_VERSION,
+	//				NAME_REGISTRY_REL_SSO);
+	//		return link != null ? link.getHref() : null;
+	//	}
 
 	/**
 	 * @return the rest API end point for SSF
@@ -114,7 +116,8 @@ public class RegistrationEntity
 	 */
 	public String getSsfRestApiEndPoint() throws Exception
 	{
-		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
+		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
+		return entity != null ? entity.getHref() : null;
 		//		if (true) {
 		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
 		//		}

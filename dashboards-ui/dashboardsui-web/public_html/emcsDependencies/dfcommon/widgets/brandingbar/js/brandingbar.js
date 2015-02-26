@@ -4,17 +4,17 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 var self = this;
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
+//                self.registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
                 self.productName = "Enterprise Manager";
                 self.cloudName = "Cloud Service";
                 self.appName = $.isFunction(params.appName) ? params.appName() : params.appName;
                 self.userTenantName = self.userName && self.tenantName ? self.userName + " (" + self.tenantName + ")" : "emaas.user@oracle.com";
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(self.registryUrl);
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
                 
                 //SSO logout handler
                 self.handleSignout = function() {
-                    window.location.href = dfu.discoverLogoutUrl(self.registryUrl) + "?endUrl=" + ssoLogoutEndUrl;
+                    window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
                 };
                 
                 self.globalNavItems = [
