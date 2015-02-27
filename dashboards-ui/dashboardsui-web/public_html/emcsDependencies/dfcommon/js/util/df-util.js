@@ -117,6 +117,41 @@ define(['knockout',
                 console.log("Warning: URL not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
                 return null;
             };
+
+            self.discoverLinkWithRelPrefix = function(serviceName, version, rel){
+                if (typeof serviceName!=="string"){
+                    console.log("Error: Failed to discovery Link (with Rel Prefix), serviceName="+serviceName);
+                    return null;
+                }
+                if (typeof version!=="string"){
+                    console.log("Error: Failed to discovery Link (with Rel Prefix), version="+version);
+                    return null;
+                }
+
+                if (typeof rel!=="string"){
+                    console.log("Error: Failed to discovery Link (with Rel Prefix), rel="+rel);
+                    return null;                    
+                }
+                var result =null;
+                var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+
+                $.ajax(url,{
+                    success:function(data, textStatus,jqXHR) {
+                        result = data;
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        console.log("Error: Link (with Rel Prefix) not found due to error: "+textStatus);
+                    },
+                    async:false
+                });
+                
+                if (result){
+                    console.log("Link (with Rel Prefix) found by serviceName="+serviceName+", version="+version+", rel="+rel); 
+                    return result.href;
+                }
+                console.log("Warning: Link (with Rel Prefix) not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
+                return null;
+            };
             
             /**
              * Discover SSO logout URL

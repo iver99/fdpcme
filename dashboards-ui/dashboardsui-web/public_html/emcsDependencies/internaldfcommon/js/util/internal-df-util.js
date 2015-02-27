@@ -248,7 +248,7 @@ define(['knockout',
              * @returns {result@arr;items@arr;links.href}
              */
             self.discoverQuickLink = function(serviceName, version, rel){
-                return dfu.discoverUrl(serviceName, version, rel);
+                return dfu.discoverLinkWithRelPrefix(serviceName, version, rel);
             };
             
         }
