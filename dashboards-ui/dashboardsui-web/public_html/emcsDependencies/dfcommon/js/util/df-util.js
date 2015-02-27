@@ -54,22 +54,6 @@ define(['knockout',
                 }
             };
 
-//            self.registrationInfo = null;
-//            self.getRegistrationInfo=function(){
-//                
-//                if (self.registrationInfo===null){
-//                    $.ajaxSettings.async = false;
-//                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
-//                        self.registrationInfo = data;
-//                    });
-//                    $.ajaxSettings.async = true; 
-//                }
-//                return self.registrationInfo;
-//            };
-//            
-//            self.getRegistrationEndPoint=function(){
-//                return '/emsaasui/api/configurations/registration';
-//            };            
             /**
              * 
              * Discover URL from Service Manager Registry
