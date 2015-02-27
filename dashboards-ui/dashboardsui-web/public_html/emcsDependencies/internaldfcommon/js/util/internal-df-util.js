@@ -151,10 +151,10 @@ define(['knockout',
                 return dfu.buildFullUrl(root, path);
             };
                         
-            self.getRegistryUrl = function() {
-                var regInfo = self.getRegistrationInfo();
-                return regInfo && regInfo.registryUrl ? regInfo.registryUrl : '';
-            };
+//            self.getRegistryUrl = function() {
+//                var regInfo = self.getRegistrationInfo();
+//                return regInfo && regInfo.registryUrl ? regInfo.registryUrl : '';
+//            };
             
             /**
              * Get request header for Saved Search Service API call
@@ -181,7 +181,7 @@ define(['knockout',
              */
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl){
+                if (regInfo){
                     var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot);
                     if (assetRoot){
                         return assetRoot;
@@ -248,52 +248,7 @@ define(['knockout',
              * @returns {result@arr;items@arr;links.href}
              */
             self.discoverQuickLink = function(serviceName, version, rel){
-                var regInfo = self.getRegistrationInfo();
-                var smUrl = null;
-                if (regInfo && regInfo.registryUrl){
-                    smUrl = regInfo.registryUrl;
-                }
-                if (typeof smUrl!=="string"){
-                     console.log("Error: Failed to discovery link, SM URL="+smUrl);
-                    return null;                    
-                }
-                if (serviceName===null || serviceName===undefined){
-                    console.log("Error: Failed to discovery link, serviceName="+serviceName);
-                    return null;
-                }
-                var searchUrl = self.buildFullUrl(smUrl,"instances")+"?serviceName="+serviceName;
-                
-                if (typeof version==="string"){
-                    searchUrl = searchUrl +"&version="+version;
-                }
-
-                var result =null;
-                $.ajax(searchUrl,{
-                    headers:dfu.getSMRequestHeader(),
-                    success:function(data, textStatus,jqXHR) {
-                        result = data;
-                    },
-                    error:function(xhr, textStatus, errorThrown){
-                        console.log("Error: link not found due to error: "+textStatus);
-                    },
-                    async:false
-                });
-                
-                if (result && result.total>0){
-                    if (typeof rel==="string"){
-                        if (Array.isArray(result.items[0].links) && result.items[0].links.length>0){
-                            for(var i=0;i<result.items[0].links.length;i++){
-                                var link = result.items[0].links[i];
-                                if (link.rel.indexOf(rel)===0){
-                                    console.log("link found by serviceName="+serviceName+", version="+version+", rel="+rel); 
-                                    return link.href;
-                                }
-                            }
-                        }
-                    }
-                }
-                console.log("Warning: link not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
-                return null;
+                return dfu.discoverUrl(serviceName, version, rel);
             };
             
         }
