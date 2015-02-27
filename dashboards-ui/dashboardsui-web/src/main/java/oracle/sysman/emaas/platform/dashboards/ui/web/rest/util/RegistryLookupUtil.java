@@ -41,6 +41,14 @@ public class RegistryLookupUtil
 
 	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version)
 	{
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual");
+		if (link != null) {
+			return new EndpointEntity(serviceName, version, link.getHref());
+		}
+		else {
+			return null;
+		}
+		/*
 		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
@@ -72,6 +80,7 @@ public class RegistryLookupUtil
 			}
 		}
 		return null;
+		 */
 	}
 
 	public static Link getServiceExternalLink(String serviceName, String version, String rel)
