@@ -68,23 +68,33 @@ war {
 
 }
 
-task buildCommonLibWar(type: War) {
-	
-	appendix = 'DfIntgMockService'
-	from('public_html') {
-	       include 'dependencies/sampleservicecommon/'
-	        into('/')
-	}
-	rootSpec.exclude("**/*.class")
-        rootSpec.exclude("**/*.jar")
-	rootSpec.exclude("**/*.zip")
-	rootSpec.exclude("**/*.MF")
+//task buildCommonLibWar(type: War) {
+//	
+//	appendix = 'DfIntgMockService'
+//	from('public_html') {
+//	       include 'dependencies/sampleservicecommon/'
+//	        into('/')
+//	}
+//	rootSpec.exclude("**/*.class")
+//        rootSpec.exclude("**/*.jar")
+//	rootSpec.exclude("**/*.zip")
+//	rootSpec.exclude("**/*.MF")
+//
+//}
 
+task buildCommonLibZip(type: Zip) {
+	baseName = 'mock-service-wf'
+	appendix = 'ui'
+	classifier = 'common'
+	from 'public_html/dependencies/sampleservicecommon/'
+	into 'sampleservicecommon'
 }
 
 def filesToPublish = []
-fileTree("build/libs").each { file ->
-     filesToPublish << file
+//fileTree("build/libs").each { file ->
+fileTree publishfiles = fileTree("build/distributions")
+publishfiles.each { file ->
+    filesToPublish << file
 }
 
 publishing {
@@ -93,7 +103,7 @@ publishing {
 	    def fbase = f.getName().split("\\.")[0]
 	    "$fbase"(MavenPublication) {
 		version "${publish_version}"
-	        groupId "${publish_group}"
+	        groupId "${publish_group}.mock-service-wf"
 		artifact f
 		artifactId fbase
 	    }
