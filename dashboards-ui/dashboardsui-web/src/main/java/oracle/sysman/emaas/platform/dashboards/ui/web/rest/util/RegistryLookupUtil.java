@@ -235,7 +235,7 @@ public class RegistryLookupUtil
 										sanitizedInstance.getLinks());
 							}
 							else {
-								RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
+								links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 							}
 						}
 					}
@@ -271,7 +271,7 @@ public class RegistryLookupUtil
 										sanitizedInstance.getLinks());
 							}
 							else {
-								RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
+								links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 							}
 
 						}
