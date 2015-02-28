@@ -91,8 +91,8 @@ require(['knockout',
         {
             if (!ko.components.isRegistered("df-oracle-branding-bar")) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
 //            ko.components.register("df-oracle-branding-bar",{
 //                viewModel:{require:'../app/df/dfcommon/widgets/brandingbar/js/brandingbar'},
