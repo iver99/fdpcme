@@ -199,9 +199,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private static final String NAV_BASE = "/emcpdf-intg-sample-wf";
-	private static final String NAV_BASE_HOME = "/emcpdf-intg-sample-wf/home.html";
-	private static final String NAV_ASSET_ROOT = "/emcpdf-intg-sample-wf/dependencies";
+	private static final String NAV_BASE = "/emsaasui/emcpdf-intg-sample-wf";
+	private static final String NAV_BASE_HOME = "/emsaasui/emcpdf-intg-sample-wf/home.html";
+	private static final String NAV_ASSET_ROOT = "/emsaasui/emcpdf-intg-sample-wf/dependencies";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -236,19 +236,19 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		ServiceConfigBuilder builder = new ServiceConfigBuilder();
 		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
-				.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
-				.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.virtualEndpoints(applicationUrl + NAV_BASE).canonicalEndpoints(applicationUrl + NAV_BASE)
+		.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
 		InfoManager
-				.getInstance()
-				.getInfo()
-				.setLinks(
-						Arrays.asList(new Link().withRel("home").withHref(applicationUrl + NAV_BASE_HOME),
-								new Link().withRel("assetRoot").withHref(applicationUrl + NAV_ASSET_ROOT)));
+		.getInstance()
+		.getInfo()
+		.setLinks(
+				Arrays.asList(new Link().withRel("home").withHref(applicationUrl + NAV_BASE_HOME),
+						new Link().withRel("assetRoot").withHref(applicationUrl + NAV_ASSET_ROOT)));
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
