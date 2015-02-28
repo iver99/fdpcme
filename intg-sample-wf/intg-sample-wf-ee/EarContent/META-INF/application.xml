@@ -4,7 +4,7 @@
   <module>
     <web>
       <web-uri>intg-sample-wf-web.war</web-uri>
-      <context-root>emcpdf-intg-sample-wf</context-root>
+      <context-root>emsaasui/emcpdf-intg-sample-wf</context-root>
     </web>
   </module>
 </application>
