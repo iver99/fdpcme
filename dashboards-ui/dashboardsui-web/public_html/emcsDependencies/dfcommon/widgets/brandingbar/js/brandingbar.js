@@ -36,10 +36,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     }
                 ];
                 
-                var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
-                var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getFilePath(localrequire, '../../../css/dashboards-common-alta.css');
-                self.brandingbarCss = cssFile && cssFile.indexOf('../')===0 ? cssFile.substring(3) : cssFile;
+		var templatePath = 'emcsDependencies/dfcommon/widgets/navlinks/navigation-links.html';
+                var vmPath = 'emcsDependencies/dfcommon/widgets/navlinks/js/navigation-links.js';
+                var cssFile = 'emcsDependencies/dfcommon/css/dashboards-common-alta.css';                
+		self.brandingbarCss = cssFile && cssFile.indexOf('../')===0 ? cssFile.substring(3) : cssFile;
                 
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links')) {
