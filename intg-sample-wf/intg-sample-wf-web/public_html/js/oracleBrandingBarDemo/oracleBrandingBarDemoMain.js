@@ -65,7 +65,24 @@ requirejs.config({
  * objects in the callback
  */
 require(['knockout',
-    'jquery' 
+    'jquery',
+    'ojs/ojchart',
+    'ojs/ojcomponents',
+//    'ojs/ojvalidation',    
+//    'ojs/ojdatetimepicker',
+    'ojs/ojcore',
+    'jqueryui',
+    'ojs/ojmodel',
+    'ojs/ojknockout',
+    'ojs/ojknockout-model',
+    'ojs/ojbutton',
+    'ojs/ojtoolbar',
+    'ojs/ojmenu',
+//    'ojs/ojpagingcontrol',
+//    'ojs/ojeditablevalue',
+    'ojs/internal-deps/dvt/DvtChart',
+    'ojs/ojdvt-base'
+ 
 ],
         function(ko, $) // this callback gets executed when all required modules are loaded
         {

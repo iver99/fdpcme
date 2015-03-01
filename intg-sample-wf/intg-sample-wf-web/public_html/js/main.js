@@ -137,6 +137,7 @@ require(['knockout',
                 self.userName = "SYSMAN";
                 self.tenantName = "TenantOPC1";
                 self.appName = "Integration Sample";
+/*
                 // 
                 // Dropdown menu states
                 // 
@@ -193,6 +194,7 @@ require(['knockout',
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+*/
             };
             
             function MainViewModel() {
