@@ -38,8 +38,19 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getFilePath(localrequire, '../../../css/dashboards-common-alta.css');
-		self.brandingbarCss = cssFile && cssFile.indexOf('../')===0 ? cssFile.substring(3) : cssFile;
+                var cssFile = getFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
+                var htmlDepth = getHtmlDepth();
+                var jsDepth = getJsDepth(localrequire);
+                var depth = jsDepth - htmlDepth;
+                if (depth>=0){
+                    cssFile = cssFile.substring("../".length*depth);
+                }else{
+                    for(var i=0;i>depth;i--){
+                       cssFile="../"+cssFile; 
+                    }                     
+                }
+
+		self.brandingbarCss = cssFile;
                 
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links')) {
@@ -78,11 +89,34 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 });  
                 
                 function getFilePath(requireContext, relPath) {
-                    var pathArray;
-                    pathArray = requireContext.toUrl(relPath).split('/');
-                    pathArray.shift();
-                    return pathArray.join('/');
+                    var jsRootMain = requireContext.toUrl("");
+                    var path = requireContext.toUrl(relPath);
+                    path = path.substring(jsRootMain.length);
+                    return path;
                 };
+                
+                function getHtmlDepth(){
+                    //Limitation: assume context root has style like /emsaasui/xxxx/, e.g. /emsaasui/emcpdfui/ 
+                    var htmlPath = window.location.pathname; //e.g. /emsaasui/emcpdfui/folder/page.html
+                    var pathArray = htmlPath.split("/");
+                    return pathArray.length-4;
+                }
+                
+                function getJsDepth(requireContext){
+                    var jsRootMain = requireContext.toUrl("");
+                    var doScan = true;
+                    while(doScan){
+                        if (jsRootMain.indexOf("../")===0){
+                            jsRootMain = jsRootMain.substring(3);
+                        }else{
+                            doScan = false;
+                        }
+                    }
+                    var jsRootMainArray = jsRootMain.split("/");//e.g. js/oracleBrandingBar/oracleBrandingBarMain
+                    return jsRootMainArray.length -1;
+                }
+                
+                
             }
             
             return BrandingBarViewModel;
