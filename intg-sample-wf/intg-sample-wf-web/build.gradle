@@ -139,29 +139,49 @@ war {
 
 task buildCommonLibZip(type: Zip) {
 	baseName = 'mock-service-wf'
-	appendix = 'ui'
-	classifier = 'common'
+	appendix = 'ui-common'
+	//classifier = 'common'
 	from 'public_html/dependencies/sampleservicecommon/'
 	into 'sampleservicecommon'
 }
 
-def filesToPublish = []
-//fileTree("build/libs").each { file ->
-fileTree publishfiles = fileTree("build/distributions")
-publishfiles.each { file ->
-    filesToPublish << file
-}
+//def filesToPublish = []
+    //fileTree("build/libs").each { file ->
+//    fileTree publishfiles = fileTree("build/distributions")
+//    publishfiles.each { file ->
+//	filesToPublish << file
+ //   }
 
 publishing {
+
+    publish.outputs.upToDateWhen { false }
+
+    def filesToPublish = []
+    //fileTree("build/libs").each { file ->
+    fileTree publishfiles = fileTree("build/distributions")
+    publishfiles.each { file ->
+	filesToPublish << file
+	println file.getName()
+    }
+
+//    publications {
+//	for (f in filesToPublish ) {
+//	    def fbase = f.getName().split("\\.")[0]
+//	    "$fbase"(MavenPublication) {
+//		version "${publish_version}"
+//	        groupId "${publish_group}.mock-service-wf"
+//		artifact f
+//		artifactId fbase
+//	    }
+//	}
+//    }
+
     publications {
-	for (f in filesToPublish ) {
-	    def fbase = f.getName().split("\\.")[0]
-	    "$fbase"(MavenPublication) {
-		version "${publish_version}"
-	        groupId "${publish_group}.mock-service-wf"
-		artifact f
-		artifactId fbase
-	    }
+	maven(MavenPublication) {
+	    version "${publish_version}"
+	    groupId "${publish_group}.mock-service-wf"
+	    artifact(buildCommonLibZip)
+	    artifactId 'mock-service-wf-ui-common'
 	}
     }
     repositories {

@@ -124,29 +124,38 @@ war {
 
 task buildDFCommonLibZip(type: Zip){
 	baseName = 'emcs-ui-framework'
-	//appendix = 'ui'
-	classifier = 'common'
+	appendix = 'common'
+	//classifier = 'common'
 	from 'public_html/emcsDependencies/dfcommon/'
 	into 'dfcommon'
 }
 
-def libsToPublish = []
+//def libsToPublish = []
 //fileTree publishfiles = fileTree("build/libs") + fileTree("build/distributions")
-fileTree publishfiles = fileTree("build/distributions")
-publishfiles.each { file ->
-    libsToPublish << file
-}
+//fileTree publishfiles = fileTree("build/distributions")
+//publishfiles.each { file ->
+//    libsToPublish << file
+//}
 
 publishing {
+//    publications {
+//	for (f in libsToPublish ) {
+//	    def fbase = f.getName().split("\\.")[0]
+//	    "$fbase"(MavenPublication) {
+//		version "${publish_version}"
+//	        groupId "${publish_group}"
+//		artifact f
+//		artifactId fbase
+//	    }
+//	}
+//    }
+
     publications {
-	for (f in libsToPublish ) {
-	    def fbase = f.getName().split("\\.")[0]
-	    "$fbase"(MavenPublication) {
-		version "${publish_version}"
-	        groupId "${publish_group}"
-		artifact f
-		artifactId fbase
-	    }
+	maven(MavenPublication) {
+	    version "${publish_version}"
+	    groupId "${publish_group}"
+	    artifact(buildDFCommonLibZip)
+	    artifactId 'emcs-ui-framework-common'
 	}
     }
     repositories {
