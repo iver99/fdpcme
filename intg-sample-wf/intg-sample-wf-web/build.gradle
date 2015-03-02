@@ -118,6 +118,8 @@ war {
                 include '**/*'
                 into('WEB-INF/classes')
         }
+	
+	rootSpec.exclude("**/*.zip")
 
 }
 
