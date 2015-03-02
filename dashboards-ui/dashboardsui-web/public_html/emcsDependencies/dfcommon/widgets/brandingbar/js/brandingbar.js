@@ -4,7 +4,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 var self = this;
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-//                self.registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
                 self.productName = "Enterprise Manager";
                 self.cloudName = "Cloud Service";
                 self.appName = $.isFunction(params.appName) ? params.appName() : params.appName;
@@ -38,17 +37,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
-                var htmlDepth = getHtmlDepth();
-                var jsDepth = getJsDepth(localrequire);
-                var depth = jsDepth - htmlDepth;
-                if (depth>=0){
-                    cssFile = cssFile.substring("../".length*depth);
-                }else{
-                    for(var i=0;i>depth;i--){
-                       cssFile="../"+cssFile; 
-                    }                     
-                }
+                var cssFile = getCssFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
 
 		self.brandingbarCss = cssFile;
                 
@@ -95,28 +84,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     return path;
                 };
                 
-                function getHtmlDepth(){
-                    //Limitation: assume context root has style like /emsaasui/xxxx/, e.g. /emsaasui/emcpdfui/ 
-                    var htmlPath = window.location.pathname; //e.g. /emsaasui/emcpdfui/folder/page.html
-                    var pathArray = htmlPath.split("/");
-                    return pathArray.length-4;
-                }
-                
-                function getJsDepth(requireContext){
-                    var jsRootMain = requireContext.toUrl("");
-                    var doScan = true;
-                    while(doScan){
-                        if (jsRootMain.indexOf("../")===0){
-                            jsRootMain = jsRootMain.substring(3);
-                        }else{
-                            doScan = false;
-                        }
-                    }
-                    var jsRootMainArray = jsRootMain.split("/");//e.g. js/oracleBrandingBar/oracleBrandingBarMain
-                    return jsRootMainArray.length -1;
-                }
-                
-                
+                function getCssFilePath(requireContext, relPath) {
+                    return requireContext.toUrl(relPath);
+                };
             }
             
             return BrandingBarViewModel;
