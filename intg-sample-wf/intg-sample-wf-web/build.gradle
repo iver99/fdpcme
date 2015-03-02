@@ -180,7 +180,7 @@ dependencies {
         compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
 	if(war_number.toInteger()>0){
 		    for (i in 0..<war_number.toInteger())
-			compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip')
+			compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip',changing:true)
 		}
 }
 
