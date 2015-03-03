@@ -114,10 +114,10 @@ war {
 	       include '**/*'
 	        into('/')
 	}
-	from('src/main/java') {
-	        include '**/*'
-	        into('WEB-INF/classes')
-	}
+	//from('src/main/java') {
+	//        include '**/*'
+	//        into('WEB-INF/classes')
+	//}
 
 	rootSpec.exclude("**/*.zip")
 }
