@@ -35,6 +35,7 @@ public class RegistrationEntity
 	public static final String NAME_DASHBOARD_API_VERSION = "0.1";
 	public static final String NAME_QUICK_LINK = "quickLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
 	public static final String NAME_DASHBOARD_UI_VERSION = "0.1";
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
@@ -82,6 +83,14 @@ public class RegistrationEntity
 	//	}
 
 	/**
+	 * @return Administration links discovered from service manager
+	 */
+	public List<LinkEntity> getAdminLinks()
+	{
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK);
+	}
+
+	/**
 	 * @return the rest API end point for dashboard framework
 	 * @throws Exception
 	 */
@@ -90,14 +99,6 @@ public class RegistrationEntity
 		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
 				NAME_DASHBOARD_API_VERSION);
 		return entity != null ? entity.getHref() : null;
-	}
-
-	/*
-	 * @return Quick links discovered from service manager
-	 */
-	public List<LinkEntity> getQuickLinks()
-	{
-		return lookupLinksWithRelPrefix(NAME_QUICK_LINK);
 	}
 
 	/**
@@ -110,17 +111,12 @@ public class RegistrationEntity
 	//		return link != null ? link.getHref() : null;
 	//	}
 
-	/**
-	 * @return the rest API end point for SSF
-	 * @throws Exception
+	/*
+	 * @return Quick links discovered from service manager
 	 */
-	public String getSsfRestApiEndPoint() throws Exception
+	public List<LinkEntity> getQuickLinks()
 	{
-		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
-		return entity != null ? entity.getHref() : null;
-		//		if (true) {
-		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
-		//		}
+		return lookupLinksWithRelPrefix(NAME_QUICK_LINK);
 	}
 
 	//	/**
@@ -138,6 +134,19 @@ public class RegistrationEntity
 	//	{
 	//		return ssfVersion;
 	//	}
+
+	/**
+	 * @return the rest API end point for SSF
+	 * @throws Exception
+	 */
+	public String getSsfRestApiEndPoint() throws Exception
+	{
+		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
+		return entity != null ? entity.getHref() : null;
+		//		if (true) {
+		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
+		//		}
+	}
 
 	/**
 	 * @return Visual analyzer links discovered from service manager
