@@ -34,6 +34,9 @@
   content: "\f1da"; 
 }
 
+.fa-cogs:before {
+  content: "\f085"; }
+
 @font-face {
   font-family: 'FaFont';
   src: url("fonts/fontawesome-webfont.woff");
@@ -77,6 +80,9 @@
 }
 #iconHistory{
     background-color: #3caf85;
+}
+#iconCogs{
+    background-color: #5a68ad;
 }
 
 #links_menu .iconCircle .fa {

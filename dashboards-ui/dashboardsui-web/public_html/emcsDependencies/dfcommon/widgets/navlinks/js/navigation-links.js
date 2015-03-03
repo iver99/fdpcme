@@ -5,17 +5,18 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var quickLinkList = [];
                 var recentList = [];
                 var favoriteList = [];
+                var adminList = [];
                 var maxRecentSize = 10;
                 var maxFavoriteSize = 5;
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-//                var registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
                 var dashboardUrl = null;
                 var dfu = new dfumodel(userName, tenantName);
                 
                 self.quickLinks = ko.observableArray();
                 self.favorites = ko.observableArray();
                 self.recents = ko.observableArray();
+                self.adminLinks = ko.observableArray();
                 
                 var refreshListener = ko.computed(function(){
                     return {
@@ -56,26 +57,27 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 };
                 
                 /**
-                * Discover available quick links by rel name 'quickLink'
-                * @param {String} smUrl
-                * @returns {Array} availableLinks
+                * Discover available quick links and administration links by calling registration api
                 */
-                function discoverQuickLinks() {
-                    var fetchServiceQuickLinks = function(data) {
+                function discoverLinks() {
+                    var fetchServiceLinks = function(data) {
                         if (data.quickLinks && data.quickLinks.length > 0) {
                             self.quickLinks(data.quickLinks);
+                        }
+                        if (data.adminLinks && data.adminLinks.length > 0) {
+                            self.adminLinks(data.adminLinks);
                         }
                     };                   
                     var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
                     $.ajax({
                         url: serviceUrl,
-//                        headers: dfu.getSMRequestHeader(),
                         success: function(data, textStatus) {
-                            fetchServiceQuickLinks(data);
+                            fetchServiceLinks(data);
                         },
                         error: function(xhr, textStatus, errorThrown){
                             console.log('Failed to get service instances by URL: '+serviceUrl);
                             self.quickLinks(quickLinkList);
+                            self.adminLinks(adminList);
                         },
                         async: true
                     });                
@@ -84,10 +86,11 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 function refreshLinks() {
                     recentList = [];
                     favoriteList = [];
+                    adminList = [];
                     
-                    //Fetch available quick links from service manager registry
-                    if (self.quickLinks().length === 0) {
-                        discoverQuickLinks();
+                    //Fetch available quick links and administration links from service manager registry
+                    if (self.quickLinks().length === 0 || self.adminLinks().length === 0) {
+                        discoverLinks();
                     }
                     
                     //Fetch favorite dashboards
