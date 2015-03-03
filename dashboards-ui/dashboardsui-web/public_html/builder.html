@@ -275,14 +275,14 @@ role value for that section to represent the appropriate content type.
                 </div>
                 <div style="display:none;" id="addWidgetDialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
-                        initialVisibility: 'hide', 
-                        rootAttributes: { style: 'width: 815px; height:520px;background-color: #DDDDDD;'}}">   
-                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
+                        initialVisibility: 'hide', title: 'Add Widgets',
+                        rootAttributes: { style: 'width: 815px; height:520px;'}}">   
+<!--                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
                         <div id="dialog-title-id" class="oj-dialog-title">
                             <span class="widget-dialog-header-title">Add Widgets</span>
-                            <!--<a href="#" data-bind="click:closeAddWidgetDialog" class="df-dialog-header-close-bigger">CLOSE</a>-->
+                            <a href="#" data-bind="click:closeAddWidgetDialog" class="df-dialog-header-close-bigger">CLOSE</a>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="oj-dialog-body widget-dialog-body">
                       <div id="addAWidget" class="oj-row">
                           <div class="widget-dialog-summary oj-col oj-sm-6" style="padding-top: 8px;font-size: small" data-bind="text:summaryMsg"></div>
@@ -306,7 +306,7 @@ role value for that section to represent the appropriate content type.
                         <div style="float:left;" id="search_box">
                             <div style="float:left;">
                                 <input id="searchTxt" maxlength='100' autofocus="autofocus" aria-label="Search widgets"
-                                   placeholder=" search widgets" data-bind="ojComponent:{component:'ojInputText',value: searchText},
+                                   placeholder=" Enter criteria to search for a widget." data-bind="ojComponent:{component:'ojInputText',value: searchText},
                                                                         dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             </div>
                             <div style="float:right;">

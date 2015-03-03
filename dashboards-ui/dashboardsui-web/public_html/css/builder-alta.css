@@ -300,7 +300,7 @@ body, html {
     width:380px;
     height: 28px; 
     margin-bottom: 10px;
-    background-color: WhiteSmoke;
+    background-color: #fcfdfe;
     
 } 
 #search_box #searchTxt { 
@@ -310,9 +310,12 @@ body, html {
     width: 340px; 
     height:28px;
     background: none; 
-    color:gray;
+/*    color:gray;
     font-size: medium;
-    font-weight: bold;
+    font-weight: bold;*/
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #737373;
     margin-left: 0;
     margin-top: 0;
 } 
@@ -368,7 +371,7 @@ body, html {
     padding-right: 5px;
     vertical-align: middle;
     text-align: center;
-    background-color: white;
+    background-color: white; /*#EAEAEA;*/
     border-color: #d6dfe6;
     /* line-height:134px; */
     float:left;
@@ -440,13 +443,13 @@ body, html {
 }
 
 .widget-dialog-body {
-    background-color:  #DDDDDD;
+    /*background-color:  #DDDDDD;*/
 }
 
 .widget-dialog-summary {
     /*width:100%;*/
     font-weight: bold;
-    color: gray;
+    /*color: gray;*/
 }
 
 .widget-dialog-footer-notes {
@@ -455,7 +458,7 @@ body, html {
     margin-left: 5px;
     /*color:black;*/
     font-weight: bold;
-    color: gray;
+    /*color: gray;*/
     font-size: small;
     padding-top: 14px;
 }
