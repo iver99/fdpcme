@@ -415,6 +415,7 @@ define(['knockout',
             var self = this;
                         
             self.dashboard = dashboard;
+            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name);
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];

@@ -242,12 +242,6 @@ require(['knockout',
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
 
-                    function TitleViewModel(){
-                        var self = this;
-                        self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name);
-                    }
-                    var titleVM = new TitleViewModel();
-                    
                      ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
                             var list = valueAccessor();
@@ -274,7 +268,6 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
 
-                    ko.applyBindings(titleVM,$("title")[0]);
                     //header
                     ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
 //                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
