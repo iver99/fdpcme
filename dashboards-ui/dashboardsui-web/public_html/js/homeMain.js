@@ -149,11 +149,16 @@ require(['dbs/dbsmodel',
                 self.appName = "";
             }
            
+           function TitleViewModel(){
+               var self = this;
+               self.homeTitle = getNlsString("DBS_HOME_TITLE");        
+           }
             dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();
+            var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
-                
+                ko.applyBindings(titleVM,$("title")[0]);
                 //Caution: need below line to enable KO binding, otherwise KOC inside headerWrapper doesn't work
                 ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
 //                ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));

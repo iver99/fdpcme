@@ -6,6 +6,8 @@
 
 define({
   "root": {
+      "DBS_HOME_TITLE":"Oracle Enterprise Manager - Cloud Service",
+      "DBS_BUILDER_TITLE":"Oracle Enterprise Manager - Cloud Service - {0}",
       "COMMON_BTN_OK": "OK",
       "COMMON_BTN_CANCEL": "Cancel",
       "COMMON_BTN_SAVE": "Save",
