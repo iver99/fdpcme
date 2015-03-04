@@ -230,11 +230,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	}
 
 	/**
-	 * Update dashboards UI service status to down on service manager
+	 * Update dashboards UI service status to out of service on service manager
 	 */
-	public void makeServiceDown()
+	public void makeServiceOutOfService()
 	{
-		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.DOWN);
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
 	}
 
 	/**

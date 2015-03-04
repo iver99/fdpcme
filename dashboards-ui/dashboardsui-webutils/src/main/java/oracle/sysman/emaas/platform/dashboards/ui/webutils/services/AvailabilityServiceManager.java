@@ -84,14 +84,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			isDFApiAvailable = false;
 			logger.error(e.getLocalizedMessage(), e);
 		}
-		// register/unregister dashboards UI service
+		// update dashboards UI service status
 		if (!isSSFAvailable) {
-			rsm.makeServiceDown();
-			logger.info("Dashboards UI service is down because Saved Search API service is unavailable");
+			rsm.makeServiceOutOfService();
+			logger.info("Dashboards UI service is out of service because Saved Search API service is unavailable");
 		}
 		else if (!isDFApiAvailable) {
-			rsm.makeServiceDown();
-			logger.info("Dashboards UI service is down because Dashboard API service is unavailable");
+			rsm.makeServiceOutOfService();
+			logger.info("Dashboards UI service is out of service because Dashboard API service is unavailable");
 		}
 		else {
 			try {
@@ -146,7 +146,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			logger.info("Timer for dashboards UI dependencies checking stopped");
 		}
 		catch (InstanceNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 

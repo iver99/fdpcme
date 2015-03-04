@@ -61,8 +61,8 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		boolean isDBAvailable = isDatabaseAvailable();
 		// update dashboard API service status
 		if (!isDBAvailable) {
-			rsm.makeServiceDown();
-			logger.info("Dashboards service is down because database is unavailable");
+			rsm.makeServiceOutOfService();
+			logger.info("Dashboards service is out of service because database is unavailable");
 		}
 		else {
 			try {
