@@ -119,6 +119,11 @@ war {
 	//        into('WEB-INF/classes')
 	//}
 
+	from('src/main/java') { 
+		include '**/*.properties'
+		into('WEB-INF/classes') 
+	}
+
 	rootSpec.exclude("**/*.zip")
 }
 
