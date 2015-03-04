@@ -20,7 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
-import org.apache.commons.lang.StringUtils;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -154,14 +154,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	{
 		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPoint(DASHBOARD_API_SERVICE_NAME,
 				DASHBOARD_API_SERVICE_VERSION);
-		return !StringUtils.isEmpty(ee.getHref());
+		return !StringUtil.isEmpty(ee.getHref());
 	}
 
 	private boolean isSavedSearchAvailable()
 	{
 		EndpointEntity ee = RegistryLookupUtil
 				.getServiceExternalEndPoint(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION);
-		return !StringUtils.isEmpty(ee.getHref());
+		return !StringUtil.isEmpty(ee.getHref());
 	}
 
 }
