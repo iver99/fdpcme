@@ -16,6 +16,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
                 };
                 
+                //Open about box
+                //aboutbox id
+                self.aboutBoxId = 'aboutBox';
+                self.openAboutBox = function() {
+                    $('#' + self.aboutBoxId).ojDialog('open');
+                };
+                
                 self.globalNavItems = [
                     {"label": "Preferences",
                         "url": "#",
@@ -27,7 +34,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     },
                     {"label": "About",
                         "url": "#",
-                        "onclick": ""
+                        "onclick": self.openAboutBox
                     },
                     {"label": "Sign Out",
                         "url": "#",
@@ -46,6 +53,16 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     ko.components.register("df-oracle-nav-links",{
                         viewModel:{require:vmPath.substring(0, vmPath.length-3)},
                         template:{require:'text!'+templatePath}
+                    });
+                }
+                
+                //Register a Knockout component for about box
+                var aboutTemplatePath = getFilePath(localrequire, '../../aboutbox/aboutBox.html');
+                var aboutVmPath = getFilePath(localrequire, '../../aboutbox/js/aboutBox.js');
+                if (!ko.components.isRegistered('df-oracle-about-box')) {
+                    ko.components.register("df-oracle-about-box",{
+                        viewModel:{require:aboutVmPath.substring(0, aboutVmPath.length-3)},
+                        template:{require:'text!'+aboutTemplatePath}
                     });
                 }
                 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+KO Component template of AboutBox
+-->
+<div style="display:none" title="About Cloud Service" 
+     data-bind="attr:{id: id},
+                ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                            resizeBehavior :'none',
+                            rootAttributes: { style: 'width: 550px;'}
+                        }">
+    <style>
+        .em-about-box .oj-dialog-close-icon
+        {
+            color: #FFFFFF;
+        }
+    </style>
+    <div class="oj-dialog-header oj-helper-clearfix em-about-box" aria-labelledby="dialogTitleId" 
+         style="background-color: #38A0D9; border-color: #38A0D9;background-image: none">
+    </div>
+    <div class="oj-dialog-body" style="padding-top: 0px; padding-left: 0px; padding-right: 0px; background-color: white">
+        <div data-bind="attr:{style: aboutBackgroundImgStyle}">
+            <div style="display:table-row;">
+                <div style="display:table-cell;">
+                    <img data-bind="attr:{src: aboutGraphic}" alt='icon' width="160" height="160"/>
+                </div>
+                <div style="display:table-cell;font-size:1.3em;vertical-align: top; padding-top: 25px;">
+                        <span style="color:white">About Cloud Service</span><br/>
+                        <span id='dialogTitleId'><b>Oracle Enterprise Manager Cloud Service</b></span>
+                </div>
+            </div>
+        </div>
+        <div style="padding-left: 1em;">
+            <p>
+                Copyright © <span data-bind="text: copyrightYearString"></span>, Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+            </p>
+            <p>
+                Warning: Unauthorized access is strictly prohibited.
+            </p>
+        </div>
+    </div>
+    <div class="oj-dialog-footer" style="background-color: white;">
+        <button id="okButton" data-bind="ojComponent: {component: 'ojButton', label: 'Close'},
+                                    click: okButtonHandle"> 
+        </button>
+    </div>
+</div>
