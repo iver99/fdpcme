@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.web.rest.util;
+package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -220,5 +220,4 @@ public class RegistryLookupUtil
 
 		return protocoledLinks;
 	}
-
 }

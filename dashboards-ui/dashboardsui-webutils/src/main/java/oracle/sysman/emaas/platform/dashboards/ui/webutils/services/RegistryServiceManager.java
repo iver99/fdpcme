@@ -229,6 +229,22 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		return "Service Registry Service";
 	}
 
+	/**
+	 * Update dashboards UI service status to down on service manager
+	 */
+	public void makeServiceDown()
+	{
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.DOWN);
+	}
+
+	/**
+	 * Update dashboards UI service status to up on service manager
+	 */
+	public void makeServiceUp()
+	{
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+	}
+
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{

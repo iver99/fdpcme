@@ -21,7 +21,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 
 /**
  * @author miao

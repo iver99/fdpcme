@@ -22,7 +22,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.MessageUtils;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 
 /**
  * @author miao

@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
+package oracle.sysman.emaas.platform.dashboards.webutils.util;
 
 import java.net.URI;
 import java.util.ArrayList;

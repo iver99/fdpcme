@@ -14,10 +14,12 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.Abstrac
 
 public class DashboardUiLifecycleService extends AbstractApplicationLifecycleService
 {
-
 	public DashboardUiLifecycleService()
 	{
-		super(new RegistryServiceManager(), new LoggingServiceManager());
+		RegistryServiceManager rsm = new RegistryServiceManager();
+		addApplicationServiceManager(rsm);
+		addApplicationServiceManager(new LoggingServiceManager());
+		addApplicationServiceManager(new AvailabilityServiceManager(rsm));
 	}
 
 }

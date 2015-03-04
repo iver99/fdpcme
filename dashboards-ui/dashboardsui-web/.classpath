@@ -43,6 +43,7 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/xml-path-1.9.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/rest-assured-common-2.3.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-core-2.0.2.jar"/>
-        <classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dashboardsui-webutils"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

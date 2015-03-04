@@ -33,6 +33,11 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 		}
 	}
 
+	public void addApplicationServiceManager(ApplicationServiceManager service)
+	{
+		registeredServices.add(service);
+	}
+
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws ApplicationException
 	{
