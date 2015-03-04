@@ -18,12 +18,12 @@ role value for that section to represent the appropriate content type.
 
 <html lang="en-us">
     <head>
-        <title>Dashboard Builder Page</title> 
+        <title>Oracle Branding Bar Demo 2</title> 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="dependencies/oraclejet/css/libs/oj/v1.0.0/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="../../dependencies/oraclejet/css/libs/oj/v1.0.0/alta/oj-alta-min.css" type="text/css"/>
 
         <!-- These style classes are for demonstration purposes only. -->
         <!--link rel="stylesheet" href="css/demo-alta-patterns-min.css"/-->
@@ -32,7 +32,7 @@ role value for that section to represent the appropriate content type.
         <!--<link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>-->
 
         <!-- RequireJS bootstrap file -->
-        <script data-main="js/main" src="dependencies/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="../../js/oracleBrandingBarDemo/oracleBrandingBarDemoMain" src="../../dependencies/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
@@ -45,23 +45,6 @@ role value for that section to represent the appropriate content type.
                 <df-oracle-branding-bar params="{userName: userName, tenantName : tenantName, appName : appName}"></df-oracle-branding-bar>
             </header>
             <div id="main-container" class="oj-col stretch-height">
-<!--                <div class="oj-row stretch-height tile-container" id="tileContainer">
-                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height">
-                        <div class="oj-row dbd-column stretch-height" data-bind="foreach: tiles" id="tiles-row">
-                            <div class="dbd-tile dbd-tile-sortable oj-col">
-                                <div class="dbd-tile-element">
-                                    <div style="width: 100%;padding-top: 5px;">
-                                        <label data-bind="text:title" style="font-size: medium;font-weight: bold;"></label>
-                                    </div>
-                                    <div style="width: 100%;">
-                                        <div data-bind='component:{name:type, params:{tile:$data }}' style="width:100%;height:100%;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
             </div>
         </div>
     </body>

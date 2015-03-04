@@ -201,7 +201,6 @@ require(['knockout',
             
             function HeaderViewModel() {
                 var self = this;
-                self.registryUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();

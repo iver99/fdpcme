@@ -32,14 +32,8 @@ define(['knockout',
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl){
-                    var url = dfu.discoverUrl("SavedSearch","0.1","sso.endpoint/virtual", regInfo.registryUrl);
-                    if (url){
-                        return url;
-                    }else{
-                        console.log("Failed to discovery SSF REST API end point");
-                        return null;
-                    }
+                if (regInfo && regInfo.ssfRestApiEndPoint){
+                    return regInfo.ssfRestApiEndPoint;
                 }else{
                     console.log("Failed to discovery SSF REST API end point");
                     return null;
@@ -52,8 +46,8 @@ define(['knockout',
              */
             self.discoverDFRestApiUrl = function() {
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl){
-                    return dfu.discoverDFRestApiUrl(regInfo.registryUrl);
+                if (regInfo && regInfo.dfRestApiEndPoint){
+                    return regInfo.dfRestApiEndPoint;
                 }else{
                     console.log("Failed to discovery DF REST API end point");
                     return null;
@@ -86,8 +80,8 @@ define(['knockout',
              */
             self.discoverQuickLinks = function() {
             	var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl){
-                    return discoverLinks('quickLink',regInfo.registryUrl);
+                if (regInfo && regInfo.quickLinks){
+                    return regInfo.quickLinks;
                 }
                 else {
                     return [];
@@ -100,8 +94,8 @@ define(['knockout',
              */
             self.discoverVisualAnalyzerLinks = function() {
             	var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl){
-                    return discoverLinks('visualAnalyzer',regInfo.registryUrl);
+                if (regInfo && regInfo.visualAnalyzers){
+                    return regInfo.visualAnalyzers;
                 }
                 else {
                     return [];
@@ -157,10 +151,10 @@ define(['knockout',
                 return dfu.buildFullUrl(root, path);
             };
                         
-            self.getRegistryUrl = function() {
-                var regInfo = self.getRegistrationInfo();
-                return regInfo && regInfo.registryUrl ? regInfo.registryUrl : '';
-            };
+//            self.getRegistryUrl = function() {
+//                var regInfo = self.getRegistrationInfo();
+//                return regInfo && regInfo.registryUrl ? regInfo.registryUrl : '';
+//            };
             
             /**
              * Get request header for Saved Search Service API call
@@ -187,8 +181,8 @@ define(['knockout',
              */
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
                 var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.registryUrl){
-                    var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot, regInfo.registryUrl);
+                if (regInfo){
+                    var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot);
                     if (assetRoot){
                         return assetRoot;
                     }else{
@@ -254,142 +248,10 @@ define(['knockout',
              * @returns {result@arr;items@arr;links.href}
              */
             self.discoverQuickLink = function(serviceName, version, rel){
-                var regInfo = self.getRegistrationInfo();
-                var smUrl = null;
-                if (regInfo && regInfo.registryUrl){
-                    smUrl = regInfo.registryUrl;
-                }
-                if (typeof smUrl!=="string"){
-                     console.log("Error: Failed to discovery link, SM URL="+smUrl);
-                    return null;                    
-                }
-                if (serviceName===null || serviceName===undefined){
-                    console.log("Error: Failed to discovery link, serviceName="+serviceName);
-                    return null;
-                }
-                var searchUrl = self.buildFullUrl(smUrl,"instances")+"?serviceName="+serviceName;
-                
-                if (typeof version==="string"){
-                    searchUrl = searchUrl +"&version="+version;
-                }
-
-                var result =null;
-                $.ajax(searchUrl,{
-                    headers:dfu.getSMRequestHeader(),
-                    success:function(data, textStatus,jqXHR) {
-                        result = data;
-                    },
-                    error:function(xhr, textStatus, errorThrown){
-                        console.log("Error: link not found due to error: "+textStatus);
-                    },
-                    async:false
-                });
-                
-                if (result && result.total>0){
-                    if (typeof rel==="string"){
-                        if (Array.isArray(result.items[0].links) && result.items[0].links.length>0){
-                            for(var i=0;i<result.items[0].links.length;i++){
-                                var link = result.items[0].links[i];
-                                if (link.rel.indexOf(rel)===0){
-                                    console.log("link found by serviceName="+serviceName+", version="+version+", rel="+rel); 
-                                    return link.href;
-                                }
-                            }
-                        }
-                    }
-                }
-                console.log("Warning: link not found by serviceName="+serviceName+", version="+version+", rel="+rel); 
-                return null;
+                return dfu.discoverLinkWithRelPrefix(serviceName, version, rel);
             };
             
-            /**
-             * Discover available links by rel name
-             * @param {String} relName
-             * @param {String} smUrl
-             * @returns {Array} availableLinks
-             */
-            function discoverLinks(relName, smUrl) {
-                var availableLinks = [];
-                var linksFromDashboard = [];
-                var linksFromIntegrators = [];
-                
-                var fetchServiceQuickLinks = function(data) {
-                    var linkRecords = {};
-                    if (data.items && data.items.length > 0) {
-                        for (var i = 0; i < data.items.length; i++) {
-                            var serviceItem = data.items[i];
-                            if (serviceItem.links && serviceItem.links.length > 0) {
-                                for (var j = 0; j < serviceItem.links.length; j++) {
-                                    var link = serviceItem.links[j];
-                                    var linkName = serviceItem.serviceName;
-                                    var isValidQuickLink = false;
-                                    if (link.rel.indexOf('/') > 0) {
-                                        var rel = link.rel.split('/');
-                                        if (rel[0] === relName) {
-                                            isValidQuickLink = true;
-                                            if (rel[1] && rel[1] !== '') {
-                                                linkName = rel[1];
-                                            }
-                                        }
-                                    }
-                                    else if (link.rel === relName) {
-                                        isValidQuickLink = true;
-                                    }
-                                    
-                                    if (isValidQuickLink) {
-                                        var linkItem = {name: linkName,
-                                                         href: link.href};
-                                        if (serviceItem.serviceName === 'Dashboard-UI' && serviceItem.version === '0.1') {
-                                            if (linkRecords[linkName]) {
-                                                if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
-                                                    linkRecords[linkName].href = link.href;
-                                                }
-                                            }
-                                            else {
-                                                linksFromDashboard.push(linkItem);
-                                                linkRecords[linkName] = linkItem;
-                                            }
-                                        }
-                                        else {
-                                            if (linkRecords[linkName]) {
-                                                if (linkRecords[linkName].href.indexOf('http') === 0 && link.href.indexOf('https') === 0) {
-                                                    linkRecords[linkName].href = link.href;
-                                                }
-                                            }
-                                            else {
-                                                linksFromIntegrators.push(linkItem);
-                                                linkRecords[linkName] = linkItem;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-                var serviceUrl = self.buildFullUrl(smUrl,'instances');
-                $.ajax({
-                    url: serviceUrl,
-                    headers: dfu.getSMRequestHeader(),
-                    success: function(data, textStatus) {
-                        fetchServiceQuickLinks(data);
-                    },
-                    error: function(xhr, textStatus, errorThrown){
-                        console.log('Failed to get service instances by URL: '+serviceUrl);
-                    },
-                    async: false
-                });                
-                
-                for (var i = 0; i < linksFromDashboard.length; i++) {
-                    availableLinks.push(linksFromDashboard[i]);
-                }
-                for (var j = 0; j < linksFromIntegrators.length; j++) {
-                    availableLinks.push(linksFromIntegrators[j]);
-                }
-                return availableLinks;
-            };
         }
-        
         return new InternalDashboardFrameworkUtility();
     }
 );

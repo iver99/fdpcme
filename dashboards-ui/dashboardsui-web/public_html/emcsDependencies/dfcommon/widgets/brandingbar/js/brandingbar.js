@@ -4,17 +4,16 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 var self = this;
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.registryUrl = $.isFunction(params.registryUrl) ? params.registryUrl() : params.registryUrl;
                 self.productName = "Enterprise Manager";
                 self.cloudName = "Cloud Service";
                 self.appName = $.isFunction(params.appName) ? params.appName() : params.appName;
                 self.userTenantName = self.userName && self.tenantName ? self.userName + " (" + self.tenantName + ")" : "emaas.user@oracle.com";
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl(self.registryUrl);
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
                 
                 //SSO logout handler
                 self.handleSignout = function() {
-                    window.location.href = dfu.discoverLogoutUrl(self.registryUrl) + "?endUrl=" + ssoLogoutEndUrl;
+                    window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
                 };
                 
                 self.globalNavItems = [
@@ -38,8 +37,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getFilePath(localrequire, '../../../css/dashboards-common-alta.css');
-                self.brandingbarCss = cssFile && cssFile.indexOf('../')===0 ? cssFile.substring(3) : cssFile;
+                var cssFile = getCssFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
+
+		self.brandingbarCss = cssFile;
                 
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links')) {
@@ -78,10 +78,14 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 });  
                 
                 function getFilePath(requireContext, relPath) {
-                    var pathArray;
-                    pathArray = requireContext.toUrl(relPath).split('/');
-                    pathArray.shift();
-                    return pathArray.join('/');
+                    var jsRootMain = requireContext.toUrl("");
+                    var path = requireContext.toUrl(relPath);
+                    path = path.substring(jsRootMain.length);
+                    return path;
+                };
+                
+                function getCssFilePath(requireContext, relPath) {
+                    return requireContext.toUrl(relPath);
                 };
             }
             

@@ -16,6 +16,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -151,14 +152,16 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private boolean isDashboardAPIAvailable()
 	{
-		String ep = RegistryLookupUtil.getServiceExternalEndPoint(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION);
-		return !StringUtils.isEmpty(ep);
+		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPoint(DASHBOARD_API_SERVICE_NAME,
+				DASHBOARD_API_SERVICE_VERSION);
+		return !StringUtils.isEmpty(ee.getHref());
 	}
 
 	private boolean isSavedSearchAvailable()
 	{
-		String ep = RegistryLookupUtil.getServiceExternalEndPoint(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION);
-		return !StringUtils.isEmpty(ep);
+		EndpointEntity ee = RegistryLookupUtil
+				.getServiceExternalEndPoint(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION);
+		return !StringUtils.isEmpty(ee.getHref());
 	}
 
 }

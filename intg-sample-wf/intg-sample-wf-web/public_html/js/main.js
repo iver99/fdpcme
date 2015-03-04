@@ -91,8 +91,8 @@ require(['knockout',
         {
             if (!ko.components.isRegistered("df-oracle-branding-bar")) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../dependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../dependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
 //            ko.components.register("df-oracle-branding-bar",{
 //                viewModel:{require:'../app/df/dfcommon/widgets/brandingbar/js/brandingbar'},
@@ -132,11 +132,12 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-                self.registryUrl = "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
-                self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
+//                self.registryUrl = "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+//                self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = "SYSMAN";
                 self.tenantName = "TenantOPC1";
                 self.appName = "Integration Sample";
+/*
                 // 
                 // Dropdown menu states
                 // 
@@ -193,6 +194,7 @@ require(['knockout',
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+*/
             };
             
             function MainViewModel() {
