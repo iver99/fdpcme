@@ -57,7 +57,7 @@ def download_artifacts = "${download_artifacts}".split(",")
 def download_version = "${download_version}".split(",")
 def download_foldername = "${download_foldername}".split(",")
 
-project.task("unpackWarFromArtifactory") << {
+project.task("unpackZipFromArtifactory") << {
     
     for (i in 0..<war_number.toInteger()){
 	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
@@ -69,10 +69,12 @@ project.task("unpackWarFromArtifactory") << {
 		        from project.file(artifact.file.absolutePath)
 		        into buildWarUnzipDir.absolutePath
 		    }
-		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".war", dest:buildWarUnzipDir.absolutePath)
+		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildWarUnzipDir.absolutePath)
 		    
 		    project.copy {
-		        from  buildWarUnzipDir.absolutePath+"/emcsDependencies/"
+		        //from  buildWarUnzipDir.absolutePath+"/emcsDependencies/"
+			from buildWarUnzipDir.absolutePath
+			exclude "*.zip"
 		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
 		    }
 		    
@@ -82,7 +84,7 @@ project.task("unpackWarFromArtifactory") << {
     }
 }
 
-project.task("cleanWar") << {
+project.task("cleanZip") << {
     def File warDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
     def File tmpdir = warDestDir
     println 'Cleaning up war directories ...'
@@ -90,16 +92,17 @@ project.task("cleanWar") << {
     download_foldername.each { folder ->
         tmpdir = new File(warDestDir.absolutePath,"/"+folder)
 	println 'war dir: ' + tmpdir
-	tmpdir.deleteDir()}
+	tmpdir.deleteDir()
+	}
 }
 
-clean.dependsOn cleanJet,cleanWar
+clean.dependsOn cleanJet,cleanZip
 
 war.archiveName "dashboardsui-web.war"
 
 if(war_number.toInteger()>0){
 
-	war.dependsOn unpackJETFromArtifactory, unpackWarFromArtifactory
+	war.dependsOn unpackJETFromArtifactory, unpackZipFromArtifactory
 }
 else
 {
@@ -111,42 +114,53 @@ war {
 	       include '**/*'
 	        into('/')
 	}
-	from('src/main/java') {
-	        include '**/*'
-	        into('WEB-INF/classes')
-	}
-}
+	//from('src/main/java') {
+	//        include '**/*'
+	//        into('WEB-INF/classes')
+	//}
 
-task buildDFCommonLibWar(type: War) {
-	
-	appendix = 'DfIntgCommon'
-	from('public_html') {
-	       include 'dependencies/dfcommon/'
-	        into('/')
+	from('src/main/java') { 
+		include '**/*.properties'
+		into('WEB-INF/classes') 
 	}
-	rootSpec.exclude("**/*.class")
-        rootSpec.exclude("**/*.jar")
+
 	rootSpec.exclude("**/*.zip")
-	rootSpec.exclude("**/*.MF")
-
 }
 
-def libsToPublish = []
-fileTree("build/libs").each { file ->
-    libsToPublish << file
+task buildDFCommonLibZip(type: Zip){
+	baseName = 'emcs-ui-framework'
+	appendix = 'common'
+	//classifier = 'common'
+	from 'public_html/emcsDependencies/dfcommon/'
+	into 'dfcommon'
 }
 
+//def libsToPublish = []
+//fileTree publishfiles = fileTree("build/libs") + fileTree("build/distributions")
+//fileTree publishfiles = fileTree("build/distributions")
+//publishfiles.each { file ->
+//    libsToPublish << file
+//}
 
 publishing {
+//    publications {
+//	for (f in libsToPublish ) {
+//	    def fbase = f.getName().split("\\.")[0]
+//	    "$fbase"(MavenPublication) {
+//		version "${publish_version}"
+//	        groupId "${publish_group}"
+//		artifact f
+//		artifactId fbase
+//	    }
+//	}
+//    }
+
     publications {
-	for (f in libsToPublish ) {
-	    def fbase = f.getName().split("\\.")[0]
-	    "$fbase"(MavenPublication) {
-		version "${publish_version}"
-	        groupId "${publish_group}"
-		artifact f
-		artifactId fbase
-	    }
+	maven(MavenPublication) {
+	    version "${publish_version}"
+	    groupId "${publish_group}"
+	    artifact(buildDFCommonLibZip)
+	    artifactId 'emcs-ui-framework-common'
 	}
     }
     repositories {
@@ -170,7 +184,9 @@ task runQAUITestSuite(type: Test){
 }
 
 dependencies {
-        compile(group: 'log4j', name: 'log4j', version: '1.2.17')
+        providedCompile project(':dashboards-ui:dashboardsui-webutils')
+        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2')
+        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2')
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
 
@@ -186,7 +202,7 @@ dependencies {
         compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
 	if(war_number.toInteger()>0){
 	    for (i in 0..<war_number.toInteger())
-		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'war')
+		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip', changing: true)
 	}
 }
 

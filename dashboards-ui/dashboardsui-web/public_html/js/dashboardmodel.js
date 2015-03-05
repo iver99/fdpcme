@@ -47,31 +47,56 @@ function(dfu, oj, ko, $)
     
     DashboardModel.prototype.openDashboardPage = function()
     {
-        // super
-        var self = this, widgets = self.get('widgets') || self.get('tiles');
-        if ("onePage"===self.type){
-                if (widgets instanceof Array && widgets.length===1 && 
-                        widgets[0].WIDGET_KOC_NAME &&
-                        widgets[0].WIDGET_VIEWMODEL &&
-                        widgets[0].WIDGET_TEMPLATE &&
-                        widgets[0].PROVIDER_NAME &&
-                        widgets[0].PROVIDER_VERSION &&
-                        widgets[0].PROVIDER_ASSET_ROOT
-                        ){
-                    window.open(self.getLink());
-                }else{
-                    $( "#dbs_comingsoonDialog" ).ojDialog( "open" );
-                }              
-        }else{
-                window.open(self.getNavLink());
+        var self = this;
+        var url = self.getNavLink();
+        if (typeof url==="string"){
+            window.open(self.getNavLink());
         }
+        // super
+//        var self = this,widgets = self.get('widgets') || self.get('tiles');
+//        if ("onePage"===self.type){
+//                if (widgets instanceof Array && widgets.length===1 && 
+//                        widgets[0].WIDGET_KOC_NAME &&
+//                        widgets[0].WIDGET_VIEWMODEL &&
+//                        widgets[0].WIDGET_TEMPLATE &&
+//                        widgets[0].PROVIDER_NAME &&
+//                        widgets[0].PROVIDER_VERSION &&
+//                        widgets[0].PROVIDER_ASSET_ROOT
+//                        ){
+//                    window.open(self.getLink());
+//                }else{
+//                    $( "#dbs_comingsoonDialog" ).ojDialog( "open" );
+//                }              
+//        }else{
+//                window.open(self.getNavLink());
+//        }
     };
     
     DashboardModel.prototype.getNavLink = function()
     {
         var _id = this.get('id');
         if (!_id) return null;
-        return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
+        var _type = this.get('type');
+        if ("SINGLEPAGE"===_type){
+            var tiles = this.get('tiles');
+            if (Array.isArray(tiles) && tiles.length===1){
+                var providerName = tiles[0]["PROVIDER_NAME"];
+                var version = tiles[0]["PROVIDER_VERSION"];
+                var assetRoot = tiles[0]["PROVIDER_ASSET_ROOT"];
+                var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot);
+                if (typeof url==="string"){
+                   console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot);  
+                   return url;
+                }else{
+                   console.log("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
+                   return null;
+                }
+            }else{
+                console.log("Invalid tiles: "+JSON.stringify(tiles));
+            }
+        }else{
+            return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
+        }
     };
 
     return {'DashboardModel': DashboardModel};

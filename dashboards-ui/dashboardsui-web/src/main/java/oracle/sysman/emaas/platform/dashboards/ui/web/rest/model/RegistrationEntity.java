@@ -21,7 +21,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 
 /**
  * @author miao
@@ -35,6 +36,7 @@ public class RegistrationEntity
 	public static final String NAME_DASHBOARD_API_VERSION = "0.1";
 	public static final String NAME_QUICK_LINK = "quickLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
+	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
 	public static final String NAME_DASHBOARD_UI_VERSION = "0.1";
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
@@ -82,13 +84,33 @@ public class RegistrationEntity
 	//	}
 
 	/**
+	 * @return Administration links discovered from service manager
+	 */
+	public List<LinkEntity> getAdminLinks()
+	{
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK);
+	}
+
+	/**
 	 * @return the rest API end point for dashboard framework
 	 * @throws Exception
 	 */
 	public String getDfRestApiEndPoint()
 	{
-		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME, NAME_DASHBOARD_API_VERSION);
+		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
+				NAME_DASHBOARD_API_VERSION);
+		return entity != null ? entity.getHref() : null;
 	}
+
+	/**
+	 * @return the registryUrl
+	 */
+	//	public String getRegistryUrl()
+	//	{
+	//		Link link = RegistryLookupUtil.getServiceExternalLink(NAME_REGISTRY_SERVICENAME, NAME_REGISTRY_VERSION,
+	//				NAME_REGISTRY_REL_SSO);
+	//		return link != null ? link.getHref() : null;
+	//	}
 
 	/*
 	 * @return Quick links discovered from service manager
@@ -96,28 +118,6 @@ public class RegistrationEntity
 	public List<LinkEntity> getQuickLinks()
 	{
 		return lookupLinksWithRelPrefix(NAME_QUICK_LINK);
-	}
-
-	/**
-	 * @return the registryUrl
-	 */
-	public String getRegistryUrl()
-	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(NAME_REGISTRY_SERVICENAME, NAME_REGISTRY_VERSION,
-				NAME_REGISTRY_REL_SSO);
-		return link != null ? link.getHref() : null;
-	}
-
-	/**
-	 * @return the rest API end point for SSF
-	 * @throws Exception
-	 */
-	public String getSsfRestApiEndPoint() throws Exception
-	{
-		return RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
-		//		if (true) {
-		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
-		//		}
 	}
 
 	//	/**
@@ -135,6 +135,19 @@ public class RegistrationEntity
 	//	{
 	//		return ssfVersion;
 	//	}
+
+	/**
+	 * @return the rest API end point for SSF
+	 * @throws Exception
+	 */
+	public String getSsfRestApiEndPoint() throws Exception
+	{
+		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
+		return entity != null ? entity.getHref() : null;
+		//		if (true) {
+		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
+		//		}
+	}
 
 	/**
 	 * @return Visual analyzer links discovered from service manager

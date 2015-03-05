@@ -74,6 +74,9 @@ public class PersistenceManager
 
 	public EntityManagerFactory getEntityManagerFactory()
 	{
+		if (emf == null) {
+			initialize();
+		}
 		return emf;
 	}
 

@@ -27,10 +27,13 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import weblogic.application.ApplicationLifecycleEvent;
 
@@ -179,6 +182,22 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		HTTP, HTTPS
 	}
 
+	private static final String NAV_BASE = "/emsaasui/emcpdfui";
+
+	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
+	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
+	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+
+	static {
+		try {
+			WLS_RUNTIME_SERVICE_NAME = ObjectName
+					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
+		}
+		catch (Exception e) {
+			throw new Error("Well-known JMX names are corrupt - code bug", e);
+		}
+	}
+
 	private static String getApplicationUrl(UrlType urlType) throws Exception
 	{
 		InitialContext ctx = new InitialContext();
@@ -201,29 +220,29 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private static final String NAV_BASE = "/emsaasui/emcpdfui";
-	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
-	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
-
-	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
-
-	static {
-		try {
-			WLS_RUNTIME_SERVICE_NAME = ObjectName
-					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
-		}
-		catch (Exception e) {
-			throw new Error("Well-known JMX names are corrupt - code bug", e);
-		}
-	}
-
-	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
 	@Override
 	public String getName()
 	{
 		return "Service Registry Service";
+	}
+
+	/**
+	 * Update dashboards UI service status to out of service on service manager
+	 */
+	public void makeServiceOutOfService()
+	{
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
+	}
+
+	/**
+	 * Update dashboards UI service status to up on service manager
+	 */
+	public void makeServiceUp()
+	{
+		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 	}
 
 	@Override

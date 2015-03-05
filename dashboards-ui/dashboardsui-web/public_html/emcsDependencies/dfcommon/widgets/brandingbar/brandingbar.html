@@ -57,10 +57,18 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- About box -->
+            <div data-bind="component: {
+                    name: 'df-oracle-about-box',
+                    params: {id: aboutBoxId}
+                }">
+            </div>
+            <!-- End of about box -->
 
             <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
             <div class="oj-component-initnode" id="links_menu">
-                <df-oracle-nav-links params="{navLinksNeedRefresh:navLinksNeedRefresh, registryUrl:registryUrl, userName:userName, tenantName:tenantName}"></df-oracle-nav-links>
+                <df-oracle-nav-links params="{navLinksNeedRefresh:navLinksNeedRefresh, userName:userName, tenantName:tenantName}"></df-oracle-nav-links>
             </div>
         </div>  
     </body>

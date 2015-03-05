@@ -201,14 +201,13 @@ require(['knockout',
             
             function HeaderViewModel() {
                 var self = this;
-                self.registryUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
                 self.appName = "";
             };
             
-    
+           
             var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
@@ -243,7 +242,7 @@ require(['knockout',
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
 
-                    ko.bindingHandlers.sortableList = {
+                     ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
                             var list = valueAccessor();
                             tilesView.enableSortable(element, list);
@@ -268,6 +267,7 @@ require(['knockout',
                         }
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
+
                     //header
                     ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
 //                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
@@ -326,4 +326,7 @@ function truncateString(str, length) {
     return str;
 };
 
+function getNlsString(key, args) {
+    return oj.Translations.getTranslatedString(key, args);
+};
 window.addEventListener("message", updateOnePageHeight, false);

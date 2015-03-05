@@ -19,6 +19,10 @@ body, html {
   width: 100%;
 }
 
+.white-background {
+  background: #fff;
+}
+
 .dbd-column {
   padding-left: 1.5em;
   padding-top: 0.2em;
@@ -57,9 +61,12 @@ body, html {
 }
 
 .dbd-gray img:not(.dbd-not-gray) {
-  -webkit-filter: grayscale(1);
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
   filter: gray;
-  filter: grayscale(1);
 }
 
 #builder-dbd-name {
@@ -101,6 +108,14 @@ body, html {
 
 #builder-dbd-description img {
   width: 10px;
+}
+
+.builder-toolbar-button-text {
+  font-size: 15px;
+  font-weight: bold;
+  color: #252525;
+  margin-left: 8px;
+  padding-bottom: 8px;
 }
 
 .editing .dbd-display-area {
@@ -277,6 +292,15 @@ body, html {
   padding: 0;
 }
 
+html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav {
+  float: left;
+  clear: none;
+}
+
+html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-tabs-tab {
+  border-width: 0 0 0 3px;
+}
+
 .dbd-one-page>.dbd-tile {
   padding: 0;
 }
@@ -300,7 +324,7 @@ body, html {
     width:380px;
     height: 28px; 
     margin-bottom: 10px;
-    background-color: WhiteSmoke;
+    background-color: #fcfdfe;
     
 } 
 #search_box #searchTxt { 
@@ -310,9 +334,12 @@ body, html {
     width: 340px; 
     height:28px;
     background: none; 
-    color:gray;
+/*    color:gray;
     font-size: medium;
-    font-weight: bold;
+    font-weight: bold;*/
+    font-size: 14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #737373;
     margin-left: 0;
     margin-top: 0;
 } 
@@ -368,7 +395,7 @@ body, html {
     padding-right: 5px;
     vertical-align: middle;
     text-align: center;
-    background-color: white;
+    background-color: white; /*#EAEAEA;*/
     border-color: #d6dfe6;
     /* line-height:134px; */
     float:left;
@@ -440,13 +467,13 @@ body, html {
 }
 
 .widget-dialog-body {
-    background-color:  #DDDDDD;
+    /*background-color:  #DDDDDD;*/
 }
 
 .widget-dialog-summary {
     /*width:100%;*/
     font-weight: bold;
-    color: gray;
+    /*color: gray;*/
 }
 
 .widget-dialog-footer-notes {
@@ -455,7 +482,7 @@ body, html {
     margin-left: 5px;
     /*color:black;*/
     font-weight: bold;
-    color: gray;
+    /*color: gray;*/
     font-size: small;
     padding-top: 14px;
 }

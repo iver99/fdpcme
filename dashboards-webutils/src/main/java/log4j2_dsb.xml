@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration debug="false">
+	<Appenders>
+		<RollingFile name="FILE" 
+						filename="/var/opt/ORCLemaas/logs/dashboardsService/dashboardsService.log" 
+						filePattern="/var/opt/ORCLemaas/logs/dashboardsService/dashboardsService.log.%d{yyyy-MM-dd}"
+						append="true">
+			<PatternLayout pattern="%d{ISO8601} %-5p [%t] - [%c{1}] %l %m%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+			</Policies>
+		</RollingFile>
+		<Async name="ASYNC">
+    		<AppenderRef ref="FILE"/>
+    	</Async>
+	</Appenders>
+	<Loggers>
+		<Logger name="oracle.sysman.emaas.platform.dashboards" level="INFO"/>
+		<Root>
+    		<AppenderRef ref="ASYNC"/>
+    	</Root>
+	</Loggers>
+</Configuration>

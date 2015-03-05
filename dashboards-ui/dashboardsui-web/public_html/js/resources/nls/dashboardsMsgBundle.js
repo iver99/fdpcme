@@ -6,6 +6,8 @@
 
 define({
   "root": {
+      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
+      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
       "COMMON_BTN_OK": "OK",
       "COMMON_BTN_CANCEL": "Cancel",
       "COMMON_BTN_SAVE": "Save",
@@ -28,7 +30,7 @@ define({
       "DBS_HOME_CREATE_DLG_TITLE": "Create Dashboard",
       "DBS_HOME_CREATE_DLG_NAME": "Name",
       "DBS_HOME_CREATE_DLG_DES": "Description",
-      "DBS_HOME_CREATE_DLG_TIME_RANGE": "Include a time control (range and refresh)",
+      "DBS_HOME_CREATE_DLG_TIME_RANGE": "Show timse selector & refresh control",
       "DBS_HOME_CREATE_DLG_INVALID_NAME": "You must enter a non empty name and its leght should be less than 64 characters.",
       "DBS_HOME_COME_SOON_DLG_INFO": "Information",
       "DBS_HOME_COME_SOON_DLG_BODY": "Coming soon...",

@@ -142,18 +142,23 @@ require(['dbs/dbsmodel',
  
             function HeaderViewModel() {
                 var self = this;
-                self.registryUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+//                self.registryUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
                 self.appName = "";
             }
            
+           function TitleViewModel(){
+               var self = this;
+               self.homeTitle = getNlsString("DBS_HOME_TITLE");        
+           }
             dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();
+            var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
-                
+                ko.applyBindings(titleVM,$("title")[0]);
                 //Caution: need below line to enable KO binding, otherwise KOC inside headerWrapper doesn't work
                 ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
 //                ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));

@@ -613,7 +613,7 @@ define(['knockout',
             self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
 
             self.widgetsCount = ko.observable(0);
-            self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard";}, this);
+            self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard.";}, this);
 
             self.currentWidget = ko.observable();
             self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
