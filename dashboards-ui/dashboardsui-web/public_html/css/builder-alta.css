@@ -106,6 +106,14 @@ body, html {
   width: 10px;
 }
 
+.builder-toolbar-button-text {
+  font-size: 15px;
+  font-weight: bold;
+  color: #252525;
+  margin-left: 8px;
+  padding-bottom: 8px;
+}
+
 .editing .dbd-display-area {
   display: none;
 }
@@ -278,6 +286,15 @@ body, html {
 
 .oj-row>.oj-col>.oj-row.dbd-one-page {
   padding: 0;
+}
+
+html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav {
+  float: left;
+  clear: none;
+}
+
+html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-tabs-tab {
+  border-width: 0 0 0 3px;
 }
 
 .dbd-one-page>.dbd-tile {
