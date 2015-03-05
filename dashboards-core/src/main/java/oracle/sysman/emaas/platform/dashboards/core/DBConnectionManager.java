@@ -46,6 +46,11 @@ public class DBConnectionManager
 	{
 	}
 
+	/**
+	 * Check if the database connection is available or not
+	 *
+	 * @return true if database connection is available
+	 */
 	public boolean isDatabaseConnectionAvailable()
 	{
 		EntityManager em = null;

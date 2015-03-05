@@ -57,9 +57,12 @@ body, html {
 }
 
 .dbd-gray img:not(.dbd-not-gray) {
-  -webkit-filter: grayscale(1);
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
   filter: gray;
-  filter: grayscale(1);
 }
 
 #builder-dbd-name {
