@@ -24,6 +24,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 
 /**
  * @author miao
@@ -37,14 +38,26 @@ public class RegistryLookupAPI
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLink(@QueryParam("serviceName") String serviceName, @QueryParam("version") String version)
 	{
-		EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPoint(serviceName, version);
-		if (endPoint != null) {
-			return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(endPoint)).build();
+		try {
+			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version)) {
+				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
+				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+			}
+			EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPoint(serviceName, version);
+			if (endPoint != null) {
+				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(endPoint)).build();
+			}
+			else {
+				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
+				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+			}
 		}
-		else {
-			ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
-					MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
-			return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+		catch (Exception e) {
+			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
+					"UNKNOWN_ERROR", e.getLocalizedMessage()));
+			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 		}
 	}
 
@@ -54,14 +67,27 @@ public class RegistryLookupAPI
 	public Response getRegistryLink(@QueryParam("serviceName") String serviceName, @QueryParam("version") String version,
 			@QueryParam("rel") String rel)
 	{
-		Link lk = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel);
-		if (lk != null) {
-			return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();
+		try {
+			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
+				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR", serviceName, version, rel));
+				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+			}
+
+			Link lk = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel);
+			if (lk != null) {
+				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();
+			}
+			else {
+				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR", serviceName, version, rel));
+				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+			}
 		}
-		else {
-			ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
-					MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR", serviceName, version, rel));
-			return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+		catch (Exception e) {
+			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
+					"UNKNOWN_ERROR", e.getLocalizedMessage()));
+			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 		}
 	}
 
@@ -71,14 +97,28 @@ public class RegistryLookupAPI
 	public Response getRegistryLinkWithRelPrefix(@QueryParam("serviceName") String serviceName,
 			@QueryParam("version") String version, @QueryParam("rel") String rel)
 	{
-		Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(serviceName, version, rel);
-		if (lk != null) {
-			return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();
+		try {
+			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
+				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE,
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR", serviceName,
+								version, rel));
+				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+			}
+			Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(serviceName, version, rel);
+			if (lk != null) {
+				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();
+			}
+			else {
+				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE,
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR", serviceName,
+								version, rel));
+				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+			}
 		}
-		else {
-			ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
-					MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR", serviceName, version, rel));
-			return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+		catch (Exception e) {
+			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
+					"UNKNOWN_ERROR", e.getLocalizedMessage()));
+			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 		}
 	}
 }
