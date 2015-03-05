@@ -25,6 +25,7 @@ public class ErrorEntity
 	public static final int REGISTRY_LOOKUP_GENERIC_ERROR_CODE = 2000;
 	public static final int REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE = 2001;
 	public static final int REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE = 2002;
+	public static final int REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE = 2003;
 
 	public static final int UNKNOWN_ERROR_CODE = 9999;
 

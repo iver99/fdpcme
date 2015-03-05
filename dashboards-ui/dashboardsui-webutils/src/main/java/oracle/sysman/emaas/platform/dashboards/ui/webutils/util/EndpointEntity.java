@@ -19,7 +19,7 @@ public class EndpointEntity
 	private String version;
 	private String href;
 
-	public EndpointEntity(String serviceName, String verison, String href)
+	public EndpointEntity(String serviceName, String version, String href)
 	{
 		setServiceName(serviceName);
 		setVersion(version);
