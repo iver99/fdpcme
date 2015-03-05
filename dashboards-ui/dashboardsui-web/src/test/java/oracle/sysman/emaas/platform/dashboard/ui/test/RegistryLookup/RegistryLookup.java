@@ -47,11 +47,11 @@ public class RegistryLookup
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 500);
+			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println(res.asString());
 
-			Assert.assertEquals(res.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "Link Not Found: seviceName=, version=0.1, rel=quickLink");
+			Assert.assertEquals(res.jsonPath().get("errorCode"), 2002);
+			Assert.assertEquals(res.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=null, version=null");
 
 			System.out.println("											");
 
@@ -63,11 +63,11 @@ public class RegistryLookup
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 500);
+			Assert.assertTrue(res1.getStatusCode() == 404);
 			System.out.println(res1.asString());
 
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "Link Not Found: seviceName=, version=0.1, rel=quickLink");
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "Link Not Found: serviceName=null, version=null, rel=null");
 
 			System.out.println("											");
 
@@ -79,11 +79,12 @@ public class RegistryLookup
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
-			Assert.assertTrue(res2.getStatusCode() == 500);
+			Assert.assertTrue(res2.getStatusCode() == 404);
 			System.out.println(res2.asString());
 
-			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "Link Not Found: seviceName=, version=0.1, rel=quickLink");
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2003);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"Link (with rel Prefix) Not Found: serviceName=null, version=null, rel prefix=null");
 
 			System.out.println("											");
 
@@ -147,7 +148,7 @@ public class RegistryLookup
 			System.out.println(res.asString());
 
 			Assert.assertEquals(res.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "End Point Not Found: seviceName=, version=0.1");
+			Assert.assertEquals(res.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=, version=0.1");
 
 			System.out.println("											");
 			System.out.println("Negative cases 2 : no version");
@@ -162,7 +163,7 @@ public class RegistryLookup
 			System.out.println(res1.asString());
 
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "End Point Not Found: seviceName=Dashboard-UI, version=");
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=Dashboard-UI, version=");
 
 			System.out.println("											");
 			System.out.println("Negative cases 3 : wrong serviceName");
@@ -177,7 +178,7 @@ public class RegistryLookup
 			System.out.println(res2.asString());
 
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "End Point Not Found: seviceName=abc, version=0.1");
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=abc, version=0.1");
 
 			System.out.println("											");
 			System.out.println("Negative cases 4 : wrong version");
@@ -192,7 +193,7 @@ public class RegistryLookup
 			System.out.println(res3.asString());
 
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "End Point Not Found: seviceName=Dashboard-UI, version=999");
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=Dashboard-UI, version=999");
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -252,7 +253,7 @@ public class RegistryLookup
 			System.out.println(res.asString());
 
 			Assert.assertEquals(res.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "Link Not Found: seviceName=, version=0.1, rel=sso.home");
+			Assert.assertEquals(res.jsonPath().get("errorMessage"), "Link Not Found: serviceName=, version=0.1, rel=sso.home");
 
 			System.out.println("											");
 
@@ -269,7 +270,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res1.jsonPath().get("errorCode"), 2001);
 			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
-					"Link Not Found: seviceName=Dashboard-UI, version=, rel=sso.home");
+					"Link Not Found: serviceName=Dashboard-UI, version=, rel=sso.home");
 
 			System.out.println("											");
 
@@ -285,7 +286,8 @@ public class RegistryLookup
 			System.out.println(res2.asString());
 
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "Link Not Found: seviceName=Dashboard-UI, version=0.1, rel=");
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"Link Not Found: serviceName=Dashboard-UI, version=0.1, rel=");
 
 			System.out.println("											");
 
@@ -301,7 +303,7 @@ public class RegistryLookup
 			System.out.println(res3.asString());
 
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "Link Not Found: seviceName=abc, version=0.1, rel=sso.home");
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "Link Not Found: serviceName=abc, version=0.1, rel=sso.home");
 
 			System.out.println("											");
 
@@ -318,7 +320,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res4.jsonPath().get("errorCode"), 2001);
 			Assert.assertEquals(res4.jsonPath().get("errorMessage"),
-					"Link Not Found: seviceName=Dashboard-UI, version=999, rel=sso.home");
+					"Link Not Found: serviceName=Dashboard-UI, version=999, rel=sso.home");
 
 			System.out.println("											");
 
@@ -335,7 +337,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res5.jsonPath().get("errorCode"), 2001);
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
-					"Link Not Found: seviceName=Dashboard-UI, version=0.1, rel=abc");
+					"Link Not Found: serviceName=Dashboard-UI, version=0.1, rel=abc");
 
 			System.out.println("											");
 
@@ -358,7 +360,7 @@ public class RegistryLookup
 			System.out.println("											");
 
 			Response res = RestAssured.given().log().everything().header("Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=&version=0.1&rel=quickLink");
+					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -396,8 +398,9 @@ public class RegistryLookup
 			Assert.assertTrue(res.getStatusCode() == 404);
 			System.out.println(res.asString());
 
-			Assert.assertEquals(res.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "Link Not Found: seviceName=, version=0.1, rel=quickLink");
+			Assert.assertEquals(res.jsonPath().get("errorCode"), 2003);
+			Assert.assertEquals(res.jsonPath().get("errorMessage"),
+					"Link (with rel Prefix) Not Found: serviceName=, version=0.1, rel prefix=quickLink");
 
 			System.out.println("											");
 
@@ -412,9 +415,9 @@ public class RegistryLookup
 			Assert.assertTrue(res1.getStatusCode() == 404);
 			System.out.println(res1.asString());
 
-			Assert.assertEquals(res1.jsonPath().get("errorCode"), 2001);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 2003);
 			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
-					"Link Not Found: seviceName=Dashboard-UI, version=, rel=quickLink");
+					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=, rel prefix=quickLink");
 
 			System.out.println("											");
 
@@ -429,8 +432,9 @@ public class RegistryLookup
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			System.out.println(res2.asString());
 
-			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "Link Not Found: seviceName=Dashboard, version=0.1, rel=");
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2003);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=0.1, rel prefix=");
 
 			System.out.println("											");
 
@@ -438,15 +442,16 @@ public class RegistryLookup
 			System.out.println("											");
 
 			Response res3 = RestAssured.given().log().everything().header("Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=abc&version=0.1&rel=quickLink");
+					.get("registry/lookup/linkWithRelPrefix?serviceName=wrong&version=0.1&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
 			Assert.assertTrue(res3.getStatusCode() == 404);
 			System.out.println(res3.asString());
 
-			Assert.assertEquals(res.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "Link Not Found: seviceName=abc, version=0.1, rel=quickLink");
+			Assert.assertEquals(res3.jsonPath().get("errorCode"), 2003);
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"),
+					"Link (with rel Prefix) Not Found: serviceName=wrong, version=0.1, rel prefix=quickLink");
 
 			System.out.println("											");
 
@@ -461,9 +466,9 @@ public class RegistryLookup
 			Assert.assertTrue(res4.getStatusCode() == 404);
 			System.out.println(res4.asString());
 
-			Assert.assertEquals(res4.jsonPath().get("errorCode"), 2001);
+			Assert.assertEquals(res4.jsonPath().get("errorCode"), 2003);
 			Assert.assertEquals(res4.jsonPath().get("errorMessage"),
-					"Link Not Found: seviceName=Dashboard-UI, version=999, rel=quickLink");
+					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=999, rel prefix=quickLink");
 
 			System.out.println("											");
 
@@ -478,9 +483,9 @@ public class RegistryLookup
 			Assert.assertTrue(res5.getStatusCode() == 404);
 			System.out.println(res5.asString());
 
-			Assert.assertEquals(res5.jsonPath().get("errorCode"), 2001);
+			Assert.assertEquals(res5.jsonPath().get("errorCode"), 2003);
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
-					"Link Not Found: seviceName=Dashboard-UI, version=0.1, rel=abc");
+					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=0.1, rel prefix=abc");
 
 			System.out.println("											");
 

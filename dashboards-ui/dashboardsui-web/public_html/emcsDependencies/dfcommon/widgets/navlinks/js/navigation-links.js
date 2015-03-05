@@ -5,8 +5,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
 //                var quickLinkList = [];
 //                var recentList = [];
 //                var favoriteList = [];
-                var adminList = [];
-                var analyzerList = [];
+//                var adminList = [];
+//                var analyzerList = [];
                 var dfHomeUrl = null;
 //                var maxRecentSize = 10;
 //                var maxFavoriteSize = 5;
@@ -74,7 +74,13 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
 //                            self.quickLinks(data.quickLinks);
 //                        }
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
-                            self.visualAnalyzers(data.visualAnalyzers);
+                            var analyzers = data.visualAnalyzers;
+                            var analyzerList = [];
+                            for (i = 0; i < analyzers.length; i++) {
+                                analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
+                                    href: analyzers[i].href});
+                            }
+                            self.visualAnalyzers(analyzerList);
                         }
                         if (data.adminLinks && data.adminLinks.length > 0) {
                             self.adminLinks(data.adminLinks);
@@ -89,8 +95,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                         error: function(xhr, textStatus, errorThrown){
                             console.log('Failed to get service instances by URL: '+serviceUrl);
 //                            self.quickLinks(quickLinkList);
-                            self.visualAnalyzers(analyzerList);
-                            self.adminLinks(adminList);
+                            self.visualAnalyzers([]);
+                            self.adminLinks([]);
                         },
                         async: true
                     });                
@@ -99,8 +105,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 function refreshLinks() {
 //                    recentList = [];
 //                    favoriteList = [];
-                    analyzerList = [];
-                    adminList = [];
+//                    analyzerList = [];
+//                    adminList = [];
                     dfHomeUrl = dfu.discoverDFHomeUrl();
                     
                     //Fetch available quick links and administration links from service manager registry

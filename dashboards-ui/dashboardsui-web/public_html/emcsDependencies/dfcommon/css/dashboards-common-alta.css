@@ -66,9 +66,17 @@
     line-height: 24px;
 }
 #links_menu .links-content-container{
-    margin : 30px 0;
-    float: left;
+    margin : 30px auto; /*30px 0;*/
+    /*float: left;*/
     width: 100%;
+    /*width:920px;*/
+    text-align:center; 
+}
+.headerMenuItem {
+    width: 33%;
+    display: inline-block;
+    vertical-align: top;
+    
 }
 #links_menu .iconCircle {
     width: 100px;
@@ -77,6 +85,45 @@
     display: table-cell;
     text-align: center;
     vertical-align: middle;
+}
+.headerMenuIcon {
+    display: inline-block;
+    vertical-align: top;
+}
+.headerMenuText {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+    text-align:left; 
+}
+@media screen and (max-width: 920px) and (min-width:600px) {
+    #links_menu .links-content-container {
+        margin : 30px auto;
+        width: 620px;
+        text-align:left; 
+    }
+    .headerMenuItem {
+        width: 300px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .headerMenuItem:last-child {
+        display: inline-block;
+        margin-top: 30px;
+    }
+}
+@media screen and (max-width: 600px) {
+    #links_menu .links-content-container {
+        margin : 30px auto;
+        width: 320px;
+        text-align:left; 
+    }
+    .headerMenuItem {
+        width: 300px;
+        display: inline-block;
+        margin-top: 30px;
+        vertical-align: top;
+    }
 }
 /*#iconLink{
     background-color: #ed813e;
