@@ -288,6 +288,15 @@ body, html {
   padding: 0;
 }
 
+html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav {
+  float: left;
+  clear: none;
+}
+
+html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-tabs-tab {
+  border-width: 0 0 0 3px;
+}
+
 .dbd-one-page>.dbd-tile {
   padding: 0;
 }
