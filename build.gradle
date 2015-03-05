@@ -5,6 +5,7 @@ ext.distDir = "${rootDir}/dist"
 ext.artifactPrefix = 'emaas-applications-' 
 ext.projectVersion = '0.1-SNAPSHOT'  
 ext.appName="${artifactPrefix}dashboards-api" 
+ext.appName_ui="${artifactPrefix}dashboards-ui"
 ext.serviceName = "${artifactPrefix}dashboards" 
 ext.serviceInstallPath = "/opt/ORCLemaas/Applications/${serviceName}/${projectVersion}" 
 ext.serviceDistDir = "${distDir}${serviceInstallPath}" 
