@@ -23,7 +23,7 @@
     display: inline-block;
 }
 
-.fa-link:before {
+/*.fa-link:before {
   content: "\f0c1"; 
 }
 
@@ -32,10 +32,16 @@
 
 .fa-history:before {
   content: "\f1da"; 
-}
+}*/
 
 .fa-cogs:before {
   content: "\f085"; }
+
+.fa-bar-chart:before {
+  content: "\f080"; }
+
+.fa-desktop:before {
+  content: "\f108"; }
 
 @font-face {
   font-family: 'FaFont';
@@ -72,7 +78,7 @@
     text-align: center;
     vertical-align: middle;
 }
-#iconLink{
+/*#iconLink{
     background-color: #ed813e;
 }
 #iconStar{
@@ -80,8 +86,14 @@
 }
 #iconHistory{
     background-color: #3caf85;
-}
+}*/
 #iconCogs{
+    background-color: #3caf85;
+}
+#iconDashboard{
+    background-color: #ed813e;
+}
+#iconAnalyzer{
     background-color: #5a68ad;
 }
 
