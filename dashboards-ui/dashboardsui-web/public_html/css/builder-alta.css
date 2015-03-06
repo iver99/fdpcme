@@ -401,9 +401,9 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     float:left;
     border-radius: 5px;
     
-    font-weight: bold;
+    /*font-weight: bold;*/
     font-size: large;
-    color:gray;
+    /*color:gray;*/
 }
 
 .widget-container:hover {
