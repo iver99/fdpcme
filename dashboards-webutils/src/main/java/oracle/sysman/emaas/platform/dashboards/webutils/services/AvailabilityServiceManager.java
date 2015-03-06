@@ -67,7 +67,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		else {
 			try {
 				rsm.makeServiceUp();
-				logger.info("Dashboards service is up");
+				logger.debug("Dashboards service is up");
 			}
 			catch (Exception e) {
 				logger.error(e.getLocalizedMessage(), e);

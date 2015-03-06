@@ -18,9 +18,9 @@ import javax.management.NotificationListener;
 
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -96,7 +96,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		else {
 			try {
 				rsm.makeServiceUp();
-				logger.info("Dashboards UI service is up");
+				logger.debug("Dashboards UI service is up");
 			}
 			catch (Exception e) {
 				logger.error(e.getLocalizedMessage(), e);
