@@ -229,7 +229,7 @@ define(['knockout',
                         break;
                     }
                 }
-                return {"tenant": tenantName, "tenantUser": userName};
+                return {"tenant": tenantName, "tenantUser": tenantUser};
             };
             
             function getUserName(userTenant) {
