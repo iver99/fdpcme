@@ -287,6 +287,12 @@ define(['knockout',
         }
         
         function initializeFromCookie() {
+            var userTenant= dfu.getUserTenantFromCookie();
+            if (userTenant){
+                dtm.tenantName = userTenant.tenant;
+                dtm.userTenant  =  userTenant.tenantUser;      
+            }
+            /*
             var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
             var userTenantPrefix = "X-REMOTE-USER=";
             var cookieArray = document.cookie.split(';');
@@ -298,6 +304,7 @@ define(['knockout',
                     dtm.userTenant = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
                 }
             }
+            */
         }
         
         function getDefaultHeaders() {
