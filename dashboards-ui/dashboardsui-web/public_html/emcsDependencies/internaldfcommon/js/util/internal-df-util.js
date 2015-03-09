@@ -12,7 +12,7 @@ define(['knockout',
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
-            var userTenant = getUserTenantFromCookie();
+            var userTenant = self.getUserTenantFromCookie();
             var userName = getUserName(userTenant);
             var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
             var dfu = new dfumodel(userName, tenantName);
