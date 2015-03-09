@@ -286,7 +286,10 @@ role value for that section to represent the appropriate content type.
                     <div class="oj-dialog-body widget-dialog-body">
                       <div id="addAWidget" class="oj-row">
                           <div class="widget-dialog-summary oj-col oj-sm-6" style="padding-top: 8px;font-size: small" data-bind="text:summaryMsg"></div>
-                            <div class="oj-col oj-sm-6" style="padding-right: 20px">
+                          <div class="oj-col oj-sm-1" style="padding-top: 8px;">
+                              <label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;'>Widget Group</label>
+                          </div>
+                            <div class="oj-col oj-sm-5" style="padding-right: 20px">
                                 <button id="exploreDataBtn" style="float:right;" data-bind="ojComponent: {component: 'ojButton', 
                                                                                                 label: 'Create Widget', 
                                                                                                 rootAttributes: {style: 'max-width:150px;'},
@@ -323,12 +326,6 @@ role value for that section to represent the appropriate content type.
                                                                 value: categoryValue,
                                                                 optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:373px;'}}">
-<!--                                <option value="all">ALL CATEGORIES</option>
-                                <option value="la">LOG ANALYTICS</option>
-                                <option value="ta">TARGET ANALYTICS</option>
-                                <option value="ita">IT ANALYTICS</option>
-                                <option value="demo">Demo ANALYTICS</option>
-                                <option value="dbs">DASHBOARDS BUILT-IN</option>-->
                                 <!-- ko foreach: widgetGroups -->
                                 <option data-bind="value:value,text:label"></option>
                                 <!-- /ko -->
