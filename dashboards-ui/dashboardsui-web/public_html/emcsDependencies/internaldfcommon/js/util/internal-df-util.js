@@ -213,7 +213,7 @@ define(['knockout',
 //                return assetRoot;
             };
             
-            function getUserTenantFromCookie() {
+            self.getUserTenantFromCookie = function() {
                 var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
                 var cookieArray = document.cookie.split(';');
                 var tenantName="TenantOPC1"; //in case tenant name is not got
