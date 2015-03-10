@@ -400,7 +400,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     padding-right: 5px;
     vertical-align: middle;
     text-align: center;
-    background-color: white; /*#EAEAEA;*/
+    background-color: rgb(234, 237, 239);/*white;*/ /*#EAEAEA;*/
     border-color: #d6dfe6;
     /* line-height:134px; */
     float:left;
