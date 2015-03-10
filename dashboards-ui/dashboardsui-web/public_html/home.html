@@ -60,7 +60,31 @@ role value for that section to represent the appropriate content type.
                                     <!--span>Dashboards</span-->
                                     <div>
                                     <!-- Home toolbar start -->
-                                    <div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;padding-left: 5px">
+                                    <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
+                                                <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
+                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'style': 'min-width:643px; width:643px;'}}
+                                                                  ,dbsTypeAhead: {response: searchResponse, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
+                                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
+                                                <button id="sbtn" style="margin-bottom: 4px; margin-left: 5px; margin-right: 16px;"
+                                                        data-bind="click: forceSearch, ojComponent: { component:'ojButton'}">
+                                                            <img style="padding-top: 6px" src="css/images/navi_search_16_ena.png" alt="Search"/>
+                                                </button>
+                                                
+                                                <button id="cbtn" class="dbs-home-button-create-new-dashboard"
+                                                        data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
+                                                <button id="exploreDataBtn"
+                                                    data-bind="ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
+                                                                             menu: '#exploreDataMenu'}, attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
+                                                </button>
+                                                <ul id="exploreDataMenu" style="display:none"
+                                                    data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
+                                                    <!-- ko foreach: exploreDataLinkList -->
+                                                    <li>
+                                                        <a href="#" data-bind="text:name,value:href"></a>
+                                                    </li>
+                                                    <!-- /ko -->
+                                                </ul>
+                                    <!--div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;padding-left: 5px">
                                         <div id="toolbar2"  aria-label="Searching toolbar" style="float:left;" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
                                                 <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'style': 'min-width:643px; width:643px;'}}
@@ -82,13 +106,13 @@ role value for that section to represent the appropriate content type.
                                             </button>
                                             <ul id="exploreDataMenu" style="display:none"
                                                 data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
-                                                <!-- ko foreach: exploreDataLinkList -->
+                                                <!- ko foreach: exploreDataLinkList ->
                                                 <li>
                                                     <a href="#" data-bind="text:name,value:href"></a>
                                                 </li>
-                                                <!-- /ko -->
+                                                <!- /ko ->
                                             </ul>
-                                        </div>
+                                        </div-->
                                         <div style="display:none; min-width:100px; min-height:50px;" id="cbtn-tooltip" 
                                               data-bind="ojComponent: {component: 'ojPopup', tail: 'simple',
                                                         position: {'my': 'right top', 'at': 'start bottom', 'of': '#cbtn'}}">
@@ -99,7 +123,7 @@ role value for that section to represent the appropriate content type.
                                                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
                                         </div-->
                                     </div>
-                                    <div id="toolbar3" aria-label="Pagination toolbar" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'border-left: 0;' }}">
+                                    <div id="toolbar3" aria-label="Pagination toolbar">
                                                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
                                     </div>
                                     <!-- Home toolbar end -->
