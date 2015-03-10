@@ -51,7 +51,6 @@ body, html {
 
 #head-bar-container {
   padding: 0.5em 2em;
-  height: 76px;
 }
 
 .dbd-translucency {
@@ -75,11 +74,19 @@ body, html {
   line-height: 1.4em;
 }
 
+#builder-dbd-name .dbd-display-area {
+  width: 800px;
+}
+
+#builder-dbd-name .dbd-display-hover-area {
+  line-height: 1.75em;
+}
+
 #builder-dbd-name input {
   font-size: 24px;
   font-family: inherit;
   line-height: 1.4em;
-  height: 1.4em;
+  height: 1.7em;
 }
 
 #builder-dbd-name:not(.editing) .dbd-edit-area {
@@ -87,9 +94,10 @@ body, html {
 }
 
 #builder-dbd-name .dbd-edit-area .oj-inputtext {
-  width: 780px;
+  width: 700px;
   outline: none;
   border: 1px solid #999999;
+  margin: 0;
 }
 
 #builder-dbd-description .dbd-display-area-text {
@@ -101,7 +109,7 @@ body, html {
 }
 
 #builder-dbd-description .dbd-edit-area .oj-inputtext {
-  width: 780px;
+  width: 700px;
   outline: none;
   border: 1px solid #999999;
 }
@@ -178,6 +186,7 @@ body, html {
   font-size: 14px;
   cursor: move;
   border-top: 1px solid #D8D6D6 !important;
+  height: 32px;
 }
 
 .dbd-tile-action span.oj-button-icon:before {
@@ -208,10 +217,6 @@ body, html {
   position: relative;
   display: inline-block;
   vertical-align: middle;
-}
-
-.dbd-tile-header {
-  height: 28px;
 }
 
 .dbd-tile-header .dbd-tile-title {

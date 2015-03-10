@@ -199,7 +199,7 @@ dependencies {
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
-        compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
+        compile(group: 'oraclejet', name: 'oraclejet', version: '1.1.0-293', ext: 'zip')
 	if(war_number.toInteger()>0){
 		    for (i in 0..<war_number.toInteger())
 			compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip',changing:true)
