@@ -151,7 +151,11 @@ function(dsf, oj, ko, $, dfu)
                 self.pagingDatasource( self.datasource['pagingDS'] );
                 if (self.datasource['pagingDS'].totalSize() <= 0)
                 {
-                    $('#cbtn-tooltip').ojPopup('open', "#cbtn");
+                    if (self.welcomeDialogModel.showWelcome === false 
+                        && self.datasource['pagingDS'].totalSize() <= 0)
+                    {
+                        $('#cbtn-tooltip').ojPopup('open', "#cbtn");
+                    }
                 }
             }
         } );
