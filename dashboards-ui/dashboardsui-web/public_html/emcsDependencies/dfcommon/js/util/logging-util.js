@@ -7,8 +7,8 @@
  * Then, call the usual JET oj.logger methods.  This custom logger intercepts those logs
  * and sends them to your logger url (passed in initialization).
  */
-define(['ojs/ojcore', 'df-util'],
-    function(oj, dfu)
+define(['ojs/ojcore'],
+    function(oj)
     {
         // Custom logger.
         var customLogger = {};
@@ -136,7 +136,7 @@ define(['ojs/ojcore', 'df-util'],
                 $.ajax({
                     url: serverUrlToSendLogs,
                     type: "POST",
-                    data: JSON.stringify({"tenantId": dfu.tenantName+"."+dfu.userName, "logs": {"logArray": logsCacheCloned}}),
+                    data: JSON.stringify({"tenantId": "TenantOPC1.emaasadmin", "logs": {"logArray": logsCacheCloned}}),//TODO replace hard coded one with real tenant user
                     dataType: "json",
                     global: false,
                     contentType: "application/json; charset=utf-8",
