@@ -79,6 +79,10 @@ define(['ojs/ojcore'],
         var logsCacheLimit = 20;
         // Last time we sent to server
         var logsCacheLastTimeWeSent = 1;
+        
+        var logOwner = "UnknownTenant.UnknownUser";
+        
+        var serverUrlToSendLogs = null;
 
         /**
          * Cache the log and send to server if cache limit is reached.
@@ -136,7 +140,7 @@ define(['ojs/ojcore'],
                 $.ajax({
                     url: serverUrlToSendLogs,
                     type: "POST",
-                    data: JSON.stringify({"tenantId": "TenantOPC1.emaasadmin", "logs": {"logArray": logsCacheCloned}}),//TODO replace hard coded one with real tenant user
+                    data: JSON.stringify({"tenantId": logOwner, "logs": {"logArray": logsCacheCloned}}),//TODO replace hard coded one with real tenant user
                     dataType: "json",
                     global: false,
                     contentType: "application/json; charset=utf-8",
@@ -186,8 +190,9 @@ define(['ojs/ojcore'],
              * frequency : Frequency to check if any logs are cached.
              * limit : Limit on how many logs to cache (cache size).
              */
-            self.initialize = function(url, maxInterval, frequency, limit)
+            self.initialize = function(url, maxInterval, frequency, limit, tenantUser)
             {
+                logOwner = tenantUser;
                 serverUrlToSendLogs = url;
 
                 if (maxInterval != undefined) {
