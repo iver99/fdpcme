@@ -16,6 +16,8 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParamsPK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
 
 public class DashboardServiceFacade
 {
@@ -76,6 +78,18 @@ public class DashboardServiceFacade
 		return em.createNamedQuery("EmsDashboardTileParams.findAll", EmsDashboardTileParams.class).getResultList();
 	}
 
+	public EmsPreference getEmsPreference(String username, String prefKey)
+	{
+		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
+	}
+
+	/** <code>select o from EmsPreference o</code> */
+	public List<EmsPreference> getEmsPreferenceFindAll(String username)
+	{
+		return em.createNamedQuery("EmsPreference.findAll", EmsPreference.class).setParameter("username", username)
+				.getResultList();
+	}
+
 	public EntityManager getEntityManager()
 	{
 		return em;
@@ -101,6 +115,14 @@ public class DashboardServiceFacade
 	{
 		EmsDashboardLastAccess entity = null;
 		entity = em.merge(emsDashboardLastAccess);
+		commitTransaction();
+		return entity;
+	}
+
+	public EmsPreference mergeEmsPreference(EmsPreference emsPreference)
+	{
+		EmsPreference entity = null;
+		entity = em.merge(emsPreference);
 		commitTransaction();
 		return entity;
 	}
@@ -133,6 +155,13 @@ public class DashboardServiceFacade
 		return emsDashboardLastAccess;
 	}
 
+	public EmsPreference persistEmsPreference(EmsPreference emsPreference)
+	{
+		em.persist(emsPreference);
+		commitTransaction();
+		return emsPreference;
+	}
+
 	public <T> T persistEntity(T entity)
 	{
 		em.persist(entity);
@@ -157,6 +186,13 @@ public class DashboardServiceFacade
 			query = query.setMaxResults(maxResults);
 		}
 		return query.getResultList();
+	}
+
+	public void removeAllEmsPreferences(String username)
+	{
+		getEntityManager().getTransaction().begin();
+		em.createNamedQuery("EmsPreference.removeAll").setParameter("username", username).executeUpdate();
+		commitTransaction();
 	}
 
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
@@ -195,6 +231,14 @@ public class DashboardServiceFacade
 				new EmsDashboardTileParamsPK(emsDashboardTileParams.getParamName(), emsDashboardTileParams.getDashboardTile()
 						.getTileId()));
 		em.remove(emsDashboardTileParams);
+		commitTransaction();
+	}
+
+	public void removeEmsPreference(EmsPreference emsPreference)
+	{
+		emsPreference = em
+				.find(EmsPreference.class, new EmsPreferencePK(emsPreference.getPrefKey(), emsPreference.getUserName()));
+		em.remove(emsPreference);
 		commitTransaction();
 	}
 }
