@@ -192,6 +192,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             //console.log(data);
             //data.dashboard.openDashboard();
             data.dashboardModel.openDashboardPage();
+            oj.Logger.info("Dashboard: ["+data.dashboardModel.get("name")+"] is open from Dashboard Home");
         };
         
         self.handleDashboardDeleted = function(event, data) {

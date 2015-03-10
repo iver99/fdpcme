@@ -25,6 +25,7 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
         'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
+        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
         'dbs': '../js',
         'require':'../emcsDependencies/oraclejet/js/libs/require/require'
     },
@@ -67,6 +68,7 @@ require(['dbs/dbsmodel',
     'jquery',
     'ojs/ojcore',
     'dfutil',
+    'loggingutil',
     'ojs/ojmodel',
     'ojs/ojknockout',
     'ojs/ojknockout-model',
@@ -98,8 +100,19 @@ require(['dbs/dbsmodel',
 //    'ojs/ojtreemap',
 //    'ojs/ojvalidation'
 ],
-        function(model, ko, $, oj, dfu) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu,_emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
+            var logger = new _emJETCustomLogger();
+            var dfRestApi = dfu.discoverDFRestApiUrl();
+            if (dfRestApi){
+                var logReceiver = dfu.buildFullUrl(dfRestApi,"logging/logs")
+                logger.initialize(logReceiver, 60000, 20000, 8);
+                // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+                // If you comment the line below, our current log calls will not be output!
+                logger.setLogLevel(oj.Logger.LEVEL_LOG);
+            }
+
+           
 //            if (!ko.components.isRegistered('df-nav-links')) {
 //                ko.components.register("df-nav-links",{
 //                    viewModel:{require:'../emcsDependencies/navlinks/js/navigation-links'},

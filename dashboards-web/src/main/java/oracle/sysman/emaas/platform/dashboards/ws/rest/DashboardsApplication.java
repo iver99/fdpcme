@@ -29,6 +29,7 @@ public class DashboardsApplication extends Application
 		hs.add(DashboardAPI.class);
 		hs.add(FavoriteAPI.class);
 		hs.add(PreferenceAPI.class);
+		hs.add(LoggingAPI.class);
 		return hs;
 	}
 }
