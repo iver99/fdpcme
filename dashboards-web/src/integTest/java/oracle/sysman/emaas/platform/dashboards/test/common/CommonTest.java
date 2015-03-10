@@ -38,8 +38,10 @@ public class CommonTest
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
-			input = new FileInputStream("testenv.properties");
-			prop.load(input);
+			
+            InputStream stream = getClass().getResourceAsStream("/testenv.properties");
+            prop.load(stream);
+
 			System.out.println("---------------------------------------------------------------------");
 			System.out.println("The property values - Hostname: " + prop.getProperty("hostname") + " and Port: "
 					+ prop.getProperty("port"));
