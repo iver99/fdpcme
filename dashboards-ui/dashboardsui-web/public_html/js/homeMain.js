@@ -24,6 +24,7 @@ requirejs.config({
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
         'dbs': '../js',
         'require':'../emcsDependencies/oraclejet/js/libs/require/require'
     },

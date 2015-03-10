@@ -13,6 +13,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
@@ -288,14 +289,15 @@ public class DashboardServiceFacadeTest
 	@Test
 	public void testAll()
 	{
-		testQueryByRange();
-		testGetEmsDashboardTileFindAll();
-		testMergeEmsDashboard();
-		testGetEmsDashboardById();
-		testGetEmsDashboardFindAll();
-		testGetEmsDashboardLastAccessFindAll();
-		testGetEmsDashboardTileParamsFindAll();
-		testGetEmsDashboardFavoriteFindAll();
+		//		testQueryByRange();
+		//		testGetEmsDashboardTileFindAll();
+		//		testMergeEmsDashboard();
+		//		testGetEmsDashboardById();
+		//		testGetEmsDashboardFindAll();
+		//		testGetEmsDashboardLastAccessFindAll();
+		//		testGetEmsDashboardTileParamsFindAll();
+		//		testGetEmsDashboardFavoriteFindAll();
+		testPrefecence();
 	}
 
 	/**
@@ -374,6 +376,22 @@ public class DashboardServiceFacadeTest
 		d.setLastModificationDate(new Date());
 		dashboardServiceFacade.persistEmsDashboard(d);
 		dashboardServiceFacade.commitTransaction();
+	}
+
+	public void testPrefecence()
+	{
+		EmsPreference p = new EmsPreference("prefKey1", "prefValue", "test");
+		dashboardServiceFacade.persistEmsPreference(p);
+		dashboardServiceFacade.commitTransaction();
+
+		p = dashboardServiceFacade.getEmsPreference("test", "prefKey1");
+		Assert.assertNotNull(p);
+		Assert.assertNotNull(dashboardServiceFacade.getEmsPreferenceFindAll("test"));
+
+		dashboardServiceFacade.removeEmsPreference(p);
+		dashboardServiceFacade.commitTransaction();
+		dashboardServiceFacade.removeAllEmsPreferences("test");
+
 	}
 
 	/**
