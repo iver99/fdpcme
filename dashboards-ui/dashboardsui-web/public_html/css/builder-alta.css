@@ -118,10 +118,21 @@ body, html {
   width: 10px;
 }
 
+.dbd-toolbar-icon-add-widget:before {
+  content: url(images/func_plus_16_ena.png);
+}
+
+.dbd-toolbar-icon-save:before {
+  content: url(images/func_floppy_16_ena.png);
+}
+
 .builder-toolbar-button-text {
-  font-size: 15px;
-  font-weight: bold;
-  color: #252525;
+  color: rgb(0, 0, 0);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
   margin-left: 8px;
   padding-bottom: 8px;
 }
