@@ -89,6 +89,10 @@
     padding-left: 10px;
 }
 
+.dbs-summary-header-title h2 {
+    font-size: 1.15rem;
+}
+
 .dbs-summary-header-title.active {
     //text-align: left;
 }
@@ -244,10 +248,10 @@ ul.dbs-summary-rows li {
 
 .icon-pageline-system-16:before{content:url("images/func_pagelines_16_hov_locked.png");}
 
-#dtabhomettb #toolbar1 #cbtn{
+#dtabhomettb #cbtn{
     margin-bottom: 4px; 
     background-image: none;
-    margin-left: 6px;
+    //margin-left: 6px;
     text-shadow: none;
 
     color: #ffffff;
@@ -262,7 +266,7 @@ ul.dbs-summary-rows li {
     
 } 
 
-#dtabhomettb #toolbar1 #cbtn:hover{
+#dtabhomettb #cbtn:hover{
     
     background-color: #3a9aea;
     border: 1px solid #3a9aea;  

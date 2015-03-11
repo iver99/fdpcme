@@ -28,6 +28,8 @@ public class DashboardsApplication extends Application
 		Set<Class<?>> hs = new HashSet<Class<?>>();
 		hs.add(DashboardAPI.class);
 		hs.add(FavoriteAPI.class);
+		hs.add(PreferenceAPI.class);
+		hs.add(LoggingAPI.class);
 		return hs;
 	}
 }

@@ -3,12 +3,11 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class DateUtil
 {
-	private static final SimpleDateFormat DATE_FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
 	/**
 	 * Convert local time to UTC time and return
 	 *
@@ -43,4 +42,6 @@ public class DateUtil
 	{
 		DATE_FORMATTER_ISO8601.setTimeZone(tz);
 	}
+
+	private static final SimpleDateFormat DATE_FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 }

@@ -15,9 +15,9 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/debug',
-        'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
-        'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
+        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.1.0/debug',
+        'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
+        'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.1.0/resources',
         'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../dependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
@@ -45,7 +45,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-//                'ojtranslations/nls/ojtranslations': 'resources/nls/intgSampleMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'resources/nls/intgSampleMsgBundle'
             }
         }
         ,
@@ -268,8 +268,13 @@ require(['knockout',
                  };
             };
             
+            function HeadViewModel(){
+                var self = this;
+                self.title=ko.observable(getNlsString("TITLE_MOCK_SERVICE_WF_HOME"));
+            }
+            
             $(document).ready(function() {
-                
+                ko.applyBindings(new HeadViewModel(), $('head')[0]);    
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new MainViewModel(), $('#main-container')[0]);      
                 
@@ -277,3 +282,7 @@ require(['knockout',
             });
         }
 );
+
+function getNlsString(key, args) {
+    return oj.Translations.getTranslatedString(key, args);
+};

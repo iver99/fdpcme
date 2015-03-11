@@ -4,7 +4,7 @@
 
            http://enunciate.codehaus.org/schemas/enunciate-1.29.xsd"
 
-       label="Dashboard-Framework API Documentation">
+       label="Dashboard-UI-Framework API Documentation">
 
        <!--api-import pattern="com.mycompany.interfaces.*" / -->
 
@@ -46,7 +46,7 @@
 
               <disable-rule id="obj-c.warnings" />
 
-              <docs docsDir="api" title="Dashboards Framework Rest API" includeDefaultDownloads="true" includeExampleXml="true"
+              <docs docsDir="api" title="Dashboards UI Framework Rest API" includeDefaultDownloads="true" includeExampleXml="true"
 
                      disableRestMountpoint="true" copyright="copyright" forceExampleJson="true">
 

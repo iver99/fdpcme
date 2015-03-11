@@ -12,7 +12,27 @@ define(['knockout',
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
-            var userTenant = getUserTenantFromCookie();
+            
+            self.getUserTenantFromCookie = function() {
+                var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
+                var cookieArray = document.cookie.split(';');
+                var tenantName="TenantOPC1"; //in case tenant name is not got
+                var tenantUser="TenantOPC1.SYSMAN"; //in case use name is not got
+                for (var i = 0; i < cookieArray.length; i++) {
+                    var c = cookieArray[i];
+                    if (c.indexOf(userTenantPrefix) !== -1) {
+                        tenantUser = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
+                        var dotPos = tenantUser.indexOf(".");
+                        if (tenantUser && dotPos>0){
+                           tenantName= tenantUser.substring(0,dotPos);
+                        }
+                        break;
+                    }
+                }
+                return {"tenant": tenantName, "tenantUser": tenantUser};
+            };
+            
+            var userTenant = self.getUserTenantFromCookie();
             var userName = getUserName(userTenant);
             var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
             var dfu = new dfumodel(userName, tenantName);
@@ -211,23 +231,6 @@ define(['knockout',
 //                        });
 //                }
 //                return assetRoot;
-            };
-            
-            function getUserTenantFromCookie() {
-                var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
-                var userTenantPrefix = "X-REMOTE-USER=";
-                var cookieArray = document.cookie.split(';');
-                var tenantName="TenantOPC1"; //in case tenant name is not got
-                var userName="TenantOPC1.SYSMAN"; //in case use name is not got
-                for (var i = 0; i < cookieArray.length; i++) {
-                    var c = cookieArray[i];
-                    if (c.indexOf(tenantNamePrefix) !== -1) {
-                        tenantName = c.substring(c.indexOf(tenantNamePrefix) + tenantNamePrefix.length, c.length);
-                    } else if (c.indexOf(userTenantPrefix) !== -1) {
-                        userName = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
-                    }
-                }
-                return {"tenant": tenantName, "tenantUser": userName};
             };
             
             function getUserName(userTenant) {

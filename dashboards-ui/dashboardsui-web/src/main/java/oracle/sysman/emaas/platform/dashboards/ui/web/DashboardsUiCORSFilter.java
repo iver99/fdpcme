@@ -12,6 +12,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
+
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
@@ -20,13 +22,13 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DashboardsUiCORSFilter implements Filter
 {
-	private static final String OAM_REMOTE_USER_HEADRE = "OAM_REMOTE_USER";
-	private static final String DEFAULT_USER = "SYSMAN";
-	private static final String DEFAULT_TENANT = "TenantOPC1";
+	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
+	//	private static final String DEFAULT_USER = "SYSMAN";
+	//	private static final String DEFAULT_TENANT = "TenantOPC1";
 
 	//	private static final String AUTHORIZATION_HEADER = "Authorization"; //header name needed for authorization
-	private static final String COOKIE_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
-	private static final String COOKIE_X_REMOTE_USER = "X-REMOTE-USER";
+	//	private static final String COOKIE_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
+	private static final String COOKIE_X_REMOTE_USER = "ORA_EMSAAS_USERNAME_AND_TENANTNAME";
 
 	@Override
 	public void destroy()
@@ -65,43 +67,34 @@ public class DashboardsUiCORSFilter implements Filter
 
 		// handling the OAM info from SSO
 		HttpServletRequest httpReq = (HttpServletRequest) request;
-		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADRE);
+		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
 
-		// default value incase there is no OAM header
-		String tenant = DEFAULT_TENANT;
-		if (userTenant != null && userTenant.indexOf(".") > 0) {
-			int idx = userTenant.indexOf(".");
-			if (idx > 0) {
-				tenant = userTenant.substring(0, idx);
-			}
-		}
-		else {
-			// default value for X-REMOTE-USER
-			userTenant = DEFAULT_TENANT + "." + DEFAULT_USER;
-		}
+		// default value in case there is no OAM header
+		//		if (userTenant == null){
+		//			// default value for X-REMOTE-USER
+		//			userTenant = DEFAULT_TENANT + "." + DEFAULT_USER;
+		//		}
 		// check to avoid duplicated cookies
-		boolean domainNameExists = false, remoteUserExists = false;
+		boolean remoteUserExists = false;
+		Cookie updatedCookie = null;
 		if (hReq.getCookies() != null) {
 			for (Cookie cookie : hReq.getCookies()) {
-				if (COOKIE_X_USER_IDENTITY_DOMAIN_NAME.equals(cookie.getName())) {
-					domainNameExists = true;
-				}
 				if (COOKIE_X_REMOTE_USER.equals(cookie.getName())) {
 					remoteUserExists = true;
-				}
-				if (domainNameExists && remoteUserExists) {
+					if (!StringUtil.isEmpty(userTenant)) {
+						updatedCookie = cookie;
+						updatedCookie.setValue(userTenant);
+					}
 					break;
 				}
 			}
 		}
-		if (!domainNameExists) {
-			Cookie userNameCookie = new Cookie(COOKIE_X_USER_IDENTITY_DOMAIN_NAME, tenant);
-			hRes.addCookie(userNameCookie);
-		}
-		if (!remoteUserExists) {
+		if (!remoteUserExists && !StringUtil.isEmpty(userTenant)) {
 			//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
-			Cookie tenantCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
-			hRes.addCookie(tenantCookie);
+			updatedCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
+		}
+		if (updatedCookie != null) {
+			hRes.addCookie(updatedCookie);
 		}
 		chain.doFilter(request, response);
 	}
