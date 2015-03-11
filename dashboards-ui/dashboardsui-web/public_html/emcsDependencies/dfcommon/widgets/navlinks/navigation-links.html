@@ -1,0 +1,44 @@
+<div class="links-content-container">
+    <div class="headerMenuItem">
+        <div class="headerMenuIcon">
+            <div class="iconCircle" id="iconDashboard">
+                <i class="fa fa-icon-font fa-desktop"></i>
+            </div>
+        </div>
+        <div class="headerMenuText">
+            <div class="oj-row" style="font-weight: bolder; font-size: medium;">Dashboard</div>
+            <div class="oj-row" style="font-weight: bold">
+                <a data-bind="click: openDashboardHome, text: 'All Dashboards'"></a>
+            </div>
+<!--            <div class="oj-row" style="font-weight: bold">
+                <a data-bind="click: openDashboardHome, text: 'Create Dashboard'"></a>
+            </div>-->
+        </div>
+    </div>
+    <div class="headerMenuItem">
+        <div class="headerMenuIcon">
+            <div class="iconCircle" id="iconAnalyzer">
+                <i class="fa fa-icon-font fa-bar-chart"></i>
+            </div>
+        </div>
+        <div class="headerMenuText">
+            <div class="oj-row" style="font-weight: bolder; font-size: medium;">Visual Analyzers</div>
+            <!-- ko foreach: visualAnalyzers -->
+            <div class="oj-row" style="font-weight: bold"><a data-bind="click: $parent.openLink, text: $parent.truncateString($data.name, 20)"></a></div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <div class="headerMenuItem">
+        <div class="headerMenuIcon">
+            <div class="iconCircle" id="iconCogs">
+                <i class="fa fa-icon-font fa-cogs"></i>
+            </div>
+        </div>
+        <div class="headerMenuText">
+            <div class="oj-row" style="font-weight: bolder; font-size: medium;">Administration</div>
+            <!-- ko foreach: adminLinks -->
+            <div class="oj-row" style="font-weight: bold"><a data-bind="click: $parent.openLink, text: $parent.truncateString($data.name, 20)"></a></div>
+            <!-- /ko -->
+        </div>
+    </div>
+</div>

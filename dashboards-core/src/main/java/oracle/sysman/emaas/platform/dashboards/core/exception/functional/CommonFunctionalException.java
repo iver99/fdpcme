@@ -47,6 +47,10 @@ public class CommonFunctionalException extends DashboardException
 	public static final String PROVIDER_VERSION_REQUIRED = "PROVIDER_VERSION_REQUIRED";
 	public static final String PROVIDER_ASSET_ROOT_REQUIRED = "PROVIDER_ASSET_ROOT_REQUIRED";
 
+	// preference messages
+	public static final String PREFERENCE_INVALID_KEY = "PREFERENCE_INVALID_KEY";
+	public static final String PREFERENCE_INVALID_VALUE = "PREFERENCE_INVALID_VALUE";
+
 	/**
 	 * Constructs a new <code>CommonFunctionalException</code> with the specified detail message.
 	 */

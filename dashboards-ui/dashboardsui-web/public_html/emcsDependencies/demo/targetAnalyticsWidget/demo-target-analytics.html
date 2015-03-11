@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Demo Target Analytics</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<link rel="stylesheet" href="../../emcpdfui/emcsDependencies/oraclejet/css/libs/oj/v1.0.0/alta/oj-alta-min.css" type="text/css"/>-->
+    </head>
+    <body>
+        <div id="vizform" style="height:100%;width:100%;background-color: white; border: 0px;" class="oj-panel oj-panel-alt1">
+            <div id='chart-container' style="width:100%;height:100%;">
+                <div data-bind="ojComponent: {
+                        component: 'ojChart', 
+                        type: 'bar', 
+                        orientation: 'vertical',
+                        stack: 'on',
+                        series: seriesValue, 
+                        groups: groupsValue, 
+                        animationOnDisplay: 'auto',
+                        hoverBehavior: 'dim',
+                        legend: {rendered: 'on',position: 'bottom'}
+                    }"
+                     style="width:100%;height:100%;">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

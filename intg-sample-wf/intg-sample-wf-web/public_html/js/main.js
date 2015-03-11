@@ -15,9 +15,9 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
-        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.0.0/debug',
-        'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.0.0/ojL10n',
-        'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.0.0/resources',
+        'ojs': '../dependencies/oraclejet/js/libs/oj/v1.1.0/debug',
+        'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
+        'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.1.0/resources',
         'signals': '../dependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../dependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../dependencies/oraclejet/js/libs/history/history.iegte8.min',
@@ -45,7 +45,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-//                'ojtranslations/nls/ojtranslations': 'resources/nls/intgSampleMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'resources/nls/intgSampleMsgBundle'
             }
         }
         ,
@@ -89,6 +89,17 @@ require(['knockout',
 ],
         function(ko, $) // this callback gets executed when all required modules are loaded
         {
+            if (!ko.components.isRegistered("df-oracle-branding-bar")) {
+                ko.components.register("df-oracle-branding-bar",{
+                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                });
+//            ko.components.register("df-oracle-branding-bar",{
+//                viewModel:{require:'../app/df/dfcommon/widgets/brandingbar/js/brandingbar'},
+//                template:{require:'text!../app/df/dfcommon/widgets/brandingbar/brandingbar.html'}
+//            });
+            }
+            
             ko.components.register("demo-chart-widget",{
                 viewModel:{require:'../widgets/simpleChartWidget/js/demo-chart-widget'},
                 template:{require:'text!../widgets/simpleChartWidget/demo-chart-widget.html'}
@@ -121,7 +132,12 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-
+//                self.registryUrl = "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
+//                self.authToken = "Basic d2VibG9naWM6d2VsY29tZTE=";
+                self.userName = "SYSMAN";
+                self.tenantName = "TenantOPC1";
+                self.appName = "Integration Sample";
+/*
                 // 
                 // Dropdown menu states
                 // 
@@ -135,12 +151,6 @@ require(['knockout',
                         default:
                             // this.selectedMenuItem(ui.item.children("a").text());
                     }
-                };
-
-                // Data for application name
-                var appName = {
-                    "id": "qs",
-                    "name": "Enterprise Manager"
                 };
 
                 var cloudName ="Cloud Service";
@@ -178,13 +188,13 @@ require(['knockout',
                         }
                     ]
                 };
-
-                self.appId = appName.id;
-                self.appName = appName.name;
+                
+                self.productName = "Enterprise Manager";
                 self.cloudName = cloudName;
                 self.userName = ko.observable(toolbarData.userName);
                 self.toolbarButtons = toolbarData.toolbar_buttons;
                 self.globalNavItems = toolbarData.global_nav_dropdown_items;
+*/
             };
             
             function MainViewModel() {
@@ -258,12 +268,21 @@ require(['knockout',
                  };
             };
             
+            function HeadViewModel(){
+                var self = this;
+                self.title=ko.observable(getNlsString("TITLE_MOCK_SERVICE_WF_HOME"));
+            }
+            
             $(document).ready(function() {
-                
-                ko.applyBindings(new HeaderViewModel(), $('#demo-appheader-bar')[0]);
+                ko.applyBindings(new HeadViewModel(), $('head')[0]);    
+                ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new MainViewModel(), $('#main-container')[0]);      
                 
                 $('#globalBody').show();
             });
         }
 );
+
+function getNlsString(key, args) {
+    return oj.Translations.getTranslatedString(key, args);
+};

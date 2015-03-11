@@ -4,7 +4,7 @@
 
            http://enunciate.codehaus.org/schemas/enunciate-1.29.xsd"
 
-       label="Saved-Search-Framework API Documentation">
+       label="Dashboard-Framework API Documentation">
 
        <!--api-import pattern="com.mycompany.interfaces.*" / -->
 

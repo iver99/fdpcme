@@ -3,6 +3,6 @@
         <wb-resource deploy-path="/" source-path="/public_html" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <property name="java-output-path" value="/intg-sample-wf-web/build/classes"/>
-        <property name="context-root" value="emcpdf-intg-sample-wf"/>
+        <property name="context-root" value="emsaasui/emcpdf-intg-sample-wf"/>
     </wb-module>
 </project-modules>

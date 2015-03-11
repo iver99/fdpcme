@@ -3,10 +3,8 @@ package oracle.sysman.emaas.platform.dashboards.core;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -770,19 +768,6 @@ public class DashboardManager
 		for (int i = 0; i < paramList.size(); i++) {
 			Object value = paramList.get(i);
 			query.setParameter(i + 1, value);
-		}
-	}
-
-	private void initializeQueryParams(Query query, Map<String, Object> paramMap)
-	{
-		if (query == null || paramMap == null) {
-			return;
-		}
-		Iterator<String> paramKeySet = paramMap.keySet().iterator();
-		for (; paramKeySet.hasNext();) {
-			String paramKey = paramKeySet.next();
-			Object value = paramMap.get(paramKey);
-			query.setParameter(paramKey, value);
 		}
 	}
 }

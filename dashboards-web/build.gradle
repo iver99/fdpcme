@@ -106,6 +106,7 @@ sourceSets {
 dependencies {
 	providedCompile project(':dashboards-entities')
 	providedCompile project(':dashboards-core')  
+        providedCompile project(':dashboards-webutils')
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5')
 	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0')
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17')
@@ -135,7 +136,7 @@ dependencies {
 	providedCompile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3')
 	providedCompile(group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3')
 	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6')
-	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.1')
+	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	restDoc(

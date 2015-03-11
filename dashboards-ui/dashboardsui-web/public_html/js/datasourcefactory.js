@@ -20,7 +20,7 @@ function(dm, dc, dp, oj, ko, $)
             if (pageSize)
             {
                 _pageSize = pageSize;
-                _fetchSize = ((_pageSize * 3) > 100 ? _pageSize : (_pageSize * 3));
+                _fetchSize = ((_pageSize * 2) > 300 ? _pageSize : (_pageSize * 2));
                 if (_fetchSize > _modelLimit) _modelLimit = _fetchSize;
             }
             var _collection = new dc.DashboardCollection([], 

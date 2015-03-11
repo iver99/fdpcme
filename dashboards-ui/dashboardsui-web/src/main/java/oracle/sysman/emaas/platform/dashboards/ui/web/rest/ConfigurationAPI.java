@@ -99,7 +99,7 @@ public class ConfigurationAPI
 		//			responseRegistration = responseSSFVersionNotFound;
 		//		}
 		else {
-			String registryUrls = svMap.get(RegistrationEntity.NAME_REGISTRYUTILS);
+			//			String registryUrls = svMap.get(RegistrationEntity.NAME_REGISTRYUTILS);
 			//			String ssfServiceName = svMap.get(RegistrationEntity.NAME_SSF_SERVICENAME);
 			//			String ssfVersion = svMap.get(RegistrationEntity.NAME_SSF_VERSION);
 			registrationEntity = new RegistrationEntity();

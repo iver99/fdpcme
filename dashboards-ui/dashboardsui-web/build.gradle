@@ -5,7 +5,7 @@ apply plugin: 'artifactory-publish'
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
-def File sourceJetDestDir = new File(sourceWebappDir, 'dependencies/oraclejet')
+def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
 
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
@@ -33,7 +33,7 @@ project.task("unpackJETFromArtifactory") << {
             }
             // Copy each of the unzipped jet directories to
             // the appropriate source directories
-            // 1. build/jet/ >> public_html/dependencies/oraclejet/
+            // 1. build/jet/ >> public_html/emcsDependencies/oraclejet/
             project.copy {
                 from  buildJetUnzipDir
                 into sourceJetDestDir.absolutePath
@@ -57,7 +57,7 @@ def download_artifacts = "${download_artifacts}".split(",")
 def download_version = "${download_version}".split(",")
 def download_foldername = "${download_foldername}".split(",")
 
-project.task("unpackWarFromArtifactory") << {
+project.task("unpackZipFromArtifactory") << {
     
     for (i in 0..<war_number.toInteger()){
 	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
@@ -69,11 +69,13 @@ project.task("unpackWarFromArtifactory") << {
 		        from project.file(artifact.file.absolutePath)
 		        into buildWarUnzipDir.absolutePath
 		    }
-		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".war", dest:buildWarUnzipDir.absolutePath)
+		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildWarUnzipDir.absolutePath)
 		    
 		    project.copy {
-		        from  buildWarUnzipDir.absolutePath+"/dependencies/"
-		        into sourceWebappDir.absolutePath+"/dependencies/"
+		        //from  buildWarUnzipDir.absolutePath+"/emcsDependencies/"
+			from buildWarUnzipDir.absolutePath
+			exclude "*.zip"
+		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
 		    }
 		    
 		    project.delete(buildWarUnzipDir)
@@ -82,24 +84,25 @@ project.task("unpackWarFromArtifactory") << {
     }
 }
 
-project.task("cleanWar") << {
-    def File warDestDir = new File(sourceWebappDir.absolutePath,"/dependencies")
+project.task("cleanZip") << {
+    def File warDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
     def File tmpdir = warDestDir
     println 'Cleaning up war directories ...'
 
     download_foldername.each { folder ->
         tmpdir = new File(warDestDir.absolutePath,"/"+folder)
 	println 'war dir: ' + tmpdir
-	tmpdir.deleteDir()}
+	tmpdir.deleteDir()
+	}
 }
 
-clean.dependsOn cleanJet,cleanWar
+clean.dependsOn cleanJet,cleanZip
 
 war.archiveName "dashboardsui-web.war"
 
 if(war_number.toInteger()>0){
 
-	war.dependsOn unpackJETFromArtifactory, unpackWarFromArtifactory
+	war.dependsOn unpackJETFromArtifactory, unpackZipFromArtifactory
 }
 else
 {
@@ -111,42 +114,53 @@ war {
 	       include '**/*'
 	        into('/')
 	}
-	from('src/main/java') {
-	        include '**/*'
-	        into('WEB-INF/classes')
-	}
-}
+	//from('src/main/java') {
+	//        include '**/*'
+	//        into('WEB-INF/classes')
+	//}
 
-task buildDFCommonLibWar(type: War) {
-	
-	appendix = 'DfIntgCommon'
-	from('public_html') {
-	       include 'dependencies/dfcommon/'
-	        into('/')
+	from('src/main/java') { 
+		include '**/*.properties'
+		into('WEB-INF/classes') 
 	}
-	rootSpec.exclude("**/*.class")
-        rootSpec.exclude("**/*.jar")
+
 	rootSpec.exclude("**/*.zip")
-	rootSpec.exclude("**/*.MF")
-
 }
 
-def libsToPublish = []
-fileTree("build/libs").each { file ->
-    libsToPublish << file
+task buildDFCommonLibZip(type: Zip){
+	baseName = 'emcs-ui-framework'
+	appendix = 'common'
+	//classifier = 'common'
+	from 'public_html/emcsDependencies/dfcommon/'
+	into 'dfcommon'
 }
 
+//def libsToPublish = []
+//fileTree publishfiles = fileTree("build/libs") + fileTree("build/distributions")
+//fileTree publishfiles = fileTree("build/distributions")
+//publishfiles.each { file ->
+//    libsToPublish << file
+//}
 
 publishing {
+//    publications {
+//	for (f in libsToPublish ) {
+//	    def fbase = f.getName().split("\\.")[0]
+//	    "$fbase"(MavenPublication) {
+//		version "${publish_version}"
+//	        groupId "${publish_group}"
+//		artifact f
+//		artifactId fbase
+//	    }
+//	}
+//    }
+
     publications {
-	for (f in libsToPublish ) {
-	    def fbase = f.getName().split("\\.")[0]
-	    "$fbase"(MavenPublication) {
-		version "${publish_version}"
-	        groupId "${publish_group}"
-		artifact f
-		artifactId fbase
-	    }
+	maven(MavenPublication) {
+	    version "${publish_version}"
+	    groupId "${publish_group}"
+	    artifact(buildDFCommonLibZip)
+	    artifactId 'emcs-ui-framework-common'
 	}
     }
     repositories {
@@ -169,8 +183,84 @@ task runQAUITestSuite(type: Test){
         }
 }
 
+// Directory where the restful API doc is generated
+ext.restDocRootDir = "${buildDir}/restdoc" 
+ext.restDocOutputDir = "${restDocRootDir}"
+
+configurations {
+	restDoc
+	enunciateCore
+	ftpAntTask
+}
+
+/**
+ * Generates documentation for the REST service API
+ */  
+task restDoc {
+ 
+    // Configure task input and output to not generate the doc again when the 
+    // source file have not changed
+    inputs.files 'src/main/java/oracle/sysman/emaas/platform/dashboards/ui/web/rest'
+    outputs.dir restDocOutputDir
+}
+restDoc << {
+    
+    // Declare the enunciate ant task
+    ant.taskdef (name: 'enunciate', 
+        classname: 'org.codehaus.enunciate.main.EnunciateTask',
+        classpath: configurations.enunciateCore.asPath)
+    
+    // Make the directory to store enunciate output
+    ant.mkdir(dir: "${restDocOutputDir}")
+
+    // Define classpath for running enunciate
+    ant.path(id:'enunciateRuntimePath') {
+        pathelement(path: configurations.restDoc.asPath)
+    }  
+
+    // Run the enunciate task
+    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emaas/platform/dashboards/ui/web/rest/',
+            classpathRef: 'enunciateRuntimePath',
+            verbose: 'true', 
+            debug: 'true', 
+            configFile: 'enunciate.xml',
+            javacSourceVersion: '7') {
+        
+        include(name: '**/*.java')
+	exclude(name: '*/exception')
+        export(artifactId: 'docs', destination: restDocOutputDir)
+        javacArgument(argument: '-g')
+    }	
+}
+
+/**
+ * FTP the REST API document to the ftp server
+ */
+
+task ftpRestDoc << {
+		ant {
+			taskdef(name: 'ftp',
+                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
+                classpath: configurations.ftpAntTask.asPath)
+			ftp(server: ftpserver, userid: uidoc_username, password: uidoc_password, remotedir: remote_restdoc_dir) {
+				fileset(dir: "${restDocOutputDir}")
+			}
+		}
+	}
+
+sourceSets {
+                            test{
+                                java {
+                                          srcDirs = ['src/test/java']
+                                }
+                                resources.srcDirs = ['src/test/java']
+                            }
+ }
+
 dependencies {
-        compile(group: 'log4j', name: 'log4j', version: '1.2.17')
+        providedCompile project(':dashboards-ui:dashboardsui-webutils')
+        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2')
+        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2')
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
 
@@ -183,10 +273,26 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1')
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5')
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0')
-        compile(group: 'oraclejet', name: 'oraclejet', version: '1.0.0-release', ext: 'zip')
+        compile(group: 'oraclejet', name: 'oraclejet', version: '1.1.0-293', ext: 'zip')
 	if(war_number.toInteger()>0){
 	    for (i in 0..<war_number.toInteger())
-		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'war')
+		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip', changing: true)
 	}
+
+	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
+	restDoc(
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.28'],
+		[group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
+		[group: 'com.sun.jersey', name: 'jersey-server', version: '1.17'],
+		[group: 'com.sun.jersey', name: 'jersey-servlet', version: '1.17']		
+	)
+	ftpAntTask('org.apache.ant:ant-commons-net:1.8.4') {
+			module('commons-net:commons-net:1.4.1') {
+				dependencies 'oro:oro:2.0.8:jar'
+			}
+		}
 }
 

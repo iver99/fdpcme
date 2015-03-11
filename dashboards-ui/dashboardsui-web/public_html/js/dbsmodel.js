@@ -14,12 +14,13 @@ define([
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
-    'dependencies/dfcommon/js/util/df-util.js',
+    'dfutil',
+    'prefutil',
     'ojs/ojknockout', 
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, oj, ko, $, dfu)
+function(dsf, oj, ko, $, dfu, pfu)
 {
     
     function createDashboardDialogModel() {
@@ -94,10 +95,60 @@ function(dsf, oj, ko, $, dfu)
         };
     };
     
+    function welcomeDialogModel(prefUtil) {
+        var self = this;
+        self.showWelcomePrefKey = "Dashboards.showWelcomeDialog";
+        self.userName = dfu.getUserName();
+        self.prefUtil = prefUtil;
+        self.showWelcome = true;
+        (function() {
+            prefUtil.getPreference(self.showWelcomePrefKey, {
+                async: false,
+                success: function (res) {
+                    if (res['value'] === "true")
+                    {
+                        self.showWelcome = true;
+                    }
+                    if (res['value'] === "false")
+                    {
+                        self.showWelcome = false;
+                    }
+                },
+                error: function() {
+                    if (console.log) console.log("Error retrieve show welcome preference");
+                }
+            });
+        })();
+        
+        self.browseClicked = function() {
+            $('#overviewDialog').ojDialog('close');
+        };
+        self.buildClicked = function() {
+            $('#overviewDialog').ojDialog('close');
+            $('#cbtn').focus();
+        };
+        self.exploreClicked = function() {
+            $('#overviewDialog').ojDialog('close');
+            $('#exploreDataBtn').focus();
+        };
+        self.gotClicked = function() {
+            self.showWelcome = false;
+            prefUtil.setPreference(self.showWelcomePrefKey, "false");
+            $('#overviewDialog').ojDialog('close');
+        };    
+        
+    };
+    
     function ViewModel() {
         
         var self = this;
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
+        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
+        //welcome
+        self.prefUtil = new pfu(self.dfRestApiUrl, dfu.getDashboardsRequestHeader());
+        self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
+        
+        //dashboards
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
@@ -105,9 +156,9 @@ function(dsf, oj, ko, $, dfu)
         self.confirmDialogModel = new confirmDialogModel();
         self.comingsoonDialogModel = new comingsoonDialogModel();
         
-        self.pageSize = ko.observable(20);
+        self.pageSize = ko.observable(120);
         
-        self.serviceURL = dfu.discoverDFRestApiUrl()+"dashboards";
+        self.serviceURL = self.dfRestApiUrl + "dashboards";
         //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
@@ -123,14 +174,25 @@ function(dsf, oj, ko, $, dfu)
         
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL);
         self.datasource = self.dsFactory.build("", self.pageSize());
-        self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 'success': function() {
+        self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
+            'success': function() {
                 self.pagingDatasource( self.datasource['pagingDS'] );
-        }} );
+                if (self.datasource['pagingDS'].totalSize() <= 0)
+                {
+                    if (self.welcomeDialogModel.showWelcome === false 
+                        && self.datasource['pagingDS'].totalSize() <= 0)
+                    {
+                        $('#cbtn-tooltip').ojPopup('open', "#cbtn");
+                    }
+                }
+            }
+        } );
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
             //data.dashboard.openDashboard();
             data.dashboardModel.openDashboardPage();
+            oj.Logger.info("Dashboard: ["+data.dashboardModel.get("name")+"] is open from Dashboard Home");
         };
         
         self.handleDashboardDeleted = function(event, data) {

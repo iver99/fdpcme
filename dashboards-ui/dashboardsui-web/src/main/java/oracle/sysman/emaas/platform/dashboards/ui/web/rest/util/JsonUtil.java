@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
@@ -53,7 +54,7 @@ public class JsonUtil
 
 	private final ObjectMapper mapper;
 
-	private static String dateFormat = "yyyy-MM-dd hh:mm:ss";
+	//	private static String dateFormat = "yyyy-MM-dd hh:mm:ss";
 
 	public JsonUtil(Inclusion inclusion)
 	{
@@ -150,7 +151,7 @@ public class JsonUtil
 
 	public void setDateFormat(String dateFormat)
 	{
-		mapper.setDateFormat(new SimpleDateFormat(dateFormat));
+		mapper.setDateFormat(new SimpleDateFormat(dateFormat, Locale.US));
 	}
 
 	/**
