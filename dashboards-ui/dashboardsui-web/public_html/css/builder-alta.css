@@ -114,14 +114,41 @@ body, html {
   border: 1px solid #999999;
 }
 
-#builder-dbd-description img {
-  width: 10px;
+#builder-toolbar-left {
+  padding-right: 180px;
+  margin-right: -180px;
+}
+
+#builder-toolbar-left, #builder-dbd-description .dbd-display-hover-area, #builder-dbd-description .dbd-display-area-text {
+  width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  float:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#builder-dbd-description .dbd-display-area-text {
+  padding-right: 40px;
+  margin-right: -40px;
+}
+
+.dbd-toolbar-icon-add-widget:before {
+  content: url(images/func_plus_16_ena.png);
+}
+
+.dbd-toolbar-icon-save:before {
+  content: url(images/func_floppy_16_ena.png);
 }
 
 .builder-toolbar-button-text {
-  font-size: 15px;
-  font-weight: bold;
-  color: #252525;
+  color: rgb(0, 0, 0);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
   margin-left: 8px;
   padding-bottom: 8px;
 }

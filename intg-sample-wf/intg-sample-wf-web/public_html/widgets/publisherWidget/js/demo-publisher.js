@@ -15,6 +15,8 @@ define([
         function PublisherViewModel(params) {
             var self = this;
             self.message = ko.observable("JET based Dashboards looks great!");
+            self.hintInfo = ko.observable(getNlsString("TEXT_WIDGET_PUBLISHER_HINT"));
+            self.publishLabel = ko.observable(getNlsString('LABEL_WIDGET_PUBLISHER_PUBLISH'));
             self.publish = function(){
                 params.tile.fireDashboardItemChangeEvent({timeRangeChange:null,customChanges:[{name:"demoMessage",value:self.message()}]});
             }

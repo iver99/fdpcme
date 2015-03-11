@@ -17,6 +17,7 @@ define([
             self.message = ko.observable("<NONE>");
             self.myGreetings = ko.observable();
             self.now = ko.observable();  
+            self.hintInfo = ko.observable(getNlsString("TEXT_WIDGET_SUBSCRIBER_HINT"));
 
             params.tile.onDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 /**

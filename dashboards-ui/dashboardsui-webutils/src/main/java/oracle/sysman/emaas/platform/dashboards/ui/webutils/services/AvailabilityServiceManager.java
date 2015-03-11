@@ -154,14 +154,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	{
 		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPoint(DASHBOARD_API_SERVICE_NAME,
 				DASHBOARD_API_SERVICE_VERSION);
-		return !StringUtil.isEmpty(ee.getHref());
+		return ee != null && !StringUtil.isEmpty(ee.getHref());
 	}
 
 	private boolean isSavedSearchAvailable()
 	{
 		EndpointEntity ee = RegistryLookupUtil
 				.getServiceExternalEndPoint(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION);
-		return !StringUtil.isEmpty(ee.getHref());
+		return ee != null && !StringUtil.isEmpty(ee.getHref());
 	}
 
 }
