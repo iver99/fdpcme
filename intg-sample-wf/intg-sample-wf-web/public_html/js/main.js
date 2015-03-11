@@ -45,7 +45,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-//                'ojtranslations/nls/ojtranslations': 'resources/nls/intgSampleMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'resources/nls/intgSampleMsgBundle'
             }
         }
         ,
@@ -268,8 +268,13 @@ require(['knockout',
                  };
             };
             
+            function HeadViewModel(){
+                var self = this;
+                self.title=ko.observable(getNlsString("TITLE_MOCK_SERVICE_WF_HOME"));
+            }
+            
             $(document).ready(function() {
-                
+                ko.applyBindings(new HeadViewModel(), $('head')[0]);    
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new MainViewModel(), $('#main-container')[0]);      
                 
@@ -277,3 +282,7 @@ require(['knockout',
             });
         }
 );
+
+function getNlsString(key, args) {
+    return oj.Translations.getTranslatedString(key, args);
+};

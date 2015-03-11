@@ -22,7 +22,8 @@ requirejs.config({
         'crossroads': '../../dependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../dependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../dependencies/oraclejet/js/libs/require/text',
-        'promise': '../../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min'
+        'promise': '../../dependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'nls':'../../js/resources/nls/intgSampleMsgBundle'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -44,7 +45,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-//                'ojtranslations/nls/ojtranslations': 'resources/nls/intgSampleMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'nls'
             }
         }
         ,
@@ -103,8 +104,14 @@ require(['knockout',
                 var self = this;
             };
             
+                        
+            function HeadViewModel(){
+                var self = this;
+                self.title=ko.observable(getNlsString("TITLE_ORACLE_BRANDING_BAR_DEMO"));
+            }
+            
             $(document).ready(function() {
-                
+                ko.applyBindings(new HeadViewModel(), $('head')[0]);
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
                 ko.applyBindings(new MainViewModel(), $('#main-container')[0]);      
                 
@@ -112,3 +119,7 @@ require(['knockout',
             });
         }
 );
+
+function getNlsString(key, args) {
+    return oj.Translations.getTranslatedString(key, args);
+};

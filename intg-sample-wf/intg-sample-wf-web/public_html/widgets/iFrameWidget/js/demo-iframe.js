@@ -15,6 +15,7 @@ define([
         function CalendarViewModel(params) {
             var self = this;
             self.url = ko.observable("http://jet.us.oracle.com/");
+            self.hintInfo= ko.observable("Please change the URL and click \"Change\" to apply: ");
             self.fullUrl =ko.observable(self.url());
             self.apply = function(){
                 self.fullUrl(self.url());
