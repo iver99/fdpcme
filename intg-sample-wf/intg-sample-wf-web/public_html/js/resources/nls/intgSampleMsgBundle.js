@@ -17,6 +17,7 @@ define({
       "TITLE_MOCK_SERVICE_WF_HOME":"Home of Mock Service for integration purpose (using Widget Framework)",
       "TITLE_ORACLE_BRANDING_BAR_DEMO":"Oracle Branding Bar Demo",
       
+      "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
       "TEXT_WIDGET_SUBSCRIBER_HINT":"You will see received message and what I will respond",
       "LABEL_WIDGET_IFRAME_CHANGE":"Change",
       "TEXT_WIDGET_PUBLISHER_HINT":"Please write your message and click \"Publish\" to send",
