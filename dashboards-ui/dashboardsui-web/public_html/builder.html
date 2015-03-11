@@ -37,7 +37,7 @@ role value for that section to represent the appropriate content type.
 
     </head>
     <body>
-        <div class="loadingIndicator" id="loading" data-bind="text: getNlsString('DBS_BUILDER_LOADING')"></div>
+        <div class="loadingIndicator" id="loading">Loading</div>
         <div id="globalBody" style="display: none"> <!-- This div helps make sure the footer stays at the bottom of the page -->
 
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
@@ -109,7 +109,7 @@ role value for that section to represent the appropriate content type.
                                     <span data-bind="text: dashboardDescription, 
                                                      event: { dblclick: editDashboardDescription }, 
                                                      enterpress: editDashboardDescription, 
-                                                     attr: {title: getNlsString('DBS_BUILDER_DESC_EDIT')}" 
+                                                     attr: {title: dashboardDescription}" 
                                           class="dbd-display-area-text"  tabindex="0"></span>
                                     <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDescription,ojComponent: {
@@ -123,7 +123,7 @@ role value for that section to represent the appropriate content type.
                                 <input id="builder-dbd-description-input"
                                        data-bind="ojComponent: {component: 'ojInputText', 
                                                value: dashboardDescriptionEditing, rootAttributes: {
-                                               style:'max-width:55em;'}}" maxlength="264">
+                                               style:'max-width:55em;'}}" maxlength="256">
                                 <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardDescription,ojComponent: {
                                                 component:'ojButton'
@@ -537,10 +537,10 @@ role value for that section to represent the appropriate content type.
                                                     </td>
                                                     <td>
                                                         <!-- ko if: $parent.useAbsolutePathForUrls() === true -->
-                                                        <label class="oj-label" >Enter the <span style="font-size: medium">FULL ABSOLUTE PATH</span> for below URLs in this category. E.g. http://slc04pxi.us.oracle.com:7001/widgets/sample/sampleWidget.html</label>
+                                                        <label class="oj-label" ><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_ABS_1ST')"></span><span style="font-size: medium" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_ABS_2ND')"></span><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_ABS_3RD')"></span></label>
                                                         <!-- /ko -->
                                                         <!-- ko if: $parent.useAbsolutePathForUrls() === false -->
-                                                        <label class="oj-label" >Enter the <span style="font-size: medium">RELATIVE PATH</span> for below URLs in this category. E.g. /sample/sampleWidget.html</label>
+                                                        <label class="oj-label" ><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_REL_1ST')"></span><span style="font-size: medium" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_REL_2ND')"></span><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_REL_3RD')"></span></label>
                                                         <!-- /ko -->
                                                     </td>
                                                 </tr>
@@ -624,8 +624,12 @@ role value for that section to represent the appropriate content type.
             <div id="main-container" class="oj-col stretch-height">
                 <div class="oj-row stretch-height tile-container" id="tileContainer">
                     <!-- ko stopBinding: true -->
-                    <div style="display:none" id="urlChangeDialog" title="Change URL" 
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide', cancelBehavior: 'none', rootAttributes: {style: 'width: 500px;'}}">
+                    <div style="display:none" id="urlChangeDialog"
+                         data-bind="ojComponent:{component: 'ojDialog', 
+                                                 initialVisibility: 'hide',  
+                                                 cancelBehavior: 'none',  
+                                                 rootAttributes: {style: 'width: 500px;'}, 
+                                    title: getNlsString('DBS_BUILDER_CHANGE_URL_TITLE')}">
                         <form id="form-container" class="oj-form oj-md-odd-cols-3 oj-md-labels-inline" data-bind="with: tileToChange">
                             <div class="oj-row">
                                 <div class="oj-col">
@@ -643,8 +647,8 @@ role value for that section to represent the appropriate content type.
                             </div>
                         </form>
                         <div class="oj-dialog-footer">
-                            <button id="okUrlChangeButton" data-bind="ojComponent: {component: 'ojButton', label: 'OK'}, click: applyUrlChange"> </button>
-                            <button data-bind="ojComponent: {component: 'ojButton', label: 'Cancel'}, click: cancelUrlChange"> 
+                            <button id="okUrlChangeButton" data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: applyUrlChange"> </button>
+                            <button data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL')}, click: cancelUrlChange"> 
                             </button>
                         </div>
                     </div>

@@ -19,6 +19,8 @@ import javax.management.ObjectName;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.management.AppLoggingManageMXBean;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import weblogic.application.ApplicationLifecycleEvent;
@@ -28,6 +30,7 @@ import weblogic.application.ApplicationLifecycleEvent;
  */
 public class LoggingServiceManager implements ApplicationServiceManager
 {
+	private final Logger logger = LogManager.getLogger(LoggingServiceManager.class);
 	public static final String MBEAN_NAME = "oracle.sysman.emaas.platform.dashboardsuiservice.logging.beans:type=AppLoggingManageMXBean";
 
 	/* (non-Javadoc)
@@ -66,6 +69,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	{
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.registerMBean(new AppLoggingManageMXBean(), new ObjectName(MBEAN_NAME));
+		logger.info("MBean '" + MBEAN_NAME + "' has been registered");
 	}
 
 	/* (non-Javadoc)
@@ -76,6 +80,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	{
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 		mbs.unregisterMBean(new ObjectName(MBEAN_NAME));
+		logger.info("MBean '" + MBEAN_NAME + "' has been un-registered");
 	}
 
 }
