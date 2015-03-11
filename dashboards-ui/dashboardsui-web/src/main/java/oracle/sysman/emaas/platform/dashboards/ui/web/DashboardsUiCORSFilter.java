@@ -12,6 +12,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
+
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
@@ -74,18 +76,25 @@ public class DashboardsUiCORSFilter implements Filter
 		//		}
 		// check to avoid duplicated cookies
 		boolean remoteUserExists = false;
+		Cookie updatedCookie = null;
 		if (hReq.getCookies() != null) {
 			for (Cookie cookie : hReq.getCookies()) {
 				if (COOKIE_X_REMOTE_USER.equals(cookie.getName())) {
 					remoteUserExists = true;
+					if (!StringUtil.isEmpty(userTenant)) {
+						updatedCookie = cookie;
+						updatedCookie.setValue(userTenant);
+					}
 					break;
 				}
 			}
 		}
-		if (!remoteUserExists) {
+		if (!remoteUserExists && !StringUtil.isEmpty(userTenant)) {
 			//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
-			Cookie tenantCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
-			hRes.addCookie(tenantCookie);
+			updatedCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
+		}
+		if (updatedCookie != null) {
+			hRes.addCookie(updatedCookie);
 		}
 		chain.doFilter(request, response);
 	}
