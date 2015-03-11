@@ -1,5 +1,5 @@
 <div id="demo-publisher" class="oj-panel" style="background-color: white; border-top: 0px;border-width: 0px">
-    <i>Please write your message and click "Publish" to send</i>
+    <i data-bind="text:hintInfo"></i>
     <!--label for="text-input">Message</label-->
     <br/>
     <br/>
@@ -11,6 +11,6 @@
                               value: message}"/>
     <button id= "button"
             data-bind="click: publish, 
-                   ojComponent: { component: 'ojButton', label: 'Publish' }">
+                   ojComponent: { component: 'ojButton', label: publishLabel }">
     </button> 
 </div>

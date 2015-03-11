@@ -114,8 +114,24 @@ body, html {
   border: 1px solid #999999;
 }
 
-#builder-dbd-description img {
-  width: 10px;
+#builder-toolbar-left {
+  padding-right: 180px;
+  margin-right: -180px;
+}
+
+#builder-toolbar-left, #builder-dbd-description .dbd-display-hover-area, #builder-dbd-description .dbd-display-area-text {
+  width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  float:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#builder-dbd-description .dbd-display-area-text {
+  padding-right: 40px;
+  margin-right: -40px;
 }
 
 .dbd-toolbar-icon-add-widget:before {

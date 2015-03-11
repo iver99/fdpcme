@@ -109,7 +109,7 @@ role value for that section to represent the appropriate content type.
                                     <span data-bind="text: dashboardDescription, 
                                                      event: { dblclick: editDashboardDescription }, 
                                                      enterpress: editDashboardDescription, 
-                                                     attr: {title: getNlsString('DBS_BUILDER_DESC_EDIT')}" 
+                                                     attr: {title: dashboardDescription}" 
                                           class="dbd-display-area-text"  tabindex="0"></span>
                                     <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDescription,ojComponent: {
@@ -123,7 +123,7 @@ role value for that section to represent the appropriate content type.
                                 <input id="builder-dbd-description-input"
                                        data-bind="ojComponent: {component: 'ojInputText', 
                                                value: dashboardDescriptionEditing, rootAttributes: {
-                                               style:'max-width:55em;'}}" maxlength="264">
+                                               style:'max-width:55em;'}}" maxlength="256">
                                 <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardDescription,ojComponent: {
                                                 component:'ojButton'
