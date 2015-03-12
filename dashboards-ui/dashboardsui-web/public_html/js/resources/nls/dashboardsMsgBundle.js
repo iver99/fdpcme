@@ -129,10 +129,12 @@ define({
       "DBS_BUILDER_AUTOREFRESH_15MIN":"15 Minutes",
       
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
+      "TEXT_WIDGET_IFRAME_CONFIGURATION":"Configuration",
       "TEXT_WIDGET_SUBSCRIBER_HINT":"You will see received message and what I will respond",
       "LABEL_WIDGET_IFRAME_CHANGE":"Change",
       "TEXT_WIDGET_PUBLISHER_HINT":"Please write your message and click \"Publish\" to send",
       "LABEL_WIDGET_PUBLISHER_PUBLISH":"Publish"
+      
 
 },
   "fr": true,
