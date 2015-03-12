@@ -1,7 +1,7 @@
         {
         "name": "dashboardService-ui",
          "serviceName": "DashboardService-ui",
-         "version": "0.1",
+         "version": "SERVICEVERSION",
          "ephemeral": true,
          "chefRunlistItems":
          [
