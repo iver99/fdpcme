@@ -1,8 +1,8 @@
 <div id="global-time-selector">
     <label style="font-weight: bold;float:left;" class="oj-label-inline" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_SHOWDATA')"></label>
     <label style="float:left;" class="oj-label-inline" data-bind="text:label"></label>
-    <button id="timeRangeBtn" title="Click to open the time selector" class="oj-button oj-default oj-button-half-chrome"
-        data-bind="ojComponent: {component:'ojButton'}, click: showTimeSelector">
+    <button id="timeRangeBtn" class="oj-button oj-default oj-button-half-chrome"
+        data-bind="ojComponent: {component:'ojButton'}, click: showTimeSelector, text:getNlsString('DBS_BUILDER_TIMESELECTOR_CLICKTOOPEN')">
         <img id="timeSelectorIcon" src="css/images/calendar_ena.png" alt=" " 
              style="width:18px;height:18px;margin: 4px 0 0 0;"/>
     </button>
