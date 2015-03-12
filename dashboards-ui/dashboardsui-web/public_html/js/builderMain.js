@@ -121,40 +121,15 @@ require(['knockout',
                 template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
             });
             
-            ko.components.register("demo-chart-widget",{
-                viewModel:{require:'../emcsDependencies/demo/simpleChartWidget/js/demo-chart-widget'},
-                template:{require:'text!../emcsDependencies/demo/simpleChartWidget/demo-chart-widget.html'}
-            });
-
-            ko.components.register("demo-publisher-widget",{
-                viewModel:{require:'../emcsDependencies/demo/publisherWidget/js/demo-publisher'},
-                template:{require:'text!../emcsDependencies/demo/publisherWidget/demo-publisher.html'}
-            });
- 
-            ko.components.register("demo-subscriber-widget",{
-                viewModel:{require:'../emcsDependencies/demo/subscriberWidget/js/demo-subscriber'},
-                template:{require:'text!../emcsDependencies/demo/subscriberWidget/demo-subscriber.html'}
-            });
-            
             ko.components.register("demo-la-widget",{
                 viewModel:{require:'../emcsDependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
                 template:{require:'text!../emcsDependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
             });  
             
-//            ko.components.register("demo-la-widget",{
-//                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js'},
-//                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
-//            }); 
-            
             ko.components.register("demo-ta-widget",{
                 viewModel:{require:'../emcsDependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
                 template:{require:'text!../emcsDependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
             }); 
-            
-//            ko.components.register("demo-ta-widget",{
-//                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/targetAnalyticsWidget/js/demo-target-analytics.js'},
-//                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
-//            });
             
             ko.components.register("DF_V1_WIDGET_IFRAME",{
                 viewModel:{require:'../emcsDependencies/widgets/iFrame/js/widget-iframe'},
@@ -165,40 +140,7 @@ require(['knockout',
                 viewModel:{require:'../emcsDependencies/widgets/onepage/js/onepageModel'},
                 template:{require:'text!../emcsDependencies/widgets/onepage/onepageTemplate.html'}
             });             
-//            ko.components.register("ita-widget",{
-//                viewModel:{require:'http://slc06xat.us.oracle.com:7001/ita-tool/widgets/js/controller/qdg-component.js'},
-//                template:{require:'text!http://slc06xat.us.oracle.com:7001/ita-tool/widgets/html/qdg-component.html'}
-//            });
 
-            function FooterViewModel() {
-                var self = this;
-
-                var aboutOracle = 'http://www.oracle.com/us/corporate/index.html#menu-about';
-                var contactUs = 'http://www.oracle.com/us/corporate/contact/index.html';
-                var legalNotices = 'http://www.oracle.com/us/legal/index.html';
-                var termsOfUse = 'http://www.oracle.com/us/legal/terms/index.html';
-                var privacyRights = 'http://www.oracle.com/us/legal/privacy/index.html';
-
-                self.ojVersion = ko.observable('v' + oj.version + ', rev: ' + oj.revision);
-
-                self.footerLinks = ko.observableArray([
-                    new FooterNavModel('About Oracle', 'aboutOracle', aboutOracle),
-                    new FooterNavModel('Contact Us', 'contactUs', contactUs),
-                    new FooterNavModel('Legal Notices', 'legalNotices', legalNotices),
-                    new FooterNavModel('Terms Of Use', 'termsOfUse', termsOfUse),
-                    new FooterNavModel('Your Privacy Rights', 'yourPrivacyRights', privacyRights)
-                ]);
-
-            }
-
-            function FooterNavModel(name, id, linkTarget) {
-
-                this.name = name;
-                this.linkId = id;
-                this.linkTarget = linkTarget;
-            }
-
-            
             function HeaderViewModel() {
                 var self = this;
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";

@@ -113,12 +113,6 @@ require(['dbs/dbsmodel',
             }
 
            
-//            if (!ko.components.isRegistered('df-nav-links')) {
-//                ko.components.register("df-nav-links",{
-//                    viewModel:{require:'../emcsDependencies/navlinks/js/navigation-links'},
-//                    template:{require:'text!../emcsDependencies/navlinks/navigation-links.html'}
-//                });
-//            }
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
