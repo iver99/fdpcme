@@ -2,7 +2,7 @@
     <label style="font-weight: bold;float:left;" class="oj-label-inline" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_SHOWDATA')"></label>
     <label style="float:left;" class="oj-label-inline" data-bind="text:label"></label>
     <button id="timeRangeBtn" class="oj-button oj-default oj-button-half-chrome"
-        data-bind="ojComponent: {component:'ojButton'}, click: showTimeSelector, text:getNlsString('DBS_BUILDER_TIMESELECTOR_CLICKTOOPEN')">
+        data-bind="ojComponent: {component:'ojButton'}, click: showTimeSelector, attr: {title:getNlsString('DBS_BUILDER_TIMESELECTOR_CLICKTOOPEN')}">
         <img id="timeSelectorIcon" src="css/images/calendar_ena.png" alt=" " 
              style="width:18px;height:18px;margin: 4px 0 0 0;"/>
     </button>
@@ -13,24 +13,24 @@
     <div class="oj-panel">
             <h3>Relative</h3>
             <div style="width:50%; float:left;">
-                <a href="#" data-bind="click: function (){relativeTimeSelected('15mins');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST15MIN')"></a><br/>
-                <a href="#" data-bind="click: function (){relativeTimeSelected('30mins');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30MIN')"></a><br/>
-                <a href="#" data-bind="click: function (){relativeTimeSelected('60mins');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST60MIN')"></a><br/>
-                <a href="#" data-bind="click: function (){relativeTimeSelected('24hrs');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST24HOUR')"></a>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('15mins');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST15MIN')" 
+                   style="display:inline-block;padding-top: 5px;"></a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('30mins');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30MIN')" 
+                   style="display:inline-block;padding-top: 5px;"></a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('60mins');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST60MIN')" 
+                   style="display:inline-block;padding-top: 5px;"></a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('24hrs');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST24HOUR')" 
+                   style="display:inline-block;padding-top: 5px;"></a>
             </div>
             <div style="width:50%; float:left;">
-                <a href="#" data-bind="click: function (){relativeTimeSelected('7days');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST7DAY')"></a><br/>
-                <a href="#" data-bind="click: function (){relativeTimeSelected('30days');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30DAY')"></a><br/>
-                <a href="#" data-bind="click: function (){relativeTimeSelected('90days');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST90DAY')"></a><br/>
-                <a href="#" data-bind="click: function (){relativeTimeSelected('all');}" 
-                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_ALLTIME')"></a>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('7days');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST7DAY')" 
+                   style="display:inline-block;padding-top: 5px;"></a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('30days');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30DAY')" 
+                   style="display:inline-block;padding-top: 5px;"></a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('90days');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST90DAY')" 
+                   style="display:inline-block;padding-top: 5px;"></a><br/>
+                <a href="#" data-bind="click: function (){relativeTimeSelected('all');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_ALLTIME')" 
+                   style="display:inline-block;padding-top: 5px;"></a>
             </div>
           </div>
         <div class="oj-panel">
