@@ -1,5 +1,5 @@
 <div id="global-time-selector">
-    <label style="font-weight: bold;float:left;" class="oj-label-inline">Show data for:</label>
+    <label style="font-weight: bold;float:left;" class="oj-label-inline" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_SHOWDATA')"></label>
     <label style="float:left;" class="oj-label-inline" data-bind="text:label"></label>
     <button id="timeRangeBtn" title="Click to open the time selector" class="oj-button oj-default oj-button-half-chrome"
         data-bind="ojComponent: {component:'ojButton'}, click: showTimeSelector">
@@ -14,23 +14,23 @@
             <h3>Relative</h3>
             <div style="width:50%; float:left;">
                 <a href="#" data-bind="click: function (){relativeTimeSelected('15mins');}" 
-                   style="display:inline-block;padding-top: 5px;">Last 15 Minutes</a><br/>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST15MIN')"></a><br/>
                 <a href="#" data-bind="click: function (){relativeTimeSelected('30mins');}" 
-                   style="display:inline-block;padding-top: 5px;">Last 30 Minutes</a><br/>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30MIN')"></a><br/>
                 <a href="#" data-bind="click: function (){relativeTimeSelected('60mins');}" 
-                   style="display:inline-block;padding-top: 5px;">Last 60 Minutes</a><br/>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST60MIN')"></a><br/>
                 <a href="#" data-bind="click: function (){relativeTimeSelected('24hrs');}" 
-                   style="display:inline-block;padding-top: 5px;">Last 24 Hours</a>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST24HOUR')"></a>
             </div>
             <div style="width:50%; float:left;">
                 <a href="#" data-bind="click: function (){relativeTimeSelected('7days');}" 
-                   style="display:inline-block;padding-top: 5px;">Last 7 Days</a><br/>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST7DAY')"></a><br/>
                 <a href="#" data-bind="click: function (){relativeTimeSelected('30days');}" 
-                   style="display:inline-block;padding-top: 5px;">Last 30 Days</a><br/>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30DAY')"></a><br/>
                 <a href="#" data-bind="click: function (){relativeTimeSelected('90days');}" 
-                   style="display:inline-block;padding-top: 5px;">Last 90 Days</a><br/>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST90DAY')"></a><br/>
                 <a href="#" data-bind="click: function (){relativeTimeSelected('all');}" 
-                   style="display:inline-block;padding-top: 5px;">All Time</a>
+                   style="display:inline-block;padding-top: 5px;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_ALLTIME')"></a>
             </div>
           </div>
         <div class="oj-panel">
@@ -44,22 +44,22 @@
                             value:timeDuration, rootAttributes: {style:'width:112px;'}}"/>
                         <select id="timeSelect1" class="oj-select-arrow" style="width: 30px;"
                                 data-bind="ojComponent:{component:'ojSelect',value:timeUnit, disabled: !isCustomRelative()}"> 
-                            <option value="mins">Minutes</option>
-                            <option value="hours">Hours</option>
-                            <option value="days">Days</option>
+                            <option value="mins" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_MINUTES')"></option>
+                            <option value="hours" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_HOURS')"></option>
+                            <option value="days" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_DAYS')"></option>
                         </select>
                     </div>   
                     <div style="width:100%;"> 
                         <input id="range1" type="radio" name="customOpt" value="absolute"/>
                         <label for="range1">Range</label> 
                         <div style="padding-top: 10px;">
-                            <label for="startDate1" class="oj-label-inline" style="width:77px;text-align: right;">Start Date</label>
+                            <label for="startDate1" class="oj-label-inline" style="width:77px;text-align: right;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_STARTDATE')"></label>
                             <input id="startDate1"  autofocus 
                                    data-bind="ojComponent:{component:'ojInputDateTime', value:startDate, 
                                         disabled: isCustomRelative, rootAttributes:{style:'width:180px;'}}"/>
                         </div>
                         <div>
-                            <label for="endDate1" class="oj-label-inline" style="width:77px;text-align: right;">End Date</label>
+                            <label for="endDate1" class="oj-label-inline" style="width:77px;text-align: right;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_ENDDATE')"></label>
                             <input id="endDate1" data-bind="ojComponent: {component: 'ojInputDateTime', value:endDate, 
                                                     disabled: isCustomRelative, rootAttributes: {style:'width:180px;'}}"/>
                         </div>
@@ -67,6 +67,6 @@
                </div>
           </div>
     <div class="oj-dialog-footer" style="padding-right: 0px;">        
-        <button data-bind="ojComponent: {component: 'ojButton', label: 'OK'}, click: customTimeSelected"></button>
+        <button data-bind="ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_TIMESELECTOR_OK')}, click: customTimeSelected"></button>
     </div> 
 </div>
