@@ -28,15 +28,17 @@ buildscript {
             url = "${artifactory_contextUrl}/repo" }
     }
     dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'testinfra', version: "${testinfraVersion}", transitive: true
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
 repositories {
+    /* To check if the jar is available in local maven repository */
+    mavenLocal()
     maven {
         url = "${artifactory_contextUrl}/repo"
     }
 }
-apply plugin: 'em-test-infra'
+apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -53,5 +55,9 @@ dependencies {
     lrgConfig (group: 'com.oracle.emaas.emcpdp', name: 'dashboards-web-integ-tests', version: '1.0.1')
 
 }
-     task QATest(type:EMTest)
-task emcpssf_qa_test (dependsOn: QATest)
+     task QATest(type:EMTest){ 
+	include "oracle/sysman/enaas/platform/dashboards/test/*"
+	useRestAssured=true
+}
+
+task emcpdf_qa_test (dependsOn: QATest)

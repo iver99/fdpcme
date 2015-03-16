@@ -7,7 +7,7 @@
      </lrg>
 
 
-     <lrg name="emcpssf_dev_test" launcher="tests/suites/emcpdf_dev_test.gradle" description="lrg for DEVTest">
+     <lrg name="emcpdf_dev_test" launcher="tests/suites/emcpdf_dev_test.gradle" description="lrg for DEVTest">
              <pipelines>
              <pipeline name="COMPONENT"/>
              </pipelines>

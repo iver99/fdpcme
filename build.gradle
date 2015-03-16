@@ -12,6 +12,7 @@ ext.serviceDistDir = "${distDir}${serviceInstallPath}"
 apply plugin: 'java' 
 apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
+apply plugin: 'TestInfraPlugin'
 allprojects {  
 	apply plugin: 'artifactory' 
 	apply plugin: 'artifactory-publish'	

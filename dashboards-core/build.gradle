@@ -34,13 +34,13 @@ repositories {
 }
 
 
-//task runDEVTestSuite(type: Test){
-//        useTestNG(){
-//       useDefaultListeners = true
-//       outputDirectory = file("$buildDir/testngoutput")
-//        suites file('dashboards_testng_suite.xml')
-//        }
-//}
+task runDEVTestSuite(type: Test){
+        useTestNG(){
+       useDefaultListeners = true
+       outputDirectory = file("$buildDir/testngoutput")
+        suites file('dashboards_testng_suite.xml')
+        }
+}
 
 publishing {
     publications {
@@ -118,4 +118,4 @@ dependencies {
 
 	
 }
-
+build.dependsOn integTestJar

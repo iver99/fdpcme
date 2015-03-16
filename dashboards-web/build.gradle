@@ -53,14 +53,24 @@ war {
 
 }
 
-//task runQATestSuite(type: Test){
-//        useTestNG(){
-//        dependsOn ':dashboards-ee:ear'
-//        useDefaultListeners = true
-//        outputDirectory = file("$buildDir/testngoutput")
-//        suites file('testngsuite.xml')
-//        }
-//}
+sourceSets{
+test {
+                                java {
+                                          srcDirs = ['src/test/java']
+                                }
+                                resources.srcDirs = ['src/test/java']
+                            }
+
+
+}
+task runQATestSuite(type: Test){
+        useTestNG(){
+        dependsOn ':dashboards-ee:ear'
+        useDefaultListeners = true
+        outputDirectory = file("$buildDir/testngoutput")
+        suites file('testngsuite.xml')
+        }
+}
 
 
 
