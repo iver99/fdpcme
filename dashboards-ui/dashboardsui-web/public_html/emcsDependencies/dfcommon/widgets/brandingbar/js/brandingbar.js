@@ -2,10 +2,58 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
         function (localrequire, ko, $, dfumodel) {
             function BrandingBarViewModel(params) {
                 var self = this;
+                
+                //Config requireJS i18n plugin if not configured yet
+                var i18nPluginPath = getFilePath(localrequire,'../../../js/resources/i18n.js');
+                i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length-3);
+                var requireConfig = requirejs.s.contexts._;
+                var locale = null;
+                var i18nConfigured = false;
+                var childCfg = requireConfig.config;
+                if (childCfg.config && childCfg.config.ojL10n) {
+                    locale =childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
+                }
+                if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
+                    i18nConfigured = true;
+                }
+                if (i18nConfigured === false) {
+                    requirejs.config({
+                        config: locale ? {i18n: {locale: locale}} : {},
+                        paths: {
+                            'i18n': i18nPluginPath
+                        }
+                    });
+                }
+                var nlsResourceBundle = getFilePath(localrequire,'../../../js/resources/nls/dfCommonMsgBundle.js');
+                nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
+                
+                //NLS strings
+                self.productName = ko.observable();
+                self.cloudName = ko.observable(); 
+                self.preferencesMenuLabel = ko.observable();
+                self.helpMenuLabel = ko.observable();
+                self.aboutMenuLabel = ko.observable();
+                self.signOutMenuLabel = ko.observable();
+                self.linkBtnLabel = ko.observable();
+                
+                self.nlsStrings = ko.observable();
+                self.navLinksNeedRefresh = ko.observable(false);
+                self.aboutBoxNeedRefresh = ko.observable(false);
+                
+                require(['i18n!'+nlsResourceBundle],
+                    function(nls) { 
+                        self.nlsStrings(nls);
+                        self.productName(nls.BRANDING_BAR_ENTERPRISE_MANAGER);
+                        self.cloudName(nls.BRANDING_BAR_CLOUD_SERVICE);
+                        self.preferencesMenuLabel(nls.BRANDING_BAR_MENU_PREFERENCES);
+                        self.helpMenuLabel(nls.BRANDING_BAR_MENU_HELP);
+                        self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
+                        self.signOutMenuLabel(nls.BRANDING_BAR_MENU_SIGN_OUT);
+                        self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
+                    });
+            
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.productName = "Enterprise Manager";
-                self.cloudName = "Cloud Service";
                 self.appName = $.isFunction(params.appName) ? params.appName() : params.appName;
                 self.userTenantName = self.userName && self.tenantName ? self.userName + " (" + self.tenantName + ")" : "emaas.user@oracle.com";
                 var dfu = new dfumodel(self.userName, self.tenantName);
@@ -20,23 +68,24 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 //aboutbox id
                 self.aboutBoxId = 'aboutBox';
                 self.openAboutBox = function() {
+                    self.aboutBoxNeedRefresh(true);
                     $('#' + self.aboutBoxId).ojDialog('open');
                 };
                 
                 self.globalNavItems = [
-                    {"label": "Preferences",
+                    {"label": self.preferencesMenuLabel,
                         "url": "#",
                         "onclick": ""
                     },
-                    {"label": "Help",
+                    {"label": self.helpMenuLabel,
                         "url": "#",
                         "onclick": ""
                     },
-                    {"label": "About",
+                    {"label": self.aboutMenuLabel,
                         "url": "#",
                         "onclick": self.openAboutBox
                     },
-                    {"label": "Sign Out",
+                    {"label": self.signOutMenuLabel,
                         "url": "#",
                         "onclick": self.handleSignout
                     }
@@ -48,6 +97,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
 
 		self.brandingbarCss = cssFile;
                 
+                //Parameters for navigation links ko component
+                self.navLinksKocParams = {
+                    navLinksNeedRefresh: self.navLinksNeedRefresh, 
+                    userName: self.userName, 
+                    tenantName: self.tenantName,
+                    nlsStrings: self.nlsStrings };
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links')) {
                     ko.components.register("df-oracle-nav-links",{
@@ -56,6 +111,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     });
                 }
                 
+                //Parameters for about dialog ko component
+                self.aboutBoxKocParams = {
+                    aboutBoxNeedRefresh: self.aboutBoxNeedRefresh, 
+                    id: self.aboutBoxId,
+                    nlsStrings: self.nlsStrings };
                 //Register a Knockout component for about box
                 var aboutTemplatePath = getFilePath(localrequire, '../../aboutbox/aboutBox.html');
                 var aboutVmPath = getFilePath(localrequire, '../../aboutbox/js/aboutBox.js');
@@ -78,8 +138,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                             // todo;
                     }
                 };
-                
-                self.navLinksNeedRefresh = ko.observable(false);
                 
                 /**
                 * Navigation links button click handler

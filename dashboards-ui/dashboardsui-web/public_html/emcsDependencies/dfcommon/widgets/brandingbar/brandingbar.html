@@ -36,10 +36,10 @@
                     <div class="emaas-appheader-toolbar-container">
                         <div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
                             <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" style="height:43px" data-bind="ojComponent: {component:'ojButton', 
-                                    label: 'Links', 
-                                    display: 'icons', 
+                                    label: linkBtnLabel, 
+                                    display: 'icons', title: linkBtnLabel,
                                     icons: {start: 'nav-mapping-icon-32 emaas-icon-font'}}, 
-                                    click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start nav-mapping-icon-32 emaas-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
+                                    click: linkMenuHandle" role="button" tabindex="-1"><span class="oj-button-icon oj-start nav-mapping-icon-32 emaas-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
 
                             <!-- This is how to add a separator to the toolbar.  
                                  Be sure to include the role and aria-orientation as shown to make it accessible.  -->
@@ -57,14 +57,18 @@
             <!-- About box -->
             <div data-bind="component: {
                     name: 'df-oracle-about-box',
-                    params: {id: aboutBoxId}
+                    params: aboutBoxKocParams
                 }">
             </div>
             <!-- End of about box -->
 
             <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
             <div class="oj-component-initnode" id="links_menu">
-                <df-oracle-nav-links params="{navLinksNeedRefresh:navLinksNeedRefresh, userName:userName, tenantName:tenantName}"></df-oracle-nav-links>
+                <div data-bind="component: {
+                    name: 'df-oracle-nav-links',
+                    params: navLinksKocParams
+                }">
+            </div>
             </div>
         </div>  
     </body>
