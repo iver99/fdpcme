@@ -1,6 +1,6 @@
 <EMaaSManifest>
 <Application Name="Platform" Version="1.0.0" >
-<Service Name="DashboardService-ui" Version="1.0.0" >
+<Service Name="DashboardService-ui" Version="1.0.0" type="app" >
 	<artifact name="softwarejson" loc="software-definitions/DashboardService-ui.json" /> 
         <artifact name="cookbook" loc="dashboards-chef/dashboardService-ui" />
         <artifact name="software" loc="dashboards-ui/deploy-list.xml" />
