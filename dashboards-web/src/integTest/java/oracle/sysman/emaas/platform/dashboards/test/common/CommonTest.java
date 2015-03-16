@@ -34,22 +34,24 @@ public class CommonTest
 	 */
 
 	public CommonTest()
-	{Properties prop = new Properties();
-	InputStream input = null;
-	try {
-		input = new FileInputStream("testenv.properties");
-		prop.load(input);
-		System.out.println("---------------------------------------------------------------------");
-		System.out.println("The property values - Hostname: " + prop.getProperty("hostname") + " and Port: "
-				+ prop.getProperty("port"));
-		System.out.println("---------------------------------------------------------------------");
-		System.out.println("											");
-	}
-	catch (IOException e) {
+	{
+		Properties prop = new Properties();
+		InputStream input = null;
+		try {
+			
+            InputStream stream = getClass().getResourceAsStream("/testenv.properties");
+            prop.load(stream);
 
-		e.printStackTrace();
-	}
+			System.out.println("---------------------------------------------------------------------");
+			System.out.println("The property values - Hostname: " + prop.getProperty("hostname") + " and Port: "
+					+ prop.getProperty("port"));
+			System.out.println("---------------------------------------------------------------------");
+			System.out.println("											");
+		}
+		catch (IOException e) {
 
+			e.printStackTrace();
+		}
 
 		HOSTNAME = prop.getProperty("hostname");
 		portno = prop.getProperty("port");

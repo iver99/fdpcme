@@ -2,10 +2,32 @@ import org.gradle.api.plugins.jetty.internal.Monitor
 
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
-
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'TestInfraPlugin'
+apply from: 'test.gradle'
+apply plugin: 'artifactory'
+apply plugin: 'artifactory-publish'
 // Directory where the restful API doc is generated
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
+//jar.archiveName='emcpdf_qa_test.jar'
+//group = 'com.oracle.emaas.emcpdf'
+//version = '1.0.1'
+
+
+buildscript {
+    repositories {
+        maven {
+            url = "${artifactory_contextUrl}/repo"
+        }
+    }
+    dependencies {
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+		
+        
+}  
+}
 
 configurations {
 	restDoc
@@ -31,6 +53,16 @@ war {
 
 }
 
+sourceSets{
+test {
+                                java {
+                                          srcDirs = ['src/test/java']
+                                }
+                                resources.srcDirs = ['src/test/java']
+                            }
+
+
+}
 task runQATestSuite(type: Test){
         useTestNG(){
         dependsOn ':dashboards-ee:ear'
@@ -39,6 +71,65 @@ task runQATestSuite(type: Test){
         suites file('testngsuite.xml')
         }
 }
+
+
+
+
+
+
+publishing {
+    publications {
+/*
+        savedsearchWeb(MavenPublication) {
+              from components.java
+        }
+*/
+        integTest(MavenPublication) {
+            setArtifactId(project.name + '-' + integTestJar.appendix)
+            artifact integTestJar.archivePath
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+		    if (it.moduleVersion != 'unspecified') {
+                        println "VERSION for ${it.moduleName} = ${it.moduleVersion}"
+                        dependency.appendNode('version', it.moduleVersion)
+                    }
+		    else {
+                        dependency.appendNode('version', '')
+
+	            }
+                }
+            }
+        }
+    }
+   repositories {
+        maven {
+            url "${artifactory_contextUrl}/${artifactory_repoKey}"
+            credentials {
+                username = "${artifactory_user}"
+                password =  "${artifactory_password}"
+            }
+        }
+    }
+}
+
+
+/*
+ * Define repositories from where to pick all the artifacts
+ */
+repositories {
+    /* Looks into local maven repository for artifacts */
+    mavenLocal()
+    maven {
+        url = "${artifactory_contextUrl}/repo"
+    }
+}
+
+
+
 
 /**
  * Generates documentation for the REST service API
@@ -138,6 +229,15 @@ dependencies {
 	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6')
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')
 
+	
+
+
+
+
+
+
+	
+
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	restDoc(
 		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
@@ -154,3 +254,5 @@ dependencies {
 			}
 		}
  }
+
+build.dependsOn integTestJar
