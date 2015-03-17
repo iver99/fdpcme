@@ -24,6 +24,7 @@ public class DashboardCRUD
 	static String serveruri;
 	static String authToken;
 	static String tenantid;
+	static String tenantid_2;
 	static String remoteuser;
 
 	@BeforeClass
@@ -35,6 +36,7 @@ public class DashboardCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
+		tenantid_2 = ct.getTenantid_2();
 		remoteuser = ct.getRemoteUser();
 	}
 
@@ -526,7 +528,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
+							.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			list_dashboards = res3.jsonPath().get("dashboards.name");
 			totalResults = res3.jsonPath().getInt("totalResults");
@@ -968,7 +970,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void multitenant_headerCheck()
+	public void multiTenant_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -1058,13 +1060,13 @@ public class DashboardCRUD
 					.contentType(ContentType.JSON)
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "X-REMOTE-USER", tenantid + ".userA", "Authorization",
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + ".userA", "Authorization",
 							authToken).when().get("/dashboards/" + dashboard_id);
 			System.out.println(res2.asString());
 			System.out.println("Status code is:  " + res2.getStatusCode());
-			Assert.assertTrue(res2.getStatusCode() == 403);
-			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30000");
-			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
+			Assert.assertTrue(res2.getStatusCode() == 404);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 			System.out.println("											");
 
 			System.out.println("Verify that the created dashboard can't be update by other tenant...");
@@ -1074,13 +1076,13 @@ public class DashboardCRUD
 					.contentType(ContentType.JSON)
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "X-REMOTE-USER", tenantid + ".userA", "Authorization",
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + ".userA", "Authorization",
 							authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
 			System.out.println(res3.asString());
 			System.out.println("Status code is:  " + res3.getStatusCode());
-			Assert.assertTrue(res3.getStatusCode() == 403);
-			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "30000");
-			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
+			Assert.assertTrue(res3.getStatusCode() == 404);
+			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 			System.out.println("											");
 
 			System.out.println("Verify that the created dashboard can't be deleted by other tenant...");
@@ -1089,13 +1091,13 @@ public class DashboardCRUD
 					.contentType(ContentType.JSON)
 					.log()
 					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "X-REMOTE-USER", tenantid + ".userA", "Authorization",
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + ".userA", "Authorization",
 							authToken).when().delete("/dashboards/" + dashboard_id);
 			System.out.println(res4.asString());
 			System.out.println("Status code is:  " + res4.getStatusCode());
-			Assert.assertTrue(res4.getStatusCode() == 403);
-			Assert.assertEquals(res4.jsonPath().getString("errorCode"), "30000");
-			Assert.assertEquals(res4.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
+			Assert.assertTrue(res4.getStatusCode() == 404);
+			Assert.assertEquals(res4.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res4.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
 			System.out.println("											");
 		}
 		catch (Exception e) {
@@ -1211,7 +1213,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void remoteuser_headerCheck()
+	public void remoteUser_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
