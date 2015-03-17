@@ -242,6 +242,52 @@ public class DashboardCRUD
 	}
 
 	@Test
+	public void dashboard_create_longNameDesc()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Create a dashboard which name length is more than 64 characters");
+			String jsonString1 = "{ \"name\":\"long name long name long name long name long name long name long name longg\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"Invalid dashboard name. Name can not be empty and must be less than 64 characters");
+			System.out.println("											");
+
+			System.out.println("Create a dashboard which description length is more than 256 characters");
+			String jsonString2 = "{ \"name\":\"long description\", \"description\":\"long description long description long description long description long description long description long description long description long description long description long description long description long description long description long description lo\"}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString2).when().post("/dashboards");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"Invalid description. Description must be less than 256 characters");
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}
+
+	@Test
 	public void dashboard_create_simple()
 	{
 
@@ -433,33 +479,6 @@ public class DashboardCRUD
 		}
 	}
 
-	//	@Test
-	//	public void dashboard_delete_sytemDashboard()
-	//	{
-	//		try {
-	//			System.out.println("------------------------------------------");
-	//			Response res1 = RestAssured
-	//					.given()
-	//					.contentType(ContentType.JSON)
-	//					.log()
-	//					.everything()
-	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-	//							"Authorization", authToken).when().delete("/dashboards/1");
-	//			System.out.println("Status code:" + res1.getStatusCode());
-	//			System.out.println(res1.asString());
-	//			Assert.assertTrue(res1.getStatusCode() == 403);
-	//			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "30001");
-	//			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Not support to delete system dashboard");
-	//			System.out.println("											");
-	//			System.out.println("------------------------------------------");
-	//			System.out.println("											");
-	//		}
-	//		catch (Exception e) {
-	//			Assert.fail(e.getLocalizedMessage());
-	//		}
-	//
-	//	}
-
 	@Test
 	public void dashboard_query_multi()
 	{
@@ -541,6 +560,33 @@ public class DashboardCRUD
 			System.out.println("											");
 		}
 	}
+
+	//	@Test
+	//	public void dashboard_delete_sytemDashboard()
+	//	{
+	//		try {
+	//			System.out.println("------------------------------------------");
+	//			Response res1 = RestAssured
+	//					.given()
+	//					.contentType(ContentType.JSON)
+	//					.log()
+	//					.everything()
+	//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+	//							"Authorization", authToken).when().delete("/dashboards/1");
+	//			System.out.println("Status code:" + res1.getStatusCode());
+	//			System.out.println(res1.asString());
+	//			Assert.assertTrue(res1.getStatusCode() == 403);
+	//			Assert.assertEquals(res1.jsonPath().getString("errorCode"), "30001");
+	//			Assert.assertEquals(res1.jsonPath().getString("errorMessage"), "Not support to delete system dashboard");
+	//			System.out.println("											");
+	//			System.out.println("------------------------------------------");
+	//			System.out.println("											");
+	//		}
+	//		catch (Exception e) {
+	//			Assert.fail(e.getLocalizedMessage());
+	//		}
+	//
+	//	}
 
 	@Test
 	public void dashboard_query_multi_invalid_para()
@@ -764,6 +810,87 @@ public class DashboardCRUD
 	}
 
 	@Test
+	public void dashboard_update_longNameDesc()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new dashboard");
+
+			String jsonString = "{ \"name\":\"Test_Long_Dashboard\"}";
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().post("/dashboards");
+			System.out.println(res.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 201);
+
+			dashboard_id = res.jsonPath().getString("id");
+
+			//update the simple dashboard
+			System.out.println("											");
+			System.out.println("											");
+			System.out.println("Update the dashboard which name length is more than 64 characters");
+			String jsonString1 = "{ \"name\":\"long name long name long name long name long name long name long name longg\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"Invalid dashboard name. Name can not be empty and must be less than 64 characters");
+			System.out.println("											");
+
+			System.out.println("Update the dashboard which description length is more than 256 characters");
+			String jsonString2 = "{ \"name\":\"long description\", \"description\":\"long description long description long description long description long description long description long description long description long description long description long description long description long description long description long description lo\"}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString2).when().post("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"Invalid description. Description must be less than 256 characters");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res5.asString());
+				System.out.println("Status code is: " + res5.getStatusCode());
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+	}
+
+	@Test
 	public void dashboard_update_systemDashboard()
 	{
 		String dashboard_id = "";
@@ -901,7 +1028,99 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void multitenant_queryupdatedelete()
+	public void multiTenant_queryUpdateDelete()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new dashboard");
+
+			String jsonString1 = "{ \"name\":\"Test_Dashboard_multitenant\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("											");
+
+			dashboard_id = res1.jsonPath().getString("id");
+
+			System.out.println("Verify that the created dashboard can't be queried by other tenant...");
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "X-REMOTE-USER", tenantid + ".userA", "Authorization",
+							authToken).when().get("/dashboards/" + dashboard_id);
+			System.out.println(res2.asString());
+			System.out.println("Status code is:  " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 403);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
+			System.out.println("											");
+
+			System.out.println("Verify that the created dashboard can't be update by other tenant...");
+			String jsonString2 = "{ \"name\":\"Test_Dashboard_multitenant\"}";
+			Response res3 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "X-REMOTE-USER", tenantid + ".userA", "Authorization",
+							authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
+			System.out.println(res3.asString());
+			System.out.println("Status code is:  " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 403);
+			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
+			System.out.println("											");
+
+			System.out.println("Verify that the created dashboard can't be deleted by other tenant...");
+			Response res4 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "errortenant", "X-REMOTE-USER", tenantid + ".userA", "Authorization",
+							authToken).when().delete("/dashboards/" + dashboard_id);
+			System.out.println(res4.asString());
+			System.out.println("Status code is:  " + res4.getStatusCode());
+			Assert.assertTrue(res4.getStatusCode() == 403);
+			Assert.assertEquals(res4.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res4.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res5.asString());
+				System.out.println("Status code is: " + res5.getStatusCode());
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
+		}
+
+	}
+
+	@Test
+	public void multiTenant_queryUpdateDelete_invalidTenant()
 	{
 		String dashboard_id = "";
 		try {
