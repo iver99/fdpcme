@@ -9,9 +9,9 @@
             <div id="emaas-appheader-bar" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
-                <div class="emaas-appheader-logo" tabindex="0" aria-label="Oracle Logo">
+                <div class="emaas-appheader-logo" tabindex="0" data-bind="attr: {'aria-label': textOracle}">
                     <div class="emaas-appheader-appname-table-cell-middle">
-                        <span role="img" class="oj-icon emaas-appheader-logo-oracle" style="vertical-align: middle;display:block;"></span>  
+                        <img data-bind="attr: {alt: textOracle, src: oracleLogoImage}" style="vertical-align: middle;display:block;"/> 
                     </div>
                     <div class="emaas-appheader-appname-table-cell-middle" style="padding-left: 15px">
                         <span class="emaas-appheader-appname" data-bind="text: productName"> </span>
@@ -41,11 +41,12 @@
 
                     <div class="emaas-appheader-toolbar-container">
                         <div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
-                            <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" style="height:43px" data-bind="ojComponent: {component:'ojButton', 
-                                    label: linkBtnLabel, 
-                                    display: 'icons', title: linkBtnLabel,
-                                    icons: {start: 'nav-mapping-icon-32 emaas-icon-font'}}, 
-                                    click: linkMenuHandle" role="button" tabindex="-1"><span class="oj-button-icon oj-start nav-mapping-icon-32 emaas-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
+                            <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" 
+                                    style="height:43px"
+                                    data-bind="ojComponent: {component:'ojButton'}, 
+                                    click: linkMenuHandle, attr: {title: textAppNavigator}" role="button" tabindex="-1">
+                                <img data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/> 
+                            </button>
 
                             <!-- This is how to add a separator to the toolbar.  
                                  Be sure to include the role and aria-orientation as shown to make it accessible.  -->

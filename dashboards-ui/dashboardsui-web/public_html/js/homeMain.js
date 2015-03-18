@@ -187,6 +187,21 @@ require(['dbs/dbsmodel',
                 ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                 $('#mainContent').show(); 
                 
+                function setMainAreaPadding()
+                {
+                    //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
+                    var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
+                    var _padding = _tabwidth % (335 /*panel width + panel margin*/);
+                    //console.log("_padding: " + Math.floor(_padding/2));
+                    var _calpadding = (_tabwidth <= 680 ) ? 5 : Math.floor(_padding/2);
+                    $("#dhometab").attr({
+                       "style" : "padding-left: "+ _calpadding  + "px;" 
+                    });
+                };
+                setMainAreaPadding();
+                $(window).resize(function() {
+                    setMainAreaPadding();
+                });
                 
                window.addEventListener('message', childMessageListener, false);
                window.name = 'dashboardhome'; 
