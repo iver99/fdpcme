@@ -1,28 +1,104 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'TestInfraPlugin'
+apply from:'test.gradle'
+apply plugin: 'artifactory'
+apply plugin: 'artifactory-publish'
+//jar.archiveName='emcpdf_dev_test.jar'
+//group = 'com.oracle.emaas.emcpdf'
+//version = '1.0.1'
 
 sourceSets {
-    main {
-        java {
-            srcDir 'src/main/java'
-        }
-        resources {
-            srcDir 'src/main/java'
-        }
+ main {
+     java {
+         srcDir 'src/main/java'
+		}
+     resources {
+          srcDir 'src/main/java'
+    		}
+  	}
+     }
+
+
+/*
+ * Define repositories from where to pick all the artifacts
+ */
+repositories {
+    /* Looks into local maven repository for artifacts */
+    mavenLocal()
+    maven {
+        url = "${artifactory_contextUrl}/repo"
     }
 }
 
+
 task runDEVTestSuite(type: Test){
         useTestNG(){
-        useDefaultListeners = true
-        outputDirectory = file("$buildDir/testngoutput")
+       useDefaultListeners = true
+       outputDirectory = file("$buildDir/testngoutput")
         suites file('dashboards_testng_suite.xml')
         }
 }
 
+publishing {
+    publications {
+/*
+        savedsearchWeb(MavenPublication) {
+              from components.java
+        }
+*/
+        integTest(MavenPublication) {
+            setArtifactId(project.name + '-' + integTestJar.appendix)
+            artifact integTestJar.archivePath
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+		    if (it.moduleVersion != 'unspecified') {
+                        println "VERSION for ${it.moduleName} = ${it.moduleVersion}"
+                        dependency.appendNode('version', it.moduleVersion)
+                    }
+		    else {
+                        dependency.appendNode('version', '')
+
+	            }
+                }
+            }
+        }
+    }
+   repositories {
+        maven {
+            url "${artifactory_contextUrl}/${artifactory_repoKey}"
+            credentials {
+                username = "${artifactory_user}"
+                password =  "${artifactory_password}"
+            }
+        }
+    }
+}
+
+
+buildscript {
+    repositories {
+        maven {
+            url = "${artifactory_contextUrl}/repo"
+        }
+    }
+    dependencies {
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+		
+        
+}  
+}
+
+
 dependencies {
 	compile project(':dashboards-entities')        
-	
+
 	testRuntime(group: 'com.oracle.weblogic', name: 'ojdbc6', version: '12.1.2-0-0')
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8')
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2')
@@ -39,4 +115,8 @@ dependencies {
         compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')
 
 	
+
+
+	
 }
+build.dependsOn integTestJar

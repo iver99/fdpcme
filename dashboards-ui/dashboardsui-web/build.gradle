@@ -7,6 +7,9 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
 
+group = 'com.oracle.emaas.emcpdf'
+version = '1.0.1'
+
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
     // run or the directory has been cleaned, then
