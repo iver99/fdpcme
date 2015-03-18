@@ -35,6 +35,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 self.aboutMenuLabel = ko.observable();
                 self.signOutMenuLabel = ko.observable();
                 self.linkBtnLabel = ko.observable();
+                self.textOracle = ko.observable();
+                self.textAppNavigator = ko.observable();
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -50,6 +52,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
                         self.signOutMenuLabel(nls.BRANDING_BAR_MENU_SIGN_OUT);
                         self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
+                        self.textOracle(nls.BRANDING_BAR_TEXT_ORACLE);
+                        self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
                     });
             
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
@@ -94,8 +98,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
                 var cssFile = getCssFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
+                var oracleLogoImg = getCssFilePath(localrequire, '../../../images/oracle_logo_lrg.png'); 
+                var navLinksImg = getCssFilePath(localrequire, '../../../images/compassIcon_32.png'); 
 
 		self.brandingbarCss = cssFile;
+                self.oracleLogoImage = oracleLogoImg;
+                self.navLinksIcon = navLinksImg;
                 
                 //Parameters for navigation links ko component
                 self.navLinksKocParams = {

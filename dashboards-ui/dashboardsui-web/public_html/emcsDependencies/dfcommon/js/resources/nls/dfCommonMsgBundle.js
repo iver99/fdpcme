@@ -7,6 +7,8 @@
 define({
   "root": {
       "BRANDING_BAR_COMMA": ",",
+      "BRANDING_BAR_TEXT_ORACLE": "Oracle",
+      "BRANDING_BAR_TEXT_APP_NAVIGATOR": "Application Navigator",
       "BRANDING_BAR_ENTERPRISE_MANAGER": "Enterprise Manager",
       "BRANDING_BAR_CLOUD_SERVICE": "Cloud Service",
       "BRANDING_BAR_MENU_PREFERENCES": "Preferences",
