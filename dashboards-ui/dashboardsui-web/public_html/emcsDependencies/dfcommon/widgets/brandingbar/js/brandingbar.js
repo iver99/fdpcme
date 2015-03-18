@@ -35,6 +35,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 self.aboutMenuLabel = ko.observable();
                 self.signOutMenuLabel = ko.observable();
                 self.linkBtnLabel = ko.observable();
+                self.helpForCurrentPageMenuLabel = ko.observable();
+                self.helpForGetStartedMenuLabel = ko.observable();
+                self.helpForVideosAndTutorialsMenuLabel = ko.observable();
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -50,6 +53,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
                         self.signOutMenuLabel(nls.BRANDING_BAR_MENU_SIGN_OUT);
                         self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
+                        self.helpForCurrentPageMenuLabel(nls.BRANDING_BAR_MENU_HELP_CURRENT_PAGE);
+                        self.helpForGetStartedMenuLabel(nls.BRANDING_BAR_MENU_HELP_GET_STARTED);
+                        self.helpForVideosAndTutorialsMenuLabel(nls.BRANDING_BAR_MENU_HELP_VIDEOS_TUTORIALS);
                     });
             
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
@@ -72,20 +78,43 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     $('#' + self.aboutBoxId).ojDialog('open');
                 };
                 
+                self.subHelpMenuItems = [
+                    {
+                        "label": self.helpForCurrentPageMenuLabel,
+                        "url": "#",
+                        "onclick": ""
+                    },
+                    {
+                        "label": self.helpForGetStartedMenuLabel,
+                        "url": "#",
+                        "onclick": ""
+                    },
+                    {
+                        "label": self.helpForVideosAndTutorialsMenuLabel,
+                        "url": "#",
+                        "onclick": ""
+                    }
+                ];
+                
                 self.globalNavItems = [
-                    {"label": self.preferencesMenuLabel,
+                    {
+                        "label": self.preferencesMenuLabel,
                         "url": "#",
                         "onclick": ""
                     },
-                    {"label": self.helpMenuLabel,
+                    {
+                        "label": self.helpMenuLabel,
                         "url": "#",
-                        "onclick": ""
+                        "onclick": "",
+                        "subNavItems": self.subHelpMenuItems
                     },
-                    {"label": self.aboutMenuLabel,
+                    {
+                        "label": self.aboutMenuLabel,
                         "url": "#",
                         "onclick": self.openAboutBox
                     },
-                    {"label": self.signOutMenuLabel,
+                    {
+                        "label": self.signOutMenuLabel,
                         "url": "#",
                         "onclick": self.handleSignout
                     }
@@ -125,19 +154,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         template:{require:'text!'+aboutTemplatePath}
                     });
                 }
-                
-                // Dropdown menu states
-                self.selectedMenuItem = ko.observable("(None selected yet)");
-                
-                self.menuItemSelect = function(event, ui) {
-                    switch (ui.item.attr("id")) {
-                        case "open":
-                            this.selectedMenuItem(ui.item.children("a").text());
-                            break;
-                        default:
-                            // todo;
-                    }
-                };
                 
                 /**
                 * Navigation links button click handler

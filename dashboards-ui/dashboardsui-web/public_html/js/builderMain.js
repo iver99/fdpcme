@@ -147,6 +147,14 @@ require(['knockout',
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
                 self.appName = "";
+                self.brandingbarParams = {
+                    userName: self.userName,
+                    tenantName: self.tenantName,
+                    appName: self.appName,
+                    helpLinkForCurrentPage: '', // TODO
+                    helpLinkForGettingStarted: '', // TODO
+                    helpLinkForVideosAndTutorials: '' // TODO
+                };
             };
             
            
