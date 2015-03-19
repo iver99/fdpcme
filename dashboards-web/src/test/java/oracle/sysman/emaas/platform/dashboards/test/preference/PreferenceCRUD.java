@@ -24,6 +24,7 @@ public class PreferenceCRUD
 	static String serveruri;
 	static String authToken;
 	static String tenantid;
+	static String tenantid_2;
 	static String remoteuser;
 
 	@BeforeClass
@@ -35,6 +36,7 @@ public class PreferenceCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
+		tenantid_2 = ct.getTenantid_2();
 		remoteuser = ct.getRemoteUser();
 	}
 
@@ -501,18 +503,18 @@ public class PreferenceCRUD
 			Assert.assertEquals(res2_1.jsonPath().getString("errorCode"), "30000");
 			Assert.assertEquals(res2_1.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
 
-			//			Response res2_2 = RestAssured
-			//					.given()
-			//					.contentType(ContentType.JSON)
-			//					.log()
-			//					.everything()
-			//					.headers("X-USER-IDENTITY-DOMAIN-NAME", "TenantOPC2", "X-REMOTE-USER", tenantid + "." + remoteuser,
-			//							"Authorization", authToken).when().get("/preferences/TestPreference_multiTenant");
-			//			System.out.println(res2_2.asString());
-			//			System.out.println("Status code is:  " + res2_2.getStatusCode());
-			//			Assert.assertTrue(res2_2.getStatusCode() == 404);
-			//			Assert.assertEquals(res2_2.jsonPath().getString("errorCode"), "20001");
-			//			Assert.assertEquals(res2_2.jsonPath().getString("errorMessage"), "Specified preference key is not found");
+			Response res2_2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + "." + remoteuser,
+							"Authorization", authToken).when().get("/preferences/TestPreference_multiTenant");
+			System.out.println(res2_2.asString());
+			System.out.println("Status code is:  " + res2_2.getStatusCode());
+			Assert.assertTrue(res2_2.getStatusCode() == 404);
+			Assert.assertEquals(res2_2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2_2.jsonPath().getString("errorMessage"), "Specified preference key is not found");
 
 			System.out.println("Delete the prefenerce with other tenant");
 			Response res3_1 = RestAssured
@@ -528,18 +530,18 @@ public class PreferenceCRUD
 			Assert.assertEquals(res3_1.jsonPath().getString("errorCode"), "30000");
 			Assert.assertEquals(res3_1.jsonPath().getString("errorMessage"), "Tenant Name is not recognized: errortenant");
 
-			//			Response res3_2 = RestAssured
-			//					.given()
-			//					.contentType(ContentType.JSON)
-			//					.log()
-			//					.everything()
-			//					.headers("X-USER-IDENTITY-DOMAIN-NAME", "TenantOPC2", "X-REMOTE-USER", tenantid + "." + remoteuser,
-			//							"Authorization", authToken).when().get("/preferences/TestPreference_multiTenant");
-			//			System.out.println(res3_2.asString());
-			//			System.out.println("Status code is:  " + res3_2.getStatusCode());
-			//			Assert.assertTrue(res3_2.getStatusCode() == 404);
-			//			Assert.assertEquals(res3_2.jsonPath().getString("errorCode"), "20001");
-			//			Assert.assertEquals(res3_2.jsonPath().getString("errorMessage"), "Specified preference key is not found");
+			Response res3_2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + "." + remoteuser,
+							"Authorization", authToken).when().get("/preferences/TestPreference_multiTenant");
+			System.out.println(res3_2.asString());
+			System.out.println("Status code is:  " + res3_2.getStatusCode());
+			Assert.assertTrue(res3_2.getStatusCode() == 404);
+			Assert.assertEquals(res3_2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res3_2.jsonPath().getString("errorMessage"), "Specified preference key is not found");
 
 		}
 		catch (Exception e) {
