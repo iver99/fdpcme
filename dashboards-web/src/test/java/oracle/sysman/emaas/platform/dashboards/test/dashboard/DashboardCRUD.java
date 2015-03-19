@@ -24,6 +24,7 @@ public class DashboardCRUD
 	static String serveruri;
 	static String authToken;
 	static String tenantid;
+	static String tenantid_2;
 	static String remoteuser;
 
 	@BeforeClass
@@ -35,6 +36,7 @@ public class DashboardCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
+		tenantid_2 = ct.getTenantid_2();
 		remoteuser = ct.getRemoteUser();
 	}
 
@@ -234,6 +236,52 @@ public class DashboardCRUD
 			Assert.assertTrue(res14.getStatusCode() == 400);
 			Assert.assertEquals(res14.jsonPath().get("errorCode"), 10000);
 			Assert.assertEquals(res14.jsonPath().get("errorMessage"), "\"Name\" is required for tile parameter(s) of the tile");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+
+	}
+
+	@Test
+	public void dashboard_create_longNameDesc()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Create a dashboard which name length is more than 64 characters");
+			String jsonString1 = "{ \"name\":\"long name long name long name long name long name long name long name longg\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"Invalid dashboard name. Name can not be empty and must be less than 64 characters");
+			System.out.println("											");
+
+			System.out.println("Create a dashboard which description length is more than 256 characters");
+			String jsonString2 = "{ \"name\":\"long description\", \"description\":\"long description long description long description long description long description long description long description long description long description long description long description long description long description long description long description lo\"}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString2).when().post("/dashboards");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"Invalid dashboard description. Description must be less than 256 characters");
+
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
 		}
 		catch (Exception e) {
 			Assert.fail(e.getLocalizedMessage());
@@ -507,7 +555,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
+							.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			list_dashboards = res3.jsonPath().get("dashboards.name");
 			totalResults = res3.jsonPath().getInt("totalResults");
@@ -764,6 +812,87 @@ public class DashboardCRUD
 	}
 
 	@Test
+	public void dashboard_update_longNameDesc()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new dashboard");
+
+			String jsonString = "{ \"name\":\"Test_Long_Dashboard\"}";
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().post("/dashboards");
+			System.out.println(res.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 201);
+
+			dashboard_id = res.jsonPath().getString("id");
+
+			//update the simple dashboard
+			System.out.println("											");
+			System.out.println("											");
+			System.out.println("Update the dashboard which name length is more than 64 characters");
+			String jsonString1 = "{ \"name\":\"long name long name long name long name long name long name long name longg\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"Invalid dashboard name. Name can not be empty and must be less than 64 characters");
+			System.out.println("											");
+
+			System.out.println("Update the dashboard which description length is more than 256 characters");
+			String jsonString2 = "{ \"name\":\"long description\", \"description\":\"long description long description long description long description long description long description long description long description long description long description long description long description long description long description long description lo\"}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
+					"Invalid dashboard description. Description must be less than 256 characters");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res5.asString());
+				System.out.println("Status code is: " + res5.getStatusCode());
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+	}
+
+	@Test
 	public void dashboard_update_systemDashboard()
 	{
 		String dashboard_id = "";
@@ -841,7 +970,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void multitenant_headerCheck()
+	public void multiTenant_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -901,7 +1030,99 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void multitenant_queryupdatedelete()
+	public void multiTenant_queryUpdateDelete()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new dashboard");
+
+			String jsonString1 = "{ \"name\":\"Test_Dashboard_multitenant\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			System.out.println(res1.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 201);
+			System.out.println("											");
+
+			dashboard_id = res1.jsonPath().getString("id");
+
+			System.out.println("Verify that the created dashboard can't be queried by other tenant...");
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + ".userA", "Authorization",
+							authToken).when().get("/dashboards/" + dashboard_id);
+			System.out.println(res2.asString());
+			System.out.println("Status code is:  " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 404);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+
+			System.out.println("Verify that the created dashboard can't be update by other tenant...");
+			String jsonString2 = "{ \"name\":\"Test_Dashboard_multitenant\"}";
+			Response res3 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + ".userA", "Authorization",
+							authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
+			System.out.println(res3.asString());
+			System.out.println("Status code is:  " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 404);
+			Assert.assertEquals(res3.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res3.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+
+			System.out.println("Verify that the created dashboard can't be deleted by other tenant...");
+			Response res4 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + ".userA", "Authorization",
+							authToken).when().delete("/dashboards/" + dashboard_id);
+			System.out.println(res4.asString());
+			System.out.println("Status code is:  " + res4.getStatusCode());
+			Assert.assertTrue(res4.getStatusCode() == 404);
+			Assert.assertEquals(res4.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res4.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res5.asString());
+				System.out.println("Status code is: " + res5.getStatusCode());
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
+		}
+
+	}
+
+	@Test
+	public void multiTenant_queryUpdateDelete_invalidTenant()
 	{
 		String dashboard_id = "";
 		try {
@@ -992,7 +1213,7 @@ public class DashboardCRUD
 	}
 
 	@Test
-	public void remoteuser_headerCheck()
+	public void remoteUser_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");

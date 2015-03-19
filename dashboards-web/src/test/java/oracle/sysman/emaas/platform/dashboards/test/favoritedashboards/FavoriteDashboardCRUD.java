@@ -338,7 +338,7 @@ public class FavoriteDashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
-							.get("/dashboards/favorites/0");
+					.get("/dashboards/favorites/0");
 			System.out.println("Stauts code is :" + res1.getStatusCode());
 			Assert.assertTrue(res1.getStatusCode() == 404);
 			//Assert.assertEquals(res1.asString(), "Specified dashboard is not found");
@@ -350,7 +350,7 @@ public class FavoriteDashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
-							.get("/dashboards/favorites/9999999999");
+					.get("/dashboards/favorites/9999999999");
 			System.out.println("Stauts code is :" + res2.getStatusCode());
 			Assert.assertTrue(res2.getStatusCode() == 404);
 			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
@@ -366,7 +366,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void multitenant_favorite_CRUD()
+	public void multiTenant_favorite_CRUD()
 	{
 		String dashboard_id = "";
 		try {
@@ -430,7 +430,7 @@ public class FavoriteDashboardCRUD
 			System.out.println("											");
 
 			System.out
-			.println("Verify that the other tenant can't query if the dashboard has been added as favorite dashborad...");
+					.println("Verify that the other tenant can't query if the dashboard has been added as favorite dashborad...");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -483,7 +483,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void multitenant_favorite_CRUD_invalidId()
+	public void multiTenant_favorite_CRUD_invalidTenant()
 	{
 		String dashboard_id = "";
 		try {
@@ -585,7 +585,7 @@ public class FavoriteDashboardCRUD
 	}
 
 	@Test
-	public void multitenant_headerCheck()
+	public void multiTenant_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -737,7 +737,7 @@ public class FavoriteDashboardCRUD
 	//	}
 
 	@Test
-	public void remoteuser_headerCheck()
+	public void remoteUser_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");

@@ -41,7 +41,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void multitenant_headerCheck()
+	public void multiTenant_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -466,7 +466,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_multitenant_CRUD()
+	public void preference_multiTenant_CRUD()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -694,7 +694,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void remoteuser_headerCheck()
+	public void remoteUser_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");

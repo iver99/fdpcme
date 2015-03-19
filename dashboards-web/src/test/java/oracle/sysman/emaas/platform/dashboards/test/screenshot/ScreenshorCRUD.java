@@ -39,7 +39,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void multitenant_headerCheck()
+	public void multiTenant_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -61,7 +61,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void multitenant_screenshot_query()
+	public void multiTenant_screenshot_query()
 	{
 		String dashboard_id = "";
 		try {
@@ -124,7 +124,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void multitenant_screenshot_query_invalidId()
+	public void multiTenant_screenshot_query_invalidTenant()
 	{
 		String dashboard_id = "";
 		try {
@@ -187,7 +187,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void remoteuser_headerCheck()
+	public void remoteUser_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -210,7 +210,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void remoteuser_screenshot_query()
+	public void remoteUser_screenshot_query()
 	{
 		String dashboard_id = "";
 		try {
