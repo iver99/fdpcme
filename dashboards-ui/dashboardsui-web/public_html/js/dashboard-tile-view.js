@@ -786,9 +786,9 @@ define(['knockout',
                 return targetWidgetGroupArray;
             };
 
- 
+            self.addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             self.openAddWidgetDialog = function() {
-                $('#addWidgetDialog').ojDialog('open');
+                $('#'+self.addWidgetDialogId).ojDialog('open');
             };
             
             self.closeAddWidgetDialog = function() {

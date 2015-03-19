@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Style classes used by this widget selector. -->
+        <link rel="stylesheet" data-bind="attr:{href: widgetSelectorCss}" type="text/css"/>
+    </head>
+    <body>
+        <div style="display:none;" 
+            data-bind="ojComponent:{component: 'ojDialog', 
+                initialVisibility: 'hide', title: widgetSelectorTitle,
+                rootAttributes: { style: 'width: 815px; height:520px;'}}, attr: {id: dialogId}">   
+            <div class="oj-dialog-body widget-dialog-body">
+                
+            </div>     
+            <div class="oj-dialog-footer" style="padding-right: 24px" > 
+                                    
+            </div>  
+        </div>
+    </body>
+</html>
