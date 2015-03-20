@@ -785,10 +785,16 @@ define(['knockout',
                 }
                 return targetWidgetGroupArray;
             };
-
-            self.addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
+            
+            var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
+            self.addWidgetDialogParams = {
+                id: addWidgetDialogId,
+                userName: 'SYSMAN',
+                tenantName: 'TenantOPC1'
+            };
+            
             self.openAddWidgetDialog = function() {
-                $('#'+self.addWidgetDialogId).ojDialog('open');
+                $('#'+addWidgetDialogId).ojDialog('open');
             };
             
             self.closeAddWidgetDialog = function() {
