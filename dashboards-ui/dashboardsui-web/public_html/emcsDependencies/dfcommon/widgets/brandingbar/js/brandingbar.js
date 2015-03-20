@@ -82,23 +82,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     $('#' + self.aboutBoxId).ojDialog('open');
                 };
                 
-                self.subHelpMenuItems = [
-                    {
-                        "label": self.helpForCurrentPageMenuLabel,
-                        "url": "#",
-                        "onclick": ""
-                    },
-                    {
-                        "label": self.helpForGetStartedMenuLabel,
-                        "url": "#",
-                        "onclick": ""
-                    },
-                    {
-                        "label": self.helpForVideosAndTutorialsMenuLabel,
-                        "url": "#",
-                        "onclick": ""
-                    }
-                ];
+                //Open help link
+                var helpBaseUrl = "http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpTopicId = $.isFunction(params.helpTopicId) ? params.helpTopicId() : params.helpTopicId;
+                self.openHelpLink = function() {
+                    window.open(helpBaseUrl + helpTopicId);
+                };
                 
                 self.globalNavItems = [
                     //Hide Preferences menu for V1 and will re-enable it in V1.1
@@ -109,8 +98,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     {
                         "label": self.helpMenuLabel,
                         "url": "#",
-                        "onclick": "",
-                        "subNavItems": self.subHelpMenuItems
+                        "onclick": self.openHelpLink
+//                        ,"subNavItems": self.subHelpMenuItems
                     },
                     {
                         "label": self.aboutMenuLabel,

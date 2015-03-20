@@ -151,9 +151,7 @@ require(['knockout',
                     userName: self.userName,
                     tenantName: self.tenantName,
                     appName: self.appName,
-                    helpLinkForCurrentPage: '', // TODO
-                    helpLinkForGettingStarted: '', // TODO
-                    helpLinkForVideosAndTutorials: '' // TODO
+                    helpTopicId: "em_home_gs"
                 };
             };
             
