@@ -2,6 +2,40 @@
     Created on : 2015-3-19, 10:30:08
     Author     : aduan
 */
+.fa-icon-font {
+  font-family: FaFont;
+  font-size: 1.34rem;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; }
+
+.fa-icon-font:before{
+    display: inline-block;
+}
+
+.fa-chevron-left:before {
+  content: "\f053";
+}
+
+.fa-chevron-right:before {
+  content: "\f054";
+}
+
+@font-face {
+  font-family: 'FaFont';
+  src: url("fonts/fontawesome-webfont.woff");
+  font-weight: normal;
+  font-style: normal; 
+}
+
 #search_box { 
     /*width: 201px; 
     height: 31px; 
@@ -10,8 +44,8 @@
     border-radius: 5px;
     border-color:lightgray;
     border-style:solid;
-    width:380px;
-    height: 28px; 
+    width:763px; //380px;
+    height: 33px; 
     margin-bottom: 10px;
     background-color: #fcfdfe;
     
@@ -20,8 +54,8 @@
     float: left; 
     padding: 0; 
     border:0;
-    width: 340px; 
-    height:28px;
+    width: 723px; //340px; 
+    height:33px;
     background: none; 
 /*    color:gray;
     font-size: medium;
@@ -42,13 +76,13 @@
     border-color:lightgray;
     border-style:solid;
     width:370px;
-    height: 28px; 
+    height: 33px; 
     margin-bottom: 10px;
     background-color: WhiteSmoke;
 }
 .widget-dialog-search-button {
     margin:0px;
-    height:24px;
+    height:33px;
 }
 
 .widget-dialog-selector {

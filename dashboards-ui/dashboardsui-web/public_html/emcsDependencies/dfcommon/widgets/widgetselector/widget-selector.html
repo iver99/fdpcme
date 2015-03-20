@@ -10,10 +10,68 @@
                 initialVisibility: 'hide', title: widgetSelectorTitle,
                 rootAttributes: { style: 'width: 815px; height:520px;'}}, attr: {id: dialogId}">   
             <div class="oj-dialog-body widget-dialog-body">
-                
+                <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
+                <div style="padding-right: 18px;padding-left: 4px" >
+                    <div id="search_box">
+                        <div style="float:left;">
+                            <input id="searchTxt" maxlength='100' autofocus="autofocus" aria-label="Search widgets" 
+                               data-bind="ojComponent:{component:'ojInputText',value: searchText}, attr: {placeholder: searchBoxPlaceHolder},
+                                                                    dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
+                        </div>
+                        <div style="float:right;">
+                            <button class="oj-button-half-chrome widget-dialog-search-button" data-bind="click: searchWidgets,
+                                ojComponent: {component: 'ojButton', label: searchButtonLabel,display: 'icons', 
+                                icons: {start:'widget-search-icon'}}"> 
+                            </button> 
+                        </div>
+                    </div>
+                    <div id="searchSelect" >
+                        <select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
+                              data-bind="ojComponent: {component: 'ojSelect',
+                                                          value: categoryValue,
+                                                          optionChange: optionChangedHandler,
+                                                          rootAttributes: {style:'max-width:373px;'}}">
+                            <!-- ko foreach: widgetGroups -->
+                            <option data-bind="value:value, text:label"></option>
+                            <!-- /ko -->
+                        </select>
+                    </div>
+                </div>
+                <div id="widgets" class="widget-summaries-container" >
+                    <!-- ko foreach: curPageWidgetList -->
+<!--                    <div class=" widget-container" data-bind="attr:{title: name}, 
+                                                    event: { dblclick: $parent.widgetDbClicked, click: $parent.widgetClicked}">
+                        <div>
+                            <input type="image" data-bind="attr:{src: WIDGET_ICON, alt: WIDGET_GROUP_NAME, title: WIDGET_GROUP_NAME}" width="32"
+                                   class="widget-image"/>
+                            <span data-bind="text:WIDGET_NAME"> </span>
+                        </div>
+                    </div>-->
+                    <div class=" widget-container" data-bind="attr:{title: name}, 
+                                                    event: { dblclick: $parent.widgetDbClicked, click: $parent.widgetClicked}">
+                        <div style="height:31px;background-color: #f5f5f5;" >
+                            <span data-bind="text: WIDGET_NAME"></span>
+                        </div>
+                        <div style="height:93px;background-color: white;display: none;">
+                            <span data-bind="text: WIDGET_NAME"></span>
+                        </div>
+                        <div style="height:93px;background-color: white;">
+                            <input type="image" data-bind="attr:{src: WIDGET_ICON, alt: WIDGET_GROUP_NAME, title: WIDGET_GROUP_NAME}" width="32"
+                                   class="widget-image"/>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
             </div>     
             <div class="oj-dialog-footer" style="padding-right: 24px" > 
-                                    
+                <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, disabled: naviPreBtnVisible,
+                    ojComponent: {component: 'ojButton'},style:{opacity:naviPreBtnVisible()?1:0.4}" >  
+                    <i class="fa fa-icon-font fa-chevron-left" style=" text-align: center; vertical-align: middle; font-size: 3em;"></i>
+                </button> 
+                <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviNext, disabled: naviNextBtnVisible,
+                    ojComponent: {component: 'ojButton'},style:{opacity:naviNextBtnVisible()?1:0.4}"> 
+                    <i class="fa fa-icon-font fa-chevron-right" style=" text-align: center; vertical-align: middle; font-size: 3em;"></i>
+                </button>                            
             </div>  
         </div>
     </body>

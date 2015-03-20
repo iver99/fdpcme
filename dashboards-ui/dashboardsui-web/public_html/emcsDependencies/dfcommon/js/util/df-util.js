@@ -60,7 +60,6 @@ define(['knockout',
              * @param {String} serviceName
              * @param {String} version
              * @param {String} rel
-             * @param {String} smUrl
              * @returns {String} result
              */
             self.discoverUrl = function(serviceName, version, rel){
