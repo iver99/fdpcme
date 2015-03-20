@@ -101,11 +101,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 ];
                 
                 self.globalNavItems = [
-                    {
-                        "label": self.preferencesMenuLabel,
-                        "url": "#",
-                        "onclick": ""
-                    },
+                    //Hide Preferences menu for V1 and will re-enable it in V1.1
+//                    {"label": self.preferencesMenuLabel,
+//                        "url": "#",
+//                        "onclick": ""
+//                    },
                     {
                         "label": self.helpMenuLabel,
                         "url": "#",

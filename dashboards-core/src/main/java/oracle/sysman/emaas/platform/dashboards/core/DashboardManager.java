@@ -596,7 +596,8 @@ public class DashboardManager
 			}
 			//check dashboard name
 			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
-				throw new CommonFunctionalException(MessageUtils.getDefaultBundleString("DASHBOARD_CREATE_INVALID_NAME_ERROR"));
+				throw new CommonFunctionalException(
+						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}
 			Dashboard sameName = getDashboardByName(dbd.getName(), tenantId);
 			if (sameName != null && !sameName.getDashboardId().equals(dbd.getDashboardId())) {
