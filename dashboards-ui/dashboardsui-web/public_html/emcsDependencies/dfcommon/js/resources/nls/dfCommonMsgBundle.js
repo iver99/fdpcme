@@ -11,6 +11,7 @@ define({
       "BRANDING_BAR_TEXT_APP_NAVIGATOR": "Application navigator",
       "BRANDING_BAR_ENTERPRISE_MANAGER": "Enterprise Manager",
       "BRANDING_BAR_CLOUD_SERVICE": "Cloud Service",
+      "BRANDING_BAR_MANAGEMENT_CLOUD": "Management Cloud",
       "BRANDING_BAR_MENU_PREFERENCES": "Preferences",
       "BRANDING_BAR_MENU_HELP": "Help",
       "BRANDING_BAR_MENU_HELP_CURRENT_PAGE": "Help for This Page",
@@ -28,7 +29,8 @@ define({
       "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT": "Copyright ©",
       "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT_MAIN": "Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates.",
       "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT_WARNING": "Warning: Unauthorized access is strictly prohibited.",
-      "BRANDING_BAR_ABOUT_DIALOG_CLOSE_BTN_LABEL": "Close"
+      "BRANDING_BAR_ABOUT_DIALOG_CLOSE_BTN_LABEL": "Close",
+      "BRANDING_BAR_TOOLBAR_LABEL": "Toolbar"
 },
   "fr": true,
   "cs": true,

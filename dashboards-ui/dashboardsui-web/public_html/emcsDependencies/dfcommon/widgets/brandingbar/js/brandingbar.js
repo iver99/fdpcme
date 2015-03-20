@@ -29,7 +29,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 //NLS strings
                 self.productName = ko.observable();
-                self.cloudName = ko.observable(); 
                 self.preferencesMenuLabel = ko.observable();
                 self.helpMenuLabel = ko.observable();
                 self.aboutMenuLabel = ko.observable();
@@ -37,9 +36,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 self.linkBtnLabel = ko.observable();
                 self.textOracle = ko.observable();
                 self.textAppNavigator = ko.observable();
-                self.helpForCurrentPageMenuLabel = ko.observable();
-                self.helpForGetStartedMenuLabel = ko.observable();
-                self.helpForVideosAndTutorialsMenuLabel = ko.observable();
+                self.toolbarLabel = ko.observable();
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -48,8 +45,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 require(['i18n!'+nlsResourceBundle],
                     function(nls) { 
                         self.nlsStrings(nls);
-                        self.productName(nls.BRANDING_BAR_ENTERPRISE_MANAGER);
-                        self.cloudName(nls.BRANDING_BAR_CLOUD_SERVICE);
+                        self.productName(nls.BRANDING_BAR_MANAGEMENT_CLOUD);
                         self.preferencesMenuLabel(nls.BRANDING_BAR_MENU_PREFERENCES);
                         self.helpMenuLabel(nls.BRANDING_BAR_MENU_HELP);
                         self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
@@ -57,9 +53,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
                         self.textOracle(nls.BRANDING_BAR_TEXT_ORACLE);
                         self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
-                        self.helpForCurrentPageMenuLabel(nls.BRANDING_BAR_MENU_HELP_CURRENT_PAGE);
-                        self.helpForGetStartedMenuLabel(nls.BRANDING_BAR_MENU_HELP_GET_STARTED);
-                        self.helpForVideosAndTutorialsMenuLabel(nls.BRANDING_BAR_MENU_HELP_VIDEOS_TUTORIALS);
+                        self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
                     });
             
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;

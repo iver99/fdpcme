@@ -154,7 +154,7 @@ require(['dbs/dbsmodel',
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
-                self.appName = "";
+                self.appName = "APM | Log Analytics | ITA";
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,
