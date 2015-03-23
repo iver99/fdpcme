@@ -158,7 +158,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.pageSize = ko.observable(120);
         
-        self.serviceURL = self.dfRestApiUrl + "dashboards";
+        self.serviceURL = dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
         //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
