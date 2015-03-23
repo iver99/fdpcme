@@ -30,6 +30,14 @@ BEGIN
   ELSE 
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_PREFERENCE exists already, no change is needed');      
   END IF;
+  
+  --add new column 'APPLICATION_TYPE' for 'EMS_DASHBOARD'
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='APPLICATION_TYPE';
+  IF vcount=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD ADD APPLICATION_TYPE NUMBER(4,0)';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.APPLICATION_TYPE exists already, no change is needed');      
+  END IF;
 END;
 /
 

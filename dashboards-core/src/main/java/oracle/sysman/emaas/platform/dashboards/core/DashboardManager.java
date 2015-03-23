@@ -14,13 +14,17 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
@@ -117,6 +121,9 @@ public class DashboardManager
 			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
 				throw new DashboardNotFoundException();
 			}
+			if (!isDashboardAccessbyCurrentTenant(ed)) {// system dashboard
+				throw new DashboardNotFoundException();
+			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
 			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
@@ -208,6 +215,9 @@ public class DashboardManager
 			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
 				throw new DashboardNotFoundException();
 			}
+			if (!isDashboardAccessbyCurrentTenant(ed)) {
+				throw new DashboardNotFoundException();
+			}
 			return ed.getScreenShot();
 		}
 		finally {
@@ -244,6 +254,9 @@ public class DashboardManager
 			String currentUser = UserContext.getCurrentUser();
 			// user can access owned or system dashboard
 			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+				throw new DashboardNotFoundException();
+			}
+			if (!isDashboardAccessbyCurrentTenant(ed)) {
 				throw new DashboardNotFoundException();
 			}
 			updateLastAccessDate(dashboardId, tenantId, dsf);
@@ -465,11 +478,24 @@ public class DashboardManager
 			maxResults = pageSize.intValue();
 		}
 
+		List<DashboardApplicationType> apps = getTenantApplications();
+		if (apps == null || apps.isEmpty()) {
+			throw new TenantWithoutSubscriptionException();
+		}
+		StringBuilder sbApps = new StringBuilder();
+		for (int i = 0; i < apps.size(); i++) {
+			DashboardApplicationType app = apps.get(i);
+			if (i != 0) {
+				sbApps.append(",");
+			}
+			sbApps.append(String.valueOf(app.getValue()));
+		}
+
 		StringBuilder sb = new StringBuilder(
 				" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
 						+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
-						+ "where p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or p.is_system = ?5) ");
-		//		Map<String, Object> paramMap = new HashMap<String, Object>();
+						+ "where p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or (p.is_system = ?5 and p.application_type in ("
+						+ sbApps.toString() + "))) ");
 		List<Object> paramList = new ArrayList<Object>();
 		String currentUser = UserContext.getCurrentUser();
 		paramList.add(currentUser);
@@ -502,7 +528,7 @@ public class DashboardManager
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?8 )) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?8)) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 			//			sb.append(" or lower(p.owner) = :owner)");
@@ -761,6 +787,24 @@ public class DashboardManager
 		}
 	}
 
+	private List<DashboardApplicationType> getTenantApplications()
+	{
+		String opcTenantId = TenantContext.getCurrentTenant();
+		if (opcTenantId == null || "".equals(opcTenantId)) {
+			return null;
+		}
+		List<String> appNames = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
+		if (appNames == null || appNames.isEmpty()) {
+			return null;
+		}
+		List<DashboardApplicationType> apps = new ArrayList<DashboardApplicationType>();
+		for (String appName : appNames) {
+			DashboardApplicationType dat = DashboardApplicationType.fromJsonValue(appName);
+			apps.add(dat);
+		}
+		return apps;
+	}
+
 	private void initializeQueryParams(Query query, List<Object> paramList)
 	{
 		if (query == null || paramList == null) {
@@ -770,5 +814,34 @@ public class DashboardManager
 			Object value = paramList.get(i);
 			query.setParameter(i + 1, value);
 		}
+	}
+
+	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed)
+	{
+		if (ed == null) {
+			return false;
+		}
+		Boolean isSystem = DataFormatUtils.integer2Boolean(ed.getIsSystem());
+		if (!isSystem) { // check system dashboard only
+			return true;
+		}
+		Integer at = ed.getApplicationType();
+		if (at == null) { // should be always available for system dashboard
+			return false;
+		}
+		DashboardApplicationType app = DashboardApplicationType.fromValue(at.intValue());
+		if (app == null) {
+			return false;
+		}
+		List<DashboardApplicationType> datList = getTenantApplications();
+		if (datList == null || datList.isEmpty()) { // accessible app list is empty
+			return false;
+		}
+		for (DashboardApplicationType dat : datList) {
+			if (dat.equals(app)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

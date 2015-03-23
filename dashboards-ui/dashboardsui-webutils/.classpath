@@ -13,5 +13,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboardsui-ee"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-annotations-2.5.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-2.5.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-databind-2.5.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-core-1.17.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

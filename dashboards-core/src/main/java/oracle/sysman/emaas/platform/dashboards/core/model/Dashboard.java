@@ -108,6 +108,8 @@ public class Dashboard
 
 	private String type;
 
+	private DashboardApplicationType appicationType;
+
 	@JsonProperty("tiles")
 	private List<Tile> tileList;
 
@@ -128,6 +130,11 @@ public class Dashboard
 		tileList.add(tile);
 		tile.setDashboard(this);
 		return tile;
+	}
+
+	public DashboardApplicationType getAppicationType()
+	{
+		return appicationType;
 	}
 
 	public Date getCreationDate()
@@ -200,9 +207,10 @@ public class Dashboard
 		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
+		Integer appType = appicationType == null ? null : appicationType.getValue();
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
-					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType);
+					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType, appType);
 			if (tileList != null) {
 				int i = 0;
 				for (Tile tile : tileList) {
@@ -225,6 +233,7 @@ public class Dashboard
 			ed.setLastModifiedBy(lastModifiedBy);
 			ed.setName(name);
 			ed.setScreenShot(screenShot);
+			ed.setApplicationType(appType);
 			if (ed.getType() != null && dashboardType != null && !dashboardType.equals(ed.getType())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
@@ -259,6 +268,11 @@ public class Dashboard
 	{
 		getTileList().remove(tile);
 		return tile;
+	}
+
+	public void setAppicationType(DashboardApplicationType appicationType)
+	{
+		this.appicationType = appicationType;
 	}
 
 	public void setCreationDate(Date creationDate)

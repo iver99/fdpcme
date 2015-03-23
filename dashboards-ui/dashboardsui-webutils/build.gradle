@@ -19,4 +19,9 @@ dependencies {
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
+        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.1')
+        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.5.1')
+        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.5.1')
+        compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')
+        compile(group: 'test', name: 'wlfullclient', version: '2.6')
 } 

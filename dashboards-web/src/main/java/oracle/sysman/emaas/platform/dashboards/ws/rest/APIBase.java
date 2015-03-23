@@ -15,10 +15,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdProcessor;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
@@ -61,13 +61,13 @@ public class APIBase
 		}
 		// TODO: once the cloud environment is available, return the queried tenant id instead
 		try {
-			long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
-			//		long internalTenantId = 1L;
+			//			long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
+			long internalTenantId = 1L;
 			return internalTenantId;
 		}
-		catch (BasicServiceMalfunctionException e) {
-			throw e;
-		}
+		//		catch (BasicServiceMalfunctionException e) {
+		//			throw e;
+		//		}
 		catch (Exception e) {
 			throw new CommonSecurityException(MessageUtils.getDefaultBundleString(
 					CommonSecurityException.TENANT_NAME_NOT_RECOGNIZED, tenantId), e);
@@ -75,7 +75,7 @@ public class APIBase
 
 	}
 
-	public String initializeUserContext(String userTenant) throws CommonSecurityException
+	public void initializeUserContext(String userTenant) throws CommonSecurityException
 	{
 		if (userTenant == null || "".equals(userTenant)) {
 			throw new CommonSecurityException(
@@ -92,7 +92,12 @@ public class APIBase
 					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
 		}
 		UserContext.setCurrentUser(userName);
-		return userName;
+		String tenantName = userTenant.substring(0, idx);
+		if (tenantName == null || "".equals(tenantName)) {
+			throw new CommonSecurityException(
+					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
+		}
+		TenantContext.setCurrentTenant(tenantName);
 	}
 
 	/*
