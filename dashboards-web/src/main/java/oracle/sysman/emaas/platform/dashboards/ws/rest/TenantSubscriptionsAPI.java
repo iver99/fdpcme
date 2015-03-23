@@ -19,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
@@ -43,7 +44,8 @@ public class TenantSubscriptionsAPI extends APIBase
 				applications = null;
 			}
 			else {
-				applications = (String[]) apps.toArray();
+				applications = new String[apps.size()];
+				apps.toArray(applications);
 			}
 		}
 
@@ -69,11 +71,17 @@ public class TenantSubscriptionsAPI extends APIBase
 			initializeUserContext(userTenant);
 			String tenantName = TenantContext.getCurrentTenant();
 			List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName);
+			if (apps == null || apps.isEmpty()) {
+				throw new TenantWithoutSubscriptionException();
+			}
 			SubscribedAppsEntity sae = new SubscribedAppsEntity(apps);
 			return Response.ok(getJsonUtil().toJson(sae)).build();
 		}
 		catch (CommonSecurityException e) {
 			logger.error(e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (TenantWithoutSubscriptionException e) {
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
