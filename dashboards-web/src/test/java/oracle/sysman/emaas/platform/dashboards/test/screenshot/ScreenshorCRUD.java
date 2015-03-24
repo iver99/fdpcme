@@ -22,6 +22,7 @@ public class ScreenshorCRUD
 	static String serveruri;
 	static String authToken;
 	static String tenantid;
+	static String tenantid_2;
 	static String remoteuser;
 
 	@BeforeClass
@@ -33,11 +34,12 @@ public class ScreenshorCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
+		tenantid_2 = ct.getTenantid_2();
 		remoteuser = ct.getRemoteUser();
 	}
 
 	@Test
-	public void multitenant_headerCheck()
+	public void multiTenant_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -59,7 +61,70 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void multitenant_screenshot_query()
+	public void multiTenant_screenshot_query()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new dashboard");
+
+			String jsonString = "{ \"name\":\"Test_Dashboard_ScreenShot_multitenant\", \"screenShot\": \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABYwAAAJACAYAAA\"}";
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().post("/dashboards");
+			System.out.println(res.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 201);
+
+			dashboard_id = res.jsonPath().getString("id");
+			System.out.println("											");
+
+			System.out.println("Verify that the other tenant can't query if the dashboard has screen shot...");
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards/" + dashboard_id + "/screenshot/");
+			System.out.println("Stauts code is :" + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 404);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20001");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Specified dashboard is not found");
+			System.out.println("											");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res5.asString());
+				System.out.println("Status code is: " + res5.getStatusCode());
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+
+	}
+
+	@Test
+	public void multiTenant_screenshot_query_invalidTenant()
 	{
 		String dashboard_id = "";
 		try {
@@ -122,7 +187,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void remoteuser_headerCheck()
+	public void remoteUser_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -145,7 +210,7 @@ public class ScreenshorCRUD
 	}
 
 	@Test
-	public void remoteuser_screenshot_query()
+	public void remoteUser_screenshot_query()
 	{
 		String dashboard_id = "";
 		try {
