@@ -82,8 +82,6 @@ public class TenantSubscriptionUtil
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
-		// TODO: as TenantApplicationMapping is not deployed and unavailable, use testing one here
-		//		domainHref = "http://sca00bym.us.oracle.com:7001/naming/entitynaming/v1/domains";
 		String domainsResponse = rc.get(domainHref);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		DomainsConverter dc = new DomainsConverter();
@@ -106,7 +104,6 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			String appMappingJson = rc.get(appMappingUrl);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response is " + appMappingJson);
-			// TODO: as there is no data from the above lookup, use test data here
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;
 			}
