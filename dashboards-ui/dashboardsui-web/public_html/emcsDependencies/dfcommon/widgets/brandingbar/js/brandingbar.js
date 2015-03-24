@@ -245,10 +245,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                             $.ajax(urlNotificationCheck, {
                                 success:function(data, textStatus, jqXHR) {
                                     if (urlNotificationShow === null)
-                                        urlNotificationCheck = dfu.discoverUrl(self.serviceName, self.serviceVersion, self.relNotificationShow);
-                                    if (urlNotificationCheck) {
+                                        urlNotificationShow = dfu.discoverUrl(self.serviceName, self.serviceVersion, self.relNotificationShow);
+                                    if (urlNotificationShow) {
                                         self.notificationDisabled(false);
-                                        self.notificationPageUrl = urlNotificationCheck;
+                                        self.notificationPageUrl = urlNotificationShow;
                                     }
                                 },
                                 error:function(xhr, textStatus, errorThrown){

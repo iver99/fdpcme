@@ -156,7 +156,7 @@ define(['knockout',
                 if (url){
                     return url;
                 }else{
-                    console.log("Failed to discovery Dashboard Home");
+                    console.log("Failed to discover Dashboard Home");
                     return null;
                 }
             };    

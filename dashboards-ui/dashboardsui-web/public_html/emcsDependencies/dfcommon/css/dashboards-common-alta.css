@@ -46,14 +46,14 @@
 .fa-notification:before {
   content: "\f0a2"; 
   /*color: #0CA3D1;*/
-  color: black;
+  color: #454545;
   font-size: larger;
 }
 
 .fa-compass:before {
   content: "\f14e"; 
   /*color: #0CA3D1;*/
-  color: black;
+  color: #454545;
   font-size: larger;
 }
 
@@ -288,13 +288,9 @@
         vertical-align: middle;
     }
     .fa-notification:before {
-/*        height:32px;
-        width:32px;*/
         font-size:xx-large;
     }
     .fa-compass:before {
-/*        height:32px;
-        width:32px;*/
         font-size:xx-large;
     }
 }
