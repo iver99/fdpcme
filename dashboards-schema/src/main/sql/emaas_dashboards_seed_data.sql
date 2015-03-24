@@ -183,7 +183,7 @@ values (3,'Database Resource Planning',1,'Database Resource Planning',SYS_EXTRAC
 dbhealth_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (4,'Middleware Performance Analytics',1,'Provides analytical insights to middleware performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN',1,0,0,'&TENANT_ID',
+values (4,'Middleware GC Overhead',1,'Analyze overhead of Garbage Collection and its impact of WebLogic performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN',1,0,0,'&TENANT_ID',
 mwperf_screenshot);
 
 Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
