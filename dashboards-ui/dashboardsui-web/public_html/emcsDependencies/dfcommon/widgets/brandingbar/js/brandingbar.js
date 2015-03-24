@@ -1,5 +1,5 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util'],
-        function (localrequire, ko, $, dfumodel) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore'],
+        function (localrequire, ko, $, dfumodel,oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
                 
@@ -29,7 +29,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 //NLS strings
                 self.productName = ko.observable();
-                self.cloudName = ko.observable(); 
                 self.preferencesMenuLabel = ko.observable();
                 self.helpMenuLabel = ko.observable();
                 self.aboutMenuLabel = ko.observable();
@@ -37,6 +36,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 self.linkBtnLabel = ko.observable();
                 self.textOracle = ko.observable();
                 self.textAppNavigator = ko.observable();
+                self.toolbarLabel = ko.observable();
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -45,8 +45,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 require(['i18n!'+nlsResourceBundle],
                     function(nls) { 
                         self.nlsStrings(nls);
-                        self.productName(nls.BRANDING_BAR_ENTERPRISE_MANAGER);
-                        self.cloudName(nls.BRANDING_BAR_CLOUD_SERVICE);
+                        self.productName(nls.BRANDING_BAR_MANAGEMENT_CLOUD);
                         self.preferencesMenuLabel(nls.BRANDING_BAR_MENU_PREFERENCES);
                         self.helpMenuLabel(nls.BRANDING_BAR_MENU_HELP);
                         self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
@@ -54,6 +53,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
                         self.textOracle(nls.BRANDING_BAR_TEXT_ORACLE);
                         self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
+                        self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
                     });
             
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
@@ -65,7 +65,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 //SSO logout handler
                 self.handleSignout = function() {
+                    oj.Logger.info("Logged out",true);
                     window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
+                    
                 };
                 
                 //Open about box
@@ -76,21 +78,32 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     $('#' + self.aboutBoxId).ojDialog('open');
                 };
                 
+                //Open help link
+                var helpBaseUrl = "http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpTopicId = $.isFunction(params.helpTopicId) ? params.helpTopicId() : params.helpTopicId;
+                self.openHelpLink = function() {
+                    window.open(helpBaseUrl + helpTopicId);
+                };
+                
                 self.globalNavItems = [
                     //Hide Preferences menu for V1 and will re-enable it in V1.1
 //                    {"label": self.preferencesMenuLabel,
 //                        "url": "#",
 //                        "onclick": ""
 //                    },
-                    {"label": self.helpMenuLabel,
+                    {
+                        "label": self.helpMenuLabel,
                         "url": "#",
-                        "onclick": ""
+                        "onclick": self.openHelpLink
+//                        ,"subNavItems": self.subHelpMenuItems
                     },
-                    {"label": self.aboutMenuLabel,
+                    {
+                        "label": self.aboutMenuLabel,
                         "url": "#",
                         "onclick": self.openAboutBox
                     },
-                    {"label": self.signOutMenuLabel,
+                    {
+                        "label": self.signOutMenuLabel,
                         "url": "#",
                         "onclick": self.handleSignout
                     }
@@ -134,19 +147,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         template:{require:'text!'+aboutTemplatePath}
                     });
                 }
-                
-                // Dropdown menu states
-                self.selectedMenuItem = ko.observable("(None selected yet)");
-                
-                self.menuItemSelect = function(event, ui) {
-                    switch (ui.item.attr("id")) {
-                        case "open":
-                            this.selectedMenuItem(ui.item.children("a").text());
-                            break;
-                        default:
-                            // todo;
-                    }
-                };
                 
                 /**
                 * Navigation links button click handler
