@@ -1,5 +1,5 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util'],
-        function (localrequire, ko, $, dfumodel) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore'],
+        function (localrequire, ko, $, dfumodel,oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
                 
@@ -65,7 +65,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 //SSO logout handler
                 self.handleSignout = function() {
+                    oj.Logger.info("Logged out",true);
                     window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
+                    
                 };
                 
                 //Open about box
