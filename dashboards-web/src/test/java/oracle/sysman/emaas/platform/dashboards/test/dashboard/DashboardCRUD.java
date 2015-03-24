@@ -939,9 +939,10 @@ public class DashboardCRUD
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
 			System.out.println("Status code is: " + res2.getStatusCode());
-			Assert.assertTrue(res2.getStatusCode() == 404);
-			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "20000");
-			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Not allow to update \"systemDashboard\"");
+			System.out.println(res2.asString());
+			Assert.assertTrue(res2.getStatusCode() == 403);
+			Assert.assertEquals(res2.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res2.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
 
 			System.out.println("											");
 		}
