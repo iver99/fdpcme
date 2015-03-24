@@ -38,10 +38,16 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 self.textAppNavigator = ko.observable();
                 self.toolbarLabel = ko.observable();
                 self.textNotifications = ko.observable();
+                self.appName = ko.observable();
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
                 self.aboutBoxNeedRefresh = ko.observable(false);
+                self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
+                self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+                var dfu = new dfumodel(self.userName, self.tenantName);
+                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
+                var subscribedApps = dfu.getSubscribedApplications(self.tenantName, self.userName);
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
                 var appIdLogAnalytics = "LogAnalytics";
@@ -89,15 +95,24 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                         self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
                         self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
                         self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
+                        var subscribedServices = null;
+                        if (subscribedApps && subscribedApps.length > 0) {
+                            for (i = 0; i < subscribedApps.length; i++) {
+                                var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
+                                if (i === 0)
+                                    subscribedServices = servicename;
+                                else 
+                                    subscribedServices = subscribedServices + " | " + servicename;
+                            }
+                        }
+                        self.appName(subscribedServices);
                     });
             
-                self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
-                self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.appName = "Application Performance Monitoring | Log Analytics | IT Analytics";//$.isFunction(params.appName) ? params.appName() : params.appName;
+                
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
                 self.relNotificationShow = $.isFunction(params.relNotificationShow) ? params.relNotificationShow() : params.relNotificationShow;
-                self.userTenantName = self.userName && self.tenantName ? self.userName + " (" + self.tenantName + ")" : "emaas.user@oracle.com";
+//                self.userTenantName = self.userName && self.tenantName ? self.userName + " (" + self.tenantName + ")" : "emaas.user@oracle.com";
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
@@ -105,9 +120,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 var appProperties = appMap[self.appId];
                 self.serviceName = appProperties['serviceName'];
                 self.serviceVersion = appProperties['version'];
-                
-                var dfu = new dfumodel(self.userName, self.tenantName);
-                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
                 
                 var urlNotificationCheck = null;
                 var urlNotificationShow = null;
