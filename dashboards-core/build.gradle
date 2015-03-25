@@ -113,6 +113,6 @@ dependencies {
 	compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')
 	compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')
 	compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
-	compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')
+	compile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2')
 }
 build.dependsOn integTestJar
