@@ -465,6 +465,7 @@ public class DashboardManagerTest
 	@Test
 	public void testGetDashboardId() throws DashboardException
 	{
+		TenantContext.setCurrentTenant("TenantOPC1");
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
@@ -548,6 +549,7 @@ public class DashboardManagerTest
 	@Test
 	public void testListDashboard() throws DashboardException, InterruptedException
 	{
+		TenantContext.setCurrentTenant("TenantOPC1");
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
 		Long tenant2 = 12L;
