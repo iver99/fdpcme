@@ -7,16 +7,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
                 
-                //NLS strings
-                self.dashboardsLabel = ko.observable();
-                self.visualAnalyzersLabel = ko.observable();
-                self.administrationLabel = ko.observable();
-                self.allDashboardsLinkLabel = ko.observable();
-                
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
                 
-                var nlsStringsAvailable = false;
                 var refreshListener = ko.computed(function(){
                     return {
                         needRefresh: params.navLinksNeedRefresh()
@@ -25,10 +18,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 
                 refreshListener.subscribe(function (value) {
                     if (value.needRefresh){
-                        if (!nlsStringsAvailable) {
-                            refreshNlsStrings(params.nlsStrings());
-                            nlsStringsAvailable = true;
-                        }
                         refreshLinks();
                         params.navLinksNeedRefresh(false);
                     }
@@ -101,16 +90,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     if (self.visualAnalyzers().length === 0 || self.adminLinks().length === 0) {
                         discoverLinks();
                     }
-                };        
-                
-                function refreshNlsStrings(nlsStrings) {
-                    if (nlsStrings) {
-                        self.dashboardsLabel(nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
-                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL);
-                        self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
-                        self.allDashboardsLinkLabel(nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL);
-                    }
-                }
+                };                          
             }
             return NavigationLinksViewModel;
         });
