@@ -47,5 +47,5 @@ dependencies {
 	lrgConfig(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3')
 	lrgConfig(group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3')
 	lrgConfig(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6')
-	lrgConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')
+	lrgConfig(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2')
 }

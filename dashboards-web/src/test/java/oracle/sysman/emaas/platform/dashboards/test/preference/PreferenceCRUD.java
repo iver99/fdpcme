@@ -24,6 +24,7 @@ public class PreferenceCRUD
 	static String serveruri;
 	static String authToken;
 	static String tenantid;
+	static String tenantid_2;
 	static String remoteuser;
 
 	@BeforeClass
@@ -35,11 +36,12 @@ public class PreferenceCRUD
 		serveruri = ct.getServeruri();
 		authToken = ct.getAuthToken();
 		tenantid = ct.getTenantid();
+		tenantid_2 = ct.getTenantid_2();
 		remoteuser = ct.getRemoteUser();
 	}
 
 	@Test
-	public void multitenant_headerCheck()
+	public void multiTenant_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -464,7 +466,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void preference_multitenant_CRUD()
+	public void preference_multiTenant_CRUD()
 	{
 		try {
 			System.out.println("------------------------------------------");
@@ -506,7 +508,7 @@ public class PreferenceCRUD
 			//					.contentType(ContentType.JSON)
 			//					.log()
 			//					.everything()
-			//					.headers("X-USER-IDENTITY-DOMAIN-NAME", "TenantOPC2", "X-REMOTE-USER", tenantid + "." + remoteuser,
+			//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + "." + remoteuser,
 			//							"Authorization", authToken).when().get("/preferences/TestPreference_multiTenant");
 			//			System.out.println(res2_2.asString());
 			//			System.out.println("Status code is:  " + res2_2.getStatusCode());
@@ -533,7 +535,7 @@ public class PreferenceCRUD
 			//					.contentType(ContentType.JSON)
 			//					.log()
 			//					.everything()
-			//					.headers("X-USER-IDENTITY-DOMAIN-NAME", "TenantOPC2", "X-REMOTE-USER", tenantid + "." + remoteuser,
+			//					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid_2, "X-REMOTE-USER", tenantid_2 + "." + remoteuser,
 			//							"Authorization", authToken).when().get("/preferences/TestPreference_multiTenant");
 			//			System.out.println(res3_2.asString());
 			//			System.out.println("Status code is:  " + res3_2.getStatusCode());
@@ -692,7 +694,7 @@ public class PreferenceCRUD
 	}
 
 	@Test
-	public void remoteuser_headerCheck()
+	public void remoteUser_headerCheck()
 	{
 		try {
 			System.out.println("------------------------------------------");

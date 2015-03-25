@@ -113,12 +113,6 @@ require(['dbs/dbsmodel',
             }
 
            
-//            if (!ko.components.isRegistered('df-nav-links')) {
-//                ko.components.register("df-nav-links",{
-//                    viewModel:{require:'../emcsDependencies/navlinks/js/navigation-links'},
-//                    template:{require:'text!../emcsDependencies/navlinks/navigation-links.html'}
-//                });
-//            }
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
@@ -160,7 +154,18 @@ require(['dbs/dbsmodel',
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
-                self.appName = "";
+//                self.appName = "Application Performance Monitoring | Log Analytics | IT Analytics";
+                self.appId = "Dashboard";
+                self.relNotificationCheck = "existActiveWarning";
+                self.relNotificationShow = "warnings";
+                self.brandingbarParams = {
+                    userName: self.userName,
+                    tenantName: self.tenantName,
+//                    appName: self.appName,
+                    appId: self.appId,
+                    relNotificationCheck: self.relNotificationCheck,
+                    relNotificationShow: self.relNotificationShow
+                };
             }
            
            function TitleViewModel(){
@@ -185,6 +190,21 @@ require(['dbs/dbsmodel',
                 ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                 $('#mainContent').show(); 
                 
+                function setMainAreaPadding()
+                {
+                    //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
+                    var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
+                    var _padding = _tabwidth % (335 /*panel width + panel margin*/);
+                    //console.log("_padding: " + Math.floor(_padding/2));
+                    var _calpadding = (_tabwidth <= 680 ) ? 5 : Math.floor(_padding/2);
+                    $("#dhometab").attr({
+                       "style" : "padding-left: "+ _calpadding  + "px;" 
+                    });
+                };
+                setMainAreaPadding();
+                $(window).resize(function() {
+                    setMainAreaPadding();
+                });
                 
                window.addEventListener('message', childMessageListener, false);
                window.name = 'dashboardhome'; 

@@ -21,6 +21,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
  * http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
@@ -29,6 +32,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DashboardsCORSFilter implements Filter
 {
+	private final Logger logger = LogManager.getLogger(DashboardsCORSFilter.class);
+
 	@Override
 	public void destroy()
 	{
@@ -36,7 +41,7 @@ public class DashboardsCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -52,6 +57,7 @@ public class DashboardsCORSFilter implements Filter
 		hRes.addHeader("Access-Control-Allow-Methods", "HEAD, OPTIONS, GET, POST, PUT, DELETE"); //add more methods as necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,X-REMOTE-USER,Authorization,x-sso-client");
+
 		chain.doFilter(request, response);
 	}
 

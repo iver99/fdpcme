@@ -117,7 +117,7 @@ dependencies {
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.1'
 	prebuild_wlfullc 'test:wlfullclient:2.6'
-	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2'
+	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2',
 			'emaas.platform:registry-lookup-client:0.23.6'
 }
 

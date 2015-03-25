@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.web.rest.model;
 
+import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.MessageUtils;
 
 /**
@@ -52,6 +53,14 @@ public class ErrorEntity
 	public ErrorEntity()
 	{
 
+	}
+
+	public ErrorEntity(DashboardException de)
+	{
+		if (de != null) {
+			errorCode = de.getErrorCode();
+			errorMessage = de.getMessage();
+		}
 	}
 
 	public ErrorEntity(Integer errorCode, String errorMessage)

@@ -27,9 +27,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
-import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -183,21 +180,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		HTTP, HTTPS
 	}
 
-	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
-	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
-
-	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
-
-	static {
-		try {
-			WLS_RUNTIME_SERVICE_NAME = ObjectName
-					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
-		}
-		catch (Exception e) {
-			throw new Error("Well-known JMX names are corrupt - code bug", e);
-		}
-	}
-
 	private static String getApplicationUrl(UrlType urlType) throws Exception
 	{
 		InitialContext ctx = new InitialContext();
@@ -217,6 +199,21 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 		finally {
 			ctx.close();
+		}
+	}
+
+	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
+	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
+
+	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+
+	static {
+		try {
+			WLS_RUNTIME_SERVICE_NAME = ObjectName
+					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
+		}
+		catch (Exception e) {
+			throw new Error("Well-known JMX names are corrupt - code bug", e);
 		}
 	}
 
@@ -276,7 +273,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
@@ -315,10 +312,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		logger.info("Pre-stopping service, attempting to close entityimanager factory");
-		PersistenceManager.getInstance().closeEntityManagerFactory();
-		logger.info("Pre-stopping service, entityimanager factory closed");
-
 		logger.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		logger.debug("Pre-stopped 'Service Regsitry'");

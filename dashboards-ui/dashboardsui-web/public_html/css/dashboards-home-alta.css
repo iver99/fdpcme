@@ -24,24 +24,20 @@
 }
 
 .main-content-area {
-    //background: #ffffff;
-    border-radius: 3px;
-    border: 0px solid #d6dfe6;
-    margin: 10px;
-    padding-right: 20px;
+    margin: 0px;
+    padding-right: 10px;
     padding-left: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
 .dbs-tab-container {
-    //background: #ffffff;
-    background: transparent;
-    border-radius: 3px;
-    border: 0px solid #d6dfe6;
-    padding: 5px;
-    min-height: 500px;
     background-color: transparent;
+    background: transparent;
+    margin: 0px;
+    padding: 0px;
+    min-height: 500px;
+    
 }
 
 .dbs-summaries-container {

@@ -26,6 +26,8 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'timeselector':'../emcsDependencies/timeselector/js',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
@@ -83,6 +85,8 @@ require(['knockout',
     'dfutil',
     'dashboards/dashboard-tile-model',
     'dashboards/dashboard-tile-view',
+    'loggingutil',
+    'idfbcutil',
     'ojs/ojchart',
     'ojs/ojcomponents',
     'ojs/ojvalidation',    
@@ -104,8 +108,18 @@ require(['knockout',
     'ojs/ojpopup',
     'dashboards/dbstypeahead'
 ],
-        function(ko, $, dfu,dtm, dtv) // this callback gets executed when all required modules are loaded
+        function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
+            var logger = new _emJETCustomLogger();
+            var dfRestApi = dfu.discoverDFRestApiUrl();
+            if (dfRestApi){
+                var logReceiver = dfu.buildFullUrl(dfRestApi,"logging/logs")
+                logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+                // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+                // If you comment the line below, our current log calls will not be output!
+                logger.setLogLevel(oj.Logger.LEVEL_LOG);
+            }
+            
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
@@ -121,40 +135,15 @@ require(['knockout',
                 template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
             });
             
-            ko.components.register("demo-chart-widget",{
-                viewModel:{require:'../emcsDependencies/demo/simpleChartWidget/js/demo-chart-widget'},
-                template:{require:'text!../emcsDependencies/demo/simpleChartWidget/demo-chart-widget.html'}
-            });
-
-            ko.components.register("demo-publisher-widget",{
-                viewModel:{require:'../emcsDependencies/demo/publisherWidget/js/demo-publisher'},
-                template:{require:'text!../emcsDependencies/demo/publisherWidget/demo-publisher.html'}
-            });
- 
-            ko.components.register("demo-subscriber-widget",{
-                viewModel:{require:'../emcsDependencies/demo/subscriberWidget/js/demo-subscriber'},
-                template:{require:'text!../emcsDependencies/demo/subscriberWidget/demo-subscriber.html'}
-            });
-            
             ko.components.register("demo-la-widget",{
                 viewModel:{require:'../emcsDependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
                 template:{require:'text!../emcsDependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
             });  
             
-//            ko.components.register("demo-la-widget",{
-//                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js'},
-//                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
-//            }); 
-            
             ko.components.register("demo-ta-widget",{
                 viewModel:{require:'../emcsDependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
                 template:{require:'text!../emcsDependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
             }); 
-            
-//            ko.components.register("demo-ta-widget",{
-//                viewModel:{require:'http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/targetAnalyticsWidget/js/demo-target-analytics.js'},
-//                template:{require:'text!http://slc04wjk.us.oracle.com:7001/emcpdfui/emcsDependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
-//            });
             
             ko.components.register("DF_V1_WIDGET_IFRAME",{
                 viewModel:{require:'../emcsDependencies/widgets/iFrame/js/widget-iframe'},
@@ -165,46 +154,24 @@ require(['knockout',
                 viewModel:{require:'../emcsDependencies/widgets/onepage/js/onepageModel'},
                 template:{require:'text!../emcsDependencies/widgets/onepage/onepageTemplate.html'}
             });             
-//            ko.components.register("ita-widget",{
-//                viewModel:{require:'http://slc06xat.us.oracle.com:7001/ita-tool/widgets/js/controller/qdg-component.js'},
-//                template:{require:'text!http://slc06xat.us.oracle.com:7001/ita-tool/widgets/html/qdg-component.html'}
-//            });
 
-            function FooterViewModel() {
-                var self = this;
-
-                var aboutOracle = 'http://www.oracle.com/us/corporate/index.html#menu-about';
-                var contactUs = 'http://www.oracle.com/us/corporate/contact/index.html';
-                var legalNotices = 'http://www.oracle.com/us/legal/index.html';
-                var termsOfUse = 'http://www.oracle.com/us/legal/terms/index.html';
-                var privacyRights = 'http://www.oracle.com/us/legal/privacy/index.html';
-
-                self.ojVersion = ko.observable('v' + oj.version + ', rev: ' + oj.revision);
-
-                self.footerLinks = ko.observableArray([
-                    new FooterNavModel('About Oracle', 'aboutOracle', aboutOracle),
-                    new FooterNavModel('Contact Us', 'contactUs', contactUs),
-                    new FooterNavModel('Legal Notices', 'legalNotices', legalNotices),
-                    new FooterNavModel('Terms Of Use', 'termsOfUse', termsOfUse),
-                    new FooterNavModel('Your Privacy Rights', 'yourPrivacyRights', privacyRights)
-                ]);
-
-            }
-
-            function FooterNavModel(name, id, linkTarget) {
-
-                this.name = name;
-                this.linkId = id;
-                this.linkTarget = linkTarget;
-            }
-
-            
             function HeaderViewModel() {
                 var self = this;
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
-                self.appName = "";
+//                self.appName = "Application Performance Monitoring | Log Analytics | IT Analytics";
+                self.appId = "Dashboard";
+                self.relNotificationCheck = "existActiveWarning";
+                self.relNotificationShow = "warnings";
+                self.brandingbarParams = {
+                    userName: self.userName,
+                    tenantName: self.tenantName,
+//                    appName: self.appName,
+                    appId: self.appId,
+                    relNotificationCheck: self.relNotificationCheck,
+                    relNotificationShow: self.relNotificationShow
+                };
             };
             
            
@@ -294,7 +261,9 @@ require(['knockout',
 
                     toolBarModel.showAddWidgetTooltip();
                     tilesViewMode.postDocumentShow();
-
+                    idfbcutil.hookupBrowserCloseEvent(function(){
+                       oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
+                    });
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                     var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');

@@ -26,7 +26,7 @@ function(dfu, oj, ko, $)
             //console.log("[DashboardModel] operation: "+ _operation +"  "+__url + " \n      Header: " + JSON.stringify(dfu.getDashboardsRequestHeader())); //return __url;
             return {
                     url: __url,
-                    headers: dfu.getDashboardsRequestHeader()//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()}//Pass the required header information
+                    headers: dfu.getDashboardsRequestHeader()
                };
         };
         _options['customURL'] = _customURL;
@@ -52,24 +52,6 @@ function(dfu, oj, ko, $)
         if (typeof url==="string"){
             window.open(self.getNavLink());
         }
-        // super
-//        var self = this,widgets = self.get('widgets') || self.get('tiles');
-//        if ("onePage"===self.type){
-//                if (widgets instanceof Array && widgets.length===1 && 
-//                        widgets[0].WIDGET_KOC_NAME &&
-//                        widgets[0].WIDGET_VIEWMODEL &&
-//                        widgets[0].WIDGET_TEMPLATE &&
-//                        widgets[0].PROVIDER_NAME &&
-//                        widgets[0].PROVIDER_VERSION &&
-//                        widgets[0].PROVIDER_ASSET_ROOT
-//                        ){
-//                    window.open(self.getLink());
-//                }else{
-//                    $( "#dbs_comingsoonDialog" ).ojDialog( "open" );
-//                }              
-//        }else{
-//                window.open(self.getNavLink());
-//        }
     };
     
     DashboardModel.prototype.getNavLink = function()
@@ -84,6 +66,7 @@ function(dfu, oj, ko, $)
                 var version = tiles[0]["PROVIDER_VERSION"];
                 var assetRoot = tiles[0]["PROVIDER_ASSET_ROOT"];
                 var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot);
+                this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
                    console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot);  
                    return url;

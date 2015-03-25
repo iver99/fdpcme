@@ -227,7 +227,7 @@ dependencies {
 	providedCompile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3')
 	providedCompile(group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3')
 	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6')
-	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')
+	providedCompile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2')
 
 	
 
