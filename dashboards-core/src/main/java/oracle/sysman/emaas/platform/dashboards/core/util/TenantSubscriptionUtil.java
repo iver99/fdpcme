@@ -11,11 +11,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -81,7 +78,7 @@ public class TenantSubscriptionUtil
 		if (tenant == null) {
 			return null;
 		}
-		Link domainLink = RegistryLookupUtil.getServiceExternalLink("EntityNaming", "0.1", "collection/domains");
+		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains");
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
 			return null;
 		}

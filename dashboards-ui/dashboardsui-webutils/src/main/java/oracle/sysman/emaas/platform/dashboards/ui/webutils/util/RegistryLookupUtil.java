@@ -92,6 +92,11 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true);
 	}
 
+	public static Link getServiceInternalLink(String serviceName, String version, String rel)
+	{
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false);
+	}
+
 	//    private static String getExternalEndPoint(SanitizedInstanceInfo instance)
 	//    {
 	//        if (instance == null) {
@@ -282,6 +287,53 @@ public class RegistryLookupUtil
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
 						return lk;
+					}
+				}
+			}
+			return lk;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return lk;
+		}
+	}
+
+	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch)
+	{
+		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		Link lk = null;
+		try {
+			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			if (result != null && result.size() > 0) {
+
+				//find https link first
+				for (InstanceInfo internalInstance : result) {
+					List<Link> links = null;
+					if (prefixMatch) {
+						links = internalInstance.getLinksWithRelPrefixWithProtocol(rel, "https");
+					}
+					else {
+						links = internalInstance.getLinksWithProtocol(rel, "https");
+					}
+
+					if (links != null && links.size() > 0) {
+						lk = links.get(0);
+						break;
+					}
+				}
+
+				if (lk != null) {
+					return lk;
+				}
+
+				//https link is not found, then find http link
+				for (InstanceInfo internalInstance : result) {
+					List<Link> links = null;
+					if (prefixMatch) {
+						links = internalInstance.getLinksWithRelPrefixWithProtocol(rel, "http");
+					}
+					else {
+						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
 				}
 			}
