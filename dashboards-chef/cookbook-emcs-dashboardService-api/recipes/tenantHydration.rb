@@ -30,7 +30,7 @@ end
 # Step 1: get the datasource information so we could connect
 #   to the database. If for any reason, this failed, most likely
 #   is caused by bad parameters
-include_recipe 'emsaas-weblogic::datasource_dependency'
+include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 
 # Set the ORACLE_HOME and LD library so we can run SQLPLUS
 ruby_block "set_OracleHome" do

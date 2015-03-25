@@ -5,8 +5,8 @@
 #
 
 #Recipe to create schema
-include_recipe 'dashboardService-api::dashboard_schema'
+include_recipe 'cookbook-emcs-dashboardService-api::dashboard_schema'
 
 #Recipe to create Datasource
-include_recipe 'dashboardService-api::dashboard_eardeploy'
+include_recipe 'cookbook-emcs-dashboardService-api::dashboard_eardeploy'
 

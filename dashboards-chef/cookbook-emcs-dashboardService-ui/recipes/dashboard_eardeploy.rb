@@ -38,9 +38,9 @@ ruby_block "set_MW_HOME" do
   action :create
 end
 
-include_recipe 'emsaas-weblogic::default'
+include_recipe 'cookbook-emcs-emsaas-weblogic::default'
 
-include_recipe 'emsaas-weblogic::datasource_dependency'
+include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 
 template "#{node["log_dir"]}/wls_datasources_dashboardUI.py" do
     source "wls_datasources.py.erb"
