@@ -107,8 +107,6 @@ public class DashboardsUiCORSFilter implements Filter
 
 		// redirecting check: make sure exception(s) don't have impact on the process
 		try {
-			// TODO: test value
-			userTenant = "tenant16.emaasadmin";
 			logger.info("The tenant.user is " + userTenant + ", and the request URI is " + hReq.getRequestURI());
 			if (!StringUtil.isEmpty(userTenant) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
 				if (userTenant.indexOf(".") > 0) {
@@ -134,13 +132,7 @@ public class DashboardsUiCORSFilter implements Filter
 		catch (Throwable t) {
 			logger.error(t.getLocalizedMessage(), t);
 		}
-		//		if (httpReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")
-		//				&& "1".equals(httpReq.getParameter("test"))) {
-		//			hRes.sendRedirect("http://localhost:7001/emsaasui/emcpdfui/builder.html?dashboardId=1061");
-		//		}
-		//		else {
 		chain.doFilter(request, response);
-		//		}
 	}
 
 	@Override

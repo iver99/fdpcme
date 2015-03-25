@@ -218,7 +218,7 @@ public class RegistrationEntity
 	 * @param tenantName
 	 * @return
 	 */
-	private Set<String> getTenantSubscribedApplicationMap()
+	private Set<String> getTenantSubscribedApplicationSet()
 	{
 		String tenantName = TenantContext.getCurrentTenant();
 		Set<String> appSet = new HashSet<String>();
@@ -251,7 +251,7 @@ public class RegistrationEntity
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix);
 
-		Set<String> subscribedApps = getTenantSubscribedApplicationMap();
+		Set<String> subscribedApps = getTenantSubscribedApplicationSet();
 		Map<String, Link> linksMap = new HashMap<String, Link>();
 		Map<String, Link> dashboardLinksMap = new HashMap<String, Link>();
 		for (InstanceInfo internalInstance : instanceList) {
