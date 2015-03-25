@@ -56,48 +56,48 @@ project.task("cleanJet") << {
 
 
 //unpack js libs from artifactory
-def jslibs_number = "${download_js_number}"
-def jslibs_group = "${download_js_group}".split(",")
-def jslibs_artifacts = "${download_js_artifacts}".split(",")
-def jslibs_version = "${download_js_version}".split(",")
-def jslibs_foldername = "${download_js_foldername}".split(",")
+//def jslibs_number = "${download_js_number}"
+//def jslibs_group = "${download_js_group}".split(",")
+//def jslibs_artifacts = "${download_js_artifacts}".split(",")
+//def jslibs_version = "${download_js_version}".split(",")
+//def jslibs_foldername = "${download_js_foldername}".split(",")
 
 project.task("unpackJSLibFromArtifactory") << {
-    for (i in 0..<jslibs_number.toInteger()){
-	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-		if (artifact.name.contains(download_js_artifacts[i])) {
-		    logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-		    def File buildJSLibsUnzipDir = new File(buildDir.absolutePath, "jslibs"+i)
-		    buildJSLibsUnzipDir.mkdirs()
-		    project.copy {
-		        from project.file(artifact.file.absolutePath)
-		        into buildJSLibsUnzipDir.absolutePath
-		    }
-		    ant.unzip(src: buildJSLibsUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildJSLibsUnzipDir.absolutePath)
-		    
-		    project.copy {
-		        //from  buildJSLibsUnzipDir.absolutePath+"/emcsDependencies/"
-			from buildJSLibsUnzipDir.absolutePath
-			exclude "*.zip"
-		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
-		    }
-		    
-		    project.delete(buildJSLibsUnzipDir)
-		}
-	    }
-    }
+//    for (i in 0..<jslibs_number.toInteger()){
+//	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+//		if (artifact.name.contains(download_js_artifacts[i])) {
+//		    logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+//		    def File buildJSLibsUnzipDir = new File(buildDir.absolutePath, "jslibs"+i)
+//		    buildJSLibsUnzipDir.mkdirs()
+//		    project.copy {
+//		        from project.file(artifact.file.absolutePath)
+//		        into buildJSLibsUnzipDir.absolutePath
+//		    }
+//		    ant.unzip(src: buildJSLibsUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildJSLibsUnzipDir.absolutePath)
+//		    
+//		    project.copy {
+//		        //from  buildJSLibsUnzipDir.absolutePath+"/emcsDependencies/"
+//			from buildJSLibsUnzipDir.absolutePath
+//			exclude "*.zip"
+//		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
+//		    }
+//		    
+//		    project.delete(buildJSLibsUnzipDir)
+//		}
+//	    }
+//  }
 }
 
 project.task("cleanJSLib") << {
-    def File libDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
-    def File tmpdir = libDestDir
-    println 'Cleaning up js libs directories ...'
-
-    download_foldername.each { folder ->
-        tmpdir = new File(libDestDir.absolutePath,"/"+folder)
-	println 'js libs dir: ' + tmpdir
-	tmpdir.deleteDir()
-	}
+//    def File libDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
+//   def File tmpdir = libDestDir
+//    println 'Cleaning up js libs directories ...'
+//
+//    download_foldername.each { folder ->
+//        tmpdir = new File(libDestDir.absolutePath,"/"+folder)
+//	println 'js libs dir: ' + tmpdir
+//	tmpdir.deleteDir()
+//	}
 }
 
 //unpack the integ common libs from artifactory
