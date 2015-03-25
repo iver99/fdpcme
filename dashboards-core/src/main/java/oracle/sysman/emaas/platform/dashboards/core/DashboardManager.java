@@ -20,6 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.AppContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
@@ -30,12 +31,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
 
 public class DashboardManager
 {
-	private static DashboardManager instance;
-
-	static {
-		instance = new DashboardManager();
-	}
-
 	/**
 	 * Returns the singleton instance for dashboard manager
 	 *
@@ -44,6 +39,12 @@ public class DashboardManager
 	public static DashboardManager getInstance()
 	{
 		return instance;
+	}
+
+	private static DashboardManager instance;
+
+	static {
+		instance = new DashboardManager();
 	}
 
 	private DashboardManager()
@@ -122,11 +123,11 @@ public class DashboardManager
 			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
 			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
 			if (edf == null) {
-				edf = new EmsDashboardFavorite(new Date(), ed, currentUser);
+				edf = new EmsDashboardFavorite(DateUtil.getCurrentUTCTime(), ed, currentUser);
 				dsf.persistEmsDashboardFavorite(edf);
 			}
 			//			else {
-			//				//				edf.setCreationDate(new Date());
+			//				//				edf.setCreationDate(DateUtil.getCurrentUTCTime());
 			//				dsf.mergeEmsDashboardFavorite(edf);
 			//			}
 		}
@@ -604,7 +605,7 @@ public class DashboardManager
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
-			Date created = new Date();
+			Date created = DateUtil.getCurrentUTCTime();
 			if (dbd.getCreationDate() == null) {
 				dbd.setCreationDate(created);
 			}
@@ -679,7 +680,7 @@ public class DashboardManager
 				throw new DashboardSameNameException();
 			}
 			// init creation date, owner to prevent null insertion
-			Date created = new Date();
+			Date created = DateUtil.getCurrentUTCTime();
 			//			if (dbd.getCreationDate() == null) {
 			//				dbd.setCreationDate(created);
 			//			}
@@ -702,7 +703,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			ed = dbd.getPersistenceEntity(ed);
-			ed.setLastModificationDate(new Date());
+			ed.setLastModificationDate(DateUtil.getCurrentUTCTime());
 			ed.setLastModifiedBy(currentUser);
 			if (dbd.getOwner() != null) {
 				ed.setOwner(dbd.getOwner());
@@ -752,11 +753,11 @@ public class DashboardManager
 		EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
 		EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
 		if (edla == null) {
-			edla = new EmsDashboardLastAccess(new Date(), currentUser, dashboardId);
+			edla = new EmsDashboardLastAccess(DateUtil.getCurrentUTCTime(), currentUser, dashboardId);
 			dsf.persistEmsDashboardLastAccess(edla);
 		}
 		else {
-			edla.setAccessDate(new Date());
+			edla.setAccessDate(DateUtil.getCurrentUTCTime());
 			dsf.mergeEmsDashboardLastAccess(edla);
 		}
 	}
