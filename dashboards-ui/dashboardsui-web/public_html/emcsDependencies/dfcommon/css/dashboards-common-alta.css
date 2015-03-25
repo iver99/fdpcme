@@ -43,6 +43,20 @@
 .fa-desktop:before {
   content: "\f108"; }
 
+.fa-notification:before {
+  content: "\f0a2"; 
+  /*color: #0CA3D1;*/
+  color: #454545;
+  font-size: larger;
+}
+
+.fa-compass:before {
+  content: "\f14e"; 
+  /*color: #0CA3D1;*/
+  color: #454545;
+  font-size: larger;
+}
+
 @font-face {
   font-family: 'FaFont';
   src: url("fonts/fontawesome-webfont.woff");
@@ -238,6 +252,18 @@
     cursor: pointer;
 }
 
+.emaas-appheader-toolbar-button:disabled .fa-notification:before {
+  color: #9e9e9e;
+}
+
+.emaas-appheader-toolbar-button:disabled .fa-compass:before {
+  color: #9e9e9e;
+}
+
+.emaas-appheader-toolbar-button:disabled:hover {
+  cursor: default;
+}
+
 @media screen and (max-width: 1023px) {
     .emaas-appheader-lite .emaas-appheader-seperator {
         display: none;
@@ -247,17 +273,25 @@
     }
     .emaas-appheader-lite .emaas-appheader-appname-twoline {
         display: block;
+        padding-top: 2px;
     }
     .emaas-appheader-toolbar{
         height:44px;
     }
     .emaas-appheader-toolbar-button {
         height:44px;
+        line-height: 44px;
     }
     .emaas-appheader-toolbar-button-icon {
         width:32px;
         height:32px;
         vertical-align: middle;
+    }
+    .fa-notification:before {
+        font-size:xx-large;
+    }
+    .fa-compass:before {
+        font-size:xx-large;
     }
 }
 @media screen and (min-width: 1024px) {

@@ -17,9 +17,9 @@
                         <span class="emaas-appheader-appname" data-bind="text: productName"></span>
                         <!--<span role="separator" class="oj-toolbar-separator emaas-appheader-seperator"></span>-->
                         <span class="emaas-appheader-appname emaas-appheader-appname-oneline" data-bind="text: appName"></span>
-                        <div class="emaas-appheader-appname emaas-appheader-appname-twoline">
-                            <span data-bind="text: appName"></span>
-                        </div>
+                    </div>
+                    <div class="emaas-appheader-appname emaas-appheader-appname-twoline">
+                        <span data-bind="text: appName"></span>
                     </div>
                 </div>
 
@@ -42,10 +42,20 @@
 
                     <div class="emaas-appheader-toolbar-container">
                         <div class="emaas-appheader-toolbar oj-toolemaas-appheader-toolbarbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
+                            <!-- ko if: notificationVisible -->
+                            <button id="notificationButton" class="oj-button-half-chrome emaas-appheader-toolbar-button"
+                                    data-bind="ojComponent: {component:'ojButton', display:'icons', 
+                                                label: textNotifications, disabled: notificationDisabled,
+                                                icons: {start: 'fa-icon-font fa-notification'}}, 
+                                    click: notificationMenuHandler, attr: {title: textNotifications}" role="button" tabindex="-1">
+                            </button>
+                            <!-- /ko -->
                             <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button" 
-                                    data-bind="ojComponent: {component:'ojButton'}, 
-                                    click: linkMenuHandle, attr: {title: textAppNavigator}" role="button" tabindex="-1">
-                                <img class="emaas-appheader-toolbar-button-icon" data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/> 
+                                    data-bind="ojComponent: {component:'ojButton', display:'icons', 
+                                                label: textAppNavigator, 
+                                                icons: {start: 'fa-icon-font fa-compass'}}, 
+                                    click: linkMenuHandler, attr: {title: textAppNavigator}" role="button" tabindex="-1">
+                                <!--<img class="emaas-appheader-toolbar-button-icon" data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/>--> 
                             </button>
 
                             <!-- This is how to add a separator to the toolbar.  
@@ -54,7 +64,7 @@
                             
                             <button id="menubutton"
                                     class='oj-button-half-chrome emaas-appheader-toolbar-button'
-                                    data-bind="ojComponent: { component: 'ojButton', label: userTenantName, menu: '#emaasAppheaderGlobalNavMenuId'}">
+                                    data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}">
                             </button>
                         </div>
                     </div>
