@@ -29,9 +29,9 @@ import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.CommonSecur
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.RegistrationEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.JsonUtil;
 
 /**
  * @author miao

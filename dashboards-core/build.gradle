@@ -108,15 +108,11 @@ dependencies {
 	compile(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2')
 	compile(group: 'javax', name: 'ejb', version: '3.2.0')
 	compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.8.8')
-        compile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.1')
-
-        compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.1')
-        compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')
-        compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')
-
-	
-
-
-	
+	compile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.1')
+	compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.1')
+	compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')
+	compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')
+	compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
+	compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')
 }
 build.dependsOn integTestJar

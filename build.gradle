@@ -73,7 +73,6 @@ configurations {
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
 	prebuild_tenant { transitive = false }
-	prebuild_jackson { transitive = false }
 
 }
 
@@ -121,9 +120,6 @@ dependencies {
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2'
 			'emaas.platform:registry-lookup-client:0.23.6'
 			'com.oracle.emaas:emaas-platform-tenant-sdk:0.1'
-	prebuild_jackson 'com.fasterxml.jackson.core:jackson-core:2.5.1'
-			'com.fasterxml.jackson.core:jackson-databind:2.5.1'
-			'com.fasterxml.jackson.core:jackson-annotations:2.5.1'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -140,7 +136,6 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_testng
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
-   from configurations.prebuild_jackson
    into "$afDir"
 }
 

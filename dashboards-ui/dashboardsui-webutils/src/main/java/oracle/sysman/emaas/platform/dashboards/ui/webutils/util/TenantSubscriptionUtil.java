@@ -11,11 +11,8 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -28,8 +25,6 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.AppMappingCollec
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.JsonConverters.AppMappingCollectionConverter;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.JsonConverters.DomainsConverter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -61,7 +56,7 @@ public class TenantSubscriptionUtil
 			Client client = Client.create(cc);
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
-			logger.info("Retrieved authorization token from registration manager: " + auth);
+			logger.debug("Retrieved authorization token from registration manager: " + auth);
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			return builder.get(String.class);
@@ -77,6 +72,8 @@ public class TenantSubscriptionUtil
 		}
 		Link domainLink = RegistryLookupUtil.getServiceExternalLink("EntityNaming", "0.1", "collection/domains");
 		if (domainLink == null || StringUtils.isEmpty(domainLink.getHref())) {
+			logger.warn("Checking tenant (" + tenant
+					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
 			return null;
 		}
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
@@ -84,10 +81,12 @@ public class TenantSubscriptionUtil
 		RestClient rc = new RestClient();
 		String domainsResponse = rc.get(domainHref);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
-		DomainsConverter dc = new DomainsConverter();
+		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
-			DomainsEntity de = dc.getRawObject(domainsResponse);
+			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
+				logger.warn("Checking tenant (" + tenant
+						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -98,19 +97,20 @@ public class TenantSubscriptionUtil
 				}
 			}
 			if (tenantAppUrl == null || "".equals(tenantAppUrl)) {
-				logger.info("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
+				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
 				return null;
 			}
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
+			logger.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
+					+ appMappingUrl);
 			String appMappingJson = rc.get(appMappingUrl);
-			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response is " + appMappingJson);
+			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;
 			}
-			AppMappingCollectionConverter amc = new AppMappingCollectionConverter();
-			AppMappingCollection amec = amc.getRawObject(appMappingJson);
+			AppMappingCollection amec = ju.fromJson(appMappingJson, AppMappingCollection.class);
 			if (amec == null || amec.getItems() == null || amec.getItems().isEmpty()) {
-				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty items are retrieved");
+				logger.error("Checking tenant (" + tenant + ") subscriptions. Empty application mapping items are retrieved");
 				return null;
 			}
 			AppMappingEntity ame = null;
@@ -144,15 +144,7 @@ public class TenantSubscriptionUtil
 			}
 			List<String> origAppsList = Arrays.asList(apps
 					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
-			if (origAppsList == null || origAppsList.isEmpty()) {
-				return origAppsList;
-			}
-			// clean up the returned value as there might be duplicated values like this: "APM,APM,LogAnalytics"
-			Set<String> appSet = new HashSet<String>();
-			for (String app : origAppsList) {
-				appSet.add(app);
-			}
-			return new ArrayList<String>(appSet);
+			return origAppsList;
 
 		}
 		catch (IOException e) {
