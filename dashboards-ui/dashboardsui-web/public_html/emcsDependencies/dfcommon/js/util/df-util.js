@@ -155,7 +155,7 @@ define(['knockout',
                 if (url){
                     return url;
                 }else{
-                    console.log("Failed to discovery Dashboard Home");
+                    console.log("Failed to discover Dashboard Home");
                     return null;
                 }
             };    
@@ -182,7 +182,7 @@ define(['knockout',
              */
             self.getDefaultHeader = function() {
                 var defHeader = {
-                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
+//                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
                     "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
                     "X-REMOTE-USER":self.tenantName+'.'+self.userName};
                 console.log("Sent Header: "+JSON.stringify(defHeader));
@@ -198,12 +198,51 @@ define(['knockout',
             };  
             
             /**
+             * Returns a list of application names subscribed by specified tenant
+             * 
+             * @param {type} tenantName name of tenant
+             * @param {type} userName name of user
+             * @returns {undefined}
+             */
+            self.getSubscribedApplications = function(tenantName, userName) {
+                if (!tenantName) {
+                    console.error("Specified tenant name is empty, and the query won't be executed");
+                    return null;
+                }
+                if (!userName) {
+                    console.error("Specified user name is empty, and the query won't be executed");
+                    return null;
+                }
+                
+                var header = {
+                    "X-USER-IDENTITY-DOMAIN-NAME" : tenantName,
+                    "X-REMOTE-USER" : tenantName + '.' + userName};
+                var dfUrlRoot = self.discoverDFRestApiUrl();
+                var url = self.buildFullUrl(dfUrlRoot, "subscribedapps");
+
+                var result = null;
+                $.ajax(url, {
+                    type: 'get',
+                    dataType: 'json',
+                    headers: header,
+                    success:function(data) {
+                        result = data.applications;
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        console.log("Error: Link (with Rel Prefix) not found due to error: "+textStatus);
+                    },
+                    async:false
+                });
+                return result;
+            }; 
+            
+            /**
              * Get request header for Saved Search Framework API call
              * @returns {Object} 
              */
             self.getSavedSearchServiceRequestHeader=function() {
                 return self.getDefaultHeader();
-            }; 
+            };
             
             /**
              * Discover available Saved Search service URL

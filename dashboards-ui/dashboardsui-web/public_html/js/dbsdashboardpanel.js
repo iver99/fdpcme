@@ -250,22 +250,45 @@ $.widget('dbs.dbsDashboardPanel',
             _element.append(self.contentElement);
         },
         
+        _setBase64ScreenShot: function(screenShot) {
+            var self = this, _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
+            if (!screenShot)
+            {
+                if (self.contentPage1ImgEle) 
+                {
+                    self.contentPage1ImgEle.remove();
+                    self.contentPage1ImgEle= undefined;
+                }
+            }
+            else
+            {
+                if (!self.contentPage1ImgEle)
+                {
+                    self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']).attr('alt', _title);
+                    self.contentPage1Ele.append(self.contentPage1ImgEle);
+                }
+                self.contentPage1ImgEle.attr("src", screenShot);
+            }
+        },
+        
         _createContentPages: function() {
             var self = this, _dashboard = self.options['dashboard'], _dmodel = self.options.dashboardModel,
                     _wdts = _dashboard['widgets'] || _dashboard['tiles'];
+            var _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
+            
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
             //image page
-            self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']).attr('alt', "");
+            self.contentPage1ImgEle = undefined;//$("<img>").addClass(self.classNames['pageImage']).attr('alt', "");
             self.contentPage1Ele = $("<div></div>")//.addClass(self.classNames['active'])
                     .addClass(self.classNames['page']);//.append(self.contentPage1ImgEle);
-            self.contentPage1Ele.append(self.contentPage1ImgEle);
+            //self.contentPage1Ele.append(self.contentPage1ImgEle);
             
             
             if (_dmodel['screenShot'])
             {
                 var _ss = _dmodel['screenShot'];
-                self.contentPage1ImgEle.attr("src", _ss);
+                self._setBase64ScreenShot(_ss);
             }
             else {
               $.ajax({
@@ -274,7 +297,7 @@ $.widget('dbs.dbsDashboardPanel',
                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
                    success: function(response){
                        var __ss = (response.screenShot ? response.screenShot : undefined);
-                       self.contentPage1ImgEle.attr("src", __ss);
+                       self._setBase64ScreenShot(__ss);
                        if (_dmodel)
                        {
                            //_dmodel.set("screenShot", _ss);

@@ -187,6 +187,16 @@ public class Dashboard
 
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
 	{
+		//check dashboard name
+		if (name == null || name.trim() == "" || name.length() > 64) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
+		}
+		//check dashboard description
+		if (description != null && description.length() > 256) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_DESCRIPTION_ERROR));
+		}
 		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);

@@ -26,6 +26,8 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'timeselector':'../emcsDependencies/timeselector/js',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
@@ -83,6 +85,8 @@ require(['knockout',
     'dfutil',
     'dashboards/dashboard-tile-model',
     'dashboards/dashboard-tile-view',
+    'loggingutil',
+    'idfbcutil',
     'ojs/ojchart',
     'ojs/ojcomponents',
     'ojs/ojvalidation',    
@@ -104,8 +108,18 @@ require(['knockout',
     'ojs/ojpopup',
     'dashboards/dbstypeahead'
 ],
-        function(ko, $, dfu,dtm, dtv) // this callback gets executed when all required modules are loaded
+        function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
+            var logger = new _emJETCustomLogger();
+            var dfRestApi = dfu.discoverDFRestApiUrl();
+            if (dfRestApi){
+                var logReceiver = dfu.buildFullUrl(dfRestApi,"logging/logs")
+                logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+                // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+                // If you comment the line below, our current log calls will not be output!
+                logger.setLogLevel(oj.Logger.LEVEL_LOG);
+            }
+            
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
@@ -152,7 +166,18 @@ require(['knockout',
 //                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
-                self.appName = "";
+//                self.appName = "Application Performance Monitoring | Log Analytics | IT Analytics";
+                self.appId = "Dashboard";
+                self.relNotificationCheck = "existActiveWarning";
+                self.relNotificationShow = "warnings";
+                self.brandingbarParams = {
+                    userName: self.userName,
+                    tenantName: self.tenantName,
+//                    appName: self.appName,
+                    appId: self.appId,
+                    relNotificationCheck: self.relNotificationCheck,
+                    relNotificationShow: self.relNotificationShow
+                };
             };
             
            
@@ -242,7 +267,9 @@ require(['knockout',
 
                     toolBarModel.showAddWidgetTooltip();
                     tilesViewMode.postDocumentShow();
-
+                    idfbcutil.hookupBrowserCloseEvent(function(){
+                       oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
+                    });
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                     var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
