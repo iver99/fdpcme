@@ -82,7 +82,7 @@ dependencies {
 	               'org.apache.logging.log4j:log4j-api:2.0.2'
 	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.0'
-	prebuild_servicemanager 'emaas.platform:registry-client:0.23.6',
+	prebuild_servicemanager 'emaas.platform:registry-client:0.29.1',
                                 'emaas.platform:registry-lookup-client:0.23.6'
 	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.weblogic:ojdbc6:12.1.2-0-0',
@@ -118,7 +118,7 @@ dependencies {
 			'com.jayway.restassured:rest-assured:2.3.1'
 	prebuild_wlfullc 'test:wlfullclient:2.6'
 	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2',
-			'emaas.platform:registry-lookup-client:0.23.6'
+			'emaas.platform:registry-lookup-client:0.29.1'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -167,7 +167,7 @@ project(':dashboards-web'){
 				
 		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
     		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6') 
-		compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6') 
+		compile(group: 'emaas.platform', name: 'registry-client', version: '0.29.1') 
 		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
 			module('commons-net:commons-net:1.4.1'){
 				dependencies 'oro:oro:2.0.8:jar'
