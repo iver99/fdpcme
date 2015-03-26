@@ -13,9 +13,13 @@ ext.serviceDistDir = "${distDir}${serviceInstallPath}"
 apply plugin: 'java' 
 apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
+apply plugin: 'TestInfraPlugin'
 allprojects {  
 	apply plugin: 'artifactory' 
+	apply plugin: 'artifactory-publish'	
 	apply plugin: 'DevInfraPlugin' 
+	apply plugin: 'maven-publish'
+        apply plugin: 'TestInfraPlugin'
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
@@ -113,7 +117,7 @@ dependencies {
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.1'
 	prebuild_wlfullc 'test:wlfullclient:2.6'
-	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2'
+	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2',
 			'emaas.platform:registry-lookup-client:0.23.6'
 }
 
@@ -188,6 +192,9 @@ buildscript {
 	dependencies {  
 		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
 		classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
+
+		 classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+
 	}  
 }
 

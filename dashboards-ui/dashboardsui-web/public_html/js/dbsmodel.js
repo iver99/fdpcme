@@ -158,7 +158,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.pageSize = ko.observable(120);
         
-        self.serviceURL = self.dfRestApiUrl + "dashboards";
+        self.serviceURL = dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
         //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
@@ -191,8 +191,8 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
             //data.dashboard.openDashboard();
+            oj.Logger.info("Dashboard: [id="+data.dashboardModel.get("id")+", name="+data.dashboardModel.get("name")+"] is open from Dashboard Home",true);
             data.dashboardModel.openDashboardPage();
-            oj.Logger.info("Dashboard: ["+data.dashboardModel.get("name")+"] is open from Dashboard Home");
         };
         
         self.handleDashboardDeleted = function(event, data) {

@@ -7,6 +7,9 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
 
+group = 'com.oracle.emaas.emcpdf'
+version = '1.0.1'
+
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
     // run or the directory has been cleaned, then
@@ -51,6 +54,53 @@ project.task("cleanJet") << {
     sourceJetDestDir.deleteDir()
 }
 
+
+//unpack js libs from artifactory
+//def jslibs_number = "${download_js_number}"
+//def jslibs_group = "${download_js_group}".split(",")
+//def jslibs_artifacts = "${download_js_artifacts}".split(",")
+//def jslibs_version = "${download_js_version}".split(",")
+//def jslibs_foldername = "${download_js_foldername}".split(",")
+
+project.task("unpackJSLibFromArtifactory") << {
+//    for (i in 0..<jslibs_number.toInteger()){
+//	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+//		if (artifact.name.contains(download_js_artifacts[i])) {
+//		    logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+//		    def File buildJSLibsUnzipDir = new File(buildDir.absolutePath, "jslibs"+i)
+//		    buildJSLibsUnzipDir.mkdirs()
+//		    project.copy {
+//		        from project.file(artifact.file.absolutePath)
+//		        into buildJSLibsUnzipDir.absolutePath
+//		    }
+//		    ant.unzip(src: buildJSLibsUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildJSLibsUnzipDir.absolutePath)
+//		    
+//		    project.copy {
+//		        //from  buildJSLibsUnzipDir.absolutePath+"/emcsDependencies/"
+//			from buildJSLibsUnzipDir.absolutePath
+//			exclude "*.zip"
+//		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
+//		    }
+//		    
+//		    project.delete(buildJSLibsUnzipDir)
+//		}
+//	    }
+//  }
+}
+
+project.task("cleanJSLib") << {
+//    def File libDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
+//   def File tmpdir = libDestDir
+//    println 'Cleaning up js libs directories ...'
+//
+//    download_foldername.each { folder ->
+//        tmpdir = new File(libDestDir.absolutePath,"/"+folder)
+//	println 'js libs dir: ' + tmpdir
+//	tmpdir.deleteDir()
+//	}
+}
+
+//unpack the integ common libs from artifactory
 def war_number = "${download_number}"
 def download_group = "${download_group}".split(",")
 def download_artifacts = "${download_artifacts}".split(",")
@@ -96,17 +146,17 @@ project.task("cleanZip") << {
 	}
 }
 
-clean.dependsOn cleanJet,cleanZip
+clean.dependsOn cleanJet,cleanZip,cleanJSLib
 
 war.archiveName "dashboardsui-web.war"
 
 if(war_number.toInteger()>0){
 
-	war.dependsOn unpackJETFromArtifactory, unpackZipFromArtifactory
+	war.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackZipFromArtifactory
 }
 else
 {
-	war.dependsOn unpackJETFromArtifactory
+	war.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory
 }
 
 war {

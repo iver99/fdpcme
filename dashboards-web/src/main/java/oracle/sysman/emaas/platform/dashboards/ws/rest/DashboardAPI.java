@@ -31,8 +31,11 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
@@ -87,6 +90,10 @@ public class DashboardAPI extends APIBase
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(userTenant);
+			Dashboard dsb = manager.getDashboardById(dashboardId, tenantId);
+			if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
+				throw new DeleteSystemDashboardException();
+			}
 			manager.deleteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -112,7 +119,8 @@ public class DashboardAPI extends APIBase
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
 			String externalBase = DashboardAPIUtil.getExternalAPIBase();
-			String screenShotUrl = externalBase + "dashboards/" + dashboardId + "/screenshot";
+			String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dashboardId
+					+ "/screenshot";
 			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
 		}
 		catch (DashboardException e) {
@@ -203,6 +211,10 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(userTenant);
 			input.setDashboardId(dashboardId);
+			if (input.getIsSystem() != null && input.getIsSystem()) {
+				throw new CommonSecurityException(
+						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
+			}
 			Dashboard dbd = dm.updateDashboard(input, tenantId);
 			updateDashboardAllHref(dbd);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
@@ -233,7 +245,8 @@ public class DashboardAPI extends APIBase
 		}
 		//		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
 		String externalBase = DashboardAPIUtil.getExternalAPIBase();
-		String screenShotUrl = externalBase + "dashboards/" + dbd.getDashboardId() + "/screenshot";
+		String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dbd.getDashboardId()
+				+ "/screenshot";
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}

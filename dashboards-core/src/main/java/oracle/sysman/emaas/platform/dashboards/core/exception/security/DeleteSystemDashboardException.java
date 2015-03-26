@@ -25,7 +25,7 @@ public class DeleteSystemDashboardException extends DashboardException
 	/**
 	 * Constructs a new <code>DeleteSystemDashboardException</code>
 	 */
-	public DeleteSystemDashboardException(Integer errorCode, String message)
+	public DeleteSystemDashboardException()
 	{
 		super(DashboardErrorConstants.NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR_CODE, MessageUtils
 				.getDefaultBundleString(NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR));
