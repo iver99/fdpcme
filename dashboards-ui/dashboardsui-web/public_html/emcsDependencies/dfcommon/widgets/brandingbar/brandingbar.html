@@ -9,37 +9,54 @@
             <div id="emaas-appheader-bar" class="oj-row emaas-appheader-lite" style="max-width: 1920px;padding-left: 10px">
 
                 <!-- logo -->  
-                <div class="emaas-appheader-logo" tabindex="0" aria-label="Oracle Logo">
+                <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
                     <div class="emaas-appheader-appname-table-cell-middle">
-                        <span role="img" class="oj-icon emaas-appheader-logo-oracle" style="vertical-align: middle;display:block;"></span>  
+                        <img data-bind="attr: {alt: textOracle, src: oracleLogoImage}" style="vertical-align: middle;display:block;"/> 
                     </div>
-                    <div class="emaas-appheader-appname-table-cell-middle" style="padding-left: 15px">
-                        <span class="emaas-appheader-appname" data-bind="text: productName"> </span>
-                        <span class="emaas-appheader-appname" style="font-weight:normal;" data-bind="text: cloudName"></span>
-                        <div style="font-size:14px">
-                            <span data-bind="text: appName"></span>
-                        </div>
+                    <div class="emaas-appheader-appname-table-cell-middle" style="padding-left: 4px">
+                        <span class="emaas-appheader-appname" data-bind="text: productName"></span>
+                        <!--<span role="separator" class="oj-toolbar-separator emaas-appheader-seperator"></span>-->
+                        <span class="emaas-appheader-appname emaas-appheader-appname-oneline" data-bind="text: appName"></span>
+                    </div>
+                    <div class="emaas-appheader-appname emaas-appheader-appname-twoline">
+                        <span data-bind="text: appName"></span>
                     </div>
                 </div>
 
                 <!-- Toolbar -->  
-                <div id='emaas-appheader-menu-and-toolbar-container' tabindex="0">
-
-                    <div id='emaas-appheader-menu-container'>
-                        <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: menuItemSelect}" style="display:none">
-                            <!-- ko foreach: globalNavItems -->
-                            <li> <a data-bind="text: label, href: url, click: onclick"> <span class=""></span>  </a></li>
+                <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
+                    <script type="text/html" id="menuItemTemplate">
+                        <li>
+                            <a data-bind="href: url, click: onclick"><span data-bind="text: label"></span></a>
+                            <!-- ko if: item.subNavItems -->
+                            <ul data-bind="template: {name: 'menuItemTemplate', foreach: item.subNavItems, as: 'item'}">
+                            </ul>
                             <!-- /ko -->
-                        </ul>
-                    </div>
+                        </li>
+                    </script>
+
+                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
+                      <!-- ko template: {name: 'menuItemTemplate', foreach: globalNavItems, as: 'item'} -->
+                      <!-- /ko -->
+                    </ul>
 
                     <div class="emaas-appheader-toolbar-container">
-                        <div class="emaas-appheader-toolbar oj-toolbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
-                            <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button oj-button oj-component oj-enabled oj-button-icon-only oj-component-initnode oj-default" style="height:43px" data-bind="ojComponent: {component:'ojButton', 
-                                    label: 'Links', 
-                                    display: 'icons', 
-                                    icons: {start: 'nav-mapping-icon-32 emaas-icon-font'}}, 
-                                    click: linkMenuHandle" role="button" title="Links" tabindex="-1"><span class="oj-button-icon oj-start nav-mapping-icon-32 emaas-icon-font"></span><span class="oj-button-text oj-helper-hidden-accessible">Links</span></button>
+                        <div class="emaas-appheader-toolbar oj-toolemaas-appheader-toolbarbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}">
+                            <!-- ko if: notificationVisible -->
+                            <button id="notificationButton" class="oj-button-half-chrome emaas-appheader-toolbar-button"
+                                    data-bind="ojComponent: {component:'ojButton', display:'icons', 
+                                                label: textNotifications, disabled: notificationDisabled,
+                                                icons: {start: 'fa-icon-font fa-notification'}}, 
+                                    click: notificationMenuHandler, attr: {title: textNotifications}" role="button" tabindex="-1">
+                            </button>
+                            <!-- /ko -->
+                            <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button" 
+                                    data-bind="ojComponent: {component:'ojButton', display:'icons', 
+                                                label: textAppNavigator, 
+                                                icons: {start: 'fa-icon-font fa-compass'}}, 
+                                    click: linkMenuHandler, attr: {title: textAppNavigator}" role="button" tabindex="-1">
+                                <!--<img class="emaas-appheader-toolbar-button-icon" data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/>--> 
+                            </button>
 
                             <!-- This is how to add a separator to the toolbar.  
                                  Be sure to include the role and aria-orientation as shown to make it accessible.  -->
@@ -47,7 +64,7 @@
                             
                             <button id="menubutton"
                                     class='oj-button-half-chrome emaas-appheader-toolbar-button'
-                                    data-bind="ojComponent: { component: 'ojButton', label: userTenantName, menu: '#emaasAppheaderGlobalNavMenuId'}">
+                                    data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}">
                             </button>
                         </div>
                     </div>
@@ -57,14 +74,18 @@
             <!-- About box -->
             <div data-bind="component: {
                     name: 'df-oracle-about-box',
-                    params: {id: aboutBoxId}
+                    params: aboutBoxKocParams
                 }">
             </div>
             <!-- End of about box -->
 
             <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
             <div class="oj-component-initnode" id="links_menu">
-                <df-oracle-nav-links params="{navLinksNeedRefresh:navLinksNeedRefresh, userName:userName, tenantName:tenantName}"></df-oracle-nav-links>
+                <div data-bind="component: {
+                    name: 'df-oracle-nav-links',
+                    params: navLinksKocParams
+                }">
+            </div>
             </div>
         </div>  
     </body>
