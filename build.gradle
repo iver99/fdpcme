@@ -118,7 +118,7 @@ dependencies {
 			'com.jayway.restassured:rest-assured:2.3.1'
 	prebuild_wlfullc 'test:wlfullclient:2.6'
 	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2',
-			'emaas.platform:registry-lookup-client:0.29.1'
+			'emaas.platform:registry-lookup-client:0.23.6'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
