@@ -20,49 +20,49 @@ define(['ojs/ojcore'],
         /**
          * Writes an error message.
          */
-        customLogger.error = function(args)
+        customLogger.error = function(args,flush)
         {
             var output = _format(args);
             if (window && window.console) {
                 window.console.error(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_ERROR, output);
+            _cacheOrSend(oj.Logger.LEVEL_ERROR, output,flush);
         };
 
         /**
          * Writes an informational message.
          */
-        customLogger.info = function(args)
+        customLogger.info = function(args,flush)
         {
             var output = _format(args);
             if (window && window.console) {
                 window.console.info(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_INFO, output);
+            _cacheOrSend(oj.Logger.LEVEL_INFO, output,flush);
         };
 
         /**
          * Writes a warning message.
          */
-        customLogger.warn = function(args)
+        customLogger.warn = function(args,flush)
         {
             var output = _format(args);
             if (window && window.console) {
                 window.console.warn(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_WARN, output);
+            _cacheOrSend(oj.Logger.LEVEL_WARN, output,flush);
         };
 
         /**
          * Writes a general message.
          */
-        customLogger.log = function(args)
+        customLogger.log = function(args,flush)
         {
             var output = _format(args);
             if (window && window.console) {
                 window.console.log(output);
             }
-            _cacheOrSend(oj.Logger.LEVEL_LOG, output);
+            _cacheOrSend(oj.Logger.LEVEL_LOG, output,flush);
         };
 
         //
@@ -87,7 +87,7 @@ define(['ojs/ojcore'],
         /**
          * Cache the log and send to server if cache limit is reached.
          */
-        var _cacheOrSend = function(level, msg)
+        var _cacheOrSend = function(level, msg, flush)
         {
             // TODO: Look into guarding against too many logs in a short period 
             // of time.  Use case: Something bad may have happened and now we are getting
@@ -96,9 +96,9 @@ define(['ojs/ojcore'],
             // TODO: Send the cache when browser is closed, or user leaves the page.
 
             logsCache.push({"logLevel": level, "log": msg});
-
+            
             // If cache is full, then send.
-            if (logsCache.length >= logsCacheLimit) {
+            if (flush || logsCache.length >= logsCacheLimit) {
                 _sendToServer();
             }
         };
@@ -152,7 +152,8 @@ define(['ojs/ojcore'],
                             "textStatus: " + textStatus +
                             "errorThrown: " + errorThrown);
                     },
-                    description: "custom logger: Sending logs to server"
+                    description: "custom logger: Sending logs to server",
+                    async:false
                 }).done(function(){
                 });
             };

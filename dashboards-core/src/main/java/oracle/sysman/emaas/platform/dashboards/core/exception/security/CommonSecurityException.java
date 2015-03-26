@@ -26,6 +26,8 @@ public class CommonSecurityException extends DashboardException
 	public static final String X_USER_IDENTITY_DOMAIN_REQUIRED = "X_USER_IDENTITY_DOMAIN_REQUIRED";
 	public static final String VALID_X_REMOTE_USER_REQUIRED = "VALID_X_REMOTE_USER_REQUIRED";
 	public static final String TENANT_NAME_NOT_RECOGNIZED = "TENANT_NAME_NOT_RECOGNIZED";
+	public static final String NOT_SUPPORT_CREATE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_CREATE_SYSTEM_DASHBOARD_ERROR";
+	public static final String NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR";
 
 	/**
 	 * Constructs a new <code>CommonSecurityException</code> with the specified detail message.

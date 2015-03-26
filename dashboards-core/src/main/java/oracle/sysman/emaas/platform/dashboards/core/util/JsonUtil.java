@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
+package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.io.IOException;
 import java.net.URLDecoder;

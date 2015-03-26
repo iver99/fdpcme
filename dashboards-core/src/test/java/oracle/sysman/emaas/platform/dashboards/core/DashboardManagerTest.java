@@ -6,10 +6,13 @@ import java.util.List;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
@@ -24,6 +27,8 @@ public class DashboardManagerTest
 	static {
 		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser("SYSMAN");
+		TenantSubscriptionUtil.setTestEnv();
+		TenantContext.setCurrentTenant("TenantOPC1");
 	}
 
 	@Test
@@ -460,11 +465,13 @@ public class DashboardManagerTest
 	@Test
 	public void testGetDashboardId() throws DashboardException
 	{
+		TenantContext.setCurrentTenant("TenantOPC1");
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName(name1);
+		dbd1.setAppicationType(DashboardApplicationType.APM);
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -473,6 +480,7 @@ public class DashboardManagerTest
 		Dashboard dbd2 = new Dashboard();
 		dbd2.setName("name2" + System.currentTimeMillis());
 		dbd2.setIsSystem(true);
+		dbd2.setAppicationType(DashboardApplicationType.APM);
 		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
 		queried = dm.getDashboardById(dbd2.getDashboardId(), tenantId1);
 		Assert.assertNotNull(queried);
@@ -541,6 +549,7 @@ public class DashboardManagerTest
 	@Test
 	public void testListDashboard() throws DashboardException, InterruptedException
 	{
+		TenantContext.setCurrentTenant("TenantOPC1");
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
 		Long tenant2 = 12L;
@@ -616,6 +625,7 @@ public class DashboardManagerTest
 		Dashboard dbd11 = new Dashboard();
 		dbd11.setName("key11" + System.currentTimeMillis());
 		dbd11.setIsSystem(true);
+		dbd11.setAppicationType(DashboardApplicationType.APM);
 		Tile tile1 = createTileForDashboard(dbd11);
 		tile1.setHeight(12);
 		tile1.setIsMaximized(true);
@@ -625,18 +635,28 @@ public class DashboardManagerTest
 		dbd11.setOwner("OTHER");
 		dbd11 = dm.updateDashboard(dbd11, tenant1);
 
-		// owned by others, system dashboard, but from different tenant. should be queried
+		// owned by others, system dashboard, but from different tenant. should not be queried
 		Dashboard dbd12 = new Dashboard();
 		dbd12.setName("key12" + System.currentTimeMillis());
 		dbd12.setIsSystem(true);
+		dbd12.setAppicationType(DashboardApplicationType.APM);
 		dbd12 = dm.saveNewDashboard(dbd12, tenant2);
 		dbd12.setOwner("OTHER_DIF_TENANT");
 		dbd12 = dm.updateDashboard(dbd12, tenant2);
 
+		// system dashboard not owned, and from service not subscribed. should not be queried
+		Dashboard dbd13 = new Dashboard();
+		dbd13.setName("key13" + System.currentTimeMillis());
+		dbd13.setIsSystem(true);
+		dbd13.setAppicationType(DashboardApplicationType.LogAnalytics);
+		dbd13 = dm.saveNewDashboard(dbd13, tenant1);
+		dbd13.setOwner("OTHER_DIF_OWNER");
+		dbd13 = dm.updateDashboard(dbd13, tenant1);
+
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
 		long icSize = pd.getTotalResults();
-		Assert.assertEquals(icSize, originSize + 8); // dbd6/dbd9/10/12 not in the returned list
+		Assert.assertEquals(icSize, originSize + 8); // dbd6/dbd9/10/12/13 not in the returned list
 		for (Dashboard dbd : pd.getDashboards()) {
 			if (dbd.getName().equals(dbd6.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: owned by others");
@@ -649,14 +669,17 @@ public class DashboardManagerTest
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
 				AssertJUnit
-				.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+						.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+			}
+			if (dbd.getName().equals(dbd13.getName())) {
+				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
 			}
 		}
 
 		// query all
 		List<Dashboard> dbList = dm.listAllDashboards(tenant1);
 		allSize = dbList == null ? 0 : dbList.size();
-		Assert.assertEquals(allSize, originSize + 9);// dbd9/10/12 not in the returned list
+		Assert.assertEquals(allSize, originSize + 10);// dbd9/10/12 not in the returned list, as they're deleleted or from other tenants
 		pd = dm.listDashboards(null, null, tenant1, true);
 		allSize = pd.getTotalResults();
 		Assert.assertEquals(allSize, originSize + 8);
@@ -699,6 +722,8 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd9.getDashboardId(), true, tenant2);
 		dm.deleteDashboard(dbd10.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd11.getDashboardId(), true, tenant1);
+		dm.deleteDashboard(dbd12.getDashboardId(), true, tenant2);
+		dm.deleteDashboard(dbd13.getDashboardId(), true, tenant1);
 	}
 
 	@Test

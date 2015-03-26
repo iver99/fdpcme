@@ -10,7 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.util;
 
-import oracle.sysman.emaas.platform.dashboards.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 
 /**
  * @author miao

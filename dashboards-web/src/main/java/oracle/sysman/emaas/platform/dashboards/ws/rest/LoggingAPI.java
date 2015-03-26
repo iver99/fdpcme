@@ -44,8 +44,12 @@ public class LoggingAPI
 	{
 		try {
 			String tenantId = jsonReceived.getString("tenantId");
-			//			String hostName1 = request.getServerName();
-			//			String hostName2 = request.getRemoteHost();
+			String remoteIpAddress = request.getRemoteAddr();
+			String remoteAgent = request.getHeader("User-Agent");
+			String preferredLang = request.getLocale() == null ? "" : request.getLocale().toString();
+			String remoteInfo = "remote Ip Address=" + remoteIpAddress + ", remote forwarded Ip Address="
+					+ request.getHeader("X-Forwarded-For") + ", remote Agent=" + remoteAgent + ", preferred language="
+					+ preferredLang;
 
 			JSONArray logArray = jsonReceived.getJSONObject("logs").getJSONArray("logArray");
 			for (int i = 0; i < logArray.length(); i++) {
@@ -77,7 +81,8 @@ public class LoggingAPI
 				// in https://confluence.oraclecorp.com/confluence/display/EMS/Logging+Recommendations+for+improving++diagnosability
 				// settle down.
 
-				mLogger.log(logLevel, "tenantId::: = " + tenantId + " - " + log);
+				mLogger.log(logLevel, "tenantId::: = " + tenantId + " - " + log + System.getProperty("line.separator")
+						+ remoteInfo);
 			}
 		}
 		catch (JSONException e1) {

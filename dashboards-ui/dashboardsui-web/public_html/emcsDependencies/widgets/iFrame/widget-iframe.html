@@ -12,7 +12,7 @@
 <!--        <div class="oj-dialog-header-close-wrapper" >
             <a class="df-dialog-header-close" data-bind="click: close">CLOSE</a>
         </div>-->
-        <span class="oj-dialog-title" data-bind="text: 'Configuration'"></span>
+        <span class="oj-dialog-title" data-bind="text: getNlsString('TEXT_WIDGET_IFRAME_CONFIGURATION')"></span>
     </div>
     <div class="oj-dialog-body">
       <form class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
@@ -37,7 +37,7 @@
       </form>     
     </div>
     <div class="oj-dialog-footer">        
-        <button data-bind="ojComponent: {component: 'ojButton', label: 'OK'}, click: saveConfiguration"> 
+        <button data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: saveConfiguration"> 
         </button> 
     </div>  
 </div> 

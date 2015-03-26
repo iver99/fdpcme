@@ -23,6 +23,7 @@ Rem LAST_MODIFICATION_DATE - modification date of the dashboard
 Rem LAST_MODIFIED_BY - latest user to modify the dashboard
 Rem OWNER - owner username of the dashboard
 Rem IS_SYSTEM - whether this is a system dashboard or not. A system dashbaoard can not be deleted. 0: not system dashboard, 1: is system dashboard
+Rem APPLICATION_TYPE - indicate the application that an OOB dashboard belowns to. Not used fo non-OOB dashboards. 1: APM, 2: ITAnalytics, 3: LogAnalytics
 Rem ENABLE_TIME_RANGE - whether enable the time range on dashboard
 Rem SCREEN_SHOT - the screen shot of the dashboard
 Rem DELETED - 0: not deleted, >0 deleted. If a dashboard is deleted, its deleted column should be set as its dashboard id
@@ -39,6 +40,7 @@ CREATE TABLE EMS_DASHBOARD
     LAST_MODIFIED_BY       VARCHAR2(128),
     OWNER                  VARCHAR2(128) NOT NULL,
     IS_SYSTEM              NUMBER(1,0) DEFAULT(1) NOT NULL,
+    APPLICATION_TYPE       NUMBER(4,0),
     ENABLE_TIME_RANGE      NUMBER(1,0) DEFAULT(1) NOT NULL,
     SCREEN_SHOT            CLOB,
     DELETED                NUMBER(*,0) DEFAULT(0) NOT NULL,

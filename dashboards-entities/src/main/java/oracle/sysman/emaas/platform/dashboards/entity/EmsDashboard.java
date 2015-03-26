@@ -49,28 +49,31 @@ public class EmsDashboard implements Serializable
 	private Integer enableTimeRange;
 	@Column(name = "IS_SYSTEM", nullable = false)
 	private Integer isSystem;
+	@Column(name = "APPLICATION_TYPE")
+	private Integer applicationType;
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", nullable = false)
 	private Date creationDate;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFICATION_DATE")
 	private Date lastModificationDate;
+
 	@Column(name = "LAST_MODIFIED_BY", length = 128)
 	private String lastModifiedBy;
 	@Column(nullable = false, length = 64)
 	private String name;
 	@Column(nullable = false, length = 128)
 	private String owner;
-
 	@Lob
 	@Basic(fetch = FetchType.EAGER)
 	@Column(name = "SCREEN_SHOT", columnDefinition = "CLOB NULL")
 	private String screenShot;
 	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
 	private Long tenantId;
+
 	@Column(nullable = false)
 	private Integer type;
-
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
 	@OrderBy("position")
 	private List<EmsDashboardTile> dashboardTileList;
@@ -81,7 +84,7 @@ public class EmsDashboard implements Serializable
 
 	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
 			Integer isSystem, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
-			Integer type)
+			Integer type, Integer applicationType)
 	{
 		this.creationDate = creationDate;
 		this.dashboardId = dashboardId;
@@ -95,6 +98,7 @@ public class EmsDashboard implements Serializable
 		this.owner = owner;
 		this.screenShot = screenShot;
 		this.type = type;
+		this.applicationType = applicationType;
 	}
 
 	public EmsDashboardTile addEmsDashboardTile(EmsDashboardTile emsDashboardTile)
@@ -105,6 +109,11 @@ public class EmsDashboard implements Serializable
 		dashboardTileList.add(emsDashboardTile);
 		emsDashboardTile.setDashboard(this);
 		return emsDashboardTile;
+	}
+
+	public Integer getApplicationType()
+	{
+		return applicationType;
 	}
 
 	public Date getCreationDate()
@@ -182,6 +191,11 @@ public class EmsDashboard implements Serializable
 		getDashboardTileList().remove(emsDashboardTile);
 		emsDashboardTile.setDashboard(null);
 		return emsDashboardTile;
+	}
+
+	public void setApplicationType(Integer applicationType)
+	{
+		this.applicationType = applicationType;
 	}
 
 	public void setCreationDate(Date creationDate)
