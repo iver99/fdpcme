@@ -86,7 +86,7 @@ bash "create_servicemanger_properties_file"  do
     echo "serviceName=Dashboard-UI" >> servicemanager.properties
     echo "registryUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "serviceUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
-    echo "characteristics=SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
+    echo "characteristics=SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]},_tenantAgnostic:true" >> servicemanager.properties
     EOH
 end
 
