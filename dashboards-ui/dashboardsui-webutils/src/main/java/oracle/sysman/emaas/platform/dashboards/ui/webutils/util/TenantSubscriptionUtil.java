@@ -63,10 +63,13 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
-
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
+		//TODO remove below once we have working cloud env to work with
+		if (true) {
+			return Arrays.asList("APM", "ITAnalytics", "LogAnalytics");
+		}
+
 		if (tenant == null) {
 			return null;
 		}
@@ -167,5 +170,7 @@ public class TenantSubscriptionUtil
 		}
 		return false;
 	}
+
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 
 }
