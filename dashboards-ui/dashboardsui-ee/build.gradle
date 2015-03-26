@@ -31,7 +31,7 @@ dependencies
 	earlib (project(':dashboards-ui:dashboardsui-webutils')){transitive = false} 
 	earlib(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6') {transitive=false }
 	earlib(group: 'emaas.platform', name: 'registry-client', version: '0.29.1') {transitive=false }
-        earlib(group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4+'} {transitive=false }
+        earlib(group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4+') {transitive=false }
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2') {transitive=false }
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2') {transitive=false }
     earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.1')
