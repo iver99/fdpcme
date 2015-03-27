@@ -115,7 +115,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                     }
                 },
                 error: function() {
-                    if (console.log) console.log("Error retrieve show welcome preference");
+                    if (console.log) console.log("Preference to Show Welcome Dialog is not set. The defualt value 'true' is applied.");
                 }
             });
         })();
