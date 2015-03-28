@@ -23,6 +23,7 @@ default["SAAS_version"] = "1.0.0"
 default["myApplicationName"]="emaas-applications-dashboards-ui-#{node["SAAS_version"]}"
 default["target"]="#{node["wls_adminserver_name"]}"
 
+default["SAAS_API_version"] = "0.1"
 default["dbhome"]="#{node["infra_dir"]}/rdbms/12.1.0" 
 default["oracle_base"] = "#{node["run_dir"]}/oracle"
 default["SAAS_datasourcename"]="emaas_dashboards_ds"
