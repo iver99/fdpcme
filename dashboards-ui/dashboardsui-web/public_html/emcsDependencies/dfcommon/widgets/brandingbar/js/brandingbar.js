@@ -47,7 +47,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
-                var subscribedApps = dfu.getSubscribedApplications(self.tenantName, self.userName);
+                var subscribedApps = dfu.getSubscribedApplications();
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
                 var appIdLogAnalytics = "LogAnalytics";
