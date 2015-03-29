@@ -199,9 +199,9 @@ define(['knockout',
             
             /**
              * Returns an array of application names subscribed by specified tenant
+             * Note:
+             * See constructor of this utility to know more about how to set tenant and user.
              * 
-             * @param {string} tenantName name of tenant, e.g. TenantOPC1, optional if df-util is initialized with with (userName, tenantName), 
-             * @param {string} userName name of user, e.g. emcaadmin, optional if du-util is intialized with (userName, tenantName)
              * @returns {string array or null if no application is subscribed}, e.g. ["APM","ITAnalytics,"LogAnalytics"], ["APM"], null, etc.
              */
             self.getSubscribedApplications = function() {
