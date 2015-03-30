@@ -787,10 +787,15 @@ define(['knockout',
             };
             
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
+            self.addSelectedWidgetToDashboard = function(widget) {
+//                $('#dashboardBuilderAddWidgetDialog').ojDialog('close');
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 2, widget);
+            };
             self.addWidgetDialogParams = {
                 id: addWidgetDialogId,
                 userName: 'SYSMAN',
-                tenantName: 'TenantOPC1'
+                tenantName: 'TenantOPC1',
+                widgetHandler: self.addSelectedWidgetToDashboard
             };
             
             self.openAddWidgetDialog = function() {
