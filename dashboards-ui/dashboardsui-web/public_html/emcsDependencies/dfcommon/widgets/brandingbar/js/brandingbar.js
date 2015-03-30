@@ -45,6 +45,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 self.aboutBoxNeedRefresh = ko.observable(false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
                 var subscribedApps = dfu.getSubscribedApplications();
@@ -191,7 +192,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                     navLinksNeedRefresh: self.navLinksNeedRefresh, 
                     userName: self.userName, 
                     tenantName: self.tenantName,
-                    nlsStrings: self.nlsStrings };
+                    nlsStrings: self.nlsStrings,
+                    isAdmin: self.isAdmin};
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links')) {
                     ko.components.register("df-oracle-nav-links",{
