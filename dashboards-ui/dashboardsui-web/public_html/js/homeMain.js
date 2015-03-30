@@ -163,8 +163,7 @@ require(['dbs/dbsmodel',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     relNotificationCheck: self.relNotificationCheck,
-                    relNotificationShow: self.relNotificationShow,
-                    isAdmin: true
+                    relNotificationShow: self.relNotificationShow
                 };
             }
            
