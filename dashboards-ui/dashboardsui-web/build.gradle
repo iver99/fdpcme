@@ -317,7 +317,7 @@ dependencies {
 	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8')
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')
 	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'0.9.1'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){ transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0'){ transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0')
