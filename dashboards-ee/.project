@@ -3,10 +3,10 @@
 	<name>dashboards-ee</name>
 	<comment></comment>
 	<projects>
+		<project>dashboards-webutils</project>
+		<project>dashboards-web</project>
 		<project>dashboards-core</project>
 		<project>dashboards-entities</project>
-		<project>dashboards-web</project>
-		<project>dashboards-webutils</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -220,13 +220,11 @@ dependencies {
 	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8') { transitive = false }
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1') { transitive = false }
 	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'0.9.1') { transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1') { transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0') { transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1') 
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0')
 	
-	providedCompile(group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.1') { transitive = false }
-	providedCompile(group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3') { transitive = false }
 	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6') { transitive = false }
 	providedCompile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 
