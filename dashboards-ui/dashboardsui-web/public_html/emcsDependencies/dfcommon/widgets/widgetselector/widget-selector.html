@@ -6,27 +6,27 @@
     </head>
     <body>
         <div style="display:none;" 
-            data-bind="ojComponent:{component: 'ojDialog', 
+            data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle,
-                rootAttributes: { style: 'width: 815px; height:520px;'}}, attr: {id: dialogId}">   
-            <div class="oj-dialog-body widget-dialog-body">
+                rootAttributes: { style: 'width: 900px; height:650px;'}}, attr: {id: dialogId}">   
+            <div class="oj-dialog-body widget-selector-body">
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
                 <div style="padding-right: 18px;padding-left: 4px" >
-                    <div id="search_box">
+                    <div id="widget-selector-searchbox">
                         <div style="float:left;">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus" aria-label="Search widgets" 
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, attr: {placeholder: searchBoxPlaceHolder},
                                                                     dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                         </div>
                         <div style="float:right;">
-                            <button class="oj-button-half-chrome widget-dialog-search-button" data-bind="click: searchWidgets,
+                            <button class="oj-button-half-chrome widget-selector-search-button" data-bind="click: searchWidgets,
                                 ojComponent: {component: 'ojButton', label: searchButtonLabel,display: 'icons', 
                                 icons: {start:'widget-search-icon'}}"> 
                             </button> 
                         </div>
                     </div>
-                    <div id="searchSelect" >
-                        <select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
+                    <div id="widget-selector-widgetgroups" >
+                        <select id="categorySelect" class="oj-select-arrow widget-group-selector"
                               data-bind="ojComponent: {component: 'ojSelect',
                                                           value: categoryValue,
                                                           optionChange: optionChangedHandler,
@@ -47,31 +47,44 @@
                             <span data-bind="text:WIDGET_NAME"> </span>
                         </div>
                     </div>-->
-                    <div class=" widget-container" data-bind="attr:{title: name}, 
-                                                    event: { dblclick: $parent.widgetDbClicked, click: $parent.widgetClicked}">
-                        <div style="height:31px;background-color: #f5f5f5;" >
+                    <div data-bind="attr:{title: name, class: widgetContainerClass}, click: $parent.widgetBoxClicked">
+                        <div class="widget-box-title">
                             <span data-bind="text: WIDGET_NAME"></span>
                         </div>
-                        <div style="height:93px;background-color: white;display: none;">
-                            <span data-bind="text: WIDGET_NAME"></span>
+                        <div data-bind="attr: {class: pageDescClass}">
+                            <div style="padding-top: 10px;padding-bottom: 5px;">
+                                <span data-bind="text: WIDGET_OWNER+' - '" style="font-weight: bold;"></span>
+                                <span data-bind="text: modificationDateString" style="font-weight: normal;"></span>
+                            </div>
+                            <div style="overflow: hidden; text-overflow:ellipsis;padding-top: 5px; ">
+                                Long Description. Long Description. Long Description. Long Description. Long Description. Long Description. 
+                            </div>
                         </div>
-                        <div style="height:93px;background-color: white;">
-                            <input type="image" data-bind="attr:{src: WIDGET_ICON, alt: WIDGET_GROUP_NAME, title: WIDGET_GROUP_NAME}" width="32"
-                                   class="widget-image"/>
+                        <div data-bind="attr: {class: pageScreenShotClass}">
+<!--                            <input type="image" data-bind="attr:{src: WIDGET_ICON, alt: WIDGET_GROUP_NAME, title: WIDGET_GROUP_NAME}" width="32"
+                                   class="widget-selector-screenshot"/>-->
+                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_HISTOGRAM}" class="widget-selector-screenshot"/>
+                        </div>
+                        <div class="widget-box-navigation">
+                            <span data-bind="attr:{class: naviScreenshotClass}, click: $parent.widgetNaviScreenShotClicked" title="Screen Shot"></span>
+                            <span data-bind="attr:{class: naviDescClass}, click: $parent.widgetNaviDescClicked" title="Description"></span>
                         </div>
                     </div>
                     <!-- /ko -->
                 </div>
             </div>     
             <div class="oj-dialog-footer" style="padding-right: 24px" > 
-                <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviPrevious, disabled: naviPreBtnVisible,
+                <button class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviPrevious, disabled: naviPreBtnVisible,
                     ojComponent: {component: 'ojButton'},style:{opacity:naviPreBtnVisible()?1:0.4}" >  
                     <i class="fa fa-icon-font fa-chevron-left" style=" text-align: center; vertical-align: middle; font-size: 3em;"></i>
                 </button> 
-                <button class="oj-button-half-chrome widget-icon-button" data-bind="click: naviNext, disabled: naviNextBtnVisible,
+                <button class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviNext, disabled: naviNextBtnVisible,
                     ojComponent: {component: 'ojButton'},style:{opacity:naviNextBtnVisible()?1:0.4}"> 
                     <i class="fa fa-icon-font fa-chevron-right" style=" text-align: center; vertical-align: middle; font-size: 3em;"></i>
-                </button>                            
+                </button>      
+                <button id="widget-selector-okbtn" data-bind="attr: {class: 'widget-selector-button'}, click: widgetSelectionConfirmed, 
+                    ojComponent: {component: 'ojButton', label: 'Add', disabled: confirmBtnDisabled}" >  
+                </button>
             </div>  
         </div>
     </body>

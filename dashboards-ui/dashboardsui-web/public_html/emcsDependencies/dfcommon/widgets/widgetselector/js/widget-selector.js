@@ -32,9 +32,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 self.widgetGroupLabel = ko.observable();
                 self.searchBoxPlaceHolder = ko.observable();
                 self.searchButtonLabel = ko.observable();
+                self.nlsStrings = null;
                 
                 require(['i18n!'+nlsResourceBundle],
                     function(nls) { 
+                        self.nlsStrings = nls;
                         self.widgetSelectorTitle(nls.WIDGET_SELECTOR_DIALOG_TITLE);
                         self.widgetGroupLabel(nls.WIDGET_SELECTOR_WIDGET_GROUP_LABEL);
                         self.searchBoxPlaceHolder(nls.WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER);
@@ -50,11 +52,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
 
 		self.widgetSelectorCss = cssFile;
                 self.dialogId = params.id ? params.id : 'widgetSelectorDialog';
+                self.widgetHandler = params.widgetHandler;
                 
-                self.categoryValue=ko.observableArray();
+                self.categoryValue=ko.observableArray(["all|all|All"]);
                 self.widgetGroup=ko.observable();
                 self.widgetGroupValue=ko.observable({providerName:"all", providerVersion:"all", name:"all"});
-                self.widgetGroups=ko.observableArray();
+                self.widgetGroups=ko.observableArray([{value: "all|all|All", label: "All"}]);
                 var widgetArray = [];
                 var curGroupWidgets = [];
                 var integratorWidgets = [];
@@ -63,7 +66,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 var curPageWidgets=[];
                 var searchResultArray = [];
                 var index=0;
-                var pageSize = 6;
+                var pageSize = 8;
                 var ssfUrl = dfu.discoverSavedSearchServiceUrl();
                 var curPage = 1;
                 var totalPage = 0;
@@ -83,6 +86,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         "PROVIDER_ASSET_ROOT": "asset",
                         "PROVIDER_VERSION": "1.0"}];
                 var assetRootList = {};
+                var widgetIndex = 0;
                 self.widgetList = ko.observableArray(widgetArray);
                 self.curPageWidgetList = ko.observableArray(curPageWidgets);
                 self.searchText = ko.observable("");
@@ -93,10 +97,18 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard.";}, this);
 
                 self.currentWidget = ko.observable();
+                self.confirmBtnDisabled = ko.observable(true);
 //                self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
                 var widgetClickTimer = null; 
 
-                refreshWidgets();
+//                refreshWidgets();
+                
+                self.beforeOpenDialog = function(event, ui) {
+                    refreshWidgets();
+                    
+//                    self.widgetGroups([{value: "test1", label: "label1"},{value: "value2", label: "label2"}]);
+//                    self.categoryValue(['test1']);
+                };
                 
                 self.optionChangedHandler = function(data, event) {
                     if (event.option === "value") {
@@ -127,6 +139,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     }
 
                     self.curPageWidgetList(curPageWidgets);
+//                    self.currentWidget(null);
+//                    self.confirmBtnDisabled(true);
                     refreshNaviButton();
                 };
 
@@ -144,6 +158,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                         fetchWidgetsForCurrentPage(getAvailableWidgets());
                     }
                     self.curPageWidgetList(curPageWidgets);
+//                    self.currentWidget(null);
+//                    self.confirmBtnDisabled(true);
                     refreshNaviButton();
                 };
 
@@ -220,6 +236,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 function fetchWidgetsForCurrentPage(allWidgets) {
                     curPageWidgets=[];
                     for (var i=(curPage-1)*pageSize;i < curPage*pageSize && i < allWidgets.length;i++) {
+//                        allWidgets[i].index = i;
                         curPageWidgets.push(allWidgets[i]);
                     }
                 };
@@ -270,6 +287,49 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     console.log("searchResponse: " + data.content.length);
                     self.searchWidgets();
                 };
+                
+                self.widgetNaviScreenShotClicked = function(data, event) {
+//                    var widget = self.curPageWidgetList()[data.index];
+                    data.naviScreenshotClass("widget-box-navi-control");
+                    data.naviDescClass("widget-box-navi-control widget-box-navi-control-inactive");
+                    data.pageScreenShotClass("widget-box-screenshot");
+                    data.pageDescClass("widget-box-description widget-box-inactive");
+                };
+                
+                self.widgetNaviDescClicked = function(data, event) {
+//                    var widget = self.curPageWidgetList()[data.index];
+                    data.naviScreenshotClass("widget-box-navi-control widget-box-navi-control-inactive");
+                    data.naviDescClass("widget-box-navi-control");
+                    data.pageScreenShotClass("widget-box-screenshot  widget-box-inactive");
+                    data.pageDescClass("widget-box-description");
+                };
+                
+                self.widgetBoxClicked = function(data, event) {
+                    var curWidget = self.currentWidget();
+                    if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME || 
+                            curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION || 
+                            curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
+//                        self.curPageWidgetList()[curWidget.index].widgetContainerClass("widget-selector-container");
+                        widgetArray[curWidget.index].widgetContainerClass("widget-selector-container");
+                        data.widgetContainerClass("widget-selector-container widget-selector-container-selected");
+                        self.currentWidget(data);
+                    }
+                    else if (!curWidget) {
+                        data.widgetContainerClass("widget-selector-container widget-selector-container-selected");
+                        self.currentWidget(data);
+                    }
+                    
+                    if (self.confirmBtnDisabled() === true)
+                        self.confirmBtnDisabled(false);
+                };
+                
+                self.widgetSelectionConfirmed = function() {
+                    $('#'+self.dialogId).ojDialog('close');
+                    if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
+                        var selectedWidget = self.currentWidget();
+                        self.widgetHandler(selectedWidget);
+                    }
+                };
 
                 function refreshWidgets() {
                     widgetArray = [];
@@ -313,6 +373,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
                     naviFromSearchResults = false;
                     self.widgetGroups(widgetGroupList);
+                    var selectedGroup = widgetGroupList.length > 0 ? widgetGroupList[0].value : "";
+                    self.categoryValue([selectedGroup]);
                     self.widgetList(widgetArray);
                     self.curPageWidgetList(curPageWidgets);
                     self.searchText("");
@@ -320,12 +382,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
                     self.widgetsCount(widgetArray.length);
                 };
-
+                
                 function loadWidgets(data) {
                     var targetWidgetArray = [];
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             var widget = data[i];
+                            widget.index = widgetIndex;
                             if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
                                if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
                                    widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
@@ -353,13 +416,32 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                                 var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
                                 widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
                             }
-
+                            
+                            if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
+                                widget.WIDGET_HISTOGRAM = "css/images/sample-db-widget.png";
+                            }
+                            else {
+                                var pname = widget.PROVIDER_NAME;
+                                var pversion = widget.PROVIDER_VERSION;
+                                var gname = widget.WIDGET_GROUP_NAME;
+                                var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
+                                widget.WIDGET_HISTOGRAM = assetRoot + widget.WIDGET_HISTOGRAM;
+                            }
+                            
+                            widget.naviScreenshotClass = ko.observable('widget-box-navi-control');
+                            widget.naviDescClass = ko.observable('widget-box-navi-control widget-box-navi-control-inactive');
+                            widget.pageScreenShotClass = ko.observable('widget-box-screenshot');
+                            widget.pageDescClass = ko.observable('widget-box-description widget-box-inactive');
+                            widget.widgetContainerClass = ko.observable("widget-selector-container");
+                            widget.modificationDateString = "test go";// getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
                             targetWidgetArray.push(widget);
                             widgetArray.push(widget);
                             if (index < pageSize) {
                                 curPageWidgets.push(widget);
                                 index++;
                             }
+                            
+                            widgetIndex++;
                         }
                     }
                     return targetWidgetArray;
@@ -402,6 +484,58 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 function getCssFilePath(requireContext, relPath) {
                     return requireContext.toUrl(relPath);
+                };
+                
+                function getLastModificationTimeString(lastModifiedDate) {
+                    var result = "";
+                    if (lastModifiedDate) {
+                        var currentDate = new Date().getTime();
+                        var modificationDate = new Date(Date.parse(lastModifiedDate)).getTime();
+                        var timediff = currentDate - modificationDate;
+                        var min = 60*1000;
+                        var hour = 60*min;
+                        var day = 24*hour;
+                        var month = 60*day;
+                        var year = 12*month;
+                        var agoText = " "+self.nlsStrings.WIDGET_SELECTOR_TIME_DIFF_AGO;
+                        var diffCount = null;
+                        var diffUnit = null;
+                        if (timediff < 60*1000) {
+                            result = self.nlsStrings.WIDGET_SELECTOR_TIME_DIFF_A_MOMENT + agoText;
+                        }
+                        else if (timediff >= min && timediff < hour) {
+                            diffCount = Math.round(timediff/min);
+                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_MINS : 
+                                    self.nlsStrings.WIDGET_SELECTOR_TIME_MIN;
+                            result = diffCount + " " + diffUnit + agoText;
+                        }
+                        else if (timediff >= hour && timediff < day) {
+                            diffCount = Math.round(timediff/hour);
+                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_HOURS : 
+                                    self.nlsStrings.WIDGET_SELECTOR_TIME_HOUR;
+                            result = diffCount + " " + diffUnit + agoText;
+                        }
+                        else if (timediff >= day && timediff < month) {
+                            diffCount = Math.round(timediff/day);
+                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_DAYS : 
+                                    self.nlsStrings.WIDGET_SELECTOR_TIME_DAY;
+                            result = diffCount + " " + diffUnit + agoText;
+                        }
+                        else if (timediff >= month && timediff < year) {
+                            diffCount = Math.round(timediff/month);
+                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_MONTHS : 
+                                    self.nlsStrings.WIDGET_SELECTOR_TIME_MONTH;
+                            result = diffCount + " " + diffUnit + agoText;
+                        }
+                        else if (timediff >= year) {
+                            diffCount = Math.round(timediff/year);
+                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_YEARS : 
+                                    self.nlsStrings.WIDGET_SELECTOR_TIME_YEAR;
+                            result = diffCount + " " + diffUnit + agoText;
+                        }
+                    }
+                    
+                    return result;
                 };
             }
             
