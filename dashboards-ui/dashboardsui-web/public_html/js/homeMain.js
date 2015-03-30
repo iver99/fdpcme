@@ -161,10 +161,10 @@ require(['dbs/dbsmodel',
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,
-//                    appName: self.appName,
                     appId: self.appId,
                     relNotificationCheck: self.relNotificationCheck,
-                    relNotificationShow: self.relNotificationShow
+                    relNotificationShow: self.relNotificationShow,
+                    isAdmin: true
                 };
             }
            
