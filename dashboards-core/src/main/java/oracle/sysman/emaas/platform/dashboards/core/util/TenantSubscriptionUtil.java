@@ -69,11 +69,6 @@ public class TenantSubscriptionUtil
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
 		}
 
-		//TODO remove below once we have working cloud env to work with
-		if (true) {
-			return Arrays.asList("APM", "ITAnalytics", "LogAnalytics");
-		}
-
 		// normal behavior here
 		if (tenant == null) {
 			return null;
