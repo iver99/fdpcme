@@ -105,9 +105,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 self.beforeOpenDialog = function(event, ui) {
                     refreshWidgets();
-                    
-//                    self.widgetGroups([{value: "test1", label: "label1"},{value: "value2", label: "label2"}]);
-//                    self.categoryValue(['test1']);
                 };
                 
                 self.optionChangedHandler = function(data, event) {
@@ -339,6 +336,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     index=0;
                     widgetGroupList = [];
                     assetRootList = {};
+                    self.currentWidget(null);
+                    self.confirmBtnDisabled(true);
                     if (ssfUrl && ssfUrl !== '') {
                         var widgetsUrl = dfu.buildFullUrl(ssfUrl,'widgets');
                         var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
@@ -418,7 +417,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                             }
                             
                             if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
-                                widget.WIDGET_HISTOGRAM = "css/images/sample-db-widget.png";
+                                if (i%3 === 2) 
+                                    widget.WIDGET_HISTOGRAM = "css/images/no-image-available.png";
+                                else
+                                    widget.WIDGET_HISTOGRAM = "css/images/sample-db-widget.png";
                             }
                             else {
                                 var pname = widget.PROVIDER_NAME;
@@ -428,12 +430,14 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                                 widget.WIDGET_HISTOGRAM = assetRoot + widget.WIDGET_HISTOGRAM;
                             }
                             
+                            if (!widget.WIDGET_DESCRIPTION)
+                                widget.WIDGET_DESCRIPTION = "";
                             widget.naviScreenshotClass = ko.observable('widget-box-navi-control');
                             widget.naviDescClass = ko.observable('widget-box-navi-control widget-box-navi-control-inactive');
                             widget.pageScreenShotClass = ko.observable('widget-box-screenshot');
                             widget.pageDescClass = ko.observable('widget-box-description widget-box-inactive');
                             widget.widgetContainerClass = ko.observable("widget-selector-container");
-                            widget.modificationDateString = "test go";// getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
+                            widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
                             targetWidgetArray.push(widget);
                             widgetArray.push(widget);
                             if (index < pageSize) {
