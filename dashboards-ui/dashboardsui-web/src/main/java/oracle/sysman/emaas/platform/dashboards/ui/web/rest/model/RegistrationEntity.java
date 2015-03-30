@@ -30,6 +30,9 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUt
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author miao
  */
@@ -48,6 +51,7 @@ public class RegistrationEntity
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
 	public static final String NAME_REGISTRY_VERSION = "0.1";
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
+	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
@@ -62,7 +66,8 @@ public class RegistrationEntity
 			successfullyInitialized = true;
 		}
 		catch (Exception exception) {
-			exception.printStackTrace();
+			//			exception.printStackTrace();
+			_logger.error("Failed to initialize Lookup Manager", exception);
 		}
 	}
 
@@ -94,7 +99,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getAdminLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK);
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, false);
 	}
 
 	/**
@@ -246,12 +251,19 @@ public class RegistrationEntity
 
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix)
 	{
+		return lookupLinksWithRelPrefix(linkPrefix, true);
+	}
+
+	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean checkSubscription)
+	{
+		_logger.info("lookupLinksWithRelPrefix(" + linkPrefix + "," + checkSubscription + ")");
 		List<LinkEntity> linkList = new ArrayList<LinkEntity>();
 
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix);
 
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet();
+		_logger.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
 		Map<String, Link> linksMap = new HashMap<String, Link>();
 		Map<String, Link> dashboardLinksMap = new HashMap<String, Link>();
 		for (InstanceInfo internalInstance : instanceList) {
@@ -265,13 +277,17 @@ public class RegistrationEntity
 			}
 			catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//				e.printStackTrace();
+				_logger.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
 					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion())) {
 				addToLinksMap(dashboardLinksMap, links);
 			}
 			else if (subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName())) {
+				addToLinksMap(linksMap, links);
+			}
+			else if (!checkSubscription) {
 				addToLinksMap(linksMap, links);
 			}
 
@@ -294,7 +310,7 @@ public class RegistrationEntity
 				linkList.add(le);
 			}
 		}
-
+		_logger.info("Got links matching prefix:" + linkPrefix, linkList.toString());
 		return linkList;
 	}
 
