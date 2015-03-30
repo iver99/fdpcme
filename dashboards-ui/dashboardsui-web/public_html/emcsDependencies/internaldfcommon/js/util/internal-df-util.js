@@ -90,8 +90,8 @@ define(['knockout',
             
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-                return 'api/configurations/registration';
-//                return 'data/servicemanager.json';
+//                return 'api/configurations/registration';
+                return 'data/servicemanager.json';
             };
 
             /**
