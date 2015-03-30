@@ -65,11 +65,6 @@ public class TenantSubscriptionUtil
 
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
-		//TODO remove below once we have working cloud env to work with
-		if (true) {
-			return Arrays.asList("APM", "ITAnalytics", "LogAnalytics");
-		}
-
 		if (tenant == null) {
 			return null;
 		}
