@@ -223,7 +223,7 @@ public class RegistrationEntity
 	 * @param tenantName
 	 * @return
 	 */
-	private Set<String> getTenantSubscribedApplicationSet()
+	private Set<String> getTenantSubscribedApplicationSet(boolean isAdmin)
 	{
 		String tenantName = TenantContext.getCurrentTenant();
 		Set<String> appSet = new HashSet<String>();
@@ -246,6 +246,10 @@ public class RegistrationEntity
 				appSet.add("LoganService");
 			}
 		}
+		//if any of APM/LA/TA is subscribed, TenantManagementUI should be subscribed accordingly as agreement now
+		if (appSet.size() > 0 && isAdmin) {
+			appSet.add("TenantManagementUI");
+		}
 		return appSet;
 	}
 
@@ -254,15 +258,15 @@ public class RegistrationEntity
 		return lookupLinksWithRelPrefix(linkPrefix, true);
 	}
 
-	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean checkSubscription)
+	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean isAdminLink)
 	{
-		_logger.info("lookupLinksWithRelPrefix(" + linkPrefix + "," + checkSubscription + ")");
+		_logger.info("lookupLinksWithRelPrefix(" + linkPrefix + "," + isAdminLink + ")");
 		List<LinkEntity> linkList = new ArrayList<LinkEntity>();
 
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix);
 
-		Set<String> subscribedApps = getTenantSubscribedApplicationSet();
+		Set<String> subscribedApps = getTenantSubscribedApplicationSet(isAdminLink);
 		_logger.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
 		Map<String, Link> linksMap = new HashMap<String, Link>();
 		Map<String, Link> dashboardLinksMap = new HashMap<String, Link>();
@@ -285,9 +289,6 @@ public class RegistrationEntity
 				addToLinksMap(dashboardLinksMap, links);
 			}
 			else if (subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName())) {
-				addToLinksMap(linksMap, links);
-			}
-			else if (!checkSubscription) {
 				addToLinksMap(linksMap, links);
 			}
 
