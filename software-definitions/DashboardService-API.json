@@ -42,7 +42,7 @@
                 ]
             },
             {
-                    "name": "dashboards-api::tenantHydration",
+                    "name": "dashboardService-api::tenantHydration",
                     "operation": "tenantHydration",
                     "configurations": [
                         {
