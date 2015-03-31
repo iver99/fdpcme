@@ -99,7 +99,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getAdminLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, false);
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 	}
 
 	/**
@@ -255,7 +255,7 @@ public class RegistrationEntity
 
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix)
 	{
-		return lookupLinksWithRelPrefix(linkPrefix, true);
+		return lookupLinksWithRelPrefix(linkPrefix, false);
 	}
 
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean isAdminLink)
