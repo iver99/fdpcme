@@ -260,16 +260,21 @@ DashboardPaging.prototype._fetch = function(options)
 };
 
 DashboardPaging.prototype._processError = function(opts, jqXHR, textStatus, errorThrown) {
-    var options = opts || {};
-    this.handleEvent("sync", null);
+    var self = this, options = opts || {}, _event = null;
+    _event = {data: self.dataWindow, startIndex: self.startIndex()};
+    this.handleEvent("sync", _event);
     if (options['error']) {
         options['error'](jqXHR, textStatus, errorThrown);
     }
 };
 
 DashboardPaging.prototype._processSuccess = function(opts, eventType, event) {
-    var options = opts || {};
-    this.handleEvent(eventType || "sync", event || null);
+    var self = this, options = opts || {}, _event = null;
+    if (!event || event === null)
+    {
+        _event = {data: self.dataWindow, startIndex: self.startIndex()};
+    }
+    this.handleEvent(eventType || "sync", _event);
     
     if (options['success']) {
         options['success']();
