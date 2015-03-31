@@ -8,8 +8,8 @@
         <div style="display:none;" 
             data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle,
-                rootAttributes: { style: 'width: 885px; height:650px;'}}, attr: {id: dialogId}">   
-            <div class="oj-dialog-body widget-selector-body">
+                rootAttributes: { style: 'width: 885px; height: dialogHeight;'}}, attr: {id: dialogId}">   
+            <div class="oj-dialog-body widget-selector-body" data-bind="attr: {style: dialogBodyHeightStyle}" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
                 <div style="padding-right: 18px;padding-left: 4px" >
                     <div id="widget-selector-searchbox">
@@ -25,6 +25,7 @@
                             </button> 
                         </div>
                     </div>
+                    <!-- ko if: widgetGroupFilterVisible -->
                     <div id="widget-selector-widgetgroups" >
                         <select id="categorySelect" class="oj-select-arrow widget-group-selector"
                               data-bind="ojComponent: {component: 'ojSelect',
@@ -36,6 +37,7 @@
                             <!-- /ko -->
                         </select>
                     </div>
+                    <!-- /ko -->
                 </div>
                 <div id="widgets" class="widget-summaries-container" >
                     <!-- ko foreach: curPageWidgetList -->
@@ -48,7 +50,7 @@
                         </div>
                     </div>-->
                     <div data-bind="attr:{title: name, class: widgetContainerClass}, click: $parent.widgetBoxClicked">
-                        <div class="widget-box-title">
+                        <div class="widget-box-title" data-bind="attr: {title: WIDGET_NAME}">
                             <span data-bind="text: WIDGET_NAME"></span>
                         </div>
                         <div data-bind="attr: {class: pageDescClass}">
@@ -56,8 +58,7 @@
                                 <span data-bind="text: WIDGET_OWNER+' - '" style="font-weight: bold;"></span>
                                 <span data-bind="text: modificationDateString" style="font-weight: normal;"></span>
                             </div>
-                            <div style="overflow: hidden; text-overflow:ellipsis;padding-top: 5px; ">
-                                Long Description. Long Description. Long Description. Long Description. Long Description. Long Description. 
+                            <div style="overflow: hidden; text-overflow:ellipsis;padding-top: 5px; " data-bind="text: WIDGET_DESCRIPTION">
                             </div>
                         </div>
                         <div data-bind="attr: {class: pageScreenShotClass}">
@@ -83,7 +84,7 @@
                     <i class="fa fa-icon-font fa-chevron-right" style=" text-align: center; vertical-align: middle; font-size: 3em;"></i>
                 </button>      
                 <button id="widget-selector-okbtn" data-bind="attr: {class: 'widget-selector-button'}, click: widgetSelectionConfirmed, 
-                    ojComponent: {component: 'ojButton', label: 'Add', disabled: confirmBtnDisabled}" >  
+                    ojComponent: {component: 'ojButton', label: affirmativeButtonLabel, disabled: confirmBtnDisabled}" >  
                 </button>
             </div>  
         </div>

@@ -147,12 +147,12 @@
 .widget-selector-container:hover {
 /*    background-color: #6495ED; lightblue;  #e371b2; 
     color: white;*/
-    border-color: #6495ED;
+    border-color: #0572ce; //#6495ED;
     border-width: 2px;
 }
 
 .widget-selector-container-selected {
-    border-color: #6495ED;
+    border-color: #0572ce; //#6495ED;
     border-width: 2px;
 }
 

@@ -28,16 +28,27 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
                 
                 //NLS strings
-                self.widgetSelectorTitle = ko.observable();
+                var affirmativeTxt = $.isFunction(params.affirmativeButtonLabel) ? params.affirmativeButtonLabel() : params.affirmativeButtonLabel;
+                var dialogTitle = $.isFunction(params.dialogTitle) ? params.dialogTitle() : params.dialogTitle;
+                var widgetProviderName = $.isFunction(params.providerName) ? params.providerName() : params.providerName;
+                var widgetProviderVersion = $.isFunction(params.providerVersion) ? params.providerVersion() : params.providerVersion;
+                self.widgetSelectorTitle = ko.observable(dialogTitle);
                 self.widgetGroupLabel = ko.observable();
                 self.searchBoxPlaceHolder = ko.observable();
                 self.searchButtonLabel = ko.observable();
+                self.affirmativeButtonLabel = ko.observable(affirmativeTxt);
+                self.widgetGroupFilterVisible = ko.observable(true);
                 self.nlsStrings = null;
+                self.dialogHeight = ko.observable('650px');
+                self.dialogBodyHeightStyle = ko.observable('height: 540px;');
                 
                 require(['i18n!'+nlsResourceBundle],
                     function(nls) { 
                         self.nlsStrings = nls;
-                        self.widgetSelectorTitle(nls.WIDGET_SELECTOR_DIALOG_TITLE);
+                        if (!self.widgetSelectorTitle())
+                            self.widgetSelectorTitle(nls.WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE);
+                        if (!self.affirmativeButtonLabel())
+                            self.affirmativeButtonLabel(nls.WIDGET_SELECTOR_DEFAULT_AFFIRMATIVE_BTN_LABEL);
                         self.widgetGroupLabel(nls.WIDGET_SELECTOR_WIDGET_GROUP_LABEL);
                         self.searchBoxPlaceHolder(nls.WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER);
                         self.searchButtonLabel(nls.WIDGET_SELECTOR_SEARCH_BTN_LABEL);
@@ -51,7 +62,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 var cssFile = getCssFilePath(localrequire, '../../../css/widget-selector-alta.css'); 
 
 		self.widgetSelectorCss = cssFile;
-                self.dialogId = params.id ? params.id : 'widgetSelectorDialog';
+                self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
+                        (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.widgetHandler = params.widgetHandler;
                 
                 self.categoryValue=ko.observableArray(["all|all|All"]);
@@ -334,6 +346,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     curPageWidgets=[];
                     searchResultArray = [];
                     index=0;
+                    widgetIndex = 0;
                     widgetGroupList = [];
                     assetRootList = {};
                     self.currentWidget(null);
@@ -346,6 +359,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
                                 widgetGroupList = loadWidgetGroups(data);
+                                if (widgetProviderName && widgetProviderVersion && widgetGroupList.length <= 2) {
+                                    self.widgetGroupFilterVisible(false);
+                                    self.dialogHeight('600px');
+                                    self.dialogBodyHeightStyle('height: 500px;');
+                                }
                             },
                             error: function(xhr, textStatus, errorThrown){
                                 console.log('Error when fetching widgets!');
@@ -386,66 +404,69 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     var targetWidgetArray = [];
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
-                            var widget = data[i];
-                            widget.index = widgetIndex;
-                            if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
-                               if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
-                                   widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-                               }
-                               else if (widget.WIDGET_GROUP_NAME==='Target Analytics') {
-                                   widget.WIDGET_ICON = 'css/images/targets_16_ena.png';
-                               }
-                               else if (widget.WIDGET_GROUP_NAME==='IT Analytics') {
-                                   widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-                               }
-                               else if (widget.WIDGET_GROUP_NAME==='Demo Analytics') {
-                                   widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-                               }
-                               else if (widget.WIDGET_GROUP_NAME==='Dashboards Built-In') {
-                                   widget.WIDGET_ICON = 'css/images/dashboard-32.png';
-                               }
-                               else {
-                                   widget.WIDGET_ICON = 'css/images/widgets_alt.png';
-                               }
+                            if ((!widgetProviderName && !widgetProviderVersion) || 
+                                    (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
+                                var widget = data[i];
+                                widget.index = widgetIndex;
+                                if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
+                                   if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
+                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                                   }
+                                   else if (widget.WIDGET_GROUP_NAME==='Target Analytics') {
+                                       widget.WIDGET_ICON = 'css/images/targets_16_ena.png';
+                                   }
+                                   else if (widget.WIDGET_GROUP_NAME==='IT Analytics') {
+                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                                   }
+                                   else if (widget.WIDGET_GROUP_NAME==='Demo Analytics') {
+                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+                                   }
+                                   else if (widget.WIDGET_GROUP_NAME==='Dashboards Built-In') {
+                                       widget.WIDGET_ICON = 'css/images/dashboard-32.png';
+                                   }
+                                   else {
+                                       widget.WIDGET_ICON = 'css/images/widgets_alt.png';
+                                   }
+                                }
+                                else {
+                                    var pname = widget.PROVIDER_NAME;
+                                    var pversion = widget.PROVIDER_VERSION;
+                                    var gname = widget.WIDGET_GROUP_NAME;
+                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
+                                    widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
+                                }
+
+                                if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
+                                    if (i%3 === 2) 
+                                        widget.WIDGET_HISTOGRAM = "css/images/no-image-available.png";
+                                    else
+                                        widget.WIDGET_HISTOGRAM = "css/images/sample-db-widget.png";
+                                }
+                                else {
+                                    var pname = widget.PROVIDER_NAME;
+                                    var pversion = widget.PROVIDER_VERSION;
+                                    var gname = widget.WIDGET_GROUP_NAME;
+                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
+                                    widget.WIDGET_HISTOGRAM = assetRoot + widget.WIDGET_HISTOGRAM;
+                                }
+
+                                if (!widget.WIDGET_DESCRIPTION)
+                                    widget.WIDGET_DESCRIPTION = "";
+                                widget.naviScreenshotClass = ko.observable('widget-box-navi-control');
+                                widget.naviDescClass = ko.observable('widget-box-navi-control widget-box-navi-control-inactive');
+                                widget.pageScreenShotClass = ko.observable('widget-box-screenshot');
+                                widget.pageDescClass = ko.observable('widget-box-description widget-box-inactive');
+                                widget.widgetContainerClass = ko.observable("widget-selector-container");
+                                widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
+                                targetWidgetArray.push(widget);
+                                widgetArray.push(widget);
+                                if (index < pageSize) {
+                                    curPageWidgets.push(widget);
+                                    index++;
+                                }
+
+                                widgetIndex++;
                             }
-                            else {
-                                var pname = widget.PROVIDER_NAME;
-                                var pversion = widget.PROVIDER_VERSION;
-                                var gname = widget.WIDGET_GROUP_NAME;
-                                var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
-                                widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
-                            }
-                            
-                            if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
-                                if (i%3 === 2) 
-                                    widget.WIDGET_HISTOGRAM = "css/images/no-image-available.png";
-                                else
-                                    widget.WIDGET_HISTOGRAM = "css/images/sample-db-widget.png";
-                            }
-                            else {
-                                var pname = widget.PROVIDER_NAME;
-                                var pversion = widget.PROVIDER_VERSION;
-                                var gname = widget.WIDGET_GROUP_NAME;
-                                var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
-                                widget.WIDGET_HISTOGRAM = assetRoot + widget.WIDGET_HISTOGRAM;
-                            }
-                            
-                            if (!widget.WIDGET_DESCRIPTION)
-                                widget.WIDGET_DESCRIPTION = "";
-                            widget.naviScreenshotClass = ko.observable('widget-box-navi-control');
-                            widget.naviDescClass = ko.observable('widget-box-navi-control widget-box-navi-control-inactive');
-                            widget.pageScreenShotClass = ko.observable('widget-box-screenshot');
-                            widget.pageDescClass = ko.observable('widget-box-description widget-box-inactive');
-                            widget.widgetContainerClass = ko.observable("widget-selector-container");
-                            widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
-                            targetWidgetArray.push(widget);
-                            widgetArray.push(widget);
-                            if (index < pageSize) {
-                                curPageWidgets.push(widget);
-                                index++;
-                            }
-                            
-                            widgetIndex++;
                         }
                     }
                     return targetWidgetArray;
@@ -460,19 +481,24 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     var assetRoot = '';
                     var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                     targetWidgetGroupArray.push(groupAll);
-                    targetWidgetGroupArray.push(groupDashboardBuiltIn);
-                    assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+                    if ((!widgetProviderName && !widgetProviderVersion) || 
+                            (widgetProviderName === pname && widgetProviderVersion === pversion)) {
+                        targetWidgetGroupArray.push(groupDashboardBuiltIn);
+                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+                    }
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            var widgetGroup = {value:pname+'|'+pversion+'|'+gname, 
-                                label:gname};
-                            targetWidgetGroupArray.push(widgetGroup);
+                            if ((!widgetProviderName && !widgetProviderVersion) || 
+                                    widgetProviderName === pname && widgetProviderVersion === pversion) {
+                                var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
+                                targetWidgetGroupArray.push(widgetGroup);
 
-                            assetRoot = dfu.discoverUrl(pname, pversion, data[i].PROVIDER_ASSET_ROOT);
-                            assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+                                assetRoot = dfu.discoverUrl(pname, pversion, data[i].PROVIDER_ASSET_ROOT);
+                                assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+                            }
                         }
                     }
                     return targetWidgetGroupArray;

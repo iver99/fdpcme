@@ -792,10 +792,18 @@ define(['knockout',
                 self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 2, widget);
             };
             self.addWidgetDialogParams = {
-                id: addWidgetDialogId,
-                userName: 'SYSMAN',
-                tenantName: 'TenantOPC1',
+                dialogId: addWidgetDialogId,
+                dialogTitle: getNlsString('DBS_BUILDER_ADD_WIDGET_DLG_TITLE'), 
+                affirmativeButtonLabel: getNlsString('DBS_BUILDER_BTN_ADD'),
+                userName: 'SYSMAN',       //dtm.userTenant
+                tenantName: 'TenantOPC1', //dtm.tenantName
                 widgetHandler: self.addSelectedWidgetToDashboard
+                ,providerName: null     //'TargetAnalytics' 
+                ,providerVersion: null  //'1.0.5'
+//                ,providerName: 'TargetAnalytics' 
+//                ,providerVersion: '1.0.5'
+//                ,providerName: 'DashboardFramework' 
+//                ,providerVersion: '1.0'
             };
             
             self.openAddWidgetDialog = function() {
