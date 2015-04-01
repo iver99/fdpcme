@@ -1,0 +1,37 @@
+<html lang="en-us" id='global-html'>
+    <head>
+        <title data-bind="text:errorPageTitle"></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="emcsDependencies/dfcommon/images/emcs_32.png" />
+        <!-- This is the main css file for the default Alta theme -->
+        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.0/alta/oj-alta-min.css" type="text/css"/>
+        <style type="text/css">
+            div.dbd-error-area {
+              position: absolute; 
+              top: 38.2%;
+              width:100%;
+              text-align:center;
+            }
+            .dbd-error-area .dbd-error-inner {
+              margin: 0 10rem;
+              padding-bottom: 2rem;
+              border: 1px solid #d6dfe6;
+              background: #e8f2fb;
+              border-radius: 2px;
+            }
+            .dbd-error-area .dbd-error-inner img {
+              width: 150px;
+            }
+        </style> 
+        <script data-main="js/error" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
+    </head>
+    <body>
+        <div class="dbd-error-area">
+            <div class="dbd-error-inner">
+                <img src="css/images/alert.png" data-bind="attr: {alt: errorPageMessage}">
+                <h4 class="dbd-error-msg" data-bind="text: errorPageMessage"></h4>
+            </div>
+        </div>
+    </body>
+</html>

@@ -114,7 +114,12 @@ public class DashboardsUiCORSFilter implements Filter
 					String auth = hReq.getHeader("authorization");
 					logger.info("The authorization from the header is " + auth);
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
-					if (TenantSubscriptionUtil.isAPMServiceOnly(apps)) {
+					if (apps == null || apps.isEmpty()) {
+						logger.info("Tenant (" + opcTenantId + ") does not subscribe to any service. Redirect to error page");
+						hRes.sendRedirect("./error.html");
+						return;
+					}
+					else if (TenantSubscriptionUtil.isAPMServiceOnly(apps)) {
 						// redirect to apm home
 						Link apmLink = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home");
 						if (apmLink != null && !StringUtil.isEmpty(apmLink.getHref())) {
