@@ -323,7 +323,7 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0')
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-        compile(group: 'oraclejet', name: 'oraclejet', version: '1.1.0-293', ext: 'zip'){ transitive = false }
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15008', ext: 'war'){ transitive = false }
 	if(war_number.toInteger()>0){
 	    for (i in 0..<war_number.toInteger())
 		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip', changing: true)
