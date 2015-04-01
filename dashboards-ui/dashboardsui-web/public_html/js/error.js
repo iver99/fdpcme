@@ -59,9 +59,15 @@ function(ko, $, dfu, oj)
         }
         if (!self.errorPageMessage)
             self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
+        self.invalidUrl = dfu.getUrlParam("invalidUrl");
+        if (self.invalidUrl) {
+            self.invalidUrl = decodeURIComponent(self.invalidUrl);
+        }
+        self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
     };
     
     $(document).ready(function() {
-        ko.applyBindings(new ErrorPageModel(), $('#global-html')[0]);   
+        ko.applyBindings(new ErrorPageModel(), $('#global-html')[0]); 
+        $('#global-body').show();
     });
 });
