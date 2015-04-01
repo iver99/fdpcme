@@ -798,8 +798,8 @@ define(['knockout',
                 userName: 'SYSMAN',       //dtm.userTenant
                 tenantName: 'TenantOPC1', //dtm.tenantName
                 widgetHandler: self.addSelectedWidgetToDashboard
-                ,providerName: null     //'TargetAnalytics' 
-                ,providerVersion: null  //'1.0.5'
+//                ,providerName: null     //'TargetAnalytics' 
+//                ,providerVersion: null  //'1.0.5'
 //                ,providerName: 'TargetAnalytics' 
 //                ,providerVersion: '1.0.5'
 //                ,providerName: 'DashboardFramework' 

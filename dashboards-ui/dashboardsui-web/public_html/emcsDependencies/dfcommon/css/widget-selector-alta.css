@@ -148,12 +148,12 @@
 /*    background-color: #6495ED; lightblue;  #e371b2; 
     color: white;*/
     border-color: #0572ce; //#6495ED;
-    border-width: 2px;
+    border-width: 1px;
 }
 
 .widget-selector-container-selected {
     border-color: #0572ce; //#6495ED;
-    border-width: 2px;
+    border-width: 1px;
 }
 
 .widget-summaries-container {
@@ -212,10 +212,10 @@
 }
 
 .widget-selector-container:hover .widget-box-navigation{
-    height:18px;
+    height:19px;
 }
 .widget-selector-container-selected .widget-box-navigation {
-    height:18px;
+    height:19px;
 }
 
 .widget-box-title {

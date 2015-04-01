@@ -16,7 +16,7 @@
                         <div style="float:left;">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus" aria-label="Search widgets" 
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, attr: {placeholder: searchBoxPlaceHolder},
-                                                                    dbsTypeAhead: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
+                                                                    typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                         </div>
                         <div style="float:right;">
                             <button class="oj-button-half-chrome widget-selector-search-button" data-bind="click: searchWidgets,
