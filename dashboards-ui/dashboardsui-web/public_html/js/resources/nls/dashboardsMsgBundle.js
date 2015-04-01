@@ -136,7 +136,11 @@ define({
       "TEXT_WIDGET_SUBSCRIBER_HINT":"You will see received message and what I will respond",
       "LABEL_WIDGET_IFRAME_CHANGE":"Change",
       "TEXT_WIDGET_PUBLISHER_HINT":"Please write your message and click \"Publish\" to send",
-      "LABEL_WIDGET_PUBLISHER_PUBLISH":"Publish"
+      "LABEL_WIDGET_PUBLISHER_PUBLISH":"Publish",
+      
+      "DBS_ERROR_PAGE_TITLE":"Error",
+      "DBS_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it.",
+      "DBS_ERROR_URL": "Requested URL is: "
       
 
 },

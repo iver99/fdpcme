@@ -169,7 +169,8 @@ require(['knockout',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     relNotificationCheck: self.relNotificationCheck,
-                    relNotificationShow: self.relNotificationShow
+                    relNotificationShow: self.relNotificationShow,
+                    isAdmin:true
                 };
             };
             
@@ -270,6 +271,10 @@ require(['knockout',
                     */
                 }, function(e) {
                     console.log(e.errorMessage());
+                    if (e.errorCode && e.errorCode() === 20001) {
+                        oj.Logger.info("Dashboard not found. Redirect to dashboard error page");
+                        location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                    }
                 });
             });
         }
