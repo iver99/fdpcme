@@ -335,6 +335,10 @@ public class RegistryLookupUtil
 					else {
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
+					if (links != null && links.size() > 0) {
+						lk = links.get(0);
+						return lk;
+					}
 				}
 			}
 			return lk;
