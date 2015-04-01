@@ -1,4 +1,4 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util'],
+define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js/util/typeahead-search'],
         function (localrequire, ko, $, dfumodel) {
             function WidgetSelectorViewModel(params) {
                 var self = this;
@@ -59,7 +59,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 
-                var cssFile = getCssFilePath(localrequire, '../../../css/widget-selector-alta.css'); 
+                var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/widget-selector-alta.css'); 
 
 		self.widgetSelectorCss = cssFile;
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
@@ -121,15 +121,16 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                 
                 self.optionChangedHandler = function(data, event) {
                     if (event.option === "value") {
-                        curPageWidgets=[];
-                        curPage = 1;
-                        var curGroupWidgets = getAvailableWidgets();
-                        totalPage = (curGroupWidgets.length%pageSize === 0 ? curGroupWidgets.length/pageSize : Math.floor(curGroupWidgets.length/pageSize) + 1);
-
-                        fetchWidgetsForCurrentPage(curGroupWidgets);
-                        self.curPageWidgetList(curPageWidgets);
-                        refreshNaviButton();
-                        naviFromSearchResults = false;
+                        self.searchWidgets();
+//                        curPageWidgets=[];
+//                        curPage = 1;
+//                        var curGroupWidgets = getAvailableWidgets();
+//                        totalPage = (curGroupWidgets.length%pageSize === 0 ? curGroupWidgets.length/pageSize : Math.floor(curGroupWidgets.length/pageSize) + 1);
+//
+//                        fetchWidgetsForCurrentPage(curGroupWidgets);
+//                        self.curPageWidgetList(curPageWidgets);
+//                        refreshNaviButton();
+//                        naviFromSearchResults = false;
                     }
                 };
                 
@@ -408,39 +409,41 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                                     (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
-                                if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
-                                   if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
-                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-                                   }
-                                   else if (widget.WIDGET_GROUP_NAME==='Target Analytics') {
-                                       widget.WIDGET_ICON = 'css/images/targets_16_ena.png';
-                                   }
-                                   else if (widget.WIDGET_GROUP_NAME==='IT Analytics') {
-                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-                                   }
-                                   else if (widget.WIDGET_GROUP_NAME==='Demo Analytics') {
-                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-                                   }
-                                   else if (widget.WIDGET_GROUP_NAME==='Dashboards Built-In') {
-                                       widget.WIDGET_ICON = 'css/images/dashboard-32.png';
-                                   }
-                                   else {
-                                       widget.WIDGET_ICON = 'css/images/widgets_alt.png';
-                                   }
-                                }
-                                else {
-                                    var pname = widget.PROVIDER_NAME;
-                                    var pversion = widget.PROVIDER_VERSION;
-                                    var gname = widget.WIDGET_GROUP_NAME;
-                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
-                                    widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
-                                }
+//                                if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
+//                                   if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
+//                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+//                                   }
+//                                   else if (widget.WIDGET_GROUP_NAME==='Target Analytics') {
+//                                       widget.WIDGET_ICON = 'css/images/targets_16_ena.png';
+//                                   }
+//                                   else if (widget.WIDGET_GROUP_NAME==='IT Analytics') {
+//                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+//                                   }
+//                                   else if (widget.WIDGET_GROUP_NAME==='Demo Analytics') {
+//                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
+//                                   }
+//                                   else if (widget.WIDGET_GROUP_NAME==='Dashboards Built-In') {
+//                                       widget.WIDGET_ICON = 'css/images/dashboard-32.png';
+//                                   }
+//                                   else {
+//                                       widget.WIDGET_ICON = 'css/images/widgets_alt.png';
+//                                   }
+//                                }
+//                                else {
+//                                    var pname = widget.PROVIDER_NAME;
+//                                    var pversion = widget.PROVIDER_VERSION;
+//                                    var gname = widget.WIDGET_GROUP_NAME;
+//                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
+//                                    widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
+//                                }
 
                                 if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
+                                    var noImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/no-image-available.png');
+                                    var sampleImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
                                     if (i%3 === 2) 
-                                        widget.WIDGET_HISTOGRAM = "css/images/no-image-available.png";
+                                        widget.WIDGET_HISTOGRAM = noImagePath;
                                     else
-                                        widget.WIDGET_HISTOGRAM = "css/images/sample-db-widget.png";
+                                        widget.WIDGET_HISTOGRAM = sampleImagePath;
                                 }
                                 else {
                                     var pname = widget.PROVIDER_NAME;
@@ -474,10 +477,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
 
                 function loadWidgetGroups(data) {
                     var targetWidgetGroupArray = [];
-                    var groupAll = {value:'all|all|All', label:'All'};
+                    var labelAll = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
+                    var groupAll = {value:'all|all|All', label: labelAll};
                     var pname = 'DashboardFramework';
                     var pversion = '1.0';
-                    var gname = 'Dashboards Built-In';
+                    var gname = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;//'Dashboards Built-In';
                     var assetRoot = '';
                     var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                     targetWidgetGroupArray.push(groupAll);
@@ -512,7 +516,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util'],
                     return path;
                 };
                 
-                function getCssFilePath(requireContext, relPath) {
+                function getFilePathRelativeToHtml(requireContext, relPath) {
                     return requireContext.toUrl(relPath);
                 };
                 

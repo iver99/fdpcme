@@ -53,7 +53,9 @@ define({
       "WIDGET_SELECTOR_TIME_MINS": "minutes",
       "WIDGET_SELECTOR_TIME_MIN": "minute",
       "WIDGET_SELECTOR_TIME_DIFF_A_MOMENT": "a moment",
-      "WIDGET_SELECTOR_TIME_DIFF_AGO": "ago"
+      "WIDGET_SELECTOR_TIME_DIFF_AGO": "ago",
+      "WIDGET_SELECTOR_WIDGET_GROUP_ALL": "All",
+      "WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN": "Dashboards Built-In"
 },
   "fr": true,
   "cs": true,
