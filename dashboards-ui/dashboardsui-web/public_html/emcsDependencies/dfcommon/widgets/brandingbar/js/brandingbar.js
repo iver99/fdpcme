@@ -113,6 +113,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                                     subscribedServices = subscribedServices + " | " + servicename;
                             }
                         }
+                        if (self.appId===appIdTenantManagement){
+                            subscribedServices = nls[appMap[appIdTenantManagement]['appName']];
+                        }
                         self.appName(subscribedServices);
                     });
             
