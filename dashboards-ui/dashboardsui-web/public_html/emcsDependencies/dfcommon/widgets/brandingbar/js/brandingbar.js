@@ -53,6 +53,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 var appIdITAnalytics = "ITAnalytics";
                 var appIdLogAnalytics = "LogAnalytics";
                 var appIdDashboard = "Dashboard";
+                var appIdTenantManagement = "TenantManagement";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -82,7 +83,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                     "version": "0.1",
                     "helpTopicId": "em_home_gs"
                 };
-                
+                appMap[appIdTenantManagement] = {
+                    "appId": "TenantManagement",
+                    "appName": "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI", 
+                    "serviceName": "TenantManagementUI",
+                    "version": "0.1",
+                    "helpTopicId": ""
+                };                
                 require(['i18n!'+nlsResourceBundle],
                     function(nls) { 
                         self.nlsStrings(nls);
@@ -193,7 +200,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                     userName: self.userName, 
                     tenantName: self.tenantName,
                     nlsStrings: self.nlsStrings,
-                    isAdmin: self.isAdmin};
+                    isAdmin: self.isAdmin,
+                    app:appMap[self.appId],
+                    appDashboard:appMap[appIdDashboard],
+                    appTenantManagement:appMap[appIdTenantManagement]
+                };
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links')) {
                     ko.components.register("df-oracle-nav-links",{
