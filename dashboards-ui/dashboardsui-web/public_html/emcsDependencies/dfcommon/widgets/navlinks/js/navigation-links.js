@@ -70,14 +70,35 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
-                            for (i = 0; i < analyzers.length; i++) {
+                            for (var i = 0; i < analyzers.length; i++) {
                                 analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
                                     href: analyzers[i].href});
                             }
                             self.visualAnalyzers(analyzerList);
                         }
                         if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
-                            self.adminLinks(data.adminLinks);
+                            if (params.app){
+                                if (params.app.appId===params.appDashboard.appId){
+                                    self.adminLinks(data.adminLinks);//show all avail admin links
+                                }else{ //show app related admin link and tenant management UI admin link only
+                                    var filteredAdminLinks = [];                                
+                                    for (var i=0;i <data.adminLinks.length;i++ ){
+                                        var link = data.adminLinks[i];
+                                        if (params.app && params.app.serviceName===link.serviceName){
+                                            filteredAdminLinks.push(link);
+                                        }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
+                                            filteredAdminLinks.push(link);
+                                        }
+                                    }
+                                    self.adminLinks(filteredAdminLinks);                                    
+                                }
+                            }else{
+                                if (console){
+                                    console.log("Empty app!");
+                                }
+                                
+                            }
+
                         }
                     };                   
                     var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
@@ -89,7 +110,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                             fetchServiceLinks(data);
                         },
                         error: function(xhr, textStatus, errorThrown){
-                            console.log('Failed to get service instances by URL: '+serviceUrl);
+                            if (console){
+                                console.log('Failed to get service instances by URL: '+serviceUrl);
+                            }
                             self.visualAnalyzers([]);
                             self.adminLinks([]);
                         },
