@@ -6,6 +6,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
+                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : params.isAdmin;
                 
                 //NLS strings
                 self.dashboardsLabel = ko.observable();
@@ -75,13 +76,15 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                             }
                             self.visualAnalyzers(analyzerList);
                         }
-                        if (data.adminLinks && data.adminLinks.length > 0) {
+                        if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
                             self.adminLinks(data.adminLinks);
                         }
                     };                   
                     var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
                     $.ajax({
                         url: serviceUrl,
+                        headers: dfu.getDefaultHeader(), 
+                        contentType:'application/json',
                         success: function(data, textStatus) {
                             fetchServiceLinks(data);
                         },
@@ -98,7 +101,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     dfHomeUrl = dfu.discoverDFHomeUrl();
                     
                     //Fetch available quick links and administration links from service manager registry
-                    if (self.visualAnalyzers().length === 0 || self.adminLinks().length === 0) {
+                    if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
                 };        

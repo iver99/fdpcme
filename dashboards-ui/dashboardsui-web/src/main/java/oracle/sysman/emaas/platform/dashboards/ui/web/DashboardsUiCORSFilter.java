@@ -1,6 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.ui.web;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,7 +13,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Support across domain access CORS: Cross-Origin Resource Sharing Reference: http://enable-cors.org/ http://www.w3.org/TR/cors/
@@ -22,6 +29,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
  */
 public class DashboardsUiCORSFilter implements Filter
 {
+	private final Logger logger = LogManager.getLogger(DashboardsUiCORSFilter.class);
 	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
 	//	private static final String DEFAULT_USER = "SYSMAN";
 	//	private static final String DEFAULT_TENANT = "TenantOPC1";
@@ -37,7 +45,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -95,6 +103,39 @@ public class DashboardsUiCORSFilter implements Filter
 		}
 		if (updatedCookie != null) {
 			hRes.addCookie(updatedCookie);
+		}
+
+		// redirecting check: make sure exception(s) don't have impact on the process
+		try {
+			logger.info("The tenant.user is " + userTenant + ", and the request URI is " + hReq.getRequestURI());
+			if (!StringUtil.isEmpty(userTenant) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
+				if (userTenant.indexOf(".") > 0) {
+					String opcTenantId = userTenant.substring(0, userTenant.indexOf("."));
+					String auth = hReq.getHeader("authorization");
+					logger.info("The authorization from the header is " + auth);
+					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
+					if (apps == null || apps.isEmpty()) {
+						logger.info("Tenant (" + opcTenantId + ") does not subscribe to any service. Redirect to error page");
+						hRes.sendRedirect("./error.html");
+						return;
+					}
+					else if (TenantSubscriptionUtil.isAPMServiceOnly(apps)) {
+						// redirect to apm home
+						Link apmLink = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home");
+						if (apmLink != null && !StringUtil.isEmpty(apmLink.getHref())) {
+							logger.info("Tenant subscribes to APM only, and redirecting to APM home: " + apmLink.getHref());
+							hRes.sendRedirect(apmLink.getHref());
+							return;
+						}
+						else {
+							logger.warn("Retrieved an empty APM home linke for service: 'ApmUI', '0.1', 'home' from service manager");
+						}
+					}
+				}
+			}
+		}
+		catch (Throwable t) {
+			logger.error(t.getLocalizedMessage(), t);
 		}
 		chain.doFilter(request, response);
 	}

@@ -77,13 +77,23 @@ define(['knockout',
             
              self.registrationInfo = null;
             self.getRegistrationInfo=function(){
-                
+             
                 if (self.registrationInfo===null){
-                    $.ajaxSettings.async = false;
-                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
-                        self.registrationInfo = data;
-                    });
-                    $.ajaxSettings.async = true; 
+                    $.ajax({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
+                        headers: dfu.getDefaultHeader(), 
+                        async: false,
+                        success: function(data, textStatus){
+                            self.registrationInfo = data;
+                        },
+                        error: function(data, textStatus){
+                            console.log('Failed to get registion info!');
+                        }
+                    });                     
+//                    $.ajaxSettings.async = false;
+//                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
+//                        self.registrationInfo = data;
+//                    });
+//                    $.ajaxSettings.async = true; 
                 }
                 return self.registrationInfo;
             };

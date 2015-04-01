@@ -250,8 +250,8 @@ body, html {
   height: 2.34rem;
   line-height: 2.34rem;
   font-weight: bold;
-  padding-right: 45px;
-  margin-right: -45px;
+  padding-right: 48px;
+  margin-right: -48px;
   width: 100%;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -354,7 +354,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-color:lightgray;
     border-style:solid;
     width:380px;
-    height: 28px; 
+    height: 33px; 
     margin-bottom: 10px;
     background-color: #fcfdfe;
     
@@ -364,7 +364,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     padding: 0; 
     border:0;
     width: 340px; 
-    height:28px;
+    height:33px;
     background: none; 
 /*    color:gray;
     font-size: medium;
@@ -375,6 +375,9 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     margin-left: 0;
     margin-top: 0;
 } 
+#searchSelect .oj-select .oj-select-choice {
+    height: 2.4rem;
+}
 #search_box #go { 
     float: right; 
 } 
@@ -385,13 +388,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-color:lightgray;
     border-style:solid;
     width:370px;
-    height: 28px; 
+    height: 33px; 
     margin-bottom: 10px;
     background-color: WhiteSmoke;
 }
 .widget-dialog-search-button {
     margin:0px;
-    height:24px;
+    height:33px;
 }
 
 .widget-dialog-selector {

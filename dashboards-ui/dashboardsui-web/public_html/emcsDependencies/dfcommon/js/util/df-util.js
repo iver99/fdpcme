@@ -198,25 +198,23 @@ define(['knockout',
             };  
             
             /**
-             * Returns a list of application names subscribed by specified tenant
+             * Returns an array of application names subscribed by specified tenant
+             * Note:
+             * See constructor of this utility to know more about how to set tenant and user.
              * 
-             * @param {type} tenantName name of tenant
-             * @param {type} userName name of user
-             * @returns {undefined}
+             * @returns {string array or null if no application is subscribed}, e.g. ["APM","ITAnalytics,"LogAnalytics"], ["APM"], null, etc.
              */
-            self.getSubscribedApplications = function(tenantName, userName) {
-                if (!tenantName) {
+            self.getSubscribedApplications = function() {
+                if (!self.tenantName) {
                     console.error("Specified tenant name is empty, and the query won't be executed");
                     return null;
                 }
-                if (!userName) {
+                if (!self.userName) {
                     console.error("Specified user name is empty, and the query won't be executed");
                     return null;
                 }
                 
-                var header = {
-                    "X-USER-IDENTITY-DOMAIN-NAME" : tenantName,
-                    "X-REMOTE-USER" : tenantName + '.' + userName};
+                var header = self.getDefaultHeader();
                 var dfUrlRoot = self.discoverDFRestApiUrl();
                 var url = self.buildFullUrl(dfUrlRoot, "subscribedapps");
 

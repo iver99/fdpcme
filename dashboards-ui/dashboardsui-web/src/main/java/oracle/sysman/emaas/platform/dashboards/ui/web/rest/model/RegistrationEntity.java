@@ -12,17 +12,26 @@ package oracle.sysman.emaas.platform.dashboards.ui.web.rest.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
+import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
@@ -42,6 +51,7 @@ public class RegistrationEntity
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
 	public static final String NAME_REGISTRY_VERSION = "0.1";
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
+	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
@@ -56,7 +66,8 @@ public class RegistrationEntity
 			successfullyInitialized = true;
 		}
 		catch (Exception exception) {
-			exception.printStackTrace();
+			//			exception.printStackTrace();
+			_logger.error("Failed to initialize Lookup Manager", exception);
 		}
 	}
 
@@ -88,7 +99,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getAdminLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK);
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 	}
 
 	/**
@@ -112,13 +123,13 @@ public class RegistrationEntity
 	//		return link != null ? link.getHref() : null;
 	//	}
 
-	/*
-	 * @return Quick links discovered from service manager
-	 */
-	public List<LinkEntity> getQuickLinks()
-	{
-		return lookupLinksWithRelPrefix(NAME_QUICK_LINK);
-	}
+	//	/*
+	//	 * @return Quick links discovered from service manager
+	//	 */
+	//	public List<LinkEntity> getQuickLinks()
+	//	{
+	//		return lookupLinksWithRelPrefix(NAME_QUICK_LINK);
+	//	}
 
 	//	/**
 	//	 * @return the ssfServiceName
@@ -206,13 +217,57 @@ public class RegistrationEntity
 		return name;
 	}
 
+	/**
+	 * This method returns a set of SM(service manager) services names represents the subscribed services for specified tenant
+	 *
+	 * @param tenantName
+	 * @return
+	 */
+	private Set<String> getTenantSubscribedApplicationSet(boolean isAdmin)
+	{
+		String tenantName = TenantContext.getCurrentTenant();
+		Set<String> appSet = new HashSet<String>();
+		if (StringUtil.isEmpty(tenantName)) {
+			return appSet;
+		}
+		List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName);
+		if (apps == null || apps.isEmpty()) {
+			return appSet;
+		}
+		for (String app : apps) {
+			if (ApplicationOPCName.APM.toString().equals(app)) {
+				appSet.add("ApmUI");
+			}
+			else if (ApplicationOPCName.ITAnalytics.toString().equals(app)) {
+				appSet.add("EmcitasApplications");
+				appSet.add("TargetAnalytics");
+			}
+			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
+				appSet.add("LoganService");
+			}
+		}
+		//if any of APM/LA/TA is subscribed, TenantManagementUI should be subscribed accordingly as agreement now
+		if (appSet.size() > 0 && isAdmin) {
+			appSet.add("TenantManagementUI");
+		}
+		return appSet;
+	}
+
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix)
 	{
+		return lookupLinksWithRelPrefix(linkPrefix, false);
+	}
+
+	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean isAdminLink)
+	{
+		_logger.info("lookupLinksWithRelPrefix(" + linkPrefix + "," + isAdminLink + ")");
 		List<LinkEntity> linkList = new ArrayList<LinkEntity>();
 
 		LookupClient lookUpClient = LookupManager.getInstance().getLookupClient();
 		List<InstanceInfo> instanceList = lookUpClient.getInstancesWithLinkRelPrefix(linkPrefix);
 
+		Set<String> subscribedApps = getTenantSubscribedApplicationSet(isAdminLink);
+		_logger.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
 		Map<String, Link> linksMap = new HashMap<String, Link>();
 		Map<String, Link> dashboardLinksMap = new HashMap<String, Link>();
 		for (InstanceInfo internalInstance : instanceList) {
@@ -226,15 +281,17 @@ public class RegistrationEntity
 			}
 			catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//				e.printStackTrace();
+				_logger.error("Error to get SanitizedInstanceInfo", e);
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
 					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion())) {
 				addToLinksMap(dashboardLinksMap, links);
 			}
-			else {
+			else if (subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName())) {
 				addToLinksMap(linksMap, links);
 			}
+
 		}
 
 		Iterator<Map.Entry<String, Link>> iterDashboardLinks = dashboardLinksMap.entrySet().iterator();
@@ -254,7 +311,7 @@ public class RegistrationEntity
 				linkList.add(le);
 			}
 		}
-
+		_logger.info("Got links matching prefix:" + linkPrefix, linkList.toString());
 		return linkList;
 	}
 

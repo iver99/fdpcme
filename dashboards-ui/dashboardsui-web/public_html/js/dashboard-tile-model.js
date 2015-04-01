@@ -334,7 +334,8 @@ define(['knockout',
                         succCallBack(dsb);
                 },
                 error: function(e) {
-                    if (errorCallBack)
+                    console.log(e.responseText);
+                    if (errorCallBack && e.responseText && e.responseText.indexOf("{") === 0)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
             });

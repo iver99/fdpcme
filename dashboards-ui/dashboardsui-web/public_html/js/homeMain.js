@@ -11,10 +11,10 @@
 requirejs.config({
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.2.0',
-        'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
-        'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
-        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
+        'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
+        'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/min',
         'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
         'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
@@ -161,7 +161,6 @@ require(['dbs/dbsmodel',
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,
-//                    appName: self.appName,
                     appId: self.appId,
                     relNotificationCheck: self.relNotificationCheck,
                     relNotificationShow: self.relNotificationShow

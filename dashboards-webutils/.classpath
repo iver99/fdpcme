@@ -5,8 +5,8 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/wlfullclient-2.6.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-core-2.0.2.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-core-2.0.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.1.jar"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.utility"/>
@@ -15,5 +15,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboards-ee"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-core"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-core-1.17.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
