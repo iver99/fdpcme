@@ -270,6 +270,10 @@ require(['knockout',
                     */
                 }, function(e) {
                     console.log(e.errorMessage());
+                    if (e.errorCode && e.errorCode() === 20001) {
+                        oj.Logger.info("Dashboard not found. Redirect to dashboard error page");
+                        location.href = "./error.html";
+                    }
                 });
             });
         }
