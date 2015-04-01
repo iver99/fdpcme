@@ -175,7 +175,8 @@ require(['knockout',
                     tenantName: self.tenantName,
                     appId: self.appId,
                     relNotificationCheck: self.relNotificationCheck,
-                    relNotificationShow: self.relNotificationShow
+                    relNotificationShow: self.relNotificationShow,
+                    isAdmin:true
                 };
             };
             
