@@ -80,6 +80,7 @@ define(['knockout',
              
                 if (self.registrationInfo===null){
                     $.ajax({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
+                        dataType: 'json',
                         headers: dfu.getDefaultHeader(), 
                         async: false,
                         success: function(data, textStatus){
