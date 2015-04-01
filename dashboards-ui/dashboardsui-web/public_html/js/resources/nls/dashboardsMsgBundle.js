@@ -139,7 +139,8 @@ define({
       "LABEL_WIDGET_PUBLISHER_PUBLISH":"Publish",
       
       "DBS_ERROR_PAGE_TITLE":"Error",
-      "DBS_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it."
+      "DBS_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it.",
+      "DBS_ERROR_URL": "Requested URL is: "
       
 
 },
