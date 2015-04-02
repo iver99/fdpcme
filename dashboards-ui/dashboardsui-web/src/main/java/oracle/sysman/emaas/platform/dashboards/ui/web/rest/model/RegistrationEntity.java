@@ -99,7 +99,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getAdminLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, false);
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 	}
 
 	/**
@@ -168,15 +168,18 @@ public class RegistrationEntity
 		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
 	}
 
-	private void addToLinksMap(Map<String, Link> linksMap, List<Link> links)
+	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
 	{
 		for (Link link : links) {
-			if (!linksMap.containsKey(link.getRel())) {
-				linksMap.put(link.getRel(), link);
+			String key = serviceName + "_" + version + "_" + link.getRel();
+			if (!linksMap.containsKey(key)) {
+				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
+				linksMap.put(key, le);
 			}
 			else if (linksMap.get(link.getRel()).getHref().toLowerCase().startsWith("http://")
 					&& link.getHref().toLowerCase().startsWith("https://")) {
-				linksMap.put(link.getRel(), link);
+				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
+				linksMap.put(key, le);
 			}
 		}
 	}
@@ -255,7 +258,7 @@ public class RegistrationEntity
 
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix)
 	{
-		return lookupLinksWithRelPrefix(linkPrefix, true);
+		return lookupLinksWithRelPrefix(linkPrefix, false);
 	}
 
 	private List<LinkEntity> lookupLinksWithRelPrefix(String linkPrefix, boolean isAdminLink)
@@ -268,8 +271,8 @@ public class RegistrationEntity
 
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(isAdminLink);
 		_logger.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
-		Map<String, Link> linksMap = new HashMap<String, Link>();
-		Map<String, Link> dashboardLinksMap = new HashMap<String, Link>();
+		Map<String, LinkEntity> linksMap = new HashMap<String, LinkEntity>();
+		Map<String, LinkEntity> dashboardLinksMap = new HashMap<String, LinkEntity>();
 		for (InstanceInfo internalInstance : instanceList) {
 			List<Link> links = internalInstance.getLinksWithRelPrefix(linkPrefix);
 			try {
@@ -286,29 +289,27 @@ public class RegistrationEntity
 			}
 			if (NAME_DASHBOARD_UI_SERVICENAME.equals(internalInstance.getServiceName())
 					&& NAME_DASHBOARD_UI_VERSION.equals(internalInstance.getVersion())) {
-				addToLinksMap(dashboardLinksMap, links);
+				addToLinksMap(dashboardLinksMap, links, internalInstance.getServiceName(), internalInstance.getVersion());
 			}
 			else if (subscribedApps != null && subscribedApps.contains(internalInstance.getServiceName())) {
-				addToLinksMap(linksMap, links);
+				addToLinksMap(linksMap, links, internalInstance.getServiceName(), internalInstance.getVersion());
 			}
 
 		}
 
-		Iterator<Map.Entry<String, Link>> iterDashboardLinks = dashboardLinksMap.entrySet().iterator();
+		Iterator<Map.Entry<String, LinkEntity>> iterDashboardLinks = dashboardLinksMap.entrySet().iterator();
 		while (iterDashboardLinks.hasNext()) {
-			Map.Entry<String, Link> entry = iterDashboardLinks.next();
-			Link val = entry.getValue();
-			LinkEntity le = new LinkEntity(getLinkName(val.getRel()), val.getHref());
-			linkList.add(le);
+			Map.Entry<String, LinkEntity> entry = iterDashboardLinks.next();
+			LinkEntity val = entry.getValue();
+			linkList.add(val);
 		}
 
-		Iterator<Map.Entry<String, Link>> iterLinks = linksMap.entrySet().iterator();
+		Iterator<Map.Entry<String, LinkEntity>> iterLinks = linksMap.entrySet().iterator();
 		while (iterLinks.hasNext()) {
-			Map.Entry<String, Link> entry = iterLinks.next();
-			Link val = entry.getValue();
-			LinkEntity le = new LinkEntity(getLinkName(val.getRel()), val.getHref());
-			if (!dashboardLinksMap.containsKey(val.getRel())) {
-				linkList.add(le);
+			Map.Entry<String, LinkEntity> entry = iterLinks.next();
+			LinkEntity val = entry.getValue();
+			if (!dashboardLinksMap.containsKey(entry.getKey())) {
+				linkList.add(val);
 			}
 		}
 		_logger.info("Got links matching prefix:" + linkPrefix, linkList.toString());

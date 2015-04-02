@@ -36,6 +36,7 @@ define({
       "BRANDING_BAR_APP_NAME_IT_ANALYTICS": "IT Analytics",
       "BRANDING_BAR_APP_NAME_LOG_ANALYTICS": "Log Analytics",
       "BRANDING_BAR_APP_NAME_DASHBOARD": "Dashboards",
+      "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI":"Set up Oracle Management Cloud"
 },
   "fr": true,
   "cs": true,
