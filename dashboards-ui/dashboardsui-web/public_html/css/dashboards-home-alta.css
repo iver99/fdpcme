@@ -14,11 +14,14 @@
 }
 
 .dbs-welcome-content{
-    padding: 5px; 
-    padding-top: 10px;
-    //margin-left: 37px; 
-    margin: 10px; 
-    height: 40px;
+    //padding-left: 4px;
+    //padding-right: 4px; 
+    margin-left: 5px;
+    margin-right: 5px; 
+    height: 55px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 14px;
     border-radius: 8px;
     background-color: #e8f2fb;
 }
@@ -55,9 +58,8 @@
     padding-right: 2px;
     vertical-align: top;
     background: #ffffff;
-    border: 1px solid #d6dfe6;
-    /*border-color: #d6dfe6;*/
-    border-color: #999999;    
+    border: 1px solid #d6dfe6;   
+    border-color: #bbbbbb;   
     border-radius: 1px;
     -moz-box-sizing: border-box;
     box-sizing: border-box;

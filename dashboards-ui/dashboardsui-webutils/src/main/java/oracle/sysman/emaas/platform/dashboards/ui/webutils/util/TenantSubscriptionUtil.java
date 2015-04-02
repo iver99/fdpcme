@@ -63,8 +63,6 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
-
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		if (tenant == null) {
@@ -167,5 +165,7 @@ public class TenantSubscriptionUtil
 		}
 		return false;
 	}
+
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 
 }
