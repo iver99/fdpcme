@@ -26,7 +26,7 @@
         {"name": "Administration 2", "href": "https://10.245.29.51:7002/emcpdfui/home.html"}
     ],
     "dfRestApiEndPoint11": "http://10.240.114.214:7001/emcpdf/api/v1/",
-    "dfRestApiEndPoint22": "http://slc06wfs.us.oracle.com:7001/emcpdf/api/v1/",
-    "dfRestApiEndPoint": "http://sca00brh.us.oracle.com:7001/emcpdf/api/v1/",
+    "dfRestApiEndPoint": "http://slc06wfs.us.oracle.com:7001/emcpdf/api/v1/",
+    "dfRestApiEndPoint22": "http://sca00brh.us.oracle.com:7001/emcpdf/api/v1/",
     "ssfRestApiEndPoint": "http://slc06wfs.us.oracle.com:7001/savedsearch/v1/"
 }
