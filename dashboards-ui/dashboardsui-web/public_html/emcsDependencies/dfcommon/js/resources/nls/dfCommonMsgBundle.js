@@ -36,6 +36,7 @@ define({
       "BRANDING_BAR_APP_NAME_IT_ANALYTICS": "IT Analytics",
       "BRANDING_BAR_APP_NAME_LOG_ANALYTICS": "Log Analytics",
       "BRANDING_BAR_APP_NAME_DASHBOARD": "Dashboards",
+      "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI":"Set up Oracle Management Cloud",
       "WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE": "Open",
       "WIDGET_SELECTOR_WIDGET_GROUP_LABEL": "Widget Group",
       "WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER": " Search widgets.",

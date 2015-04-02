@@ -60,6 +60,7 @@ public class APIBase
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_REQUIRED));
 		}
+
 		try {
 			long internalTenantId = TenantIdProcessor.getInternalTenantIdFromOpcTenantId(tenantId);
 			return internalTenantId;
@@ -108,7 +109,7 @@ public class APIBase
 			return null;
 		}
 		String externalBase = DashboardAPIUtil.getExternalAPIBase();
-		String href = externalBase + "dashboards/" + dbd.getDashboardId();
+		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dbd.getDashboardId();
 		//		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
 		dbd.setHref(href);
 		return dbd;
