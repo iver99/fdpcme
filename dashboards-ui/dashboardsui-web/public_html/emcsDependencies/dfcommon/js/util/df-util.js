@@ -227,12 +227,52 @@ define(['knockout',
                         result = data.applications;
                     },
                     error:function(xhr, textStatus, errorThrown){
-                        console.log("Error: Link (with Rel Prefix) not found due to error: "+textStatus);
+                        console.log("Failed to get subscribed applicatoins due to error: "+textStatus);
                     },
                     async:false
                 });
                 return result;
             };
+            
+            /**
+             * Check subscribed applications and call callback function with subscribed application names in an string array or null for none
+             * Note:
+             * See constructor of this utility to know more about how to set tenant and user.
+             * 
+             */
+            self.checkSubscribedApplications = function(callbackFunc) {
+                if (!$.isFunction(callbackFunc)){
+                    console.error("invalid callback function: "+callbackFunc);
+                    return;
+                } 
+                
+                if (!self.tenantName) {
+                    console.error("Specified tenant name is empty, and the query won't be executed");
+                    return;
+                }
+                if (!self.userName) {
+                    console.error("Specified user name is empty, and the query won't be executed");
+                    return;
+                }
+                
+                var header = self.getDefaultHeader();
+                var dfUrlRoot = self.discoverDFRestApiUrl();
+                var url = self.buildFullUrl(dfUrlRoot, "subscribedapps");
+
+                $.ajax(url, {
+                    type: 'get',
+                    dataType: 'json',
+                    headers: header,
+                    success:function(data) {
+                        callbackFunc(data.applications);
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        console.log("Failed to get subscribed applicatoins due to error: "+textStatus);
+                        callbackFunc(null);
+                    },
+                    async:true
+                });
+            };            
         }
         
         return DashboardFrameworkUtility;
