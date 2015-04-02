@@ -17,19 +17,6 @@ function(dfu, oj, $, ko)
 ko.bindingHandlers.dbsDashboardPanel = {
     init: function(element, valueAccessor) {
         var _value = ko.unwrap(valueAccessor());
-        /*
-        _value.activated = function(event, data) {
-                                console.log('activated');
-                            };
-        _value.deactivated = function() {
-                                console.log('deactivated');
-                            };
-        _value.deleteClicked = function(event, data) {
-                                console.log('delete clicked');
-                            };
-        _value.navigated = function(event, data) {
-                                console.log('nagivate clicked');
-                            };*/
         var _data = _value['data'], _dashabord =  _value['data'], _resturl = _dashabord['href'], _dmProperty = 'oj._internalObj', _dProperty = 'attributes';
         
         if (_data[_dmProperty]) //oj.KnockoutUtils.map interanl object
@@ -56,8 +43,8 @@ ko.bindingHandlers.dbsDashboardPanel = {
 
 var TITLE_MAX_LENGTH = 34,
     DESCRIPTION_MAX_LENGTH = 256,
-    WIGDET_NAME_MAX_LENGTH = 34,
-    DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE",
+    //WIGDET_NAME_MAX_LENGTH = 34,
+    //DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE",
     TAB_INDEX_ATTR = "tabindex";
 
 
@@ -79,7 +66,7 @@ $.widget('dbs.dbsDashboardPanel',
         
         classNames:
         {
-            'chover': 'dbs-summary-container-hover',
+            //'chover': 'dbs-summary-container-hover',
             'headerTitle': 'dbs-summary-header-title',
             'headerContainer': 'dbs-summary-header-container',
             'headerToolbar': 'dbs-summary-header-toolbar',
@@ -100,14 +87,15 @@ $.widget('dbs.dbsDashboardPanel',
             var self = this;
             if (self.active === false)
             {
-                var _name = self.name, _dashboard = self.options['dashboard'], _element = self.element, _toolbarEle = self.toolbarElement;
+                var _dashboard = self.options['dashboard'], _element = self.element, _toolbarEle = self.toolbarElement;
                 _element.addClass(self.classNames['active']);
                 self.titleElement.addClass(self.classNames['active']);
                 _toolbarEle.addClass(self.classNames['active']);
+                /*
                 if (self.options.dashboard.widgets && self.options.dashboard.widgets.length > 4)
                 {
                     self.contentPage3Ele.addClass(self.classNames['pageScroll']);
-                }
+                }*/
                 _element.animate({margin:'-=5px', height:'+=10px', width:'+=10px'},
                 {
                     duration: 300,
@@ -130,7 +118,7 @@ $.widget('dbs.dbsDashboardPanel',
                 _element.removeClass(self.classNames['active']);
                 self.titleElement.removeClass(self.classNames['active']);
                 _toolbarEle.removeClass(self.classNames['active']);
-                self.contentPage3Ele.removeClass(self.classNames['pageScroll']);
+                //self.contentPage3Ele.removeClass(self.classNames['pageScroll']);
                 
                 _element.animate({margin:'+=5px', height:'-=10px', width:'-=10px'},
                 {
@@ -317,6 +305,8 @@ $.widget('dbs.dbsDashboardPanel',
             self.contentPage2Ele = $("<div></div>")
                     .addClass(self.classNames['page']).append(self.contentPage2CntEle);
             self.contentPagesEle.append(self.contentPage2Ele);
+            /*
+            // remove widget bullet
             //widgets page
             self.contentPage3TlEle = $("<div></div>").text(getNlsString('DBS_HOME_DSB_PANEL_WIDGETS')).css({"text-align": "center", "max-height": "16px", "font-weight":"bold"});//.append("<h6>Widgets</h6>");
             
@@ -338,8 +328,9 @@ $.widget('dbs.dbsDashboardPanel',
                     .addClass(self.classNames['page'])
                     .append(self.contentPage3TlEle)
                     .append(self.contentPage3CntEle);
-            
+            // remove widget bullet
             self.contentPagesEle.append(self.contentPage3Ele);
+            */
         },
         
         _createContentControlls: function() {
@@ -378,6 +369,7 @@ $.widget('dbs.dbsDashboardPanel',
                     .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'))
                     .attr("title", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'));
             self.contentCtlsEle.append(self.contentCtl2Ele);
+            /*
             self.contentCtl3Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
                     .bind('click.' + _name, function (event) {
@@ -394,6 +386,7 @@ $.widget('dbs.dbsDashboardPanel',
                     .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_WIDGETS'))
                     .attr("title", getNlsString('DBS_HOME_DSB_PAGE_WIDGETS'));
             self.contentCtlsEle.append(self.contentCtl3Ele);
+            */
         },
         
         _goToPage: function(num) {
@@ -412,11 +405,13 @@ $.widget('dbs.dbsDashboardPanel',
                     self.contentCtl2Ele.addClass(_aclass);
                     self._setCurrentPageNum(2);
                     break;
+                /*
                 case 3:
                     self.contentPage3Ele.addClass(_aclass);
                     self.contentCtl3Ele.addClass(_aclass);
                     self._setCurrentPageNum(3);
                     break;
+                */
                 }
             }
         },
@@ -434,11 +429,13 @@ $.widget('dbs.dbsDashboardPanel',
                     self.contentCtl2Ele.removeClass(_aclass);
                     //self._setCurrentPageNum(undefined);
                     break;
+                /*
                 case 3:
                     self.contentPage3Ele.removeClass(_aclass);
                     self.contentCtl3Ele.removeClass(_aclass);
                     //self._setCurrentPageNum(undefined);
                     break;
+                */
             }
         },
         
