@@ -55,7 +55,9 @@ define({
       "WIDGET_SELECTOR_TIME_DIFF_A_MOMENT": "a moment",
       "WIDGET_SELECTOR_TIME_DIFF_AGO": "ago",
       "WIDGET_SELECTOR_WIDGET_GROUP_ALL": "All",
-      "WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN": "Dashboards Built-In"
+      "WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN": "Dashboards Built-In",
+      "WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE": "Screen Shot",
+      "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description"
 },
   "fr": true,
   "cs": true,

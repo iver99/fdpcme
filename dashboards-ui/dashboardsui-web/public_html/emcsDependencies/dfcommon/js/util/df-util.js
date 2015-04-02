@@ -249,32 +249,9 @@ define(['knockout',
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
                 return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-//                var regInfo = self.getRegistrationInfo();
-//                if (regInfo && regInfo.ssfRestApiEndPoint){
-//                    return regInfo.ssfRestApiEndPoint;
-//                }else{
-//                    console.log("Failed to discovery SSF REST API end point");
-//                    return null;
-//                }
 //                return self.discoverUrl('SavedSearch', '0.1');
             };
             
-//            self.getRegistrationInfo=function(){
-//                if (self.registrationInfo===null){
-//                    $.ajaxSettings.async = false;
-//                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
-//                        self.registrationInfo = data;
-//                    });
-//                    $.ajaxSettings.async = true; 
-//                }
-//                return self.registrationInfo;
-//            };
-//            
-//            self.getRegistrationEndPoint=function(){
-//                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-////                return 'api/configurations/registration';
-//                return 'data/servicemanager.json';
-//            };
         }
         
         return DashboardFrameworkUtility;
