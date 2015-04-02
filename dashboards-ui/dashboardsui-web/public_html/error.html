@@ -24,6 +24,9 @@
             .dbd-error-area .dbd-error-inner img {
               width: 150px;
             }
+            .dbd-error-area .dbd-error-inner .dbd-error-url {
+              word-break: break-all;
+            }
         </style> 
         <script data-main="js/error" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
     </head>
@@ -34,7 +37,7 @@
                 <h4 class="dbd-error-msg" data-bind="text: errorPageMessage"></h4>
                 <div data-bind="visible: invalidUrl">
                     <span data-bind="text: invalidUrlLabel"></span>
-                    <a data-bind="text: invalidUrl, attr: {href: invalidUrl}"></a>
+                    <a class="dbd-error-url" data-bind="text: invalidUrl, attr: {href: invalidUrl}"></a>
                 </div>
             </div>
         </div>
