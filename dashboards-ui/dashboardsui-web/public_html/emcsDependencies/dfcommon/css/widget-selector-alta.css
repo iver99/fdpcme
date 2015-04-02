@@ -36,10 +36,14 @@
   font-style: normal; 
 }
 
+#widget-selector-widgetgroups .oj-select-choice {
+    border: 1px solid #c4ced7;
+}
+
 #widget-selector-searchbox { 
     border:1px; 
     border-radius: 2px;
-    border-color: #dfe4e7;
+    border-color: #c4ced7;
     border-style: solid;
     width: 829px;
     height: 32px; 
