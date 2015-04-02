@@ -27,21 +27,27 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 var nlsResourceBundle = getFilePath(localrequire,'../../../js/resources/nls/dfCommonMsgBundle.js');
                 nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
                 
-                //NLS strings
+                // Get input parameters and set UI strings
                 var affirmativeTxt = $.isFunction(params.affirmativeButtonLabel) ? params.affirmativeButtonLabel() : params.affirmativeButtonLabel;
                 var dialogTitle = $.isFunction(params.dialogTitle) ? params.dialogTitle() : params.dialogTitle;
                 var widgetProviderName = $.isFunction(params.providerName) ? params.providerName() : params.providerName;
                 var widgetProviderVersion = $.isFunction(params.providerVersion) ? params.providerVersion() : params.providerVersion;
+                self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
+                self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+                self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
+                        (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
+                self.widgetHandler = params.widgetHandler;
                 self.widgetSelectorTitle = ko.observable(dialogTitle);
                 self.widgetGroupLabel = ko.observable();
                 self.searchBoxPlaceHolder = ko.observable();
                 self.searchButtonLabel = ko.observable();
                 self.affirmativeButtonLabel = ko.observable(affirmativeTxt);
+                self.widgetScreenShotPageTitle = ko.observable();
+                self.widgetDescPageTitle = ko.observable();
                 self.widgetGroupFilterVisible = ko.observable(true);
                 self.nlsStrings = null;
-                self.dialogHeight = ko.observable('650px');
-                self.dialogBodyHeightStyle = ko.observable('height: 540px;');
                 
+                // Get NLS strings
                 require(['i18n!'+nlsResourceBundle],
                     function(nls) { 
                         self.nlsStrings = nls;
@@ -52,20 +58,15 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                         self.widgetGroupLabel(nls.WIDGET_SELECTOR_WIDGET_GROUP_LABEL);
                         self.searchBoxPlaceHolder(nls.WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER);
                         self.searchButtonLabel(nls.WIDGET_SELECTOR_SEARCH_BTN_LABEL);
+                        self.widgetScreenShotPageTitle(nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE);
+                        self.widgetDescPageTitle(nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE);
                     });
-            
-                self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
-                self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                
                 var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/widget-selector-alta.css'); 
-
 		self.widgetSelectorCss = cssFile;
-                self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
-                        (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
-                self.widgetHandler = params.widgetHandler;
                 
+                // Initialize widget group and widget data
                 self.categoryValue=ko.observableArray(["all|all|All"]);
                 self.widgetGroup=ko.observable();
                 self.widgetGroupValue=ko.observable({providerName:"all", providerVersion:"all", name:"all"});
@@ -104,36 +105,22 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 self.searchText = ko.observable("");
                 self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
                 self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
-
-                self.widgetsCount = ko.observable(0);
-                self.summaryMsg = ko.computed(function(){return "Search from " + self.widgetsCount() + " available widgets for your dashboard.";}, this);
-
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
-//                self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
-                var widgetClickTimer = null; 
-
-//                refreshWidgets();
                 
+                // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
                     refreshWidgets();
                 };
                 
+                // Widget group selector value change handler
                 self.optionChangedHandler = function(data, event) {
                     if (event.option === "value") {
                         self.searchWidgets();
-//                        curPageWidgets=[];
-//                        curPage = 1;
-//                        var curGroupWidgets = getAvailableWidgets();
-//                        totalPage = (curGroupWidgets.length%pageSize === 0 ? curGroupWidgets.length/pageSize : Math.floor(curGroupWidgets.length/pageSize) + 1);
-//
-//                        fetchWidgetsForCurrentPage(curGroupWidgets);
-//                        self.curPageWidgetList(curPageWidgets);
-//                        refreshNaviButton();
-//                        naviFromSearchResults = false;
                     }
                 };
                 
+                // Show widgets data of previous page
                 self.naviPrevious = function() {
                     if (curPage === 1) {
                         self.naviPreBtnVisible(false);
@@ -149,11 +136,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     }
 
                     self.curPageWidgetList(curPageWidgets);
-//                    self.currentWidget(null);
-//                    self.confirmBtnDisabled(true);
                     refreshNaviButton();
                 };
-
+                
+                // Show widget data of next page
                 self.naviNext = function() {
                     if (curPage === totalPage) {
                         self.naviNextBtnVisible(false);
@@ -168,56 +154,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                         fetchWidgetsForCurrentPage(getAvailableWidgets());
                     }
                     self.curPageWidgetList(curPageWidgets);
-//                    self.currentWidget(null);
-//                    self.confirmBtnDisabled(true);
                     refreshNaviButton();
                 };
-
-                self.widgetDbClicked = function(data, event) {
-                    clearTimeout(widgetClickTimer);
-                    self.tilesViewModel.appendNewTile(data.WIDGET_NAME, "", 2, data);
-                };
-
-                self.widgetClicked = function(data, event) {
-                    clearTimeout(widgetClickTimer);
-                    widgetClickTimer = setTimeout(function (){
-                        var _data = ko.toJS(data);
-                        _data.WIDGET_DESCRIPTION = '';
-                        _data.QUERY_STR = '';
-                        if (_data.WIDGET_GROUP_NAME !== 'Dashboards Built-In') {
-                            if (ssfUrl && ssfUrl !== '') {
-                                $.ajax({
-                                    url: dfu.buildFullUrl(ssfUrl,'search/'+data.WIDGET_UNIQUE_ID),
-                                    headers: dfu.getSavedSearchServiceRequestHeader(),
-                                    success: function(widget, textStatus) {
-                                        _data.WIDGET_DESCRIPTION = widget.description ? widget.description : '';
-                                        _data.QUERY_STR = widget.queryStr ? widget.queryStr : '';
-                                    },
-                                    error: function(xhr, textStatus, errorThrown){
-                                        console.log('Error when querying saved searches!');
-                                    },
-                                    async: false
-                                });
-                            }
-                        }
-
-                        self.currentWidget(_data);
-                        $('#widgetDetailsDialog').ojDialog('open');
-                    }, 300); 
-                };
                 
-                self.addWidgetToDashboard = function() {
-                    $('#'+self.dialogId).ojDialog('close');
-//                    self.tilesViewModel.appendNewTile(self.currentWidget().WIDGET_NAME, "", 2, self.currentWidget());
-                };
-
-                self.enterSearch = function(d,e){
-                    if(e.keyCode === 13){
-                        self.searchWidgets();  
-                    }
-                    return true;
-                };
-
+                // Search widgets by selected widget group and search text(name, description)
                 self.searchWidgets = function() {
                     searchResultArray = [];
                     var allWidgets = getAvailableWidgets();
@@ -242,15 +182,16 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     refreshNaviButton();
                     naviFromSearchResults = true;
                 };
-
+                
+                // Get widget data to be shown in current page
                 function fetchWidgetsForCurrentPage(allWidgets) {
                     curPageWidgets=[];
                     for (var i=(curPage-1)*pageSize;i < curPage*pageSize && i < allWidgets.length;i++) {
-//                        allWidgets[i].index = i;
                         curPageWidgets.push(allWidgets[i]);
                     }
                 };
-
+                
+                // Get available widgets to be searched from
                 function getAvailableWidgets() {
                     var availWidgets = [];
                     var category = ko.toJS(self.categoryValue);
@@ -279,53 +220,46 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     }
                     return availWidgets;
                 };
-
+                
+                // Refresh pagination button status
                 function refreshNaviButton() {
                     self.naviPreBtnVisible(curPage === 1 ? false : true);
                     self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
                 };
-
-                self.searchFilterFunc = function (arr, value)
-                {
-                    console.log("Value: " + value);
+                
+                // Return search result of type ahead search
+                self.searchFilterFunc = function (arr, value) {
                     self.searchText(value);
                     return searchResultArray;
                 };
-
-                self.searchResponse = function (event, data)
-                {
-                    console.log("searchResponse: " + data.content.length);
+                
+                // Handler for type ahead search
+                self.searchResponse = function (event, data) {
                     self.searchWidgets();
                 };
                 
+                // Handler for navigation to widget screen shot page
                 self.widgetNaviScreenShotClicked = function(data, event) {
-//                    var widget = self.curPageWidgetList()[data.index];
-                    data.naviScreenshotClass("widget-box-navi-control");
-                    data.naviDescClass("widget-box-navi-control widget-box-navi-control-inactive");
-                    data.pageScreenShotClass("widget-box-screenshot");
-                    data.pageDescClass("widget-box-description widget-box-inactive");
+                    data.isScreenShotPageDisplayed(true);
                 };
                 
+                // Handler for navigation to widget description page
                 self.widgetNaviDescClicked = function(data, event) {
-//                    var widget = self.curPageWidgetList()[data.index];
-                    data.naviScreenshotClass("widget-box-navi-control widget-box-navi-control-inactive");
-                    data.naviDescClass("widget-box-navi-control");
-                    data.pageScreenShotClass("widget-box-screenshot  widget-box-inactive");
-                    data.pageDescClass("widget-box-description");
+                    data.isScreenShotPageDisplayed(false);
                 };
                 
+                // Widget box click handler
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
                     if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME || 
                             curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION || 
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
-//                        self.curPageWidgetList()[curWidget.index].widgetContainerClass("widget-selector-container");
-                        widgetArray[curWidget.index].widgetContainerClass("widget-selector-container");
-                        data.widgetContainerClass("widget-selector-container widget-selector-container-selected");
+                        widgetArray[curWidget.index].isSelected(false);
+                        data.isSelected(true);
                         self.currentWidget(data);
                     }
                     else if (!curWidget) {
-                        data.widgetContainerClass("widget-selector-container widget-selector-container-selected");
+                        data.isSelected(true);
                         self.currentWidget(data);
                     }
                     
@@ -333,6 +267,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                         self.confirmBtnDisabled(false);
                 };
                 
+                // Widget handler for selected widget
                 self.widgetSelectionConfirmed = function() {
                     $('#'+self.dialogId).ojDialog('close');
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
@@ -340,7 +275,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                         self.widgetHandler(selectedWidget);
                     }
                 };
-
+                
+                // Refresh widget/widget group data and UI displaying
                 function refreshWidgets() {
                     widgetArray = [];
                     curGroupWidgets = [];
@@ -362,8 +298,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                                 widgetGroupList = loadWidgetGroups(data);
                                 if (widgetProviderName && widgetProviderVersion && widgetGroupList.length <= 2) {
                                     self.widgetGroupFilterVisible(false);
-                                    self.dialogHeight('600px');
-                                    self.dialogBodyHeightStyle('height: 500px;');
                                 }
                             },
                             error: function(xhr, textStatus, errorThrown){
@@ -398,9 +332,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     self.searchText("");
                     self.naviPreBtnVisible(curPage === 1 ? false : true);
                     self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
-                    self.widgetsCount(widgetArray.length);
                 };
                 
+                // Load widgets from ajax call result data
                 function loadWidgets(data) {
                     var targetWidgetArray = [];
                     if (data && data.length > 0) {
@@ -455,11 +389,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
 
                                 if (!widget.WIDGET_DESCRIPTION)
                                     widget.WIDGET_DESCRIPTION = "";
-                                widget.naviScreenshotClass = ko.observable('widget-box-navi-control');
-                                widget.naviDescClass = ko.observable('widget-box-navi-control widget-box-navi-control-inactive');
-                                widget.pageScreenShotClass = ko.observable('widget-box-screenshot');
-                                widget.pageDescClass = ko.observable('widget-box-description widget-box-inactive');
-                                widget.widgetContainerClass = ko.observable("widget-selector-container");
+                                widget.isSelected = ko.observable(false);
+                                widget.isScreenShotPageDisplayed = ko.observable(true);
                                 widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
                                 targetWidgetArray.push(widget);
                                 widgetArray.push(widget);
@@ -474,14 +405,15 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     }
                     return targetWidgetArray;
                 };
-
+                
+                // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
                     var targetWidgetGroupArray = [];
                     var labelAll = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
                     var groupAll = {value:'all|all|All', label: labelAll};
                     var pname = 'DashboardFramework';
                     var pversion = '1.0';
-                    var gname = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;//'Dashboards Built-In';
+                    var gname = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;
                     var assetRoot = '';
                     var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                     targetWidgetGroupArray.push(groupAll);
@@ -507,8 +439,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     }
                     return targetWidgetGroupArray;
                 };
-
                 
+                // Get file path relative to js
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");
                     var path = requireContext.toUrl(relPath);
@@ -516,10 +448,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     return path;
                 };
                 
+                // Get file path relative to html
                 function getFilePathRelativeToHtml(requireContext, relPath) {
                     return requireContext.toUrl(relPath);
                 };
                 
+                // Calculate the time difference between current date and the last modification date
                 function getLastModificationTimeString(lastModifiedDate) {
                     var result = "";
                     if (lastModifiedDate) {
@@ -571,6 +505,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     
                     return result;
                 };
+                
             }
             
             return WidgetSelectorViewModel;

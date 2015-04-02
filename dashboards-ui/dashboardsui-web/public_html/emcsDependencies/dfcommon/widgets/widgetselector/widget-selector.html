@@ -8,15 +8,16 @@
         <div style="display:none;" 
             data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle,
-                rootAttributes: { style: 'width: 885px; height: dialogHeight;'}}, attr: {id: dialogId}">   
-            <div class="oj-dialog-body widget-selector-body" data-bind="attr: {style: dialogBodyHeightStyle}" >
+                rootAttributes: { style: 'width: 885px; height: widgetGroupFilterVisible ? 650px : 600px;'}}, attr: {id: dialogId}">   
+            <div class="oj-dialog-body" data-bind="style: {height: widgetGroupFilterVisible() ? '540px' : '500px'}" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
-                <div style="padding-right: 18px;padding-left: 4px" >
+                <div style="padding-left: 4px" >
                     <div id="widget-selector-searchbox">
                         <div style="float:left;">
-                            <input id="searchTxt" maxlength='100' autofocus="autofocus" aria-label="Search widgets" 
-                               data-bind="ojComponent:{component:'ojInputText',value: searchText}, attr: {placeholder: searchBoxPlaceHolder},
-                                                                    typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
+                            <input id="searchTxt" maxlength='100' autofocus="autofocus"
+                               data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
+                                            attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
+                                            typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                         </div>
                         <div style="float:right;">
                             <button class="oj-button-half-chrome widget-selector-search-button" data-bind="click: searchWidgets,
@@ -39,36 +40,30 @@
                     </div>
                     <!-- /ko -->
                 </div>
-                <div id="widgets" class="widget-summaries-container" >
+                <div id="widgets">
                     <!-- ko foreach: curPageWidgetList -->
-<!--                    <div class=" widget-container" data-bind="attr:{title: name}, 
-                                                    event: { dblclick: $parent.widgetDbClicked, click: $parent.widgetClicked}">
-                        <div>
-                            <input type="image" data-bind="attr:{src: WIDGET_ICON, alt: WIDGET_GROUP_NAME, title: WIDGET_GROUP_NAME}" width="32"
-                                   class="widget-image"/>
-                            <span data-bind="text:WIDGET_NAME"> </span>
-                        </div>
-                    </div>-->
-                    <div data-bind="attr:{title: name, class: widgetContainerClass}, click: $parent.widgetBoxClicked">
+                    <div class="widget-selector-container" data-bind="attr:{title: name}, 
+                            css: {'widget-selector-container-selected': isSelected}, click: $parent.widgetBoxClicked">
                         <div class="widget-box-title" data-bind="attr: {title: WIDGET_NAME}">
                             <span data-bind="text: WIDGET_NAME"></span>
                         </div>
-                        <div data-bind="attr: {class: pageDescClass}">
-                            <div style="padding-top: 10px;padding-bottom: 5px;">
+                        <div class="widget-box-description" data-bind="css: {'widget-box-inactive': isScreenShotPageDisplayed}">
+                            <div style="padding-top: 10px; padding-bottom: 10px;">
                                 <span data-bind="text: WIDGET_OWNER+' - '" style="font-weight: bold;"></span>
                                 <span data-bind="text: modificationDateString" style="font-weight: normal;"></span>
                             </div>
-                            <div style="overflow: hidden; text-overflow:ellipsis;padding-top: 5px; " data-bind="text: WIDGET_DESCRIPTION">
-                            </div>
+                            <div data-bind="text: WIDGET_DESCRIPTION"></div>
                         </div>
-                        <div data-bind="attr: {class: pageScreenShotClass}">
+                        <div class="widget-box-screenshot" data-bind="css: {'widget-box-inactive': !isScreenShotPageDisplayed()}">
 <!--                            <input type="image" data-bind="attr:{src: WIDGET_ICON, alt: WIDGET_GROUP_NAME, title: WIDGET_GROUP_NAME}" width="32"
                                    class="widget-selector-screenshot"/>-->
                             <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_HISTOGRAM}" class="widget-selector-screenshot"/>
                         </div>
                         <div class="widget-box-navigation">
-                            <span data-bind="attr:{class: naviScreenshotClass}, click: $parent.widgetNaviScreenShotClicked" title="Screen Shot"></span>
-                            <span data-bind="attr:{class: naviDescClass}, click: $parent.widgetNaviDescClicked" title="Description"></span>
+                            <span class="widget-box-navi-control" data-bind="css: {'widget-box-navi-control-inactive': !isScreenShotPageDisplayed()}, 
+                                click: $parent.widgetNaviScreenShotClicked, attr: {title: $parent.widgetScreenShotPageTitle}"></span>
+                            <span class="widget-box-navi-control" data-bind="css: {'widget-box-navi-control-inactive': isScreenShotPageDisplayed}, 
+                                click: $parent.widgetNaviDescClicked, attr: {title: $parent.widgetDescPageTitle}"></span>
                         </div>
                     </div>
                     <!-- /ko -->
