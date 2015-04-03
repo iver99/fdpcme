@@ -45,7 +45,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	ServletException
+			ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -108,28 +108,37 @@ public class DashboardsUiCORSFilter implements Filter
 		// redirecting check: make sure exception(s) don't have impact on the process
 		try {
 			logger.info("The tenant.user is " + userTenant + ", and the request URI is " + hReq.getRequestURI());
-			if (!StringUtil.isEmpty(userTenant) && hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
-				if (userTenant.indexOf(".") > 0) {
-					String opcTenantId = userTenant.substring(0, userTenant.indexOf("."));
-					String auth = hReq.getHeader("authorization");
-					logger.info("The authorization from the header is " + auth);
+			if (!StringUtil.isEmpty(userTenant) && userTenant.indexOf(".") > 0) {
+				String opcTenantId = userTenant.substring(0, userTenant.indexOf("."));
+				if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/home.html")) {
 					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
 					if (apps == null || apps.isEmpty()) {
-						logger.info("Tenant (" + opcTenantId + ") does not subscribe to any service. Redirect to error page");
-						hRes.sendRedirect("./error.html");
+						logger.error("Tenant (" + opcTenantId
+								+ ") does not subscribe to any service. Redirect dashboard home to error page");
+						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
 						return;
 					}
 					else if (TenantSubscriptionUtil.isAPMServiceOnly(apps)) {
 						// redirect to apm home
 						Link apmLink = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home");
 						if (apmLink != null && !StringUtil.isEmpty(apmLink.getHref())) {
-							logger.info("Tenant subscribes to APM only, and redirecting to APM home: " + apmLink.getHref());
+							logger.info("Tenant subscribes to APM only, and redirecting dashboard home page to APM home: "
+									+ apmLink.getHref());
 							hRes.sendRedirect(apmLink.getHref());
 							return;
 						}
 						else {
 							logger.warn("Retrieved an empty APM home linke for service: 'ApmUI', '0.1', 'home' from service manager");
 						}
+					}
+				}
+				else if (hReq.getRequestURI().toLowerCase().contains("emsaasui/emcpdfui/builder.html")) {
+					List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(opcTenantId);
+					if (apps == null || apps.isEmpty()) {
+						logger.error("Tenant (" + opcTenantId
+								+ ") does not subscribe to any service. Redirect dashboard builder page to error page");
+						hRes.sendRedirect("./error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG");
+						return;
 					}
 				}
 			}

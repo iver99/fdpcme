@@ -238,9 +238,9 @@ ext.restDocRootDir = "${buildDir}/restdoc"
 ext.restDocOutputDir = "${restDocRootDir}"
 
 configurations {
-	restDoc
-	enunciateCore
-	ftpAntTask
+	restDoc { transitive = false }
+	enunciateCore { transitive = false }
+	ftpAntTask { transitive = false }
 }
 
 /**
@@ -308,19 +308,19 @@ sourceSets {
  }
 
 dependencies {
-        providedCompile project(':dashboards-ui:dashboardsui-webutils')
-        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2')
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2')
-        compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6')
-        compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')
+        providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
+        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2'){ transitive = false }
+        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2'){ transitive = false }
+        compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6'){ transitive = false }
+        compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6'){ transitive = false }
 
-	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8')
-	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1')
+	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
+	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
 	
 	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){ transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1')
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0')
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15008', ext: 'war'){ transitive = false }
