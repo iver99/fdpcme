@@ -69,7 +69,6 @@ dependencies {
 	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
 				 'oracle.ojdbc6:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
-				'javax:ejb:3.2.0',
 				'javax.servlet:servlet-api:2.5',
 				'javax.ws.rs:javax.ws.rs-api:2.0',
 				'commons-codec:commons-codec:1.6',
@@ -90,7 +89,7 @@ dependencies {
 			'org.codehaus.jettison:jettison:1.1'
 	prebuild_testng 'org.testng:testng:6.8.8',
 			'com.sun.jersey:jersey-client:1.17',
- 'com.oracle.weblogic:jersey-multipart-1.17.1:12.1.2-0-0',
+			'com.sun.jersey.contribs:jersey-multipart:1.17.1',
 			'org.codehaus.groovy:groovy-all:2.2.1',
 			'org.apache.commons:commons-lang3:3.1',
 			'com.jayway.restassured:json-path:1.8.1',

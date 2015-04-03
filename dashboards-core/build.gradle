@@ -101,7 +101,7 @@ dependencies {
 	compile project(':dashboards-entities') { transitive = false }
 
 	testRuntime(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-	testCompile(group: 'org.testng', name:'testng', version:'6.8.8')  { transitive = false }
+	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
 	compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5')  { transitive = false }
