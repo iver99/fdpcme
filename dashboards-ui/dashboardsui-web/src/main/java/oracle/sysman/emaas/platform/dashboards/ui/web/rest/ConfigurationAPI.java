@@ -33,53 +33,15 @@ import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.JsonUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author miao
  */
 @Path("/configurations")
 public class ConfigurationAPI
 {
-	private static RegistrationEntity registrationEntity;
-
-	private static final String SERVICEMANAGER_FILE = "/opt/ORCLemaas/Applications/DashboardService-UI/init/servicemanager.properties";
-
-	private static Response responseRegistration;
-
-	private static final Response responseRegistrationError = Response.status(Status.NOT_FOUND)
-			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_ERROR)).build();
-	private static final Response responseRegisgtryUrlsNotFound = Response.status(Status.NOT_FOUND)
-			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR))
-			.build();
-	//	private static final Response responseSSFServiceNameNotFound = Response.status(Status.NOT_FOUND)
-	//			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR))
-	//			.build();
-	//	private static final Response responseSSFVersionNotFound = Response.status(Status.NOT_FOUND)
-	//			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR))
-	//			.build();
-	static {
-		Map<String, String> svMap = ConfigurationAPI.getServiceManagerContent();
-		if (svMap == null) {
-			responseRegistration = responseRegistrationError;
-		}
-		else if (!svMap.containsKey(RegistrationEntity.NAME_REGISTRYUTILS)) {
-			responseRegistration = responseRegisgtryUrlsNotFound;
-		}
-		//		else if (!svMap.containsKey(RegistrationEntity.NAME_SSF_SERVICENAME)) {
-		//			responseRegistration = responseSSFServiceNameNotFound;
-		//		}
-		//		else if (!svMap.containsKey(RegistrationEntity.NAME_SSF_VERSION)) {
-		//			responseRegistration = responseSSFVersionNotFound;
-		//		}
-		else {
-			//			String registryUrls = svMap.get(RegistrationEntity.NAME_REGISTRYUTILS);
-			//			String ssfServiceName = svMap.get(RegistrationEntity.NAME_SSF_SERVICENAME);
-			//			String ssfVersion = svMap.get(RegistrationEntity.NAME_SSF_VERSION);
-			registrationEntity = new RegistrationEntity();
-			responseRegistration = Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(registrationEntity))
-					.build();
-		}
-	}
-
 	private static Map<String, String> getServiceManagerContent()
 	{
 		Map<String, String> map = new HashMap<String, String>();
@@ -113,17 +75,46 @@ public class ConfigurationAPI
 		}
 	}
 
+	private static Logger _logger = LogManager.getLogger(ConfigurationAPI.class);
+	private static final String SERVICEMANAGER_FILE = "/opt/ORCLemaas/Applications/DashboardService-UI/init/servicemanager.properties";
+
+	private static Response responseError = null;
+	private static final Response responseRegistrationError = Response.status(Status.NOT_FOUND)
+			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_ERROR)).build();
+	private static final Response responseRegisgtryUrlsNotFound = Response.status(Status.NOT_FOUND)
+			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR))
+			.build();
+
+	static {
+		Map<String, String> svMap = ConfigurationAPI.getServiceManagerContent();
+		if (svMap == null) {
+			responseError = responseRegistrationError;
+			_logger.error("servicemanager.properties is empty");
+		}
+		else if (!svMap.containsKey(RegistrationEntity.NAME_REGISTRYUTILS)) {
+			responseError = responseRegisgtryUrlsNotFound;
+			_logger.error("required key: [registryUrls] is missing in servicemanager.properties");
+		}
+
+		else {
+			//do nothing
+		}
+	}
+
 	@Path("/registration")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDiscoveryConfigurations(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
+		if (responseError != null) {
+			return responseError; //need redeployment to remove error with fix
+		}
 		try {
 			initializeUserTenantContext(userTenant);
-			responseRegistration = Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(registrationEntity))
+			Response resp = Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity()))
 					.build();
-			return responseRegistration;
+			return resp;
 
 		}
 		catch (DashboardException e) {
