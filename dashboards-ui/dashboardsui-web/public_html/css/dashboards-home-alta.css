@@ -88,8 +88,12 @@
 }
 
 .dbs-summary-header-title h2 {
+<<<<<<< HEAD
     font-size: 1.15rem;
     white-space: nowrap;
+=======
+    font-size: 1rem;
+>>>>>>> change font to 1rem as requested
 }
 
 .dbs-summary-header-title.active {
