@@ -6,9 +6,8 @@ function(ko, $)
  * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
  * All rights reserved.
  */
-    PreferenceUtility = function(dfRestApiUrl, requestHeader) {
-        this.dfRestApiUrl = dfRestApiUrl;
-        this.prefRestApiUrl = dfRestApiUrl + "preferences";
+    PreferenceUtility = function(prefRestApiUrl, requestHeader) {
+        this.prefRestApiUrl = prefRestApiUrl;
         this.requestHeader = requestHeader;
     };
     

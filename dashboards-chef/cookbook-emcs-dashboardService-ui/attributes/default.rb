@@ -19,9 +19,11 @@ default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 
 default["file_domain_create"] = "#{node["log_dir"]}/dashboardCreateDomain.py"
 
-default["myApplicationName"]="emaas-applications-dashboards-ui-0.1"
+default["SAAS_version"] = "1.0.0"
+default["myApplicationName"]="emaas-applications-dashboards-ui-#{node["SAAS_version"]}"
 default["target"]="#{node["wls_adminserver_name"]}"
 
+default["SAAS_API_version"] = "0.1"
 default["dbhome"]="#{node["infra_dir"]}/rdbms/12.1.0" 
 default["oracle_base"] = "#{node["run_dir"]}/oracle"
 default["SAAS_datasourcename"]="emaas_dashboards_ds"
@@ -48,6 +50,6 @@ default["SAAS_entityNamingDomain"]="DatabaseTenantMapping"
 default["SAAS_entityNamingKey"]="tenantid"
 
 default["SAAS_earSelfCheck"]="emaas"
-default["SAAS_earfile"]="emaas-applications-dashboards-ui-0.1"
+default["SAAS_earfile"]="emaas-applications-dashboards-ui-#{node["SAAS_version"]}"
 default["SAAS_deploymentUuid"]="0"
 

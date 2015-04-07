@@ -11,10 +11,10 @@
 requirejs.config({
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.2.0',
-        'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
-        'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
-        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
+        'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
+        'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/min',
         'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
         'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
@@ -150,21 +150,14 @@ require(['dbs/dbsmodel',
  
             function HeaderViewModel() {
                 var self = this;
-//                self.registryUrl = dfu.getRegistryUrl();//"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/";
-//                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
-//                self.appName = "Application Performance Monitoring | Log Analytics | IT Analytics";
                 self.appId = "Dashboard";
-                self.relNotificationCheck = "existActiveWarning";
-                self.relNotificationShow = "warnings";
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,
-//                    appName: self.appName,
                     appId: self.appId,
-                    relNotificationCheck: self.relNotificationCheck,
-                    relNotificationShow: self.relNotificationShow
+                    isAdmin:true
                 };
             }
            

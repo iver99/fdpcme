@@ -1,0 +1,65 @@
+        {
+         "name": "dashboardService-api",
+         "serviceName": "DashboardService-API",
+         "version": "SERVICEVERSION",
+         "ephemeral": true,
+         "chefRunlistItems":
+         [
+         {
+          "name": "dashboardService-api", "operation": "deploy"
+         },
+         {
+                 "name": "emsaas-weblogic::undeploy_app",
+                 "operation": "undeploy",
+                  "configurations":
+                  [
+                  {
+                  "name": "applicationName",
+                  "defaultValue": "emaas-applications-dashboards-api"
+                  }
+                  ]
+           },
+           {
+                "name": "emsaas-weblogic::start_app",
+                "operation": "start",
+                "configurations":
+                [
+                {
+                        "name": "applicationName",
+                        "defaultValue": "emaas-applications-dashboards-api"
+                 }
+                 ]
+            },
+            {
+                 "name": "emsaas-weblogic::stop_app",
+                 "operation": "stop",
+                 "configurations":
+                 [
+                 {
+                          "name": "applicationName",
+                          "defaultValue": "emaas-applications-dashboards-api"
+                 }
+                ]
+            },
+            {
+                    "name": "dashboardService-api::tenantHydration",
+                    "operation": "tenantHydration",
+                    "configurations": [
+                        {
+                            "name": "internalTenantID",
+                            "required": true
+                        }
+                    ]
+                }
+         ],
+         "chefCookbook":
+         {
+              "href": "<cookbook>",
+                "rel": "link/gzip"
+         },
+         "softwareImage":
+         {
+                "rel": "link/gzip",
+                "href": "<software>"
+         }
+        }

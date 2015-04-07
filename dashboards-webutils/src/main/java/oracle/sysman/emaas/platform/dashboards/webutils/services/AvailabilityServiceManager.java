@@ -16,7 +16,10 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,13 +36,18 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private static final long PERIOD = Timer.ONE_MINUTE;
+
+	private static final String ENTITY_NAMING_SERVICE_NAME = "EntityNaming";
+	private static final String ENTITY_NAMING_SERVICE_VERSION = "0.1";
+	private static final String ENTITY_NAMING_SERVICE_REL = "collection/domains";
+
 	private Timer timer;
 	private Integer notificationId;
 	private final RegistryServiceManager rsm;
 
-	public AvailabilityServiceManager(RegistryServiceManager rsm)
+	public AvailabilityServiceManager(RegistryServiceManager rsManager)
 	{
-		this.rsm = rsm;
+		rsm = rsManager;
 	}
 
 	/* (non-Javadoc)
@@ -58,20 +66,40 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	public void handleNotification(Notification notification, Object handback)
 	{
 		// check database available
-		boolean isDBAvailable = isDatabaseAvailable();
+		boolean isDBAvailable = true;
+		try {
+			isDBAvailable = isDatabaseAvailable();
+		}
+		catch (Exception e) {
+			isDBAvailable = false;
+			logger.error(e.getLocalizedMessage(), e);
+		}
 		// update dashboard API service status
 		if (!isDBAvailable) {
 			rsm.makeServiceOutOfService();
 			logger.info("Dashboards service is out of service because database is unavailable");
+			return;
 		}
-		else {
-			try {
-				rsm.makeServiceUp();
-				logger.debug("Dashboards service is up");
-			}
-			catch (Exception e) {
-				logger.error(e.getLocalizedMessage(), e);
-			}
+		// check entity naming availibility
+		boolean isEntityNamingAvailable = true;
+		try {
+			isEntityNamingAvailable = isEntityNamingAvailable();
+		}
+		catch (Exception e) {
+			isEntityNamingAvailable = false;
+			logger.error(e.getLocalizedMessage(), e);
+		}
+		if (!isEntityNamingAvailable) {
+			rsm.makeServiceOutOfService();
+			logger.info("Dashboards service is out of service because entity naming service is unavailable");
+			return;
+		}
+		try {
+			rsm.makeServiceUp();
+			logger.debug("Dashboards service is up");
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -125,6 +153,13 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	{
 		DBConnectionManager dbcm = DBConnectionManager.getInstance();
 		return dbcm.isDatabaseConnectionAvailable();
+	}
+
+	private boolean isEntityNamingAvailable()
+	{
+		Link lk = RegistryLookupUtil.getServiceExternalLink(ENTITY_NAMING_SERVICE_NAME, ENTITY_NAMING_SERVICE_VERSION,
+				ENTITY_NAMING_SERVICE_REL);
+		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 
 }

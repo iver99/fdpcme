@@ -9,7 +9,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="var" path="DSB_HOME/dependencies/artifactory/eclipselink-2.4.2.jar"/>
-	<classpathentry exported="true" kind="var" path="DSB_HOME/dependencies/artifactory/javax.persistence-2.0.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/javax.persistence-2.0.5.jar"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
 			<attribute name="owner.project.facets" value="jst.utility"/>

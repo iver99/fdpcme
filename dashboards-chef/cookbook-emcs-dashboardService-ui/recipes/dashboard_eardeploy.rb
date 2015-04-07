@@ -82,7 +82,7 @@ bash "create_servicemanger_properties_file"  do
 		echo "Creating SM properties file in #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init"
     mkdir -p #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init
     cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init
-    echo "version=#{node["SAAS_version"]}" > servicemanager.properties
+    echo "version=#{node["SAAS_API_version"]}" > servicemanager.properties
     echo "serviceName=Dashboard-UI" >> servicemanager.properties
     echo "registryUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "serviceUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
