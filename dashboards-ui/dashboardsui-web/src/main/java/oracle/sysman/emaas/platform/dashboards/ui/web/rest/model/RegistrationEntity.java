@@ -176,7 +176,7 @@ public class RegistrationEntity
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
 				linksMap.put(key, le);
 			}
-			else if (linksMap.get(link.getRel()).getHref().toLowerCase().startsWith("http://")
+			else if (linksMap.get(key).getHref().toLowerCase().startsWith("http://")
 					&& link.getHref().toLowerCase().startsWith("https://")) {
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
 				linksMap.put(key, le);
@@ -296,7 +296,7 @@ public class RegistrationEntity
 			}
 
 		}
-
+		_logger.info("dashboardLinksMap: " + dashboardLinksMap);
 		Iterator<Map.Entry<String, LinkEntity>> iterDashboardLinks = dashboardLinksMap.entrySet().iterator();
 		while (iterDashboardLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterDashboardLinks.next();
@@ -304,6 +304,7 @@ public class RegistrationEntity
 			linkList.add(val);
 		}
 
+		_logger.info("linksMap: " + dashboardLinksMap);
 		Iterator<Map.Entry<String, LinkEntity>> iterLinks = linksMap.entrySet().iterator();
 		while (iterLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterLinks.next();
