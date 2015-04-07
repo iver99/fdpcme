@@ -201,7 +201,7 @@ dependencies {
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
 //	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0') { transitive = false }
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17') { transitive = false }
-	providedCompile(group: 'com.oracle.weblogic', name: 'jersey-multipart-1.17.1', version: '12.1.2-0-0') { transitive = false }
+	providedCompile(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1') { transitive = false }
 
 	providedCompile(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4') { transitive = false }
 	providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0') { transitive = false }
@@ -217,13 +217,13 @@ dependencies {
 	providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
 	providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
 	
-	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8') { transitive = false }
+	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1') { transitive = false }
 	
 	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1') { transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0') { transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1') 
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0')
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false } 
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
 	
 	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6') { transitive = false }
 	providedCompile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }

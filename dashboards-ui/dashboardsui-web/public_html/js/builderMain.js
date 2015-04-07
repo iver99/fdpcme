@@ -157,19 +157,13 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-//                self.authToken = dfu.getAuthToken();//"Basic d2VibG9naWM6d2VsY29tZTE=";
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
-//                self.appName = "Application Performance Monitoring | Log Analytics | IT Analytics";
                 self.appId = "Dashboard";
-                self.relNotificationCheck = "existActiveWarning";
-                self.relNotificationShow = "warnings";
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,
                     appId: self.appId,
-                    relNotificationCheck: self.relNotificationCheck,
-                    relNotificationShow: self.relNotificationShow,
                     isAdmin:true
                 };
             };
