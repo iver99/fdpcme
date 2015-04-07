@@ -176,7 +176,7 @@ public class RegistrationEntity
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
 				linksMap.put(key, le);
 			}
-			else if (linksMap.get(link.getRel()).getHref().toLowerCase().startsWith("http://")
+			else if (linksMap.get(key).getHref().toLowerCase().startsWith("http://")
 					&& link.getHref().toLowerCase().startsWith("https://")) {
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
 				linksMap.put(key, le);
