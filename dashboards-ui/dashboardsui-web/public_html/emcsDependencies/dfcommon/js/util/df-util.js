@@ -182,7 +182,7 @@ define(['knockout',
              */
             self.getDefaultHeader = function() {
                 var defHeader = {
-                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
+//                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
                     "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
                     "X-REMOTE-USER":self.tenantName+'.'+self.userName};
                 console.log("Sent Header: "+JSON.stringify(defHeader));
@@ -288,8 +288,8 @@ define(['knockout',
              */            
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
-                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-//                return self.discoverUrl('SavedSearch', '0.1');
+//                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
+                return self.discoverUrl('SavedSearch', '0.1');
             };
             
         }
