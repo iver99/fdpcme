@@ -88,8 +88,8 @@
 }
 
 .dbs-summary-header-title h2 {
-    white-space: nowrap;
     font-size: 1rem;
+    white-space: nowrap;
 }
 
 .dbs-summary-header-title.active {
