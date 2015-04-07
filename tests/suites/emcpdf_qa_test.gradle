@@ -56,7 +56,7 @@ dependencies {
 
 }
      task QATest(type:EMTest){ 
-	include "oracle/sysman/enaas/platform/dashboards/test/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/*"
 	useRestAssured=true
 }
 

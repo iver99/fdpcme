@@ -35,6 +35,12 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
 
 public class DashboardManager
 {
+	private static DashboardManager instance;
+
+	static {
+		instance = new DashboardManager();
+	}
+
 	/**
 	 * Returns the singleton instance for dashboard manager
 	 *
@@ -43,12 +49,6 @@ public class DashboardManager
 	public static DashboardManager getInstance()
 	{
 		return instance;
-	}
-
-	private static DashboardManager instance;
-
-	static {
-		instance = new DashboardManager();
 	}
 
 	private DashboardManager()
@@ -110,7 +110,7 @@ public class DashboardManager
 	 * @param tenantId
 	 * @throws DashboardNotFoundException
 	 */
-	public void addFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardNotFoundException
+	public void addFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardException
 	{
 		if (dashboardId == null || dashboardId <= 0) {
 			throw new DashboardNotFoundException();
@@ -817,10 +817,14 @@ public class DashboardManager
 		}
 	}
 
-	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed)
+	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed) throws TenantWithoutSubscriptionException
 	{
 		if (ed == null) {
 			return false;
+		}
+		List<DashboardApplicationType> datList = getTenantApplications();
+		if (datList == null || datList.isEmpty()) { // accessible app list is empty
+			throw new TenantWithoutSubscriptionException();
 		}
 		Boolean isSystem = DataFormatUtils.integer2Boolean(ed.getIsSystem());
 		if (!isSystem) { // check system dashboard only
@@ -832,10 +836,6 @@ public class DashboardManager
 		}
 		DashboardApplicationType app = DashboardApplicationType.fromValue(at.intValue());
 		if (app == null) {
-			return false;
-		}
-		List<DashboardApplicationType> datList = getTenantApplications();
-		if (datList == null || datList.isEmpty()) { // accessible app list is empty
 			return false;
 		}
 		for (DashboardApplicationType dat : datList) {

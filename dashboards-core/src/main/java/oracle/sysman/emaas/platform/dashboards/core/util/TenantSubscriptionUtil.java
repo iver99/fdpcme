@@ -62,18 +62,13 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	private static Boolean IS_TEST_ENV = null;
-
-	private static Object lock = new Object();
-
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
-
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		// for junit test only
 		if (Boolean.TRUE.equals(IS_TEST_ENV)) {
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
 		}
+
 		// normal behavior here
 		if (tenant == null) {
 			return null;
@@ -182,4 +177,10 @@ public class TenantSubscriptionUtil
 			}
 		}
 	}
+
+	private static Boolean IS_TEST_ENV = null;
+
+	private static Object lock = new Object();
+
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 }
