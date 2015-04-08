@@ -75,7 +75,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 var curGroupWidgets = [];
                 var integratorWidgets = [];
                 var widgetGroupList = [];
-                var dbsWidgetArray = [];
+//                var dbsWidgetArray = [];
                 var curPageWidgets=[];
                 var searchResultArray = [];
                 var index=0;
@@ -84,20 +84,20 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 var curPage = 1;
                 var totalPage = 0;
                 var naviFromSearchResults = false;
-                var dbsBuiltinWidgets = [{
-                        "WIDGET_UNIQUE_ID": 1,
-                        "WIDGET_NAME": "Generic URL Widget",
-                        "WIDGET_DESCRIPTION": "A generic widget to show a web page by a given URL",
-                        "WIDGET_OWNER": "SYSMAN",
-                        "WIDGET_CREATION_TIME": "2015-01-20T07:07:07.405Z",
-                        "WIDGET_SOURCE": 0,
-                        "WIDGET_GROUP_NAME": "Dashboards Built-In",
-                        "WIDGET_TEMPLATE": "../emcsDependencies/widgets/iFrame/widget-iframe.html",
-                        "WIDGET_KOC_NAME": "DF_V1_WIDGET_IFRAME",
-                        "WIDGET_VIEWMODEL": "../emcsDependencies/widgets/iFrame/js/widget-iframe",
-                        "PROVIDER_NAME": "DashboardFramework",
-                        "PROVIDER_ASSET_ROOT": "asset",
-                        "PROVIDER_VERSION": "1.0"}];
+//                var dbsBuiltinWidgets = [{
+//                        "WIDGET_UNIQUE_ID": 1,
+//                        "WIDGET_NAME": "Generic URL Widget",
+//                        "WIDGET_DESCRIPTION": "A generic widget to show a web page by a given URL",
+//                        "WIDGET_OWNER": "SYSMAN",
+//                        "WIDGET_CREATION_TIME": "2015-01-20T07:07:07.405Z",
+//                        "WIDGET_SOURCE": 0,
+//                        "WIDGET_GROUP_NAME": "Dashboards Built-In",
+//                        "WIDGET_TEMPLATE": "../emcsDependencies/widgets/iFrame/widget-iframe.html",
+//                        "WIDGET_KOC_NAME": "DF_V1_WIDGET_IFRAME",
+//                        "WIDGET_VIEWMODEL": "../emcsDependencies/widgets/iFrame/js/widget-iframe",
+//                        "PROVIDER_NAME": "DashboardFramework",
+//                        "PROVIDER_ASSET_ROOT": "asset",
+//                        "PROVIDER_VERSION": "1.0"}];
                 var assetRootList = {};
                 var widgetIndex = 0;
                 self.widgetList = ko.observableArray(widgetArray);
@@ -318,7 +318,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                             async: false
                         });  
 
-                        dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
+//                        dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
                     }
 
                     curPage = 1;
@@ -373,11 +373,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
 
                                 if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
                                     var noImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/no-image-available.png');
-                                    var sampleImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
-                                    if (i%3 === 2) 
+//                                    var sampleImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
+//                                    if (i%3 === 2) 
                                         widget.WIDGET_HISTOGRAM = noImagePath;
-                                    else
-                                        widget.WIDGET_HISTOGRAM = sampleImagePath;
+//                                    else
+//                                        widget.WIDGET_HISTOGRAM = sampleImagePath;
                                 }
                                 else {
                                     var pname = widget.PROVIDER_NAME;
@@ -411,17 +411,17 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     var targetWidgetGroupArray = [];
                     var labelAll = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
                     var groupAll = {value:'all|all|All', label: labelAll};
-                    var pname = 'DashboardFramework';
-                    var pversion = '1.0';
-                    var gname = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;
+                    var pname = null; //'DashboardFramework';
+                    var pversion = null; // '1.0';
+                    var gname = null; //self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;
                     var assetRoot = '';
-                    var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
+//                    var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                     targetWidgetGroupArray.push(groupAll);
-                    if ((!widgetProviderName && !widgetProviderVersion) || 
-                            (widgetProviderName === pname && widgetProviderVersion === pversion)) {
-                        targetWidgetGroupArray.push(groupDashboardBuiltIn);
-                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
-                    }
+//                    if ((!widgetProviderName && !widgetProviderVersion) || 
+//                            (widgetProviderName === pname && widgetProviderVersion === pversion)) {
+//                        targetWidgetGroupArray.push(groupDashboardBuiltIn);
+//                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+//                    }
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             pname = data[i].PROVIDER_NAME;
