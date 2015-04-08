@@ -167,56 +167,123 @@ DECLARE
 'jXs3LjvOwksPMLr1SGZwbsE0PCIJtP9UlboYmoRo+N59L8nTqsk6i73sJ2W0wYyo+5TF2Sjw/7d3Na9NBFH8JWuTJhAbpRH8gLSleGkxBvHSgz148+jB/0DwoBf/D88F/wC91IMFPYlF0IvVED+2SCmxFW38IlZid5Osyfp7m44uSTeEZYK7ybzSzO7szNv3fjPzdmd25g2nYxJh57Fz0fXD6VDz3261XSO924NRRFxh/SEV+PWVleX7IO49xg/ZYL4ovXFkwXcW2vjw8t9YEs7j8JCzY+0gA4jzs6EXIccxv07ZcD40+6KijIr6MhW5q8m6su6sL+IfPL/TxpLjmQS+bHmQ5jXi7z9baWMmXFQ5CeX8KAMnB8fh4AI3VJHqOv249pi046cotnABLqqOknYMNU+Dq4FyHx8HwoIEN8DO2n/QG6gwsO60Ik7oyo2X/zHmNJc9TfrmBs1kZ6i0XXJSTExO0M/vWIOaFBn207tOQ324b8wcPIUhEwod9EAS10Qo0jAfyeQuNsmsFbuwIRCJatQsf3Yevq3yR6rdw9PXIWx8oMgbAW6YGEc/k7tCl9Hliqem6er8eSrsZSif/kWblQjNn0zR9ds3yBAtDnkG0J69ZRz0FaGMCAd9vz75C7j7TK6SjQICAauj4YAcby5T4xqtVizK48PFp90yrW3rVEnblE3naPnVGuVOZGirNk5RDLyzuyRFg0fAt4Gza9jGDfKNUmNgfVuGMZR6N004xoQjuIN6aaIaclnX60Z7NQKPpcgkvAEZMfB2T+CVyR8GyMCfdP6CL8KVp3cdiZ/g2OmyAsyic4ypMgwetzbRYDg0jb+nOPvvxCK1IBNZKAye4hEG4grLjho9yLeBSy4uUmZqmqJjvll4iBTc6CbW52lJDKTAyHnN9g+u9L0lOwxX79+wmqHx27tmWw2bFuYSdCRl0ljPNVu979V1FS3LhheLpJYko8WNXliBrpS+I9jhZQLu4U2bPRzL4++L'||
 'L26/G7XpSzWJ3bsMrIyTJ49vgJDxEB5akVSMLs7C5T9PsQkDAbuvk95jw76t06WlpTCor2SUjMAtyfxGmt3N4Gk/C5EeBU8s3xL16pH4ZqoyKgQUAgqBICCgDFwQSkHJoBBQCEhFQGxe3lcX1bLa4zK8+7kihYBCQCEQFATYkLn2zXLE4m0tTXw0401n+tpVq1qtkq7r2J+0c4ZjUNRUcigEFAKjhgAbN7PeoEQ81mXkWviQdC5/lv4AqFTngbut7RwAAAAASUVORK5CYII=';
 
+  ta_hostbyplt_screenshot CLOB:=null;
+  ta_dbcfgbyver_screenshot CLOB:=null;
+  ta_wlsbyjdk_screenshot CLOB:=null;
+  ta_top25dbbyrc_screenshot CLOB:=null;
+  ta_top25wlsbyheap_screenshot CLOB:=null;
+  ta_top25wlsbyload_screenshot CLOB:=null;
 BEGIN  
 
 --Rem SEED DATA FOR OOB Dashboards
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (1,'Application Performance Monitoring',1,'Monitor performance of your applications, view response times, invocation counts across all pages of your application.',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN',1,1,0,0,'&TENANT_ID',
+values (1,'Application Performance Monitoring',1,'Monitor performance of your applications, view response times, invocation counts across all pages of your application.',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,1,0,0,'&TENANT_ID',
 apm_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (2,'Database Performance Analytics',1,'Database Performance Analytics',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN',1,2,0,0,'&TENANT_ID',
+values (2,'Database Performance Analytics',1,'Database Performance Analytics',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
 dbperf_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (3,'Database Resource Planning',1,'Database Resource Planning',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN',1,2,0,0,'&TENANT_ID',
+values (3,'Database Resource Planning',1,'Database Resource Planning',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
 dbhealth_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (4,'Middleware GC Overhead',1,'Analyze overhead of Garbage Collection and its impact of WebLogic performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN',1,2,0,0,'&TENANT_ID',
+values (4,'Middleware GC Overhead',1,'Analyze overhead of Garbage Collection and its impact of WebLogic performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
 mwperf_screenshot);
 
-Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
-  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (1,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','ApmUI','0.1','home');
+Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
+values (5,'Host Inventory By Platform',0,'Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+ta_hostbyplt_screenshot);
+
+Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
+values (6,'Database Configuration and Storage By Version',0,'Shows Total CPU Cores, Patch IDs, Tablespace Size and SGA Size for Databases grouped by their version',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+ta_dbcfgbyver_screenshot);
+
+Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
+values (7,'WebLogic Servers by JDK Version',0,'Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+ta_wlsbyjdk_screenshot);
+
+Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
+values (8,'Top 25 Databases by Resource Consumption',0,'Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+ta_top25dbbyrc_screenshot);
+
+Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
+values (9,'Top 25 WebLogic Servers by Heap Usage',0,'Shows the status, Heap Usage, Current Memory Pool Usage and Garbage Collection Invocation time and frequency for Top 25 WebLogic Servers (by Heap Usage)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+ta_top25wlsbyheap_screenshot);
+
+Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
+values (10,'Top 25 WebLogic Servers by Load',0,'Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+ta_top25wlsbyload_screenshot);
 
 Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
   WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (2,2,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-perf');
+values (1,1,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','ApmUI','0.1','home');
 
 Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
   WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (3,3,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-resource');
+values (2,2,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-perf');
 
 Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
   WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
-values (4,4,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'SYSMAN','Home',220,2,0,0,'&TENANT_ID',
-  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.mw-perf');
+values (3,3,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.db-resource');
+
+Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
+  WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
+values (4,4,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
+  '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.mw-perf');
+
+Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
+values (5,5,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Host Inventory By Platform',220,2,1,0,0,'3018','Host Inventory By Platform','Shows CPU Implementation, Total CPU Cores/Sockets/Threads and Memory Size for Hosts grouped by Operating System','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','1.0.5','assetRoot');
+
+Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
+values (6,6,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Database Configuration and Storage By Version',220,2,1,0,0,'3020','Database Configuration and Storage By Version','Shows Total CPU Cores, Patch IDs, Tablespace Size and SGA Size for Databases grouped by their version','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','1.0.5','assetRoot');
+
+Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
+values (7,7,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','WebLogic Servers by JDK Version',220,2,1,0,0,'3023','WebLogic Servers by JDK Version','Shows the Java VM Vendor, Target Version and Platform for WebLogic Servers grouped by Java version','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','1.0.5','assetRoot');
+
+Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
+values (8,8,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 Databases by Resource Consumption',220,2,1,0,0,'3019','Top 25 Databases by Resource Consumption','Shows the status, Database CPU Time, CPU Utilization, Total Memory Usage and Number of Transactions per second for Top 25 Databases (by Resource Consumption)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','1.0.5','assetRoot');
+
+Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
+values (9,9,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 WebLogic Servers by Heap Usage',220,2,1,0,0,'3021','Top 25 WebLogic Servers by Heap Usage','Shows the status, Heap Usage, Current Memory Pool Usage and Garbage Collection Invocation time and frequency for Top 25 WebLogic Servers (by Heap Usage)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','1.0.5','assetRoot');
+
+Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
+values (10,10,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Top 25 WebLogic Servers by Load',220,2,1,0,0,'3022','Top 25 WebLogic Servers by Load','Shows the status, CPU Usage, Active Sessions, Request Processing Time, Requests per minute and Heap Usage for Top 25 WebLogic Servers (by Load)','Target Analytics','/../images/func_horibargraph_24_ena.png',null,'ORACLE',to_char(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYY-MM-DD"T"HH24:MI:SS.ff3"Z"'),1,'emcta-visualization','/widget/visualizationWidget/js/VisualizationWidget.js','/widget/visualizationWidget/visualizationWidget.html','TargetAnalytics','1.0.5','assetRoot');
 
 Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (1,'SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+values (1,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
 
 Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (2,'SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+values (2,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
 
 Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (3,'SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+values (3,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
 
 Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
-values (4,'SYSMAN',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+values (4,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+
+Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
+values (5,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+
+Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
+values (6,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+
+Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
+values (7,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+
+Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
+values (8,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+
+Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
+values (9,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+
+Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
+values (10,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
+
 
 END;
 /
