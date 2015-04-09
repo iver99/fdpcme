@@ -12,4 +12,9 @@
              <pipeline name="COMPONENT"/>
              </pipelines>
      </lrg>
+     <lrg name="emcpdf_dashboard_uitest" launcher="tests/suites/emcpdf_dashboard_uitest.gradle" description="lrg for ui automation">
+             <pipelines>
+                         <pipeline name="COMPONENT" />
+             </pipelines>
+     </lrg>
  </lrg-metadata>
