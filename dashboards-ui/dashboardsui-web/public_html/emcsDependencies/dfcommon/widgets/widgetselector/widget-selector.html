@@ -70,12 +70,12 @@
                 </div>
             </div>     
             <div class="oj-dialog-footer" style="padding-right: 24px" > 
-                <button class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviPrevious, disabled: naviPreBtnVisible,
-                    ojComponent: {component: 'ojButton'},style:{opacity:naviPreBtnVisible()?1:0.4}" >  
+                <button class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviPrevious, 
+                    ojComponent: {component: 'ojButton', disabled: !naviPreBtnEnabled()},style:{opacity: naviPreBtnEnabled()?1:0.4}" >  
                     <i class="fa fa-icon-font fa-chevron-left" style=" text-align: center; vertical-align: middle; font-size: 3em;"></i>
                 </button> 
-                <button class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviNext, disabled: naviNextBtnVisible,
-                    ojComponent: {component: 'ojButton'},style:{opacity:naviNextBtnVisible()?1:0.4}"> 
+                <button class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviNext, 
+                    ojComponent: {component: 'ojButton', disabled: !naviNextBtnEnabled()},style:{opacity: naviNextBtnEnabled()?1:0.4}"> 
                     <i class="fa fa-icon-font fa-chevron-right" style=" text-align: center; vertical-align: middle; font-size: 3em;"></i>
                 </button>      
                 <button id="widget-selector-okbtn" data-bind="attr: {class: 'widget-selector-button'}, click: widgetSelectionConfirmed, 

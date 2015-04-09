@@ -103,8 +103,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 self.widgetList = ko.observableArray(widgetArray);
                 self.curPageWidgetList = ko.observableArray(curPageWidgets);
                 self.searchText = ko.observable("");
-                self.naviPreBtnVisible=ko.observable(curPage === 1 ? false : true);
-                self.naviNextBtnVisible=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
+                self.naviPreBtnEnabled=ko.observable(curPage === 1 ? false : true);
+                self.naviNextBtnEnabled=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
                 
@@ -123,7 +123,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 // Show widgets data of previous page
                 self.naviPrevious = function() {
                     if (curPage === 1) {
-                        self.naviPreBtnVisible(false);
+                        self.naviPreBtnEnabled(false);
                     }
                     else {
                         curPage--;
@@ -137,12 +137,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
 
                     self.curPageWidgetList(curPageWidgets);
                     refreshNaviButton();
+                    refreshWidgetAndButtonStatus();
                 };
                 
                 // Show widget data of next page
                 self.naviNext = function() {
                     if (curPage === totalPage) {
-                        self.naviNextBtnVisible(false);
+                        self.naviNextBtnEnabled(false);
                     }
                     else {
                         curPage++;
@@ -155,6 +156,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     }
                     self.curPageWidgetList(curPageWidgets);
                     refreshNaviButton();
+                    refreshWidgetAndButtonStatus();
                 };
                 
                 // Search widgets by selected widget group and search text(name, description)
@@ -181,6 +183,17 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     self.curPageWidgetList(curPageWidgets);
                     refreshNaviButton();
                     naviFromSearchResults = true;
+                    refreshWidgetAndButtonStatus();
+                };
+                
+                //Refresh widget selection status and confirm button status
+                function refreshWidgetAndButtonStatus() {
+                    var curWidget = self.currentWidget();
+                    if (curWidget) {
+                        widgetArray[curWidget.index].isSelected(false);
+                        self.currentWidget(null);
+                    }
+                    self.confirmBtnDisabled(true);
                 };
                 
                 // Get widget data to be shown in current page
@@ -223,8 +236,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 
                 // Refresh pagination button status
                 function refreshNaviButton() {
-                    self.naviPreBtnVisible(curPage === 1 ? false : true);
-                    self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
+                    self.naviPreBtnEnabled(curPage === 1 ? false : true);
+                    self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
                 };
                 
                 // Return search result of type ahead search
@@ -330,8 +343,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     self.widgetList(widgetArray);
                     self.curPageWidgetList(curPageWidgets);
                     self.searchText("");
-                    self.naviPreBtnVisible(curPage === 1 ? false : true);
-                    self.naviNextBtnVisible(totalPage > 1 && curPage!== totalPage ? true:false);
+                    self.naviPreBtnEnabled(curPage === 1 ? false : true);
+                    self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
                 };
                 
                 // Load widgets from ajax call result data
