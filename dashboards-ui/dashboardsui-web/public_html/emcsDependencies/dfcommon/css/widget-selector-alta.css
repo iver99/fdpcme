@@ -122,10 +122,10 @@
     border-width: 1px;
 }
 
-.widget-search-icon:before {
+.widget-selector-search-icon:before {
     height:16px;
     width:16px;
-    content:url("../images/search-icon-24.png")
+    content:url("../images/func_search_16_ena.png");
 }
 
 .widget-selector-icon-button {
