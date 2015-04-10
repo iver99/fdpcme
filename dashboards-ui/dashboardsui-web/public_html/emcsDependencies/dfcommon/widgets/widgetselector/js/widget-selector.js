@@ -1,5 +1,5 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js/util/typeahead-search'],
-        function (localrequire, ko, $, dfumodel) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', '../../../js/util/typeahead-search'],
+        function (localrequire, ko, $, dfumodel, oj) {
             function WidgetSelectorViewModel(params) {
                 var self = this;
                 
@@ -287,6 +287,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                         var selectedWidget = self.currentWidget();
                         self.widgetHandler(selectedWidget);
                     }
+                    else {
+                        oj.Logger.warn('No widget handler is available to call back!');
+                    }
                 };
                 
                 // Refresh widget/widget group data and UI displaying
@@ -314,7 +317,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                                 }
                             },
                             error: function(xhr, textStatus, errorThrown){
-                                console.log('Error when fetching widgets!');
+                                oj.Logger.error('Error when fetching widget groups by URL: '+widgetgroupsUrl+'.');
+//                                console.log('Error when fetching widget groups!');
                             },
                             async: false
                         });
@@ -326,12 +330,16 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                                 integratorWidgets = loadWidgets(data);
                             },
                             error: function(xhr, textStatus, errorThrown){
-                                console.log('Error when fetching widgets!');
+                                oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
+//                                console.log('Error when fetching widgets!');
                             },
                             async: false
                         });  
 
 //                        dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
+                    }
+                    else {
+                        oj.Logger.warn('Failed to discover available Saved Search service URL.');
                     }
 
                     curPage = 1;
