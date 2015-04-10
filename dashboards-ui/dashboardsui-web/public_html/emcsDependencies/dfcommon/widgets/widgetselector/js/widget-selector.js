@@ -282,7 +282,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 
                 // Widget handler for selected widget
                 self.widgetSelectionConfirmed = function() {
-                    $('#'+self.dialogId).ojDialog('close');
+//                    $('#'+self.dialogId).ojDialog('close');
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
                         var selectedWidget = self.currentWidget();
                         self.widgetHandler(selectedWidget);
