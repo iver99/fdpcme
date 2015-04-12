@@ -6,10 +6,10 @@
          "chefRunlistItems":
          [
          {
-          "name": "dashboardService-api", "operation": "deploy"
+          "name": "cookbook-emcs-dashboardService-api", "operation": "deploy"
          },
          {
-                 "name": "emsaas-weblogic::undeploy_app",
+                 "name": "cookbook-emcs-emsaas-weblogic::undeploy_app",
                  "operation": "undeploy",
                   "configurations":
                   [
@@ -20,7 +20,7 @@
                   ]
            },
            {
-                "name": "emsaas-weblogic::start_app",
+                "name": "cookbook-emcs-emsaas-weblogic::start_app",
                 "operation": "start",
                 "configurations":
                 [
@@ -31,7 +31,7 @@
                  ]
             },
             {
-                 "name": "emsaas-weblogic::stop_app",
+                 "name": "cookbook-emcs-emsaas-weblogic::stop_app",
                  "operation": "stop",
                  "configurations":
                  [
@@ -42,7 +42,7 @@
                 ]
             },
             {
-                    "name": "dashboardService-api::tenantHydration",
+                    "name": "cookbook-emcs-dashboardService-api::tenantHydration",
                     "operation": "tenantHydration",
                     "configurations": [
                         {

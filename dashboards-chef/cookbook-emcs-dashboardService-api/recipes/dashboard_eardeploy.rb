@@ -1,4 +1,4 @@
-#cookbook Name::dashboardUI
+#cookbook Name::dashboardFramework
 # Recipe::dashboard_datasource
 #
 # This recipe creates the datasource and deploys the ear file in weblogic server
@@ -38,11 +38,11 @@ ruby_block "set_MW_HOME" do
   action :create
 end
 
-include_recipe 'emsaas-weblogic::default'
+include_recipe 'cookbook-emcs-emsaas-weblogic::default'
 
-include_recipe 'emsaas-weblogic::datasource_dependency'
+include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 
-template "#{node["log_dir"]}/wls_datasources_dashboardUI.py" do
+template "#{node["log_dir"]}/wls_datasources_dashboardFramework.py" do
     source "wls_datasources.py.erb"
     action :create
     variables lazy {{
@@ -62,11 +62,11 @@ end
 
 bash "create_wls_datasource" do
   code <<-EOH
-    echo "\n--------------------Create Data Source-------------------------">> #{node["log_dir"]}/dashboardUIDatasource.log
+    echo "\n--------------------Create Data Source-------------------------">> #{node["log_dir"]}/dashboardFrameworkDatasource.log
     set -e
-    echo "Executing command:" >> #{node["log_dir"]}/dashboardUIDatasource.log 
-    echo "#{wls_home}/common/bin/wlst.sh #{node["log_dir"]}/wls_datasources_dashboardUI.py" >> #{node["log_dir"]}/dashboardUIDatasource.log 
-    #{wls_home}/common/bin/wlst.sh #{node["log_dir"]}/wls_datasources_dashboardUI.py >> #{node["log_dir"]}/dashboardUIDatasource.log 
+    echo "Executing command:" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log 
+    echo "#{wls_home}/common/bin/wlst.sh #{node["log_dir"]}/wls_datasources_dashboardFramework.py" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log 
+    #{wls_home}/common/bin/wlst.sh #{node["log_dir"]}/wls_datasources_dashboardFramework.py >> #{node["log_dir"]}/dashboardFrameworkDatasource.log 
   EOH
 end
 
@@ -83,7 +83,7 @@ bash "create_servicemanger_properties_file"  do
     mkdir -p #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init
     cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init
     echo "version=#{node["SAAS_API_version"]}" > servicemanager.properties
-    echo "serviceName=Dashboard-UI" >> servicemanager.properties
+    echo "serviceName=Dashboard-API" >> servicemanager.properties
     echo "registryUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "serviceUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "characteristics=SAAS_deploymentUuid:#{node["SAAS_deploymentUuid"]}" >> servicemanager.properties
@@ -93,13 +93,13 @@ end
 bash "deploy_ear" do
   code <<-EOH
 
-    echo "----------------------Deploying EAR-----------------------------">> #{node["log_dir"]}/dashboardUIDatasource.log
-    echo "\n hostname= #{node["hostname"]}, fqdn=  #{node["fqdn"]}" >> #{node["log_dir"]}/dashboardUIDatasource.log
+    echo "----------------------Deploying EAR-----------------------------">> #{node["log_dir"]}/dashboardFrameworkDatasource.log
+    echo "\n hostname= #{node["hostname"]}, fqdn=  #{node["fqdn"]}" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
     set +e
     # Check if service is online
-    curl -s -o out.html -w '%{http_code}' "http://#{node["hostname"]}:#{node["wls_port"]}/emcpdfui/home.html" | grep 200
+    curl -s -o out.html -w '%{http_code}' "http://#{node["hostname"]}:#{node["wls_port"]}/emcpdf/api" | grep 200
     if [ $? -eq 0 ]; then
-    echo "Application is already deployed" >> #{node["log_dir"]}/dashboardUIDatasource.log
+    echo "Application is already deployed" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
     exit 0
     else
         export JAVA_HOME=#{node["jdk_dir"]}/jdk1.7.0_51
@@ -108,19 +108,19 @@ bash "deploy_ear" do
             applicationName=#{node["SAAS_servicename"]}
         fi
         set +e
-        echo "#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password xxxx -listapps | grep $applicationName" >> #{node["log_dir"]}/dashboardUIDatasource.log
+        echo "#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password xxxx -listapps | grep $applicationName" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
         listApp=`#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -listapps | grep $applicationName`
         if  [ -z "$listApp" ]; then
-            echo "Performing deployment since the $applicationName is not in the application list" >> #{node["log_dir"]}/dashboardUIDatasource.log
+            echo "Performing deployment since the $applicationName is not in the application list" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
-            echo "#{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}"#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/dashboardUIDatasource.log
+            echo "#{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}-"#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
-            #{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}-#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/dashboardUIDatasource.log
+            #{node["jdk_dir"]}/jdk1.7.0_51/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -username #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -url t3://#{node["hostname"]}:#{node["wls_port"]} -name #{node["myApplicationName"]} -deploy -targets #{node["target"]} -source #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["SAAS_earfile"]}-#{node["SAAS_version"]}.ear >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
         else
-            echo "Starting the Application since $applicationName is already on the application list" >> #{node["log_dir"]}/dashboardUIDatasource.log
+            echo "Starting the Application since $applicationName is already on the application list" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
-            echo "#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password xxxx -start -name $applicationName" >> #{node["log_dir"]}/dashboardUIDatasource.log
+            echo "#{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password xxxx -start -name $applicationName" >> #{node["log_dir"]}/dashboardFrameworkDatasource.log
 
             #{node["java_home"]}/bin/java -cp #{node["wls_home"]}/server/lib/weblogic.jar weblogic.Deployer -adminurl t3://#{node["hostname"]}:#{node["wls_port"]} -user #{node["wls_admin_user"]} -password #{node["wls_admin_password"]} -start -name $applicationName 
         fi
