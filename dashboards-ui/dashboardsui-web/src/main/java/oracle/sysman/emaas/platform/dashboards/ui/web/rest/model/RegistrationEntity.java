@@ -109,7 +109,7 @@ public class RegistrationEntity
 	public String getDfRestApiEndPoint()
 	{
 		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
-				NAME_DASHBOARD_API_VERSION);
+				NAME_DASHBOARD_API_VERSION, TenantContext.getCurrentTenant());
 		return entity != null ? entity.getHref() : null;
 	}
 
@@ -153,7 +153,8 @@ public class RegistrationEntity
 	 */
 	public String getSsfRestApiEndPoint() throws Exception
 	{
-		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
+		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
+				TenantContext.getCurrentTenant());
 		return entity != null ? entity.getHref() : null;
 		//		if (true) {
 		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";

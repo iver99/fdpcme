@@ -98,7 +98,7 @@ public class FavoriteAPI extends APIBase
 			List<FavoriteEntity> entities = new ArrayList<FavoriteEntity>();
 			if (pd != null) {
 				for (Dashboard dashboard : pd) {
-					updateDashboardHref(dashboard);
+					updateDashboardHref(dashboard, tenantIdParam);
 					entities.add(new FavoriteEntity(dashboard));
 				}
 			}

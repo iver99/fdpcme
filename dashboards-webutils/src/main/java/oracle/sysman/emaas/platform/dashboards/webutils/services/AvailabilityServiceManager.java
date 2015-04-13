@@ -158,7 +158,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private boolean isEntityNamingAvailable()
 	{
 		Link lk = RegistryLookupUtil.getServiceExternalLink(ENTITY_NAMING_SERVICE_NAME, ENTITY_NAMING_SERVICE_VERSION,
-				ENTITY_NAMING_SERVICE_REL);
+				ENTITY_NAMING_SERVICE_REL, null);
 		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 

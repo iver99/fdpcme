@@ -15,16 +15,14 @@ import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 /**
  * @author miao
  */
-public class DashboardAPIUtil
-{
+public class DashboardAPIUtil {
 	public static final String DASHBOARD_API_SERVICENAME = "Dashboard-API";
 
 	public static final String DASHBOARD_API_VERSION = "0.1";
 
-	public static String getExternalAPIBase()
-	{
+	public static String getExternalAPIBase(String tenantName) {
 		String externalBase = RegistryLookupUtil.getServiceExternalEndPoint(DashboardAPIUtil.DASHBOARD_API_SERVICENAME,
-				DashboardAPIUtil.DASHBOARD_API_VERSION);
+				DashboardAPIUtil.DASHBOARD_API_VERSION, tenantName);
 		return externalBase; //e.g. https://slc07hcn.us.oracle.com:4443/microservice/be1d3d5f-2bd4-44ff-aab1-2b5aab1c7493/
 	}
 }
