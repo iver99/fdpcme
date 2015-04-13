@@ -49,13 +49,12 @@
     height: 32px; 
     margin-bottom: 10px;
     background-color: #fcfdfe;
-    
 } 
 #widget-selector-searchbox #searchTxt { 
     float: left; 
     padding-left: 5px; 
     border:0;
-    width: 797px;
+    width: 763px; 
     height:32px;
     background: none; 
     font-size: 14px;
@@ -71,6 +70,21 @@
     line-height: 32px;
     vertical-align: middle;
     text-align: center;
+}
+
+.widget-selector-clear-button {
+    margin:0px;
+    height:32px;
+    line-height: 32px;
+    vertical-align: middle;
+    text-align: center;
+    float: right;
+}
+
+.widget-selector-clear-icon:before {
+    height:16px;
+    width:16px;
+    content:url("../images/clearEntry_ena.png");
 }
 
 .widget-selector-screenshot {
