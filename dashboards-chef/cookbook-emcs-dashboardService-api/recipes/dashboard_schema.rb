@@ -5,7 +5,7 @@
 # This recipe creates DB schema
 #
 
-include_recipe 'emsaas-weblogic::datasource_dependency'
+include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 
 ruby_block "set_LDLibrary" do
   block do
