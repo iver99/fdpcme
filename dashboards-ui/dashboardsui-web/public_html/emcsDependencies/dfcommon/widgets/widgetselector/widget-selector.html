@@ -13,11 +13,15 @@
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
                 <div style="padding-left: 4px" >
                     <div id="widget-selector-searchbox">
-                        <div style="float:left;">
+                        <div style="float:left;width:797px;">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
+                            <button class="oj-button-half-chrome widget-selector-clear-button" data-bind="click: clearSearchText, visible: clearButtonVisible,
+                                ojComponent: {component: 'ojButton', label: clearButtonLabel, display: 'icons', 
+                                icons: {start:'widget-selector-clear-icon'}}"> 
+                            </button>
                         </div>
                         <div style="float:right;">
                             <button class="oj-button-half-chrome widget-selector-search-button" data-bind="click: searchWidgets,

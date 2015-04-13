@@ -41,11 +41,14 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.widgetGroupLabel = ko.observable();
                 self.searchBoxPlaceHolder = ko.observable();
                 self.searchButtonLabel = ko.observable();
+                self.clearButtonLabel = ko.observable();
                 self.affirmativeButtonLabel = ko.observable(affirmativeTxt);
                 self.widgetScreenShotPageTitle = ko.observable();
                 self.widgetDescPageTitle = ko.observable();
                 self.widgetGroupFilterVisible = ko.observable(true);
                 self.nlsStrings = null;
+                self.searchText = ko.observable("");
+                self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
                 
                 // Get NLS strings
                 require(['i18n!'+nlsResourceBundle],
@@ -58,6 +61,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         self.widgetGroupLabel(nls.WIDGET_SELECTOR_WIDGET_GROUP_LABEL);
                         self.searchBoxPlaceHolder(nls.WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER);
                         self.searchButtonLabel(nls.WIDGET_SELECTOR_SEARCH_BTN_LABEL);
+                        self.clearButtonLabel(nls.WIDGET_SELECTOR_CLEAR_BTN_LABEL);
                         self.widgetScreenShotPageTitle(nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE);
                         self.widgetDescPageTitle(nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE);
                     });
@@ -102,7 +106,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var widgetIndex = 0;
                 self.widgetList = ko.observableArray(widgetArray);
                 self.curPageWidgetList = ko.observableArray(curPageWidgets);
-                self.searchText = ko.observable("");
                 self.naviPreBtnEnabled=ko.observable(curPage === 1 ? false : true);
                 self.naviNextBtnEnabled=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
                 self.currentWidget = ko.observable();
@@ -184,6 +187,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     refreshNaviButton();
                     naviFromSearchResults = true;
                     refreshWidgetAndButtonStatus();
+                };
+                
+                self.clearSearchText = function() {
+                    self.searchText('');
+                    self.searchWidgets();
                 };
                 
                 //Refresh widget selection status and confirm button status
