@@ -311,7 +311,7 @@ define(['knockout',
             var headers = {
                 'Content-type': 'application/json',
                 'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1'
-//                ,'Authorization': dfu.getAuthToken()
+//                ,'Authorization': "Basic d2VibG9naWM6d2VsY29tZTE="
             };
 //            dtm.userTenant='TenantOPC1.SYSMAN';
             if (dtm.userTenant){

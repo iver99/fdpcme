@@ -126,6 +126,12 @@ require(['knockout',
                     template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
             }
+            if (!ko.components.isRegistered('df-widget-selector')) {
+                ko.components.register("df-widget-selector",{
+                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/widgetselector/js/widget-selector'},
+                    template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
+                });
+            }
             ko.components.register("df-time-selector",{
                 viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
                 template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}

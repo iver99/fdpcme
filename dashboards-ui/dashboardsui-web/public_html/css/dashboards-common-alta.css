@@ -33,8 +33,8 @@ a:hover {
  cursor:pointer;
 }
 
-.dbs-nav-mapping-icon-24:before{content:url("images/compassIcon_24.png");}
-.dbs-nav-mapping-icon-32:before{content:url("images/compassIcon_32.png");}
+/*.dbs-nav-mapping-icon-24:before{content:url("images/compassIcon_24.png");}
+.dbs-nav-mapping-icon-32:before{content:url("images/compassIcon_32.png");}*/
 
 .loadingIndicator{
     position:fixed;
@@ -56,7 +56,7 @@ a:hover {
 }
 
 
-.fa-icon-font {
+/*.fa-icon-font {
   font-family: FaFont;
   font-size: 1.34rem;
   display: inline-block;
@@ -92,17 +92,17 @@ a:hover {
 
 .fa-chevron-right:before {
   content: "\f054";
-}
+}*/
 
-@font-face {
+/*@font-face {
   font-family: 'FaFont';
   src: url("fonts/fontawesome-webfont.woff");
   font-weight: normal;
   font-style: normal; 
-}
+}*/
 
 
-#links_menu{
+/*#links_menu{
     background-color: white;
     position: absolute;
     width: 100%;
@@ -142,4 +142,4 @@ a:hover {
 #links_menu .iconCircle .fa {
     font-size: 5em;
     color: white;
-}
+}*/
