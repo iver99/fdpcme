@@ -26,8 +26,8 @@ define(['knockout',
             return $('<div class="dbd-tile oj-col oj-sm-' + columns + ' oj-md-' + columns + ' oj-lg-' + columns + ' dbd-tile-placeholder' + '"><div class="dbd-tile-header dbd-tile-header-placeholder">placeholder</div><div class="dbd-tile-placeholder-inner"></div></div>');
         }
             
-        function createNewTileFromSearchObject(dtm, searchObject) {
-            return new dtm.DashboardTile(
+        function createNewTileFromSearchObject(dashboard, dtm, searchObject) {
+            return new dtm.DashboardTile(dashboard,
                     searchObject.getAttribute("name"), 
                     "", 
                     1,
@@ -35,7 +35,7 @@ define(['knockout',
                     searchObject.getAttribute("chartType"));
         }
             
-        function DashboardTilesView(dtm) {
+        function DashboardTilesView(dashboard, dtm) {
             var self = this;
             self.dtm = dtm;
             
@@ -63,7 +63,7 @@ define(['knockout',
                                 var position = ko.utils.arrayIndexOf(ui.item.parent().children(), ui.item[0]);
                                 if (position >= 0) {
                                     if (self.searchObject !== undefined) {
-                                        var newTile = createNewTileFromSearchObject(self.dtm, self.searchObject);
+                                        var newTile = createNewTileFromSearchObject(dashboard, self.dtm, self.searchObject);
                                         list.splice(position, 0, newTile);
                                     }
                                 }
@@ -321,6 +321,7 @@ define(['knockout',
             var allCategories = [];
             if (ssfUrl === null && ssfUrl !== "") {
                 console.log("Saved Search service is not available! Try again later.");
+                oj.Logger.log("Saved Search service is not available! Try again later.");
             }
             else {
                 var categoryUrl = dfu.buildFullUrl(ssfUrl,'categories');
@@ -337,6 +338,7 @@ define(['knockout',
                     },
                     error: function(data, textStatus){
                         console.log('Failed to query categories!');
+                        oj.Logger.log('Failed to query categories!');
                     }
                 });
             }
@@ -527,6 +529,7 @@ define(['knockout',
                     self.isFavorite(isFavorite);
                 }, function(e) {
                     console.log(e.errorMessage());
+                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
                 });
             }();  
             
@@ -546,6 +549,7 @@ define(['knockout',
 //                    }
                 }, function(e) {
                     console.log(e.errorMessage());
+                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
                 });
             };
             self.deleteFromFavorites = function() {
@@ -564,6 +568,7 @@ define(['knockout',
 //                    }
                 }, function(e) {
                     console.log(e.errorMessage());
+                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
                 });
             };
             
@@ -590,7 +595,14 @@ define(['knockout',
             };
             
             self.openAddWidgetDialog = function() {
+            	var maximizedTile = tilesViewModel.getMaximizedTile();
+            	if (maximizedTile)
+            		tilesViewModel.restore(maximizedTile);
                 $('#'+addWidgetDialogId).ojDialog('open');
+            };
+            
+            self.closeAddWidgetDialog = function() {
+                $('#'+addWidgetDialogId).ojDialog('close');
             };
             
             self.showAddWidgetTooltip = function() {
