@@ -130,7 +130,12 @@ body, html {
   text-overflow:ellipsis;
 }
 
-#builder-dbd-description .dbd-display-area-text {
+#builder-dbd-description .dbd-display-hover-area {
+  max-width: 100%;
+  width: auto;
+}
+
+#builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
   padding-right: 40px;
   margin-right: -40px;
 }

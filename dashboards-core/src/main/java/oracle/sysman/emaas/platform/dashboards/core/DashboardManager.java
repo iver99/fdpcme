@@ -15,6 +15,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonF
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.DashboardSameNameException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.TenantWithoutSubscriptionException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
@@ -165,6 +166,15 @@ public class DashboardManager
 			throw new DashboardNotFoundException();
 		}
 		if (permanent == false && ed.getDeleted() != null && ed.getDeleted() > 0) {
+			throw new DashboardNotFoundException();
+		}
+		if (!permanent && DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
+			throw new CommonSecurityException(
+					MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR));
+		}
+		String currentUser = UserContext.getCurrentUser();
+		// user can access owned or system dashboard
+		if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
 			throw new DashboardNotFoundException();
 		}
 		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
@@ -727,6 +737,10 @@ public class DashboardManager
 			ed = dsf.getEmsDashboardById(dbd.getDashboardId());
 			if (ed == null) {
 				throw new DashboardNotFoundException();
+			}
+			if (DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
+				throw new CommonSecurityException(
+						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
 			}
 			ed = dbd.getPersistenceEntity(ed);
 			ed.setLastModificationDate(DateUtil.getCurrentUTCTime());

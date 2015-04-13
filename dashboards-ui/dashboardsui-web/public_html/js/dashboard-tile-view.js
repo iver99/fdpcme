@@ -594,7 +594,7 @@ define(['knockout',
             };
             
             self.showAddWidgetTooltip = function() {
-                if (tilesViewModel.isEmpty()) {
+                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
                    $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
                 }
             };
