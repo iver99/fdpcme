@@ -788,6 +788,9 @@ define(['knockout',
 
  
             self.openAddWidgetDialog = function() {
+            	var maximizedTile = tilesViewModel.getMaximizedTile();
+            	if (maximizedTile)
+            		tilesViewModel.restore(maximizedTile);
                 $('#addWidgetDialog').ojDialog('open');
             };
             
