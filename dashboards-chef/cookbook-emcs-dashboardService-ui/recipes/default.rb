@@ -6,5 +6,5 @@
 
 
 #Recipe to create Datasource
-include_recipe 'dashboardService-ui::dashboard_eardeploy'
+include_recipe 'cookbook-emcs-dashboardService-ui::dashboard_eardeploy'
 
