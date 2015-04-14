@@ -590,11 +590,18 @@ define(['knockout',
             };
             
             self.openAddWidgetDialog = function() {
-                $('#'+addWidgetDialogId).ojDialog('open');
+            	var maximizedTile = tilesViewModel.getMaximizedTile();
+            	if (maximizedTile)
+            		tilesViewModel.restore(maximizedTile);
+                $('#addWidgetDialog').ojDialog('open');
+            };
+            
+            self.closeAddWidgetDialog = function() {
+                $('#addWidgetDialog').ojDialog('close');
             };
             
             self.showAddWidgetTooltip = function() {
-                if (tilesViewModel.isEmpty()) {
+                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
                    $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
                 }
             };

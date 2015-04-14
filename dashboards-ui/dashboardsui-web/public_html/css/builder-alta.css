@@ -69,9 +69,10 @@ body, html {
 }
 
 #builder-dbd-name {
-  font-size: 24px;
+  font-size: 1.286rem;
   font-family: inherit;
   line-height: 1.4em;
+  color: #252525;
 }
 
 #builder-dbd-name .dbd-display-area {
@@ -83,7 +84,7 @@ body, html {
 }
 
 #builder-dbd-name input {
-  font-size: 24px;
+  font-size: 1.286rem;
   font-family: inherit;
   line-height: 1.4em;
   height: 1.7em;
@@ -129,7 +130,12 @@ body, html {
   text-overflow:ellipsis;
 }
 
-#builder-dbd-description .dbd-display-area-text {
+#builder-dbd-description .dbd-display-hover-area {
+  max-width: 100%;
+  width: auto;
+}
+
+#builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
   padding-right: 40px;
   margin-right: -40px;
 }

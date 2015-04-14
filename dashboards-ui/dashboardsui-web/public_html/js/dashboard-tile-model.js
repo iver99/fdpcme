@@ -737,26 +737,30 @@ define(['knockout',
                 var maximizedTileHeight = self.calculateTilesRowHeight();
                 self.tileOriginalHeight = $('.dbd-tile-maximized .dbd-tile-element').height();
                 $('.dbd-tile-maximized .dbd-tile-element').height(maximizedTileHeight);
-                $('#add-widget-button').ojButton('option', 'disabled', true);
                 
                 self.postTileMenuClicked(tile);
             };
             
-            self.initializeMaximization = function() {
+            self.getMaximizedTile = function() {
                 for (var i = 0; i < self.dashboard.tiles().length; i++) {
                     var tile = self.dashboard.tiles()[i];
                     if (tile && tile.isMaximized && tile.isMaximized()) {
-                        self.maximize(tile);
-                        return;
+                    	return tile;
                     }
                 }
+                return null;
+            };
+            
+            self.initializeMaximization = function() {
+            	var maximized = self.getMaximizedTile();
+            	if (maximized)
+            		self.maximize(maximized);
             };
             
             self.restore = function(tile) {
                 if (self.tileOriginalHeight) {
                     $('.dbd-tile-maximized .dbd-tile-element').height(self.tileOriginalHeight);
                 }
-                $('#add-widget-button').ojButton('option', 'disabled', false);
                 tile.isMaximized(false);
                 for (var i = 0; i < self.dashboard.tiles().length; i++) {
                     var eachTile = self.dashboard.tiles()[i];
