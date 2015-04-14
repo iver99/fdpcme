@@ -593,11 +593,11 @@ define(['knockout',
             	var maximizedTile = tilesViewModel.getMaximizedTile();
             	if (maximizedTile)
             		tilesViewModel.restore(maximizedTile);
-                $('#addWidgetDialog').ojDialog('open');
+                $('#'+addWidgetDialogId).ojDialog('open');
             };
             
             self.closeAddWidgetDialog = function() {
-                $('#addWidgetDialog').ojDialog('close');
+                $('#'+addWidgetDialogId).ojDialog('close');
             };
             
             self.showAddWidgetTooltip = function() {
