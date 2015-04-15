@@ -24,8 +24,7 @@ import org.testng.annotations.Test;
 /**
  * @author guobaochen
  */
-public class DashboardManagerTest
-{
+public class DashboardManagerTest {
 	static {
 		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser("SYSMAN");
@@ -33,14 +32,12 @@ public class DashboardManagerTest
 	}
 
 	@BeforeMethod
-	public void beforeMethod()
-	{
+	public void beforeMethod() {
 		TenantContext.setCurrentTenant("TenantOPC1");
 	}
 
 	@Test
-	public void testCreateDashboardDifUserSameNameSameTenant() throws DashboardException
-	{
+	public void testCreateDashboardDifUserSameNameSameTenant() throws DashboardException {
 		// EMCPDF-85	Diff user is able to create dashboard with the same name for the same tenant
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -67,8 +64,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateDashboardSameNameDifTenant() throws DashboardException
-	{
+	public void testCreateDashboardSameNameDifTenant() throws DashboardException {
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 1234L;
@@ -92,8 +88,7 @@ public class DashboardManagerTest
 	}
 
 	@Test(expectedExceptions = DashboardException.class)
-	public void testCreateDashboardSameNameSameUserSameTenant() throws DashboardException
-	{
+	public void testCreateDashboardSameNameSameUserSameTenant() throws DashboardException {
 		Dashboard dbd1 = null;
 		Dashboard dbd2 = null;
 		DashboardManager dm = DashboardManager.getInstance();
@@ -122,8 +117,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateSimpleDashboard() throws DashboardException, InterruptedException
-	{
+	public void testCreateSimpleDashboard() throws DashboardException, InterruptedException {
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateSimpleDashboard()" + System.currentTimeMillis());
 		dbd.setType(Dashboard.DASHBOARD_TYPE_NORMAL);
@@ -152,8 +146,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateUpdateDashboard() throws DashboardException, InterruptedException
-	{
+	public void testCreateUpdateDashboard() throws DashboardException, InterruptedException {
 		String currentUser = UserContext.getCurrentUser();
 		Dashboard dbd = new Dashboard();
 		dbd.setName("dashboard in testCreateUpdateDashboard()" + System.currentTimeMillis());
@@ -294,8 +287,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateUpdateSystemDashboard() throws DashboardException
-	{
+	public void testCreateUpdateSystemDashboard() throws DashboardException	{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
 		// try to insert system dashboard, and it should work also
@@ -328,8 +320,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testDeleteDashboard() throws DashboardException
-	{
+	public void testDeleteDashboard() throws DashboardException {
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
@@ -429,8 +420,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testFavoriteDashboards() throws DashboardException
-	{
+	public void testFavoriteDashboards() throws DashboardException {
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
@@ -484,8 +474,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testGetDashboardByName() throws DashboardException
-	{
+	public void testGetDashboardByName() throws DashboardException {
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
@@ -533,8 +522,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testGetDashboardId() throws DashboardException
-	{
+	public void testGetDashboardId() throws DashboardException {
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
@@ -580,8 +568,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testGetUpdateLastAccessDate() throws DashboardException, InterruptedException
-	{
+	public void testGetUpdateLastAccessDate() throws DashboardException, InterruptedException {
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
@@ -616,8 +603,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testListDashboard() throws DashboardException, InterruptedException
-	{
+	public void testListDashboard() throws DashboardException, InterruptedException {
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
 		Long tenant2 = 12L;
@@ -738,7 +724,7 @@ public class DashboardManagerTest
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
 				AssertJUnit
-						.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+				.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 			if (dbd.getName().equals(dbd13.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
@@ -798,8 +784,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testSetDashboardIncludeTimeControl() throws DashboardException
-	{
+	public void testSetDashboardIncludeTimeControl() throws DashboardException {
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
@@ -819,8 +804,7 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 	}
 
-	private TileParam createParameterForTile(Tile tile) throws InterruptedException
-	{
+	private TileParam createParameterForTile(Tile tile) throws InterruptedException {
 		Thread.sleep(2);
 		TileParam tp = new TileParam();
 		tp.setName("param " + System.currentTimeMillis());
@@ -830,8 +814,7 @@ public class DashboardManagerTest
 		return tp;
 	}
 
-	private Tile createTileForDashboard(Dashboard dbd) throws InterruptedException
-	{
+	private Tile createTileForDashboard(Dashboard dbd) throws InterruptedException {
 		Thread.sleep(2);
 		Tile tile = new Tile();
 		tile.setTitle("tile " + System.currentTimeMillis());
@@ -840,8 +823,7 @@ public class DashboardManagerTest
 		return tile;
 	}
 
-	private void initTileWidget(Tile tile)
-	{
+	private void initTileWidget(Tile tile) {
 		if (tile == null) {
 			return;
 		}
