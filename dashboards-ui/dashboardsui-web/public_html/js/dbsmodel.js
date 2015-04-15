@@ -149,6 +149,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
         
         //dashboards
+        self.showSeachClear = ko.observable(false);
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
@@ -319,6 +320,18 @@ function(dsf, oj, ko, $, dfu, pfu)
             $( "#cDsbDialog" ).ojDialog( "close" );
         };
         
+        self.acceptInput = function (event, data)
+        {
+            if (data && data.length > 0)
+            {
+                self.showSeachClear(true);
+            }
+            else
+            {
+                self.showSeachClear(false);
+            }
+        };
+        
         self.searchResponse = function (event, data)
         {
             //console.log("searchResponse: "+data.content.collection.length);
@@ -329,6 +342,11 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.forceSearch = function (event, data)
         {
             $("#sinput").dbsTypeAhead("forceSearch");
+        };
+        
+        self.clearSearch = function (event, data)
+        {
+            $("#sinput").dbsTypeAhead("clearInput");
         };
         
         self.updateDashboard = function (dsb)
