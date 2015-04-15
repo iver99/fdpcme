@@ -27,6 +27,7 @@ public class CommonTest
 	private final String authToken;
 	private final String tenantid;
 	private final String remoteuser;
+	private final String tenantid_2;
 
 	/**
 	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
@@ -38,10 +39,8 @@ public class CommonTest
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
-			
-            InputStream stream = getClass().getResourceAsStream("/testenv.properties");
-            prop.load(stream);
-
+			input = new FileInputStream("testenv.properties");
+			prop.load(input);
 			System.out.println("---------------------------------------------------------------------");
 			System.out.println("The property values - Hostname: " + prop.getProperty("hostname") + " and Port: "
 					+ prop.getProperty("port"));
@@ -54,15 +53,16 @@ public class CommonTest
 		}
 
 		HOSTNAME = prop.getProperty("hostname");
-		portno = prop.getProperty("port");
-		authToken = prop.getProperty("authToken");
-		tenantid = prop.getProperty("tenantid");
-		remoteuser = prop.getProperty("RemoteUser");
-		serveruri = "http://" + HOSTNAME + ":" + portno;
-		RestAssured.useRelaxedHTTPSValidation();
-		RestAssured.baseURI = serveruri;
-		RestAssured.basePath = "/emcpdf/api/v1";
-		RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
+	portno = prop.getProperty("port");
+	authToken = prop.getProperty("authToken");
+	tenantid = prop.getProperty("tenantid");
+	tenantid_2 = prop.getProperty("tenantid_2");
+	remoteuser = prop.getProperty("RemoteUser");
+	serveruri = "http://" + HOSTNAME + ":" + portno;
+	RestAssured.useRelaxedHTTPSValidation();
+	RestAssured.baseURI = serveruri;
+	RestAssured.basePath = "/emcpdf/api/v1";
+	RestAssured.config = RestAssured.config().logConfig(LogConfig.logConfig().enablePrettyPrinting(false));
 
 	}
 
@@ -94,5 +94,10 @@ public class CommonTest
 	public String getTenantid()
 	{
 		return tenantid;
+	}
+
+	public String getTenantid_2()
+	{
+		return tenantid_2;
 	}
 }

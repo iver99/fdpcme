@@ -19,7 +19,7 @@ dependencies {
 	lrgConfig project(':dashboards-entities') { transitive = false }
 	lrgConfig project(':dashboards-core')   { transitive = false }
 	lrgConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8') { transitive = false }
+//	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8') { transitive = false }
 //	lrgConfig(group: 'log4j', name: 'log4j', version: '1.2.16') { transitive = false }
 	lrgConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	lrgConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
