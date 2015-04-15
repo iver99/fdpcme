@@ -461,6 +461,24 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic) throws DashboardException
 	{
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, null);
+	}
+
+	/**
+	 * Returns dashboards for specified query string, by providing page number and page size
+	 *
+	 * @param queryString
+	 * @param offset
+	 *            number to indicate row index, started from 0
+	 * @param pageSize
+	 * @param tenantId
+	 * @param ic
+	 *            ignore case or not
+	 * @return
+	 */
+	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
+			boolean ic, String orderBy) throws DashboardException
+	{
 		if (offset != null && offset < 0) {
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET));
@@ -536,7 +554,14 @@ public class DashboardManager
 			//			paramMap.put("owner", queryString.toLowerCase(locale));
 			//			sb.append(" and p.deleted = 0 ");
 		}
-		sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
+
+		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)) {
+			sb.append(" order by lower(p.name), p.dashboard_Id DESC");
+		}
+		else {
+			//order by last access date
+			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
+		}
 		StringBuilder sbQuery = new StringBuilder(sb);
 		sbQuery.insert(0, "select p.* ");
 		String jpqlQuery = sbQuery.toString();

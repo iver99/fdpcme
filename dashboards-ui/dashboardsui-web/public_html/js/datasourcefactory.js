@@ -11,12 +11,13 @@ function(dm, dc, dp, oj, ko, $)
  */
 
 
-    DatasourceFactory = function(dashbaordsUrl) {
+    DatasourceFactory = function(dashbaordsUrl, sortBy) {
         var self = this;
         self.dashbaordsUrl = dashbaordsUrl;
+        self.sortBy = sortBy;
         self.build = function(query, pageSize) {
           return (function () {
-            var _model = dm.DashboardModel, _pageSize = 20, _fetchSize = 60, _modelLimit = 1000;
+            var _orderby = self.sortBy, _model = dm.DashboardModel, _pageSize = 20, _fetchSize = 60, _modelLimit = 1000;
             if (pageSize)
             {
                 _pageSize = pageSize;
@@ -27,7 +28,8 @@ function(dm, dc, dp, oj, ko, $)
                         {'fetchSize': _fetchSize, 
                          'modelLimit': _modelLimit, 
                          'url': self.dashbaordsUrl, 
-                         'query': query, 
+                         'query': query,
+                         'orderBy': _orderby,
                          'model': _model});
             var _pagingds = new dp.DashboardPaging(_collection);// new oj.CollectionPagingDataSource(_collection);
             _pagingds.setPageSize(_pageSize);
