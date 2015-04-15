@@ -2,12 +2,12 @@
 <Application Name="Platform" Version="1.0.0" >
 <Service Name="DashboardService-ui" Version="1.0.0" type="app" >
 	<artifact name="softwarejson" loc="software-definitions/DashboardService-ui.json" /> 
-        <artifact name="cookbook" loc="dashboards-chef/dashboardService-ui" />
+        <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboardService-ui" />
         <artifact name="software" loc="dashboards-ui/deploy-list.xml" />
 </Service>
 <Service Name="DashboardService-API" Version="1.0.0" type="schema,app" >
         <artifact name="softwarejson" loc="software-definitions/DashboardService-API.json" /> 
-        <artifact name="cookbook" loc="dashboards-chef/dashboardService-api" />
+        <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboardService-api" />
         <artifact name="software" loc="dashboards-ee/deploy-list.xml" />
 </Service>
 </Application>
