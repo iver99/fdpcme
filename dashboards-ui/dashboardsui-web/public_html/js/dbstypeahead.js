@@ -35,7 +35,8 @@ $.widget( "dbs.dbsTypeAhead", {
                 disabled: false,
                 
 		// event handlders
-		response: null
+		response: null,
+                acceptInput: undefined
 	},
 
 	requestIndex: 0,
@@ -107,6 +108,7 @@ $.widget( "dbs.dbsTypeAhead", {
 					this._searchTimeout( event );
 					break;
 				}
+                                this._acceptInput();
 			},
 			keypress: function( event ) {
 				if ( suppressKeyPress ) {
@@ -144,6 +146,7 @@ $.widget( "dbs.dbsTypeAhead", {
 					return;
 				}
 				this._searchTimeout( event );
+                                this._acceptInput();
 			},
 			focus: function() {
 				
@@ -253,6 +256,7 @@ $.widget( "dbs.dbsTypeAhead", {
 		return this._search( value );
 	},
         
+        
         forceSearch: function(  ) {
 		// always save the actual value, not the one passed as an argument
 		var value = this.term = this._value();
@@ -290,6 +294,28 @@ $.widget( "dbs.dbsTypeAhead", {
 		if ( !this.options.disabled && !this.cancelSearch ) {
 			this._trigger( "response", null, { content: content } );
 		} 
+	},
+        
+        clearInput: function () {
+            var nodeName = this.element[ 0 ].nodeName.toLowerCase(), isTextarea = nodeName === "textarea",
+			isInput = nodeName === "input";
+            if (isTextarea || isInput)
+            {
+                this.element.val("");
+                this.forceSearch();
+                this._acceptInput();
+            }
+        },
+        
+        _acceptInput: function( ) {
+            this._delay(function() {
+
+	        var _value = this._value();
+		if ( !this.options.disabled && this.options.acceptInput && !this.cancelSearch  ) {
+			this._trigger( "acceptInput", null, _value );
+		} 
+	    }, 0 );
+                
 	},
 
 	close: function( event ) {
