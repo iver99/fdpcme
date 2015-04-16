@@ -12,9 +12,9 @@ public class LoginAndLogout {
   public  void login(String testName,String username,String password,String tenantId,String rel,String servicename)
 	{
 		webd = WebDriverUtils.initWebDriver(testName);
-		//url= PageUtils.getServiceLink(tenantId,rel,servicename);
+		String url= PageUtils.getServiceLink(tenantId,rel,servicename);
 		
-		String url = "https://slc07hcn.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+		//String url = "https://slc07hcn.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		//String url = "https://slc07dgg.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		//String url = "https://slc07ptb.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		webd.getLogger().info("start to test in LoginAndOut");	
@@ -26,7 +26,7 @@ public class LoginAndLogout {
 	
 	public  void login(String testName)
 	{
-		login(testName,"emaasadmin", "Welcome1!","TenantOPC1", "library", "LoganService");
+		login(testName,"emaasadmin", "Welcome1!","TenantOPC1", "home", "Dashboard-UI");
 		
 	}
 	
