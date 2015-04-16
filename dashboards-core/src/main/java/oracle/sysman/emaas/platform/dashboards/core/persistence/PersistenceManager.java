@@ -96,7 +96,7 @@ public class PersistenceManager
 		Properties connectionProps = new Properties();
 		InputStream input = null;
 		try {
-			input = new FileInputStream(testPropsFile);
+			input = PersistenceManager.class.getResourceAsStream("/"+testPropsFile);//new FileInputStream(testPropsFile);
 			connectionProps.load(input);
 			return connectionProps;
 		}
