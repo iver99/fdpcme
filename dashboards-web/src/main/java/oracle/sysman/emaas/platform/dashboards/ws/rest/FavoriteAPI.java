@@ -30,6 +30,9 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author wenjzhu
  * @author guobaochen introduce to add favorite, to delete favorite
@@ -37,6 +40,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 @Path("/v1/dashboards/favorites")
 public class FavoriteAPI extends APIBase
 {
+	private final Logger logger = LogManager.getLogger(FavoriteAPI.class);
 
 	public FavoriteAPI()
 	{
@@ -108,7 +112,8 @@ public class FavoriteAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 
