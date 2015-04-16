@@ -311,7 +311,7 @@ define(['knockout',
             var headers = {
                 'Content-type': 'application/json',
                 'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1'
-//                ,'Authorization': "Basic d2VibG9naWM6d2VsY29tZTE="
+//                ,'Authorization': dfu.getAuthToken()
             };
 //            dtm.userTenant='TenantOPC1.SYSMAN';
             if (dtm.userTenant){
@@ -644,22 +644,16 @@ define(['knockout',
                 for (var i = 0; i < self.tileRemoveCallbacks.length; i++) {
                     self.tileRemoveCallbacks[i]();
                 }
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.broadenTile = function(tile) {
                 if (tile.width() <= 3)
                     tile.width(tile.width() + 1);
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.narrowTile = function(tile) {
                 if (tile.width() > 1)
                     tile.width(tile.width() - 1);
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.calculateTilesRowHeight = function() {
@@ -716,14 +710,6 @@ define(['knockout',
                 }
             };
             
-            self.postTileMenuClicked = function(tile) {
-                $("#tileMenu" + tile.clientGuid).hide();
-                if ($('#actionButton' + tile.clientGuid).hasClass('oj-selected')) {
-                    $('#actionButton' + tile.clientGuid).removeClass('oj-selected');
-                    $('#actionButton' + tile.clientGuid).addClass('oj-default');
-                }
-            };
-            
             self.maximize = function(tile) {
                 for (var i = 0; i < self.dashboard.tiles().length; i++) {
                     var eachTile = self.dashboard.tiles()[i];
@@ -737,8 +723,7 @@ define(['knockout',
                 var maximizedTileHeight = self.calculateTilesRowHeight();
                 self.tileOriginalHeight = $('.dbd-tile-maximized .dbd-tile-element').height();
                 $('.dbd-tile-maximized .dbd-tile-element').height(maximizedTileHeight);
-                
-                self.postTileMenuClicked(tile);
+                $('#add-widget-button').ojButton('option', 'disabled', true);
             };
             
             self.getMaximizedTile = function() {
@@ -768,8 +753,6 @@ define(['knockout',
                 }
                 self.tilesView.enableSortable();
                 self.tilesView.enableDraggable();
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.configure = function(tile){
@@ -781,8 +764,6 @@ define(['knockout',
             self.changeUrl = function(tile) {
                 urlEditView.setEditedTile(tile);
                 $('#urlChangeDialog').ojDialog('open');
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
