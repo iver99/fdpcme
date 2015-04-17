@@ -59,11 +59,10 @@ configurations{
 restAssured.exclude module:'groovy'
 }
 }
-     task DEVTest(type:EMTest){
-  	//include "oaracle/sysman/emaas/platform/dashboards/core/<CLASS>.class"
-  	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
+task DEVTest(type:EMTest){
+    include "oracle/sysman/emaas/platform/dashboards/core/*"
+    include "oracle/sysman/emaas/platform/dashboards/core/persistence/*"
 	useRestAssured =true
-	scanForTestClasses = false
 	}
 
 task emcpdf_dev_test (dependsOn: DEVTest)
