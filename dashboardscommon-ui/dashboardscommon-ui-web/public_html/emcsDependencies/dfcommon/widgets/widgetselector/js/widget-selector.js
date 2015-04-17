@@ -1,4 +1,12 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', '../../../js/util/typeahead-search'],
+define(['require',
+    'knockout', 
+    'jquery', 
+    '../../../js/util/df-util', 
+    'ojs/ojcore', 
+    '../../../js/util/typeahead-search', 
+    'ojs/ojselectcombobox', 
+    'ojs/ojcomponents'
+    ],
         function (localrequire, ko, $, dfumodel, oj) {
             function WidgetSelectorViewModel(params) {
                 var self = this;
