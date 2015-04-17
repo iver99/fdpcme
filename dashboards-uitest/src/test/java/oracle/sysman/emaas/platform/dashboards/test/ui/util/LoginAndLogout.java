@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import oracle.sysman.qatool.uifwk.webdriver.*;
 import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.emsaas.login.LoginUtils;
+import oracle.sysman.emsaas.login.Utils;
 
 public class LoginAndLogout {
 	public static WebDriver webd=null;
@@ -26,7 +27,8 @@ public class LoginAndLogout {
 	
 	public  void login(String testName)
 	{
-		login(testName,"emaasadmin", "Welcome1!","TenantOPC1", "home", "Dashboard-UI");
+		String tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
+		login(testName,"emaasadmin", "Welcome1!",tenantID, "home", "Dashboard-UI");
 		
 	}
 	
