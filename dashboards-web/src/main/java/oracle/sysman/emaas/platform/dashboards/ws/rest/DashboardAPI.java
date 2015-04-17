@@ -50,7 +50,7 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/v1/dashboards")
 public class DashboardAPI extends APIBase
 {
-	private final Logger logger = LogManager.getLogger(DashboardAPI.class);
+	private static final Logger logger = LogManager.getLogger(DashboardAPI.class);
 
 	public DashboardAPI()
 	{
@@ -156,10 +156,10 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -176,7 +176,6 @@ public class DashboardAPI extends APIBase
 			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e) {
-			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 		}
 
@@ -193,10 +192,10 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(pd)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
@@ -213,6 +212,7 @@ public class DashboardAPI extends APIBase
 			input = getJsonUtil().fromJson(inputJson.toString(), Dashboard.class);
 		}
 		catch (IOException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -231,10 +231,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
