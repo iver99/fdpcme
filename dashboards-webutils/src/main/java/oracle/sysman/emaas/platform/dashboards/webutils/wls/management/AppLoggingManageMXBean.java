@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
@@ -23,6 +24,8 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
  */
 public class AppLoggingManageMXBean implements IAppLoggingManageMXBean
 {
+	private static final Logger sysLogger = LogManager.getLogger(AppLoggingManageMXBean.class);
+
 	@Override
 	public String getLogLevels()
 	{
@@ -74,5 +77,6 @@ public class AppLoggingManageMXBean implements IAppLoggingManageMXBean
 			lc.setLevel(Level.FATAL);
 		}
 		ctx.updateLoggers();
+		sysLogger.info("Logging MXBean sets the log level to {}" + lc.getLevel().name());
 	}
 }
