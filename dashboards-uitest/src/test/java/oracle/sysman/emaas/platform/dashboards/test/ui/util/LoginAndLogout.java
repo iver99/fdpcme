@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 import oracle.sysman.qatool.uifwk.webdriver.*;
 import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.emsaas.login.LoginUtils;
-import oracle.sysman.emsaas.login.Utils;
+import oracle.sysman.emsaas.login.utils.Utils;
 
 public class LoginAndLogout {
 	public static WebDriver webd=null;
