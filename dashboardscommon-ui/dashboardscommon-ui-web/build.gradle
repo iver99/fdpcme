@@ -54,120 +54,17 @@ project.task("cleanJet") << {
     sourceJetDestDir.deleteDir()
 }
 
+clean.dependsOn cleanJet
 
-//unpack js libs from artifactory
-//def jslibs_number = "${download_js_number}"
-//def jslibs_group = "${download_js_group}".split(",")
-//def jslibs_artifacts = "${download_js_artifacts}".split(",")
-//def jslibs_version = "${download_js_version}".split(",")
-//def jslibs_foldername = "${download_js_foldername}".split(",")
+war.archiveName "dashboards-common-ui-web.war"
 
-project.task("unpackJSLibFromArtifactory") << {
-//    for (i in 0..<jslibs_number.toInteger()){
-//	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-//		if (artifact.name.contains(download_js_artifacts[i])) {
-//		    logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-//		    def File buildJSLibsUnzipDir = new File(buildDir.absolutePath, "jslibs"+i)
-//		    buildJSLibsUnzipDir.mkdirs()
-//		    project.copy {
-//		        from project.file(artifact.file.absolutePath)
-//		        into buildJSLibsUnzipDir.absolutePath
-//		    }
-//		    ant.unzip(src: buildJSLibsUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildJSLibsUnzipDir.absolutePath)
-//		    
-//		    project.copy {
-//		        //from  buildJSLibsUnzipDir.absolutePath+"/emcsDependencies/"
-//			from buildJSLibsUnzipDir.absolutePath
-//			exclude "*.zip"
-//		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
-//		    }
-//		    
-//		    project.delete(buildJSLibsUnzipDir)
-//		}
-//	    }
-//  }
-}
-
-project.task("cleanJSLib") << {
-//    def File libDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
-//   def File tmpdir = libDestDir
-//    println 'Cleaning up js libs directories ...'
-//
-//    download_foldername.each { folder ->
-//        tmpdir = new File(libDestDir.absolutePath,"/"+folder)
-//	println 'js libs dir: ' + tmpdir
-//	tmpdir.deleteDir()
-//	}
-}
-
-//unpack the integ common libs from artifactory
-def war_number = "${download_number}"
-def download_group = "${download_group}".split(",")
-def download_artifacts = "${download_artifacts}".split(",")
-def download_version = "${download_version}".split(",")
-def download_foldername = "${download_foldername}".split(",")
-
-project.task("unpackZipFromArtifactory") << {
-    
-    for (i in 0..<war_number.toInteger()){
-	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-		if (artifact.name.contains(download_artifacts[i])) {
-		    logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-		    def File buildWarUnzipDir = new File(buildDir.absolutePath, "intgwar"+i)
-		    buildWarUnzipDir.mkdirs()
-		    project.copy {
-		        from project.file(artifact.file.absolutePath)
-		        into buildWarUnzipDir.absolutePath
-		    }
-		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildWarUnzipDir.absolutePath)
-		    
-		    project.copy {
-		        //from  buildWarUnzipDir.absolutePath+"/emcsDependencies/"
-			from buildWarUnzipDir.absolutePath
-			exclude "*.zip"
-		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
-		    }
-		    
-		    project.delete(buildWarUnzipDir)
-		}
-	    }
-    }
-}
-
-project.task("cleanZip") << {
-    def File warDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
-    def File tmpdir = warDestDir
-    println 'Cleaning up war directories ...'
-
-    download_foldername.each { folder ->
-        tmpdir = new File(warDestDir.absolutePath,"/"+folder)
-	println 'war dir: ' + tmpdir
-	tmpdir.deleteDir()
-	}
-}
-
-clean.dependsOn cleanJet,cleanZip,cleanJSLib
-
-war.archiveName "dashboardsui-web.war"
-
-if(war_number.toInteger()>0){
-
-	war.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackZipFromArtifactory
-}
-else
-{
-	war.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory
-}
+war.dependsOn unpackJETFromArtifactory
 
 war {
 	from('public_html') {
 	       include '**/*'
 	        into('/')
 	}
-	//from('src/main/java') {
-	//        include '**/*'
-	//        into('WEB-INF/classes')
-	//}
 
 	from('src/main/java') { 
 		include '**/*.properties'
@@ -180,31 +77,11 @@ war {
 task buildDFCommonLibZip(type: Zip){
 	baseName = 'emcs-ui-framework'
 	appendix = 'common'
-	//classifier = 'common'
 	from 'public_html/emcsDependencies/dfcommon/'
 	into 'dfcommon'
 }
 
-//def libsToPublish = []
-//fileTree publishfiles = fileTree("build/libs") + fileTree("build/distributions")
-//fileTree publishfiles = fileTree("build/distributions")
-//publishfiles.each { file ->
-//    libsToPublish << file
-//}
-
 publishing {
-//    publications {
-//	for (f in libsToPublish ) {
-//	    def fbase = f.getName().split("\\.")[0]
-//	    "$fbase"(MavenPublication) {
-//		version "${publish_version}"
-//	        groupId "${publish_group}"
-//		artifact f
-//		artifactId fbase
-//	    }
-//	}
-//    }
-
     publications {
 	maven(MavenPublication) {
 	    version "${publish_version}"
@@ -224,125 +101,7 @@ publishing {
     }
 }
 
-task runQAUITestSuite(type: Test){
-        useTestNG(){
-        dependsOn ':dashboards-ui:dashboardsui-ee:ear'
-        useDefaultListeners = true
-        outputDirectory = file("$buildDir/testngoutput")
-        suites file('testngsuite.xml')
-        }
-}
-
-// Directory where the restful API doc is generated
-ext.restDocRootDir = "${buildDir}/restdoc" 
-ext.restDocOutputDir = "${restDocRootDir}"
-
-configurations {
-	restDoc { transitive = false }
-	enunciateCore { transitive = false }
-	ftpAntTask { transitive = false }
-}
-
-/**
- * Generates documentation for the REST service API
- */  
-task restDoc {
- 
-    // Configure task input and output to not generate the doc again when the 
-    // source file have not changed
-    inputs.files 'src/main/java/oracle/sysman/emaas/platform/dashboards/ui/web/rest'
-    outputs.dir restDocOutputDir
-}
-restDoc << {
-    
-    // Declare the enunciate ant task
-    ant.taskdef (name: 'enunciate', 
-        classname: 'org.codehaus.enunciate.main.EnunciateTask',
-        classpath: configurations.enunciateCore.asPath)
-    
-    // Make the directory to store enunciate output
-    ant.mkdir(dir: "${restDocOutputDir}")
-
-    // Define classpath for running enunciate
-    ant.path(id:'enunciateRuntimePath') {
-        pathelement(path: configurations.restDoc.asPath)
-    }  
-
-    // Run the enunciate task
-    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emaas/platform/dashboards/ui/web/rest/',
-            classpathRef: 'enunciateRuntimePath',
-            verbose: 'true', 
-            debug: 'true', 
-            configFile: 'enunciate.xml',
-            javacSourceVersion: '7') {
-        
-        include(name: '**/*.java')
-	exclude(name: '*/exception')
-        export(artifactId: 'docs', destination: restDocOutputDir)
-        javacArgument(argument: '-g')
-    }	
-}
-
-/**
- * FTP the REST API document to the ftp server
- */
-
-task ftpRestDoc << {
-		ant {
-			taskdef(name: 'ftp',
-                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
-                classpath: configurations.ftpAntTask.asPath)
-			ftp(server: ftpserver, userid: uidoc_username, password: uidoc_password, remotedir: remote_restdoc_dir) {
-				fileset(dir: "${restDocOutputDir}")
-			}
-		}
-	}
-
-sourceSets {
-                            test{
-                                java {
-                                          srcDirs = ['src/test/java']
-                                }
-                                resources.srcDirs = ['src/test/java']
-                            }
- }
-
 dependencies {
-        providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2'){ transitive = false }
-        compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2'){ transitive = false }
-        compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6'){ transitive = false }
-        compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6'){ transitive = false }
-
-	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
-	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
-	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
-        providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
-        providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15008', ext: 'war'){ transitive = false }
-	if(war_number.toInteger()>0){
-	    for (i in 0..<war_number.toInteger())
-		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip', changing: true)
-	}
-
-	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.29'
-	restDoc(
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.29'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.29'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.29'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.29'],
-		[group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
-		[group: 'com.oracle.weblogic', name: 'jersey-server-1.17.1', version: '12.1.2-0-0'],
-		 [group: 'com.oracle.weblogic', name: 'jersey-servlet-1.17.1', version: '12.1.2-0-0']
-	)
-	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
-			module('commons-net:commons-net:1.4.1') {
-				dependencies 'oro:oro:2.0.8:jar'
-			}
-		}
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15008', ext: 'war'){ transitive = false }	
 }
 
