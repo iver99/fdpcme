@@ -3,7 +3,7 @@
   <display-name>dashboardscommonui-ee</display-name>
   <module>
     <web>
-      <web-uri>dashboardscommonui-web.war</web-uri>
+      <web-uri>dashboards-common-ui-web.war</web-uri>
       <context-root>emsaasui/dfcommon</context-root>
     </web>
   </module>
