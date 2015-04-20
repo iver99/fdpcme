@@ -723,7 +723,6 @@ define(['knockout',
                 var maximizedTileHeight = self.calculateTilesRowHeight();
                 self.tileOriginalHeight = $('.dbd-tile-maximized .dbd-tile-element').height();
                 $('.dbd-tile-maximized .dbd-tile-element').height(maximizedTileHeight);
-                $('#add-widget-button').ojButton('option', 'disabled', true);
             };
             
             self.getMaximizedTile = function() {
