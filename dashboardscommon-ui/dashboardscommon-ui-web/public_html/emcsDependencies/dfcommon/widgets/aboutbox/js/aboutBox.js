@@ -1,4 +1,4 @@
-define(['require', 'knockout', 'jquery'],
+define(['require', 'knockout', 'jquery', 'ojs/ojdialog', 'ojs/ojbutton'],
     function(localrequire, ko, $)
     {
         function AboutBox(params) {

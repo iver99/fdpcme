@@ -68,15 +68,16 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'ojs/ojcore',
-    'ojs/ojcomponents',
-    'jqueryui',
-    'ojs/ojmodel',
+//    'ojs/ojcomponents',
+//    'jqueryui',
+//    'ojs/ojmodel',
     'ojs/ojknockout',
-    'ojs/ojknockout-model',
+//    'ojs/ojknockout-model',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
 //    'ojs/ojselectcombobox',
-    'ojs/ojmenu'
+    'ojs/ojdialog'
+//    'ojs/ojmenu'
 ],
         function(ko, $) // this callback gets executed when all required modules are loaded
         {            

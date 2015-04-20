@@ -5,7 +5,9 @@ define(['require',
     'ojs/ojcore', 
     '../../../js/util/typeahead-search', 
     'ojs/ojselectcombobox', 
-    'ojs/ojcomponents'
+    'ojs/ojdialog',
+    'ojs/ojinputtext',
+    'ojs/ojbutton'
     ],
         function (localrequire, ko, $, dfumodel, oj) {
             function WidgetSelectorViewModel(params) {
