@@ -26,8 +26,8 @@ define(['knockout',
             return $('<div class="dbd-tile oj-col oj-sm-' + columns + ' oj-md-' + columns + ' oj-lg-' + columns + ' dbd-tile-placeholder' + '"><div class="dbd-tile-header dbd-tile-header-placeholder">placeholder</div><div class="dbd-tile-placeholder-inner"></div></div>');
         }
             
-        function createNewTileFromSearchObject(dtm, searchObject) {
-            return new dtm.DashboardTile(
+        function createNewTileFromSearchObject(dashboard, dtm, searchObject) {
+            return new dtm.DashboardTile(dashboard,
                     searchObject.getAttribute("name"), 
                     "", 
                     1,
@@ -35,7 +35,7 @@ define(['knockout',
                     searchObject.getAttribute("chartType"));
         }
             
-        function DashboardTilesView(dtm) {
+        function DashboardTilesView(dashboard, dtm) {
             var self = this;
             self.dtm = dtm;
             
@@ -63,7 +63,7 @@ define(['knockout',
                                 var position = ko.utils.arrayIndexOf(ui.item.parent().children(), ui.item[0]);
                                 if (position >= 0) {
                                     if (self.searchObject !== undefined) {
-                                        var newTile = createNewTileFromSearchObject(self.dtm, self.searchObject);
+                                        var newTile = createNewTileFromSearchObject(dashboard, self.dtm, self.searchObject);
                                         list.splice(position, 0, newTile);
                                     }
                                 }
