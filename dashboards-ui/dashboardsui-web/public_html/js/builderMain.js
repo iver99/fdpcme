@@ -169,7 +169,6 @@ require(['knockout',
             };
             
            
-            var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
@@ -199,6 +198,7 @@ require(['knockout',
                             dtm.initializeTileAfterLoad(dashboard, tile);
                         }
                     }
+                    var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
                     var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();

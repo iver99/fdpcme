@@ -465,7 +465,7 @@ define(['knockout',
                             console.log("widget template: " + template);
                             console.log("widget viewmodel:: " + viewmodel);
 
-                          newTile =new DashboardTile(self, koc_name, name, description, width, widget); 
+                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
                         }
                     }else if (widget.WIDGET_GROUP_NAME !== 'Demo Analytics') { //====new logic !==999
                         var assetRoot = null;
@@ -512,7 +512,7 @@ define(['knockout',
                                     console.log("DF widget template: "+template);
                                     console.log("DF widget viewmodel:: "+viewmodel);                                  
                                 }                            
-                                newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
+                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                              }else if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
                                     var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
@@ -528,7 +528,7 @@ define(['knockout',
                                     console.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
 
-                                newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
+                                newTile =new DashboardTile(self.dashboard.dashboard,koc_name,name, description, width, widget); 
                                 if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
                                     var worksheetName = 'WS_4_QDG_WIDGET';
                                     var workSheetCreatedBy = 'sysman';
@@ -575,7 +575,7 @@ define(['knockout',
                                 console.error("Invalid WIDGET_SOURCE: "+widget_source);
                             }
                         }else{
-    //                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
+    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
 
@@ -595,9 +595,9 @@ define(['knockout',
                                console.log("widget template: "+template);
                                console.log("widget viewmodel:: "+viewmodel);    
                            }
-                           newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
+                           newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                         }else{
-    //                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
+    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
                     }
