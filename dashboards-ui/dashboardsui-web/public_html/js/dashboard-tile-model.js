@@ -81,6 +81,7 @@ define(['knockout',
                         self.customChanges.push(change);
                     }else{
                         console.log("ERROR: "+"invalid custom change: "+change);
+                        oj.Logger.error("ERROR: "+"invalid custom change: "+change);
                     }
                 }
             }
@@ -228,6 +229,7 @@ define(['knockout',
             tile.setParameter = function(name, value){
                 if (name===undefined || name===null || value===undefined || value===null){
                     console.error("Invaild value: name=["+name,"] value=["+value+"]");
+                    oj.Logger.error("Invaild value: name=["+name,"] value=["+value+"]");
                 }else{
                     var found = false;
                     if (tile.tileParameters){
@@ -321,6 +323,7 @@ define(['knockout',
                 headers['X-REMOTE-USER'] = dtm.userTenant;
             }else{
                 console.log("Warning: user name is not found: "+dtm.userTenant);
+                oj.Logger.warn("Warning: user name is not found: "+dtm.userTenant);
             }
             return headers;
         }
@@ -338,6 +341,7 @@ define(['knockout',
                 },
                 error: function(e) {
                     console.log(e.responseText);
+                    oj.Logger.error("Error to load dashboard: "+e.responseText);
                     if (errorCallBack && e.responseText && e.responseText.indexOf("{") === 0)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -356,6 +360,7 @@ define(['knockout',
                         succCallBack(data);
                 },
                 error: function(e) {
+                    oj.Logger.error("Error to update dashboard: "+e.responseText);
                     if (errorCallBack)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -390,6 +395,7 @@ define(['knockout',
                         succCallBack();
                 },
                 error: function(e) {
+                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
                     if (errorCallBack)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -407,6 +413,7 @@ define(['knockout',
                         succCallBack();
                 },
                 error: function(e) {
+                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
                     if (errorCallBack)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -573,10 +580,12 @@ define(['knockout',
                                 }
                             }else{
                                 console.error("Invalid WIDGET_SOURCE: "+widget_source);
+                                oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
                             }
                         }else{
     //                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
 
                     } 
@@ -599,6 +608,7 @@ define(['knockout',
                         }else{
     //                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
                     }
                     if (newTile){
@@ -606,14 +616,17 @@ define(['knockout',
                     }
                 }else{
                     console.error("Null widget passed to a tile");
+                    oj.Logger.error("Null widget passed to a tile");
                 }
 
             };
             
            self.menuItemSelect = function(event, ui) {
                var tile = ko.dataFor(ui.item[0]);
-               if (!tile)
+               if (!tile) {
+                   oj.Logger.error("Error: could not find tile from the ui data");
                    return;
+               }
                switch (ui.item.attr("id")) {
                    case "delete":
                        self.removeTile(tile);
@@ -698,6 +711,7 @@ define(['knockout',
                     height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
                     var width = globalDom.scrollWidth;
                     console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
+                    oj.Logger.log("Error: could not find tile from the ui data");
                     // following are investigation code, and now work actually for plugins loaded by requireJS
 //                    $($('#df_iframe').context).ready(function() {
 //                        alert('iframe loaded');
@@ -795,11 +809,13 @@ define(['knockout',
                         if (this.widget.onDashboardItemChangeEvent) {
                             this.widget.onDashboardItemChangeEvent(dashboardItemChangeEvent);
                             console.log(widget.title());
+                            oj.Logger.log(widget.title());
                             deferred.resolve();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(textStatus);
+                        oj.Logger.log(textStatus);
                         deferred.reject(textStatus);
                     }
                 });
@@ -817,9 +833,11 @@ define(['knockout',
                     var combinedPromise = $.when.apply($,defArray);
                     combinedPromise.done(function(){
                         console.log("All Widgets have completed refresh!");
+                        oj.Logger.log("All Widgets have completed refresh!");
                     });
                     combinedPromise.fail(function(ex){
                         console.log("One or more widgets failed to refresh: "+ex);
+                        oj.Logger.log("One or more widgets failed to refresh: "+ex);
                     });   
                 }
             };
