@@ -82,6 +82,7 @@ $.widget('dbs.dbsDashboardPanel',
         
         active: false,
         currentPageNum: undefined,
+        showDescription: false,
         
         _activate: function(event, callback) {
             var self = this;
@@ -153,7 +154,6 @@ $.widget('dbs.dbsDashboardPanel',
         _createComponent: function () {
             this._createHeader();
             this._createContent();
-            //var self = this, _name = self.name, _element = self.element;
             
             var self = this, _name = self.name, _element = self.element;
             self.active = false;
@@ -260,9 +260,9 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createContentPages: function() {
-            var self = this, _dashboard = self.options['dashboard'], _dmodel = self.options.dashboardModel,
-                    _wdts = _dashboard['widgets'] || _dashboard['tiles'];
-            var _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
+            var self = this, _dashboard = self.options['dashboard'], _dmodel = self.options.dashboardModel;
+            //        _wdts = _dashboard['widgets'] || _dashboard['tiles'];
+            //var _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
             
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
@@ -271,7 +271,6 @@ $.widget('dbs.dbsDashboardPanel',
             self.contentPage1Ele = $("<div></div>")//.addClass(self.classNames['active'])
                     .addClass(self.classNames['page']);//.append(self.contentPage1ImgEle);
             //self.contentPage1Ele.append(self.contentPage1ImgEle);
-            
             
             if (_dmodel['screenShot'])
             {
@@ -300,11 +299,18 @@ $.widget('dbs.dbsDashboardPanel',
             self.contentPagesEle.append(self.contentPage1Ele);
             //description page
             var _dtext = self.options.dashboard['description'];
+            if (_dtext && _dtext !== null && _dtext.length > 0)
+            {
+                self.showDescription = true;
+            }
             if (!_dtext) _dtext = '';
-            self.contentPage2CntEle = $("<p></p>").addClass(self.classNames['pageDescription']).html(self._truncateString(_dtext, DESCRIPTION_MAX_LENGTH));
-            self.contentPage2Ele = $("<div></div>")
+            if (self.showDescription === true)
+            {
+                self.contentPage2CntEle = $("<p></p>").addClass(self.classNames['pageDescription']).html(self._truncateString(_dtext, DESCRIPTION_MAX_LENGTH));
+                self.contentPage2Ele = $("<div></div>")
                     .addClass(self.classNames['page']).append(self.contentPage2CntEle);
-            self.contentPagesEle.append(self.contentPage2Ele);
+                self.contentPagesEle.append(self.contentPage2Ele);
+            }
             /*
             // remove widget bullet
             //widgets page
@@ -353,7 +359,9 @@ $.widget('dbs.dbsDashboardPanel',
                     .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'))
                     .attr("title", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'));
             self.contentCtlsEle.append(self.contentCtl1Ele);
-            self.contentCtl2Ele = $("<div></div>")
+            if (self.showDescription === true)
+            {
+                self.contentCtl2Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
                     .bind('click.' + _name, function (event) {
                         self._goToPage(2);
@@ -368,7 +376,8 @@ $.widget('dbs.dbsDashboardPanel',
                     .attr(TAB_INDEX_ATTR, '0')
                     .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'))
                     .attr("title", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'));
-            self.contentCtlsEle.append(self.contentCtl2Ele);
+                self.contentCtlsEle.append(self.contentCtl2Ele);
+            }
             /*
             self.contentCtl3Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
@@ -401,9 +410,12 @@ $.widget('dbs.dbsDashboardPanel',
                     self._setCurrentPageNum(1);
                     break;
                 case 2:
-                    self.contentPage2Ele.addClass(_aclass);
-                    self.contentCtl2Ele.addClass(_aclass);
-                    self._setCurrentPageNum(2);
+                    if (self.showDescription === true)
+                    {
+                        self.contentPage2Ele.addClass(_aclass);
+                        self.contentCtl2Ele.addClass(_aclass);
+                        self._setCurrentPageNum(2);
+                    }
                     break;
                 /*
                 case 3:
@@ -425,8 +437,11 @@ $.widget('dbs.dbsDashboardPanel',
                     //self._setCurrentPageNum(undefined);
                     break;
                 case 2:
-                    self.contentPage2Ele.removeClass(_aclass);
-                    self.contentCtl2Ele.removeClass(_aclass);
+                    if (self.showDescription === true)
+                    {
+                        self.contentPage2Ele.removeClass(_aclass);
+                        self.contentCtl2Ele.removeClass(_aclass);
+                    }
                     //self._setCurrentPageNum(undefined);
                     break;
                 /*
