@@ -139,8 +139,8 @@
 .dbs-summary-page-description {
    padding-left: 5px;
    padding-right: 5px;
-    font-weight: bold;
-    color:gray;   
+   //font-weight: bold;
+   color:gray;   
 }
 
 .dbs-summary-controlls {
