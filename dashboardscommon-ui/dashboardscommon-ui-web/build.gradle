@@ -6,6 +6,8 @@ apply plugin: 'artifactory-publish'
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
 def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
+// sourc directories where font files are copied
+def File sourceFontDestDir = new File(sourceWebappDir, 'emcsDependencies/dfcommon/css/font-awesome')
 
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
@@ -54,11 +56,44 @@ project.task("cleanJet") << {
     sourceJetDestDir.deleteDir()
 }
 
-clean.dependsOn cleanJet
+project.task("unpackFontFromArtifactory") << {
+    
+    def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
+    //first time or if custom cleans removes it
+    sourceFontDestDir.mkdirs()
+
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('font-awesome') && files(sourceFontDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildFontUnzipDir.mkdirs()
+            project.copy {  
+		from project.file(artifact.file.absolutePath)
+		into buildFontUnzipDir.absolutePath
+	    }
+	    
+	    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)
+		    
+	    project.copy {
+	    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
+		    into sourceFontDestDir.absolutePath
+	    }
+		    
+	    project.delete(buildFontUnzipDir)
+        }
+    }
+}
+
+project.task("cleanFont") << {
+    println 'Cleaning up font directories ...'
+    println 'font-awesome dir: ' + sourceFontDestDir.absolutePath
+    sourceFontDestDir.deleteDir()
+}
+
+clean.dependsOn cleanJet,cleanFont
 
 war.archiveName "dashboards-common-ui-web.war"
 
-war.dependsOn unpackJETFromArtifactory
+war.dependsOn unpackJETFromArtifactory, unpackFontFromArtifactory
 
 war {
 	from('public_html') {
@@ -103,5 +138,6 @@ publishing {
 
 dependencies {
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15008', ext: 'war'){ transitive = false }	
+	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
 }
 
