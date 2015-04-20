@@ -1,5 +1,5 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
-        function (localrequire, ko, $, dfumodel, oj) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore', 'ojs/ojmenu', 'ojs/ojbutton'],
+        function (localrequire, ko, $, dfumodel,oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
                 
