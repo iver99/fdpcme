@@ -698,7 +698,7 @@ role value for that section to represent the appropriate content type.
                                             <ul style="display:none"
                                                     data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                                ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
-                                                <li id="delete">
+                                                <li id="delete" data-bind="css: { 'oj-disabled': editDisabled()}">
                                                   <a href="#">
                                                       <span class="oj-menu-item-icon demo-icon-font">
                                                           <img src="images/func_x_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DELETE')}"/></span>

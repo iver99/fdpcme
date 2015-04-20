@@ -128,7 +128,7 @@ define(['knockout',
         }
          */
         
-        function initializeTileAfterLoad(tile) {
+        function initializeTileAfterLoad(dashboard, tile) {
             if (!tile)
                 return;
             
@@ -151,6 +151,9 @@ define(['knockout',
             }
             tile.shouldHide = ko.observable(false);
             tile.clientGuid = dfu.guid();
+            tile.editDisabled = ko.computed(function() {
+            	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
+            });
             tile.widerEnabled = ko.computed(function() {
                 return tile.width() < 4;
             });
@@ -276,7 +279,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTileAfterLoad(self);
+            initializeTileAfterLoad(dashboard, self);
         }
         
         function getBaseUrl() {

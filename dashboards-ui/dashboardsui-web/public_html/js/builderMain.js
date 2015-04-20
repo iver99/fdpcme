@@ -196,7 +196,7 @@ require(['knockout',
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
-                            dtm.initializeTileAfterLoad(tile);
+                            dtm.initializeTileAfterLoad(dashboard, tile);
                         }
                     }
                     var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
