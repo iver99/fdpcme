@@ -1,5 +1,5 @@
-define(['knockout', 'jquery', '../../../js/util/df-util'],
-        function (ko, $, dfumodel) {
+define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
+        function (ko, $, dfumodel, oj) {
             function NavigationLinksViewModel(params) {
                 var self = this;
                 var dfHomeUrl = null;
@@ -57,6 +57,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 };
                 
                 self.openDashboardHome = function(data, event) {
+                    oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfHomeUrl);
                     if (dfHomeUrl) {
                         window.location.href = dfHomeUrl;
                     }
@@ -92,11 +93,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                                     }
                                     self.adminLinks(filteredAdminLinks);                                    
                                 }
-                            }else{
-                                if (console){
-                                    console.log("Empty app!");
-                                }
-                                
+                            }
+                            else {
+                                oj.Logger.warn('Empty app!');
                             }
 
                         }
@@ -110,9 +109,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                             fetchServiceLinks(data);
                         },
                         error: function(xhr, textStatus, errorThrown){
-                            if (console){
-                                console.log('Failed to get service instances by URL: '+serviceUrl);
-                            }
+                            oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
                             self.visualAnalyzers([]);
                             self.adminLinks([]);
                         },
