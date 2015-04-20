@@ -528,7 +528,7 @@ define(['knockout',
                                     console.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
 
-                                newTile =new DashboardTile(self.dashboard.dashboard,koc_name,name, description, width, widget); 
+                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                                 if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
                                     var worksheetName = 'WS_4_QDG_WIDGET';
                                     var workSheetCreatedBy = 'sysman';
