@@ -45,17 +45,30 @@ public class RegistryLookupUtil
 
 	public static String getServiceExternalEndPoint(String serviceName, String version, String tenantName)
 	{
+		// TODO: test only
+		InstanceInfo testqueryInfo = InstanceInfo.Builder.newBuilder().withServiceName("EmcitasApplications").withVersion("0.1")
+				.build();
+
 		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
 		try {
-			if (StringUtil.isEmpty(tenantName)) {
-				internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
+			// TODO: test only
+			internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(testqueryInfo, "tenantbvt03");
+			logger.info("Test code: retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance,
+					"tenantbvt03");
+
+			if (!StringUtil.isEmpty(tenantName) && RegistryLookupUtil.isServiceInApplicationShard(serviceName)) {
+				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+				if (internalInstance == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
 			}
 			else {
-				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
-				logger.debug("Is the retrieved instance info with getInstanceForTenant null or not? "
-						+ (internalInstance == null));
+				internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
 			}
 			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
 			if (sanitizedInstance == null) {
@@ -88,16 +101,23 @@ public class RegistryLookupUtil
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = null;
-			if (StringUtil.isEmpty(tenantName)) {
-				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			}
-			else {
+
+			if (!StringUtil.isEmpty(tenantName) && RegistryLookupUtil.isServiceInApplicationShard(serviceName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-				logger.debug("Is the retrieved instance info with getInstanceForTenant null or not? " + (ins == null));
-				if (ins != null) {
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
 					result = new ArrayList<InstanceInfo>();
 					result.add(ins);
 				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
 			if (result != null && result.size() > 0) {
 
@@ -159,16 +179,22 @@ public class RegistryLookupUtil
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = null;
-			if (StringUtil.isEmpty(tenantName)) {
-				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			}
-			else {
+			if (!StringUtil.isEmpty(tenantName) && RegistryLookupUtil.isServiceInApplicationShard(serviceName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-				logger.debug("Is the retrieved instance info with getInstanceForTenant null or not? " + (ins == null));
-				if (ins != null) {
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
 					result = new ArrayList<InstanceInfo>();
 					result.add(ins);
 				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
 			if (result != null && result.size() > 0) {
 
@@ -291,6 +317,18 @@ public class RegistryLookupUtil
 		}
 
 		return protocoledLinks;
+	}
+
+	private static boolean isServiceInApplicationShard(String serviceName)
+	{
+		if (StringUtil.isEmpty(serviceName)) {
+			return false;
+		}
+		if (serviceName.contains("LoganService") || serviceName.contains("EmcitasApplications")
+				|| serviceName.contains("TargetAnalytics") || serviceName.contains("ApmUI")) {
+			return true;
+		}
+		return false;
 	}
 
 }

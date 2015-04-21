@@ -113,7 +113,8 @@ dependencies {
 	compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12')  { transitive = false }
 	compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')  { transitive = false }
 	compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')  { transitive = false }
-	compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6')  
+	compile(group: 'emaas.platform', name: 'registry-client', version: '1.0.1')  
+	compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '1.0.1')  
 	compile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
 }
 build.dependsOn integTestJar
