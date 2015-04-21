@@ -358,9 +358,10 @@ $.widget('dbs.dbsDashboardPanel',
                     .attr(TAB_INDEX_ATTR, '0')
                     .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'))
                     .attr("title", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'));
-            self.contentCtlsEle.append(self.contentCtl1Ele);
+            
             if (self.showDescription === true)
             {
+                self.contentCtlsEle.append(self.contentCtl1Ele);
                 self.contentCtl2Ele = $("<div></div>")
                     .addClass(self.classNames['controll']).append($("<span></span>"))
                     .bind('click.' + _name, function (event) {
