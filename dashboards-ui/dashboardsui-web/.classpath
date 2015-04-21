@@ -15,8 +15,8 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboardsui-ee"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-0.29.1.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.0.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-asl-1.9.12.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.12.jar"/>

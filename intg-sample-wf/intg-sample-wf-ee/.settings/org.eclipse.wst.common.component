@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="intg-sample-wf-ee">
         <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
-        <dependent-module archiveName="registry-lookup-client-0.23.6.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar">
+        <dependent-module archiveName="registry-lookup-client-1.0.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-client-0.29.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-0.29.1.jar">
+        <dependent-module archiveName="registry-client-1.0.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-1.0.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="log4j-1.2.17.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-1.2.17.jar">
