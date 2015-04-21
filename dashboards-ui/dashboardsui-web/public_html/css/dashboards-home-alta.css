@@ -146,6 +146,8 @@
 .dbs-summary-controlls {
     margin-top: 5px;
     text-align: center;
+    min-height: 25px;
+    height: 25px;
 }
 
 .dbs-summary-controlls .dbs-summary-controll {
