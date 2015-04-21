@@ -294,8 +294,7 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateUpdateSystemDashboard() throws DashboardException
-	{
+	public void testCreateUpdateSystemDashboard() throws DashboardException	{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
 		// try to insert system dashboard, and it should work also
