@@ -321,6 +321,7 @@ define(['knockout',
             var allCategories = [];
             if (ssfUrl === null && ssfUrl !== "") {
                 console.log("Saved Search service is not available! Try again later.");
+                oj.Logger.log("Saved Search service is not available! Try again later.");
             }
             else {
                 var categoryUrl = dfu.buildFullUrl(ssfUrl,'categories');
@@ -337,6 +338,7 @@ define(['knockout',
                     },
                     error: function(data, textStatus){
                         console.log('Failed to query categories!');
+                        oj.Logger.log('Failed to query categories!');
                     }
                 });
             }
@@ -527,6 +529,7 @@ define(['knockout',
                     self.isFavorite(isFavorite);
                 }, function(e) {
                     console.log(e.errorMessage());
+                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
                 });
             }();  
             
@@ -546,6 +549,7 @@ define(['knockout',
 //                    }
                 }, function(e) {
                     console.log(e.errorMessage());
+                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
                 });
             };
             self.deleteFromFavorites = function() {
@@ -564,6 +568,7 @@ define(['knockout',
 //                    }
                 }, function(e) {
                     console.log(e.errorMessage());
+                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
                 });
             };
             
