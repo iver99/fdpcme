@@ -3,13 +3,13 @@
 <service-artifacts name="dashboardService-api"> 
     <file name='../dashboards-ee/build/libs/emaas-applications-dashboards-api' 
             serviceName='DashboardService-API'> 
-            <version>0.1</version> 
+            <version>SERVICEVERSION</version> 
             <extension>ear</extension> 
             <destination>Applications</destination> 
      </file> 
       <file name='../dashboards-schema/build/emaas-applications-dashboards-schema'
             serviceName='DashboardService-API'> 
-            <version>0.1</version> 
+            <version>SERVICEVERSION</version> 
             <extension>tgz</extension> 
             <destination>Applications</destination> 
      </file> 
