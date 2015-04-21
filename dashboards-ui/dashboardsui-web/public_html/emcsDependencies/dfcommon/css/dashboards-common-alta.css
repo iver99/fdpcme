@@ -43,6 +43,20 @@
 .fa-desktop:before {
   content: "\f108"; }
 
+.fa-notification:before {
+  content: "\f0a2"; 
+  /*color: #0CA3D1;*/
+  color: #454545;
+  font-size: larger;
+}
+
+.fa-compass:before {
+  content: "\f14e"; 
+  /*color: #0CA3D1;*/
+  color: #454545;
+  font-size: larger;
+}
+
 @font-face {
   font-family: 'FaFont';
   src: url("fonts/fontawesome-webfont.woff");
@@ -66,10 +80,8 @@
     line-height: 24px;
 }
 #links_menu .links-content-container{
-    margin : 30px auto; /*30px 0;*/
-    /*float: left;*/
+    margin : 30px auto; 
     width: 100%;
-    /*width:920px;*/
     text-align:center; 
 }
 .headerMenuItem {
@@ -167,6 +179,14 @@
     color: #454545;
 }
 
+.emaas-appheader-lite .emaas-appheader-appname-oneline {
+    font-weight:normal;
+}
+
+.emaas-appheader-lite .emaas-appheader-appname-twoline {
+    font-weight:normal;
+}
+
 .emaas-appheader-logo-oracle {
     width: 158px;
     height: 20px;
@@ -204,7 +224,7 @@
 }
 
 .emaas-appheader-toolbar{
-    height:44px
+    height:27px; 
 }
 
 .emaas-icon-font{
@@ -230,4 +250,67 @@
 
 .emaas-appheader-toolbar-button:hover {
     cursor: pointer;
+}
+
+.emaas-appheader-toolbar-button:disabled .fa-notification:before {
+  color: #9e9e9e;
+}
+
+.emaas-appheader-toolbar-button:disabled .fa-compass:before {
+  color: #9e9e9e;
+}
+
+.emaas-appheader-toolbar-button:disabled:hover {
+  cursor: default;
+}
+
+@media screen and (max-width: 1023px) {
+    .emaas-appheader-lite .emaas-appheader-seperator {
+        display: none;
+    }
+    .emaas-appheader-lite .emaas-appheader-appname-oneline {
+        display: none;
+    }
+    .emaas-appheader-lite .emaas-appheader-appname-twoline {
+        display: block;
+        padding-top: 2px;
+    }
+    .emaas-appheader-toolbar{
+        height:44px;
+    }
+    .emaas-appheader-toolbar-button {
+        height:44px;
+        line-height: 44px;
+    }
+    .emaas-appheader-toolbar-button-icon {
+        width:32px;
+        height:32px;
+        vertical-align: middle;
+    }
+    .fa-notification:before {
+        font-size:xx-large;
+    }
+    .fa-compass:before {
+        font-size:xx-large;
+    }
+}
+@media screen and (min-width: 1024px) {
+    .emaas-appheader-lite .emaas-appheader-seperator {
+        display: inline-block;
+    }
+    .emaas-appheader-lite .emaas-appheader-appname-oneline {
+        display: inline-block;
+        padding-left: 10px;
+    }
+    .emaas-appheader-lite .emaas-appheader-appname-twoline {
+        display: none;
+    }
+    .emaas-appheader-toolbar-button {
+        height:27px;
+        line-height: 27px;
+    }
+    .emaas-appheader-toolbar-button-icon {
+        width:24px;
+        height:24px;
+    }
 }

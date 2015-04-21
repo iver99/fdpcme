@@ -19,23 +19,23 @@
         <dependent-module archiveName="emaas-platform-tenant-sdk-0.2.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dashboards-core.jar" deploy-path="/lib" handle="module:/resource/dashboards-core/dashboards-core">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-	<dependent-module archiveName="dashboards-web.war" deploy-path="/" handle="module:/resource/dashboards-web/dashboards-web">
-            <dependent-object/>
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="dashboards-webutils.jar" deploy-path="/lib" handle="module:/resource/dashboards-webutils/dashboards-webutils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="dashboards-entities.jar" deploy-path="/lib" handle="module:/resource/dashboards-entities/dashboards-entities">
+        <dependent-module archiveName="log4j-core-2.0.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-core-2.0.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="log4j-core-2.0.2.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-core-2.0.2.jar">
+        <dependent-module archiveName="log4j-api-2.0.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-api-2.0.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="log4j-api-2.0.2.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/log4j-api-2.0.2.jar">
+        <dependent-module archiveName="dashboards-web.war" deploy-path="/" handle="module:/resource/dashboards-web/dashboards-web">
+            <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dashboards-core.jar" deploy-path="/lib" handle="module:/resource/dashboards-core/dashboards-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="dashboards-db.jar" deploy-path="/lib" handle="module:/resource/dashboards-entities/dashboards-entities">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?> 
  
 <cookbooks> 
-  <cookbook name="dashboardService-api" dir="dashboards-chef"/> 
-  <cookbook name="dashboardService-ui" dir="dashboards-chef"/>  
+  <cookbook name="cookbook-emcs-dashboardService-api" dir="dashboards-chef"/> 
+  <cookbook name="cookbook-emcs-dashboardService-ui" dir="dashboards-chef"/>  
 </cookbooks> 

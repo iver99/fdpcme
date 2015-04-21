@@ -38,9 +38,9 @@ ruby_block "set_MW_HOME" do
   action :create
 end
 
-include_recipe 'emsaas-weblogic::default'
+include_recipe 'cookbook-emcs-emsaas-weblogic::default'
 
-include_recipe 'emsaas-weblogic::datasource_dependency'
+include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
 
 template "#{node["log_dir"]}/wls_datasources_dashboardFramework.py" do
     source "wls_datasources.py.erb"
@@ -82,7 +82,7 @@ bash "create_servicemanger_properties_file"  do
 		echo "Creating SM properties file in #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init"
     mkdir -p #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init
     cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/init
-    echo "version=#{node["SAAS_version"]}" > servicemanager.properties
+    echo "version=#{node["SAAS_API_version"]}" > servicemanager.properties
     echo "serviceName=Dashboard-API" >> servicemanager.properties
     echo "registryUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties
     echo "serviceUrls=$SAAS_REGISTRY_URLS" >> servicemanager.properties

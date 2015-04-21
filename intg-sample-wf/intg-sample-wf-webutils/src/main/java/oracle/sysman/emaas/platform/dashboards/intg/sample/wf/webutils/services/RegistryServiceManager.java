@@ -30,7 +30,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 import oracle.sysman.emaas.platform.dashboards.intg.sample.wf.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.intg.sample.wf.webutils.wls.lifecycle.ApplicationServiceManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import weblogic.application.ApplicationLifecycleEvent;
 
@@ -217,7 +218,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
-	private final Logger logger = Logger.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
+	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
 	@Override

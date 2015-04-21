@@ -1,0 +1,57 @@
+        {
+        "name": "dashboardService-ui",
+         "serviceName": "DashboardService-ui",
+         "version": "SERVICEVERSION",
+         "ephemeral": true,
+         "chefRunlistItems":
+         [
+                  {
+                  "name": "cookbook-emcs-dashboardService-ui",
+          "operation": "deploy"
+         },
+                 {
+                  "name": "cookbook-emcs-emsaas-weblogic::undeploy_app",
+                  "operation": "undeploy",
+                  "configurations":
+                   [
+                            {
+                              "name": "applicationName",
+                               "defaultValue": "emaas-applications-dashboards-ui"
+                             }
+                   ]
+                   },
+		   {
+                    "name": "cookbook-emcs-emsaas-weblogic::start_app",
+                    "operation": "start",
+                    "configurations":
+                    [
+                          {
+                                "name": "applicationName",
+                                "defaultValue": "emaas-applications-dashboards-ui"
+                            }
+                    ]
+                  },
+                  {
+                   "name": "cookbook-emcs-emsaas-weblogic::stop_app",
+                   "operation": "stop",
+                    "configurations":
+                    [
+                           {
+                                 "name": "applicationName",
+                                 "defaultValue": "emaas-applications-dashboards-ui"
+                            }
+                     ]
+                  }
+         ],
+         "chefCookbook":
+         {
+                  "href": "<cookbook>",
+        "rel": "link/gzip"
+         },
+         "softwareImage":
+         {
+                  "rel": "link/gzip",
+                  "href": "<software>"
+         }
+
+        }

@@ -5,7 +5,7 @@ configurations {
     appServer     
 }
 
-version = '0.1'
+version = '1.0.0'
 group = 'emaas/applications/dashboards-framework'
 
 def artifactId = 'dashboardsui' 
@@ -34,10 +34,10 @@ dependencies
         earlib(group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4+') {transitive=false }
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2') {transitive=false }
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2') {transitive=false }
-    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.1')
-    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.5.1')
-    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.5.1')
-    earlib(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2')
+    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.2.3'){transitive=false }
+    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.2.3'){transitive=false }
+    earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.2.3'){transitive=false }
+    earlib(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
 }
 
 // All WLS Related things

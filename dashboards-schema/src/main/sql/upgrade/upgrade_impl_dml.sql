@@ -10,7 +10,6 @@ AND TENANT_ID ='&TENANT_ID';
 DELETE
 FROM ems_dashboard_tile
 WHERE tile_id  <=10000
-OR dashboard_id<=1000
 AND TENANT_ID   ='&TENANT_ID';
 
 DELETE

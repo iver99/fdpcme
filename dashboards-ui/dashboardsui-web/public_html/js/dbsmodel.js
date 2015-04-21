@@ -115,7 +115,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                     }
                 },
                 error: function() {
-                    if (console.log) console.log("Error retrieve show welcome preference");
+                    if (console.log) console.log("Preference to Show Welcome Dialog is not set. The defualt value 'true' is applied.");
                 }
             });
         })();
@@ -145,7 +145,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
         self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
         //welcome
-        self.prefUtil = new pfu(self.dfRestApiUrl, dfu.getDashboardsRequestHeader());
+        self.prefUtil = new pfu(dfu.buildFullUrl(self.dfRestApiUrl,'preferences'), dfu.getDashboardsRequestHeader());
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
         
         //dashboards

@@ -6,10 +6,18 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
+                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : params.isAdmin;
+                
+                //NLS strings
+                self.dashboardsLabel = ko.observable();
+                self.visualAnalyzersLabel = ko.observable();
+                self.administrationLabel = ko.observable();
+                self.allDashboardsLinkLabel = ko.observable();
                 
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
                 
+                var nlsStringsAvailable = false;
                 var refreshListener = ko.computed(function(){
                     return {
                         needRefresh: params.navLinksNeedRefresh()
@@ -18,6 +26,10 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                 
                 refreshListener.subscribe(function (value) {
                     if (value.needRefresh){
+                        if (!nlsStringsAvailable) {
+                            refreshNlsStrings(params.nlsStrings());
+                            nlsStringsAvailable = true;
+                        }
                         refreshLinks();
                         params.navLinksNeedRefresh(false);
                     }
@@ -58,24 +70,49 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
-                            for (i = 0; i < analyzers.length; i++) {
+                            for (var i = 0; i < analyzers.length; i++) {
                                 analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
                                     href: analyzers[i].href});
                             }
                             self.visualAnalyzers(analyzerList);
                         }
-                        if (data.adminLinks && data.adminLinks.length > 0) {
-                            self.adminLinks(data.adminLinks);
+                        if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
+                            if (params.app){
+                                if (params.app.appId===params.appDashboard.appId){
+                                    self.adminLinks(data.adminLinks);//show all avail admin links
+                                }else{ //show app related admin link and tenant management UI admin link only
+                                    var filteredAdminLinks = [];                                
+                                    for (var i=0;i <data.adminLinks.length;i++ ){
+                                        var link = data.adminLinks[i];
+                                        if (params.app && params.app.serviceName===link.serviceName){
+                                            filteredAdminLinks.push(link);
+                                        }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
+                                            filteredAdminLinks.push(link);
+                                        }
+                                    }
+                                    self.adminLinks(filteredAdminLinks);                                    
+                                }
+                            }else{
+                                if (console){
+                                    console.log("Empty app!");
+                                }
+                                
+                            }
+
                         }
                     };                   
                     var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
                     $.ajax({
                         url: serviceUrl,
+                        headers: dfu.getDefaultHeader(), 
+                        contentType:'application/json',
                         success: function(data, textStatus) {
                             fetchServiceLinks(data);
                         },
                         error: function(xhr, textStatus, errorThrown){
-                            console.log('Failed to get service instances by URL: '+serviceUrl);
+                            if (console){
+                                console.log('Failed to get service instances by URL: '+serviceUrl);
+                            }
                             self.visualAnalyzers([]);
                             self.adminLinks([]);
                         },
@@ -87,10 +124,19 @@ define(['knockout', 'jquery', '../../../js/util/df-util'],
                     dfHomeUrl = dfu.discoverDFHomeUrl();
                     
                     //Fetch available quick links and administration links from service manager registry
-                    if (self.visualAnalyzers().length === 0 || self.adminLinks().length === 0) {
+                    if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
-                };                          
+                };        
+                
+                function refreshNlsStrings(nlsStrings) {
+                    if (nlsStrings) {
+                        self.dashboardsLabel(nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
+                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL);
+                        self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
+                        self.allDashboardsLinkLabel(nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL);
+                    }
+                }
             }
             return NavigationLinksViewModel;
         });
