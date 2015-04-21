@@ -323,3 +323,6 @@ a:hover {
  cursor:pointer;
 }
 
+.busy, .busy *{
+    cursor: progress !important;   
+}

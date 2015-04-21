@@ -33,6 +33,8 @@ $.widget( "dbs.dbsTypeAhead", {
 		source: null,
                 filterFunc: null,
                 disabled: false,
+                busyElement: null,
+                busyClassName: null,
                 
 		// event handlders
 		response: null
@@ -263,7 +265,15 @@ $.widget( "dbs.dbsTypeAhead", {
 	_search: function( value ) {
 		this.pending++;
 		//this.element.addClass( "ui-autocomplete-loading" );
-                this.element.css("cursor", "progress");
+                //set busy crusor
+                if (this.options["busyElement"] && this.options["busyElement"] !== null)
+                {
+                    $(this.options["busyElement"]).addClass(this.options["busyClassName"]);
+                }
+                else
+                {
+                    this.element.css("cursor", "progress");
+                }
 		this.cancelSearch = false;
 
 		this.source( { term: value }, this._response() );
@@ -274,7 +284,15 @@ $.widget( "dbs.dbsTypeAhead", {
 
 		return $.proxy(function( content ) {
 			if ( index === this.requestIndex ) {
-                                this.element.css("cursor", "text");
+                                //remove busy crusor
+                                if (this.options["busyElement"] && this.options["busyElement"] !== null)
+                                {
+                                    $(this.options["busyElement"]).removeClass(this.options["busyClassName"]);
+                                }
+                                else
+                                {
+                                    this.element.css("cursor", "text");
+                                }
 				this.__response( content );
 			}
 

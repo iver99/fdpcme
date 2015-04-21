@@ -556,7 +556,7 @@ public class DashboardManager
 		}
 
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)) {
-			sb.append(" order by lower(p.name), p.dashboard_Id DESC");
+			sb.append(" order by lower(p.name), p.name, p.dashboard_Id DESC");
 		}
 		else {
 			//order by last access date
