@@ -27,8 +27,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -276,7 +274,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
@@ -285,10 +283,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		if (applicationUrlHttp != null) {
 			links.add(new Link().withRel("home").withHref(applicationUrlHttp + NAV_BASE_HOME));
 			links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
+			links.add(new Link().withRel("static/dashboard.home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
 		}
 		if (applicationUrlHttps != null) {
 			links.add(new Link().withRel("home").withHref(applicationUrlHttps + NAV_BASE_HOME));
 			links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
+			links.add(new Link().withRel("static/dashboard.home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
 		}
 
 		InfoManager.getInstance().getInfo().setLinks(links);

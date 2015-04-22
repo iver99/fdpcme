@@ -27,6 +27,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
+import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -180,6 +182,21 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		HTTP, HTTPS
 	}
 
+	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
+	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
+
+	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+
+	static {
+		try {
+			WLS_RUNTIME_SERVICE_NAME = ObjectName
+					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
+		}
+		catch (Exception e) {
+			throw new Error("Well-known JMX names are corrupt - code bug", e);
+		}
+	}
+
 	private static String getApplicationUrl(UrlType urlType) throws Exception
 	{
 		InitialContext ctx = new InitialContext();
@@ -199,21 +216,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 		finally {
 			ctx.close();
-		}
-	}
-
-	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
-	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
-
-	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
-
-	static {
-		try {
-			WLS_RUNTIME_SERVICE_NAME = ObjectName
-					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
-		}
-		catch (Exception e) {
-			throw new Error("Well-known JMX names are corrupt - code bug", e);
 		}
 	}
 
@@ -273,7 +275,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
@@ -281,10 +283,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		List<Link> links = new ArrayList<Link>();
 		if (applicationUrlHttp != null) {
 			links.add(new Link().withRel("base").withHref(applicationUrlHttp + NAV_API_BASE));
+			links.add(new Link().withRel("static/base").withHref(applicationUrlHttp + NAV_API_BASE));
 		}
 
 		if (applicationUrlHttps != null) {
 			links.add(new Link().withRel("base").withHref(applicationUrlHttps + NAV_API_BASE));
+			links.add(new Link().withRel("static/base").withHref(applicationUrlHttps + NAV_API_BASE));
 		}
 		InfoManager.getInstance().getInfo().setLinks(links);
 
