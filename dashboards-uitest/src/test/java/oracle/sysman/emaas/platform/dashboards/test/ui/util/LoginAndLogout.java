@@ -29,6 +29,7 @@ public class LoginAndLogout {
 	{
 		String tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
 		login(testName,"emaasadmin", "Welcome1!",tenantID, "home", "Dashboard-UI");
+		//login(testName,"emaasadmin", "Welcome1!","TenantOPC1", "home", "Dashboard-UI");
 		
 	}
 	
