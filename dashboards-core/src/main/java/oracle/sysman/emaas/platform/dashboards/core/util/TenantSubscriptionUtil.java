@@ -37,16 +37,12 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 /**
  * @author guobaochen
  */
-public class TenantSubscriptionUtil
-{
-	public static class RestClient
-	{
-		public RestClient()
-		{
+public class TenantSubscriptionUtil {
+	public static class RestClient {
+		public RestClient() {
 		}
 
-		public String get(String url)
-		{
+		public String get(String url) {
 			if (url == null || "".equals(url)) {
 				return null;
 			}
@@ -62,8 +58,13 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	public static List<String> getTenantSubscribedServices(String tenant)
-	{
+	private static Boolean IS_TEST_ENV = null;
+
+	private static Object lock = new Object();
+
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+
+	public static List<String> getTenantSubscribedServices(String tenant) {
 		// for junit test only
 		if (Boolean.TRUE.equals(IS_TEST_ENV)) {
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
@@ -73,7 +74,7 @@ public class TenantSubscriptionUtil
 		if (tenant == null) {
 			return null;
 		}
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains");
+		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains", null);
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
 			return null;
 		}
@@ -154,8 +155,7 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	public static boolean isAPMServiceOnly(List<String> services)
-	{
+	public static boolean isAPMServiceOnly(List<String> services) {
 		if (services == null || services.size() != 1) {
 			return false;
 		}
@@ -169,18 +169,11 @@ public class TenantSubscriptionUtil
 		return false;
 	}
 
-	public static void setTestEnv()
-	{
+	public static void setTestEnv() {
 		synchronized (lock) {
 			if (IS_TEST_ENV == null) {
 				IS_TEST_ENV = true;
 			}
 		}
 	}
-
-	private static Boolean IS_TEST_ENV = null;
-
-	private static Object lock = new Object();
-
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 }
