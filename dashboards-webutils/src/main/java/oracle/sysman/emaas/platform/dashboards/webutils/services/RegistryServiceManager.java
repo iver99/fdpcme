@@ -184,9 +184,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
 	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
-	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "/dashboards";
-	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "/preference";
-	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "/subscribedapps";
+	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "dashboards";
+	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preference";
+	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "subscribedapps";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -278,7 +278,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
