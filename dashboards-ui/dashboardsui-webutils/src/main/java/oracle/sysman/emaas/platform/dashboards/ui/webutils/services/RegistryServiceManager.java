@@ -184,8 +184,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
 	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
-	private static final String NAV_STATIC_CONF = "/emsaasui/emcpdfui/configurations";
-	private static final String NAV_STATIC_REGISTRY = "/emsaasui/emcpdfui/registry";
+	private static final String NAV_STATIC_CONF = "/emsaasui/emcpdfui/api/configurations";
+	private static final String NAV_STATIC_REGISTRY = "/emsaasui/emcpdfui/api/registry";
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
 	static {
@@ -276,7 +276,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
