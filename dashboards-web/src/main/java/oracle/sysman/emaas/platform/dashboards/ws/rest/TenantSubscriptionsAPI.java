@@ -64,7 +64,7 @@ public class TenantSubscriptionsAPI extends APIBase
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteAllPreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+	public Response getSubscribedApplications(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
 	{
 		try {
@@ -82,6 +82,7 @@ public class TenantSubscriptionsAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (TenantWithoutSubscriptionException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}

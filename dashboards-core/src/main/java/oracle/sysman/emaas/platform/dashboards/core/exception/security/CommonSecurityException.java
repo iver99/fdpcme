@@ -28,6 +28,7 @@ public class CommonSecurityException extends DashboardException
 	public static final String TENANT_NAME_NOT_RECOGNIZED = "TENANT_NAME_NOT_RECOGNIZED";
 	public static final String NOT_SUPPORT_CREATE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_CREATE_SYSTEM_DASHBOARD_ERROR";
 	public static final String NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR";
+	public static final String NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR";
 
 	/**
 	 * Constructs a new <code>CommonSecurityException</code> with the specified detail message.

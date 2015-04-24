@@ -26,12 +26,16 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author miao
  */
 @Path("/registry")
 public class RegistryLookupAPI
 {
+	private static Logger logger = LogManager.getLogger(RegistryLookupAPI.class);
 
 	@Path("/lookup/endpoint")
 	@GET
@@ -55,6 +59,7 @@ public class RegistryLookupAPI
 			}
 		}
 		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
@@ -85,6 +90,7 @@ public class RegistryLookupAPI
 			}
 		}
 		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
@@ -116,6 +122,7 @@ public class RegistryLookupAPI
 			}
 		}
 		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();

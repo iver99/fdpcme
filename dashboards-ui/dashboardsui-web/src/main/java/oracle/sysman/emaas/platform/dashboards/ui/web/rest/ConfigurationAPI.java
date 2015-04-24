@@ -42,6 +42,32 @@ import org.apache.logging.log4j.Logger;
 @Path("/configurations")
 public class ConfigurationAPI
 {
+	private static Logger _logger = LogManager.getLogger(ConfigurationAPI.class);
+
+	private static final String SERVICEMANAGER_FILE = "/opt/ORCLemaas/Applications/DashboardService-UI/init/servicemanager.properties";
+	private static Response responseError = null;
+
+	private static final Response responseRegistrationError = Response.status(Status.NOT_FOUND)
+			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_ERROR)).build();
+	private static final Response responseRegisgtryUrlsNotFound = Response.status(Status.NOT_FOUND)
+			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR))
+			.build();
+	static {
+		Map<String, String> svMap = ConfigurationAPI.getServiceManagerContent();
+		if (svMap == null) {
+			responseError = responseRegistrationError;
+			_logger.error("servicemanager.properties is empty");
+		}
+		else if (!svMap.containsKey(RegistrationEntity.NAME_REGISTRYUTILS)) {
+			responseError = responseRegisgtryUrlsNotFound;
+			_logger.error("required key: [registryUrls] is missing in servicemanager.properties");
+		}
+
+		else {
+			//do nothing
+		}
+	}
+
 	private static Map<String, String> getServiceManagerContent()
 	{
 		Map<String, String> map = new HashMap<String, String>();
@@ -59,8 +85,7 @@ public class ConfigurationAPI
 			return map;
 		}
 		catch (Exception e) {
-			//TODO
-			e.printStackTrace();
+			_logger.error(e.getLocalizedMessage(), e);
 			return null;
 		}
 		finally {
@@ -69,35 +94,9 @@ public class ConfigurationAPI
 					is.close();
 				}
 				catch (Exception e2) {
-					// TODO: handle exception
+					_logger.error(e2.getLocalizedMessage(), e2);
 				}
 			}
-		}
-	}
-
-	private static Logger _logger = LogManager.getLogger(ConfigurationAPI.class);
-	private static final String SERVICEMANAGER_FILE = "/opt/ORCLemaas/Applications/DashboardService-UI/init/servicemanager.properties";
-
-	private static Response responseError = null;
-	private static final Response responseRegistrationError = Response.status(Status.NOT_FOUND)
-			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_ERROR)).build();
-	private static final Response responseRegisgtryUrlsNotFound = Response.status(Status.NOT_FOUND)
-			.entity(JsonUtil.buildNormalMapper().toJson(ErrorEntity.CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR))
-			.build();
-
-	static {
-		Map<String, String> svMap = ConfigurationAPI.getServiceManagerContent();
-		if (svMap == null) {
-			responseError = responseRegistrationError;
-			_logger.error("servicemanager.properties is empty");
-		}
-		else if (!svMap.containsKey(RegistrationEntity.NAME_REGISTRYUTILS)) {
-			responseError = responseRegisgtryUrlsNotFound;
-			_logger.error("required key: [registryUrls] is missing in servicemanager.properties");
-		}
-
-		else {
-			//do nothing
 		}
 	}
 
@@ -118,6 +117,7 @@ public class ConfigurationAPI
 
 		}
 		catch (DashboardException e) {
+			_logger.error(e.getLocalizedMessage(), e);
 			return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
 		}
 	}
