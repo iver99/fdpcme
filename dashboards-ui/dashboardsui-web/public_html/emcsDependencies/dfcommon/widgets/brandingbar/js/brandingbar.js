@@ -1,4 +1,4 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore'],
+define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore', 'ojs/ojmenu', 'ojs/ojbutton'],
         function (localrequire, ko, $, dfumodel,oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
@@ -144,8 +144,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 
                 //SSO logout handler
                 self.handleSignout = function() {
-                    oj.Logger.info("Logged out",true);
-                    window.location.href = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
+                    var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
+                    window.location.href = logoutUrl;
+                    oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
                 };
                 
                 //Open about box
@@ -160,6 +161,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 var helpBaseUrl = "http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 var helpTopicId = appProperties["helpTopicId"];
                 self.openHelpLink = function() {
+                    oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
                     window.open(helpBaseUrl + helpTopicId);
                 };
                 
@@ -204,9 +206,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                     tenantName: self.tenantName,
                     nlsStrings: self.nlsStrings,
                     isAdmin: self.isAdmin,
-                    app:appMap[self.appId],
-                    appDashboard:appMap[appIdDashboard],
-                    appTenantManagement:appMap[appIdTenantManagement]
+                    app: appMap[self.appId],
+                    appDashboard: appMap[appIdDashboard],
+                    appTenantManagement: appMap[appIdTenantManagement]
                 };
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links')) {
@@ -245,6 +247,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                 */
                 self.notificationMenuHandler = function(event, item){
                     if (self.notificationPageUrl !== null && self.notificationPageUrl !== "") {
+                        oj.Logger.info("Open notifications page: " + self.notificationPageUrl);
                         window.open(self.notificationPageUrl);
                     }
                 };
@@ -280,6 +283,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util','ojs/ojcore']
                                     }
                                 },
                                 error:function(xhr, textStatus, errorThrown){
+                                    oj.Logger.error('Error when checking notifications by URL: ' + urlNotificationCheck);
                                     self.notificationDisabled(true);
                                 }
                             });

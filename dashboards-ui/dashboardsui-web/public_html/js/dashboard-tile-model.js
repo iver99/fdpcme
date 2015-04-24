@@ -81,6 +81,7 @@ define(['knockout',
                         self.customChanges.push(change);
                     }else{
                         console.log("ERROR: "+"invalid custom change: "+change);
+                        oj.Logger.error("ERROR: "+"invalid custom change: "+change);
                     }
                 }
             }
@@ -128,7 +129,7 @@ define(['knockout',
         }
          */
         
-        function initializeTileAfterLoad(tile) {
+        function initializeTileAfterLoad(dashboard, tile) {
             if (!tile)
                 return;
             
@@ -151,6 +152,9 @@ define(['knockout',
             }
             tile.shouldHide = ko.observable(false);
             tile.clientGuid = dfu.guid();
+            tile.editDisabled = ko.computed(function() {
+            	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
+            });
             tile.widerEnabled = ko.computed(function() {
                 return tile.width() < 4;
             });
@@ -225,6 +229,7 @@ define(['knockout',
             tile.setParameter = function(name, value){
                 if (name===undefined || name===null || value===undefined || value===null){
                     console.error("Invaild value: name=["+name,"] value=["+value+"]");
+                    oj.Logger.error("Invaild value: name=["+name,"] value=["+value+"]");
                 }else{
                     var found = false;
                     if (tile.tileParameters){
@@ -276,7 +281,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTileAfterLoad(self);
+            initializeTileAfterLoad(dashboard, self);
         }
         
         function getBaseUrl() {
@@ -318,6 +323,7 @@ define(['knockout',
                 headers['X-REMOTE-USER'] = dtm.userTenant;
             }else{
                 console.log("Warning: user name is not found: "+dtm.userTenant);
+                oj.Logger.warn("Warning: user name is not found: "+dtm.userTenant);
             }
             return headers;
         }
@@ -335,6 +341,7 @@ define(['knockout',
                 },
                 error: function(e) {
                     console.log(e.responseText);
+                    oj.Logger.error("Error to load dashboard: "+e.responseText);
                     if (errorCallBack && e.responseText && e.responseText.indexOf("{") === 0)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -353,6 +360,7 @@ define(['knockout',
                         succCallBack(data);
                 },
                 error: function(e) {
+                    oj.Logger.error("Error to update dashboard: "+e.responseText);
                     if (errorCallBack)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -387,6 +395,7 @@ define(['knockout',
                         succCallBack();
                 },
                 error: function(e) {
+                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
                     if (errorCallBack)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -404,6 +413,7 @@ define(['knockout',
                         succCallBack();
                 },
                 error: function(e) {
+                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
                     if (errorCallBack)
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
@@ -462,7 +472,7 @@ define(['knockout',
                             console.log("widget template: " + template);
                             console.log("widget viewmodel:: " + viewmodel);
 
-                          newTile =new DashboardTile(self, koc_name, name, description, width, widget); 
+                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
                         }
                     }else if (widget.WIDGET_GROUP_NAME !== 'Demo Analytics') { //====new logic !==999
                         var assetRoot = null;
@@ -509,7 +519,7 @@ define(['knockout',
                                     console.log("DF widget template: "+template);
                                     console.log("DF widget viewmodel:: "+viewmodel);                                  
                                 }                            
-                                newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
+                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                              }else if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
                                     var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
@@ -525,7 +535,7 @@ define(['knockout',
                                     console.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
 
-                                newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
+                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                                 if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
                                     var worksheetName = 'WS_4_QDG_WIDGET';
                                     var workSheetCreatedBy = 'sysman';
@@ -570,10 +580,12 @@ define(['knockout',
                                 }
                             }else{
                                 console.error("Invalid WIDGET_SOURCE: "+widget_source);
+                                oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
                             }
                         }else{
-    //                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
+    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
 
                     } 
@@ -592,10 +604,11 @@ define(['knockout',
                                console.log("widget template: "+template);
                                console.log("widget viewmodel:: "+viewmodel);    
                            }
-                           newTile =new DashboardTile(self,koc_name,name, description, width, widget); 
+                           newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                         }else{
-    //                       newTile =new DashboardTile(self,"demo-la-widget",name, description, width, widget); 
+    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
                             console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
                     }
                     if (newTile){
@@ -603,14 +616,17 @@ define(['knockout',
                     }
                 }else{
                     console.error("Null widget passed to a tile");
+                    oj.Logger.error("Null widget passed to a tile");
                 }
 
             };
             
            self.menuItemSelect = function(event, ui) {
                var tile = ko.dataFor(ui.item[0]);
-               if (!tile)
+               if (!tile) {
+                   oj.Logger.error("Error: could not find tile from the ui data");
                    return;
+               }
                switch (ui.item.attr("id")) {
                    case "delete":
                        self.removeTile(tile);
@@ -644,22 +660,16 @@ define(['knockout',
                 for (var i = 0; i < self.tileRemoveCallbacks.length; i++) {
                     self.tileRemoveCallbacks[i]();
                 }
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.broadenTile = function(tile) {
                 if (tile.width() <= 3)
                     tile.width(tile.width() + 1);
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.narrowTile = function(tile) {
                 if (tile.width() > 1)
                     tile.width(tile.width() - 1);
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.calculateTilesRowHeight = function() {
@@ -695,6 +705,7 @@ define(['knockout',
                     height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
                     var width = globalDom.scrollWidth;
                     console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
+                    oj.Logger.log("Error: could not find tile from the ui data");
                     // following are investigation code, and now work actually for plugins loaded by requireJS
 //                    $($('#df_iframe').context).ready(function() {
 //                        alert('iframe loaded');
@@ -716,14 +727,6 @@ define(['knockout',
                 }
             };
             
-            self.postTileMenuClicked = function(tile) {
-                $("#tileMenu" + tile.clientGuid).hide();
-                if ($('#actionButton' + tile.clientGuid).hasClass('oj-selected')) {
-                    $('#actionButton' + tile.clientGuid).removeClass('oj-selected');
-                    $('#actionButton' + tile.clientGuid).addClass('oj-default');
-                }
-            };
-            
             self.maximize = function(tile) {
                 for (var i = 0; i < self.dashboard.tiles().length; i++) {
                     var eachTile = self.dashboard.tiles()[i];
@@ -737,26 +740,28 @@ define(['knockout',
                 var maximizedTileHeight = self.calculateTilesRowHeight();
                 self.tileOriginalHeight = $('.dbd-tile-maximized .dbd-tile-element').height();
                 $('.dbd-tile-maximized .dbd-tile-element').height(maximizedTileHeight);
-                $('#add-widget-button').ojButton('option', 'disabled', true);
-                
-                self.postTileMenuClicked(tile);
             };
             
-            self.initializeMaximization = function() {
+            self.getMaximizedTile = function() {
                 for (var i = 0; i < self.dashboard.tiles().length; i++) {
                     var tile = self.dashboard.tiles()[i];
                     if (tile && tile.isMaximized && tile.isMaximized()) {
-                        self.maximize(tile);
-                        return;
+                    	return tile;
                     }
                 }
+                return null;
+            };
+            
+            self.initializeMaximization = function() {
+            	var maximized = self.getMaximizedTile();
+            	if (maximized)
+            		self.maximize(maximized);
             };
             
             self.restore = function(tile) {
                 if (self.tileOriginalHeight) {
                     $('.dbd-tile-maximized .dbd-tile-element').height(self.tileOriginalHeight);
                 }
-                $('#add-widget-button').ojButton('option', 'disabled', false);
                 tile.isMaximized(false);
                 for (var i = 0; i < self.dashboard.tiles().length; i++) {
                     var eachTile = self.dashboard.tiles()[i];
@@ -764,8 +769,6 @@ define(['knockout',
                 }
                 self.tilesView.enableSortable();
                 self.tilesView.enableDraggable();
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.configure = function(tile){
@@ -777,8 +780,6 @@ define(['knockout',
             self.changeUrl = function(tile) {
                 urlEditView.setEditedTile(tile);
                 $('#urlChangeDialog').ojDialog('open');
-                
-                self.postTileMenuClicked(tile);
             };
             
             self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
@@ -792,11 +793,13 @@ define(['knockout',
                         if (this.widget.onDashboardItemChangeEvent) {
                             this.widget.onDashboardItemChangeEvent(dashboardItemChangeEvent);
                             console.log(widget.title());
+                            oj.Logger.log(widget.title());
                             deferred.resolve();
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.log(textStatus);
+                        oj.Logger.log(textStatus);
                         deferred.reject(textStatus);
                     }
                 });
@@ -814,9 +817,11 @@ define(['knockout',
                     var combinedPromise = $.when.apply($,defArray);
                     combinedPromise.done(function(){
                         console.log("All Widgets have completed refresh!");
+                        oj.Logger.log("All Widgets have completed refresh!");
                     });
                     combinedPromise.fail(function(ex){
                         console.log("One or more widgets failed to refresh: "+ex);
+                        oj.Logger.log("One or more widgets failed to refresh: "+ex);
                     });   
                 }
             };

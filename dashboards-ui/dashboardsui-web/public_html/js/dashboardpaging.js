@@ -163,7 +163,7 @@ DashboardPaging.prototype.create = function(attributes, options)
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             self._processError(opts, jqXHR, textStatus, errorThrown);
-                            console.log('Error in Create: ' + textStatus);
+                            //console.log('Error in Create: ' + textStatus);
                         }});
         /*
         this.collection.add(attributes, {at: 0, merge:true}).then(function(val){
@@ -247,10 +247,16 @@ DashboardPaging.prototype._fetch = function(options)
     // Call collection fetch, and refresh the window on success
     // Allow for the fact that this collection might not be backed by a rest service
     try {
-        this.collection.fetch({success:function() {
-            self._refreshDataWindow().then(function() {
-                self._processSuccess(opts)});
-        }});
+        this.collection.fetch({
+            success:function() {
+                self._refreshDataWindow().then(function() {
+                     self._processSuccess(opts)});
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                self._processError(options, jqXHR, textStatus, errorThrown);
+            //console.log('Error in Create: ' + textStatus);
+            }
+        });
     }
     catch (e) {
         var _e = e;
