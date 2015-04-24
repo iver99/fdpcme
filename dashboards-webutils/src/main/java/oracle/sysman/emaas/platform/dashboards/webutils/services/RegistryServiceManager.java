@@ -184,6 +184,9 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
 	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
+	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "/dashboards";
+	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "/preference";
+	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "/subscribedapps";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -275,20 +278,32 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
 		List<Link> links = new ArrayList<Link>();
+		// introduce static links
 		if (applicationUrlHttp != null) {
-			links.add(new Link().withRel("base").withHref(applicationUrlHttp + NAV_API_BASE));
-			links.add(new Link().withRel("static/base").withHref(applicationUrlHttp + NAV_API_BASE));
+			links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttp + NAV_STATIC_DASHBOARDS));
 		}
-
 		if (applicationUrlHttps != null) {
-			links.add(new Link().withRel("base").withHref(applicationUrlHttps + NAV_API_BASE));
-			links.add(new Link().withRel("static/base").withHref(applicationUrlHttps + NAV_API_BASE));
+			links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
+		}
+		if (applicationUrlHttp != null) {
+			links.add(new Link().withRel("static/dashboards.preference").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
+		}
+		if (applicationUrlHttps != null) {
+			links.add(new Link().withRel("static/dashboards.preference").withHref(applicationUrlHttps + NAV_STATIC_PREFERENCE));
+		}
+		if (applicationUrlHttp != null) {
+			links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
+					applicationUrlHttp + NAV_STATIC_SUBSCRIBEDAPPS));
+		}
+		if (applicationUrlHttps != null) {
+			links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
+					applicationUrlHttps + NAV_STATIC_SUBSCRIBEDAPPS));
 		}
 		InfoManager.getInstance().getInfo().setLinks(links);
 
