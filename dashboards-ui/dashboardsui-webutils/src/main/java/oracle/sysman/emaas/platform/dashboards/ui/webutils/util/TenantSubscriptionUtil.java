@@ -38,16 +38,12 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 /**
  * @author guobaochen
  */
-public class TenantSubscriptionUtil
-{
-	public static class RestClient
-	{
-		public RestClient()
-		{
+public class TenantSubscriptionUtil {
+	public static class RestClient {
+		public RestClient() {
 		}
 
-		public String get(String url)
-		{
+		public String get(String url) {
 			if (StringUtils.isEmpty(url)) {
 				return null;
 			}
@@ -63,12 +59,13 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	public static List<String> getTenantSubscribedServices(String tenant)
-	{
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+
+	public static List<String> getTenantSubscribedServices(String tenant) {
 		if (tenant == null) {
 			return null;
 		}
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains");
+		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains", tenant);
 		if (domainLink == null || StringUtils.isEmpty(domainLink.getHref())) {
 			logger.warn("Checking tenant (" + tenant
 					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");
@@ -151,8 +148,7 @@ public class TenantSubscriptionUtil
 		}
 	}
 
-	public static boolean isAPMServiceOnly(List<String> services)
-	{
+	public static boolean isAPMServiceOnly(List<String> services) {
 		if (services == null || services.size() != 1) {
 			return false;
 		}
@@ -165,7 +161,5 @@ public class TenantSubscriptionUtil
 		}
 		return false;
 	}
-
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 
 }

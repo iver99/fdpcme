@@ -20,11 +20,16 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author miao
  */
 public class RegistryLookupUtil
 {
+	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
+
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
 		List<Link> matched = new ArrayList<Link>();
@@ -38,9 +43,9 @@ public class RegistryLookupUtil
 		return matched;
 	}
 
-	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version)
+	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version, String tenantName)
 	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual");
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
 		if (link != null) {
 			return new EndpointEntity(serviceName, version, link.getHref());
 		}
@@ -82,19 +87,19 @@ public class RegistryLookupUtil
 		 */
 	}
 
-	public static Link getServiceExternalLink(String serviceName, String version, String rel)
+	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false);
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
 	}
 
-	public static Link getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel)
+	public static Link getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true);
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
 
-	public static Link getServiceInternalLink(String serviceName, String version, String rel)
+	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false);
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
 	}
 
 	//    private static String getExternalEndPoint(SanitizedInstanceInfo instance)
@@ -212,12 +217,30 @@ public class RegistryLookupUtil
 		return protocoledLinks;
 	}
 
-	private static Link getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch)
+	private static Link getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+			String tenantName)
 	{
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName) && RegistryLookupUtil.isServiceInApplicationShard(serviceName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
 			if (result != null && result.size() > 0) {
 
 				//find https link first
@@ -298,12 +321,30 @@ public class RegistryLookupUtil
 		}
 	}
 
-	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch)
+	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+			String tenantName)
 	{
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName) && RegistryLookupUtil.isServiceInApplicationShard(serviceName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
 			if (result != null && result.size() > 0) {
 
 				//find https link first
@@ -347,6 +388,18 @@ public class RegistryLookupUtil
 			e.printStackTrace();
 			return lk;
 		}
+	}
+
+	private static boolean isServiceInApplicationShard(String serviceName)
+	{
+		if (StringUtil.isEmpty(serviceName)) {
+			return false;
+		}
+		if (serviceName.contains("LoganService") || serviceName.contains("EmcitasApplications")
+				|| serviceName.contains("TargetAnalytics") || serviceName.contains("ApmUI")) {
+			return true;
+		}
+		return false;
 	}
 
 }

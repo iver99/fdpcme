@@ -24,7 +24,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-core-1.17.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-json-1.17.1.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-multipart-1.17.1-12.1.2-0-0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-server-1.17.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-servlet-1.17.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jettison-1.3.4.jar"/>
@@ -45,5 +44,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboardsui-webutils"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-multipart-1.17.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
