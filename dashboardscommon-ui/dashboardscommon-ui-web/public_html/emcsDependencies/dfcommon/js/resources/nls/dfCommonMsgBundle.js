@@ -31,6 +31,7 @@ define({
       "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT_MAIN": "Oracle and/or its affiliates. All rights reserved. Oracle is a registered trademark of Oracle Corporation and/or its affiliates.",
       "BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT_WARNING": "Warning: Unauthorized access is strictly prohibited.",
       "BRANDING_BAR_ABOUT_DIALOG_CLOSE_BTN_LABEL": "Close",
+      "BRANDING_BAR_ABOUT_DIALOG_ICON_ALT_TEXT": "About Cloud Service icon",
       "BRANDING_BAR_TOOLBAR_LABEL": "Toolbar",
       "BRANDING_BAR_APP_NAME_APM": "Application Performance Monitoring",
       "BRANDING_BAR_APP_NAME_IT_ANALYTICS": "IT Analytics",

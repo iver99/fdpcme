@@ -10,6 +10,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojdialog', 'ojs/ojbutton'],
             self.copyRight = ko.observable();
             self.copyRightWarning = ko.observable();
             self.closeBtnLabel = ko.observable();
+            self.aboutIconAltTxt = ko.observable();
             
             var nlsStringsAvailable = false;
             var refreshListener = ko.computed(function(){
@@ -70,6 +71,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojdialog', 'ojs/ojbutton'],
                     self.copyRight(copyRightMark+' '+self.copyrightYearString+comma+' '+copyRightMain);
                     self.copyRightWarning(nlsStrings.BRANDING_BAR_ABOUT_DIALOG_COPY_RIGHT_WARNING);
                     self.closeBtnLabel(nlsStrings.BRANDING_BAR_ABOUT_DIALOG_CLOSE_BTN_LABEL);
+                    self.aboutIconAltTxt(nlsStrings.BRANDING_BAR_ABOUT_DIALOG_ICON_ALT_TEXT);
                 }
             }
         };
