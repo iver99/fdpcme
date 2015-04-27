@@ -4,6 +4,10 @@
 */
 .nav-mapping-icon-32:before{content:url("../images/compassIcon_32.png");}
 
+a:hover {
+ cursor: pointer;
+}
+
 .fa-icon-font {
   font-family: FaFont;
   font-size: 1.34rem;
