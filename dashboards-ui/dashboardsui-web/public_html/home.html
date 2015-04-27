@@ -22,7 +22,7 @@ role value for that section to represent the appropriate content type.
         
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="emcsDependencies/dfcommon/images/emcs_32.png" />
+        <link rel="icon" type="image/png" href="emcsDependencies/dfcommon/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
         <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.0/alta/oj-alta-min.css" type="text/css"/>
 
@@ -65,14 +65,29 @@ role value for that section to represent the appropriate content type.
                                     <div>
                                     <!-- Home toolbar start -->
                                     <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
-                                                <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
-                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'style': 'min-width:643px; width:643px;'}}
-                                                                  ,dbsTypeAhead: {response: searchResponse, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}, 'busyElement': '#dhometab', 'busyClassName': 'busy'}
+                                                <span class="dbs-search-box oj-sm-1 oj-md-2 oj-lg-4 oj-xl-6">
+                                                    <input id="sinput" type="text" name="searchInput"
+                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                                                  ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
                                                                   ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
-                                                <button id="sbtn" style="margin-bottom: 4px; margin-left: 5px; margin-right: 16px;"
+                                                    <button class="oj-button-half-chrome" data-bind="click: clearSearch, visible: showSeachClear,
+                                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                                                            icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
+                                                    </button>
+                                                    <button class="oj-button-half-chrome" data-bind="click: forceSearch,
+                                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
+                                                            icons: {start:'dbs-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
+                                                    </button> 
+                                                </span>
+                                                <!--input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
+                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'style': 'min-width:643px; width:643px;'}}
+
+                                                                  ,dbsTypeAhead: {response: searchResponse, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
+                                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/-->
+                                                <!--button id="sbtn" style="margin-bottom: 4px; margin-left: 5px; margin-right: 16px;"
                                                         data-bind="click: forceSearch, ojComponent: { component:'ojButton'}">
                                                             <img style="padding-top: 6px" src="css/images/navi_search_16_ena.png" alt="Search"/>
-                                                </button>
+                                                </button-->
                                                 
                                                 <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
                                                 <select id="sortcb"  data-bind="ojComponent: {component: 'ojSelect', value: sortBy, optionChange: handleSortByChanged, 
@@ -95,35 +110,6 @@ role value for that section to represent the appropriate content type.
                                                     </li>
                                                     <!-- /ko -->
                                                 </ul>
-                                    <!--div id="dtabhomettb" class="oj-toolbar-row" style=" min-height: 50px;padding-left: 5px">
-                                        <div id="toolbar2"  aria-label="Searching toolbar" style="float:left;" data-bind="ojComponent: {component:'ojToolbar', rootAttributes:{ 'style': 'min-width:698px; width:698px; border-left: 0;' }}">
-                                                <input id="sinput" type="text" name="searchInput" style="margin-left: 0px;border-radius: 8px;"
-                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'style': 'min-width:643px; width:643px;'}}
-                                                                  ,dbsTypeAhead: {response: searchResponse, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
-                                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
-                                                <button id="sbtn" style="margin-bottom: 4px;margin-left: 5px;"
-                                                        data-bind="click: forceSearch, ojComponent: { component:'ojButton'}">
-                                                            <img style="padding-top: 6px" src="css/images/navi_search_16_ena.png" alt="Search"/>
-                                                </button>
-                                        </div>
-                                        <div id="toolbar1"  aria-label="Control toolbar" style="float:left;border-left: 0px" data-bind="ojComponent: {component:'ojToolbar'}">
-                                                <button id="cbtn" class="dbs-home-button-create-new-dashboard"
-                                                        data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
-                                        </div>
-                                        <div id='menubutton-container' style="float:left;padding-left: 5px;padding-top: 3px;">
-                                            <button id="exploreDataBtn"
-                                                    data-bind="ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
-                                                                             menu: '#exploreDataMenu'}, attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
-                                            </button>
-                                            <ul id="exploreDataMenu" style="display:none"
-                                                data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
-                                                <!- ko foreach: exploreDataLinkList ->
-                                                <li>
-                                                    <a href="#" data-bind="text:name,value:href"></a>
-                                                </li>
-                                                <!- /ko ->
-                                            </ul>
-                                        </div-->
                                         <div style="display:none; min-width:100px; min-height:50px;" id="cbtn-tooltip" 
                                               data-bind="ojComponent: {component: 'ojPopup', tail: 'simple',
                                                         position: {'my': 'right top', 'at': 'start bottom', 'of': '#cbtn'}}">
