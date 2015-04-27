@@ -19,12 +19,18 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.AvailabilityServiceManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
  */
 public class RegistryLookupUtil
 {
+	private static final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
+
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
 		List<Link> matched = new ArrayList<Link>();
@@ -181,6 +187,7 @@ public class RegistryLookupUtil
 				}
 			}
 			catch (Throwable thr) {
+				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
 		}
@@ -205,6 +212,7 @@ public class RegistryLookupUtil
 				}
 			}
 			catch (Throwable thr) {
+				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
 		}
@@ -244,8 +252,7 @@ public class RegistryLookupUtil
 						}
 					}
 					catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e.getLocalizedMessage(), e);
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
@@ -281,8 +288,7 @@ public class RegistryLookupUtil
 						}
 					}
 					catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e.getLocalizedMessage(), e);
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
@@ -293,7 +299,7 @@ public class RegistryLookupUtil
 			return lk;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return lk;
 		}
 	}
@@ -344,7 +350,7 @@ public class RegistryLookupUtil
 			return lk;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return lk;
 		}
 	}

@@ -5,6 +5,7 @@ import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
@@ -17,6 +18,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -28,6 +30,11 @@ public class DashboardManagerTest
 		PersistenceManager.setTestEnv(true);
 		UserContext.setCurrentUser("SYSMAN");
 		TenantSubscriptionUtil.setTestEnv();
+	}
+
+	@BeforeMethod
+	public void beforeMethod()
+	{
 		TenantContext.setCurrentTenant("TenantOPC1");
 	}
 
@@ -53,7 +60,9 @@ public class DashboardManagerTest
 		Assert.assertNotNull(dbd2.getDashboardId());
 
 		// post test
+		UserContext.setCurrentUser("AnotherUser");
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		UserContext.setCurrentUser("SYSMAN");
 		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 	}
 
@@ -285,6 +294,39 @@ public class DashboardManagerTest
 	}
 
 	@Test
+	public void testCreateUpdateSystemDashboard() throws DashboardException	{
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId1 = 11L;
+		// try to insert system dashboard, and it should work also
+		String name1 = "name1" + System.currentTimeMillis();
+		Dashboard dbd1 = new Dashboard();
+		dbd1.setName(name1);
+		dbd1.setDescription("dashboard 1: system dashboard");
+		dbd1.setIsSystem(true);
+		dbd1.setAppicationType(DashboardApplicationType.APM);
+		dm.saveNewDashboard(dbd1, tenantId1);
+		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
+		Assert.assertNotNull(queried);
+
+		// try to update system dashboard, and it is not allowed
+		queried.setName("Updated system dashboard name");
+		try {
+			dm.updateDashboard(dbd1, tenantId1);
+		}
+		catch (CommonSecurityException e) {
+		}
+		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
+		Assert.assertEquals(queried.getName(), name1);
+
+		// post test
+		try {
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+	}
+
+	@Test
 	public void testDeleteDashboard() throws DashboardException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
@@ -326,6 +368,17 @@ public class DashboardManagerTest
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
 
+		// try to insert system dashboard, and it should work also
+		String name4 = "name4" + System.currentTimeMillis();
+		Dashboard dbd4 = new Dashboard();
+		dbd4.setName(name4);
+		dbd4.setDescription("dashboard 4: system dashboard");
+		dbd4.setIsSystem(true);
+		dbd4.setAppicationType(DashboardApplicationType.APM);
+		dm.saveNewDashboard(dbd4, tenantId1);
+		queried = dm.getDashboardById(dbd4.getDashboardId(), tenantId1);
+		Assert.assertNotNull(queried);
+
 		// try to delete dashboard owned by other user, and the deletion actually has no effect
 		try {
 			dm.deleteDashboard(dbd3.getDashboardId(), false, tenantId1);
@@ -342,6 +395,15 @@ public class DashboardManagerTest
 		queried = dm.getDashboardById(dbd3.getDashboardId(), tenantId2);
 		Assert.assertNotNull(queried);
 
+		// try to delete system dashboard, even own dashboard, and it failed/has no effect
+		try {
+			dm.deleteDashboard(dbd4.getDashboardId(), false, tenantId1);
+		}
+		catch (CommonSecurityException e) {
+		}
+		queried = dm.getDashboardById(dbd4.getDashboardId(), tenantId1);
+		Assert.assertNotNull(queried);
+
 		// post test
 		try {
 			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
@@ -355,6 +417,11 @@ public class DashboardManagerTest
 		}
 		try {
 			dm.deleteDashboard(dbd3.getDashboardId(), true, tenantId2);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+		try {
+			dm.deleteDashboard(dbd4.getDashboardId(), true, tenantId1);
 		}
 		catch (DashboardNotFoundException e) {
 		}
@@ -456,7 +523,9 @@ public class DashboardManagerTest
 		catch (DashboardNotFoundException e) {
 		}
 		try {
+			UserContext.setCurrentUser("other user");
 			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+			UserContext.setCurrentUser("SYSMAN");
 		}
 		catch (DashboardNotFoundException e) {
 		}
@@ -465,7 +534,6 @@ public class DashboardManagerTest
 	@Test
 	public void testGetDashboardId() throws DashboardException
 	{
-		TenantContext.setCurrentTenant("TenantOPC1");
 		DashboardManager dm = DashboardManager.getInstance();
 		String name1 = "name1" + System.currentTimeMillis();
 		Long tenantId1 = 11L;
@@ -549,7 +617,6 @@ public class DashboardManagerTest
 	@Test
 	public void testListDashboard() throws DashboardException, InterruptedException
 	{
-		TenantContext.setCurrentTenant("TenantOPC1");
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenant1 = 11L;
 		Long tenant2 = 12L;
@@ -622,6 +689,7 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd10.getDashboardId(), tenant1);
 
 		// owned by others, but is system dashboard. should be queried
+		UserContext.setCurrentUser("OTHER");
 		Dashboard dbd11 = new Dashboard();
 		dbd11.setName("key11" + System.currentTimeMillis());
 		dbd11.setIsSystem(true);
@@ -632,26 +700,26 @@ public class DashboardManagerTest
 		TileParam t1p1 = createParameterForTile(tile1);
 		t1p1.setStringValue("tile 1 param 1");
 		dbd11 = dm.saveNewDashboard(dbd11, tenant1);
-		dbd11.setOwner("OTHER");
-		dbd11 = dm.updateDashboard(dbd11, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
+		dbd11 = dm.getDashboardById(dbd11.getDashboardId(), tenant1);
 
 		// owned by others, system dashboard, but from different tenant. should not be queried
+		UserContext.setCurrentUser("OTHER_DIF_TENANT");
 		Dashboard dbd12 = new Dashboard();
 		dbd12.setName("key12" + System.currentTimeMillis());
 		dbd12.setIsSystem(true);
 		dbd12.setAppicationType(DashboardApplicationType.APM);
 		dbd12 = dm.saveNewDashboard(dbd12, tenant2);
-		dbd12.setOwner("OTHER_DIF_TENANT");
-		dbd12 = dm.updateDashboard(dbd12, tenant2);
+		UserContext.setCurrentUser("SYSMAN");
 
 		// system dashboard not owned, and from service not subscribed. should not be queried
+		UserContext.setCurrentUser("OTHER_DIF_TENANT");
 		Dashboard dbd13 = new Dashboard();
 		dbd13.setName("key13" + System.currentTimeMillis());
 		dbd13.setIsSystem(true);
 		dbd13.setAppicationType(DashboardApplicationType.LogAnalytics);
 		dbd13 = dm.saveNewDashboard(dbd13, tenant1);
-		dbd13.setOwner("OTHER_DIF_OWNER");
-		dbd13 = dm.updateDashboard(dbd13, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
 
 		// query by key word, case in-sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, true);
@@ -716,7 +784,9 @@ public class DashboardManagerTest
 		dm.deleteDashboard(dbd3.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd4.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd5.getDashboardId(), true, tenant1);
+		UserContext.setCurrentUser("KEY");
 		dm.deleteDashboard(dbd6.getDashboardId(), true, tenant1);
+		UserContext.setCurrentUser("SYSMAN");
 		dm.deleteDashboard(dbd7.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd8.getDashboardId(), true, tenant1);
 		dm.deleteDashboard(dbd9.getDashboardId(), true, tenant2);

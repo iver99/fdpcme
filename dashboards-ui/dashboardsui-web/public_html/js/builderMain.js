@@ -126,6 +126,12 @@ require(['knockout',
                     template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
             }
+            if (!ko.components.isRegistered('df-widget-selector')) {
+                ko.components.register("df-widget-selector",{
+                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/widgetselector/js/widget-selector'},
+                    template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
+                });
+            }
             ko.components.register("df-time-selector",{
                 viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
                 template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
@@ -169,7 +175,6 @@ require(['knockout',
             };
             
            
-            var tilesView = new dtv.DashboardTilesView(dtm);
             var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
@@ -196,9 +201,10 @@ require(['knockout',
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
-                            dtm.initializeTileAfterLoad(tile);
+                            dtm.initializeTileAfterLoad(dashboard, tile);
                         }
                     }
+                    var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
                     var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
@@ -266,7 +272,7 @@ require(['knockout',
                 }, function(e) {
                     console.log(e.errorMessage());
                     if (e.errorCode && e.errorCode() === 20001) {
-                        oj.Logger.info("Dashboard not found. Redirect to dashboard error page");
+                        oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
                         location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
                     }
                 });
@@ -279,6 +285,7 @@ function updateOnePageHeight(event) {
     if (event && event.data && event.data.messageType === 'onePageWidgetHeight') {
         onePageTile.height(event.data.height);
         console.log('one page tile height is set to ' + event.data.height);
+        oj.Logger.log('one page tile height is set to ' + event.data.height);
     }
 };
 
