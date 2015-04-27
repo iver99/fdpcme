@@ -36,6 +36,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSys
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
@@ -125,9 +126,8 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(userTenant);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
-			String externalBase = DashboardAPIUtil.getExternalAPIBase();
-			String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dashboardId
-					+ "/screenshot";
+			String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase();
+			String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + dashboardId + "/screenshot";
 			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
 		}
 		catch (DashboardException e) {
@@ -256,9 +256,11 @@ public class DashboardAPI extends APIBase
 			return null;
 		}
 		//		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
-		String externalBase = DashboardAPIUtil.getExternalAPIBase();
-		String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dbd.getDashboardId()
-				+ "/screenshot";
+		String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase();
+		if (StringUtil.isEmpty(externalBase)) {
+			return null;
+		}
+		String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + dbd.getDashboardId() + "/screenshot";
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}

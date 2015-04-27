@@ -181,8 +181,8 @@ public class PreferenceAPI extends APIBase
 		if (pref == null) {
 			return;
 		}
-		String externalBase = DashboardAPIUtil.getExternalAPIBase();
-		String url = externalBase + "preferences/" + pref.getKey();
+		String externalBase = DashboardAPIUtil.getExternalPreferenceAPIBase();
+		String url = externalBase + (externalBase.endsWith("/") ? "" : "/") + pref.getKey();
 		pref.setHref(url);
 		//return pref;
 	}

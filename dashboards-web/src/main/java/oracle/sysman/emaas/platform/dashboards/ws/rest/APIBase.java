@@ -20,6 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
@@ -108,8 +109,11 @@ public class APIBase
 		if (dbd == null) {
 			return null;
 		}
-		String externalBase = DashboardAPIUtil.getExternalAPIBase();
-		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dbd.getDashboardId();
+		String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase();
+		if (StringUtil.isEmpty(externalBase)) {
+			return null;
+		}
+		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + dbd.getDashboardId();
 		//		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
 		dbd.setHref(href);
 		return dbd;

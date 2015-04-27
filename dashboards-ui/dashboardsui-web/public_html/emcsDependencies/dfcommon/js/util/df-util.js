@@ -217,8 +217,8 @@ define(['knockout',
                 }
                 
                 var header = self.getDefaultHeader();
-                var dfUrlRoot = self.discoverDFRestApiUrl();
-                var url = self.buildFullUrl(dfUrlRoot, "subscribedapps");
+//                var dfUrlRoot = self.discoverDFRestApiUrl();
+                var url = "/sso.static/dashboards.subscribedapps";//self.buildFullUrl(dfUrlRoot, "subscribedapps");
 
                 var result = null;
                 $.ajax(url, {
@@ -258,8 +258,8 @@ define(['knockout',
                 }
                 
                 var header = self.getDefaultHeader();
-                var dfUrlRoot = self.discoverDFRestApiUrl();
-                var url = self.buildFullUrl(dfUrlRoot, "subscribedapps");
+//                var dfUrlRoot = self.discoverDFRestApiUrl();
+                var url = "/sso.static/dashboards.subscribedapps";//self.buildFullUrl(dfUrlRoot, "subscribedapps");
 
                 $.ajax(url, {
                     type: 'get',
