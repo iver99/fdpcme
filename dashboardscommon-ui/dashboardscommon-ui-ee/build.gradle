@@ -85,7 +85,7 @@ task appServerInit << {
 
 	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
 	
-	ant.propertyfile(file: "../dashboardsui-web/testenv.properties") 
+	ant.propertyfile(file: "../dashboardscommon-ui-web/testenv.properties") 
 	{
 		entry( key:"hostname",  value: "${serverHost}" )
 		entry( key: "port", value: "${appServerconfig.port}")
