@@ -70,6 +70,7 @@ configurations{
 restAssured.exclude module:'groovy'
 }
 }
+
  
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
@@ -90,8 +91,19 @@ task small_deploy_3n_block(type: EMTest) {
 }
 
 
-/* Cleanup EMaaS Small Deployment */
-task small_deploy_3n_cleanup(type: EMTest) {
+
+
+
+
+
+
+    task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
+  	//include "oaracle/sysman/emaas/platform/dashboards/core/<CLASS>.class"
+  	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
+}
+task small_deploy_3n_cleanup(type: EMTest,dependsOn: DEVTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
     options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
         test('name': 'emaas_setup_small_deploy') {
@@ -104,22 +116,9 @@ task small_deploy_3n_cleanup(type: EMTest) {
             }
         }
     }
-    mustRunAfter ([small_deploy_3n_block,DEVTest])
+ 
 }
 
 
-
-
-
-
-    task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
-  	//include "oaracle/sysman/emaas/platform/dashboards/core/<CLASS>.class"
-  	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
-	useRestAssured =true
-	scanForTestClasses = false
-	}
-
-task emcpdf_dev_test (dependsOn: DEVTest)
+task emcpdf_dev_test (dependsOn:DEVTest)
 
