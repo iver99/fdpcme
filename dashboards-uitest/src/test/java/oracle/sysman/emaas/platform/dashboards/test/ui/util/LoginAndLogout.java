@@ -28,7 +28,9 @@ public class LoginAndLogout {
 	public  void login(String testName)
 	{
 		String tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");
-		login(testName,"emaasadmin", "Welcome1!",tenantID, "home", "Dashboard-UI");
+		String username = oracle.sysman.emsaas.login.utils.Utils.getProperty("SSO_USERNAME");
+		login(testName,username, "Welcome1!",tenantID, "home", "Dashboard-UI");
+		//login(testName,"emaasadmin", "Welcome1!","TenantOPC1", "home", "Dashboard-UI");
 		
 	}
 	
