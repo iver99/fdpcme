@@ -12,6 +12,8 @@ def artifactId = 'dashboardscommonui'
 def groupId = group 
 def versionNumber = version
 
+ext.appName_commonui="${artifactPrefix}dashboards-common-ui"
+
 ear 
 {
 	libDirName 'lib'
@@ -103,7 +105,7 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "${appName_ui}-${version}",
+		name:       "${appName_commonui}-${version}",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
