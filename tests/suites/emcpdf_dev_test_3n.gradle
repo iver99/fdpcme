@@ -120,5 +120,5 @@ task small_deploy_3n_cleanup(type: EMTest,dependsOn: DEVTest) {
 }
 
 
-task emcpdf_dev_test (dependsOn:DEVTest)
+task emcpdf_dev_test_3n (dependsOn:DEVTest)
 
