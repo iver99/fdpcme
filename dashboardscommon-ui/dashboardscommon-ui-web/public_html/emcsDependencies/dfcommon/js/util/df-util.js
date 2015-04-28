@@ -153,13 +153,14 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
-                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home');
-                if (url){
-                    return url;
-                }else{
-                    oj.Logger.error("Failed to discover Dashboard Home.");
-                    return null;
-                }
+//                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home');
+//                if (url){
+//                    return url;
+//                }else{
+//                    oj.Logger.error("Failed to discover Dashboard Home.");
+//                    return null;
+//                }
+            	return "/emsaasui/emcpdfui/home.html";
             };    
             
             /**
@@ -168,14 +169,15 @@ define(['knockout',
              * @returns {String} url 
              */
             self.discoverDFRestApiUrl = function() {
-                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual");
-                
-                if (url){
-                    return url;
-                }else{
-                    oj.Logger.error("Failed to discover DF REST API end point.");
-                    return null;
-                }
+//                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual");
+//                
+//                if (url){
+//                    return url;
+//                }else{
+//                    oj.Logger.error("Failed to discover DF REST API end point.");
+//                    return null;
+//                }
+            	return "/sso.static/dashboards.service";
             };
             
             /**
