@@ -1,0 +1,143 @@
+apply plugin: 'ear'
+apply plugin: 'eclipse-wtp'
+
+configurations { 
+    appServer     
+}
+
+version = '1.0.0'
+group = 'emaas/applications/dashboards-framework'
+
+def artifactId = 'dashboardscommonui' 
+def groupId = group 
+def versionNumber = version
+
+ear 
+{
+	libDirName 'lib'
+	appDirName 'EarContent'
+	baseName = artifactPrefix+'dashboards-common-ui'
+	from('ear/META-INF')
+	{ 
+		include 'ear/META-INF/*.xml'
+		into('META-INF') 
+	}
+}
+
+dependencies 
+{
+	deploy (project(path:':dashboardscommon-ui:dashboardscommon-ui-web', configuration:'archives')) {transitive = false}
+	
+	//earlib (project(':dashboardscommon-ui:dashboardsui-webutils')){transitive = false} 
+	//earlib(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6') {transitive=false }
+	//earlib(group: 'emaas.platform', name: 'registry-client', version: '0.23.6') {transitive=false }	
+	//earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.2') {transitive=false }
+	//earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2') {transitive=false }
+        //earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.2.3'){transitive=false }
+        //earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.2.3'){transitive=false }
+        //earlib(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.2.3'){transitive=false }
+        //earlib(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
+}
+
+// All WLS Related things
+
+loadConfiguration()
+
+def loadConfiguration() {
+
+    def environment = hasProperty('env') ? env : 'dev'
+    setProperty 'environment', environment
+    
+    def configFile = file('../appServerConfig.config')
+    def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
+    setProperty 'appServerconfig', appServerconfig
+}
+
+task appServerInit << {
+
+	println "=============== Environment is $environment ========================"
+	println " "
+	println "(Un/Re)Deployment will be performed at following server info: "
+	println "	serverName:  $appServerconfig.serverName"
+	println "	port:  $appServerconfig.port"
+  println "	adminuser:  $appServerconfig.adminUser"
+	println "	adminuserpwd: $appServerconfig.adminUserPwd"
+	println " "
+
+	dependencies 
+	{
+	        // we are pulling in wlfullclient from "http://artifactory.oraclecorp.com/artifactory/emaas-sandbox-local/" as a temp measure
+          	// once we get right set of JARs figured out - we will remove this
+        	appServer compile(group: 'test', name: 'wlfullclient', version: '2.6')
+	} 
+	if (!project.hasProperty('serverHost')) { 
+		project.ext.serverHost = "$appServerconfig.serverName"; 
+	} 
+	if (!project.hasProperty('adminServerPost')) { 
+		project.ext.adminServerPost = "$appServerconfig.port"; 
+	}     
+	if (!project.hasProperty('adminUser')) { 
+		project.ext.adminUser = "$appServerconfig.adminUser"; 
+	}     
+	if (!project.hasProperty('adminUserPassword')) { 
+		project.ext.adminUserPassword = "$appServerconfig.adminUserPwd"; 
+	}     
+
+	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
+	
+	ant.propertyfile(file: "../dashboardsui-web/testenv.properties") 
+	{
+		entry( key:"hostname",  value: "${serverHost}" )
+		entry( key: "port", value: "${appServerconfig.port}")
+	}
+
+	ant.taskdef(name: 'wldeploy',classname: 'weblogic.ant.taskdefs.management.WLDeploy',classpath: configurations.appServer.asPath)  
+} 
+
+task appServerDeploy{
+	dependsOn 'ear', 'appServerInit'
+
+	doLast 
+	{ 
+		println "Deploying ${ear.archivePath} to ${t3URL}" 
+
+		ant.wldeploy(action:'deploy',  
+		source:     ear.archivePath, 
+		name:       "${appName_ui}-${version}",
+		adminurl:   t3URL,  
+		user:       adminUser, 
+		password:   adminUserPassword, 
+		upload:     'true',  
+		verbose:    'true', 
+		debug:      'false') 
+	} 
+}
+
+
+task appServerUndeploy{
+	dependsOn 'uiappServerInit' 
+
+	doLast 
+	{ 
+		println "Undeploying ${appName_ui}-${version} from ${t3URL}" 
+
+		ant.wldeploy(action:'undeploy',  
+		name:       "${appName_ui}-${version}",  
+		adminurl:   t3URL,  
+		user:       adminUser, 
+		password:   adminUserPassword, 
+		verbose:    'false', 
+		debug:      'true')
+	}
+}
+
+task appServerRedeploy{
+	dependsOn 'appServerInit' 
+	doFirst {
+		tasks.appServerUndeploy.execute()
+	}
+	doLast {
+		tasks.appServerDeploy.execute()
+	}
+}
+

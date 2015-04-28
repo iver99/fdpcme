@@ -1,0 +1,143 @@
+apply plugin: 'war'
+apply plugin: 'maven-publish'
+apply plugin: 'artifactory-publish'
+
+// source 'webapp' directory
+def File sourceWebappDir = new File(project.projectDir, 'public_html')
+// source directories where jet files are copied
+def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
+// sourc directories where font files are copied
+def File sourceFontDestDir = new File(sourceWebappDir, 'emcsDependencies/dfcommon/css/font-awesome')
+
+group = 'com.oracle.emaas.emcpdf'
+version = '1.1'
+
+project.task("unpackJETFromArtifactory") << {
+    // if the resources/web/js/libs directory is empty - either the first time this task is
+    // run or the directory has been cleaned, then
+    // iterate over the project artifacts and look for the oraclejet.zip,
+    // - downloaded on the local file system (generally found in <user_home_dir>/.gradle)
+    // - unzip to the build/jet directory
+    // - copy over the directories to different common/resources directories
+    // (these directories are specified in the .gitignore file)
+    // - delete the build/jet directory
+    // build directory where the oraclejet.zip will be unzipped
+    
+    def File buildJetUnzipDir = new File(buildDir.absolutePath, 'jet')
+    //first time or if custom cleans removes it
+    sourceJetDestDir.mkdirs()
+
+    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('oraclejet') && files(sourceJetDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildJetUnzipDir.mkdirs()
+            project.copy {
+                from project.zipTree(artifact.file.absolutePath)
+                into buildJetUnzipDir.absolutePath
+            }
+            // Copy each of the unzipped jet directories to
+            // the appropriate source directories
+            // 1. build/jet/ >> public_html/emcsDependencies/oraclejet/
+            project.copy {
+                from  buildJetUnzipDir
+                into sourceJetDestDir.absolutePath
+            }
+            
+            //finally delete the build/jet directory
+            project.delete(buildJetUnzipDir)
+        }
+    }
+}
+
+project.task("cleanJet") << {
+    println 'Cleaning up jet directories ...'
+    println 'oraclejet dir: ' + sourceJetDestDir.absolutePath
+    sourceJetDestDir.deleteDir()
+}
+
+project.task("unpackFontFromArtifactory") << {
+    
+    def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
+    //first time or if custom cleans removes it
+    sourceFontDestDir.mkdirs()
+
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('font-awesome') && files(sourceFontDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildFontUnzipDir.mkdirs()
+            project.copy {  
+		from project.file(artifact.file.absolutePath)
+		into buildFontUnzipDir.absolutePath
+	    }
+	    
+	    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)
+		    
+	    project.copy {
+	    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
+		    into sourceFontDestDir.absolutePath
+	    }
+		    
+	    project.delete(buildFontUnzipDir)
+        }
+    }
+}
+
+project.task("cleanFont") << {
+    println 'Cleaning up font directories ...'
+    println 'font-awesome dir: ' + sourceFontDestDir.absolutePath
+    sourceFontDestDir.deleteDir()
+}
+
+clean.dependsOn cleanJet,cleanFont
+
+war.archiveName "dashboards-common-ui-web.war"
+
+war.dependsOn unpackJETFromArtifactory, unpackFontFromArtifactory
+
+war {
+	from('public_html') {
+	       include '**/*'
+	        into('/')
+	}
+
+	from('src/main/java') { 
+		include '**/*.properties'
+		into('WEB-INF/classes') 
+	}
+
+	rootSpec.exclude("**/*.zip")
+}
+
+task buildDFCommonLibZip(type: Zip){
+	baseName = 'emcs-ui-framework'
+	appendix = 'common'
+	from 'public_html/emcsDependencies/dfcommon/'
+	into 'dfcommon'
+}
+
+publishing {
+    publications {
+	maven(MavenPublication) {
+	    version "${publish_version}"
+	    groupId "${publish_group}"
+	    artifact(buildDFCommonLibZip)
+	    artifactId 'emcs-ui-framework-common'
+	}
+    }
+    repositories {
+        maven {
+            url "${artifactory_contextUrl}"+'/'+"${publish_repo_key}"
+            credentials {
+                username = "${artifactory_user}"
+                password = "${artifactory_password}"
+            }
+        }
+    }
+}
+
+dependencies {
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15008', ext: 'war'){ transitive = false }	
+	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
+}
+
