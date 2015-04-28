@@ -66,7 +66,7 @@
     padding: 0px;
     min-width: 8em; 
     max-width: 650px;
-    margin-right: 20px;
+    margin-right: 5px;
 } 
 
 .dbs-search-box-input { 
@@ -335,3 +335,6 @@ a:hover {
  cursor:pointer;
 }
 
+.busy, .busy *{
+    cursor: progress !important;   
+}
