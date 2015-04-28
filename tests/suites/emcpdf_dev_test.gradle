@@ -43,6 +43,16 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
  ***************************************************************************************************/
+
+
+
+
+
+
+
+
+
+
  
  
 /* Your lrg specific code would come here */
@@ -55,13 +65,58 @@ dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core-integ-tests', version: '1.0.1'){
 exclude('module':'groovy')
 }
+ testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
 configurations{
 restAssured.exclude module:'groovy'
 }
 }
-     task DEVTest(type:EMTest){
+ 
+task small_deploy_3n_block(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'setupEmaasSmallDeploy')
+                    }
+                }
+        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true
+}
+
+
+/* Cleanup EMaaS Small Deployment */
+task small_deploy_3n_cleanup(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'logCollectionAndPostCleanup')
+                    }
+                }
+            }
+        }
+    }
+    mustRunAfter ([small_deploy_3n_block,DEVTest])
+}
+
+
+
+
+
+
+    task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
   	//include "oaracle/sysman/emaas/platform/dashboards/core/<CLASS>.class"
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
 	useRestAssured =true
 	scanForTestClasses = false
 	}
