@@ -52,11 +52,22 @@ repositories {
             url = "${artifactory_contextUrl}/repo" }
     }
 dependencies {
-    lrgConfig (group: 'com.oracle.emaas.emcpdp', name: 'dashboards-web-integ-tests', version: '1.0.1')
+    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-web-integ-tests', version: '1.0.1') {
+	exclude('module':'groovy')
+}
 
 }
+configurations {
+restAssured.exclude module: 'groovy'
+}
+
      task QATest(type:EMTest){ 
-	include "oracle/sysman/emaas/platform/dashboards/test/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/logging/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/favoritedashboards/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
 	useRestAssured=true
 }
 
