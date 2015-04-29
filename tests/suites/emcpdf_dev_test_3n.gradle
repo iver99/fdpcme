@@ -74,7 +74,7 @@ restAssured.exclude module:'groovy'
  
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
+    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_test_3n') {
         test('name': 'emaas_setup_small_deploy') {
             classes([:]) {
                 'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
