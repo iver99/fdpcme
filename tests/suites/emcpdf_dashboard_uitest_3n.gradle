@@ -56,18 +56,11 @@ dependencies {
 testConfig group: 'com.oracle.emaas.emcpdf.Webdriver.uitest', name: 'dashboards-uitest', version: '1.0+'
 testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: '1.1+'
 }
-/* Note: This Will be needed only if there are lrgConfig specific dependencies. */
-/* TestInfraPlugin By default will extracts testConfig artifacts into $T_WORK/testClasses */
-task copyDependencies(type: Copy) {
-    from configurations.lrgConfig
-    into System.env.T_WORK
-}
   
 /* Setup EMaaS Small Deployment */
-/* Add copyDependencies Dependency if lrgConfig specific dependencies are present*/
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'dashboard_ui_setup_3n') {
+    options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'emaas_setup_small_deploy') {
             classes([:]) {
                 'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
@@ -85,7 +78,7 @@ task small_deploy_3n_block(type: EMTest) {
 //This are 1 test blocks to run testng tests.
 //sample1 for the package oracle/sysman/test/logan
 task e2e (type: EMTest, dependsOn: small_deploy_3n_block){
-options.suiteXmlBuilder().suite('name': 'DashBoard') {
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
@@ -101,7 +94,7 @@ options.suiteXmlBuilder().suite('name': 'DashBoard') {
 /* Note: Make sure this block is added after defining task my_test_task or else you see a failure saying my_test_task doesn't exist. */
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'dashboard_ui_cleanup_3n') {
+    options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'emaas_setup_small_deploy') {
             classes([:]) {
                 'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
@@ -115,4 +108,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
     mustRunAfter ([small_deploy_3n_block,e2e])
 }
 
-task emcpdf_dashboard_uitest (dependsOn:[e2e, small_deploy_3n_cleanup])
+task emcpdf_dashboard_uitest_3n (dependsOn:[e2e, small_deploy_3n_cleanup])
