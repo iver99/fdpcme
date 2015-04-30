@@ -12,6 +12,8 @@ def artifactId = 'dashboardscommonui'
 def groupId = group 
 def versionNumber = version
 
+ext.appName_commonui="${artifactPrefix}dashboards-common-ui"
+
 ear 
 {
 	libDirName 'lib'
@@ -85,7 +87,7 @@ task appServerInit << {
 
 	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
 	
-	ant.propertyfile(file: "../dashboardsui-web/testenv.properties") 
+	ant.propertyfile(file: "../dashboardscommon-ui-web/testenv.properties") 
 	{
 		entry( key:"hostname",  value: "${serverHost}" )
 		entry( key: "port", value: "${appServerconfig.port}")
@@ -103,7 +105,7 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "${appName_ui}-${version}",
+		name:       "${appName_commonui}-${version}",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
