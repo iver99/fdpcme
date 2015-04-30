@@ -124,6 +124,9 @@ define(['knockout',
                 var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
 
                 $.ajax(url,{
+                    type: 'get',
+                    dataType: 'json',
+                    headers: self.getDefaultHeader(),
                     success:function(data, textStatus,jqXHR) {
                         result = data;
                     },
