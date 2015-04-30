@@ -94,7 +94,7 @@ define(['require',
                 var searchResultArray = [];
                 var index=0;
                 var pageSize = 8;
-                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+//                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
                 var curPage = 1;
                 var totalPage = 0;
                 var naviFromSearchResults = false;
@@ -322,9 +322,11 @@ define(['require',
                     assetRootList = {};
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
-                    if (ssfUrl && ssfUrl !== '') {
-                        var widgetsUrl = dfu.buildFullUrl(ssfUrl,'widgets');
-                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
+//                    if (ssfUrl && ssfUrl !== '') {
+//                        var widgetsUrl = dfu.buildFullUrl(ssfUrl,'widgets');
+//                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
+                        var widgetsUrl = '/sso.static/savedsearch.widgets';
+                        var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
                         $.ajax({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
@@ -355,10 +357,10 @@ define(['require',
                         });  
 
 //                        dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
-                    }
-                    else {
-                        oj.Logger.warn('Failed to discover available Saved Search service URL.');
-                    }
+//                    }
+//                    else {
+//                        oj.Logger.warn('Failed to discover available Saved Search service URL.');
+//                    }
 
                     curPage = 1;
                     totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
