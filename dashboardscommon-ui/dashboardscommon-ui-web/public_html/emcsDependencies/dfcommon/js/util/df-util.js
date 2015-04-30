@@ -80,6 +80,9 @@ define(['knockout',
                 }
 
                 $.ajax(url,{
+                	type: 'get',
+                    dataType: 'json',
+                    headers: self.getDefaultHeader(),
                     success:function(data, textStatus,jqXHR) {
                         result = data;
                     },
