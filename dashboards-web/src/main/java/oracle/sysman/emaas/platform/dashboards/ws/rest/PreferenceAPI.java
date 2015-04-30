@@ -123,7 +123,7 @@ public class PreferenceAPI extends APIBase
 			List<Preference> ps = pm.listPreferences(tenantId);
 			if (ps != null) {
 				for (Preference p : ps) {
-					updatePreferenceHref(p);
+					updatePreferenceHref(p, tenantIdParam);
 				}
 			}
 			return Response.ok(getJsonUtil().toJson(ps)).build();
@@ -163,7 +163,7 @@ public class PreferenceAPI extends APIBase
 			input.setKey(key);
 
 			pm.savePreference(input, tenantId);
-			updatePreferenceHref(input);
+			updatePreferenceHref(input, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(input)).build();
 		}
 		catch (DashboardException e) {
@@ -176,12 +176,12 @@ public class PreferenceAPI extends APIBase
 		}
 	}
 
-	private void updatePreferenceHref(Preference pref)
+	private void updatePreferenceHref(Preference pref, String tenantName)
 	{
 		if (pref == null) {
 			return;
 		}
-		String externalBase = DashboardAPIUtil.getExternalAPIBase();
+		String externalBase = DashboardAPIUtil.getExternalAPIBase(tenantName);
 		String url = externalBase + "preferences/" + pref.getKey();
 		pref.setHref(url);
 		//return pref;

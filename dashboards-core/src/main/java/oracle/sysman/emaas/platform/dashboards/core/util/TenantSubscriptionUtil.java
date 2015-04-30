@@ -73,7 +73,7 @@ public class TenantSubscriptionUtil
 		if (tenant == null) {
 			return null;
 		}
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains");
+		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains", null);
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
 			return null;
 		}

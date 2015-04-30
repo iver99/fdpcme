@@ -103,12 +103,11 @@ public class APIBase
 	/*
 	 * Updates the specified dashboard by generating all href fields
 	 */
-	protected Dashboard updateDashboardHref(Dashboard dbd)
-	{
+	protected Dashboard updateDashboardHref(Dashboard dbd, String tenantName) {
 		if (dbd == null) {
 			return null;
 		}
-		String externalBase = DashboardAPIUtil.getExternalAPIBase();
+		String externalBase = DashboardAPIUtil.getExternalAPIBase(tenantName);
 		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dbd.getDashboardId();
 		//		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
 		dbd.setHref(href);

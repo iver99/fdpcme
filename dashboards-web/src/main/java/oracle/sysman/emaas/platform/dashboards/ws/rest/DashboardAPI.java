@@ -69,7 +69,7 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(userTenant);
 			d = manager.saveNewDashboard(d, tenantId);
-			updateDashboardAllHref(d);
+			updateDashboardAllHref(d, tenantIdParam);
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
 		}
 		catch (IOException e) {
@@ -125,7 +125,7 @@ public class DashboardAPI extends APIBase
 			initializeUserContext(userTenant);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
-			String externalBase = DashboardAPIUtil.getExternalAPIBase();
+			String externalBase = DashboardAPIUtil.getExternalAPIBase(tenantIdParam);
 			String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dashboardId
 					+ "/screenshot";
 			return Response.ok(getJsonUtil().toJson(new ScreenShotEntity(screenShotUrl, ss))).build();
@@ -152,7 +152,7 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(userTenant);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
-			updateDashboardAllHref(dbd);
+			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
@@ -186,7 +186,7 @@ public class DashboardAPI extends APIBase
 			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
-					updateDashboardAllHref(d);
+					updateDashboardAllHref(d, tenantIdParam);
 				}
 			}
 			return Response.ok(getJsonUtil().toJson(pd)).build();
@@ -227,7 +227,7 @@ public class DashboardAPI extends APIBase
 						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
 			}
 			Dashboard dbd = dm.updateDashboard(input, tenantId);
-			updateDashboardAllHref(dbd);
+			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
@@ -243,20 +243,20 @@ public class DashboardAPI extends APIBase
 	/*
 	 * Updates the specified dashboard by generating all href fields
 	 */
-	private Dashboard updateDashboardAllHref(Dashboard dbd)
+	private Dashboard updateDashboardAllHref(Dashboard dbd, String tenantName)
 	{
-		updateDashboardHref(dbd);
-		updateDashboardScreenshotHref(dbd);
+		updateDashboardHref(dbd, tenantName);
+		updateDashboardScreenshotHref(dbd, tenantName);
 		return dbd;
 	}
 
-	private Dashboard updateDashboardScreenshotHref(Dashboard dbd)
+	private Dashboard updateDashboardScreenshotHref(Dashboard dbd, String tenantName)
 	{
 		if (dbd == null) {
 			return null;
 		}
 		//		String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId() + "/screenshot";
-		String externalBase = DashboardAPIUtil.getExternalAPIBase();
+		String externalBase = DashboardAPIUtil.getExternalAPIBase(tenantName);
 		String screenShotUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dbd.getDashboardId()
 				+ "/screenshot";
 		dbd.setScreenShotHref(screenShotUrl);
