@@ -54,6 +54,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies {
 testConfig group: 'com.oracle.emaas.emcpdf.Webdriver.uitest', name: 'dashboards-uitest', version: '1.0+'
+testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: '1.1+'
 }
 /* Note: This Will be needed only if there are lrgConfig specific dependencies. */
 /* TestInfraPlugin By default will extracts testConfig artifacts into $T_WORK/testClasses */
