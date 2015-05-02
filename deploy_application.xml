@@ -4,6 +4,9 @@
 	<artifact name="softwarejson" loc="software-definitions/DashboardService-ui.json" /> 
         <artifact name="cookbook" loc="dashboards-chef/cookbook-emcs-dashboardService-ui" />
         <artifact name="software" loc="dashboards-ui/deploy-list.xml" />
+	<DependsOn>
+            <Service Name="DashboardService-API" Version="1.0.0" />
+         </DependsOn>
 </Service>
 <Service Name="DashboardService-API" Version="1.0.0" type="schema,app" >
         <artifact name="softwarejson" loc="software-definitions/DashboardService-API.json" /> 
