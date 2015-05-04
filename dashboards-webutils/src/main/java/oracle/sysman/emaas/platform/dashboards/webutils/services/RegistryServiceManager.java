@@ -278,12 +278,18 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-				.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 		logger.info("Initializing RegistrationManager");
 		RegistrationManager.getInstance().initComponent(builder.build());
 
 		List<Link> links = new ArrayList<Link>();
+		if (applicationUrlHttp != null) {
+			links.add(new Link().withRel("base").withHref(applicationUrlHttp + NAV_API_BASE));
+		}
+		if (applicationUrlHttps != null) {
+			links.add(new Link().withRel("base").withHref(applicationUrlHttps + NAV_API_BASE));
+		}
 		// introduce static links
 		if (applicationUrlHttp != null) {
 			links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttp + NAV_STATIC_DASHBOARDS));
