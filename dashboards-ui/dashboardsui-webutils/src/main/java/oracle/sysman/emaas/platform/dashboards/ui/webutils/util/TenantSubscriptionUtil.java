@@ -68,7 +68,7 @@ public class TenantSubscriptionUtil
 		if (tenant == null) {
 			return null;
 		}
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains");
+		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains", tenant);
 		if (domainLink == null || StringUtils.isEmpty(domainLink.getHref())) {
 			logger.warn("Checking tenant (" + tenant
 					+ ") subscriptions: null/empty entity naming service collection/domains is retrieved.");

@@ -120,7 +120,7 @@ public class DashboardsUiCORSFilter implements Filter
 					}
 					else if (TenantSubscriptionUtil.isAPMServiceOnly(apps)) {
 						// redirect to apm home
-						Link apmLink = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home");
+						Link apmLink = RegistryLookupUtil.getServiceExternalLink("ApmUI", "0.1", "home", opcTenantId);
 						if (apmLink != null && !StringUtil.isEmpty(apmLink.getHref())) {
 							logger.info("Tenant subscribes to APM only, and redirecting dashboard home page to APM home: "
 									+ apmLink.getHref());

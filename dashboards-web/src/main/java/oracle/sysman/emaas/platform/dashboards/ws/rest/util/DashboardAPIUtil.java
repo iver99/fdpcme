@@ -25,17 +25,17 @@ public class DashboardAPIUtil
 	private static final String DASHBOARD_API_STATIC_REL = "static/dashboards.service";
 	private static final String PREFERENCE_API_STATIC_REL = "static/dashboards.preference";
 
-	public static String getExternalDashboardAPIBase()
+	public static String getExternalDashboardAPIBase(String tenantName)
 	{
 		Link lnk = RegistryLookupUtil.getServiceExternalLink(DashboardAPIUtil.DASHBOARD_API_SERVICENAME,
-				DashboardAPIUtil.DASHBOARD_API_VERSION, DASHBOARD_API_STATIC_REL);
+				DashboardAPIUtil.DASHBOARD_API_VERSION, DASHBOARD_API_STATIC_REL, tenantName);
 		return lnk == null ? null : lnk.getHref(); //e.g. https://slc07hcn.us.oracle.com:4443/microservice/be1d3d5f-2bd4-44ff-aab1-2b5aab1c7493/
 	}
 
-	public static String getExternalPreferenceAPIBase()
+	public static String getExternalPreferenceAPIBase(String tenantName)
 	{
 		Link lnk = RegistryLookupUtil.getServiceExternalLink(DashboardAPIUtil.DASHBOARD_API_SERVICENAME,
-				DashboardAPIUtil.DASHBOARD_API_VERSION, PREFERENCE_API_STATIC_REL);
+				DashboardAPIUtil.DASHBOARD_API_VERSION, PREFERENCE_API_STATIC_REL, tenantName);
 		return lnk == null ? null : lnk.getHref();
 	}
 }
