@@ -19,6 +19,22 @@
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping> 
+  <filter>
+  	<filter-name>compress.filter</filter-name>
+    <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.GzipFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>compress.filter</filter-name>
+    <url-pattern>*.html</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>compress.filter</filter-name>
+    <url-pattern>*.css</url-pattern>
+  </filter-mapping> 
+  <filter-mapping>
+    <filter-name>compress.filter</filter-name>
+    <url-pattern>*.js</url-pattern>
+  </filter-mapping>
   	<security-constraint>
 	  <web-resource-collection>
 	    <web-resource-name>secure-pages</web-resource-name>

@@ -189,13 +189,15 @@
 .dbs-summary-page-description {
    padding-left: 5px;
    padding-right: 5px;
-    font-weight: bold;
-    color:gray;   
+   //font-weight: bold;
+   color:gray;   
 }
 
 .dbs-summary-controlls {
     margin-top: 5px;
     text-align: center;
+    min-height: 25px;
+    height: 25px;
 }
 
 .dbs-summary-controlls .dbs-summary-controll {

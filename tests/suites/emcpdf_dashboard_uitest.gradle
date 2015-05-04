@@ -53,8 +53,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies {
-testConfig group: 'com.oracle.emaas.emcpdf.Webdriver.uitest', name: 'uitest', version: '1.0+'
-
+testConfig group: 'com.oracle.emaas.emcpdf.Webdriver.uitest', name: 'dashboards-uitest', version: '1.0+'
 }
 
 //This are 1 test blocks to run testng tests.

@@ -25,7 +25,7 @@ define({
       "DBS_HOME_SEARCH_ARIA_LABEL": "Search for a Dashboard",
       "DBS_HOME_SEARCH_PLACE_HODE": "Search for a dashboard. Enter name or description of the dashboard or a widget in the dashboard.",
       "DBS_HOME_SEARCH_BTN_LABEL": "Search",
-      "DBS_HOME_CLEAN_BTN_LABEL": "Clear input",
+      "DBS_HOME_CLEAN_BTN_LABEL": "Clear",
       "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
       "DBS_HOME_CREATE_BTN_TT_TITLE": "How do I use this page?",
       "DBS_HOME_CREATE_BTN_TT_CONTENT": " Click to create a dashboard and add widgets of your choice.",
@@ -143,6 +143,7 @@ define({
       "DBS_ERROR_PAGE_TITLE":"Error",
       "DBS_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it.",
       "DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it. Reason: \"No service is subscribed\"",
+      "DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID": "Error: failed to retrieve user or tenant for cookie 'ORA_EMSAAS_USERNAME_AND_TENANTNAME' is missing or invalid",
       "DBS_ERROR_URL": "Requested URL is: "
       
 

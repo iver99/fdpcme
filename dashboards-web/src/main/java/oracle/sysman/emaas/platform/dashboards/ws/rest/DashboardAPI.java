@@ -39,6 +39,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
@@ -48,6 +50,8 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/v1/dashboards")
 public class DashboardAPI extends APIBase
 {
+	private static final Logger logger = LogManager.getLogger(DashboardAPI.class);
+
 	public DashboardAPI()
 	{
 		super();
@@ -69,6 +73,7 @@ public class DashboardAPI extends APIBase
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
 		}
 		catch (IOException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -76,7 +81,8 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -101,7 +107,8 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -127,7 +134,8 @@ public class DashboardAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 
@@ -148,10 +156,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -167,7 +176,7 @@ public class DashboardAPI extends APIBase
 			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString, "UTF-8");
 		}
 		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 		}
 
 		try {
@@ -183,10 +192,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(pd)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -202,6 +212,7 @@ public class DashboardAPI extends APIBase
 			input = getJsonUtil().fromJson(inputJson.toString(), Dashboard.class);
 		}
 		catch (IOException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -220,10 +231,11 @@ public class DashboardAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
