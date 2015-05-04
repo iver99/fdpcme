@@ -174,7 +174,7 @@ define(['knockout',
              * @param {String} smUrl
              * @returns {String} url 
              */
-            self.discoverDFRestApiUrl = function() {
+//            self.discoverDFRestApiUrl = function() {
 //                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual");
 //                
 //                if (url){
@@ -183,8 +183,8 @@ define(['knockout',
 //                    oj.Logger.error("Failed to discover DF REST API end point.");
 //                    return null;
 //                }
-            	return "/sso.static/dashboards.service";
-            };
+//            	return "/sso.static/dashboards.service";
+//            };
             
             /**
              * Get default request header for ajax call

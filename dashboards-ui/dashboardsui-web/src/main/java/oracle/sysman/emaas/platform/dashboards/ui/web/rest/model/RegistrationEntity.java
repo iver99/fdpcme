@@ -106,12 +106,12 @@ public class RegistrationEntity
 	 * @return the rest API end point for dashboard framework
 	 * @throws Exception
 	 */
-	public String getDfRestApiEndPoint()
-	{
-		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
-				NAME_DASHBOARD_API_VERSION);
-		return entity != null ? entity.getHref() : null;
-	}
+	//	public String getDfRestApiEndPoint()
+	//	{
+	//		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
+	//				NAME_DASHBOARD_API_VERSION);
+	//		return entity != null ? entity.getHref() : null;
+	//	}
 
 	/**
 	 * @return the registryUrl

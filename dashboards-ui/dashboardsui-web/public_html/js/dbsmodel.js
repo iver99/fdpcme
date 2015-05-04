@@ -143,7 +143,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         var self = this;
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
-        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
+//        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
         //welcome
         self.prefUtil = new pfu("/sso.static/dashboards.preference"/*dfu.buildFullUrl(self.dfRestApiUrl,'preferences')*/, dfu.getDashboardsRequestHeader());
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
@@ -160,7 +160,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.pageSize = ko.observable(120);
         
-        self.serviceURL = dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
+        self.serviceURL = "/sso.static/dashboards.service";//dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
         //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));

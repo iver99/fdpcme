@@ -69,15 +69,15 @@ define(['knockout',
              * Discover available Saved Search service URL
              * @returns {String} url
              */
-            self.discoverDFRestApiUrl = function() {
-                var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.dfRestApiEndPoint){
-                    return regInfo.dfRestApiEndPoint;
-                }else{
-                    console.log("Failed to discovery DF REST API end point");
-                    return null;
-                }
-            };
+//            self.discoverDFRestApiUrl = function() {
+//                var regInfo = self.getRegistrationInfo();
+//                if (regInfo && regInfo.dfRestApiEndPoint){
+//                    return regInfo.dfRestApiEndPoint;
+//                }else{
+//                    console.log("Failed to discovery DF REST API end point");
+//                    return null;
+//                }
+//            };
               
             
              self.registrationInfo = null;
