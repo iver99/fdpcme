@@ -149,6 +149,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
                 };
                 
+                //Go to home page
+                self.gotoHomePage = function() {
+                    var homeUrl = dfu.discoverDFHomeUrl();
+                    oj.Logger.info("Go to home page by URL: " + homeUrl, false);
+                    window.location.href = homeUrl;
+                };
+                
                 //Open about box
                 //aboutbox id
                 self.aboutBoxId = 'aboutBox';
