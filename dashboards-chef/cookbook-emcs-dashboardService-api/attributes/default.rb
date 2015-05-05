@@ -19,7 +19,7 @@ default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 
 default["file_domain_create"] = "#{node["log_dir"]}/dashboardCreateDomain.py"
 
-default["myApplicationName"]="emaas-applications-dashboards-api-0.1"
+default["myApplicationName"]="emaas-applications-dashboards-api"
 default["target"]="#{node["wls_adminserver_name"]}"
 
 default["SAAS_API_version"] = "0.1"
