@@ -224,7 +224,7 @@ public class RegistryLookupUtil
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = null;
-			if (!StringUtil.isEmpty(tenantName) && RegistryLookupUtil.isServiceInApplicationShard(serviceName)) {
+			if (!StringUtil.isEmpty(tenantName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
@@ -328,7 +328,7 @@ public class RegistryLookupUtil
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = null;
-			if (!StringUtil.isEmpty(tenantName) && RegistryLookupUtil.isServiceInApplicationShard(serviceName)) {
+			if (!StringUtil.isEmpty(tenantName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
@@ -389,17 +389,4 @@ public class RegistryLookupUtil
 			return lk;
 		}
 	}
-
-	private static boolean isServiceInApplicationShard(String serviceName)
-	{
-		if (StringUtil.isEmpty(serviceName)) {
-			return false;
-		}
-		if (serviceName.contains("LoganService") || serviceName.contains("EmcitasApplications")
-				|| serviceName.contains("TargetAnalytics") || serviceName.contains("ApmUI")) {
-			return true;
-		}
-		return false;
-	}
-
 }

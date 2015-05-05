@@ -27,8 +27,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -292,6 +290,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 
 		InfoManager.getInstance().getInfo().setLinks(links);
+
+		Map<String, String> characteristics = new HashMap<String, String>();
+		characteristics.put("_tenantAgnostic", "true");
+		InfoManager.getInstance().getInfo().setCharacteristics(characteristics);
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();

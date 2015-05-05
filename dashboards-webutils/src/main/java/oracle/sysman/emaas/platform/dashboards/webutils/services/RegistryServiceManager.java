@@ -180,6 +180,21 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		HTTP, HTTPS
 	}
 
+	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
+	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
+
+	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+
+	static {
+		try {
+			WLS_RUNTIME_SERVICE_NAME = ObjectName
+					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
+		}
+		catch (Exception e) {
+			throw new Error("Well-known JMX names are corrupt - code bug", e);
+		}
+	}
+
 	private static String getApplicationUrl(UrlType urlType) throws Exception
 	{
 		InitialContext ctx = new InitialContext();
@@ -199,21 +214,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 		finally {
 			ctx.close();
-		}
-	}
-
-	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
-	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
-
-	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
-
-	static {
-		try {
-			WLS_RUNTIME_SERVICE_NAME = ObjectName
-					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
-		}
-		catch (Exception e) {
-			throw new Error("Well-known JMX names are corrupt - code bug", e);
 		}
 	}
 
@@ -287,6 +287,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			links.add(new Link().withRel("base").withHref(applicationUrlHttps + NAV_API_BASE));
 		}
 		InfoManager.getInstance().getInfo().setLinks(links);
+
+		Map<String, String> characteristics = new HashMap<String, String>();
+		characteristics.put("_tenantAgnostic", "true");
+		InfoManager.getInstance().getInfo().setCharacteristics(characteristics);
 
 		logger.info("Registering service with 'Service Registry'");
 		RegistrationManager.getInstance().getRegistrationClient().register();
