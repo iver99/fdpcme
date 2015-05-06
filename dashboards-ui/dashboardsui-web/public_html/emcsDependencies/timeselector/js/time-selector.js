@@ -13,7 +13,7 @@ define(['knockout', 'jquery'],
                 var day = 24*hour;
                 me.customOption = ko.observable('relative');
 //                me.label = ko.observable("Last 30 Days");
-                me.label = ko.observable("Last 60 Minutes");
+                me.label = ko.observable(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST60MIN'));
                 me.timeUnit = ko.observable('days');
                 me.timeDuration = ko.observable(30);
                 me.startDate = ko.observable(oj.IntlConverterUtils.dateToLocalIso(model.viewStart()));
@@ -21,7 +21,7 @@ define(['knockout', 'jquery'],
                 me.isCustomRelative = ko.computed(function(){return me.customOption() === 'relative';}, me);
                 
                 me.showTimeSelector = function() {
-                    $("#timeRangePopup").ojPopup("open","#time_selector_box");
+                    $("#timeRangePopup").ojPopup("open","#timeRangeBtn");
                 };
                 
                 me.relativeTimeSelected = function(relative) {
@@ -29,56 +29,56 @@ define(['knockout', 'jquery'],
                     if (relative === '15mins') {
                         model.viewStart(new Date(now.getTime() - 15*min));
                         model.viewEnd(now);  
-                        me.label("Last 15 Minutes");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST15MIN'));
                         me.timeUnit(['mins']);
                         me.timeDuration(15);
                     }
                     else if (relative === '30mins') {
                         model.viewStart(new Date(now.getTime() - 30*min));
                         model.viewEnd(now);  
-                        me.label("Last 30 Minutes");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30MIN'));
                         me.timeUnit(['mins']);
                         me.timeDuration(30);
                     }
                     else if (relative === '60mins') {
                         model.viewStart(new Date(now.getTime() - 60*min));
                         model.viewEnd(now);  
-                        me.label("Last 60 Minutes");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST60MIN'));
                         me.timeUnit(['mins']);
                         me.timeDuration(60);
                     }
                     else if (relative === '24hrs') {
                         model.viewStart(new Date(now.getTime() - 24*hour));
                         model.viewEnd(now);  
-                        me.label("Last 24 Hours");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST24HOUR'));
                         me.timeUnit(['hours']);
                         me.timeDuration(24);
                     }
                     else if (relative === '7days') {
                         model.viewStart(new Date(now.getTime() - 7*day));
                         model.viewEnd(now);  
-                        me.label("Last 7 Days");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST7DAY'));
                         me.timeUnit(['days']);
                         me.timeDuration(7);
                     }
                     else if (relative === '30days') {
                         model.viewStart(new Date(now.getTime() - 30*day));
                         model.viewEnd(now);  
-                        me.label("Last 30 Days");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST30DAY'));
                         me.timeUnit(['days']);
                         me.timeDuration(30);
                     }
                     else if (relative === '90days') {
                         model.viewStart(new Date(now.getTime() - 90*day));
                         model.viewEnd(now);  
-                        me.label("Last 90 Days");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_LAST90DAY'));
                         me.timeUnit(['days']);
                         me.timeDuration(90);
                     }
                     else if (relative === 'all') {
                         model.viewStart(null);
                         model.viewEnd(null);  
-                        me.label("All Time");
+                        me.label(getNlsString('DBS_BUILDER_TIMESELECTOR_ALLTIME'));
                         me.timeUnit(['mins']);
                         me.timeDuration(0);
                         me.startDate(null);
@@ -103,6 +103,7 @@ define(['knockout', 'jquery'],
                             model.viewStart(new Date(now.getTime() - me.timeDuration()*day));
                         }
                         model.viewEnd(now);  
+                        resetValues();
                     }
                     else if (me.customOption() === 'absolute') {
                         model.viewStart(new Date(me.startDate()));

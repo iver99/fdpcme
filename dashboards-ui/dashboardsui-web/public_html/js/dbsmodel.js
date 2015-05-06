@@ -153,6 +153,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
+        self.sortBy = ko.observable('access_Date');
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
         self.comingsoonDialogModel = new comingsoonDialogModel();
@@ -173,7 +174,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL);
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy());
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
             'success': function() {
@@ -318,6 +319,15 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.cancelDashboardCreate = function()
         {
             $( "#cDsbDialog" ).ojDialog( "close" );
+        };
+        
+        self.handleSortByChanged = function (context, valueParam) {
+            var _preValue = valueParam.previousValue, _value = valueParam.value;
+            if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
+            {
+                self.dsFactory.sortBy = _value[0];
+                $("#sinput").dbsTypeAhead("forceSearch");
+            }
         };
         
         self.acceptInput = function (event, data)

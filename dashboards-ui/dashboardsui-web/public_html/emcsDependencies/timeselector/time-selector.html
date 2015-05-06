@@ -3,15 +3,15 @@
     <label style="float:left;" class="oj-label-inline" data-bind="text:label"></label>
     <button id="timeRangeBtn" class="oj-button oj-default oj-button-half-chrome"
         data-bind="ojComponent: {component:'ojButton'}, click: showTimeSelector, attr: {title:getNlsString('DBS_BUILDER_TIMESELECTOR_CLICKTOOPEN')}">
-        <img id="timeSelectorIcon" src="css/images/calendar_ena.png" alt=" " 
+        <img id="timeSelectorIcon" src="css/images/calendar_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TIMESELECTOR_ICON_ALT_TEXT')}"
              style="width:18px;height:18px;margin: 4px 0 0 0;"/>
     </button>
 </div>
 <div style="display:none; min-width:295px; min-height:350px" id="timeRangePopup" 
      data-bind="ojComponent:{component: 'ojPopup', tail: 'simple', 
-                 position: {'my' : 'left top', 'at' : 'right bottom', 'collision' : 'none'}}">
+                 position: {'my' : 'left top', 'at' : 'right bottom', 'collision' : 'none', 'of' : '#timeRangeBtn'}}">
     <div class="oj-panel">
-            <h3>Relative</h3>
+        <h3 data-bind="text: getNlsString('DBS_BUILDER_TIMESELECTOR_OPTION_RELATIVE')"></h3>
             <div style="width:50%; float:left;">
                 <a href="#" data-bind="click: function (){relativeTimeSelected('15mins');},text:getNlsString('DBS_BUILDER_TIMESELECTOR_LAST15MIN')" 
                    style="display:inline-block;padding-top: 5px;"></a><br/>
@@ -34,12 +34,12 @@
             </div>
           </div>
         <div class="oj-panel">
-            <h3>Custom</h3>
+            <h3 data-bind="text: getNlsString('DBS_BUILDER_TIMESELECTOR_OPTION_CUSTOM')"></h3>
                <div id="customset" 
                 data-bind="ojComponent: {component: 'ojRadioset', value: customOption}">
                     <div style="padding-bottom: 10px;">   
                         <input id="relative1" type="radio" name="customOpt" value="relative" />
-                        <label for="relative1">Last</label>     
+                        <label for="relative1" data-bind="text: getNlsString('DBS_BUILDER_TIMESELECTOR_CUSTOM_LAST')"></label>     
                         <input data-bind="ojComponent: {component: 'ojInputNumber', min:0, disabled: !isCustomRelative(),
                             value:timeDuration, rootAttributes: {style:'width:112px;'}}"/>
                         <select id="timeSelect1" class="oj-select-arrow" style="width: 30px;"
@@ -51,17 +51,17 @@
                     </div>   
                     <div style="width:100%;"> 
                         <input id="range1" type="radio" name="customOpt" value="absolute"/>
-                        <label for="range1">Range</label> 
+                        <label for="range1" data-bind="text: getNlsString('DBS_BUILDER_TIMESELECTOR_CUSTOM_RANGE')"></label> 
                         <div style="padding-top: 10px;">
                             <label for="startDate1" class="oj-label-inline" style="width:77px;text-align: right;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_STARTDATE')"></label>
                             <input id="startDate1"  autofocus 
                                    data-bind="ojComponent:{component:'ojInputDateTime', value:startDate, 
-                                        disabled: isCustomRelative, rootAttributes:{style:'width:180px;'}}"/>
+                                        disabled: isCustomRelative, rootAttributes:{style:'width:190px;'}}"/>
                         </div>
                         <div>
                             <label for="endDate1" class="oj-label-inline" style="width:77px;text-align: right;" data-bind="text:getNlsString('DBS_BUILDER_TIMESELECTOR_ENDDATE')"></label>
                             <input id="endDate1" data-bind="ojComponent: {component: 'ojInputDateTime', value:endDate, 
-                                                    disabled: isCustomRelative, rootAttributes: {style:'width:180px;'}}"/>
+                                                    disabled: isCustomRelative, rootAttributes: {style:'width:190px;'}}"/>
                         </div>
                     </div>
                </div>

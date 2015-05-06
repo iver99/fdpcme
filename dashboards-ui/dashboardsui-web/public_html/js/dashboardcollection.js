@@ -12,6 +12,7 @@ function(dfu, oj, ko, $)
     DashboardCollection = function(models, options) {
         var self = this, _options = options || {};
         self.queryString = _options['query'] || null;
+        self.orderBy = _options['orderBy'] || null;
         //self.url 
         var _customPagingOptions = function(response){
           var _ret = {
@@ -37,7 +38,10 @@ function(dfu, oj, ko, $)
                 {
                     __url = __url + "&queryString=" + encodeURIComponent(self.queryString);
                 }
-                   
+                if (self.orderBy !== null) 
+                {
+                    __url = __url + "&orderBy=" + self.orderBy;
+                }   
             }
             //console.log("[DashboardCollection] operation: "+ _operation +"  "+__url + " \n      Header: " + JSON.stringify(dfu.getDashboardsRequestHeader())); //return __url;
             return {
