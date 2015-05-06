@@ -7,7 +7,7 @@ import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
+import oracle.sysman.qatool.uifwk.utils.Utils; 
 public class PersistenceManager
 {
 	/**
@@ -83,7 +83,20 @@ public class PersistenceManager
 	private void initialize()
 	{
 		if (IS_TEST_ENV) {
+			// testng local properties
 			Properties props = loadProperties(CONNECTION_PROPS_FILE);
+			// lrg env only
+			if (System.getenv("T_WORK") != null) {
+				
+				
+				String url = "jdbc:oracle:thin:@"+Utils.getProperty("ODS_HOSTNAME")+":"+Utils.getProperty("ODS_PORT")+":"+Utils.getProperty("ODS_SERVICE");
+				props.put("javax.persistence.jdbc.url", url);
+				String user = "EMAAS_DASHBOARDS";
+				props.put("javax.persistence.jdbc.user", user);
+				String password = "oracle123";
+				props.put("javax.persistence.jdbc.password", password);
+		
+			}
 			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
 		}
 		else {
