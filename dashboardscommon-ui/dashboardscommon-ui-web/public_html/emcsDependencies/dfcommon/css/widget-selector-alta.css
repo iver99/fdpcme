@@ -38,6 +38,7 @@
 
 #widget-selector-widgetgroups .oj-select-choice {
     border: 1px solid #c4ced7;
+    background-color: #e4e8ea;
 }
 
 #widget-selector-searchbox { 
@@ -45,7 +46,7 @@
     border-radius: 2px;
     border-color: #c4ced7;
     border-style: solid;
-    width: 829px;
+    width: 622px;//500px;//829px;
     height: 32px; 
     margin-bottom: 10px;
     background-color: #fcfdfe;
@@ -54,8 +55,8 @@
     float: left; 
     padding-left: 5px; 
     border:0;
-    width: 763px; 
-    height:32px;
+    width: 558px;//436PX;//763px; 
+    height: 30px;
     background: none; 
     font-size: 14px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -66,16 +67,16 @@
 
 .widget-selector-search-button {
     margin:0px;
-    height:32px;
-    line-height: 32px;
+    height: 30px;
+    line-height: 30px;
     vertical-align: middle;
     text-align: center;
 }
 
 .widget-selector-clear-button {
     margin:0px;
-    height:32px;
-    line-height: 32px;
+    height: 30px;
+    line-height: 30px;
     vertical-align: middle;
     text-align: center;
     float: right;

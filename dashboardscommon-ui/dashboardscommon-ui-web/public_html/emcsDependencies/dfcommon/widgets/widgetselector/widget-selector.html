@@ -11,9 +11,9 @@
                 rootAttributes: { style: 'width: 885px;'}}, attr: {id: dialogId}">   
             <div class="oj-dialog-body" data-bind="style: {height: widgetGroupFilterVisible() ? '525px' : '490px'}" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
-                <div style="padding-left: 4px" >
-                    <div id="widget-selector-searchbox">
-                        <div style="float:left;width:797px;">
+                <div style="padding-left: 4px;padding-right: 4px;height:32px;">
+                    <div id="widget-selector-searchbox" style="float: left;box-sizing: border-box;">
+                        <div style="float:left;width:588px;height:30px;">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
@@ -31,12 +31,12 @@
                         </div>
                     </div>
                     <!-- ko if: widgetGroupFilterVisible -->
-                    <div id="widget-selector-widgetgroups" >
+                    <div id="widget-selector-widgetgroups" style="float:left;width:200px;padding-left: 10px;">
                         <select id="categorySelect" class="oj-select-arrow"
                               data-bind="ojComponent: {component: 'ojSelect',
                                                           value: categoryValue,
                                                           optionChange: optionChangedHandler,
-                                                          rootAttributes: {style:'max-width:373px;'}}">
+                                                          rootAttributes: {style:'max-width:200px;'}}">
                             <!-- ko foreach: widgetGroups -->
                             <option data-bind="value:value, text:label"></option>
                             <!-- /ko -->
@@ -44,7 +44,7 @@
                     </div>
                     <!-- /ko -->
                 </div>
-                <div id="widgets">
+                <div id="widgets" style="float: left;">
                     <!-- ko foreach: curPageWidgetList -->
                     <div class="widget-selector-container" data-bind="attr:{title: name}, 
                             css: {'widget-selector-container-selected': isSelected}, click: $parent.widgetBoxClicked">
