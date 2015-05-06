@@ -54,7 +54,7 @@
 
 .dbs-search-box { 
     border:1px; 
-    border-radius: 8px;
+    border-radius: 2px;
     border-style: solid;
     background-color: #fcfdfe;
     border: 1px solid #d6dfe6;   
@@ -65,7 +65,7 @@
     height: 2.286rem;
     padding: 0px;
     min-width: 8em; 
-    max-width: 650px;
+    max-width: 400px;
     margin-right: 5px;
 } 
 
@@ -77,6 +77,7 @@
     border-radius: 8px;
     border-color: #fcfdfe;
     padding: 0px;
+    padding-left: 5px;
     margin: 0;
     max-width: 1024px;
     min-width: 50px
