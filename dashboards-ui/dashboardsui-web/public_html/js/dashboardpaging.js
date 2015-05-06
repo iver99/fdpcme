@@ -19,7 +19,7 @@ define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'oj
 };
 
 // Subclass from oj.PagingDataSource 
-oj.Object.createSubclass(DashboardPaging, oj.PagingDataSource, "DashboardPaging");
+oj.Object.createSubclass(DashboardPaging, oj.DataSource, "DashboardPaging");
 
 DashboardPaging.prototype.Init = function()
 {
@@ -123,6 +123,65 @@ DashboardPaging.prototype.getWindowObservable = function() {
     return this.observableDataWindow;
 };
 
+DashboardPaging.prototype.getPage = function()
+{
+  return this._page;
+};
+
+DashboardPaging.prototype.setPage = function(value, options)
+{
+  options = options || {};
+  value = parseInt(value, 10);
+  try 
+  {
+    oj.CollectionPagingDataSource.superclass.handleEvent.call(this, oj.PagingModel.EventType['BEFOREPAGE'], {'page' : value, 'previousPage' : this._page});
+  }
+  catch (err)
+  {
+    return Promise.reject(null);
+  }
+  this.pageSize = options['pageSize'] != null ? options['pageSize'] : this.pageSize;
+  options['startIndex'] = value * this.pageSize;
+  var previousPage = this._page;
+  this._page = value;
+  this._startIndex = options['startIndex'];
+  var self = this;
+  
+  return new Promise(function(resolve, reject)
+  {
+    self.fetch({'startIndex': self._startIndex, 
+            'success': function() {
+                oj.CollectionPagingDataSource.superclass.handleEvent.call(self, oj.PagingModel.EventType['PAGE'], {'page' : self._page, 'previousPage' : previousPage});
+                resolve(null);
+            },
+            'error': function(jqXHR, textStatus, errorThrown) {
+                oj.Logger.error("Error when fetching data for paginge data source. " + (jqXHR ? jqXHR.responseText : ""));
+                // restore old page
+                self._page = previousPage;
+                self._startIndex = self._page * self.pageSize;
+                reject(null);  
+            }
+        } );
+  });
+};
+
+DashboardPaging.prototype.getStartItemIndex = function()
+{
+  return this._startIndex;
+};
+
+DashboardPaging.prototype.getEndItemIndex = function()
+{
+  var self = this;
+  return self._startIndex + self.dataWindow.length - 1;//this._endIndex;
+};
+
+DashboardPaging.prototype.getPageCount = function()
+{
+  var totalSize = this.totalSize();
+  return totalSize == -1 ? -1 : Math.ceil(totalSize / this.pageSize);
+};
+
 DashboardPaging.prototype.refreshModel = function(modelId, options)
 {
     var opts = options || {};
@@ -187,7 +246,6 @@ DashboardPaging.prototype.remove = function(model, options)
        success: function(result) {
           // Do something with the result
           self.collection.remove(model);
-          //self._refreshDataWindow().then(function() { self._processSuccess(options); });
           if (self.pageSize <= self.totalSize())
           {
               self._refreshDataWindow().then(self._processSuccess(options, "remove"));
@@ -208,17 +266,6 @@ DashboardPaging.prototype.remove = function(model, options)
 
 DashboardPaging.prototype.fetch = function(options)
 {
-        // super
-    //console.log("[DashboardPaging] calling fetch options - fetchType: "+options['fetchType']+  " startIndex: "+options['startIndex'] + " pageSize: " + options['pageSize']);
-     /*   var self = this, _forceFetch = options['forceFetch'], _isInit = ((options['fetchType'] && options['fetchType'] === 'init') ? true : false), _startIndex = self.startIndex(), _pageSize = self.pageSize;
-        if (_forceFetch !== true)
-        {
-            if (self.initialized === true &&  _isInit === true) return;
-            if (_isInit === false && _startIndex === options['startIndex'])
-            {
-                 if (!options['pageSize'] || _pageSize === options['pageSize']) return;
-            }
-        }*/
     if (!this.collection) return;
     var self = this, opts = options || {}, _forceFetch = options['forceFetch'];
     if (opts['startIndex'] !== undefined) {
@@ -233,7 +280,9 @@ DashboardPaging.prototype.fetch = function(options)
         if (this.current >= _offset && (this.pageSize + this.current) <= (_offset + _lastFetchSize))
         {
             //console.log("[DashboardPaging] resolve fetch");
-            return this._refreshDataWindow().then(function() {self._processSuccess(opts)});
+            return this._refreshDataWindow().then(function() {
+                              self._processSuccess(opts);
+                          });
         }
     }
     //console.log("[DashboardPaging] called fetch");
@@ -250,7 +299,8 @@ DashboardPaging.prototype._fetch = function(options)
         this.collection.fetch({
             success:function() {
                 self._refreshDataWindow().then(function() {
-                     self._processSuccess(opts)});
+                     self._processSuccess(opts);
+                 });
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 self._processError(options, jqXHR, textStatus, errorThrown);
@@ -261,8 +311,10 @@ DashboardPaging.prototype._fetch = function(options)
     catch (e) {
         var _e = e;
         self._refreshDataWindow().then(function() {
-            self._processError(opts, null, null, _e)});
+            self._processError(opts, null, null, _e);
+        });
     }
+    
 };
 
 DashboardPaging.prototype._processError = function(opts, jqXHR, textStatus, errorThrown) {
