@@ -33,6 +33,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', 'ojs/ojdatetimepicker'],
                     $("#timeRangePopup").ojPopup("open","#time_selector_box");
                 };
                 
+                me.closeTimeSelector = function() {
+                    $("#timeRangePopup").ojPopup("close");
+                };
+                
                 me.relativeTimeSelected = function(relative) {
                     var now = new Date();
                     if (relative === '15mins') {
