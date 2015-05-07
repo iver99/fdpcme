@@ -413,12 +413,23 @@ define(['require',
 //                                }
 
                                 if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
-                                    var noImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/no-image-available.png');
-//                                    var sampleImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
+//                                    var noImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/no-image-available.png');
+                                    var laImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
+                                    var taImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
+                                    var itaImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
 //                                    if (i%3 === 2) 
-                                        widget.WIDGET_HISTOGRAM = noImagePath;
+//                                        widget.WIDGET_HISTOGRAM = noImagePath;
 //                                    else
 //                                        widget.WIDGET_HISTOGRAM = sampleImagePath;
+                                    if ('LoganService' === widget.PROVIDER_NAME) {
+                                        widget.WIDGET_HISTOGRAM = laImagePath;
+                                    }
+                                    else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
+                                        widget.WIDGET_HISTOGRAM = taImagePath;
+                                    }
+                                    else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
+                                        widget.WIDGET_HISTOGRAM = itaImagePath;
+                                    }
                                 }
                                 else {
                                     var pname = widget.PROVIDER_NAME;
