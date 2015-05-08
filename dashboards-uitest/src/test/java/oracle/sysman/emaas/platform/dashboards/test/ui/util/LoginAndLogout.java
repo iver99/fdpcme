@@ -19,7 +19,7 @@ public class LoginAndLogout {
 			url= PageUtils.getServiceLink(tenantId,rel,servicename);
 		}catch(Exception e)
 		{
-			url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		}
 		
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
