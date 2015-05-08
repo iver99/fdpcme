@@ -215,27 +215,6 @@ else
 	copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory
 }
 
-war.archiveName "dashboardsui-web.war"
-war {
-	from(compiledDir) {
-	       include '**/*'
-	        into('/')
-	}
-	//from('src/main/java') {
-	//        include '**/*'
-	//        into('WEB-INF/classes')
-	//}
-
-	from('src/main/java') { 
-		include '**/*.properties'
-		into('WEB-INF/classes') 
-	}
-
-	rootSpec.exclude("**/*.zip")
-}
-
-war.dependsOn minifyJs
-
 task buildDFCommonLibZip(type: Zip){
 	baseName = 'emcs-ui-framework'
 	appendix = 'common'
@@ -392,14 +371,19 @@ def generateMD5(String s) {
 }
 
 //minifyJs runs the google closure compiler.  Additionally the doFirst and doLast will fingerprint and set up HTML 5 source maps for your code
-minifyJs {
+task minifyBuilderJs(dependsOn: requireJs, type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     doFirst {
         //copy the original source which will be used in a source map
-        Files.copy(Paths.get(compiledDir+'/js/builderMain.js'), Paths.get(compiledDir+'/js/builderMain.orig.js'))
+        //Files.copy(Paths.get(compiledDir+'/js/homeMain.js'), Paths.get(compiledDir+'/js/homeMain.orig.js'))
+	Files.copy(Paths.get(compiledDir+'/js/builderMain.js'), Paths.get(compiledDir+'/js/builderMain.orig.js'))
     }
     source = file(compiledDir+'/js/builderMain.js')
     dest = file(compiledDir+'/js/builderMain.js')
     sourceMap = file(compiledDir+'/js/builderMain.map')
+
+    //source = files(compiledDir+'/js/homeMain.js',compiledDir+'/js/builderMain.js')
+    //dest = files(compiledDir+'/js/homeMain.js',compiledDir+'/js/builderMain.js')
+    //sourceMap = files(compiledDir+'/js/homeMain.map',compiledDir+'/js/builderMain.map')
 
     closure {
         warningLevel = 'QUIET'
@@ -423,7 +407,61 @@ minifyJs {
         mapFile.write(contents, 'UTF-8')
     }
 }
-minifyJs.dependsOn requireJs
+
+task minifyHomeJs(dependsOn: minifyBuilderJs, type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+        Files.copy(Paths.get(compiledDir+'/js/homeMain.js'), Paths.get(compiledDir+'/js/homeMain.orig.js'))
+    }
+    source = file(compiledDir+'/js/homeMain.js')
+    dest = file(compiledDir+'/js/homeMain.js')
+    sourceMap = file(compiledDir+'/js/homeMain.map')
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+	//update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+'/js/homeMain.js')
+	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=homeMain.map", 'UTF-8')       //generate a fingerprint
+        String md5 = generateMD5(compiledFile.getText('UTF-8'))
+        compiledFile.renameTo(compiledDir+'/js/homeMain-'+md5+'.js')       //update references to point to fingerprinted file
+        File htmlFile = new File(compiledDir+'/home.html')
+        String html = htmlFile.getText('UTF-8')
+        html = html.replaceAll(Pattern.quote('js/homeMain'), 'js/homeMain-'+md5)
+        htmlFile.write(html, 'UTF-8')             //fix file path in source map file
+        File mapFile = new File(compiledDir+'/js/homeMain.map')
+        String contents = mapFile.getText('UTF-8')
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), 'homeMain.orig.js')
+        mapFile.write(contents, 'UTF-8')
+    }
+}
+
+//minifyJs.dependsOn requireJs,minifyBuilderJs
+
+war.archiveName "dashboardsui-web.war"
+war {
+	from(compiledDir) {
+	       include '**/*'
+	        into('/')
+	}
+	//from('src/main/java') {
+	//        include '**/*'
+	//        into('WEB-INF/classes')
+	//}
+
+	from('src/main/java') { 
+		include '**/*.properties'
+		into('WEB-INF/classes') 
+	}
+
+	rootSpec.exclude("**/*.zip")
+}
+
+war.dependsOn minifyHomeJs
 
 dependencies {
         providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
