@@ -60,9 +60,6 @@ define({
       "WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN": "Dashboards Built-In",
       "WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE": "Screen Shot",
       "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description"
-},
-  "fr": true,
-  "cs": true,
-  "zh": true
+}
 });
 
