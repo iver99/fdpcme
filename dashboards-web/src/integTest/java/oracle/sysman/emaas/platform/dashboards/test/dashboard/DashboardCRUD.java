@@ -1021,10 +1021,10 @@ public class DashboardCRUD
 							"Authorization", authToken).body(jsonString).when().put("/dashboards/1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 404);
+			Assert.assertTrue(res.getStatusCode() == 403);
 			System.out.println(res.asString());
-			Assert.assertEquals(res.jsonPath().getString("errorCode"), "20000");
-			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not allow to update \"systemDashboard\"");
+			Assert.assertEquals(res.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
 			System.out.println("											");
 
 			System.out.println("This test is to validate update a custom dashboard to the system dashboard");
