@@ -55,8 +55,16 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 dependencies {
 testConfig group: 'com.oracle.emaas.emcpdf.Webdriver.uitest', name: 'dashboards-uitest', version: '1.0+'
 testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: '1.1+'
+configurations{
+restAssured.exclude module:'groovy'
+}
 }
   
+task copyDependencies(type: Copy) {
+    from configurations.lrgConfig
+    into System.env.T_WORK
+}
+
 /* Setup EMaaS Small Deployment */
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
