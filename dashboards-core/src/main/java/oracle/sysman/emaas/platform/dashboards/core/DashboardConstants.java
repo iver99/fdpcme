@@ -16,4 +16,8 @@ package oracle.sysman.emaas.platform.dashboards.core;
 public class DashboardConstants
 {
 	public static final int DASHBOARD_QUERY_DEFAULT_LIMIT = 20;
+
+	public static final String DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME = "access_Date";
+	public static final String DASHBOARD_QUERY_ORDER_BY_NAME = "name";
+
 }

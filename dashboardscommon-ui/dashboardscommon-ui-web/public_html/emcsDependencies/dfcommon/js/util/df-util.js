@@ -80,6 +80,9 @@ define(['knockout',
                 }
 
                 $.ajax(url,{
+                	type: 'get',
+                    dataType: 'json',
+                    headers: self.getDefaultHeader(),
                     success:function(data, textStatus,jqXHR) {
                         result = data;
                     },
@@ -121,6 +124,9 @@ define(['knockout',
                 var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
 
                 $.ajax(url,{
+                    type: 'get',
+                    dataType: 'json',
+                    headers: self.getDefaultHeader(),
                     success:function(data, textStatus,jqXHR) {
                         result = data;
                     },
@@ -153,13 +159,14 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
-                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home');
-                if (url){
-                    return url;
-                }else{
-                    oj.Logger.error("Failed to discover Dashboard Home.");
-                    return null;
-                }
+//                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home');
+//                if (url){
+//                    return url;
+//                }else{
+//                    oj.Logger.error("Failed to discover Dashboard Home.");
+//                    return null;
+//                }
+            	return "/emsaasui/emcpdfui/home.html";
             };    
             
             /**
@@ -167,16 +174,17 @@ define(['knockout',
              * @param {String} smUrl
              * @returns {String} url 
              */
-            self.discoverDFRestApiUrl = function() {
-                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual");
-                
-                if (url){
-                    return url;
-                }else{
-                    oj.Logger.error("Failed to discover DF REST API end point.");
-                    return null;
-                }
-            };
+//            self.discoverDFRestApiUrl = function() {
+//                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual");
+//                
+//                if (url){
+//                    return url;
+//                }else{
+//                    oj.Logger.error("Failed to discover DF REST API end point.");
+//                    return null;
+//                }
+//            	return "/sso.static/dashboards.service";
+//            };
             
             /**
              * Get default request header for ajax call
@@ -217,8 +225,8 @@ define(['knockout',
                 }
                 
                 var header = self.getDefaultHeader();
-                var dfUrlRoot = self.discoverDFRestApiUrl();
-                var url = self.buildFullUrl(dfUrlRoot, "subscribedapps");
+//                var dfUrlRoot = self.discoverDFRestApiUrl();
+                var url = "/sso.static/dashboards.subscribedapps";//self.buildFullUrl(dfUrlRoot, "subscribedapps");
 
                 var result = null;
                 $.ajax(url, {
@@ -258,8 +266,8 @@ define(['knockout',
                 }
                 
                 var header = self.getDefaultHeader();
-                var dfUrlRoot = self.discoverDFRestApiUrl();
-                var url = self.buildFullUrl(dfUrlRoot, "subscribedapps");
+//                var dfUrlRoot = self.discoverDFRestApiUrl();
+                var url = "/sso.static/dashboards.subscribedapps";//self.buildFullUrl(dfUrlRoot, "subscribedapps");
 
                 $.ajax(url, {
                     type: 'get',
@@ -291,7 +299,8 @@ define(['knockout',
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-                return self.discoverUrl('SavedSearch', '0.1');
+//                return self.discoverUrl('SavedSearch', '0.1');
+                return '/sso.static/savedsearch.navigation';
             };
             
         }

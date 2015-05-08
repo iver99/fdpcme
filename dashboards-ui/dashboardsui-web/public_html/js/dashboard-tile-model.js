@@ -285,7 +285,8 @@ define(['knockout',
         }
         
         function getBaseUrl() {
-            return dfu.discoverDFRestApiUrl();
+        	return "/sso.static/dashboards.service";
+//            return dfu.discoverDFRestApiUrl();
 //            return "http://slc04pxi.us.oracle.com:7001";//TODO
 //            return "http://localhost:7001/emcpdf/api/v1/";
 //            return "http://slc00bqs.us.oracle.com:7021";
@@ -329,7 +330,7 @@ define(['knockout',
         }
         
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(),"dashboards/" + dashboardId);
+            var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -349,7 +350,7 @@ define(['knockout',
         }
         
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "dashboards/" + dashboardId);
+            var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
             $.ajax(url, {
                 type: 'put',
                 dataType: "json",
@@ -368,7 +369,7 @@ define(['knockout',
         }
         
         function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "dashboards/favorites/" + dashboardId);
+            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -385,7 +386,7 @@ define(['knockout',
         }
         
         function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "dashboards/favorites/" + dashboardId);
+            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
             $.ajax(url, {
                 type: 'post',
                 dataType: "json",
@@ -403,7 +404,7 @@ define(['knockout',
         }
         
         function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl() , "dashboards/favorites/" + dashboardId);
+            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
             $.ajax(url, {
                 type: 'delete',
                 dataType: "json",
