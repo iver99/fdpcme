@@ -68,7 +68,11 @@ function(dfu, oj, ko, $)
                 var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot);
                 this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
-                   console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot);  
+                   console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
+                   if ("EmcitasApplications"===providerName && "0.1"===version && "ita-dashboard"===assetRoot){
+                       var dsbName = this.get('name');
+                        url=url+"?name="+encodeURI(dsbName)+"&createdBy=Oracle";
+                    }
                    return url;
                 }else{
                    console.log("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
