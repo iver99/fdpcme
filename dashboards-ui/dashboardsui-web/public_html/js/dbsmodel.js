@@ -236,7 +236,11 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         
         self.exploreDataMenuItemSelect = function( event, ui ) {
-            window.open(ui.item.children("a")[0].value);
+            //window.open(ui.item.children("a")[0].value);
+            if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
+            {
+                window.location = ui.item.children("a")[0].value;
+            }
         };
         
         self.createDashboardClicked = function()

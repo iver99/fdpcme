@@ -29,7 +29,7 @@ define({
       "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
       "DBS_HOME_CREATE_BTN_TT_TITLE": "How do I use this page?",
       "DBS_HOME_SELECT_SORT_BY_LABEL": "Sort by",
-      "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last access time",
+      "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last opened by me",
       "DBS_HOME_SELECT_SORT_NAME": "Name",
       "DBS_HOME_CREATE_BTN_TT_CONTENT": " Click to create a dashboard and add widgets of your choice.",
       "DBS_HOME_EXPLORE_BTN_LABEL": "Explore Data",
