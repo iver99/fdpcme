@@ -44,6 +44,8 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		//add widget
 		DashBoardUtils.addWidget(1,parentWindow);
+		
+		webd.takeScreenShot();
 			
 	}
 	
@@ -62,7 +64,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//add a new widget
 		DashBoardUtils.addWidget(0,parentWindow);
 		
-		
+		webd.takeScreenShot();
 	}
 	
 	
@@ -74,6 +76,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testRemoveDashBoard");	
 		//focus a dashboard
 		DashBoardUtils.waitForMilliSeconds(50000);
+		webd.takeScreenShot();
 		WebElement mainelement = webd.getElement(DashBoardPageId.ElementID);
 		WebElement deletebutton = webd.getElement(DashBoardPageId.DeleteBtnID);
         Actions builder = new Actions(webd.getWebDriver());
