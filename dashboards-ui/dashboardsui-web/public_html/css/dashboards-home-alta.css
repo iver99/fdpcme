@@ -66,7 +66,7 @@
     padding: 0px;
     min-width: 8em; 
     max-width: 650px;
-    margin-right: 20px;
+    margin-right: 5px;
 } 
 
 .dbs-search-box-input { 
@@ -261,6 +261,8 @@ ul.dbs-summary-rows li {
 
 #dtabhomettb #cbtn{
     margin-bottom: 4px; 
+    margin-left: 8px;
+    margin-right: 8px;
     background-image: none;
     //margin-left: 6px;
     text-shadow: none;
@@ -335,3 +337,6 @@ a:hover {
  cursor:pointer;
 }
 
+.busy, .busy *{
+    cursor: progress !important;   
+}
