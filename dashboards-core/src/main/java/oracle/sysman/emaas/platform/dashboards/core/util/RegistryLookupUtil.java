@@ -43,14 +43,28 @@ public class RegistryLookupUtil
 		return matched;
 	}
 
-	public static String getServiceExternalEndPoint(String serviceName, String version)
+	public static String getServiceExternalEndPoint(String serviceName, String version, String tenantName)
 	{
+		logger.debug(
+				"/getServiceExternalEndPoint/ Trying to retrieve service external end point for service: \"{}\", version: \"{}\", tenant: \"{}\"",
+				serviceName, version, tenantName);
 		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
 		try {
 			internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
-			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
+
+			if (!StringUtil.isEmpty(tenantName)) {
+				sanitizedInstance = LookupManager.getInstance().getLookupClient()
+						.getSanitizedInstanceInfo(internalInstance, tenantName);
+				logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}", sanitizedInstance,
+						tenantName);
+			}
+			else {
+				sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
+				logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo w/o tenant info",
+						sanitizedInstance);
+			}
 			if (sanitizedInstance == null) {
 				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
 				//				return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
@@ -74,8 +88,11 @@ public class RegistryLookupUtil
 		return null;
 	}
 
-	public static Link getServiceExternalLink(String serviceName, String version, String rel)
+	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
+		logger.debug(
+				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
@@ -86,8 +103,18 @@ public class RegistryLookupUtil
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = internalInstance.getLinksWithProtocol(rel, "https");
 					try {
-						SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
-								.getSanitizedInstanceInfo(internalInstance);
+						SanitizedInstanceInfo sanitizedInstance = null;
+						if (!StringUtil.isEmpty(tenantName)) {
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance, tenantName);
+							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+									sanitizedInstance, tenantName);
+						}
+						else {
+							logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance);
+						}
 						if (sanitizedInstance != null) {
 							links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
 						}
@@ -109,8 +136,17 @@ public class RegistryLookupUtil
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = internalInstance.getLinksWithProtocol(rel, "http");
 					try {
-						SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
-								.getSanitizedInstanceInfo(internalInstance);
+						SanitizedInstanceInfo sanitizedInstance = null;
+						if (!StringUtil.isEmpty(tenantName)) {
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance, tenantName);
+							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+									sanitizedInstance, tenantName);
+						}
+						else {
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance);
+						}
 						if (sanitizedInstance != null) {
 							links = RegistryLookupUtil.getLinksWithProtocol("http", sanitizedInstance.getLinks(rel));
 						}
@@ -132,8 +168,11 @@ public class RegistryLookupUtil
 		}
 	}
 
-	public static Link getServiceInternalLink(String serviceName, String version, String rel)
+	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
+		logger.debug(
+				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {

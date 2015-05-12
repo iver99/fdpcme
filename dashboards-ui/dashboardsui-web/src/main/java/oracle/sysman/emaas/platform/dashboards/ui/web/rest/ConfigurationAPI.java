@@ -25,12 +25,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.RegistrationEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.MessageUtils;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.JsonUtil;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +37,7 @@ import org.apache.logging.log4j.Logger;
  * @author miao
  */
 @Path("/configurations")
-public class ConfigurationAPI
+public class ConfigurationAPI extends AbstractAPI
 {
 	private static Logger _logger = LogManager.getLogger(ConfigurationAPI.class);
 
@@ -110,7 +107,7 @@ public class ConfigurationAPI
 			return responseError; //need redeployment to remove error with fix
 		}
 		try {
-			initializeUserTenantContext(userTenant);
+			validateInitializeTenantIdUserName(tenantIdParam, userTenant);
 			Response resp = Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity()))
 					.build();
 			return resp;
@@ -118,31 +115,32 @@ public class ConfigurationAPI
 		}
 		catch (DashboardException e) {
 			_logger.error(e.getLocalizedMessage(), e);
-			return Response.status(Status.BAD_REQUEST).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e))).build();
+			ErrorEntity ee = new ErrorEntity(e);
+			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 	}
 
-	private void initializeUserTenantContext(String userTenant) throws CommonSecurityException
-	{
-		if (userTenant == null || "".equals(userTenant)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
-		int idx = userTenant.indexOf(".");
-		if (idx <= 0) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
-		String userName = userTenant.substring(idx + 1, userTenant.length());
-		if (userName == null || "".equals(userName)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
-		String tenantName = userTenant.substring(0, idx);
-		if (tenantName == null || "".equals(tenantName)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
-		TenantContext.setCurrentTenant(tenantName);
-	}
+	//	private void initializeUserTenantContext(String userTenant) throws CommonSecurityException
+	//	{
+	//		if (userTenant == null || "".equals(userTenant)) {
+	//			throw new CommonSecurityException(
+	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
+	//		}
+	//		int idx = userTenant.indexOf(".");
+	//		if (idx <= 0) {
+	//			throw new CommonSecurityException(
+	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
+	//		}
+	//		String userName = userTenant.substring(idx + 1, userTenant.length());
+	//		if (userName == null || "".equals(userName)) {
+	//			throw new CommonSecurityException(
+	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
+	//		}
+	//		String tenantName = userTenant.substring(0, idx);
+	//		if (tenantName == null || "".equals(tenantName)) {
+	//			throw new CommonSecurityException(
+	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
+	//		}
+	//		TenantContext.setCurrentTenant(tenantName);
+	//	}
 }

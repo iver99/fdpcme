@@ -16,7 +16,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
@@ -38,9 +38,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
 	private static final String DASHBOARD_API_SERVICE_VERSION = "0.1";
+	private static final String DASHBOARD_API_SERVICE_REL = "base";
 
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "0.1";
+	private static final String SAVED_SEARCH_SERVICE_REL = "search";
 
 	private Timer timer;
 	private Integer notificationId;
@@ -152,16 +154,16 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private boolean isDashboardAPIAvailable()
 	{
-		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPoint(DASHBOARD_API_SERVICE_NAME,
-				DASHBOARD_API_SERVICE_VERSION);
-		return ee != null && !StringUtil.isEmpty(ee.getHref());
+		Link lk = RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
+				DASHBOARD_API_SERVICE_REL, null);
+		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 
 	private boolean isSavedSearchAvailable()
 	{
-		EndpointEntity ee = RegistryLookupUtil
-				.getServiceExternalEndPoint(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION);
-		return ee != null && !StringUtil.isEmpty(ee.getHref());
+		Link lk = RegistryLookupUtil.getServiceInternalLink(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION,
+				SAVED_SEARCH_SERVICE_REL, null);
+		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 
 }
