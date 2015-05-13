@@ -71,7 +71,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 	}
 	
-	/*@Test
+	@Test
 	public void testRemoveDashBoard() throws Exception
 	{
 				
@@ -91,6 +91,6 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		webd.takeScreenShot();
 					
-	}*/
+	}
 	
 }
