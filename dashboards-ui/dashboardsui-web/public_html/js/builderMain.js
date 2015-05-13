@@ -34,7 +34,8 @@ requirejs.config({
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
         'canvg':'../emcsDependencies/canvg/canvg',
         'd3':'../emcsDependencies/d3/d3.min',
-        'emcta':'../../emcta/ta/js'
+        'emcta':'../../emcta/ta/js',
+        'emcla':'/emsaasui/emlacore/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
