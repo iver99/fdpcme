@@ -45,6 +45,8 @@ public class TestDashBoard extends LoginAndLogout{
 		//add widget
 		DashBoardUtils.addWidget(1,parentWindow);
 		
+		DashBoardUtils.waitForMilliSeconds(50000);
+		
 		webd.takeScreenShot();
 			
 	}
@@ -64,11 +66,12 @@ public class TestDashBoard extends LoginAndLogout{
 		//add a new widget
 		DashBoardUtils.addWidget(0,parentWindow);
 		
+		DashBoardUtils.waitForMilliSeconds(50000);
+		
 		webd.takeScreenShot();
 	}
 	
 	
-	@Test
 	public void testRemoveDashBoard() throws Exception
 	{
 				
@@ -85,6 +88,8 @@ public class TestDashBoard extends LoginAndLogout{
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
 		DashBoardUtils.waitForMilliSeconds(50000);
+		
+		webd.takeScreenShot();
 					
 	}
 	
