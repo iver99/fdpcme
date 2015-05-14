@@ -19,7 +19,10 @@ public class LoginAndLogout {
 			url= PageUtils.getServiceLink(tenantId,rel,servicename);
 		}catch(Exception e)
 		{
-			url = "https://slc07hgf.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc07psz.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc00rjx.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc07hgf.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		}
 		
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
@@ -29,9 +32,14 @@ public class LoginAndLogout {
 		//String url = "https://slc07ptb.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		webd.getLogger().info("after::start to test in LoginAndOut");	
 		//if the ui have been login, do not login ,again
-		if(!webd.getWebDriver().getCurrentUrl().equals(url))
-		 LoginUtils.doLogin(webd, username, password, tenantId, url);
-		
+		if(!webd.getWebDriver().getCurrentUrl().equals(url)){
+			try{
+				LoginUtils.doLogin(webd, username, password, tenantId, url);
+			}catch(Exception e)
+			{
+				webd.getLogger().info("LogUtils is null");
+			}
+		}
 	}
 	
 	public  void login(String testName)
@@ -41,7 +49,7 @@ public class LoginAndLogout {
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");			
 		}catch(Exception e)
 		{
-			tenantID = "emaastesttenant1";
+			tenantID = "emaastesttenant1";//site46tenant1";"emaastesttenant1";
 		}
 		
 		try{
