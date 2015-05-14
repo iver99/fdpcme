@@ -34,7 +34,8 @@ requirejs.config({
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
         'canvg':'../emcsDependencies/canvg/canvg',
         'd3':'../emcsDependencies/d3/d3.min',
-        'emcta':'../../emcta/ta/js'
+        'emcta':'../../emcta/ta/js',
+        'emcla':'/emsaasui/emlacore/js'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -110,15 +111,15 @@ require(['knockout',
 ],
         function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
-            var logger = new _emJETCustomLogger();
-            var dfRestApi = dfu.discoverDFRestApiUrl();
-            if (dfRestApi){
-                var logReceiver = dfu.buildFullUrl(dfRestApi,"logging/logs")
+            var logger = new _emJETCustomLogger()
+//          var dfRestApi = dfu.discoverDFRestApiUrl();
+//          if (dfRestApi){
+              var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
                 logger.setLogLevel(oj.Logger.LEVEL_LOG);
-            }
+//            }
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{

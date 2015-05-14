@@ -38,6 +38,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class RegistrationEntity
 {
+	private static final Logger logger = LogManager.getLogger(RegistrationEntity.class);
+
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
 	public static final String NAME_SSF_SERVICENAME = "SavedSearch";
 	public static final String NAME_SSF_VERSION = "0.1";
@@ -106,12 +108,12 @@ public class RegistrationEntity
 	 * @return the rest API end point for dashboard framework
 	 * @throws Exception
 	 */
-	public String getDfRestApiEndPoint()
-	{
-		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
-				NAME_DASHBOARD_API_VERSION);
-		return entity != null ? entity.getHref() : null;
-	}
+	//	public String getDfRestApiEndPoint()
+	//	{
+	//		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_DASHBOARD_API_SERVICENAME,
+	//				NAME_DASHBOARD_API_VERSION, TenantContext.getCurrentTenant());
+	//		return entity != null ? entity.getHref() : null;
+	//	}
 
 	/**
 	 * @return the registryUrl
@@ -153,7 +155,8 @@ public class RegistrationEntity
 	 */
 	public String getSsfRestApiEndPoint() throws Exception
 	{
-		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION);
+		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
+				TenantContext.getCurrentTenant());
 		return entity != null ? entity.getHref() : null;
 		//		if (true) {
 		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
@@ -276,8 +279,17 @@ public class RegistrationEntity
 		for (InstanceInfo internalInstance : instanceList) {
 			List<Link> links = internalInstance.getLinksWithRelPrefix(linkPrefix);
 			try {
-				SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
-						.getSanitizedInstanceInfo(internalInstance);
+				String tenantName = TenantContext.getCurrentTenant();
+				SanitizedInstanceInfo sanitizedInstance = null;
+				if (!StringUtil.isEmpty(tenantName)) {
+					sanitizedInstance = LookupManager.getInstance().getLookupClient()
+							.getSanitizedInstanceInfo(internalInstance, tenantName);
+					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+							sanitizedInstance, tenantName);
+				}
+				else {
+					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
+				}
 				if (sanitizedInstance != null) {
 					links = RegistryLookupUtil.getLinksWithRelPrefix(linkPrefix, sanitizedInstance);
 				}

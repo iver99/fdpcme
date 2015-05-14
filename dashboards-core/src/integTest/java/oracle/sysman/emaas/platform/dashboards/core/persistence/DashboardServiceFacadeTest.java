@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
@@ -125,12 +126,12 @@ public class DashboardServiceFacadeTest
 	{
 		EmsDashboard d = new EmsDashboard();
 		d.setName("test");
-		d.setCreationDate(new Date());
+		d.setCreationDate(DateUtil.getCurrentUTCTime());
 		d.setDeleted(0L);
 		d.setDescription("test");
 		d.setEnableTimeRange(1);
 		d.setIsSystem(1);
-		d.setLastModificationDate(new Date());
+		d.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		d.setOwner("test");
 		d.setLastModifiedBy("test");
 		//d.setTenantId("11");
@@ -142,7 +143,7 @@ public class DashboardServiceFacadeTest
 	private static EmsDashboardFavorite newFavorite(EmsDashboard d)
 	{
 		EmsDashboardFavorite f = new EmsDashboardFavorite();
-		f.setCreationDate(new Date());
+		f.setCreationDate(DateUtil.getCurrentUTCTime());
 		//f.setTenantId("tenantId");
 		f.setUserName("userName");
 		f.setDashboard(d);
@@ -152,7 +153,7 @@ public class DashboardServiceFacadeTest
 	private static EmsDashboardLastAccess newLastAccess(Long dashboardId)
 	{
 		EmsDashboardLastAccess a = new EmsDashboardLastAccess();
-		a.setAccessDate(new Date());
+		a.setAccessDate(DateUtil.getCurrentUTCTime());
 		a.setDashboardId(dashboardId);
 		a.setAccessedBy("accessedBy");
 		//a.setTenantId("tenantId");
@@ -162,11 +163,11 @@ public class DashboardServiceFacadeTest
 	private static EmsDashboardTile newTile()
 	{
 		EmsDashboardTile tile = new EmsDashboardTile();
-		tile.setCreationDate(new Date());
+		tile.setCreationDate(DateUtil.getCurrentUTCTime());
 		tile.setHeight(1);
 		tile.setWidth(23);
 		tile.setIsMaximized(1);
-		tile.setLastModificationDate(new Date());
+		tile.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		tile.setLastModifiedBy("test");
 		tile.setOwner("test");
 		tile.setPosition(1);
@@ -204,7 +205,7 @@ public class DashboardServiceFacadeTest
 				p.setParamValueNum(1);
 				break;
 			case 3:
-				p.setParamValueTimestamp(new Date());
+				p.setParamValueTimestamp(DateUtil.getCurrentUTCTime());
 				break;
 		}
 		return p;
@@ -373,7 +374,7 @@ public class DashboardServiceFacadeTest
 	 */
 	public void testMergeEmsDashboard()
 	{
-		d.setLastModificationDate(new Date());
+		d.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		dashboardServiceFacade.persistEmsDashboard(d);
 		dashboardServiceFacade.commitTransaction();
 	}

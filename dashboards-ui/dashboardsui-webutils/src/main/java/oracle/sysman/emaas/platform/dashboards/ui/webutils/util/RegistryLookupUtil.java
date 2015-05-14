@@ -29,7 +29,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class RegistryLookupUtil
 {
-	private static final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
+	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
 
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
 	{
@@ -44,9 +44,9 @@ public class RegistryLookupUtil
 		return matched;
 	}
 
-	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version)
+	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version, String tenantName)
 	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual");
+		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
 		if (link != null) {
 			return new EndpointEntity(serviceName, version, link.getHref());
 		}
@@ -88,19 +88,19 @@ public class RegistryLookupUtil
 		 */
 	}
 
-	public static Link getServiceExternalLink(String serviceName, String version, String rel)
+	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false);
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
 	}
 
-	public static Link getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel)
+	public static Link getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true);
+		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
 
-	public static Link getServiceInternalLink(String serviceName, String version, String rel)
+	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
-		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false);
+		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
 	}
 
 	//    private static String getExternalEndPoint(SanitizedInstanceInfo instance)
@@ -220,8 +220,12 @@ public class RegistryLookupUtil
 		return protocoledLinks;
 	}
 
-	private static Link getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch)
+	private static Link getServiceExternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+			String tenantName)
 	{
+		logger.debug(
+				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
@@ -239,8 +243,18 @@ public class RegistryLookupUtil
 					}
 
 					try {
-						SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
-								.getSanitizedInstanceInfo(internalInstance);
+						SanitizedInstanceInfo sanitizedInstance = null;
+						if (!StringUtil.isEmpty(tenantName)) {
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance, tenantName);
+							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+									sanitizedInstance, tenantName);
+						}
+						else {
+							logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance);
+						}
 						if (sanitizedInstance != null) {
 							if (prefixMatch) {
 								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
@@ -274,8 +288,18 @@ public class RegistryLookupUtil
 						links = internalInstance.getLinksWithProtocol(rel, "http");
 					}
 					try {
-						SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
-								.getSanitizedInstanceInfo(internalInstance);
+						SanitizedInstanceInfo sanitizedInstance = null;
+						if (!StringUtil.isEmpty(tenantName)) {
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance, tenantName);
+							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+									sanitizedInstance, tenantName);
+						}
+						else {
+							logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance);
+						}
 						if (sanitizedInstance != null) {
 							if (prefixMatch) {
 								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
@@ -304,8 +328,12 @@ public class RegistryLookupUtil
 		}
 	}
 
-	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch)
+	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
+			String tenantName)
 	{
+		logger.debug(
+				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, prefixMatch, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
