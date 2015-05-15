@@ -27,7 +27,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -184,7 +183,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
 	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
 	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "dashboards";
-	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preference";
+	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preferences";
 	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "subscribedapps";
 	private static final String NAV_STATIC_LOGGING = NAV_API_BASE + "logging";
 
