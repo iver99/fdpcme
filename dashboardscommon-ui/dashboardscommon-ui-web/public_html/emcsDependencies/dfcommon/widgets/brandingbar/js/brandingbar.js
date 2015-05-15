@@ -108,8 +108,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var getSubscribedAppsDeferred = null;
                 self.getSubscribedAppsCallback = function(apps) {
                     subscribedApps = apps;
+                    oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
                     getSubscribedAppsDeferred.resolve();
-                    oj.Logger.info("End to get subscribed applications for branding bar.", false);
                 };
                 
                 self.getSubscribedApplications = function() {
@@ -133,13 +133,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
                     self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
                     
+                    oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
-                    oj.Logger.info("End to load resource bundle for branding bar.", false);
                 };
                 
                 self.requireNlsBundleErrorCallback = function(error) {
-                    requireNlsBundleDeferred.reject(error.message);
                     oj.Logger.error("Failed to load resource bundle for branding bar: " + error.message , false);
+                    requireNlsBundleDeferred.reject(error.message);
                 };
                 
                 self.requireNlsBundle = function() {
@@ -348,16 +348,17 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 function getSubscribedAppsAndRefreshNlsStrings() {
+                    oj.Logger.info("Start to load resource bundle and get subscribed applications.");
                     var defArray = [];
                     defArray.push(self.requireNlsBundle());
                     defArray.push(self.getSubscribedApplications());
                     var combinedPromise = $.when.apply($,defArray);
                     combinedPromise.done(function(){
                         refreshAppName();
-                        oj.Logger.info("Finished loading resource bundle and refreshing subscribed application names.");
+                        oj.Logger.info("Finished loading resource bundle and getting subscribed applications.");
                     });
                     combinedPromise.fail(function(ex){
-                        oj.Logger.error("Failed to load resource bundle and refresh subscribed application names: "+ex);
+                        oj.Logger.error("Failed to load resource bundle and get subscribed applications: "+ex);
                     }); 
                 };
                 
