@@ -50,7 +50,8 @@ function(dfu, oj, ko, $)
         var self = this;
         var url = self.getNavLink();
         if (typeof url==="string"){
-            window.open(self.getNavLink());
+            //window.open(self.getNavLink());
+            window.location = self.getNavLink();
         }
     };
     
