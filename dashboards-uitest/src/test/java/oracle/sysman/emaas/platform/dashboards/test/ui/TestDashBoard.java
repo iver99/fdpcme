@@ -44,6 +44,10 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		//add widget
 		DashBoardUtils.addWidget(1,parentWindow);
+		
+		DashBoardUtils.waitForMilliSeconds(50000);
+		
+		webd.takeScreenShot();
 			
 	}
 	
@@ -62,9 +66,10 @@ public class TestDashBoard extends LoginAndLogout{
 		//add a new widget
 		DashBoardUtils.addWidget(0,parentWindow);
 		
+		DashBoardUtils.waitForMilliSeconds(50000);
 		
+		webd.takeScreenShot();
 	}
-	
 	
 	@Test
 	public void testRemoveDashBoard() throws Exception
@@ -74,6 +79,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testRemoveDashBoard");	
 		//focus a dashboard
 		DashBoardUtils.waitForMilliSeconds(50000);
+		webd.takeScreenShot();
 		WebElement mainelement = webd.getElement(DashBoardPageId.ElementID);
 		WebElement deletebutton = webd.getElement(DashBoardPageId.DeleteBtnID);
         Actions builder = new Actions(webd.getWebDriver());
@@ -82,6 +88,8 @@ public class TestDashBoard extends LoginAndLogout{
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
 		DashBoardUtils.waitForMilliSeconds(50000);
+		
+		webd.takeScreenShot();
 					
 	}
 	

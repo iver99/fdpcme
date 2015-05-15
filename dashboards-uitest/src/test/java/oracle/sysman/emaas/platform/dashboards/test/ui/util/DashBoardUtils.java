@@ -21,7 +21,7 @@ public class DashBoardUtils {
 	public static void loadWebDriver(WebDriver webDriver) throws Exception
 	{
 		driver=webDriver;
-		//closeOverviewPage();
+		closeOverviewPage();
 		waitForMilliSeconds(5000);
 
 	}

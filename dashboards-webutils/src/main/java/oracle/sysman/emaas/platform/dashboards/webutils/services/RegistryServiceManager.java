@@ -27,6 +27,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -340,10 +341,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("static/dashboards.preference").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.preference")
+				links.add(new Link().withRel("static/dashboards.preferences")
 						.withHref(applicationUrlHttps + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttp != null) {
