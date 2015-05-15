@@ -81,6 +81,7 @@ body, html {
 
 #builder-dbd-name .dbd-display-hover-area {
   line-height: 1.75em;
+  font-weight: bold;
 }
 
 #builder-dbd-name input {
