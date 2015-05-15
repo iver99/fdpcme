@@ -65,11 +65,11 @@ define(['knockout',
              */
             self.discoverUrl = function(serviceName, version, rel){
                 if (serviceName===null || serviceName===undefined){
-                    oj.Logger.error("Error: Failed to discovery URL, serviceName="+serviceName);
+                    oj.Logger.error("Error: Failed to discover URL, serviceName="+serviceName);
                     return null;
                 }
                 if (version===null || version===undefined){
-                    oj.Logger.error("Error: Failed to discovery URL, version="+version);
+                    oj.Logger.error("Error: Failed to discover URL, version="+version);
                     return null;
                 }
 
@@ -80,7 +80,7 @@ define(['knockout',
                 }
 
                 $.ajax(url,{
-                	type: 'get',
+                    type: 'get',
                     dataType: 'json',
                     headers: self.getDefaultHeader(),
                     success:function(data, textStatus,jqXHR) {
@@ -105,19 +105,80 @@ define(['knockout',
                 oj.Logger.error("Error: URL not found by serviceName="+serviceName+", version="+version+", rel="+rel);
                 return null;
             };
+            
+            /**
+             * 
+             * Discover URL from Service Manager Registry asynchronously
+             * @param {String} serviceName
+             * @param {String} version
+             * @param {String} rel
+             * @param {Function} callbackFunc
+             * @returns 
+             */
+            self.discoverUrlAsync = function(serviceName, version, rel, callbackFunc){
+                if (!$.isFunction(callbackFunc)){
+                    oj.Logger.error("Invalid callback function: "+callbackFunc);
+                    return;
+                } 
+                if (serviceName===null || serviceName===undefined){
+                    oj.Logger.error("Error: Failed to discover URL, serviceName="+serviceName);
+                    return;
+                }
+                if (version===null || version===undefined){
+                    oj.Logger.error("Error: Failed to discover URL, version="+version);
+                    return;
+                }
 
+                var url ="/emsaasui/emcpdfui/api/registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                if (typeof rel==="string"){
+                    url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                }
+
+                $.ajax(url, {
+                    type: 'get',
+                    dataType: 'json',
+                    headers: self.getDefaultHeader(),
+                    success:function(data, textStatus, jqXHR) {
+                        if (data) {
+                            if (typeof rel==="string") {
+                                oj.Logger.info("Link found by serviceName="+serviceName+", version="+version+", rel="+rel);
+                            }
+                            else {
+                                oj.Logger.info("EndPoint found by serviceName="+serviceName+", version="+version+", rel="+rel);
+                            }
+                            callbackFunc(data.href);
+                        }
+                        else 
+                            callbackFunc(null);
+                    },
+                    error:function(xhr, textStatus, errorThrown) {
+                        oj.Logger.error("Error: URL not found due to error: " + textStatus);
+                        callbackFunc(null);
+                    },
+                    async:true
+                });
+            };
+            
+            /**
+             * 
+             * Discover link URL from Service Manager Registry with prefixed rel
+             * @param {String} serviceName
+             * @param {String} version
+             * @param {String} rel
+             * @returns {String} result
+             */
             self.discoverLinkWithRelPrefix = function(serviceName, version, rel){
                 if (typeof serviceName!=="string"){
-                    oj.Logger.error("Error: Failed to discovery Link (with Rel Prefix), serviceName="+serviceName);
+                    oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), serviceName="+serviceName);
                     return null;
                 }
                 if (typeof version!=="string"){
-                    oj.Logger.error("Error: Failed to discovery Link (with Rel Prefix), version="+version);
+                    oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), version="+version);
                     return null;
                 }
 
                 if (typeof rel!=="string"){
-                    oj.Logger.error("Error: Failed to discovery Link (with Rel Prefix), rel="+rel);
+                    oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), rel="+rel);
                     return null;                    
                 }
                 var result =null;
@@ -145,12 +206,69 @@ define(['knockout',
             };
             
             /**
+             * 
+             * Discover link URL from Service Manager Registry with prefixed rel asynchronously
+             * @param {String} serviceName
+             * @param {String} version
+             * @param {String} rel
+             * @param {Function} callbackFunc
+             * @returns 
+             */
+            self.discoverLinkWithRelPrefixAsync = function(serviceName, version, rel, callbackFunc){
+                if (!$.isFunction(callbackFunc)){
+                    oj.Logger.error("Invalid callback function: "+callbackFunc);
+                    return;
+                } 
+                if (typeof serviceName!=="string"){
+                    oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), serviceName="+serviceName);
+                    return;
+                }
+                if (typeof version!=="string"){
+                    oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), version="+version);
+                    return;
+                }
+
+                if (typeof rel !== "string"){
+                    oj.Logger.error("Error: Failed to discover Link (with Rel Prefix), rel="+rel);
+                    return;                    
+                }
+                
+                var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                $.ajax(url,{
+                    type: 'get',
+                    dataType: 'json',
+                    headers: self.getDefaultHeader(),
+                    success: function(data, textStatus, jqXHR) {
+                        if (data){
+                            oj.Logger.info("Link (with Rel Prefix) found by serviceName="+serviceName+", version="+version+", rel="+rel);
+                            callbackFunc(data.href);
+                        }
+                        else 
+                            callbackFunc(null);
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        oj.Logger.error("Error: Link (with Rel Prefix) not found due to error: "+textStatus);
+                        callbackFunc(null);
+                    },
+                    async: true
+                });
+            };
+            
+            /**
              * Discover SSO logout URL
-             * @param {String} smUrl
              * @returns {String}
              */
             self.discoverLogoutUrl = function() {
                 return self.discoverUrl('SecurityService', '0.1', 'sso.logout');
+            };
+            
+            /**
+             * Discover SSO logout URL asynchronously
+             * @param {Function} callbackFunc
+             * @returns 
+             */
+            self.discoverLogoutUrlAsync = function(callbackFunc) {
+                return self.discoverUrlAsync('SecurityService', '0.1', 'sso.logout', callbackFunc);
             };
 
             /**
@@ -159,32 +277,8 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
-//                var url = self.discoverUrl("Dashboard-UI","0.1",'sso.home');
-//                if (url){
-//                    return url;
-//                }else{
-//                    oj.Logger.error("Failed to discover Dashboard Home.");
-//                    return null;
-//                }
             	return "/emsaasui/emcpdfui/home.html";
             };    
-            
-            /**
-             * Discover available dashboard api service URL
-             * @param {String} smUrl
-             * @returns {String} url 
-             */
-//            self.discoverDFRestApiUrl = function() {
-//                var url = self.discoverUrl("Dashboard-API","0.1","sso.endpoint/virtual");
-//                
-//                if (url){
-//                    return url;
-//                }else{
-//                    oj.Logger.error("Failed to discover DF REST API end point.");
-//                    return null;
-//                }
-//            	return "/sso.static/dashboards.service";
-//            };
             
             /**
              * Get default request header for ajax call
@@ -225,8 +319,7 @@ define(['knockout',
                 }
                 
                 var header = self.getDefaultHeader();
-//                var dfUrlRoot = self.discoverDFRestApiUrl();
-                var url = "/sso.static/dashboards.subscribedapps";//self.buildFullUrl(dfUrlRoot, "subscribedapps");
+                var url = "/sso.static/dashboards.subscribedapps";
 
                 var result = null;
                 $.ajax(url, {
@@ -266,8 +359,7 @@ define(['knockout',
                 }
                 
                 var header = self.getDefaultHeader();
-//                var dfUrlRoot = self.discoverDFRestApiUrl();
-                var url = "/sso.static/dashboards.subscribedapps";//self.buildFullUrl(dfUrlRoot, "subscribedapps");
+                var url = "/sso.static/dashboards.subscribedapps";
 
                 $.ajax(url, {
                     type: 'get',
