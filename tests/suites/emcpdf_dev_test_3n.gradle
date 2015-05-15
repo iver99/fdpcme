@@ -1,0 +1,133 @@
+/* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.*/
+/*
+ * DESCRIPTION
+ *     <<description here>>
+ *
+ * PRIVATE CLASSES
+ *     NONE
+ *
+ * NOTES
+ *    <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *   << file history here >>
+ *
+ */
+/* *************************************************************************************************
+ *                   BEGIN TEST-INFRA-BLOCK
+ ***************************************************************************************************
+ * DO NOT EDIT THE LINES BELOW. PLEASE ADD YOUR LRG SPECIFIC CODE AFTER
+ * THE LINE "END OF TEST-INFRA-BLOCK
+ */
+/**
+ * Run the buildscript{} configuration to pull the em-test-infraplugin.
+ */
+buildscript {
+    repositories {
+        maven {
+            url = "${artifactory_contextUrl}/repo" }
+    }
+    dependencies {
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+    }
+}
+repositories {
+    /* To check if the jar is available in local maven repository */
+    mavenLocal()
+    maven {
+        url = "${artifactory_contextUrl}/repo"
+    }
+}
+apply plugin: 'TestInfraPlugin'
+import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+/* *************************************************************************************************
+ *                   END OF TEST-INFRA-BLOCK
+ ***************************************************************************************************/
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+/* Your lrg specific code would come here */
+repositories {
+	mavenLocal()
+        maven {
+            url = "${artifactory_contextUrl}/repo" }
+    }
+dependencies {
+    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core-integ-tests', version: '1.0.1'){
+exclude('module':'groovy')
+}
+ testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+configurations{
+restAssured.exclude module:'groovy'
+}
+}
+
+task copyDependencies(type: Copy) {
+    from configurations.lrgConfig
+    into System.env.T_WORK
+}
+
+ 
+task small_deploy_3n_block(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_test_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'setupEmaasSmallDeploy')
+                    }
+                }
+        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true
+}
+
+
+
+
+
+
+
+
+    task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
+  	//include "oaracle/sysman/emaas/platform/dashboards/core/<CLASS>.class"
+  	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
+	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
+ useRestAssured=true
+}
+
+task small_deploy_3n_cleanup(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'logCollectionAndPostCleanup')
+                    }
+                }
+            }
+        }
+    }
+ mustRunAfter ([small_deploy_3n_block,DEVTest])
+}
+
+
+
+
+task emcpdf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+

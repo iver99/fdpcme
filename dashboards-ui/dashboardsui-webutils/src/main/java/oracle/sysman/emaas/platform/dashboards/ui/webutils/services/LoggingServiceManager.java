@@ -56,6 +56,23 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
+	 */
+	@Override
+	public void postStop(ApplicationLifecycleEvent evt) throws Exception
+	{
+
+	}
+
+	/* (non-Javadoc)
+	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
+	 */
+	@Override
+	public void preStart(ApplicationLifecycleEvent evt) throws Exception
+	{
 		URL url = LoggingServiceManager.class.getResource("/log4j2_dsbui.xml");
 		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
 
@@ -79,33 +96,22 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
-	 */
-	@Override
-	public void postStop(ApplicationLifecycleEvent evt) throws Exception
-	{
-
-	}
-
-	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
-	 */
-	@Override
-	public void preStart(ApplicationLifecycleEvent evt) throws Exception
-	{
-	}
-
-	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-		if (tempMBeanExists) {
-			tempMBeanExists = false;
-			unregisterMBean(MBEAN_NAME_TMP);
+		logger.info("Pre-stopping logging service");
+		try {
+			if (tempMBeanExists) {
+				tempMBeanExists = false;
+				unregisterMBean(MBEAN_NAME_TMP);
+			}
+			unregisterMBean(MBEAN_NAME);
 		}
-		unregisterMBean(MBEAN_NAME);
+		catch (Throwable e) {
+			logger.error(e.getLocalizedMessage(), e);
+		}
 	}
 
 	private void registerMBean(String name) throws InstanceAlreadyExistsException, MBeanRegistrationException,
