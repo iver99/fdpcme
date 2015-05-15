@@ -361,16 +361,11 @@ def generateMD5(String s) {
 task minifyBuilderJs(dependsOn: requireJs, type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     doFirst {
         //copy the original source which will be used in a source map
-        //Files.copy(Paths.get(compiledDir+'/js/homeMain.js'), Paths.get(compiledDir+'/js/homeMain.orig.js'))
 	Files.copy(Paths.get(compiledDir+'/js/builderMain.js'), Paths.get(compiledDir+'/js/builderMain.orig.js'))
     }
     source = file(compiledDir+'/js/builderMain.js')
     dest = file(compiledDir+'/js/builderMain.js')
     sourceMap = file(compiledDir+'/js/builderMain.map')
-
-    //source = files(compiledDir+'/js/homeMain.js',compiledDir+'/js/builderMain.js')
-    //dest = files(compiledDir+'/js/homeMain.js',compiledDir+'/js/builderMain.js')
-    //sourceMap = files(compiledDir+'/js/homeMain.map',compiledDir+'/js/builderMain.map')
 
     closure {
         warningLevel = 'QUIET'
@@ -380,13 +375,19 @@ task minifyBuilderJs(dependsOn: requireJs, type: com.eriwen.gradle.js.tasks.Mini
 	//update the compiled JS to point to the source map
         File compiledFile = new File(compiledDir+'/js/builderMain.js')
 	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-        compiledFile.append("\n//# sourceMappingURL=builderMain.map", 'UTF-8')       //generate a fingerprint
+        compiledFile.append("\n//# sourceMappingURL=builderMain.map", 'UTF-8')
+
+       //generate a fingerprint
         String md5 = generateMD5(compiledFile.getText('UTF-8'))
-        compiledFile.renameTo(compiledDir+'/js/builderMain-'+md5+'.js')       //update references to point to fingerprinted file
+        compiledFile.renameTo(compiledDir+'/js/builderMain-'+md5+'.js')
+
+       //update references to point to fingerprinted file
         File htmlFile = new File(compiledDir+'/builder.html')
         String html = htmlFile.getText('UTF-8')
         html = html.replaceAll(Pattern.quote('js/builderMain'), 'js/builderMain-'+md5)
-        htmlFile.write(html, 'UTF-8')             //fix file path in source map file
+        htmlFile.write(html, 'UTF-8')
+
+        //fix file path in source map file
         File mapFile = new File(compiledDir+'/js/builderMain.map')
         String contents = mapFile.getText('UTF-8')
         String absPath = compiledFile;
@@ -412,13 +413,19 @@ task minifyHomeJs(dependsOn: minifyBuilderJs, type: com.eriwen.gradle.js.tasks.M
 	//update the compiled JS to point to the source map
         File compiledFile = new File(compiledDir+'/js/homeMain.js')
 	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-        compiledFile.append("\n//# sourceMappingURL=homeMain.map", 'UTF-8')       //generate a fingerprint
+        compiledFile.append("\n//# sourceMappingURL=homeMain.map", 'UTF-8')
+
+       //generate a fingerprint
         String md5 = generateMD5(compiledFile.getText('UTF-8'))
-        compiledFile.renameTo(compiledDir+'/js/homeMain-'+md5+'.js')       //update references to point to fingerprinted file
+        compiledFile.renameTo(compiledDir+'/js/homeMain-'+md5+'.js')
+
+       //update references to point to fingerprinted file
         File htmlFile = new File(compiledDir+'/home.html')
         String html = htmlFile.getText('UTF-8')
         html = html.replaceAll(Pattern.quote('js/homeMain'), 'js/homeMain-'+md5)
-        htmlFile.write(html, 'UTF-8')             //fix file path in source map file
+        htmlFile.write(html, 'UTF-8')
+
+        //fix file path in source map file
         File mapFile = new File(compiledDir+'/js/homeMain.map')
         String contents = mapFile.getText('UTF-8')
         String absPath = compiledFile;
@@ -426,8 +433,6 @@ task minifyHomeJs(dependsOn: minifyBuilderJs, type: com.eriwen.gradle.js.tasks.M
         mapFile.write(contents, 'UTF-8')
     }
 }
-
-//minifyJs.dependsOn requireJs,minifyBuilderJs
 
 war.archiveName "dashboardsui-web.war"
 war {
