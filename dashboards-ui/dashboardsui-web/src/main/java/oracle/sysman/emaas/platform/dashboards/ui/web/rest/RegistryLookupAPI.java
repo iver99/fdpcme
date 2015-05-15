@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.MessageUtils;
@@ -36,7 +35,7 @@ import org.apache.logging.log4j.Logger;
  * @author miao
  */
 @Path("/registry")
-public class RegistryLookupAPI
+public class RegistryLookupAPI extends AbstractAPI
 {
 	private static Logger logger = LogManager.getLogger(RegistryLookupAPI.class);
 
@@ -48,7 +47,7 @@ public class RegistryLookupAPI
 			@QueryParam("version") String version)
 	{
 		try {
-			validateTenantIdUserName(tenantIdParam, userTenant);
+			validateInitializeTenantIdUserName(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version)) {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
 						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
@@ -65,8 +64,9 @@ public class RegistryLookupAPI
 			}
 		}
 		catch (DashboardException e) {
-			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e)))
-					.build();
+			logger.error(e.getLocalizedMessage(), e);
+			ErrorEntity ee = new ErrorEntity(e);
+			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -84,7 +84,7 @@ public class RegistryLookupAPI
 			@QueryParam("version") String version, @QueryParam("rel") String rel)
 	{
 		try {
-			validateTenantIdUserName(tenantIdParam, userTenant);
+			validateInitializeTenantIdUserName(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
 						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR", serviceName, version, rel));
@@ -102,8 +102,9 @@ public class RegistryLookupAPI
 			}
 		}
 		catch (DashboardException e) {
-			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e)))
-					.build();
+			logger.error(e.getLocalizedMessage(), e);
+			ErrorEntity ee = new ErrorEntity(e);
+			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -121,7 +122,7 @@ public class RegistryLookupAPI
 			@QueryParam("version") String version, @QueryParam("rel") String rel)
 	{
 		try {
-			validateTenantIdUserName(tenantIdParam, userTenant);
+			validateInitializeTenantIdUserName(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE,
 						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR", serviceName,
@@ -140,41 +141,15 @@ public class RegistryLookupAPI
 			}
 		}
 		catch (DashboardException e) {
-			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(new ErrorEntity(e)))
-					.build();
+			logger.error(e.getLocalizedMessage(), e);
+			ErrorEntity ee = new ErrorEntity(e);
+			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
-		}
-	}
-
-	private void validateTenantIdUserName(String opcTenantId, String userTenant) throws CommonSecurityException
-	{
-		if (opcTenantId == null || "".equals(opcTenantId)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_NAME_REQUIRED));
-		}
-		if (userTenant == null || "".equals(userTenant)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
-		int idx = userTenant.indexOf(".");
-		if (idx <= 0) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
-		String userName = userTenant.substring(idx + 1, userTenant.length());
-		if (userName == null || "".equals(userName)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-		}
-		String tenantName = userTenant.substring(0, idx);
-		if (tenantName == null || "".equals(tenantName)) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
 		}
 	}
 }
