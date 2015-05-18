@@ -112,7 +112,7 @@ define({
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
       "DBS_BUILDER_TILE_MAXIMIZE": "Maximize",
       "DBS_BUILDER_TILE_RESTORE": "Restore",
-      "DBS_BUILDER_TILE_CFG": "Configure",
+      "DBS_BUILDER_TILE_CFG": "Edit",
       "DBS_BUILDER_TIMESELECTOR_OK":"OK",
       "DBS_BUILDER_TIMESELECTOR_SHOWDATA":"Show data for:",
       "DBS_BUILDER_TIMESELECTOR_CLICKTOOPEN":"Click to open the time selector",
