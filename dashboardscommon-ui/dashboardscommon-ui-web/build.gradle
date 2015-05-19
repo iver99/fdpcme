@@ -16,6 +16,9 @@ def File sourceFontDestDir = new File(sourceWebappDir, 'emcsDependencies/dfcommo
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
 
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
 
@@ -41,29 +44,50 @@ javascript.source {
             js {
                 srcDir stagingDir+'/emcsDependencies/dfcommon'
                 include "**/*.js"
+		exclude "**/*.orig.js"
             }
         }
 }
 
-javascript.source.dev.js.files.eachWithIndex { jsFile, idx ->
+javascript.source.dev.js.files.eachWithIndex { File jsFile, idx ->
     tasks.add(name: "dominify${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	logger.lifecycle("${jsFile}")
+	//String fileName = "${jsFile.name}"
+	//String renamedFile = fileName.replace(".",".orig.")
+	//def parentDir = jsFile.parent
+	//def sourceFile = parentDir+"/"+fileName
+	//def destFile = parentDir+"/"+renamedFile
+	
+	//doFirst{ 
+	//    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	//}
+
         source = jsFile
-        //dest = file("${stagingDir}/${jsFile.name}")
 	dest =jsFile
+	//String sourceMapFile = fileName.replace(".js",".map")
+	//sourceMap = file(parentDir+'/'+sourceMapFile)
+	
 	closure {
 	        warningLevel = 'QUIET'
-	   }
+	}
+
+	//doLast {
+		//update the compiled JS to point to the source map
+	//	File compiledFile = new File(sourceFile)
+	//	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+	//	compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+	//	File mapFile = new File(parentDir+'/'+sourceMapFile)
+	//	String contents = mapFile.getText('UTF-8')
+	//	String absPath = compiledFile
+	//	logger.lifecycle("absPath:" + Pattern.quote(absPath))
+	//	contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+	//	mapFile.write(contents, 'UTF-8')
+    	//}	
     }
 }
+
 task individualMinify(dependsOn: [copyJsSource, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
-//task individualMinify(dependsOn: copyJsSource, type: com.eriwen.gradle.js.tasks.MinifyJsTask){
-//    source = file(stagingDir+'/emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar.js')
-//    dest = file(stagingDir+'/emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar.js')
-//    closure {
-//        warningLevel = 'QUIET'
-//   }
-//}
 
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
