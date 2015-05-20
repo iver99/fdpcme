@@ -108,10 +108,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var getSubscribedAppsDeferred = null;
                 self.getSubscribedAppsCallback = function(apps) {
                     subscribedApps = apps;
+                    oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
                     getSubscribedAppsDeferred.resolve();
                 };
                 
                 self.getSubscribedApplications = function() {
+                    oj.Logger.info("Start to get subscribed applications for branding bar.", false);
                     getSubscribedAppsDeferred = $.Deferred();
                     dfu.checkSubscribedApplications(self.getSubscribedAppsCallback);
                     return getSubscribedAppsDeferred.promise();
@@ -131,15 +133,18 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
                     self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
                     
+                    oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
                 };
                 
                 self.requireNlsBundleErrorCallback = function(error) {
+                    oj.Logger.error("Failed to load resource bundle for branding bar: " + error.message , false);
                     requireNlsBundleDeferred.reject(error.message);
                 };
                 
                 self.requireNlsBundle = function() {
                     var nlsResourceBundle = getFilePath(localrequire,'../../../js/resources/nls/dfCommonMsgBundle.js');
+                    oj.Logger.info("Start to load resource bundle for branding bar. Resource bundle file: " + nlsResourceBundle, false);
                     nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
                     requireNlsBundleDeferred = $.Deferred();
                     require(['i18n!'+nlsResourceBundle], self.requireNlsBundleCallback, self.requireNlsBundleErrorCallback);
@@ -155,20 +160,26 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.notificationShowCallback = function(url) {
                     urlNotificationShow = url;
                     if (urlNotificationShow) {
+                        oj.Logger.info("Get notifications page link successfully: " + urlNotificationShow, false);
                         self.notificationDisabled(false);
                         self.notificationPageUrl = urlNotificationShow;
+                    }
+                    else {
+                        oj.Logger.info("Failed to get notifications page link.", false);
                     }
                 };
                 
                 
                 self.checkNotificationAvailability = function() {
+                    oj.Logger.info("Start to check available notifications by URL:" + urlNotificationCheck, false);
                     $.ajax(urlNotificationCheck, {
                         success:function(data, textStatus, jqXHR) {
+                            oj.Logger.info("Found available notifications. Trying to get notifications page link...", false);
                             if (urlNotificationShow === null)
                                 dfu.discoverUrlAsync(self.serviceName, self.serviceVersion, self.relNotificationShow, self.notificationShowCallback);
                         },
                         error:function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Error when checking notifications by URL: ' + urlNotificationCheck);
+                            oj.Logger.info('No available notifications found by URL: ' + urlNotificationCheck);
                             self.notificationDisabled(true);
                         }
                     });
@@ -180,10 +191,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         self.notificationVisible(true);
                         self.checkNotificationAvailability();
                         //Check notifications every 5 minutes
+                        oj.Logger.info("Set timer to check notifications every 5 minutes.", false);
                         var interval = 5*60*1000;  
                         setInterval(self.checkNotificationAvailability, interval);
                     }
                     else {
+                        oj.Logger.info("Notifications is not provided by current application.", false);
                         self.notificationVisible(false);
                         self.notificationDisabled(true);
                     }
@@ -326,6 +339,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 function checkNotifications() {
+                    oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
+                            self.relNotificationCheck+", relNotificationShow: "+self.relNotificationShow, false);
                     if (self.relNotificationCheck && self.relNotificationShow) {
                         if (urlNotificationCheck === null) 
                             dfu.discoverUrlAsync(self.serviceName, self.serviceVersion, self.relNotificationCheck, self.notificationCheckCallback);
@@ -333,16 +348,17 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 function getSubscribedAppsAndRefreshNlsStrings() {
+                    oj.Logger.info("Start to load resource bundle and get subscribed applications.");
                     var defArray = [];
                     defArray.push(self.requireNlsBundle());
                     defArray.push(self.getSubscribedApplications());
                     var combinedPromise = $.when.apply($,defArray);
                     combinedPromise.done(function(){
                         refreshAppName();
-                        oj.Logger.info("Finished loading resource bundle and refreshing subscribed application names.");
+                        oj.Logger.info("Finished loading resource bundle and getting subscribed applications.");
                     });
                     combinedPromise.fail(function(ex){
-                        oj.Logger.error("Failed to load resource bundle and refresh subscribed application names: "+ex);
+                        oj.Logger.error("Failed to load resource bundle and get subscribed applications: "+ex);
                     }); 
                 };
                 
