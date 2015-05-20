@@ -172,7 +172,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 self.checkNotificationAvailability = function() {
                     oj.Logger.info("Start to check available notifications by URL:" + urlNotificationCheck, false);
-                    $.ajax(urlNotificationCheck, {
+                    dfu.ajaxWithRetry(urlNotificationCheck, {
                         success:function(data, textStatus, jqXHR) {
                             oj.Logger.info("Found available notifications. Trying to get notifications page link...", false);
                             if (urlNotificationShow === null)

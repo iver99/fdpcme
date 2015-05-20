@@ -84,7 +84,7 @@ define(['knockout',
             self.getRegistrationInfo=function(){
              
                 if (self.registrationInfo===null){
-                    $.ajax({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
+                    dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
                         dataType: 'json',
                         headers: dfu.getDefaultHeader(), 
                         async: false,
@@ -268,6 +268,14 @@ define(['knockout',
              */
             self.discoverQuickLink = function(serviceName, version, rel){
                 return dfu.discoverLinkWithRelPrefix(serviceName, version, rel);
+            };
+            
+            /**
+             * Ajax call with retry logic
+             * @returns 
+             */ 
+            self.ajaxWithRetry = function(urlOrOpt, options) {
+                return dfu.ajaxWithRetry(urlOrOpt, options);
             };
             
         }

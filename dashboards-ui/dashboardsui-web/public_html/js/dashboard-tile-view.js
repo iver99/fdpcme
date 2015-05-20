@@ -325,7 +325,7 @@ define(['knockout',
             }
             else {
                 var categoryUrl = dfu.buildFullUrl(ssfUrl,'categories');
-                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl,
+                dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: categoryUrl,
                     headers: dfu.getSavedSearchServiceRequestHeader(), 
                     async: false,
                     success: function(data, textStatus){
@@ -435,7 +435,7 @@ define(['knockout',
                                         folder:{id: 999}, description: widgetToSave.description, 
                                         queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
                     var saveSearchUrl = dfu.buildFullUrl(ssfUrl,"search");
-                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
+                    dfu.ajaxWithRetry({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
                         headers: dfu.getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
                             $('#createWidgetDialog').ojDialog('close');

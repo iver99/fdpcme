@@ -327,7 +327,7 @@ define(['require',
 //                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
-                        $.ajax({
+                        dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
@@ -343,7 +343,7 @@ define(['require',
                             async: false
                         });
 
-                        $.ajax({
+                        dfu.ajaxWithRetry({
                             url: widgetsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {

@@ -331,7 +331,7 @@ define(['knockout',
         
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
-            $.ajax(url, {
+            dfu.ajaxWithRetry(url, {
                 type: 'get',
                 dataType: "json",
                 headers: getDefaultHeaders(),
@@ -351,7 +351,7 @@ define(['knockout',
         
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
-            $.ajax(url, {
+            dfu.ajaxWithRetry(url, {
                 type: 'put',
                 dataType: "json",
                 headers: getDefaultHeaders(),
@@ -370,7 +370,7 @@ define(['knockout',
         
         function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            $.ajax(url, {
+            dfu.ajaxWithRetry(url, {
                 type: 'get',
                 dataType: "json",
                 headers: getDefaultHeaders(),
@@ -387,7 +387,7 @@ define(['knockout',
         
         function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            $.ajax(url, {
+            dfu.ajaxWithRetry(url, {
                 type: 'post',
                 dataType: "json",
                 headers: getDefaultHeaders(),
@@ -405,7 +405,7 @@ define(['knockout',
         
         function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
-            $.ajax(url, {
+            dfu.ajaxWithRetry(url, {
                 type: 'delete',
                 dataType: "json",
                 headers: getDefaultHeaders(),
@@ -545,7 +545,7 @@ define(['knockout',
                                     if (ssfUrl && ssfUrl !== '') {
                                         var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
                                         var widgetDetails = null;
-                                        $.ajax({
+                                        dfu.ajaxWithRetry({
                                             url: href,
                                             headers: dfu.getSavedSearchServiceRequestHeader(),
                                             success: function(data, textStatus) {
@@ -785,7 +785,7 @@ define(['knockout',
             
             self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
-                $.ajax({url: 'widgetLoading.html',
+                dfu.ajaxWithRetry({url: 'widgetLoading.html',
                     widget: widget,
                     success: function () {
                         /**

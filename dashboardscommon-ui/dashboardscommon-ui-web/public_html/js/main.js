@@ -23,7 +23,8 @@ requirejs.config({
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
-        'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min'
+        'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -68,6 +69,7 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'ojs/ojcore',
+    'loggingutil',
 //    'ojs/ojcomponents',
 //    'jqueryui',
 //    'ojs/ojmodel',
@@ -79,8 +81,15 @@ require(['knockout',
     'ojs/ojdialog'
 //    'ojs/ojmenu'
 ],
-        function(ko, $) // this callback gets executed when all required modules are loaded
-        {            
+        function(ko, $, oj, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        {          
+            var logger = new _emJETCustomLogger();
+            var logReceiver = "/sso.static/dashboards.logging/logs";
+            logger.initialize(logReceiver, 60000, 20000, 8, 'emaastesttenant1.emcsadmin');
+            // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+            // If you comment the line below, our current log calls will not be output!
+            logger.setLogLevel(oj.Logger.LEVEL_LOG);
+                
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},

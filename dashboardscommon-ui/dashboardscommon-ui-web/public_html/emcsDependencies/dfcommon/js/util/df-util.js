@@ -79,7 +79,7 @@ define(['knockout',
                     url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
-                $.ajax(url,{
+                self.ajaxWithRetry(url,{
                     type: 'get',
                     dataType: 'json',
                     headers: self.getDefaultHeader(),
@@ -134,7 +134,7 @@ define(['knockout',
                     url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
-                $.ajax(url, {
+                self.ajaxWithRetry(url, {
                     type: 'get',
                     dataType: 'json',
                     headers: self.getDefaultHeader(),
@@ -184,7 +184,7 @@ define(['knockout',
                 var result =null;
                 var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
 
-                $.ajax(url,{
+                self.ajaxWithRetry(url,{
                     type: 'get',
                     dataType: 'json',
                     headers: self.getDefaultHeader(),
@@ -234,7 +234,7 @@ define(['knockout',
                 }
                 
                 var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
-                $.ajax(url,{
+                self.ajaxWithRetry(url,{
                     type: 'get',
                     dataType: 'json',
                     headers: self.getDefaultHeader(),
@@ -322,7 +322,7 @@ define(['knockout',
                 var url = "/sso.static/dashboards.subscribedapps";
 
                 var result = null;
-                $.ajax(url, {
+                self.ajaxWithRetry(url, {
                     type: 'get',
                     dataType: 'json',
                     headers: header,
@@ -361,7 +361,7 @@ define(['knockout',
                 var header = self.getDefaultHeader();
                 var url = "/sso.static/dashboards.subscribedapps";
 
-                $.ajax(url, {
+                self.ajaxWithRetry(url, {
                     type: 'get',
                     dataType: 'json',
                     headers: header,
@@ -393,6 +393,50 @@ define(['knockout',
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
 //                return self.discoverUrl('SavedSearch', '0.1');
                 return '/sso.static/savedsearch.navigation';
+            };
+            
+            /**
+             * Ajax call with retry logic
+             * @returns 
+             */ 
+            self.ajaxWithRetry = function(urlOrOpt, options) {
+//                urlOrOpt = 'data/servicemanager.json';
+                if (urlOrOpt && typeof(urlOrOpt) === 'string' && options)
+                    options.url = urlOrOpt;
+                else if (urlOrOpt && typeof(urlOrOpt) === 'object')
+                    options = urlOrOpt;
+                var retryCount = 0;
+                var retryLimit = options.retryLimit ? options.retryLimit : 3;
+                var errorCallBack = options.error;
+                var errorCallBackWithRetry = function(xhr, status, error) {
+                    retryCount++;
+                    if (retryCount <= retryLimit) {
+                        var warnMsg = "Not connected. Retrying the connection by URL: "+options.url+". Retry count: "+retryCount;
+                        //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
+                        if (options.url === '/sso.static/dashboards.logging/logs')
+                            window.console.warn(warnMsg);
+                        else 
+                            oj.Logger.warn(warnMsg);
+                        
+                        //Try to connect again
+                        return $.ajax(options); 
+                    }
+                    
+                    var errorMsg = "Could not connect even after retrying for "+retryLimit+" times by URL: "+options.url;
+                    //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
+                    if (options.url === '/sso.static/dashboards.logging/logs')
+                        window.console.error(errorMsg);
+                    else 
+                        oj.Logger.error(errorMsg);
+                    
+                    //Invoke error callback
+                    if (errorCallBack) {
+                        errorCallBack(xhr, status, error);
+                    }
+                    return;
+                };
+                options.error = errorCallBackWithRetry;
+                return $.ajax(options);    
             };
             
         }
