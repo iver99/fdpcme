@@ -1,0 +1,91 @@
+<!--<div id="dateTimePickerComponent">-->
+<div data-bind="attr: {id: 'dateTimePicker_' + randomId}">
+    <label for="dropdown" style="font-weight: bold; font-size: 18px" data-bind="text: timeRangeMsg"></label>
+    <div id="dropDown" data-bind="click: panelControl">
+        <div data-bind="html: dateTimeInfo" style="width: 405px; display: inline-block"></div>
+        <img id='panelArrow' src="css/images/drop-down.jpg"/>
+    </div>            
+
+    <div class="panel" style="display:none" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
+        <!--<div id="panel" style="display:none">-->
+        <!-- left of panel -->
+        <div id="drawers" data-bind="click: chooseTimePeriod">
+            <div id="drawer0" class="drawer" data-bind="text: timePeriodLast15mins"></div>
+            <div id="drawer1" class="drawer" data-bind="text: timePeriodLast30mins"></div>
+            <div id="drawer2" class="drawer" data-bind="text: timePeriodLast60mins"></div>
+            <div id="drawer3" class="drawer" data-bind="text: timePeriodLast4hours"></div>
+            <div id="drawer4" class="drawer" data-bind="text: timePeriodLast6hours"></div>
+            <div id="drawer5" class="drawer" data-bind="text: timePeriodLast1day"></div>
+            <div id="drawer6" class="drawer" data-bind="text: timePeriodLast7days"></div>
+            <div id="drawer7" class="drawer" data-bind="text: timePeriodLast30days"></div>
+            <div id="drawer8" class="drawer" data-bind="text: timePeriodLast90days"></div>
+            <div id="drawer9" class="drawer" data-bind="text: timePeriodCustom"></div>
+        </div>
+
+        <!-- right of panel-->
+        <div id="pickerPanel">
+
+            <!--date and time info above picker -->
+            <div id="pickerTop">
+                <!-- date and time above the canlendar -->
+
+                <span style="font-weight: bold; display: inline-block; width: 75px;padding-left: 5px;" data-bind="text: timePeriod">                            
+                </span>
+                &nbsp;&nbsp;
+
+                <div class="chosenDate">
+                    <input id="inputStartDate" data-bind="ojComponent: {component: 'ojInputText', value: startDate, rootAttributes:{style : 'width: 70px;'}, optionChange: changeDate}, click: focusOnStartDate"/>
+                </div>
+                <!--div class="chosenTime" data-bind="click: changeStartTime"-->
+                <div id="divStartTime" class="chosenTime" data-bind="click: focusOnStartTime">
+                    <input id="inputStartTime" data-bind="ojComponent:{component: 'ojInputTime', value: startTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeStartTime}"/>
+                </div>
+
+                <div id="to">
+                    <span style="font-weight: bold">-</span>
+                </div>
+
+                <div class="chosenDate">
+                    <input id="inputEndDate" data-bind="ojComponent: {component: 'ojInputText', value: endDate, rootAttributes: {style : 'width: 70px;'}, optionChange: changeDate}, click: focusOnEndDate"/>
+                    <!--input id="inputEndDate" data-bind="ojComponent: {component: 'ojInputText', value: endDate, rootAttributes: {style : 'width: 70px;'}}, click: changeEndDate, clickBubble: false"/-->
+                </div>
+                <!--div class="chosenTime" data-bind="click: changeEndTime"-->
+                <div id="divEndTime" class="chosenTime" data-bind="click: focusOnEndTime">
+                    <input id="inputEndTime" data-bind="ojComponent:{component: 'ojInputTime', value: endTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeEndTime}, click: focusOnEndDate"/>
+                </div>
+
+            </div>
+
+            <!--date picker -->
+            <div id= "datePicker" class="datePicker" data-bind="ojComponent:{component: 'ojInputDate', 
+                                                                    datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2},
+                                                                    value: value,
+                                                                    }, 
+                                                                                                                                   
+                 ">
+            </div>
+
+            <!-- Apply & Cancel button -->
+            <div id="buttons">
+                <button data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton}">
+                </button>
+                <button data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}"> 
+                </button>
+            </div>
+        </div>
+    </div> 
+
+</div>
+
+<div id="chartContainer">
+    <div id="lineChart" data-bind="ojComponent: {
+                component: 'ojChart', 
+                type: 'line',
+                series: lineSeriesValues,
+                groups: lineGroupsValues,
+                animationOnDisplay: 'auto',
+                animationOnDataChange: 'auto',
+                hoverBehavior: 'dim',                
+            }"  style="top:100px; width: 100%; height: 300px; border: 1px solid #dfe4e7;">
+    </div>
+</div>
