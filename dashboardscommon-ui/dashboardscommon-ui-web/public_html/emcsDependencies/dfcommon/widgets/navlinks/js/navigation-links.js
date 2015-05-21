@@ -6,7 +6,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
-                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : params.isAdmin;
+                var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
+                self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
+                self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
                 self.dashboardsLabel = ko.observable();
@@ -18,6 +20,19 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 self.visualAnalyzers = ko.observableArray();
                 
                 var nlsStringsAvailable = false;
+                
+                //Refresh admin links if isAdmin is observable and will be updated at a later point
+                if (isAdminObservable) {
+                    params.isAdmin.subscribe(function(value) {
+                        self.isAdmin = value;
+                        self.isAdminLinksVisible(value);
+                        //Refresh links only if the links menu drop down is visible
+                        if ($('#links_menu').is(':visible')) {
+                            refreshLinks();
+                        }
+                    });
+                }
+                
                 var refreshListener = ko.computed(function(){
                     return {
                         needRefresh: params.navLinksNeedRefresh()
