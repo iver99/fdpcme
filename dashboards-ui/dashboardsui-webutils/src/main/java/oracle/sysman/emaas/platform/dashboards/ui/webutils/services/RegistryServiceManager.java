@@ -174,6 +174,16 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			serviceConfigMap.put("virtualEndpoints", virtualEndpoints);
 			return this;
 		}
+
+                /**
+                 * @param characteristics
+                 * @return ServiceConfigBuilder
+                 */
+                public ServiceConfigBuilder characteristics(String characteristics)
+                {
+                       if (characteristics != null) serviceConfigMap.put("characteristics", characteristics);
+                       return this;
+                }
 	}
 
 	enum UrlType
@@ -305,7 +315,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
-			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
+			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version")).characteristics(serviceProps.getProperty("characteristics"));
 			StringBuilder virtualEndPoints = new StringBuilder();
 			StringBuilder canonicalEndPoints = new StringBuilder();
 			if (applicationUrlHttp != null) {
