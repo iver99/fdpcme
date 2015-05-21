@@ -487,7 +487,7 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic) throws DashboardException
 	{
-		return listDashboards(queryString, offset, pageSize, tenantId, ic, null);
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, false, false, false);
 	}
 
 	/**
@@ -503,7 +503,7 @@ public class DashboardManager
 	 * @return
 	 */
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
-			boolean ic, String orderBy) throws DashboardException
+			boolean ic, String orderBy, boolean filterITA, boolean filterLA, boolean filterAPM) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
 			throw new CommonFunctionalException(
@@ -527,27 +527,53 @@ public class DashboardManager
 		if (apps == null || apps.isEmpty()) {
 			throw new TenantWithoutSubscriptionException();
 		}
-		StringBuilder sbApps = new StringBuilder();
-		for (int i = 0; i < apps.size(); i++) {
-			DashboardApplicationType app = apps.get(i);
-			if (i != 0) {
-				sbApps.append(",");
-			}
-			sbApps.append(String.valueOf(app.getValue()));
+		if (filterITA && apps.contains(DashboardApplicationType.ITAnalytics)) {
+			apps.remove(DashboardApplicationType.ITAnalytics);
+		}
+		if (filterLA && apps.contains(DashboardApplicationType.LogAnalytics)) {
+			apps.remove(DashboardApplicationType.LogAnalytics);
+		}
+		if (filterAPM && apps.contains(DashboardApplicationType.APM)) {
+			apps.remove(DashboardApplicationType.APM);
 		}
 
-		StringBuilder sb = new StringBuilder(
-				" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
-						+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
-						+ "where p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or (p.is_system = ?5 and p.application_type in ("
-						+ sbApps.toString() + "))) ");
+		StringBuilder sb = null;
+		if (apps.isEmpty()) {
+			// no subscribe apps
+			sb = new StringBuilder(
+					" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
+							+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
+							+ "where p.deleted = 0 and p.tenant_Id = ?3 and p.owner = ?4 and p.is_system = ?5");
+		}
+		else {
+			StringBuilder sbApps = new StringBuilder();
+			for (int i = 0; i < apps.size(); i++) {
+				DashboardApplicationType app = apps.get(i);
+				if (i != 0) {
+					sbApps.append(",");
+				}
+				sbApps.append(String.valueOf(app.getValue()));
+			}
+
+			sb = new StringBuilder(
+					" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
+							+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
+							+ "where p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or (p.is_system = ?5 and p.application_type in ("
+							+ sbApps.toString() + "))) ");
+		}
 		List<Object> paramList = new ArrayList<Object>();
 		String currentUser = UserContext.getCurrentUser();
 		paramList.add(currentUser);
 		paramList.add(tenantId);
 		paramList.add(tenantId);
 		paramList.add(currentUser);
-		paramList.add(1);
+		if (apps.isEmpty()) {
+			paramList.add(0);
+		}
+		else {
+			paramList.add(1);
+		}
+
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
