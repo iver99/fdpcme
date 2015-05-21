@@ -19,16 +19,16 @@ dependencies {
 	lrgConfig project(':dashboards-entities') { transitive = false }
 	lrgConfig project(':dashboards-core')   { transitive = false }
 	lrgConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8') { transitive = false }
+//	lrgConfig(group: 'org.testng', name:'testng', version:'6.8.8') { transitive = false }
 //	lrgConfig(group: 'log4j', name: 'log4j', version: '1.2.16') { transitive = false }
 	lrgConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	lrgConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
 	lrgConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
 //	lrgConfig(group: 'javax', name: 'ejb', version: '3.2.0')
 //	lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.8.8') { transitive = false }
-        lrgConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.1') { transitive = false }
+//        lrgConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.1') { transitive = false }
 
-       lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12') { transitive = false }
-       lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12') { transitive = false }
-       lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
+ //      lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12') { transitive = false }
+    //   lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12') { transitive = false }
+   //     lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
 }

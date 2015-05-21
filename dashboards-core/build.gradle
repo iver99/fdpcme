@@ -115,5 +115,7 @@ dependencies {
 	compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')  { transitive = false }
 	compile(group: 'emaas.platform', name: 'registry-client', version: '1.0.1')  
 	compile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
+	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.4') {transitive=false}
+
 }
 build.dependsOn integTestJar

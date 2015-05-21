@@ -34,5 +34,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.0.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-1.0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

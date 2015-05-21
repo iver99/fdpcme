@@ -30,6 +30,9 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author wenjzhu
  * @author guobaochen introduce to add favorite, to delete favorite
@@ -37,6 +40,7 @@ import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 @Path("/v1/dashboards/favorites")
 public class FavoriteAPI extends APIBase
 {
+	private static final Logger logger = LogManager.getLogger(FavoriteAPI.class);
 
 	public FavoriteAPI()
 	{
@@ -56,10 +60,11 @@ public class FavoriteAPI extends APIBase
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -77,10 +82,11 @@ public class FavoriteAPI extends APIBase
 			return Response.status(Status.NO_CONTENT).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -105,10 +111,11 @@ public class FavoriteAPI extends APIBase
 			return Response.ok(getJsonUtil().toJson(entities)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 
@@ -131,10 +138,11 @@ public class FavoriteAPI extends APIBase
 			return Response.status(Status.OK).entity(getJsonUtil().toJson(ife)).build();
 		}
 		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}

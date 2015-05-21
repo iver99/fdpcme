@@ -16,8 +16,8 @@ define(['knockout',
             self.getUserTenantFromCookie = function() {
                 var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
                 var cookieArray = document.cookie.split(';');
-                var tenantName="TenantOPC1"; //in case tenant name is not got
-                var tenantUser="TenantOPC1.SYSMAN"; //in case use name is not got
+                var tenantName=null; //in case tenant name is not got
+                var tenantUser=null; //in case use name is not got
                 for (var i = 0; i < cookieArray.length; i++) {
                     var c = cookieArray[i];
                     if (c.indexOf(userTenantPrefix) !== -1) {
@@ -29,7 +29,12 @@ define(['knockout',
                         break;
                     }
                 }
-                return {"tenant": tenantName, "tenantUser": tenantUser};
+                if ((!tenantName || !tenantUser) && location.href && location.href.indexOf("error.html") === -1) {
+                	location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href);
+                	return null;
+                }
+                else
+                	return {"tenant": tenantName, "tenantUser": tenantUser};
             };
             
             var userTenant = self.getUserTenantFromCookie();
@@ -64,15 +69,15 @@ define(['knockout',
              * Discover available Saved Search service URL
              * @returns {String} url
              */
-            self.discoverDFRestApiUrl = function() {
-                var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.dfRestApiEndPoint){
-                    return regInfo.dfRestApiEndPoint;
-                }else{
-                    console.log("Failed to discovery DF REST API end point");
-                    return null;
-                }
-            };
+//            self.discoverDFRestApiUrl = function() {
+//                var regInfo = self.getRegistrationInfo();
+//                if (regInfo && regInfo.dfRestApiEndPoint){
+//                    return regInfo.dfRestApiEndPoint;
+//                }else{
+//                    console.log("Failed to discovery DF REST API end point");
+//                    return null;
+//                }
+//            };
               
             
              self.registrationInfo = null;
@@ -80,6 +85,7 @@ define(['knockout',
              
                 if (self.registrationInfo===null){
                     $.ajax({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
+                        dataType: 'json',
                         headers: dfu.getDefaultHeader(), 
                         async: false,
                         success: function(data, textStatus){
@@ -100,7 +106,7 @@ define(['knockout',
             
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-                return 'api/configurations/registration';
+                return '/emsaasui/emcpdfui/api/configurations/registration';
 //                return 'data/servicemanager.json';
             };
 

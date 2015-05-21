@@ -891,6 +891,246 @@ public class DashboardCRUD
 	}
 
 	@Test
+	public void dashboard_update_emptyPara()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("POST method is in-progress to create a new dashboard");
+
+			String jsonString = "{ \"name\":\"Test_Edit_Empty_Para_Dashboard\"}";
+			Response res = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString).when().post("/dashboards");
+			System.out.println(res.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res.getStatusCode() == 201);
+
+			dashboard_id = res.jsonPath().getString("id");
+
+			//update the simple dashboard
+			String jsonString1 = "{ \"name\":\"\"}";
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 400);
+			Assert.assertEquals(res1.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res1.jsonPath().get("errorMessage"),
+					"Invalid dashboard name. Name can not be empty and must be less than 64 characters");
+			System.out.println("											");
+
+			String jsonString2 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"\"}]}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString2).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 400);
+			Assert.assertEquals(res2.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "Title for tile is required");
+
+			String jsonString3 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"\"}]}";
+			Response res3 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString3).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 400);
+			Assert.assertEquals(res3.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "\"WIDGET_NAME\" is required for tile(s) of the dashboard");
+
+			String jsonString4 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"\"}]}";
+			Response res4 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString4).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res4.getStatusCode());
+			Assert.assertTrue(res4.getStatusCode() == 400);
+			Assert.assertEquals(res4.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res4.jsonPath().get("errorMessage"),
+					"\"WIDGET_UNIQUE_ID\" is required for tile(s) of the dashboard");
+
+			String jsonString5 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"\"}]}";
+			Response res5 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString5).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res5.getStatusCode());
+			Assert.assertTrue(res5.getStatusCode() == 400);
+			Assert.assertEquals(res5.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res5.jsonPath().get("errorMessage"), "\"WIDGET_OWNER\" is required for tile(s) of the dashboard");
+
+			String jsonString6 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"\"}]}";
+			Response res6 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString6).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res6.getStatusCode());
+			Assert.assertTrue(res6.getStatusCode() == 400);
+			Assert.assertEquals(res6.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res6.jsonPath().get("errorMessage"),
+					"\"WIDGET_CREATION_TIME\" is required for tile(s) of the dashboard");
+
+			String jsonString7 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": \"\"}]}";
+			Response res7 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString7).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res7.getStatusCode());
+			Assert.assertTrue(res7.getStatusCode() == 400);
+			Assert.assertEquals(res7.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res7.jsonPath().get("errorMessage"), "\"WIDGET_SOURCE\" is required for tile(s) of the dashboard");
+
+			String jsonString8 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\":\"\"}]}";
+			Response res8 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString8).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res8.getStatusCode());
+			Assert.assertTrue(res8.getStatusCode() == 400);
+			Assert.assertEquals(res8.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res8.jsonPath().get("errorMessage"),
+					"\"WIDGET_KOC_NAME\" is required for tile(s) of the dashboard");
+
+			String jsonString9 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEWMODEL\":\"\"}]}";
+			Response res9 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString9).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res9.getStatusCode());
+			Assert.assertTrue(res9.getStatusCode() == 400);
+			Assert.assertEquals(res9.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res9.jsonPath().get("errorMessage"),
+					"\"WIDGET_VIEWMODEL\" is required for tile(s) of the dashboard");
+
+			String jsonString10 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEWMODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\":\"\"}]}";
+			Response res10 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString10).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res10.getStatusCode());
+			Assert.assertTrue(res10.getStatusCode() == 400);
+			Assert.assertEquals(res10.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res10.jsonPath().get("errorMessage"),
+					"\"WIDGET_TEMPLATE\" is required for tile(s) of the dashboard");
+
+			String jsonString11 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEWMODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\":\"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"\"}]}";
+			Response res11 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString11).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res11.getStatusCode());
+			Assert.assertTrue(res11.getStatusCode() == 400);
+			Assert.assertEquals(res11.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res11.jsonPath().get("errorMessage"),
+					"\"PROVIDER_NAME\" is required for tile(s) of the dashboard");
+
+			String jsonString12 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEWMODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\":\"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"\"}]}";
+			Response res12 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString12).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res12.getStatusCode());
+			Assert.assertTrue(res12.getStatusCode() == 400);
+			Assert.assertEquals(res12.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res12.jsonPath().get("errorMessage"),
+					"\"PROVIDER_VERSION\" is required for tile(s) of the dashboard");
+
+			String jsonString13 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEWMODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\":\"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"\"}]}";
+			Response res13 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString13).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res13.getStatusCode());
+			Assert.assertTrue(res13.getStatusCode() == 400);
+			Assert.assertEquals(res13.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res13.jsonPath().get("errorMessage"),
+					"\"PROVIDER_ASSET_ROOT\" is required for tile(s) of the dashboard");
+
+			String jsonString14 = "{ \"name\":\"test_emptyPara\", \"tiles\":[{\"title\":\"test1\", \"WIDGET_NAME\": \"test_widget\",\"WIDGET_UNIQUE_ID\": \"1001\", \"WIDGET_OWNER\": \"SYSMAN\",\"WIDGET_CREATION_TIME\": \"2014-11-11T19:20:30.45Z\",\"WIDGET_SOURCE\": 0,\"WIDGET_KOC_NAME\":\"DF_V1_WIDGET_IFRAME\",\"WIDGET_VIEWMODEL\":\"dependencies/built-in/iFrame/js/iFrameViewModel.js\",\"WIDGET_TEMPLATE\":\"dependencies/built-in/iFrame/iFrame.html\",\"PROVIDER_NAME\": \"X Analytics\",\"PROVIDER_VERSION\": \"0.1\",\"PROVIDER_ASSET_ROOT\": \"assetRoot\",\"tileParameters\": [{\"name\": \"\"}]}]}";
+			Response res14 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString14).when().put("/dashboards/" + dashboard_id);
+			System.out.println("Status code is: " + res14.getStatusCode());
+			Assert.assertTrue(res14.getStatusCode() == 400);
+			Assert.assertEquals(res14.jsonPath().get("errorCode"), 10000);
+			Assert.assertEquals(res14.jsonPath().get("errorMessage"), "\"Name\" is required for tile parameter(s) of the tile");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res5 = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res5.asString());
+				System.out.println("Status code is: " + res5.getStatusCode());
+				Assert.assertTrue(res5.getStatusCode() == 204);
+			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+	}
+
+	@Test
 	public void dashboard_update_invalidId()
 	{
 		try {
@@ -1021,10 +1261,27 @@ public class DashboardCRUD
 							"Authorization", authToken).body(jsonString).when().put("/dashboards/1");
 
 			System.out.println("Status code is: " + res.getStatusCode());
-			Assert.assertTrue(res.getStatusCode() == 404);
+			Assert.assertTrue(res.getStatusCode() == 403);
 			System.out.println(res.asString());
-			Assert.assertEquals(res.jsonPath().getString("errorCode"), "20000");
-			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not allow to update \"systemDashboard\"");
+			Assert.assertEquals(res.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
+			System.out.println("											");
+
+			System.out.println("This test is to validate update a system dashboard to the custom dashboard");
+			String jsonString_1 = "{ \"systemDashboard\":false }";
+			Response res_1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString_1).when().put("/dashboards/1");
+
+			System.out.println("Status code is: " + res.getStatusCode());
+			Assert.assertTrue(res_1.getStatusCode() == 403);
+			System.out.println(res_1.asString());
+			Assert.assertEquals(res_1.jsonPath().getString("errorCode"), "30000");
+			Assert.assertEquals(res_1.jsonPath().getString("errorMessage"), "Not support to update system dashboard");
 			System.out.println("											");
 
 			System.out.println("This test is to validate update a custom dashboard to the system dashboard");

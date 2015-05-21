@@ -31,6 +31,8 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
@@ -39,6 +41,8 @@ import org.codehaus.jettison.json.JSONObject;
 @Path("/v1/preferences")
 public class PreferenceAPI extends APIBase
 {
+	private final Logger logger = LogManager.getLogger(PreferenceAPI.class);
+
 	@DELETE
 	public Response deleteAllPreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
@@ -54,7 +58,8 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -76,7 +81,8 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -99,7 +105,8 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -125,7 +132,8 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -142,6 +150,8 @@ public class PreferenceAPI extends APIBase
 			input = getJsonUtil().fromJson(inputJson.toString(), Preference.class);
 		}
 		catch (IOException e) {
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
@@ -160,7 +170,8 @@ public class PreferenceAPI extends APIBase
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 		catch (BasicServiceMalfunctionException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
 	}
@@ -170,8 +181,8 @@ public class PreferenceAPI extends APIBase
 		if (pref == null) {
 			return;
 		}
-		String externalBase = DashboardAPIUtil.getExternalAPIBase(tenantName);
-		String url = externalBase + "preferences/" + pref.getKey();
+		String externalBase = DashboardAPIUtil.getExternalPreferenceAPIBase(tenantName);
+		String url = externalBase + (externalBase.endsWith("/") ? "" : "/") + pref.getKey();
 		pref.setHref(url);
 		//return pref;
 	}

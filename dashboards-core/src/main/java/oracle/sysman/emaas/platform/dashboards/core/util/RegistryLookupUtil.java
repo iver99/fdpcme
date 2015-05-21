@@ -45,6 +45,9 @@ public class RegistryLookupUtil
 
 	public static String getServiceExternalEndPoint(String serviceName, String version, String tenantName)
 	{
+		logger.debug(
+				"/getServiceExternalEndPoint/ Trying to retrieve service external end point for service: \"{}\", version: \"{}\", tenant: \"{}\"",
+				serviceName, version, tenantName);
 		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
@@ -77,8 +80,7 @@ public class RegistryLookupUtil
 			}
 		}
 		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			if (internalInstance != null) {
 				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
 			}
@@ -88,6 +90,9 @@ public class RegistryLookupUtil
 
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
+		logger.debug(
+				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
@@ -123,8 +128,7 @@ public class RegistryLookupUtil
 						}
 					}
 					catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e.getLocalizedMessage(), e);
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
@@ -147,8 +151,7 @@ public class RegistryLookupUtil
 						}
 					}
 					catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error(e.getLocalizedMessage(), e);
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
@@ -159,13 +162,16 @@ public class RegistryLookupUtil
 			return lk;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return lk;
 		}
 	}
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
+		logger.debug(
+				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
@@ -214,7 +220,7 @@ public class RegistryLookupUtil
 			return lk;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 			return lk;
 		}
 	}

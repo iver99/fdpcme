@@ -65,6 +65,18 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
+		logger.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
+				notificationId);
+		if (rsm.isRegistrationComplete() == null) {
+			logger.info("RegistryServiceManager hasn't registered. Check registry service next time");
+			return;
+		}
+		// check if service manager is up and registration is complete
+		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
+			logger.info("Dashboards service registration is not completed. Ignore database or other dependant services availability checking");
+			return;
+		}
+
 		// check database available
 		boolean isDBAvailable = true;
 		try {
@@ -74,12 +86,12 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			isDBAvailable = false;
 			logger.error(e.getLocalizedMessage(), e);
 		}
-		// update dashboard API service status
 		if (!isDBAvailable) {
-			rsm.makeServiceOutOfService();
+			rsm.markOutOfService();
 			logger.info("Dashboards service is out of service because database is unavailable");
 			return;
 		}
+
 		// check entity naming availibility
 		boolean isEntityNamingAvailable = true;
 		try {
@@ -90,12 +102,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		if (!isEntityNamingAvailable) {
-			rsm.makeServiceOutOfService();
+			rsm.markOutOfService();
 			logger.info("Dashboards service is out of service because entity naming service is unavailable");
 			return;
 		}
+
+		// now all checking is OK
 		try {
-			rsm.makeServiceUp();
+			rsm.markServiceUp();
 			logger.debug("Dashboards service is up");
 		}
 		catch (Exception e) {
@@ -114,7 +128,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
 		notificationId = timer.addNotification("DashboardsServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for dashboard service dependencies checking started");
+		logger.info("Timer for dashboard service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
@@ -139,10 +153,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		logger.info("Pre-stopping availability service");
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for dashboards dependencies checking stopped");
+			logger.info("Timer for dashboards dependencies checking stopped. notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -157,7 +172,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private boolean isEntityNamingAvailable()
 	{
-		Link lk = RegistryLookupUtil.getServiceExternalLink(ENTITY_NAMING_SERVICE_NAME, ENTITY_NAMING_SERVICE_VERSION,
+		Link lk = RegistryLookupUtil.getServiceInternalLink(ENTITY_NAMING_SERVICE_NAME, ENTITY_NAMING_SERVICE_VERSION,
 				ENTITY_NAMING_SERVICE_REL, null);
 		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}

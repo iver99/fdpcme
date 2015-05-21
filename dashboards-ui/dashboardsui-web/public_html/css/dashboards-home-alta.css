@@ -1,10 +1,19 @@
 /* 
     Document   : override
     Created on : <date>
-    Author     : <author>
+    Author     : wenjzhu
     Description:
         This is where any of your application specific styles should be included
 */
+
+.dbs-lock-icon-24:before{content:url("images/qual_lock_16_full.png");}
+
+.dbs-search-icon:before {content:url("images/func_search_16_ena.png");}
+
+.dbs-clear-icon:before {content:url("images/clearEntry_ena.png");}
+
+.icon-delete-ena-16:before{content:url("images/func_delete_16_ena.png");}
+
 .dbs-welcome-centeredImage{
     text-align:center;
     margin-top:0px;
@@ -42,6 +51,47 @@
     min-height: 500px;
     
 }
+
+.dbs-search-box { 
+    border:1px; 
+    border-radius: 8px;
+    border-style: solid;
+    background-color: #fcfdfe;
+    border: 1px solid #d6dfe6;   
+    white-space: nowrap;
+    display: -ms-inline-flexbox;
+    display: -webkit-inline-flex;
+    display: inline-flex;
+    height: 2.286rem;
+    padding: 0px;
+    min-width: 8em; 
+    max-width: 650px;
+    margin-right: 5px;
+} 
+
+.dbs-search-box-input { 
+    -webkit-flex: 1;  /* Safari 6.1+ */
+    -ms-flex: 1;  /* IE 10 */    
+    flex: 1;
+    border: 0px;
+    border-radius: 8px;
+    border-color: #fcfdfe;
+    padding: 0px;
+    margin: 0;
+    max-width: 1024px;
+    min-width: 50px
+} 
+
+.dbs-search-box-input input { 
+    border: 0px;
+    border-color: #fcfdfe;
+    border-radius: 8px;
+    //height: 2.286rem;
+    padding: 0px;
+    margin: 0;
+    max-width: 1024px;
+    min-width: 50px
+} 
 
 .dbs-summaries-container {
     //background: #ffffff;
@@ -139,13 +189,15 @@
 .dbs-summary-page-description {
    padding-left: 5px;
    padding-right: 5px;
-    font-weight: bold;
-    color:gray;   
+   //font-weight: bold;
+   color:gray;   
 }
 
 .dbs-summary-controlls {
     margin-top: 5px;
     text-align: center;
+    min-height: 25px;
+    height: 25px;
 }
 
 .dbs-summary-controlls .dbs-summary-controll {
@@ -189,10 +241,6 @@ ul.dbs-summary-rows li {
     color:gray;
 }
 
-.dbs-lock-icon-24:before{content:url("images/qual_lock_16_full.png");}
-
-.dbs-isolate-icon{content:url("images/s_max_ovr.png")}
-
 .dbs-icon {
   display: inline-block;
   margin: 0;
@@ -208,47 +256,13 @@ ul.dbs-summary-rows li {
   -moz-box-sizing: content-box;
   box-sizing: content-box; 
 }
-.console-table-incon:before {
-    display: inline-block;
-    -moz-box-sizing: content-box;
-    box-sizing: content-box; 
-}
-
-.console-table-incon:after {
-    display: inline-block;
-    content: "  ";
-    -moz-box-sizing: content-box;
-    box-sizing: content-box; 
-}
-
-.edit-search-input-text, .edit-folder-input-text {
-    width: 300px;
-}
 
 .oj-label-required:before{content:'*'}
 
-.icon-add-folder-ena-16:before{content:url("images/func_add-folder_16_ena.png");}
-
-.icon-edit-ena-16:before{content:url("images/func_edit_16_ena.png");}
-
-.icon-delete-ena-16:before{content:url("images/func_delete_16_ena.png");}
-
-.icon-folder-open-16:before{content:url("images/qual_folderopen_16_mono.png");}
-
-.icon-folder-open-system-16:before{content:url("images/qual_folderopen_16_mono_locked.png");}
-
-.icon-folder-close-16-2x:before{content:url("images/qual_folderclose_16_mono@2x.png");}
-
-.icon-search-results-24:before{content:url("images/navi_searchresults_24_ena.png");}
-
-.icon-search-ena-24:before{content:url("images/navi_search_24_ena.png");}
-
-.icon-pageline-16:before{content:url("images/func_pagelines_16_hov.png");}
-
-.icon-pageline-system-16:before{content:url("images/func_pagelines_16_hov_locked.png");}
-
 #dtabhomettb #cbtn{
     margin-bottom: 4px; 
+    margin-left: 8px;
+    margin-right: 8px;
     background-image: none;
     //margin-left: 6px;
     text-shadow: none;
@@ -323,3 +337,6 @@ a:hover {
  cursor:pointer;
 }
 
+.busy, .busy *{
+    cursor: progress !important;   
+}

@@ -115,7 +115,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                     }
                 },
                 error: function() {
-                    if (console.log) console.log("Preference to Show Welcome Dialog is not set. The defualt value 'true' is applied.");
+                    oj.Logger.info("Preference of Show Welcome Dialog is not set. The defualt value 'true' is applied.");
                 }
             });
         })();
@@ -143,22 +143,24 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         var self = this;
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
-        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
+//        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
         //welcome
-        self.prefUtil = new pfu(dfu.buildFullUrl(self.dfRestApiUrl,'preferences'), dfu.getDashboardsRequestHeader());
+        self.prefUtil = new pfu("/sso.static/dashboards.preference"/*dfu.buildFullUrl(self.dfRestApiUrl,'preferences')*/, dfu.getDashboardsRequestHeader());
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
         
         //dashboards
+        self.showSeachClear = ko.observable(false);
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
+        self.sortBy = ko.observable('access_Date');
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
         self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);
         
-        self.serviceURL = dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
+        self.serviceURL = "/sso.static/dashboards.service";//dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
         //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
@@ -172,7 +174,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL);
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy());
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
             'success': function() {
@@ -185,6 +187,9 @@ function(dsf, oj, ko, $, dfu, pfu)
                         $('#cbtn-tooltip').ojPopup('open', "#cbtn");
                     }
                 }
+            },
+            'error': function(jqXHR, textStatus, errorThrown) {
+                oj.Logger.error("Error when fetching data for paginge data source. " + (jqXHR ? jqXHR.responseText : ""));
             }
         } );
                 
@@ -216,8 +221,12 @@ function(dsf, oj, ko, $, dfu, pfu)
                             var _m = "";
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorMessage)
                             {
-                                _m = jqXHR[0].responseJSON.errorMessage;
+                                 _m = jqXHR[0].responseJSON.errorMessage;
+                            }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorMessage)
+                            {
+                                _m = jqXHR.responseJSON.errorMessage;
                             }
+                            oj.Logger.error("Error when deleting dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                             self.confirmDialogModel.show(getNlsString('COMMON_TEXT_ERROR'), getNlsString('COMMON_BTN_OK'), 
                                     getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB_ERROR') + " " +_m,
                                     function () {self.confirmDialogModel.close();});
@@ -283,7 +292,15 @@ function(dsf, oj, ko, $, dfu, pfu)
                             var _m = getNlsString('COMMON_SERVER_ERROR');
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorMessage)
                             {
-                                _m = jqXHR[0].responseJSON.errorMessage;
+                                 _m = jqXHR[0].responseJSON.errorMessage;
+                            }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorMessage)
+                            {
+                                _m = jqXHR.responseJSON.errorMessage;
+                            }
+                            else
+                            {
+                                // a server error record
+                                 oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                             }
                             _trackObj = new oj.InvalidComponentTracker();
                             self.tracker(_trackObj);
@@ -304,6 +321,27 @@ function(dsf, oj, ko, $, dfu, pfu)
             $( "#cDsbDialog" ).ojDialog( "close" );
         };
         
+        self.handleSortByChanged = function (context, valueParam) {
+            var _preValue = valueParam.previousValue, _value = valueParam.value;
+            if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
+            {
+                self.dsFactory.sortBy = _value[0];
+                $("#sinput").dbsTypeAhead("forceSearch");
+            }
+        };
+        
+        self.acceptInput = function (event, data)
+        {
+            if (data && data.length > 0)
+            {
+                self.showSeachClear(true);
+            }
+            else
+            {
+                self.showSeachClear(false);
+            }
+        };
+        
         self.searchResponse = function (event, data)
         {
             //console.log("searchResponse: "+data.content.collection.length);
@@ -316,6 +354,11 @@ function(dsf, oj, ko, $, dfu, pfu)
             $("#sinput").dbsTypeAhead("forceSearch");
         };
         
+        self.clearSearch = function (event, data)
+        {
+            $("#sinput").dbsTypeAhead("clearInput");
+        };
+        
         self.updateDashboard = function (dsb)
         {
             var _id = dsb.id;
@@ -326,8 +369,9 @@ function(dsf, oj, ko, $, dfu, pfu)
                         var _e = $(".dbs-summary-container[aria-dashboard=\""+_id+"\"]");
                         if (_e && _e.length > 0) _e.dbsDashboardPanel("refresh");
                     },
-                    error: function() {
+                    error: function(jqXHR, textStatus, errorThrown) {
                         //console.log("Error on update dashboard");
+                        oj.Logger.error("Error when updating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                     }
                 });
             }
@@ -335,15 +379,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.getDashboard = function (id)
         {
-            /*
-            if (id !== 0 && !id) return null;
-            for (var _i = 0 ; _i < self.dbsArray.length; _i++)
-            {
-                if (id === self.dbsArray[_i].id)
-                {
-                    return self.dbsArray[_i];
-                }
-            }*/
+           
         };
         
     };

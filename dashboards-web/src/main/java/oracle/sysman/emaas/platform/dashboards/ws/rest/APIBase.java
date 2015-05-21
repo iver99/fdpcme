@@ -20,6 +20,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSec
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
@@ -28,29 +29,34 @@ import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 /**
  * @author wenjzhu
  */
-public class APIBase {
+public class APIBase
+{
 	@Context
 	protected UriInfo uriInfo;
 	private final JsonUtil jsonUtil;
 
-	public APIBase() {
+	public APIBase()
+	{
 		super();
 		jsonUtil = JsonUtil.buildNonNullMapper();
 		jsonUtil.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	}
 
-	public Response buildErrorResponse(ErrorEntity error) {
+	public Response buildErrorResponse(ErrorEntity error)
+	{
 		if (error == null) {
 			return null;
 		}
 		return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
 	}
 
-	public JsonUtil getJsonUtil() {
+	public JsonUtil getJsonUtil()
+	{
 		return jsonUtil;
 	}
 
-	public Long getTenantId(String tenantId) throws CommonSecurityException, BasicServiceMalfunctionException {
+	public Long getTenantId(String tenantId) throws CommonSecurityException, BasicServiceMalfunctionException
+	{
 		if (tenantId == null || "".equals(tenantId)) {
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_REQUIRED));
@@ -70,7 +76,8 @@ public class APIBase {
 
 	}
 
-	public void initializeUserContext(String userTenant) throws CommonSecurityException {
+	public void initializeUserContext(String userTenant) throws CommonSecurityException
+	{
 		if (userTenant == null || "".equals(userTenant)) {
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
@@ -97,12 +104,16 @@ public class APIBase {
 	/*
 	 * Updates the specified dashboard by generating all href fields
 	 */
-	protected Dashboard updateDashboardHref(Dashboard dbd, String tenantName) {
+	protected Dashboard updateDashboardHref(Dashboard dbd, String tenantName)
+	{
 		if (dbd == null) {
 			return null;
 		}
-		String externalBase = DashboardAPIUtil.getExternalAPIBase(tenantName);
-		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + "dashboards/" + dbd.getDashboardId();
+		String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantName);
+		if (StringUtil.isEmpty(externalBase)) {
+			return null;
+		}
+		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + dbd.getDashboardId();
 		//		String href = uriInfo.getBaseUri() + "v1/dashboards/" + dbd.getDashboardId();
 		dbd.setHref(href);
 		return dbd;

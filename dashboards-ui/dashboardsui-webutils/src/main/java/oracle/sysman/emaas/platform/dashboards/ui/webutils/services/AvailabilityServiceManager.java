@@ -16,7 +16,7 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
@@ -38,9 +38,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
 	private static final String DASHBOARD_API_SERVICE_VERSION = "0.1";
+	private static final String DASHBOARD_API_SERVICE_REL = "base";
 
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "0.1";
+	private static final String SAVED_SEARCH_SERVICE_REL = "search";
 
 	private Timer timer;
 	private Integer notificationId;
@@ -66,6 +68,18 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void handleNotification(Notification notification, Object handback)
 	{
+		logger.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
+				notificationId);
+		if (rsm.isRegistrationComplete() == null) {
+			logger.info("RegistryServiceManager hasn't registered. Check registry service next time");
+			return;
+		}
+		// check if service manager is up and registration is complete
+		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
+			logger.info("Dashboards UI service registration is not completed. Ignore dependant services availability checking");
+			return;
+
+		}
 		// check ssf avaibility
 		boolean isSSFAvailable = true;
 		try {
@@ -75,6 +89,12 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			isSSFAvailable = false;
 			logger.error(e.getLocalizedMessage(), e);
 		}
+		if (!isSSFAvailable) {
+			rsm.markOutOfService();
+			logger.info("Dashboards UI service is out of service because Saved Search API service is unavailable");
+			return;
+		}
+
 		// check df api service avaibility
 		boolean isDFApiAvailable = true;
 		try {
@@ -84,23 +104,19 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			isDFApiAvailable = false;
 			logger.error(e.getLocalizedMessage(), e);
 		}
-		// update dashboards UI service status
-		if (!isSSFAvailable) {
-			rsm.makeServiceOutOfService();
-			logger.info("Dashboards UI service is out of service because Saved Search API service is unavailable");
-		}
-		else if (!isDFApiAvailable) {
-			rsm.makeServiceOutOfService();
+		if (!isDFApiAvailable) {
+			rsm.markOutOfService();
 			logger.info("Dashboards UI service is out of service because Dashboard API service is unavailable");
+			return;
 		}
-		else {
-			try {
-				rsm.makeServiceUp();
-				logger.debug("Dashboards UI service is up");
-			}
-			catch (Exception e) {
-				logger.error(e.getLocalizedMessage(), e);
-			}
+
+		// now all checking is OK
+		try {
+			rsm.markServiceUp();
+			logger.debug("Dashboards UI service is up");
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -115,7 +131,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
 		notificationId = timer.addNotification("DashboardsUIServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for dashboards UI service dependencies checking started");
+		logger.info("Timer for dashboards UI service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
@@ -140,10 +156,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
 	{
+		logger.info("Pre-stopping availability service");
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for dashboards UI dependencies checking stopped");
+			logger.info("Timer for dashboards UI dependencies checking stopped, notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -152,16 +169,16 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 
 	private boolean isDashboardAPIAvailable()
 	{
-		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPoint(DASHBOARD_API_SERVICE_NAME,
-				DASHBOARD_API_SERVICE_VERSION, null);
-		return ee != null && !StringUtil.isEmpty(ee.getHref());
+		Link lk = RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
+				DASHBOARD_API_SERVICE_REL, null);
+		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 
 	private boolean isSavedSearchAvailable()
 	{
-		EndpointEntity ee = RegistryLookupUtil.getServiceExternalEndPoint(SAVED_SEARCH_SERVICE_NAME,
-				SAVED_SEARCH_SERVICE_VERSION, null);
-		return ee != null && !StringUtil.isEmpty(ee.getHref());
+		Link lk = RegistryLookupUtil.getServiceInternalLink(SAVED_SEARCH_SERVICE_NAME, SAVED_SEARCH_SERVICE_VERSION,
+				SAVED_SEARCH_SERVICE_REL, null);
+		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 
 }
