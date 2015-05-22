@@ -1,12 +1,13 @@
 
-define(['knockout','jquery', '../emcsDependencies/dfcommon/js/util/usertenant-util', '../emcsDependencies/dfcommon/js/util/df-util'],
+define(['knockout','jquery', './usertenant-util', './df-util'],
 function(ko, $, ututil, dfumodel)
 {
     var dfu = new dfumodel(ututil.getUserName(), ututil.getTenantName());
-/**
- * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
- * All rights reserved.
- */
+    
+    /**
+     * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
+     * All rights reserved.
+     */
     PreferenceUtility = function(prefRestApiUrl, requestHeader) {
         this.prefRestApiUrl = prefRestApiUrl;
         this.requestHeader = requestHeader;

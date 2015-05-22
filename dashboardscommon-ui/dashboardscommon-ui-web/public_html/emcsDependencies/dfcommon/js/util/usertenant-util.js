@@ -51,7 +51,7 @@ define(['jquery', 'ojs/ojcore'],
             
         }
         
-        return new DashboardFrameworkUserTenantUtility;
+        return new DashboardFrameworkUserTenantUtility();
     }
 );
 

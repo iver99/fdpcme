@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojs/ojcore', 'jquery', 'knockout','jqueryui', '../emcsDependencies/dfcommon/js/util/usertenant-util', '../emcsDependencies/dfcommon/js/util/df-util'], 
+define(['ojs/ojcore', 'jquery', 'knockout','jqueryui', './usertenant-util', './df-util'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
