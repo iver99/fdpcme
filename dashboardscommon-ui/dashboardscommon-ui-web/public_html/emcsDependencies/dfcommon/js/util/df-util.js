@@ -400,7 +400,6 @@ define(['knockout',
              * @returns 
              */ 
             self.ajaxWithRetry = function(urlOrOpt, options) {
-//                urlOrOpt = 'data/servicemanager.json';
                 if (urlOrOpt && typeof(urlOrOpt) === 'string' && options)
                     options.url = urlOrOpt;
                 else if (urlOrOpt && typeof(urlOrOpt) === 'object')
@@ -436,6 +435,9 @@ define(['knockout',
                     return;
                 };
                 options.error = errorCallBackWithRetry;
+                //Set timeout by default 8 seconds if not set
+                if (!options.timeout)
+                    options.timeout = 8000;
                 return $.ajax(options);    
             };
             
