@@ -68,8 +68,13 @@ require(['ojs/ojcore',
             function MyViewModel() {
                 var self = this;
                 self.timeParams1 = {
-                    startDateTime: "2015-05-15T00:00:00",
-                    endDateTime: "2015-05-17T13:00:00"
+                    startDateTime: new Date() - 24*60*1000,
+                    endDateTime: new Date(),
+		    callback: function(start, end){
+		    	console.log(start);
+                        console.log(end);
+		    }
+
                 }
                 self.timeParams2 = {
                     startDateTime: "2015-05-14T00:00:00",
