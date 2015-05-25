@@ -145,7 +145,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
 //        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
         //welcome
-        self.prefUtil = new pfu("/sso.static/dashboards.preference"/*dfu.buildFullUrl(self.dfRestApiUrl,'preferences')*/, dfu.getDashboardsRequestHeader());
+        self.prefUtil = new pfu("/sso.static/dashboards.preferences"/*dfu.buildFullUrl(self.dfRestApiUrl,'preferences')*/, dfu.getDashboardsRequestHeader());
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
         
         //dashboards
@@ -236,7 +236,11 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         
         self.exploreDataMenuItemSelect = function( event, ui ) {
-            window.open(ui.item.children("a")[0].value);
+            //window.open(ui.item.children("a")[0].value);
+            if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
+            {
+                window.location = ui.item.children("a")[0].value;
+            }
         };
         
         self.createDashboardClicked = function()

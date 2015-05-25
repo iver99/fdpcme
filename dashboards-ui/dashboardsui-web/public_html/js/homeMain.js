@@ -74,31 +74,14 @@ require(['dbs/dbsmodel',
     'ojs/ojknockout-model',
     'ojs/ojcomponents',
     'ojs/ojvalidation',
-//    'ojs/ojdatagrid', 
-//    'ojs/ojtable',
-//    'ojs/ojtable-model',
     'ojs/ojbutton',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'ojs/ojpopup',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
-//    'ojs/ojvalidation'
     'ojs/ojselectcombobox',
     'ojs/ojmenu'
-//    'ojs/ojmodel',
-//    'ojs/ojknockout-model',
-//    'ojs/ojselectcombobox',
-//    'ojs/ojdatetimepicker',
-//    'ojs/ojtable',
-//    'ojs/ojdatagrid',
-//    'ojs/ojchart', 
-//    'ojs/ojgauge', 
-//    'ojs/ojlegend', 
-//    'ojs/ojsunburst', 
-//    'ojs/ojthematicmap', 
-//    'ojs/ojtreemap',
-//    'ojs/ojvalidation'
 ],
         function(model, ko, $, oj, dfu,_emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
@@ -120,34 +103,6 @@ require(['dbs/dbsmodel',
                 });
             }
             
-            function FooterViewModel() {
-                var self = this;
-
-                var aboutOracle = 'http://www.oracle.com/us/corporate/index.html#menu-about';
-                var contactUs = 'http://www.oracle.com/us/corporate/contact/index.html';
-                var legalNotices = 'http://www.oracle.com/us/legal/index.html';
-                var termsOfUse = 'http://www.oracle.com/us/legal/terms/index.html';
-                var privacyRights = 'http://www.oracle.com/us/legal/privacy/index.html';
-
-                self.ojVersion = ko.observable('v' + oj.version + ', rev: ' + oj.revision);
-
-                self.footerLinks = ko.observableArray([
-                    new FooterNavModel('About Oracle', 'aboutOracle', aboutOracle),
-                    new FooterNavModel('Contact Us', 'contactUs', contactUs),
-                    new FooterNavModel('Legal Notices', 'legalNotices', legalNotices),
-                    new FooterNavModel('Terms Of Use', 'termsOfUse', termsOfUse),
-                    new FooterNavModel('Your Privacy Rights', 'yourPrivacyRights', privacyRights)
-                ]);
-
-            }
-
-            function FooterNavModel(name, id, linkTarget) {
-
-                this.name = name;
-                this.linkId = id;
-                this.linkTarget = linkTarget;
-            }
- 
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
@@ -179,28 +134,41 @@ require(['dbs/dbsmodel',
                 $('#globalBody').show();
                 // Setup bindings for the header and footer then display everything
                 //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));
-                
+
                 var predataModel = new model.PredataModel();
                 function init() {
                     dashboardsViewModle = new model.ViewModel(predataModel);
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
 
-                    function setMainAreaPadding()
+                    function setMainAreaPadding(isDrag)
                     {
-                        //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
-                        var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
-                        var _padding = _tabwidth % (335 /*panel width + panel margin*/);
-                        //console.log("_padding: " + Math.floor(_padding/2));
-                        var _calpadding = (_tabwidth <= 680) ? 5 : Math.floor(_padding / 2);
-                        $("#dhometab").attr({
-                            "style": "padding-left: " + _calpadding + "px;"
-                        });
-                    }
-                    ;
+                    //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
+                    var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
+                    //console.log("tab width: "+_tabwidth);
+                    var _padding = _tabwidth % (335 /*panel width + panel margin*/);
+                    //console.log("_padding: " + Math.floor(_padding/2));
+                    var _calpadding = (_tabwidth <= 680 ) ? 5 : Math.floor(_padding/2);
+                    
+                    var _rpadding = _calpadding;
+                    /*
+                    if (isDrag === true) _rpadding = _rpadding + 13;
+                    else if (_tabwidth < 1080) {
+                        console.log("tab width: "+_tabwidth);
+                        _rpadding = _rpadding + 12;
+                    }*/
+                    _rpadding = _rpadding + 13;
+                    $("#dhometab").attr({
+                       "style" : "padding-left: "+ _calpadding  + "px;" //"padding-right: "+ _rpadding  + "px;" 
+                    });
+                    
+                    $("#homettbtns").attr({
+                       "style" : "padding-right: "+ _rpadding  + "px;" 
+                    });
+                    };
                     setMainAreaPadding();
-                    $(window).resize(function () {
-                        setMainAreaPadding();
+                    $(window).resize(function() {
+                    setMainAreaPadding(true);
                     });
 
                     window.addEventListener('message', childMessageListener, false);
@@ -210,6 +178,7 @@ require(['dbs/dbsmodel',
                         window.parent.updateOnePageHeight('2000px');
                 }
                 predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+
             });
         }
 );
