@@ -561,7 +561,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             + start + "<span style='font-weight: bold'> - </span>"
                             + end);
 
-                    self.generateData();
                     $(self.panelId).ojPopup("close");
                     if (self.callback){
                         self.callback(new Date(start), new Date(end));
@@ -621,7 +620,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.setFocusOnInput("inputStartDate");
                 self.lastFocus(1);
 
-                $(self.panelId + " #datePicker").mouseup(function (event, data) {
+                self.calendarClicked = function(data, event) {
                     if ($(event.target).hasClass("oj-datepicker-prev-icon") || $(event.target).hasClass("oj-datepicker-next-icon")
                             || $(event.target).hasClass("oj-datepicker-title") || $(event.target).hasClass("oj-datepicker-header") ||
                             $(event.target).hasClass("oj-datepicker-group") || $(event.target).hasClass("oj-datepicker-other-month")) {
@@ -629,92 +628,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     } else {
                         self.random(new Date().getTime());
                     }
-                });
-
-
-
-                //data visualization
-                self.lineSeriesValues = ko.observableArray();
-                self.lineGroupsValues = ko.observableArray();
-
-                self.generateData = function () {
-                    var lineSeries = [];
-                    var lineGroups = [];
-                    var timeInterval;
-
-                    dateDiff = new Date(self.endDate()) - new Date(self.startDate());
-                    timeDiff = oj.IntlConverterUtils.isoToLocalDate(self.endTime()) - oj.IntlConverterUtils.isoToLocalDate(self.startTime());
-                    dateTimeDiff = dateDiff + timeDiff;
-                    //time range is less than 1 hour
-                    if (dateTimeDiff <= 60 * 60 * 1000) {
-                        timeInterval = 60 * 1000;  //1 min
-                    } else if (dateTimeDiff <= 24 * 60 * 60 * 1000) {
-                        timeInterval = 60 * 60 * 1000; //60 min
-                    } else {
-                        timeInterval = 24 * 60 * 60 * 1000; //1 day
-                    }
-
-                    //groups
-                    start = new Date(self.startDate() + " " + self.startTime().slice(1)).getTime();
-                    end = new Date(self.endDate() + " " + self.endTime().slice(1)).getTime();
-
-                    var day, tmp;
-                    var n = 0;
-
-                    if (timeInterval == 60 * 1000) {
-//                        lineGroups.push(self.dateFormatter(self.startDateISO()).format1 + " " + self.startTime().slice(1));
-                        lineGroups.push(self.dateConverter2.format(self.startDateISO()) + " " + self.timeConverter.format(self.startTime()));
-                        n++;
-                        while ((start + n * timeInterval) <= end) {
-//                            lineGroups.push(oj.IntlConverterUtils.dateToLocalIso(new Date(start + n * timeInterval)).slice(11, 16));
-                            lineGroups.push(self.timeConverter.format(start + n * timeInterval));
-                            n++;
-                        }
-                    } else if (timeInterval == 60 * 60 * 1000) {
-//                        lineGroups.push(self.dateFormatter(self.startDateISO()).format1 + " " + self.startTime().slice(1));
-                        lineGroups.push(self.dateConverter2.format(self.startDateISO()) + " " + self.timeConverter.format(self.startTime()));
-                        n++;
-                        day = new Date(self.startDate()).getDate();
-                        while ((start + n * timeInterval) <= end) {
-                            tmp = new Date(start + n * timeInterval);
-                            if (tmp.getDate() == day) {
-//                                lineGroups.push(oj.IntlConverterUtils.dateToLocalIso(tmp).slice(11, 16));
-                                lineGroups.push(self.timeConverter.format(oj.IntlConverterUtils.dateToLocalIso(tmp)));
-                            } else {
-//                                lineGroups.push(self.dateFormatter(tmp).format1 + " " + oj.IntlConverterUtils.dateToLocalIso(tmp).slice(11, 16));
-                                lineGroups.push(self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(tmp)) + " " + self.timeConverter.format(oj.IntlConverterUtils.dateToLocalIso(tmp)));
-                                day = tmp.getDate();
-                            }
-                            n++;
-                        }
-                    } else {
-                        while ((start + n * timeInterval) <= end) {
-//                            lineGroups.push(self.dateFormatter(start + n * timeInterval).format1);
-                            lineGroups.push(self.dateConverter2.format(start + n * timeInterval));
-                            n++;
-                        }
-                    }
-
-                    //series
-                    var seriesNames = ["p1", "p2", "p3"];
-                    var seriesMax = [30, 50, 100];
-                    var seriesNumber = seriesNames.length;
-                    for (var i = 0; i < seriesNumber; i++) {
-                        var max = seriesMax[i];
-                        var itemsValues = [];
-                        for (var j = 0; j < n; j++) {
-                            itemsValues.push(Math.floor(Math.random() * max));
-                        }
-                        lineSeries.push({name: seriesNames[i], items: itemsValues});
-                    }
-
-                    self.lineSeriesValues(lineSeries);
-                    self.lineGroupsValues(lineGroups);
-                };
-                $.when(nlsString()).done(function () {
-                    self.generateData();
-                });
-
+                }
             }
             return dateTimePickerViewModel;
         });

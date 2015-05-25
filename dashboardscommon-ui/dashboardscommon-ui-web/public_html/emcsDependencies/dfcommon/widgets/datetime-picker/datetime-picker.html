@@ -7,7 +7,6 @@
     </div>            
 
     <div class="panel" style="display:none" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
-        <!--<div id="panel" style="display:none">-->
         <!-- left of panel -->
         <div id="drawers" data-bind="click: chooseTimePeriod">
             <div id="drawer0" class="drawer" data-bind="text: timePeriodLast15mins"></div>
@@ -61,6 +60,7 @@
                                                                     datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2},
                                                                     value: value,
                                                                     }, 
+                                                                  event: {mouseup: calendarClicked}
                                                                                                                                    
                  ">
             </div>
@@ -75,17 +75,4 @@
         </div>
     </div> 
 
-</div>
-
-<div id="chartContainer">
-    <div id="lineChart" data-bind="ojComponent: {
-                component: 'ojChart', 
-                type: 'line',
-                series: lineSeriesValues,
-                groups: lineGroupsValues,
-                animationOnDisplay: 'auto',
-                animationOnDataChange: 'auto',
-                hoverBehavior: 'dim',                
-            }"  style="top:100px; width: 100%; height: 300px; border: 1px solid #dfe4e7;">
-    </div>
 </div>
