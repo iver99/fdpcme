@@ -165,7 +165,7 @@ require(['dbs/dbsmodel',
                var self = this;
                self.homeTitle = getNlsString("DBS_HOME_TITLE");        
            }
-            dashboardsViewModle = new model.ViewModel();
+            //dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();
             var titleVM = new TitleViewModel();
 
@@ -180,30 +180,36 @@ require(['dbs/dbsmodel',
                 // Setup bindings for the header and footer then display everything
                 //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));
                 
-                ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
-                $('#mainContent').show(); 
-                
-                function setMainAreaPadding()
-                {
-                    //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
-                    var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
-                    var _padding = _tabwidth % (335 /*panel width + panel margin*/);
-                    //console.log("_padding: " + Math.floor(_padding/2));
-                    var _calpadding = (_tabwidth <= 680 ) ? 5 : Math.floor(_padding/2);
-                    $("#dhometab").attr({
-                       "style" : "padding-left: "+ _calpadding  + "px;" 
-                    });
-                };
-                setMainAreaPadding();
-                $(window).resize(function() {
+                var predataModel = new model.PredataModel();
+                function init() {
+                    dashboardsViewModle = new model.ViewModel(predataModel);
+                    ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
+                    $('#mainContent').show();
+
+                    function setMainAreaPadding()
+                    {
+                        //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
+                        var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
+                        var _padding = _tabwidth % (335 /*panel width + panel margin*/);
+                        //console.log("_padding: " + Math.floor(_padding/2));
+                        var _calpadding = (_tabwidth <= 680) ? 5 : Math.floor(_padding / 2);
+                        $("#dhometab").attr({
+                            "style": "padding-left: " + _calpadding + "px;"
+                        });
+                    }
+                    ;
                     setMainAreaPadding();
-                });
-                
-               window.addEventListener('message', childMessageListener, false);
-               window.name = 'dashboardhome'; 
-               
-               if (window.parent && window.parent.updateOnePageHeight)
-                   window.parent.updateOnePageHeight('2000px');
+                    $(window).resize(function () {
+                        setMainAreaPadding();
+                    });
+
+                    window.addEventListener('message', childMessageListener, false);
+                    window.name = 'dashboardhome';
+
+                    if (window.parent && window.parent.updateOnePageHeight)
+                        window.parent.updateOnePageHeight('2000px');
+                }
+                predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
             });
         }
 );

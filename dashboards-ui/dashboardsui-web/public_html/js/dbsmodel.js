@@ -160,7 +160,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.pageSize = ko.observable(120);
         
-        self.serviceURL = "/sso.static/dashboards.service";//dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
+        self.serviceURL = "http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards/";//"/sso.static/dashboards.service";//dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
         //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
@@ -384,6 +384,112 @@ function(dsf, oj, ko, $, dfu, pfu)
         
     };
     
+    function PredataModel() {
+        var self = this, itaSetupUrl = "test", 
+                laSetupUrl = "test", 
+                apmSetupUrl = "test", 
+                sApplictionsUrl = "/sso.static/dashboards.subscribedapps";
+        self.itaResponse = { "eligibleODSTargetCount" : 0, "warehouseTargetCount": 0, "warehouseLoading": true};
+        self.laResponse = {"other": {"#agents": 0}};
+        self.apmResponse = "false";
+        self.sApplications = undefined;
+        
+        self.getItaSetupStatus = function() {
+            if (itaResponse !== undefined)
+            {
+                if (itaResponse['eligibleODSTargetCount'] === 0) return 1;
+                if (itaResponse['eligibleODSTargetCount'] > 0 
+                        && itaResponse['warehouseTargetCount'] === 0)
+                {
+                    return 2;
+                }
+                if (itaResponse['eligibleODSTargetCount'] > 1
+                        && itaResponse['warehouseTargetCount'] > 1)
+                {
+                    return 3;
+                }
+            }
+            return 0;
+        };
+        
+        self.getLaSetupStatus = function() {
+            if (laResponse !== undefined)
+            {
+                if (laResponse['other']['#agents'] === 0) return 1;
+            }
+            return 0;
+        };
+        
+        self.getApmSetupStatus = function() {
+            if (apmResponse !== undefined)
+            {
+                if (apmResponse === "false") return 1;
+            }
+            return 0;
+        };
+        
+        self.loadItaSetup = function() {
+            return $.ajax({
+                        url: itaSetupUrl,
+                        type: 'GET',
+                        headers: dfu.getDashboardsRequestHeader(), 
+                        success: function (result) {
+                            self.itaResponse = result;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            oj.Logger.error("Error when load ITA setup status. " + (jqXHR ? jqXHR.responseText : ""));
+                        }
+                    });
+        };
+        
+        self.loadLaSetup = function() {
+            return $.ajax({
+                        url: laSetupUrl,
+                        type: 'GET',
+                        headers: dfu.getDashboardsRequestHeader(), 
+                        success: function (result) {
+                            self.laResponse = result;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            oj.Logger.error("Error when load LA setup status. " + (jqXHR ? jqXHR.responseText : ""));
+                        }
+                    });
+        };
+        
+        self.loadApmSetup = function() {
+            return $.ajax({
+                        url: apmSetupUrl,
+                        type: 'GET',
+                        headers: dfu.getDashboardsRequestHeader(), 
+                        success: function (result) {
+                            self.apmResponse = result;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            oj.Logger.error("Error when load APM setup status. " + (jqXHR ? jqXHR.responseText : ""));
+                        }
+                    });
+        };
+        
+        self.loadSubscribedApplications = function() {
+            return $.ajax({
+                        url: sApplictionsUrl,
+                        type: 'GET',
+                        headers: dfu.getDashboardsRequestHeader(), 
+                        success: function (result) {
+                            self.sApplications = result;
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            oj.Logger.error("Error when load subscribed applications. " + (jqXHR ? jqXHR.responseText : ""));
+                        }
+                    });
+        };
+        
+        self.loadAll = function() {
+            return $.when(self.loadItaSetup(), self.loadLaSetup(), 
+                          self.loadApmSetup(), self.loadSubscribedApplications());
+        };
+    }
     
-    return {'ViewModel': ViewModel};
+    
+    return {'ViewModel': ViewModel, 'PredataModel': PredataModel};
 });
