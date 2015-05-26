@@ -42,6 +42,43 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.toolbarLabel = ko.observable();
                 self.textNotifications = ko.observable();
                 self.appName = ko.observable();
+                self.hasMessages = ko.observable(true);
+                self.altTextError = ko.observable();
+                self.altTextWarn = ko.observable();
+                self.altTextConfirm = ko.observable();
+                self.altTextInfo = ko.observable();
+                self.altTextClear = ko.observable();
+                self.messageList = ko.observableArray();
+                self.clearMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/clearEntry_ena.png'); 
+                var errorMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_error_16.png'); 
+                var warnMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_warn_16.png'); 
+                var confirmMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_confirm_16.png'); 
+                var infoMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_info_16.png'); 
+                var messages = [];
+                var sampleMessages = [
+//                    {id: 1, action: 'add', type: 'error', iconAltText: self.altTextError, icon: errorMessageIcon,
+//                        summary: 'Could not connect.', 
+//                        detail: 'Could not connect after retrying for 3 times by URL: /sso.static/dashboards.subscribedapps.'},
+//                    {id: 2, action: 'add', type: 'warn', iconAltText: self.altTextWarn, icon: warnMessageIcon,
+//                        summary: 'Java.jeff is also editing this APIs resources.', 
+//                        detail: 'Your changes could be overwritten.'},
+//                    {id: 3, action: 'add', type: 'confirm', iconAltText: self.altTextConfirm, icon: confirmMessageIcon,
+//                        summary: 'Save successful.', 
+//                        detail: 'Dashboard is saved successfully.'},
+//                    {id: 4, action: 'add', type: 'info', iconAltText: self.altTextInfo, icon: infoMessageIcon,
+//                        summary: 'Not connected.', 
+//                        detail: 'Retrying the connection now. Target URL: /sso.static/dashboards.subscribedapps.'}
+                ];
+//                var messageIdToIndexMap = {};
+                for (i = 0; i < sampleMessages.length; i++) {
+                    showMessage(sampleMessages[i]);
+                }
+                
+                self.clearMessage = function(data, event) {
+//                    messages.splice(data.index, 1);
+                    removeMessage(data);
+                    self.messageList(messages);
+                };
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -132,6 +169,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
                     self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
                     self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
+                    self.altTextError(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR);
+                    self.altTextWarn(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN);
+                    self.altTextConfirm(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM);
+                    self.altTextInfo(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO);
                     
                     oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
@@ -181,7 +222,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         error:function(xhr, textStatus, errorThrown){
                             oj.Logger.info('No available notifications found by URL: ' + urlNotificationCheck);
                             self.notificationDisabled(true);
-                        }
+                        },
+                        showMessages: false
                     });
                 };
                 
@@ -262,9 +304,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getCssFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
-                var oracleLogoImg = getCssFilePath(localrequire, '../../../images/oracle_logo_lrg.png'); 
-                var navLinksImg = getCssFilePath(localrequire, '../../../images/compassIcon_32.png'); 
+                var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/dashboards-common-alta.css'); 
+                var oracleLogoImg = getFilePathRelativeToHtml(localrequire, '../../../images/oracle_logo_lrg.png'); 
+                var navLinksImg = getFilePathRelativeToHtml(localrequire, '../../../images/compassIcon_32.png'); 
 
 		self.brandingbarCss = cssFile;
                 self.oracleLogoImage = oracleLogoImg;
@@ -327,6 +369,99 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     $("#links_menu").slideUp('normal');
                 });  
                 
+                window.addEventListener("message", receiveMessage, false);
+
+                function receiveMessage(event)
+                {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host)
+                        return;
+                    var data = event.data;
+                    //Only handle received message for showing page level messages
+                    if (data && data.category && data.category === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
+                        if (data.action) {
+                            if (data.action.toUpperCase() === 'SHOW') {
+                                showMessage(data);
+                            }
+                            else if (data.action.toUpperCase() === 'REMOVE') {
+                                removeMessage(data);
+                            }
+                        }
+                        //Show message by default
+                        else {
+                            showMessage(data);
+                        }
+                    }
+                };
+                
+                function showMessage(data) {
+                    if (data) {
+                        var size = messages.length;
+                        var message = {};
+                        message.index = size;
+                        message.id = data.id ? data.id : dfu.getGuid();
+                        message.type = data.type;
+                        message.summary = data.summary;
+                        message.detail = data.detail;
+                        if (data.type && data.type.toUpperCase() === 'ERROR') {
+                            message.iconAltText = self.altTextError;
+                            message.icon = errorMessageIcon;
+                        }
+                        else if (data.type && data.type.toUpperCase() === 'WARN') {
+                            message.iconAltText = self.altTextWarn;
+                            message.icon = warnMessageIcon;
+                        }
+                        else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
+                            message.iconAltText = self.altTextConfirm;
+                            message.icon = confirmMessageIcon;
+                        }
+                        else if (data.type && data.type.toUpperCase() === 'INFO') {
+                            message.iconAltText = self.altTextInfo;
+                            message.icon = infoMessageIcon;
+                        }
+                        
+                        messages.push(message);
+//                        if (message.id)
+//                            messageIdToIndexMap[message.id] = message.index;
+                        self.messageList(messages);
+                        
+                        //Remove message automatically if remove delay time is set
+                        if (data.removeDelayTime && typeof(data.removeDelayTime) === 'number') {
+                            setTimeout(function(){removeMessage(data);}, data.removeDelayTime);
+                        }
+                    }
+                };
+                
+                function removeMessage(data) {
+//                    var originSize = messages.length;
+//                    var index;
+                    if (data && data.id) {
+                        for (i = 0; i < messages.length; i++) {
+                            if (messages[i].id === data.id) {
+                                messages.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                    
+//                    if (data && data.index) {
+//                        index = data.index;
+//                    }
+//                    else if (data && data.id) {
+//                        index = messageIdToIndexMap[data.id];
+//                    }
+                    
+//                    messages.splice(index, 1);
+//                    for (i = data.index; i < originSize-1; i++) {
+//                        messages[i].index = messages[i].index - 1;
+//                        if (messages[i].id)
+//                            messageIdToIndexMap[messages[i].id] = messages[i].index;
+//                    }
+//                    if (data && data.id) {
+//                        delete messageIdToIndexMap[data.id];
+//                    }
+                    self.messageList(messages);
+                };
+                
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");
                     var path = requireContext.toUrl(relPath);
@@ -334,7 +469,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     return path;
                 };
                 
-                function getCssFilePath(requireContext, relPath) {
+                function getFilePathRelativeToHtml(requireContext, relPath) {
                     return requireContext.toUrl(relPath);
                 };
                 

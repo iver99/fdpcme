@@ -1,14 +1,44 @@
-define(['knockout',
-        'jquery',
-        'ojs/ojcore'
-    ],
-    
-    function(ko, $, oj)
+define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
+    function(localrequire, ko, $, oj)
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
+            
+            //Config requireJS i18n plugin if not configured yet
+            var i18nPluginPath = getFilePath(localrequire,'../resources/i18n.js');
+            i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length-3);
+            var requireConfig = requirejs.s.contexts._;
+            var locale = null;
+            var i18nConfigured = false;
+            var childCfg = requireConfig.config;
+            if (childCfg.config && childCfg.config.ojL10n) {
+                locale =childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
+            }
+            if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
+                i18nConfigured = true;
+            }
+            if (i18nConfigured === false) {
+                requirejs.config({
+                    config: locale ? {i18n: {locale: locale}} : {},
+                    paths: {
+                        'i18n': i18nPluginPath
+                    }
+                });
+            }
+            else {
+                requirejs.config({
+                    config: locale ? {i18n: {locale: locale}} : {}
+                });
+            }
+                
             self.userName = userName;
             self.tenantName = tenantName;
+            
+            var isNlsStringsLoaded = false;
+            var nlsStrings = ko.observable();
+            
+            requireNlsBundle();
+            
             
             /**
              * Catenate root and path to build full path
@@ -397,48 +427,164 @@ define(['knockout',
             
             /**
              * Ajax call with retry logic
+             * 
+             * Note:
+             * Parameter urlOrOptions can be a URL string (e.g. 'http://localhost:7001/api/v1'), 
+             * in such case the ajax call will be in pattern $.ajax(url, options).
+             * Otherwise urlOrOptions should be a Object which holds all the settings (including url) required by an ajax call, 
+             * in such case the ajax call will be in pattern $.ajax(options).
+             * 
+             * @param {String}/{Object} urlOrOptions
+             * @param {Object} options
              * @returns 
              */ 
-            self.ajaxWithRetry = function(urlOrOpt, options) {
-                if (urlOrOpt && typeof(urlOrOpt) === 'string' && options)
-                    options.url = urlOrOpt;
-                else if (urlOrOpt && typeof(urlOrOpt) === 'object')
-                    options = urlOrOpt;
+            self.ajaxWithRetry = function(urlOrOptions, options) {
+                var retryOptions = null;
+                if (typeof(urlOrOptions) === 'string' && typeof(options) === 'object') {
+                    retryOptions = options;
+                    retryOptions.url = urlOrOptions;
+                }
+                else if (typeof(urlOrOptions) === 'object')
+                    retryOptions = urlOrOptions;
                 var retryCount = 0;
-                var retryLimit = options.retryLimit ? options.retryLimit : 3;
-                var errorCallBack = options.error;
-                var errorCallBackWithRetry = function(xhr, status, error) {
-                    retryCount++;
-                    if (retryCount <= retryLimit) {
-                        var warnMsg = "Not connected. Retrying the connection by URL: "+options.url+". Retry count: "+retryCount;
-                        //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
-                        if (options.url === '/sso.static/dashboards.logging/logs')
-                            window.console.warn(warnMsg);
-                        else 
-                            oj.Logger.warn(warnMsg);
+                var retryLimit = retryOptions.retryLimit ? retryOptions.retryLimit : 3;
+                var showMessages = retryOptions.showMessages === false ? false : true;
+                var messageId = null;
+                var messageObj = null;
+                
+                var ajaxCallDfd = $.Deferred();
+ 
+                (function ajaxCall (retries) {
+                    var dfd = $.ajax(retryOptions);
+                    dfd.done(function (data) {
+                        ajaxCallDfd.resolve(data);
+                        removeMessage(messageId);
+                    });
+                    dfd.fail(function (jqXHR, textStatus, errorThrown) {
+                        retryCount++;
+                        if ((retries > 0) && (jqXHR.status === 408 || jqXHR.status === 404 || jqXHR.status === 503 || jqXHR.status === 0)) {
+                            if (showMessages === true) {
+                                //remove old retrying message
+                                removeMessage(messageId);
+
+                                //show new retrying message, if resource bundle not loaded yet show default message
+                                if (!isNlsStringsLoaded) {
+                                    var nlsWarnMsg = 'Resource bundle has not finished loading in df-util, show default messages instead.';
+                                    if (retryOptions.url === '/sso.static/dashboards.logging/logs')
+                                        window.console.warn(nlsWarnMsg);
+                                    else 
+                                        oj.Logger.warn(nlsWarnMsg);
+                                }
+                                messageId = self.getGuid();
+                                var summaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY : 
+                                        'Not connected.';
+                                var detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
+                                        'Retrying the connection by URL: {0}. Retry count: {1}.';
+                                detailMsg = self.formatMessage(detailMsg, retryOptions.url, retryCount);
+                                messageObj = {
+                                    id: messageId, 
+                                    action: 'show', 
+                                    type: 'warn', 
+                                    summary: summaryMsg, 
+                                    detail: detailMsg};
+                                self.showMessage(messageObj);
+                            }
+
+                            var warnMsg = "Not connected. Retrying the connection by URL: {0}. Retry count: {1}.";
+                            warnMsg = self.formatMessage(warnMsg, retryOptions.url, retryCount);
+                            //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
+                            if (retryOptions.url === '/sso.static/dashboards.logging/logs')
+                                window.console.warn(warnMsg);
+                            else 
+                                oj.Logger.warn(warnMsg);
                         
-                        //Try to connect again
-                        return $.ajax(options); 
-                    }
-                    
-                    var errorMsg = "Could not connect even after retrying for "+retryLimit+" times by URL: "+options.url;
-                    //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
-                    if (options.url === '/sso.static/dashboards.logging/logs')
-                        window.console.error(errorMsg);
-                    else 
-                        oj.Logger.error(errorMsg);
-                    
-                    //Invoke error callback
-                    if (errorCallBack) {
-                        errorCallBack(xhr, status, error);
-                    }
-                    return;
-                };
-                options.error = errorCallBackWithRetry;
-                //Set timeout by default 8 seconds if not set
-                if (!options.timeout)
-                    options.timeout = 8000;
-                return $.ajax(options);    
+                            ajaxCall(retries - 1);
+                            return;
+                        }
+                        
+                        if (showMessages === true) {
+                            //remove old retrying message after retrying for 3 times
+                            removeMessage(messageId);
+
+                            //show new retry error message
+                            if (!isNlsStringsLoaded) {
+                                var nlsWarnMsg = 'Resource bundle has not finished loading in df-util, show default messages instead.';
+                                if (retryOptions.url === '/sso.static/dashboards.logging/logs')
+                                    window.console.warn(nlsWarnMsg);
+                                else 
+                                    oj.Logger.warn(nlsWarnMsg);
+                            }
+                            var errorSummaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY : 
+                                    'Could not connect.';
+                            var errorDetailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
+                                    'Could not connect after retrying for {0} times by URL: {1}.';
+                            errorDetailMsg = self.formatMessage(errorDetailMsg, retryLimit, retryOptions.url);
+                            messageObj = {
+                                id: self.getGuid(), 
+                                action: 'show', 
+                                type: 'error', 
+                                summary: errorSummaryMsg,
+                                detail: errorDetailMsg};
+                            self.showMessage(messageObj);
+                        }
+                        
+                        ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
+                    });
+                }(retryLimit));
+ 
+                return ajaxCallDfd;
+            };
+            
+            self.getGuid = function() {
+                function S4() {
+                   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                }
+                
+                return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+            };
+            
+            self.showMessage = function(message) {
+                if (message) {
+                    message.category = 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE';
+                    window.postMessage(message, window.location.href);
+                }
+            };
+            
+            self.formatMessage = function(message) {
+                var i=1;
+                while(i<arguments.length) message=message.replace("{"+(i-1)+"}",arguments[i++]);
+                return message;
+            };
+            
+            function removeMessage(messageId) {
+                if (messageId) {
+                    var messageObj = {id: messageId, category: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove'};
+                    window.postMessage(messageObj, window.location.href);
+                }
+            };
+            
+            function getFilePath(requireContext, relPath) {
+                var jsRootMain = requireContext.toUrl("");
+                var path = requireContext.toUrl(relPath);
+                path = path.substring(jsRootMain.length);
+                return path;
+            };
+            
+            function requireNlsBundleCallback(nls) {
+                nlsStrings(nls);
+                isNlsStringsLoaded = true;
+                oj.Logger.info("Finished loading resource bundle for df-util.", false);
+            };
+
+            function requireNlsBundleErrorCallback(error) {
+                oj.Logger.error("Failed to load resource bundle for df-util: " + error.message , false);
+            };
+
+            function requireNlsBundle() {
+                var nlsResourceBundle = getFilePath(localrequire,'../resources/nls/dfCommonMsgBundle.js');
+                oj.Logger.info("Start to load resource bundle for df-util. Resource bundle file: " + nlsResourceBundle, false);
+                nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
+                require(['i18n!'+nlsResourceBundle], requireNlsBundleCallback, requireNlsBundleErrorCallback);
             };
             
         }
