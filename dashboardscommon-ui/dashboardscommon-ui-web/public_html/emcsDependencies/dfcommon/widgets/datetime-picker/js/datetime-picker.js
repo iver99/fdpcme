@@ -563,7 +563,11 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                     $(self.panelId).ojPopup("close");
                     if (self.callback){
-                        self.callback(new Date(start), new Date(end));
+			$.ajax({
+                            success: function() {self.callback(new Date(start), new Date(end));},
+           	            error: function() {console.log("error!");},
+			});
+                        
                     }
                     return true;
                 }

@@ -7,11 +7,12 @@
     border-style: solid;
     border-color: #dfe4e7;
     border-radius: 2px;
-    padding-top: 13px;
-    padding-bottom: 13px;
+ /*   padding-top: 13px;
+    padding-bottom: 13px;*/
     padding-left:8px;
     height: 38px;
-    width: 430px;
+ /*   width: 430px;*/  
+    width: auto;
     margin-top: 10px;
     line-height: 38px; /*******/
     display: inline-block;
