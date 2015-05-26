@@ -469,7 +469,11 @@ define(['knockout',
                     var height = $(node).height();
                     var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
                     var canvas = document.createElement('canvas');
-                    canvg(canvas, svg);
+                    try {
+                    	canvg(canvas, svg);
+                    } catch (e) {
+                    	oj.Logger.error(e);
+                    }
                     nodesToRecover.push({
                         parent: parentNode,
                         child: node
@@ -483,43 +487,51 @@ define(['knockout',
                 });
                 html2canvas($('#tiles-row'), {
                     onrendered: function(canvas) {
-                        var ctx = canvas.getContext('2d');
-                        ctx.webkitImageSmoothingEnabled = false;
-                        ctx.mozImageSmoothingEnabled = false;
-                        ctx.imageSmoothingEnabled = false;
-                        var data = canvas.toDataURL();
-                        nodesToRemove.forEach(function(pair) {
-                            pair.parent.removeChild(pair.child);
-                        });
-                        nodesToRecover.forEach(function(pair) {
-                            pair.parent.appendChild(pair.child);
-                        });
-                        outputData.screenShot = data;
-                        if (window.opener && window.opener.childMessageListener) {
-                            var jsonValue = JSON.stringify(outputData);
-                            console.log(jsonValue);
-                            window.opener.childMessageListener(jsonValue);
-                        }
-                        tilesViewModel.dashboard.screenShot = ko.observable(data);
-                        var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
-                            'include': ['screenShot', 'description', 'height', 
-                                'isMaximized', 'title', 'type', 'width', 
-                                'tileParameters', 'name', 'systemParameter', 
-                                'tileId', 'value'],
-                            'ignore': ["createdOn", "href", "owner", 
-                                "screenShotHref", "systemDashboard",
-                                "customParameters", "clientGuid", "dashboard", 
-                                "fireDashboardItemChangeEvent", "getParameter", 
-                                "maximizeEnabled", "narrowerEnabled", 
-                                "onDashboardItemChangeEvent", "restoreEnabled", 
-                                "setParameter", "shouldHide", "systemParameters", 
-                                "tileDisplayClass", "widerEnabled", "widget"]
-                        });
-                        var dashboardId = tilesViewModel.dashboard.id();
-                        dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
-                            console.log(error.errorMessage());
-                        });
+                    	try {
+                    		var ctx = canvas.getContext('2d');
+                    		ctx.webkitImageSmoothingEnabled = false;
+                    		ctx.mozImageSmoothingEnabled = false;
+                    		ctx.imageSmoothingEnabled = false;
+                    		var data = canvas.toDataURL();
+                    		nodesToRemove.forEach(function(pair) {
+                    			pair.parent.removeChild(pair.child);
+                    		});
+                    		nodesToRecover.forEach(function(pair) {
+                    			pair.parent.appendChild(pair.child);
+                    		});
+                    		outputData.screenShot = data;
+                    		tilesViewModel.dashboard.screenShot = ko.observable(data);
+                    		if (window.opener && window.opener.childMessageListener) {
+                    			var jsonValue = JSON.stringify(outputData);
+                    			console.log(jsonValue);
+                    			window.opener.childMessageListener(jsonValue);
+                    		}
+                    	} catch (e) {
+                    		oj.Logger.error(e);
+                    	}
+                    	self.handleSaveUpdateToServer();
                     }  
+                });
+            };
+            
+            self.handleSaveUpdateToServer = function() {
+                var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
+                    'include': ['screenShot', 'description', 'height', 
+                        'isMaximized', 'title', 'type', 'width', 
+                        'tileParameters', 'name', 'systemParameter', 
+                        'tileId', 'value'],
+                    'ignore': ["createdOn", "href", "owner", 
+                        "screenShotHref", "systemDashboard",
+                        "customParameters", "clientGuid", "dashboard", 
+                        "fireDashboardItemChangeEvent", "getParameter", 
+                        "maximizeEnabled", "narrowerEnabled", 
+                        "onDashboardItemChangeEvent", "restoreEnabled", 
+                        "setParameter", "shouldHide", "systemParameters", 
+                        "tileDisplayClass", "widerEnabled", "widget"]
+                });
+                var dashboardId = tilesViewModel.dashboard.id();
+                dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
+                    console.log(error.errorMessage());
                 });
             };
             
