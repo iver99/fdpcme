@@ -487,7 +487,7 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic) throws DashboardException
 	{
-		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, false, false, false);
+		return listDashboards(queryString, offset, pageSize, tenantId, ic, null, null);
 	}
 
 	/**
@@ -503,7 +503,7 @@ public class DashboardManager
 	 * @return
 	 */
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
-			boolean ic, String orderBy, boolean filterITA, boolean filterLA, boolean filterAPM) throws DashboardException
+			boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException
 	{
 		if (offset != null && offset < 0) {
 			throw new CommonFunctionalException(
@@ -527,23 +527,30 @@ public class DashboardManager
 		if (apps == null || apps.isEmpty()) {
 			throw new TenantWithoutSubscriptionException();
 		}
-		if (filterITA && apps.contains(DashboardApplicationType.ITAnalytics)) {
-			apps.remove(DashboardApplicationType.ITAnalytics);
-		}
-		if (filterLA && apps.contains(DashboardApplicationType.LogAnalytics)) {
-			apps.remove(DashboardApplicationType.LogAnalytics);
-		}
-		if (filterAPM && apps.contains(DashboardApplicationType.APM)) {
-			apps.remove(DashboardApplicationType.APM);
+		if (filter != null) {
+			if (filter.getIncludedApplicationTypes() != null && !filter.getIncludedApplicationTypes().isEmpty()) {
+				List<DashboardApplicationType> filteredTypes = new ArrayList<DashboardApplicationType>();
+				for (DashboardApplicationType type : apps) {
+					if (!filter.getIncludedApplicationTypes().contains(type)) {
+						filteredTypes.add(type);
+					}
+				}
+
+				for (DashboardApplicationType type : filteredTypes) {
+					apps.remove(type);
+				}
+			}
 		}
 
 		StringBuilder sb = null;
+		int index = 1;
 		if (apps.isEmpty()) {
 			// no subscribe apps
 			sb = new StringBuilder(
 					" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
 							+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
-							+ "where p.deleted = 0 and p.tenant_Id = ?3 and p.owner = ?4 and p.is_system = ?5");
+							+ "where p.deleted = 0 and p.tenant_Id = ?3 and p.owner = ?4 ");
+			index = 5;
 		}
 		else {
 			StringBuilder sbApps = new StringBuilder();
@@ -560,6 +567,7 @@ public class DashboardManager
 							+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
 							+ "where p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or (p.is_system = ?5 and p.application_type in ("
 							+ sbApps.toString() + "))) ");
+			index = 6;
 		}
 		List<Object> paramList = new ArrayList<Object>();
 		String currentUser = UserContext.getCurrentUser();
@@ -567,39 +575,78 @@ public class DashboardManager
 		paramList.add(tenantId);
 		paramList.add(tenantId);
 		paramList.add(currentUser);
-		if (apps.isEmpty()) {
-			paramList.add(0);
-		}
-		else {
+		if (!apps.isEmpty()) {
 			paramList.add(1);
+		}
+
+		if (filter != null) {
+			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
+				sb.append(" and ( ");
+				for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
+					if (i != 0) {
+						sb.append(" or ");
+					}
+					sb.append(" p.type = ?" + index++);
+					paramList.add(filter.getIncludedTypeIntegers().get(i));
+				}
+				sb.append(" ) ");
+			}
+
+			if (filter.getIncludedOwners() != null && !filter.getIncludedOwners().isEmpty()) {
+				sb.append(" and ( ");
+				if (filter.getIncludedOwners().contains("Oracle")) {
+					sb.append(" p.owner = ?" + index++);
+					paramList.add("Oracle");
+				}
+				if (filter.getIncludedOwners().contains("Others")) {
+					if (filter.getIncludedOwners().contains("Oracle")) {
+						sb.append(" or ");
+					}
+					sb.append(" p.owner != ?" + index++);
+					paramList.add("Oracle");
+				}
+				/*
+				for (int i = 0; i < filter.getIncludedOwners().size(); i++) {
+					if (i != 0) {
+						sb.append(" or ");
+					}
+					sb.append(" p.owner = ?" + index++);
+					paramList.add(filter.getIncludedOwners().get(i));
+					}
+				 */
+
+				sb.append(" ) ");
+			}
 		}
 
 		if (queryString != null && !"".equals(queryString)) {
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
-				sb.append(" and (p.name LIKE ?6");
+				sb.append(" and (p.name LIKE ?" + index++);
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" and (lower(p.name) LIKE ?6");
+				sb.append(" and (lower(p.name) LIKE ?" + index++);
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 
 			if (!ic) {
-				sb.append(" or p.description like ?7");
+				sb.append(" or p.description like ?" + index++);
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or lower(p.description) like ?7");
+				sb.append(" or lower(p.description) like ?" + index++);
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?8 )) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?" + index++
+						+ " )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?8)) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?"
+						+ index++ + " )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 			//			sb.append(" or lower(p.owner) = :owner)");
