@@ -12,6 +12,10 @@ import oracle.sysman.emsaas.login.PageUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.By;
+
 import org.testng.Assert;
 
 public class DashBoardUtils {
@@ -21,7 +25,7 @@ public class DashBoardUtils {
 	public static void loadWebDriver(WebDriver webDriver) throws Exception
 	{
 		driver=webDriver;
-		closeOverviewPage();
+		if(doesWebElementExist(DashBoardPageId.OverviewCloseID))  closeOverviewPage();
 		waitForMilliSeconds(5000);
 
 	}
@@ -145,15 +149,18 @@ public class DashBoardUtils {
 	
 	public static boolean doesWebElementExist(String selector)
 	{
-		try                                 
-		{                                   
-		       driver.getElement(selector);
-		       return true;                  
-		                                    
-		}catch(org.openqa.selenium.NoSuchElementException e)      
-		 {                                  
-		         return false;              
-		 }                                  
+		                             
+		        WebElement el=driver.getWebDriver().findElement(By.id(selector));
+			
+		       if(el.isDisplayed()){
+		    	   driver.getLogger().info("can get element");
+		    	   return true;              
+		       }		                                    
+		       else{
+		 
+		    	   driver.getLogger().info("can not get element");
+		    	   return false;              
+		       }         
 
 	}
 	public static void clickDashBoard() throws Exception
