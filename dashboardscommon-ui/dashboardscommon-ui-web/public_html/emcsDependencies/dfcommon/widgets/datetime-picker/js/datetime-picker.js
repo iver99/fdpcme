@@ -58,7 +58,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     }
 
                     return {
-                        format1: month1 + '/' + day + '/' + year,
+                        format1: month1 + '/' + day + '/' + year
 //                        format2: month2 + " " + day + "," + year
                     }
                 }
@@ -566,7 +566,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if (self.callback){
 			$.ajax({
                             success: function() {self.callback(new Date(start), new Date(end));},
-           	            error: function() {console.log("error!");},
+           	            error: function() {console.log("error!");}
 			});
                         
                     }
