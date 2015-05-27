@@ -423,6 +423,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if (data.option == "value" && !self.selectByDrawer()) {
                         self.customClick();
                         $.when(nlsString()).done(function () {
+		            self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                             self.updateRange(self.startDate(), self.endDate());
                         });
                     }
@@ -476,7 +477,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         curMonths.push(self.monthObject()[$(this).text()]);
                     });
                     monthDiff = (Number(startYear) - Number(curYears[0])) * 12 + (Number(startMonth) - Number(curMonths[0]));
-                    monthDiff = Math.floor(monthDiff / 2);
+                    //monthDiff = Math.floor(monthDiff / 2);
                     if (monthDiff <= 0) {
                         while (clickNumber < Math.abs(monthDiff)) {
                             $(self.panelId + " .oj-datepicker-prev-icon").click();
