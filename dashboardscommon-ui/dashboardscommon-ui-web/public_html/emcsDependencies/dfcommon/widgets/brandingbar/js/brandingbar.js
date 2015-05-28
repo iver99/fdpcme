@@ -405,7 +405,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         
                         //Remove message automatically if remove delay time is set
                         if (data.removeDelayTime && typeof(data.removeDelayTime) === 'number') {
-                            setTimeout(function(){removeMessage(data);}, data.removeDelayTime);
+                            setTimeout(function(){removeMessage(message);}, data.removeDelayTime);
                         }
                     }
                 };
