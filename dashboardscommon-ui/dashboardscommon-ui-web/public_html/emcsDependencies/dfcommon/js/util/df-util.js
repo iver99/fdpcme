@@ -659,12 +659,13 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 var respJson = xhr.responseJSON;
                 if (typeof respJson !== "undefined" && 
                         respJson.hasOwnProperty("errorMessage") && 
-                        typeof respJson.errorMessage !== "undefined") {
+                        typeof respJson.errorMessage !== "undefined" && 
+                        respJson.errorMessage !== "") {
                     message = respJson.errorMessage;
                 } 
                 else {
                     var respText = xhr.responseText;
-                    if (typeof respText !== "undefined") {
+                    if (typeof respText !== "undefined" && respText !== "") {
                         message = respText;
                     }
                 }
