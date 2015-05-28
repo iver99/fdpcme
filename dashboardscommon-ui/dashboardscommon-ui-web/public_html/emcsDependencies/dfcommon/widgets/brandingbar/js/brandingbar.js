@@ -55,27 +55,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var confirmMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_confirm_16.png'); 
                 var infoMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_info_16.png'); 
                 var messages = [];
-                var sampleMessages = [
-//                    {id: 1, action: 'add', type: 'error', iconAltText: self.altTextError, icon: errorMessageIcon,
-//                        summary: 'Could not connect.', 
-//                        detail: 'Could not connect after retrying for 3 times by URL: /sso.static/dashboards.subscribedapps.'},
-//                    {id: 2, action: 'add', type: 'warn', iconAltText: self.altTextWarn, icon: warnMessageIcon,
-//                        summary: 'Java.jeff is also editing this APIs resources.', 
-//                        detail: 'Your changes could be overwritten.'},
-//                    {id: 3, action: 'add', type: 'confirm', iconAltText: self.altTextConfirm, icon: confirmMessageIcon,
-//                        summary: 'Save successful.', 
-//                        detail: 'Dashboard is saved successfully.'},
-//                    {id: 4, action: 'add', type: 'info', iconAltText: self.altTextInfo, icon: infoMessageIcon,
-//                        summary: 'Not connected.', 
-//                        detail: 'Retrying the connection now. Target URL: /sso.static/dashboards.subscribedapps.'}
-                ];
-//                var messageIdToIndexMap = {};
-                for (i = 0; i < sampleMessages.length; i++) {
-                    showMessage(sampleMessages[i]);
-                }
                 
                 self.clearMessage = function(data, event) {
-//                    messages.splice(data.index, 1);
                     removeMessage(data);
                     self.messageList(messages);
                 };
@@ -420,8 +401,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         }
                         
                         messages.push(message);
-//                        if (message.id)
-//                            messageIdToIndexMap[message.id] = message.index;
                         self.messageList(messages);
                         
                         //Remove message automatically if remove delay time is set
@@ -432,8 +411,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 function removeMessage(data) {
-//                    var originSize = messages.length;
-//                    var index;
                     if (data && data.id) {
                         for (i = 0; i < messages.length; i++) {
                             if (messages[i].id === data.id) {
@@ -443,22 +420,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         }
                     }
                     
-//                    if (data && data.index) {
-//                        index = data.index;
-//                    }
-//                    else if (data && data.id) {
-//                        index = messageIdToIndexMap[data.id];
-//                    }
-                    
-//                    messages.splice(index, 1);
-//                    for (i = data.index; i < originSize-1; i++) {
-//                        messages[i].index = messages[i].index - 1;
-//                        if (messages[i].id)
-//                            messageIdToIndexMap[messages[i].id] = messages[i].index;
-//                    }
-//                    if (data && data.id) {
-//                        delete messageIdToIndexMap[data.id];
-//                    }
                     self.messageList(messages);
                 };
                 

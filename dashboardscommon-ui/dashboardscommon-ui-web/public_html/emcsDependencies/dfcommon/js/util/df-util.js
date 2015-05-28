@@ -399,7 +399,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                         callbackFunc(data.applications);
                     },
                     error:function(xhr, textStatus, errorThrown){
-                        oj.Logger.error("Failed to get subscribed applicatoins due to error: "+textStatus);
+                        oj.Logger.error("Failed to get subscribed applications due to error: "+textStatus);
                         callbackFunc(null);
                     },
                     async:true
@@ -429,7 +429,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * Ajax call with retry logic
              * 
              * Note:
-             * Parameter urlOrOptions can be a URL string (e.g. 'http://localhost:7001/api/v1'), 
+             * Parameter urlOrOptions can be a URL string (e.g. '/sso.static/dashboards.subscribedapps'), 
              * in such case the ajax call will be in pattern $.ajax(url, options).
              * Otherwise urlOrOptions should be a Object which holds all the settings (including url) required by an ajax call, 
              * in such case the ajax call will be in pattern $.ajax(options).
@@ -451,81 +451,102 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 var showMessages = retryOptions.showMessages === false ? false : true;
                 var messageId = null;
                 var messageObj = null;
+                var errorCallBack = retryOptions.error;
+                retryOptions.error = null;
                 
                 var ajaxCallDfd = $.Deferred();
  
                 (function ajaxCall (retries) {
                     var dfd = $.ajax(retryOptions);
                     dfd.done(function (data) {
-                        ajaxCallDfd.resolve(data);
                         removeMessage(messageId);
+                        ajaxCallDfd.resolve(data);
                     });
                     dfd.fail(function (jqXHR, textStatus, errorThrown) {
-                        retryCount++;
-                        if ((retries > 0) && (jqXHR.status === 408 || jqXHR.status === 404 || jqXHR.status === 503 || jqXHR.status === 0)) {
+                        //If session timeout (status = 302), make a browser refresh call which then will redirect to sso login page
+                        if (jqXHR.status === 302) {
+                            var sessionTimeoutMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING : 
+                                    'Session timeout. Redirecting to SSO login page now...';
+                            logMessage(retryOptions.url, 'warn', sessionTimeoutMsg);
+                            
+                            location.reload(true);
+                        }
+                        //Do retry
+                        else {
+                            retryCount++;
+                            if ((retries > 0) && (jqXHR.status === 408 || jqXHR.status === 404 || jqXHR.status === 503 || jqXHR.status === 0)) {
+                                if (showMessages === true) {
+                                    //remove old retrying message
+                                    removeMessage(messageId);
+
+                                    //show new retrying message, if resource bundle not loaded yet show default message
+                                    if (!isNlsStringsLoaded) {
+                                        var nlsWarnMsg = 'Resource bundle has not finished loading in df-util, show default messages instead.';
+                                        logMessage(retryOptions.url, 'warn', nlsWarnMsg);
+                                    }
+
+                                    //Set message to be shown on UI
+                                    messageId = self.getGuid();
+                                    var summaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY : 
+                                            'Not connected.';
+                                    var detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
+                                            'Retrying to connect to your cloud service. Retry count: {0}.';
+                                    detailMsg = self.formatMessage(detailMsg, retryCount);
+                                    messageObj = {
+                                        id: messageId, 
+                                        action: 'show', 
+                                        type: 'warn', 
+                                        summary: summaryMsg, 
+                                        detail: detailMsg};
+
+                                    //Show message on UI
+                                    self.showMessage(messageObj);
+                                }
+                                
+                                //Do retry once again if failed
+                                ajaxCall(retries - 1);
+                                return;
+                            }
+
+                            var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
                             if (showMessages === true) {
-                                //remove old retrying message
+                                //remove old retrying message after retrying for 3 times
                                 removeMessage(messageId);
 
-                                //show new retrying message, if resource bundle not loaded yet show default message
+                                //show new retry error message
                                 if (!isNlsStringsLoaded) {
                                     var nlsWarnMsg = 'Resource bundle has not finished loading in df-util, show default messages instead.';
-                                    if (retryOptions.url === '/sso.static/dashboards.logging/logs')
-                                        window.console.warn(nlsWarnMsg);
-                                    else 
-                                        oj.Logger.warn(nlsWarnMsg);
+                                    logMessage(retryOptions.url, 'warn', nlsWarnMsg);
                                 }
-                                messageId = self.getGuid();
-                                var summaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY : 
-                                        'Not connected.';
-                                var detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
-                                        'Retrying the connection by URL: {0}. Retry count: {1}.';
-                                detailMsg = self.formatMessage(detailMsg, retryOptions.url, retryCount);
+
+                                //Set failure message to be shown on UI after 3 retries
+                                var errorSummaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY : 
+                                        'Attempts to connect to your cloud service failed after {0} tries.';
+                                var errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg : 
+                                        (isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
+                                        'Could not connect to your cloud service after {0} tries.');
+                                errorSummaryMsg = self.formatMessage(errorSummaryMsg, retryLimit);
+                                errorDetailMsg = self.formatMessage(errorDetailMsg, retryLimit);
                                 messageObj = {
-                                    id: messageId, 
+                                    id: self.getGuid(), 
                                     action: 'show', 
-                                    type: 'warn', 
-                                    summary: summaryMsg, 
-                                    detail: detailMsg};
+                                    type: 'error', 
+                                    summary: errorSummaryMsg,
+                                    detail: errorDetailMsg};
+
+                                //Show error message on UI
                                 self.showMessage(messageObj);
                             }
 
-                            var warnMsg = "Not connected. Retrying the connection by URL: {0}. Retry count: {1}.";
-                            warnMsg = self.formatMessage(warnMsg, retryOptions.url, retryCount);
+                            var errorMsg = "Attempts to connect to your cloud service failed after {0} tries. Target URL: {1}.";
+                            errorMsg = self.formatMessage(errorMsg, retryLimit, retryOptions.url);
                             //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
-                            if (retryOptions.url === '/sso.static/dashboards.logging/logs')
-                                window.console.warn(warnMsg);
-                            else 
-                                oj.Logger.warn(warnMsg);
-                        
-                            ajaxCall(retries - 1);
-                            return;
+                            logMessage(retryOptions.url, 'error', errorMsg);
                         }
                         
-                        if (showMessages === true) {
-                            //remove old retrying message after retrying for 3 times
-                            removeMessage(messageId);
-
-                            //show new retry error message
-                            if (!isNlsStringsLoaded) {
-                                var nlsWarnMsg = 'Resource bundle has not finished loading in df-util, show default messages instead.';
-                                if (retryOptions.url === '/sso.static/dashboards.logging/logs')
-                                    window.console.warn(nlsWarnMsg);
-                                else 
-                                    oj.Logger.warn(nlsWarnMsg);
-                            }
-                            var errorSummaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY : 
-                                    'Could not connect.';
-                            var errorDetailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
-                                    'Could not connect after retrying for {0} times by URL: {1}.';
-                            errorDetailMsg = self.formatMessage(errorDetailMsg, retryLimit, retryOptions.url);
-                            messageObj = {
-                                id: self.getGuid(), 
-                                action: 'show', 
-                                type: 'error', 
-                                summary: errorSummaryMsg,
-                                detail: errorDetailMsg};
-                            self.showMessage(messageObj);
+                        //Call error callback if the ajax call finally failed
+                        if (errorCallBack) {
+                            errorCallBack(jqXHR, textStatus, errorThrown);
                         }
                         
                         ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
@@ -533,6 +554,35 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 }(retryLimit));
  
                 return ajaxCallDfd;
+            };
+            
+            /**
+             * Make an ajax get call with retry logic
+             * 
+             * Note:
+             * Parameter urlOrOptions can be a URL string (e.g. '/sso.static/dashboards.subscribedapps'), 
+             * in such case the ajax call will be in pattern $.ajax(url, options).
+             * Otherwise urlOrOptions should be a Object which holds all the settings (including url) required by an ajax call, 
+             * in such case the ajax call will be in pattern $.ajax(options).
+             * 
+             * @param {String}/{Object} urlOrOptions
+             * @param {Object} options
+             * @returns 
+             */ 
+            self.ajaxGetWithRetry = function(urlOrOptions, options) {
+                var retryOptions = null;
+                if (typeof(urlOrOptions) === 'string' && typeof(options) === 'object') {
+                    retryOptions = options;
+                    retryOptions.url = urlOrOptions;
+                }
+                else if (typeof(urlOrOptions) === 'object')
+                    retryOptions = urlOrOptions;
+                
+                //Set ajax call type to GET
+                retryOptions.type = 'GET';
+                
+                //call ajaxWithRetry
+                return self.ajaxWithRetry(retryOptions);
             };
             
             self.getGuid = function() {
@@ -556,11 +606,70 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 return message;
             };
             
+            function logMessage(url, messageType, messageText) {
+                if (messageType) 
+                    messageType = messageType.toLowerCase();
+                if (url === '/sso.static/dashboards.logging/logs') {
+                    switch(messageType) {
+                        case 'error':
+                            window.console.error(messageText);
+                            break;
+                        case 'warn':
+                            window.console.warn(messageText);
+                            break;
+                        case 'info':
+                            window.console.info(messageText);
+                            break;
+                        case 'log':
+                            window.console.log(messageText);
+                            break;
+                        default:
+                            window.console.log(messageText);
+                    }
+                }
+                else {
+                    switch(messageType) {
+                        case 'error':
+                            oj.Logger.error(messageText);
+                            break;
+                        case 'warn':
+                            oj.Logger.warn(messageText);
+                            break;
+                        case 'info':
+                            oj.Logger.info(messageText);
+                            break;
+                        case 'log':
+                            oj.Logger.log(messageText);
+                            break;
+                        default:
+                            oj.Logger.log(messageText);
+                    }
+                }
+            };
+            
             function removeMessage(messageId) {
                 if (messageId) {
                     var messageObj = {id: messageId, category: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove'};
                     window.postMessage(messageObj, window.location.href);
                 }
+            };
+            
+            function getMessageFromXhrResponse(xhr) {
+                var message = null;
+                var respJson = xhr.responseJSON;
+                if (typeof respJson !== "undefined" && 
+                        respJson.hasOwnProperty("errorMessage") && 
+                        typeof respJson.errorMessage !== "undefined") {
+                    message = respJson.errorMessage;
+                } 
+                else {
+                    var respText = xhr.responseText;
+                    if (typeof respText !== "undefined") {
+                        message = respText;
+                    }
+                }
+                
+                return message;
             };
             
             function getFilePath(requireContext, relPath) {

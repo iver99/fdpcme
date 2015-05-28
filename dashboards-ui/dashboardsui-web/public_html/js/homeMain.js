@@ -168,7 +168,7 @@ require(['dbs/dbsmodel',
                     setMainAreaPadding(true);
                 });
                 
-               window.addEventListener('message', childMessageListener, false);
+//               window.addEventListener('message', childMessageListener, false);
                window.name = 'dashboardhome'; 
                
                if (window.parent && window.parent.updateOnePageHeight)

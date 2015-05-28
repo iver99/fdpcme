@@ -66,9 +66,10 @@ define({
       "WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE": "Screen Shot",
       "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY":"Not connected.",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying the connection by URL: {0}. Retry count: {1}.",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Could not connect.",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Could not connect after retrying for {0} times by URL: {1}."
+      "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service. Retry count: {0}.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Attempts to connect to your cloud service failed after 3 tries.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Could not connect to your cloud service after {0} tries.",
+      "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now..."
 }
 });
 

@@ -24,7 +24,8 @@ requirejs.config({
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util'
+        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -69,7 +70,8 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'ojs/ojcore',
-    'loggingutil',
+    'loggingutil', 
+    'prefutil',
 //    'ojs/ojcomponents',
 //    'jqueryui',
 //    'ojs/ojmodel',

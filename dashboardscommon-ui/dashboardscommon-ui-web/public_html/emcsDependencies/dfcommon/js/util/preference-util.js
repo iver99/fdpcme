@@ -1,5 +1,5 @@
 
-define(['knockout','jquery', './usertenant-util', './df-util'],
+define(['knockout','jquery', '../emcsDependencies/dfcommon/js/util/usertenant-util', '../emcsDependencies/dfcommon/js/util/df-util'],
 function(ko, $, ututil, dfumodel)
 {
     var dfu = new dfumodel(ututil.getUserName(), ututil.getTenantName());
