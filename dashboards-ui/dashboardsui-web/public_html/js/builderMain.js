@@ -133,10 +133,14 @@ require(['knockout',
                     template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
                 });
             }
-            ko.components.register("df-time-selector",{
-                viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
-                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
-            });
+//            ko.components.register("df-time-selector",{
+//                viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
+//                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
+//            });
+	    ko.components.register("df-datetime-picker",{
+         	viewModel: {require: '../emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker'},
+	        template: {require: 'text!../emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html'}
+	    });
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
                 template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}

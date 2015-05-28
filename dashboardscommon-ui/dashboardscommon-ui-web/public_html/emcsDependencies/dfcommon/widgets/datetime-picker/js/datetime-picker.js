@@ -21,7 +21,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 path = path.substring(jsRootMain.length);
                 return path;
             }
-            ;
 
             /**
              * 
@@ -212,7 +211,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if (self.startDate() == self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() == 1) {
                             self.updateRange(self.startDate(), self.endDate());
-                            self.autoFocus("inputEndDate");
+                            self.autoFocus("inputEndDate_"+self.randomId);
                             self.lastFocus(2);
                         } else if (self.lastFocus() == 2) {
                             self.endDateISO(self.value());
@@ -225,7 +224,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             self.updateRange(self.startDate(), self.endDate());
                         } else if (self.lastFocus() == 1) {
                             self.startDateISO(self.value());
-                            self.autoFocus("inputEndDate");
+                            self.autoFocus("inputEndDate_"+self.randomId);
                             self.lastFocus(2);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
@@ -234,7 +233,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         var tmp = self.value();
                         if (self.lastFocus() == 1) {
                             self.startDateISO(tmp);
-                            self.autoFocus("inputEndDate");
+                            self.autoFocus("inputEndDate_"+self.randomId);
                             self.lastFocus(2);
                         } else if (self.lastFocus() == 2) {
                             self.endDateISO(tmp);
@@ -282,7 +281,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         if (t_timePeriod) {
                             self.timePeriod(t_timePeriod);
                             self.selectByDrawer(true);
-                            var eleId = self.panelId + " #drawer" + self.timePeriodObject()[t_timePeriod][0];
+                            var eleId = self.panelId + " #drawer" + self.timePeriodObject()[t_timePeriod][0] + "_" + self.randomId;
                             $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                             $(self.panelId + ' .drawer').css('font-weight', 'normal');
                             $(eleId).css('background-color', '#ffffff');
@@ -295,8 +294,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         self.selectByDrawer(true);
                         $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                         $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                        $(self.panelId + ' #drawer0').css('background-color', '#ffffff');
-                        $(self.panelId + ' #drawer0').css('font-weight', 'bold');
+                        $(self.panelId + ' #drawer0_'+self.randomId).css('background-color', '#ffffff');
+                        $(self.panelId + ' #drawer0_'+self.randomId).css('font-weight', 'bold');
                         
                         start = new Date(curDate - 15 * 60 * 1000);
                         end = new Date();
@@ -315,8 +314,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                         $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                         $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                        $(self.panelId + ' #drawer0').css('background-color', '#ffffff');
-                        $(self.panelId + ' #drawer0').css('font-weight', 'bold');
+                        $(self.panelId + ' #drawer0_'+self.randomId).css('background-color', '#ffffff');
+                        $(self.panelId + ' #drawer0_'+self.randomId).css('font-weight', 'bold');
 
                         start = new Date(curDate - 15 * 60 * 1000);
                         end = new Date();
@@ -328,8 +327,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                         $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                         $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                        $(self.panelId + ' #drawer0').css('background-color', '#ffffff');
-                        $(self.panelId + ' #drawer0').css('font-weight', 'bold');
+                        $(self.panelId + ' #drawer0_'+self.randomId).css('background-color', '#ffffff');
+                        $(self.panelId + ' #drawer0_'+self.randomId).css('font-weight', 'bold');
                         
                         start = new Date(curDate - 15 * 60 * 1000);
                         end = new Date(); 
@@ -364,8 +363,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                     $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                    $(self.panelId + ' #drawer9').css('background-color', '#ffffff');
-                    $(self.panelId + ' #drawer9').css('font-weight', 'bold');
+                    $(self.panelId + ' #drawer9_'+self.randomId).css('background-color', '#ffffff');
+                    $(self.panelId + ' #drawer9_'+self.randomId).css('font-weight', 'bold');
 
                 }
 
@@ -374,7 +373,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                     $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                    var drawerId = " #drawer" + self.timePeriodObject()[timePeriod][0];
+                    var drawerId = " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
                     $(self.panelId + drawerId).css('background-color', '#ffffff');
                     $(self.panelId + drawerId).css('font-weight', 'bold');
                 }
@@ -423,7 +422,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if (data.option == "value" && !self.selectByDrawer()) {
                         self.customClick();
                         $.when(nlsString()).done(function () {
-		            self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                            self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                             self.updateRange(self.startDate(), self.endDate());
                         });
                     }
@@ -438,7 +437,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 self.changeStartTime = function (event, data) {
                     if (data.option == "value" && !self.selectByDrawer()) {
-                        self.setFocusOnInput("divStartTime");
+                        self.setFocusOnInput("divStartTime_"+self.randomId);
                         self.lastFocus(0);
                         self.customClick();
                     }
@@ -446,7 +445,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 self.changeEndTime = function (event, data) {
                     if (data.option == "value" && !self.selectByDrawer()) {
-                        self.setFocusOnInput("divEndTime");
+                        self.setFocusOnInput("divEndTime_"+self.randomId);
                         self.lastFocus(0);
                         self.customClick();
                     }
@@ -477,7 +476,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         curMonths.push(self.monthObject()[$(this).text()]);
                     });
                     monthDiff = (Number(startYear) - Number(curYears[0])) * 12 + (Number(startMonth) - Number(curMonths[0]));
-                    //monthDiff = Math.floor(monthDiff / 2);
+//                    monthDiff = Math.floor(monthDiff / 2);
                     if (monthDiff <= 0) {
                         while (clickNumber < Math.abs(monthDiff)) {
                             $(self.panelId + " .oj-datepicker-prev-icon").click();
@@ -497,15 +496,15 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if ($(self.panelId).ojPopup('isOpen')) {
                         $(self.panelId).ojPopup('close');
                     } else {
-                        self.autoFocus("inputStartDate");
+                        self.autoFocus("inputStartDate_"+self.randomId);
                         self.lastFocus(1);
 //                        self.customClick();
                         self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                         self.updateRange(self.startDate(), self.endDate());
 
-                        $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown');
+                        $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_'+self.randomId);
 //                        $("#panel").slideDown();
-                        $(self.wrapperId + ' #panelArrow').attr('src', 'css/images/pull-up.jpg');
+                        $(self.wrapperId + ' #panelArrow_'+self.randomId).attr('src', 'emcsDependencies/dfcommon/images/pull-up.jpg');
                     }
                 }
 
@@ -516,12 +515,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     self.endTime(self.lastEndTime());
                     self.timePeriod(self.lastTimePeriod());
 
-                    $(self.wrapperId + ' #panelArrow').attr('src', 'css/images/drop-down.jpg');
+                    $(self.wrapperId + ' #panelArrow_'+self.randomId).attr('src', 'emcsDependencies/dfcommon/images/drop-down.jpg');
                 }
 
                 //select time period
                 self.chooseTimePeriod = function (data, event) {
-                    self.setFocusOnInput("inputStartDate");
+                    self.setFocusOnInput("inputStartDate_"+self.randomId);
                     self.lastFocus(1);
 
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
@@ -564,11 +563,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                     $(self.panelId).ojPopup("close");
                     if (self.callback){
-			$.ajax({
-                            success: function() {self.callback(new Date(start), new Date(end));},
-           	            error: function() {console.log("error!");}
-			});
-                        
+                        $.ajax({
+                            success: function() {self.callback(new Date(start), new Date(end))},
+                            error: function() {console.log(self.errorMsg())}
+                        });                        
                     }
                     return true;
                 }
@@ -579,8 +577,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 }
 
                 self.renderDateRange = function (startRange, endRange) {
-                    if ($(self.panelId + " #datePicker").children()[0]) {
-                        var calendarId = $(self.panelId + " #datePicker").children()[0].id;
+                    if ($(self.panelId + " #datePicker_"+self.randomId).children()[0]) {
+                        var calendarId = $(self.panelId + " #datePicker_"+self.randomId).children()[0].id;
                     } else {
                         return;
                     }
@@ -622,7 +620,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         }
                     }
                 }
-                self.setFocusOnInput("inputStartDate");
+                self.setFocusOnInput("inputStartDate_"+self.randomId);
                 self.lastFocus(1);
 
                 self.calendarClicked = function(data, event) {

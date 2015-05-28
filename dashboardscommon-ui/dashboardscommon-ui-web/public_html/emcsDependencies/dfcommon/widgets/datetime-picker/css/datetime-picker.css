@@ -1,4 +1,4 @@
-#dropDown {
+.dropdown {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     color: #333333;
@@ -10,11 +10,11 @@
  /*   padding-top: 13px;
     padding-bottom: 13px;*/
     padding-left:8px;
-    height: 38px;
+    height: 32px;
  /*   width: 430px;*/  
     width: auto;
-    margin-top: 10px;
-    line-height: 38px; /*******/
+    /*margin-top: 10px;*/
+    line-height: 32px; /*******/
     display: inline-block;
 }
 .panel {
@@ -30,7 +30,7 @@
     height: 391px;
     width: 630px;
 }
-#drawers {
+.drawers {
     width: 109px;
     float: left;
 }
@@ -48,7 +48,7 @@
     height: 23px; /*self define*/
     width: 109px;
 }
-#pickerPanel {
+.pickerPanel {
     width: 510px; /***/
     height: 391px;
     float: right;
@@ -66,7 +66,7 @@
     line-height: 30px;
     vertical-align: middle;
 }
-#to {
+.to {
     padding: 5px;
     display: inline-block;
 }
@@ -82,7 +82,7 @@
     width: 100px;
     vertical-align: middle
 }
-#buttons {
+.buttons {
     margin: 10px;
 }
 .datePicker {
@@ -94,7 +94,7 @@ img {
     margin: auto;
     width: 15px;
     height: 15px;
-    margin-top: 11px;
+    margin-top: 8px;
     margin-right: 5px
 }
 
