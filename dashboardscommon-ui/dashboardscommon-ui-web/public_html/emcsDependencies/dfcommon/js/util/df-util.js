@@ -505,7 +505,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                                 
                                 //Do retry once again if failed
                                 ajaxCall(retries - 1);
-                                return;
+                                return false;
                             }
 
                             var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
@@ -550,6 +550,8 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                         }
                         
                         ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
+                        
+                        return false;
                     });
                 }(retryLimit));
  
