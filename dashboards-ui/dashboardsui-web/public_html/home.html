@@ -52,17 +52,13 @@ role value for that section to represent the appropriate content type.
             <!-- main content -->
             <div id="mainContent" style="display: none;">
                         <div class="main-content-area">
-                            <!--div id="dtabs" data-bind="dbsTabs: {removable: false}"-->
-                                <!-- Home tab start -->
-                                <div id="dhometab" class="dbs-tab-container">
-                                    <!--span>Dashboards</span-->
-                                    <div>
+                            <div id="dhometab" class="dbs-tab-container">
                                     <!-- Home toolbar start -->
                                     <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
-                                                <span class="dbs-search-box oj-sm-1 oj-md-2 oj-lg-2 oj-xl-6">
+                                                <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-4 oj-xl-6">
                                                     <input id="sinput" type="text" name="searchInput"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                                                  ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
+                                                                  ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
                                                                   ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
                                                     <button class="oj-button-half-chrome" data-bind="click: clearSearch, visible: showSeachClear,
                                                             ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
@@ -105,27 +101,78 @@ role value for that section to represent the appropriate content type.
                                         </div>
                                         
                                     </div>
+                                    <!-- Home toolbar end -->
+                                    <!-- paging start -->
                                     <div id="toolbar3" aria-label="Pagination toolbar">
                                                 <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
                                     </div>
-                                    <!-- Home toolbar end -->
-                                    <div id="dtabhomesc" class="dbs-summaries-container">
-                                        <!-- ko foreach: dashboards -->
-                                        <div class="oj-panel dbs-summary-container" 
-                                             data-tag data-bind="dbsDashboardPanel: {
+                                    <!-- paging end -->
+                                    <div class="oj-row oj-cols-nopad" style="max-width: none;">
+                                        <div id="filterpanel" class="oj-col" style="width: 12%; min-width: 90px; max-width: 200px;">
+                                            <!-- filter panel start-->
+                                            <div style="margin-top: 5px; padding: 10px; background-color: #FFFFFF">
+                                                <label id="typecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_LABEL')"></label>
+                                                <div id="typecb"  aria-labelledby="typecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: typeFilter, optionChange: handleTypeFilterChanged}">
+                                                    <span class="oj-choice-row">
+                                                        <input id="appopt" type="checkbox" name="types" value="SINGLEPAGE">
+                                                        <label for="appopt" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_APP')"></label>
+                                                    </span>
+                                                    <span class="oj-choice-row">
+                                                        <input id="dbopt" type="checkbox" name="types" value="NORMAL">
+                                                        <label for="dbopt" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_DSB')"></label>
+                                                    </span>
+                                                </div>
+                                                <div data-bind="visible: showServiceFilter">
+                                                <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
+                                                <div id="servicecb"  aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: serviceFilter, optionChange: handleServiceFilterChanged}">
+                                                    <span class="oj-choice-row" data-bind="visible: showLaServiceFilter">
+                                                        <input id="laopt" type="checkbox" name="services" value="LogAnalytics">
+                                                        <label for="laopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LA')"></label>
+                                                    </span>
+                                                    <span class="oj-choice-row" data-bind="visible: showApmSrviceFilter">
+                                                        <input id="apmopt" type="checkbox" name="services" value="APM">
+                                                        <label for="apmopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_APM')"></label>
+                                                    </span>
+                                                    <span class="oj-choice-row" data-bind="visible: showItaServiceFilter">
+                                                        <input id="itaopt" type="checkbox" name="services" value="ITAnalytics">
+                                                        <label for="itaopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_ITA')"></label>
+                                                    </span>
+                                                </div>
+                                                </div>
+                                                <label id="creatorcblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_LABEL')"></label>
+                                                <div id="creatorcb"  aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: creatorFilter, optionChange: handleOwnerFilterChanged}">
+                                                    <span class="oj-choice-row">
+                                                        <input id="oracleopt" type="checkbox" name="creators" value="Oracle">
+                                                        <label for="oracleopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ORACLE')"></label>
+                                                    </span>
+                                                    <span class="oj-choice-row">
+                                                        <input id="otheropt" type="checkbox" name="creators" value="Others">
+                                                        <label for="otheropt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_OTHER')"></label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <!-- filter panel end-->
+                                        </div>
+                                        <div class="oj-col" style="width: 88%;">
+                                            <!-- tiles panel start -->
+                                            <div id="dtabhomesc" class="dbs-summaries-container">
+                                                <!-- ko foreach: dashboards -->
+                                                <div class="oj-panel dbs-summary-container" 
+                                                    data-tag data-bind="dbsDashboardPanel: {
                                                                    activated: null,
                                                                    deactivated: null,
                                                                    deleteClicked: $root.handleDashboardDeleted,
                                                                    navigated: $root.handleDashboardClicked,
                                                                    data: $data
-                                            }"></div>
-                                        <!-- /ko -->
+                                                       }">    
+                                                </div>
+                                                <!-- /ko -->
+                                            </div>
+                                            <!-- tiles panel end -->
+                                        </div>
                                     </div>
-                                    
-                                    </div>
-                                </div>
-                                <!-- Home tab end -->
-                            <!--/div-->
+                            </div>
+                            <!-- Home tab end -->
                         </div>
 
                     <!-- Create Dashboard dilog start -->
@@ -302,9 +349,7 @@ role value for that section to represent the appropriate content type.
                             <p data-bind="text: getNlsString('DBS_HOME_COME_SOON_DLG_BODY')"></p>
                         </div>
                     </div>                    
-            </div>
-
-            
-            </div>
-        </body>
-    </html>
+            </div>            
+        </div>
+    </body>
+</html>

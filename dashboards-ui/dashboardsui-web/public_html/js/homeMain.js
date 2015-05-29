@@ -143,33 +143,37 @@ require(['dbs/dbsmodel',
 
                     function setMainAreaPadding(isDrag)
                     {
-                    //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
-                    var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
-                    //console.log("tab width: "+_tabwidth);
-                    var _padding = _tabwidth % (335 /*panel width + panel margin*/);
-                    //console.log("_padding: " + Math.floor(_padding/2));
-                    var _calpadding = (_tabwidth <= 680 ) ? 5 : Math.floor(_padding/2);
+                        //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
+                        var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
+                        var _filterwidth = document.getElementById('filterpanel').offsetWidth;
+                        //console.log("tab width: "+_tabwidth);
+                        //console.log("filter width: "+_filterwidth);
+                        var _padding = (_tabwidth - _filterwidth) % (335 /*panel width + panel margin*/);
+                        //console.log("_padding: " + Math.floor(_padding/2));
+                        var _calpadding = (_tabwidth <= 760 ) ? 10 : Math.floor(_padding/2);
                     
-                    var _rpadding = _calpadding;
-                    /*
-                    if (isDrag === true) _rpadding = _rpadding + 13;
-                    else if (_tabwidth < 1080) {
-                        console.log("tab width: "+_tabwidth);
-                        _rpadding = _rpadding + 12;
-                    }*/
-                    _rpadding = _rpadding + 13;
-                    $("#dhometab").attr({
-                       "style" : "padding-left: "+ _calpadding  + "px;" //"padding-right: "+ _rpadding  + "px;" 
-                    });
-                    
-                    $("#homettbtns").attr({
-                       "style" : "padding-right: "+ _rpadding  + "px;" 
-                    });
+                        var _rpadding = _calpadding;
+                        if (_tabwidth > 760)
+                        {
+                            if (isDrag === true) _rpadding = _rpadding + 13;
+                            else _rpadding = _rpadding + 10;
+                        }
+                        $("#dhometab").attr({
+                           "style" : "padding-left: "+ _calpadding  + "px;" //"padding-right: "+ _rpadding  + "px;" 
+                        });
+                        
+                        $("#homettbtns").attr({
+                           "style" : "padding-right: "+ _rpadding  + "px;" 
+                        });
                     };
-                    setMainAreaPadding();
                     $(window).resize(function() {
-                    setMainAreaPadding(true);
+                        setMainAreaPadding(true);
                     });
+                    setTimeout(function() {
+                        setMainAreaPadding();
+                    }, 0);
+                    
+                    
 
                     window.addEventListener('message', childMessageListener, false);
                     window.name = 'dashboardhome';

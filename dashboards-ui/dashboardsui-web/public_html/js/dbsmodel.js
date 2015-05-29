@@ -22,6 +22,11 @@ define([
 ],
 function(dsf, oj, ko, $, dfu, pfu)
 {
+    var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
+            DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
+            DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
+            PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
+            SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
     
     function createDashboardDialogModel() {
         var self = this;
@@ -95,30 +100,33 @@ function(dsf, oj, ko, $, dfu, pfu)
         };
     };
     
-    function welcomeDialogModel(prefUtil) {
+    function welcomeDialogModel(prefUtil, showWel) {
         var self = this;
-        self.showWelcomePrefKey = "Dashboards.showWelcomeDialog";
+        //self.showWelcomePrefKey = "Dashboards.showWelcomeDialog";
         self.userName = dfu.getUserName();
         self.prefUtil = prefUtil;
-        self.showWelcome = true;
-        (function() {
-            prefUtil.getPreference(self.showWelcomePrefKey, {
-                async: false,
-                success: function (res) {
-                    if (res['value'] === "true")
-                    {
-                        self.showWelcome = true;
-                    }
-                    if (res['value'] === "false")
-                    {
-                        self.showWelcome = false;
-                    }
-                },
-                error: function() {
-                    oj.Logger.info("Preference of Show Welcome Dialog is not set. The defualt value 'true' is applied.");
-                }
-            });
-        })();
+        self.showWelcome = showWel;
+        if (showWel === undefined)
+        {
+                    (function () {
+                        prefUtil.getPreference(SHOW_WELCOME_PREF_KEY, {
+                            async: false,
+                            success: function (res) {
+                                if (res['value'] === "true")
+                                {
+                                    self.showWelcome = true;
+                                }
+                                if (res['value'] === "false")
+                                {
+                                    self.showWelcome = false;
+                                }
+                            },
+                            error: function () {
+                                oj.Logger.info("Preference of Show Welcome Dialog is not set. The defualt value 'true' is applied.");
+                            }
+                        });
+                    })();
+        }
         
         self.browseClicked = function() {
             $('#overviewDialog').ojDialog('close');
@@ -133,22 +141,31 @@ function(dsf, oj, ko, $, dfu, pfu)
         };
         self.gotClicked = function() {
             self.showWelcome = false;
-            prefUtil.setPreference(self.showWelcomePrefKey, "false");
+            prefUtil.setPreference(SHOW_WELCOME_PREF_KEY, "false");
             $('#overviewDialog').ojDialog('close');
         };    
         
     };
     
-    function ViewModel() {
+    function ViewModel(predata) {
         
-        var self = this;
+        var self = this, showWelcome = predata.getShowWelcomePref(), filter = predata.getDashboardsFilter();
+        
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
-//        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
+        
         //welcome
-        self.prefUtil = new pfu("/sso.static/dashboards.preferences"/*dfu.buildFullUrl(self.dfRestApiUrl,'preferences')*/, dfu.getDashboardsRequestHeader());
-        self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
+        self.prefUtil = new pfu(PREFERENCES_REST_URL, dfu.getDashboardsRequestHeader());
+        self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil, showWelcome);
         
         //dashboards
+        self.typeFilter = ko.observable(filter['types']);
+        self.serviceFilter = ko.observable(filter['appTypes']);
+        self.creatorFilter = ko.observable(filter['owners']);
+        self.showServiceFilter = ko.observable(predata.getShowServiceFilter());
+        self.showLaServiceFilter = ko.observable(predata.getShowLaService());
+        self.showApmSrviceFilter = ko.observable(predata.getShowApmService());
+        self.showItaServiceFilter = ko.observable(predata.getShowItaService());
+        
         self.showSeachClear = ko.observable(false);
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
@@ -160,7 +177,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.pageSize = ko.observable(120);
         
-        self.serviceURL = "http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards/";//"/sso.static/dashboards.service";//dfu.buildFullUrl(self.dfRestApiUrl,"dashboards");
+        self.serviceURL = DASHBOARDS_REST_URL;
         //console.log("Service url: "+self.serviceURL);
         
         self.pagingDatasource = ko.observable(new oj.ArrayPagingDataSource([]));
@@ -174,7 +191,8 @@ function(dsf, oj, ko, $, dfu, pfu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy());
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
+                                                   filter['types'], filter['appTypes'], filter['owners']);
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
             'success': function() {
@@ -334,6 +352,54 @@ function(dsf, oj, ko, $, dfu, pfu)
             }
         };
         
+        self.handleTypeFilterChanged = function (event, data) {
+            var _option = data.option, _value = data.value;
+            if ( _option === "value" )
+            {
+                self.dsFactory.types = _value;
+                $("#sinput").dbsTypeAhead("forceSearch");
+                self.saveDashbordsFilter(_value, self.serviceFilter(), self.creatorFilter());
+            }
+        };
+        
+        self.handleServiceFilterChanged = function (event, data) {
+            var _option = data.option, _value = data.value;
+            if ( _option === "value" )
+            {
+                self.dsFactory.appTypes = _value;
+                $("#sinput").dbsTypeAhead("forceSearch");
+                self.saveDashbordsFilter(self.typeFilter(), _value, self.creatorFilter());
+            }
+        };
+        
+        self.handleOwnerFilterChanged = function (event, data) {
+            var _option = data.option, _value = data.value;
+            if ( _option === "value" )
+            {
+                self.dsFactory.owners = _value;
+                $("#sinput").dbsTypeAhead("forceSearch");
+                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), _value);
+            }
+        };
+        
+        self.saveDashbordsFilter = function (typeFilter, serviceFilter, creatorFilter)
+        {
+            var _filter = {};
+            if (typeFilter !== undefined && typeFilter.length > 0)
+            {
+                _filter.types = typeFilter;
+            }
+            if (serviceFilter !== undefined && serviceFilter.length > 0)
+            {
+                _filter.appTypes = serviceFilter;
+            }
+            if (creatorFilter !== undefined && creatorFilter.length > 0)
+            {
+                _filter.owners = creatorFilter;
+            }
+            self.prefUtil.setPreference(DASHBOARDS_FILTER_PREF_KEY, JSON.stringify(_filter));
+        };
+        
         self.acceptInput = function (event, data)
         {
             if (data && data.length > 0)
@@ -389,84 +455,79 @@ function(dsf, oj, ko, $, dfu, pfu)
     };
     
     function PredataModel() {
-        var self = this, itaSetupUrl = "test", 
-                laSetupUrl = "test", 
-                apmSetupUrl = "test", 
-                sApplictionsUrl = "/sso.static/dashboards.subscribedapps";
-        self.itaResponse = { "eligibleODSTargetCount" : 0, "warehouseTargetCount": 0, "warehouseLoading": true};
-        self.laResponse = {"other": {"#agents": 0}};
-        self.apmResponse = "false";
+        var self = this; 
+        self.preferences = undefined;
         self.sApplications = undefined;
         
-        self.getItaSetupStatus = function() {
-            if (itaResponse !== undefined)
-            {
-                if (itaResponse['eligibleODSTargetCount'] === 0) return 1;
-                if (itaResponse['eligibleODSTargetCount'] > 0 
-                        && itaResponse['warehouseTargetCount'] === 0)
-                {
-                    return 2;
-                }
-                if (itaResponse['eligibleODSTargetCount'] > 1
-                        && itaResponse['warehouseTargetCount'] > 1)
-                {
-                    return 3;
-                }
-            }
-            return 0;
+        self.getShowLaService = function() {
+            if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0) return true;
+            return false;
         };
         
-        self.getLaSetupStatus = function() {
-            if (laResponse !== undefined)
-            {
-                if (laResponse['other']['#agents'] === 0) return 1;
-            }
-            return 0;
+        self.getShowApmService = function() {
+            if (self.sApplications !== undefined && $.inArray("APM", self.sApplications['applications']) >= 0) return true;
+            return false;
         };
         
-        self.getApmSetupStatus = function() {
-            if (apmResponse !== undefined)
-            {
-                if (apmResponse === "false") return 1;
-            }
-            return 0;
+        self.getShowItaService = function() {
+            if (self.sApplications !== undefined && $.inArray("ITAnalytics", self.sApplications['applications']) >= 0) return true;
+            return false;
         };
         
-        self.loadItaSetup = function() {
+        self.getShowServiceFilter = function() {
+            if (self.getShowLaService() === true 
+                    && self.getShowApmService() === true 
+                    && self.getShowItaService() === true)
+            {
+                return true;
+            }
+            return false;
+        };
+        
+        self.getDashboardsFilter = function () {
+            var filter = self.getDashboardsFilterPref();
+            return {types: (filter['types'] === undefined ? [] : filter['types']), 
+                appTypes: (filter['appTypes'] === undefined ? [] : filter['appTypes']), 
+                owners: (filter['owners'] === undefined ? [] : filter['owners'])};
+        };
+        
+        self.getDashboardsFilterPref = function () {
+            var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
+            if (filter === undefined || filter.length === 0) return {};
+            return JSON.parse(filter);
+        };
+        
+        self.getShowWelcomePref = function () {
+            var showWelcome = self.getPreferenceValue(SHOW_WELCOME_PREF_KEY);
+            if (showWelcome === "false") 
+            {
+                showWelcome = false;
+            }
+            else 
+            {
+                showWelcome = true;
+            }
+            return showWelcome;
+        };
+        
+        self.getPreferenceValue = function(key) {
+            if (self.preferences === undefined) return undefined;
+            var arr = undefined;
+            arr = $.grep(self.preferences, function( pref ) {
+                if (pref !== undefined && pref['key'] === key) return true;
+                return false;
+            });
+            if (arr !== undefined && arr.length > 0) return arr[0]['value'];
+            return undefined;
+        };
+        
+        self.loadPreferences = function() {
             return $.ajax({
-                        url: itaSetupUrl,
+                        url: PREFERENCES_REST_URL,
                         type: 'GET',
                         headers: dfu.getDashboardsRequestHeader(), 
                         success: function (result) {
-                            self.itaResponse = result;
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            oj.Logger.error("Error when load ITA setup status. " + (jqXHR ? jqXHR.responseText : ""));
-                        }
-                    });
-        };
-        
-        self.loadLaSetup = function() {
-            return $.ajax({
-                        url: laSetupUrl,
-                        type: 'GET',
-                        headers: dfu.getDashboardsRequestHeader(), 
-                        success: function (result) {
-                            self.laResponse = result;
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            oj.Logger.error("Error when load LA setup status. " + (jqXHR ? jqXHR.responseText : ""));
-                        }
-                    });
-        };
-        
-        self.loadApmSetup = function() {
-            return $.ajax({
-                        url: apmSetupUrl,
-                        type: 'GET',
-                        headers: dfu.getDashboardsRequestHeader(), 
-                        success: function (result) {
-                            self.apmResponse = result;
+                            self.preferences = result;
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             oj.Logger.error("Error when load APM setup status. " + (jqXHR ? jqXHR.responseText : ""));
@@ -476,7 +537,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.loadSubscribedApplications = function() {
             return $.ajax({
-                        url: sApplictionsUrl,
+                        url: SUBSCIBED_APPS_REST_URL,
                         type: 'GET',
                         headers: dfu.getDashboardsRequestHeader(), 
                         success: function (result) {
@@ -489,8 +550,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         };
         
         self.loadAll = function() {
-            return $.when(self.loadItaSetup(), self.loadLaSetup(), 
-                          self.loadApmSetup(), self.loadSubscribedApplications());
+            return $.when(self.loadPreferences(), self.loadSubscribedApplications());
         };
     }
     
