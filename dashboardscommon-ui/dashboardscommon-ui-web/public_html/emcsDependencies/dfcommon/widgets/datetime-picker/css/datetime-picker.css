@@ -47,7 +47,16 @@
     padding-top: 14px;
     height: 23px; /*self define*/
     width: 109px;
+    display: block;
 }
+
+.drawers a:visited {
+    color: black;
+}
+.drawers a:link, a:hover {
+    text-decoration: none;
+}
+
 .pickerPanel {
     width: 510px; /***/
     height: 391px;
@@ -89,7 +98,7 @@
     font-size: 14px;
 }
 
-img {
+.drawer img {
     float: right;
     margin: auto;
     width: 15px;

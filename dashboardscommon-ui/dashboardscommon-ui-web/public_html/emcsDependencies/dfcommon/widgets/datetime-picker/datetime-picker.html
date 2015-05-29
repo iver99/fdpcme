@@ -1,24 +1,34 @@
 <!--<div id="dateTimePickerComponent">-->
 <div data-bind="attr: {id: 'dateTimePicker_' + randomId}">
-    <label for="dropdown" style="font-weight: bold; font-size: 14px; padding-right: 7px" data-bind="text: timeRangeMsg"></label>
-    <div class="dropdown" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl">
+    <label for="dropdown" style="font-weight: bold; font-size: 14px; padding-right: 7px;" data-bind="text: timeRangeMsg"></label>
+    <button class="dropdown" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl">
         <div data-bind="html: dateTimeInfo" style="width: auto; display: inline-block"></div>
         <img data-bind="attr: {id: 'panelArrow_'+randomId}" alt="dropdown" src="emcsDependencies/dfcommon/images/drop-down.jpg"/>
-    </div>            
+    </button>            
 
     <div class="panel" style="display:none" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
         <!-- left of panel -->
         <div class="drawers" data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
-            <div class="drawer" data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins"></div>
-            <div class="drawer" data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins"></div>
-            <div class="drawer" data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins"></div>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days"></a>
+            <a href="#" class="drawer"  data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom"></a>
+<!--            <div class="drawer"  data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins"></div>
+            <div class="drawer"  data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins"></div>
+            <div class="drawer"  data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins"></div>
             <div class="drawer" data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours"></div>
             <div class="drawer" data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours"></div>
             <div class="drawer" data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day"></div>
             <div class="drawer" data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days"></div>
             <div class="drawer" data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days"></div>
             <div class="drawer" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days"></div>
-            <div class="drawer" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom"></div>
+            <div class="drawer" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom"></div>-->
         </div>
 
         <!-- right of panel-->
@@ -33,11 +43,11 @@
                 &nbsp;&nbsp;
 
                 <div class="chosenDate">
-                    <input data-bind="attr: {id: 'inputStartDate_'+randomId}, ojComponent: {component: 'ojInputText', value: startDate, rootAttributes:{style : 'width: 70px;'}, optionChange: changeDate}, click: focusOnStartDate"/>
+                    <input data-bind="attr: {id: 'inputStartDate_'+randomId}, ojComponent: {component: 'ojInputText', value: startDate, rootAttributes:{style : 'width: 70px;'}, optionChange: changeDate}, click: focusOnStartDate, hasFocus: startDateFocus"/>
                 </div>
                 <!--div class="chosenTime" data-bind="click: changeStartTime"-->
                 <div class="chosenTime" data-bind="attr: {id: 'divStartTime_'+randomId}, click: focusOnStartTime">
-                    <input data-bind="ojComponent:{component: 'ojInputTime', value: startTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeStartTime}"/>
+                    <input data-bind="attr:{id: 'inputStartTime_'+randomId}, ojComponent:{component: 'ojInputTime', value: startTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeStartTime}, hasFocus: startTimeFocus"/>
                 </div>
 
                 <div class="to">
@@ -45,12 +55,12 @@
                 </div>
 
                 <div class="chosenDate">
-                    <input data-bind="attr: {id: 'inputEndDate_'+randomId}, ojComponent: {component: 'ojInputText', value: endDate, rootAttributes: {style : 'width: 70px;'}, optionChange: changeDate}, click: focusOnEndDate"/>
+                    <input data-bind="attr: {id: 'inputEndDate_'+randomId}, ojComponent: {component: 'ojInputText', value: endDate, rootAttributes: {style : 'width: 70px;'}, optionChange: changeDate}, click: focusOnEndDate, hasFocus: endDateFocus"/>
                     <!--input id="inputEndDate" data-bind="ojComponent: {component: 'ojInputText', value: endDate, rootAttributes: {style : 'width: 70px;'}}, click: changeEndDate, clickBubble: false"/-->
                 </div>
                 <!--div class="chosenTime" data-bind="click: changeEndTime"-->
                 <div class="chosenTime" data-bind="attr: {id: 'divEndTime_'+randomId}, click: focusOnEndTime">
-                    <input data-bind="ojComponent:{component: 'ojInputTime', value: endTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeEndTime}, click: focusOnEndDate"/>
+                    <input data-bind="attr:{id: 'inputEndTime_'+randomId}, ojComponent:{component: 'ojInputTime', value: endTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeEndTime}, hasFocus: endTimeFocus"/>
                 </div>
 
             </div>

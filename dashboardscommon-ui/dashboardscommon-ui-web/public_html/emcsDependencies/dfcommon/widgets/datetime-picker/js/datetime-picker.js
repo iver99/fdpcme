@@ -110,7 +110,80 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.timePeriodLast30days = ko.observable();
                 self.timePeriodLast90days = ko.observable();
                 self.timePeriodCustom = ko.observable();
-
+                
+                //*****************
+                self.startDateFocus = ko.observable(false); 
+                self.endDateFocus = ko.observable(false);
+                self.startTimeFocus = ko.observable(false);
+                self.endTimeFocus = ko.observable(false);
+                
+                self.startDateSubscriber = ko.computed(function() {
+                    return self.startDateFocus();
+                }, self);
+                self.startDateSubscriber.subscribe(function(value) {
+                    if(value) {
+                        self.autoFocus("inputStartDate_"+self.randomId);
+                        self.lastFocus(1);
+                    }else {
+                        if(!(self.endDateFocus() && self.startTimeFocus() && self.endTimeFocus())) {
+                            self.autoFocus("inputStartDate_"+self.randomId);
+                            self.lastFocus(1);
+                        }else {
+                            $("#inputStartDate_"+self.randomId).removeClass("input-focus");
+                        }
+                    }
+                });
+                
+                self.endDateSubscriber = ko.computed(function() {
+                    return self.endDateFocus();
+                }, self);
+                self.endDateSubscriber.subscribe(function(value) {
+                    if(value) {
+                        self.autoFocus("inputEndDate_"+self.randomId);
+                        self.lastFocus(2);
+                    }else {
+                        if (!(self.startDateFocus() && self.startTimeFocus() && self.endTimeFocus())) {  
+                            console.log("in");
+                            self.autoFocus("inputEndDate_"+self.randomId);
+                            self.lastFocus(2);                            
+                        }else{                           
+                            $("#inputEndDate_"+self.randomId).removeClass("input-focus"); 
+                        }
+                    }
+                });
+                
+                self.startTimeSubscriber = ko.computed(function() {
+                    return self.startTimeFocus();
+                }, self);
+                self.startTimeSubscriber.subscribe(function(value) {
+                    if(value) {
+                        self.autoFocus("divStartTime_"+self.randomId);
+                        self.lastFocus(0);
+                    }else {
+                        if (!(self.startDateFocus() && self.endDateFocus() && self.endTimeFocus())) {
+                            self.autoFocus("inputStartDate_"+self.randomId);
+                            self.lastFocus(1);                            
+                        }
+                        $("#divStartTime_"+self.randomId).removeClass("input-focus");
+                    }
+                });
+                
+                self.endTimeSubscriber = ko.computed(function() {
+                    return self.endTimeFocus();
+                }, self);
+                self.endTimeSubscriber.subscribe(function(value) {
+                    if(value) {
+                        self.autoFocus("divEndTime_"+self.randomId);
+                        self.lastFocus(0);
+                    }else {
+                        if (!(self.startDateFocus() && self.endDateFocus() && self.startTimeFocus())) {
+                            self.autoFocus("inputEndDate_"+self.randomId);
+                            self.lastFocus(2);                            
+                        }
+                        $("#divEndTime_"+self.randomId).removeClass("input-focus");
+                    }
+                });
+                //***********//
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
                 self.errorMsg = ko.observable();
@@ -207,25 +280,27 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     self.updateRange(self.startDate(), self.endDate());
                 });
                 self.valueSubscriber.subscribe(function (value) {
-//                    if (self.startDate() == self.dateFormatter(self.value()).format1) {
                     if (self.startDate() == self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() == 1) {
                             self.updateRange(self.startDate(), self.endDate());
-                            self.autoFocus("inputEndDate_"+self.randomId);
-                            self.lastFocus(2);
+//                            self.autoFocus("inputEndDate_"+self.randomId);  //*************
+//                            self.lastFocus(2);
+                            self.endDateFocus(true);
                         } else if (self.lastFocus() == 2) {
                             self.endDateISO(self.value());
+                            self.endDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                         }
-//                    } else if (self.endDate() == self.dateFormatter(self.value()).format1) {
                     } else if (self.endDate() == self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() == 2) {
                             self.updateRange(self.startDate(), self.endDate());
+                            self.endDateFocus(true);
                         } else if (self.lastFocus() == 1) {
                             self.startDateISO(self.value());
-                            self.autoFocus("inputEndDate_"+self.randomId);
-                            self.lastFocus(2);
+//                            self.autoFocus("inputEndDate_"+self.randomId); //***********
+//                            self.lastFocus(2);
+                            self.endDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                         }
@@ -233,10 +308,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         var tmp = self.value();
                         if (self.lastFocus() == 1) {
                             self.startDateISO(tmp);
-                            self.autoFocus("inputEndDate_"+self.randomId);
-                            self.lastFocus(2);
+//                            self.autoFocus("inputEndDate_"+self.randomId);  //************
+//                            self.lastFocus(2);
+                            self.endDateFocus(true);
                         } else if (self.lastFocus() == 2) {
                             self.endDateISO(tmp);
+                            self.endDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                             console.log("Should focus on an input");
@@ -376,6 +453,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     var drawerId = " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
                     $(self.panelId + drawerId).css('background-color', '#ffffff');
                     $(self.panelId + drawerId).css('font-weight', 'bold');
+                    
                 }
 
                 self.setFocusOnInput = function (idToFocus) {
@@ -392,25 +470,29 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 self.focusOnStartDate = function (data, event) {
                     self.selectByDrawer(false);
-                    self.setFocusOnInput(event.target.id);
+                    self.setFocusOnInput(event.target.id); //**********
                     self.lastFocus(1);
+//                    self.startDateFocus(true);                    
                 }
 
                 self.focusOnEndDate = function (data, event) {
                     self.selectByDrawer(false);
-                    self.setFocusOnInput(event.target.id);
+                    self.setFocusOnInput(event.target.id);//*********
                     self.lastFocus(2);
+//                    self.endDateFocus(true);
                 }
 
                 self.focusOnStartTime = function (data, event) {
                     self.selectByDrawer(false);
-                    self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
+                    self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id); //*************
                     self.lastFocus(0);
+//                    self.startTimeFocus(true);
                 }
                 self.focusOnEndTime = function (data, event) {
                     self.selectByDrawer(false);
-                    self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
+                    self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);//*********
                     self.lastFocus(0);
+//                    self.endTimeFocus(true);
                 }
 
                 self.autoFocus = function (id) {
@@ -496,9 +578,11 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if ($(self.panelId).ojPopup('isOpen')) {
                         $(self.panelId).ojPopup('close');
                     } else {
-                        self.autoFocus("inputStartDate_"+self.randomId);
+                        self.autoFocus("inputStartDate_"+self.randomId); //*****
                         self.lastFocus(1);
-//                        self.customClick();
+//                        self.startDateFocus(false);
+//                        self.startDateFocus(true);
+
                         self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                         self.updateRange(self.startDate(), self.endDate());
 
@@ -520,9 +604,11 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 //select time period
                 self.chooseTimePeriod = function (data, event) {
-                    self.setFocusOnInput("inputStartDate_"+self.randomId);
+                    self.setFocusOnInput("inputStartDate_"+self.randomId); //************
                     self.lastFocus(1);
-
+//                    self.startDateFocus(false);
+//                    self.startDateFocus(true);
+                    
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                     $(self.panelId + ' .drawer').css('font-weight', 'normal');
 
@@ -537,13 +623,15 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         self.endTime(end.slice(10, 16));
                         self.selectByDrawer(true);
                     }
+                    
                     self.timePeriod(event.target.innerHTML);
                     event.target.style.backgroundColor = '#ffffff';
                     event.target.style.fontWeight = 'bold';
 
-                    self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                    self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);                    
 
                     self.updateRange(self.startDate(), self.endDate());
+                    $(event.target).focus();
                 };
 
 
@@ -631,7 +719,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     } else {
                         self.random(new Date().getTime());
                     }
-                }
+                } 
             }
             return dateTimePickerViewModel;
         });
