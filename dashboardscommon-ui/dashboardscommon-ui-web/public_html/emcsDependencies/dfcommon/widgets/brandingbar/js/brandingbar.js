@@ -24,8 +24,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         }
                     });
                 }
-                var nlsResourceBundle = getFilePath(localrequire,'../../../js/resources/nls/dfCommonMsgBundle.js');
-                nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
+                else {
+                    requirejs.config({
+                        config: locale ? {i18n: {locale: locale}} : {}
+                    });
+                }
                 
                 //NLS strings
                 self.productName = ko.observable();
@@ -47,8 +50,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var ssoLogoutEndUrl =dfu.discoverDFHomeUrl();
-                var subscribedApps = dfu.getSubscribedApplications();
+                var dfHomeUrl =dfu.discoverDFHomeUrl();
+                var subscribedApps = null;//dfu.getSubscribedApplications();
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
                 var appIdLogAnalytics = "LogAnalytics";
@@ -90,40 +93,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     "version": "0.1",
                     "helpTopicId": ""
                 };                
-                require(['i18n!'+nlsResourceBundle],
-                    function(nls) { 
-                        self.nlsStrings(nls);
-                        self.productName(nls.BRANDING_BAR_MANAGEMENT_CLOUD);
-                        self.preferencesMenuLabel(nls.BRANDING_BAR_MENU_PREFERENCES);
-                        self.helpMenuLabel(nls.BRANDING_BAR_MENU_HELP);
-                        self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
-                        self.signOutMenuLabel(nls.BRANDING_BAR_MENU_SIGN_OUT);
-                        self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
-                        self.textOracle(nls.BRANDING_BAR_TEXT_ORACLE);
-                        self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
-                        self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
-                        self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
-                        var subscribedServices = null;
-                        if (subscribedApps && subscribedApps.length > 0) {
-                            for (i = 0; i < subscribedApps.length; i++) {
-                                var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
-                                if (i === 0)
-                                    subscribedServices = servicename;
-                                else 
-                                    subscribedServices = subscribedServices + " | " + servicename;
-                            }
-                        }
-                        if (self.appId===appIdTenantManagement){
-                            subscribedServices = nls[appMap[appIdTenantManagement]['appName']];
-                        }
-                        self.appName(subscribedServices);
-                    });
             
-                
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
                 self.relNotificationShow = $.isFunction(params.relNotificationShow) ? params.relNotificationShow() : params.relNotificationShow;
-//                self.userTenantName = self.userName && self.tenantName ? self.userName + " (" + self.tenantName + ")" : "emaas.user@oracle.com";
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
@@ -132,21 +105,119 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.serviceName = appProperties['serviceName'];
                 self.serviceVersion = appProperties['version'];
                 
+                var getSubscribedAppsDeferred = null;
+                self.getSubscribedAppsCallback = function(apps) {
+                    subscribedApps = apps;
+                    oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
+                    getSubscribedAppsDeferred.resolve();
+                };
+                
+                self.getSubscribedApplications = function() {
+                    oj.Logger.info("Start to get subscribed applications for branding bar.", false);
+                    getSubscribedAppsDeferred = $.Deferred();
+                    dfu.checkSubscribedApplications(self.getSubscribedAppsCallback);
+                    return getSubscribedAppsDeferred.promise();
+                };
+                
+                var requireNlsBundleDeferred = null;
+                self.requireNlsBundleCallback = function(nls) {
+                    self.nlsStrings(nls);
+                    self.productName(nls.BRANDING_BAR_MANAGEMENT_CLOUD);
+                    self.preferencesMenuLabel(nls.BRANDING_BAR_MENU_PREFERENCES);
+                    self.helpMenuLabel(nls.BRANDING_BAR_MENU_HELP);
+                    self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
+                    self.signOutMenuLabel(nls.BRANDING_BAR_MENU_SIGN_OUT);
+                    self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
+                    self.textOracle(nls.BRANDING_BAR_TEXT_ORACLE);
+                    self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
+                    self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
+                    self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
+                    
+                    oj.Logger.info("Finished loading resource bundle for branding bar.", false);
+                    requireNlsBundleDeferred.resolve();
+                };
+                
+                self.requireNlsBundleErrorCallback = function(error) {
+                    oj.Logger.error("Failed to load resource bundle for branding bar: " + error.message , false);
+                    requireNlsBundleDeferred.reject(error.message);
+                };
+                
+                self.requireNlsBundle = function() {
+                    var nlsResourceBundle = getFilePath(localrequire,'../../../js/resources/nls/dfCommonMsgBundle.js');
+                    oj.Logger.info("Start to load resource bundle for branding bar. Resource bundle file: " + nlsResourceBundle, false);
+                    nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
+                    requireNlsBundleDeferred = $.Deferred();
+                    require(['i18n!'+nlsResourceBundle], self.requireNlsBundleCallback, self.requireNlsBundleErrorCallback);
+                    return requireNlsBundleDeferred.promise();
+                };
+                
+                //Get subscribed application names and load nls strings
+                getSubscribedAppsAndRefreshNlsStrings();
+                
                 var urlNotificationCheck = null;
                 var urlNotificationShow = null;
-                checkNotifications();
                 
-                //Check notifications every 5 minutes
-                if (self.notificationVisible()) {
-                    var interval = 5*60*1000;  
-                    setInterval(checkNotifications, interval);
-                }
+                self.notificationShowCallback = function(url) {
+                    urlNotificationShow = url;
+                    if (urlNotificationShow) {
+                        oj.Logger.info("Get notifications page link successfully: " + urlNotificationShow, false);
+                        self.notificationDisabled(false);
+                        self.notificationPageUrl = urlNotificationShow;
+                    }
+                    else {
+                        oj.Logger.info("Failed to get notifications page link.", false);
+                    }
+                };
+                
+                
+                self.checkNotificationAvailability = function() {
+                    oj.Logger.info("Start to check available notifications by URL:" + urlNotificationCheck, false);
+                    $.ajax(urlNotificationCheck, {
+                        success:function(data, textStatus, jqXHR) {
+                            oj.Logger.info("Found available notifications. Trying to get notifications page link...", false);
+                            if (urlNotificationShow === null)
+                                dfu.discoverUrlAsync(self.serviceName, self.serviceVersion, self.relNotificationShow, self.notificationShowCallback);
+                        },
+                        error:function(xhr, textStatus, errorThrown){
+                            oj.Logger.info('No available notifications found by URL: ' + urlNotificationCheck);
+                            self.notificationDisabled(true);
+                        }
+                    });
+                };
+                
+                self.notificationCheckCallback = function(url) {
+                    urlNotificationCheck = url;
+                    if (urlNotificationCheck) {
+                        self.notificationVisible(true);
+                        self.checkNotificationAvailability();
+                        //Check notifications every 5 minutes
+                        oj.Logger.info("Set timer to check notifications every 5 minutes.", false);
+                        var interval = 5*60*1000;  
+                        setInterval(self.checkNotificationAvailability, interval);
+                    }
+                    else {
+                        oj.Logger.info("Notifications is not provided by current application.", false);
+                        self.notificationVisible(false);
+                        self.notificationDisabled(true);
+                    }
+                };
+                
+                //Check notifications
+                checkNotifications();
                 
                 //SSO logout handler
                 self.handleSignout = function() {
+                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
                     var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
                     window.location.href = logoutUrl;
                     oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
+                };
+                
+                //Go to home page
+                self.gotoHomePage = function() {
+                    var homeUrl = dfu.discoverDFHomeUrl();
+                    oj.Logger.info("Go to home page by URL: " + homeUrl, false);
+                    window.location.href = homeUrl;
                 };
                 
                 //Open about box
@@ -251,7 +322,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         window.open(self.notificationPageUrl);
                     }
                 };
-
+                
                 $('body').click(function(){
                     $("#links_menu").slideUp('normal');
                 });  
@@ -268,32 +339,46 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 function checkNotifications() {
+                    oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
+                            self.relNotificationCheck+", relNotificationShow: "+self.relNotificationShow, false);
                     if (self.relNotificationCheck && self.relNotificationShow) {
                         if (urlNotificationCheck === null) 
-                            urlNotificationCheck = dfu.discoverUrl(self.serviceName, self.serviceVersion, self.relNotificationCheck);
-                        if (urlNotificationCheck) {
-                            self.notificationVisible(true);
-                            $.ajax(urlNotificationCheck, {
-                                success:function(data, textStatus, jqXHR) {
-                                    if (urlNotificationShow === null)
-                                        urlNotificationShow = dfu.discoverUrl(self.serviceName, self.serviceVersion, self.relNotificationShow);
-                                    if (urlNotificationShow) {
-                                        self.notificationDisabled(false);
-                                        self.notificationPageUrl = urlNotificationShow;
-                                    }
-                                },
-                                error:function(xhr, textStatus, errorThrown){
-                                    oj.Logger.error('Error when checking notifications by URL: ' + urlNotificationCheck);
-                                    self.notificationDisabled(true);
-                                }
-                            });
-                        }
-                        else {
-                            self.notificationVisible(false);
-                            self.notificationDisabled(true);
+                            dfu.discoverUrlAsync(self.serviceName, self.serviceVersion, self.relNotificationCheck, self.notificationCheckCallback);
+                    }
+                };
+                
+                function getSubscribedAppsAndRefreshNlsStrings() {
+                    oj.Logger.info("Start to load resource bundle and get subscribed applications.");
+                    var defArray = [];
+                    defArray.push(self.requireNlsBundle());
+                    defArray.push(self.getSubscribedApplications());
+                    var combinedPromise = $.when.apply($,defArray);
+                    combinedPromise.done(function(){
+                        refreshAppName();
+                        oj.Logger.info("Finished loading resource bundle and getting subscribed applications.");
+                    });
+                    combinedPromise.fail(function(ex){
+                        oj.Logger.error("Failed to load resource bundle and get subscribed applications: "+ex);
+                    }); 
+                };
+                
+                function refreshAppName() {
+                    var subscribedServices = null;
+                    var nls = self.nlsStrings();
+                    if (subscribedApps && subscribedApps.length > 0) {
+                        for (i = 0; i < subscribedApps.length; i++) {
+                            var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
+                            if (i === 0)
+                                subscribedServices = servicename;
+                            else 
+                                subscribedServices = subscribedServices + " | " + servicename;
                         }
                     }
-                }
+                    if (self.appId===appIdTenantManagement){
+                        subscribedServices = nls[appMap[appIdTenantManagement]['appName']];
+                    }
+                    self.appName(subscribedServices);
+                };
             }
             
             return BrandingBarViewModel;

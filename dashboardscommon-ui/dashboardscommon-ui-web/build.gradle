@@ -1,3 +1,7 @@
+import java.nio.file.*
+import java.security.MessageDigest
+import java.util.regex.Pattern
+
 apply plugin: 'war'
 apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
@@ -9,8 +13,81 @@ def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oracleje
 // sourc directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'emcsDependencies/dfcommon/css/font-awesome')
 
+def stagingDir = buildDir.absolutePath+'/staging/public_html'
+def compiledDir = buildDir.absolutePath+'/public_html'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
+
+//define the JS source locations
+
+task cleanJs(type:Delete) {
+	delete fileTree(dir: stagingDir)
+        delete fileTree(dir: compiledDir)
+}
+
+task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
+    from ('public_html') {
+	include "**/*"
+    }
+    into stagingDir
+}
+
+task stageJs(dependsOn: copyJsSource){
+}
+
+javascript.source {
+	dev {
+            js {
+                srcDir stagingDir+'/emcsDependencies/dfcommon'
+                include "**/*.js"
+		exclude "**/*.orig.js"
+            }
+        }
+}
+
+javascript.source.dev.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominify${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	//String fileName = "${jsFile.name}"
+	//String renamedFile = fileName.replace(".",".orig.")
+	//def parentDir = jsFile.parent
+	//def sourceFile = parentDir+"/"+fileName
+	//def destFile = parentDir+"/"+renamedFile
+	
+	//doFirst{ 
+	//    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	//}
+
+        source = jsFile
+	dest =jsFile
+	//String sourceMapFile = fileName.replace(".js",".map")
+	//sourceMap = file(parentDir+'/'+sourceMapFile)
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	//doLast {
+		//update the compiled JS to point to the source map
+	//	File compiledFile = new File(sourceFile)
+	//	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+	//	compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+	//	File mapFile = new File(parentDir+'/'+sourceMapFile)
+	//	String contents = mapFile.getText('UTF-8')
+	//	String absPath = compiledFile
+	//	logger.lifecycle("absPath:" + Pattern.quote(absPath))
+	//	contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+	//	mapFile.write(contents, 'UTF-8')
+    	//}	
+    }
+}
+
+task individualMinify(dependsOn: [copyJsSource, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
 
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
@@ -93,10 +170,12 @@ clean.dependsOn cleanJet,cleanFont
 
 war.archiveName "dashboards-common-ui-web.war"
 
-war.dependsOn unpackJETFromArtifactory, unpackFontFromArtifactory
+copyJsSource.dependsOn unpackJETFromArtifactory, unpackFontFromArtifactory
+
+war.dependsOn individualMinify
 
 war {
-	from('public_html') {
+	from(stagingDir) {
 	       include '**/*'
 	        into('/')
 	}
@@ -112,7 +191,7 @@ war {
 task buildDFCommonLibZip(type: Zip){
 	baseName = 'emcs-ui-framework'
 	appendix = 'common'
-	from 'public_html/emcsDependencies/dfcommon/'
+	from stagingDir+'/emcsDependencies/dfcommon/'
 	into 'dfcommon'
 }
 
@@ -137,7 +216,7 @@ publishing {
 }
 
 dependencies {
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15008', ext: 'war'){ transitive = false }	
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-15947', ext: 'war'){ transitive = false }	
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
 }
 

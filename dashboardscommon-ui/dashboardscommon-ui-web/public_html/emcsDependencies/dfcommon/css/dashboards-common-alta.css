@@ -177,6 +177,17 @@ a:hover {
     outline:none;
 }
 
+.emaas-appheader-logo .emaas-appheader-logo-img {
+    vertical-align: middle;
+    display:block;
+    width:158px;
+    height:19px;
+}
+
+.emaas-appheader-logo .emaas-appheader-logo-img:hover {
+    cursor: pointer;
+}
+
 .emaas-appheader-lite .emaas-appheader-appname {
     font-size: 15px;
     font-weight: bold;
@@ -189,15 +200,6 @@ a:hover {
 
 .emaas-appheader-lite .emaas-appheader-appname-twoline {
     font-weight:normal;
-}
-
-.emaas-appheader-logo-oracle {
-    width: 158px;
-    height: 20px;
-}
-
-.emaas-appheader-logo-oracle:before{
-    content:url("../images/oracle_logo_lrg.png")
 }
 
 .emaas-appheader {

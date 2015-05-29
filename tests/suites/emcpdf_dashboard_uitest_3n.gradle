@@ -53,13 +53,42 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 //Update the lrgConfig configuration to specify where the test jar is.
 dependencies {
-testConfig group: 'com.oracle.emaas.emcpdf.Webdriver.uitest', name: 'dashboards-uitest', version: '1.0+'
+testConfig (group: 'com.oracle.emaas.emcpdf.Webdriver.uitest', name: 'dashboards-uitest', version: '1.0+')
+{
+exclude('module':'groovy')
+}
+testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: '1.1+'
+configurations{
+restAssured.exclude module:'groovy'
+}
+}
+  
+task copyDependencies(type: Copy) {
+    from configurations.lrgConfig
+    into System.env.T_WORK
 }
 
+/* Setup EMaaS Small Deployment */
+task small_deploy_3n_block(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'setupEmaasSmallDeploy')
+                    }
+                }
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true
+}
 //This are 1 test blocks to run testng tests.
 //sample1 for the package oracle/sysman/test/logan
-task e2e (type: EMTest){
-options.suiteXmlBuilder().suite('name': 'DashBoard') {
+task e2e (type: EMTest, dependsOn: small_deploy_3n_block){
+options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
@@ -71,4 +100,22 @@ options.suiteXmlBuilder().suite('name': 'DashBoard') {
 
 }
 
-task emcpdf_dashboard_uitest (dependsOn:[e2e])
+/* Cleanup EMaaS Small Deployment */
+/* Note: Make sure this block is added after defining task my_test_task or else you see a failure saying my_test_task doesn't exist. */
+task small_deploy_3n_cleanup(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'logCollectionAndPostCleanup')
+                    }
+                }
+            }
+        }
+    }
+    mustRunAfter ([small_deploy_3n_block,e2e])
+}
+
+task emcpdf_dashboard_uitest_3n (dependsOn:[e2e, small_deploy_3n_cleanup])
