@@ -510,6 +510,12 @@ define(['knockout',
                     		oj.Logger.error(e);
                     	}
                     	self.handleSaveUpdateToServer();
+                    	dfu.showMessage({
+                    		type: 'confirm',
+                    		summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
+                    		detail: '',
+                    		removeDelayTime: 5000
+                    	});
                     }  
                 });
             };

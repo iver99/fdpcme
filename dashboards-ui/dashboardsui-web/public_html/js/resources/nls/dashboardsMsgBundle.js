@@ -160,6 +160,8 @@ define({
       "DBS_BUILDER_TIMESELECTOR_OPTION_CUSTOM":"Custom",
       "DBS_BUILDER_TIMESELECTOR_CUSTOM_LAST":"Last",
       "DBS_BUILDER_TIMESELECTOR_CUSTOM_RANGE":"Range",
+      "DBS_BUILDER_MSG_CHANGES_SAVED": "Changes on the dashboard have been saved",
+      
       
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
       "TEXT_WIDGET_IFRAME_CONFIGURATION":"Configuration",

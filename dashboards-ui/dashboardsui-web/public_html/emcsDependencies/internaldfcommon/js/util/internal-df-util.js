@@ -278,6 +278,13 @@ define(['knockout',
                 return dfu.ajaxWithRetry(urlOrOpt, options);
             };
             
+            /**
+             * Display message
+             */
+            self.showMessage = function(messageObj) {
+            	dfu.showMessage(messageObj);
+            };
+            
         }
         return new InternalDashboardFrameworkUtility();
     }
