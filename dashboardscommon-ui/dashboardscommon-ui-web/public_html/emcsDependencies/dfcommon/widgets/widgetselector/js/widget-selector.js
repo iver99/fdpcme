@@ -47,6 +47,7 @@ define(['require',
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.widgetHandler = params.widgetHandler;
+                self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
                 self.widgetSelectorTitle = ko.observable(dialogTitle);
                 self.widgetGroupLabel = ko.observable();
                 self.searchBoxPlaceHolder = ko.observable();
@@ -300,7 +301,9 @@ define(['require',
                 
                 // Widget handler for selected widget
                 self.widgetSelectionConfirmed = function() {
-//                    $('#'+self.dialogId).ojDialog('close');
+                    //Close dialog if autoCloseDialog is true or not set
+                    if (self.autoCloseDialog !== false)
+                        $('#'+self.dialogId).ojDialog('close');
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
                         var selectedWidget = self.currentWidget();
                         self.widgetHandler(selectedWidget);

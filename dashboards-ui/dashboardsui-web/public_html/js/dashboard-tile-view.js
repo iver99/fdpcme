@@ -597,7 +597,8 @@ define(['knockout',
                 affirmativeButtonLabel: getNlsString('DBS_BUILDER_BTN_ADD'),
                 userName: dfu.getUserName(),
                 tenantName: dfu.getTenantName(),
-                widgetHandler: self.addSelectedWidgetToDashboard
+                widgetHandler: self.addSelectedWidgetToDashboard,
+                autoCloseDialog: false
 //                ,providerName: null     //'TargetAnalytics' 
 //                ,providerVersion: null  //'1.0.5'
 //                ,providerName: 'TargetAnalytics' 
