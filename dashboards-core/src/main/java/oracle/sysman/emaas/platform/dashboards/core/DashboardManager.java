@@ -592,6 +592,18 @@ public class DashboardManager
 				sb.append(" ) ");
 			}
 
+			if (filter.getIncludedApplicationTypes() != null && !filter.getIncludedApplicationTypes().isEmpty()) {
+				sb.append(" and ( ");
+				for (int i = 0; i < filter.getIncludedApplicationTypes().size(); i++) {
+					if (i != 0) {
+						sb.append(" or ");
+					}
+					sb.append(" p.application_type = " + filter.getIncludedApplicationTypes().get(i).getValue() + " ");
+					//paramList.add(filter.getIncludedApplicationTypes().get(i).getValue());
+				}
+				sb.append(" ) ");
+			}
+
 			if (filter.getIncludedOwners() != null && !filter.getIncludedOwners().isEmpty()) {
 				sb.append(" and ( ");
 				if (filter.getIncludedOwners().contains("Oracle")) {
