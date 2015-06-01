@@ -15,6 +15,7 @@ requirejs.config({
         'jquery': '../dependencies/oraclejet/js/libs/jquery/jquery-2.1.1.min',
         'jqueryui': '../dependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.1.custom.min',
         'jqueryui-amd':'../dependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.1',
+        'hammerjs': '../dependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../dependencies/oraclejet/js/libs/oj/v1.1.0/debug',
         'ojL10n': '../dependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
         'ojtranslations': '../dependencies/oraclejet/js/libs/oj/v1.1.0/resources',
