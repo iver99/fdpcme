@@ -23,7 +23,7 @@ define({
       "COMMON_REQUIRE_ERROR": "{0} is required",
       "COMMON_SERVER_ERROR": "Error on accessing server",
       "DBS_HOME_SEARCH_ARIA_LABEL": "Search for a Dashboard",
-      "DBS_HOME_SEARCH_PLACE_HODE": "Search for a dashboard. Enter name or description of the dashboard or a widget in the dashboard.",
+      "DBS_HOME_SEARCH_PLACE_HODE": "Search",
       "DBS_HOME_SEARCH_BTN_LABEL": "Search",
       "DBS_HOME_CLEAN_BTN_LABEL": "Clear",
       "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
