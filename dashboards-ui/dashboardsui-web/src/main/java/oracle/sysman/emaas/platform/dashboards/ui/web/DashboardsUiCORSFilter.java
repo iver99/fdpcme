@@ -37,6 +37,7 @@ public class DashboardsUiCORSFilter implements Filter
 	//	private static final String AUTHORIZATION_HEADER = "Authorization"; //header name needed for authorization
 	//	private static final String COOKIE_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
 	private static final String COOKIE_X_REMOTE_USER = "ORA_EMSAAS_USERNAME_AND_TENANTNAME";
+	private static final String COOKIE_X_REMOTE_USER_PATH = "/emsaasui/emcpdfui";
 
 	@Override
 	public void destroy()
@@ -45,7 +46,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
@@ -89,9 +90,12 @@ public class DashboardsUiCORSFilter implements Filter
 			for (Cookie cookie : hReq.getCookies()) {
 				if (COOKIE_X_REMOTE_USER.equals(cookie.getName())) {
 					remoteUserExists = true;
-					if (!StringUtil.isEmpty(userTenant)) {
+					String oldCookieValue = cookie.getValue();
+					if (!StringUtil.isEmpty(userTenant) && !userTenant.equals(oldCookieValue)) {
 						updatedCookie = cookie;
 						updatedCookie.setValue(userTenant);
+						updatedCookie.setPath(COOKIE_X_REMOTE_USER_PATH);
+						logger.info("Value of Cookie:" + COOKIE_X_REMOTE_USER + " is updated to " + userTenant);
 					}
 					break;
 				}
@@ -100,6 +104,9 @@ public class DashboardsUiCORSFilter implements Filter
 		if (!remoteUserExists && !StringUtil.isEmpty(userTenant)) {
 			//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
 			updatedCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
+			updatedCookie.setPath(COOKIE_X_REMOTE_USER_PATH);
+			logger.info("New Cookie:" + COOKIE_X_REMOTE_USER + " with value: " + userTenant + " is created");
+
 		}
 		if (updatedCookie != null) {
 			hRes.addCookie(updatedCookie);
