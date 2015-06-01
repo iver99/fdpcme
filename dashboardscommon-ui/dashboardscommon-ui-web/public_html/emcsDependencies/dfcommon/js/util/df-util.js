@@ -338,6 +338,96 @@ define(['knockout',
             }; 
             
             /**
+             * Returns an array of application with edition information subscribed by specified tenant
+             * Note:
+             * See constructor of this utility to know more about how to set tenant and user.
+             * 
+             * @returns {string array or null if no application is subscribed}, 
+             * e.g. 
+             * [
+			 * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
+			 * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
+			 * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
+			 * ]
+             */
+            self.getSubscribedApplicationsWithEdition = function() {
+                if (!self.tenantName) {
+                    oj.Logger.error("Specified tenant name is empty, and the query won't be executed.");
+                    return null;
+                }
+                if (!self.userName) {
+                    oj.Logger.error("Specified user name is empty, and the query won't be executed.");
+                    return null;
+                }
+                
+                var header = self.getDefaultHeader();
+                var url = "/sso.static/dashboards.subscribedapps?withEdition=true";
+
+                var result = null;
+                $.ajax(url, {
+                    type: 'get',
+                    dataType: 'json',
+                    headers: header,
+                    success:function(data) {
+                        result = data.applications;
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        oj.Logger.error("Failed to get subscribed applicatoins with edition due to error: "+textStatus);
+                    },
+                    async:false
+                });
+                return result;
+            };  
+
+            
+            /**
+             * Retrieves an array of application with edition information subscribed by specified tenant, and call the specified callback function
+             * to handle the applications
+             * 
+             * Note:
+             * See constructor of this utility to know more about how to set tenant and user.
+             * 
+             * e.g. 
+             * [
+			 * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
+			 * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
+			 * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
+			 * ]
+             */
+            self.checkSubscribedApplicationsWithEdition = function(callbackFunc) {
+                if (!self.tenantName) {
+                    oj.Logger.error("Specified tenant name is empty, and the query won't be executed.");
+                    return null;
+                }
+                if (!self.userName) {
+                    oj.Logger.error("Specified user name is empty, and the query won't be executed.");
+                    return null;
+                }
+                if (!callbackFunc || !(callbackFunc instanceof Function)){
+                    oj.Logger.error("Specified callback func isn't an Function, and the query won't be executed.");
+                    return null;
+                }
+                
+                var header = self.getDefaultHeader();
+                var url = "/sso.static/dashboards.subscribedapps?withEdition=true";
+
+                var result = null;
+                $.ajax(url, {
+                    type: 'get',
+                    dataType: 'json',
+                    headers: header,
+                    success:function(data) {
+                        result = data.applications;
+                        callbackFunc(result);
+                    },
+                    error:function(xhr, textStatus, errorThrown){
+                        oj.Logger.error("Failed to get subscribed applicatoins with edition due to error: "+textStatus);
+                    },
+                    async:true
+                });
+            };
+            
+            /**
              * Check subscribed applications and call callback function with subscribed application names in an string array or null for none
              * Note:
              * See constructor of this utility to know more about how to set tenant and user.
