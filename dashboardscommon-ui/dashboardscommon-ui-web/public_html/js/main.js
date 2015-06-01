@@ -107,9 +107,9 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-                self.userName = 'SYSMAN';
-                self.tenantName = 'TenantOPC1';
-                self.appId = "Dashboard";
+                self.userName = 'emcsadmin';
+                self.tenantName = 'emaastesttenant1';
+                self.appId = "Error"; //"Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,

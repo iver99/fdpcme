@@ -1,4 +1,4 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', 'ojs/ojmenu', 'ojs/ojbutton'],
+define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojtoolbar', 'ojs/ojmenu', 'ojs/ojbutton'],
         function (localrequire, ko, $, dfumodel,oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
@@ -75,6 +75,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var appIdLogAnalytics = "LogAnalytics";
                 var appIdDashboard = "Dashboard";
                 var appIdTenantManagement = "TenantManagement";
+                var appIdError = "Error";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -110,7 +111,14 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     "serviceName": "TenantManagementUI",
                     "version": "0.1",
                     "helpTopicId": ""
-                };                
+                };     
+                appMap[appIdError] = {
+                    "appId": "Error",
+                    "appName": "", 
+                    "serviceName": "Error",
+                    "version": "0.1",
+                    "helpTopicId": "em_home_gs"
+                };    
             
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
@@ -118,6 +126,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
+                self.navLinksVisible = self.appId === 'Error' ? false : true;
                 
                 var appProperties = appMap[self.appId];
                 self.serviceName = appProperties['serviceName'];
@@ -305,7 +314,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     appTenantManagement: appMap[appIdTenantManagement]
                 };
                 //Register a Knockout component for navigation links
-                if (!ko.components.isRegistered('df-oracle-nav-links')) {
+                if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
                     ko.components.register("df-oracle-nav-links",{
                         viewModel:{require:vmPath.substring(0, vmPath.length-3)},
                         template:{require:'text!'+templatePath}
@@ -447,7 +456,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     oj.Logger.info("Start to load resource bundle and get subscribed applications.");
                     var defArray = [];
                     defArray.push(self.requireNlsBundle());
-                    defArray.push(self.getSubscribedApplications());
+                    //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
+                    //Even other apps are subscribed to current tenant as well, we don't show them
+                    if (self.appId === 'Dashboard')
+                        defArray.push(self.getSubscribedApplications());
                     var combinedPromise = $.when.apply($,defArray);
                     combinedPromise.done(function(){
                         refreshAppName();
@@ -461,6 +473,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 function refreshAppName() {
                     var subscribedServices = null;
                     var nls = self.nlsStrings();
+                    //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
+                    //Even other apps are subscribed to current tenant as well, we don't show them
+                    if (self.appId !== 'Dashboard' && self.appId !== 'Error')
+                        subscribedApps = [self.appId];
+                    else if (self.appId === 'Error')
+                        subscribedApps = [];
                     if (subscribedApps && subscribedApps.length > 0) {
                         for (i = 0; i < subscribedApps.length; i++) {
                             var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";

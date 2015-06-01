@@ -50,6 +50,7 @@
                                     click: notificationMenuHandler, attr: {title: textNotifications}" role="button" tabindex="-1">
                             </button>
                             <!-- /ko -->
+                            <!-- ko if: navLinksVisible -->
                             <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button" 
                                     data-bind="ojComponent: {component:'ojButton', display:'icons', 
                                                 label: textAppNavigator, 
@@ -57,6 +58,7 @@
                                     click: linkMenuHandler, attr: {title: textAppNavigator}" role="button" tabindex="-1">
                                 <!--<img class="emaas-appheader-toolbar-button-icon" data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/>--> 
                             </button>
+                            <!-- /ko -->
 
                             <!-- This is how to add a separator to the toolbar.  
                                  Be sure to include the role and aria-orientation as shown to make it accessible.  -->
@@ -78,15 +80,17 @@
                 }">
             </div>
             <!-- End of about box -->
-
+            
+            <!-- ko if: navLinksVisible -->
             <!--Navigation Menu: Quick Links/Favorites/Recent Dashboards etc.-->
             <div class="oj-component-initnode" id="links_menu">
                 <div data-bind="component: {
                     name: 'df-oracle-nav-links',
                     params: navLinksKocParams
-                }">
+                    }">
+                </div>
             </div>
-            </div>
+            <!-- /ko -->
         </div>  
         <!-- ko if: hasMessages -->
         <div>
