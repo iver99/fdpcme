@@ -277,17 +277,20 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     {
                         "label": self.helpMenuLabel,
                         "url": "#",
+                        "id":"emcpdf_oba_help",
                         "onclick": self.openHelpLink
 //                        ,"subNavItems": self.subHelpMenuItems
                     },
                     {
                         "label": self.aboutMenuLabel,
                         "url": "#",
+                        "id":"emcpdf_oba_about",
                         "onclick": self.openAboutBox
                     },
                     {
                         "label": self.signOutMenuLabel,
                         "url": "#",
+                        "id":"emcpdf_oba_logout",
                         "onclick": self.handleSignout
                     }
                 ];
