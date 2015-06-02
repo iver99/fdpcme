@@ -439,16 +439,20 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns 
              */ 
             self.ajaxWithRetry = function(urlOrOptions, options) {
-                var retryOptions = null;
+                var retryOptions = {};
                 if (typeof(urlOrOptions) === 'string' && typeof(options) === 'object') {
                     retryOptions = options;
                     retryOptions.url = urlOrOptions;
+                }
+                else if (typeof(urlOrOptions) === 'string' && typeof(options) === 'function') {
+                    retryOptions.url = urlOrOptions;
+                    retryOptions.success = options;
                 }
                 else if (typeof(urlOrOptions) === 'object')
                     retryOptions = urlOrOptions;
                 var retryCount = 0;
                 var retryLimit = retryOptions.retryLimit ? retryOptions.retryLimit : 3;
-                var showMessages = retryOptions.showMessages === false ? false : true;
+                var showMessages = retryOptions.showMessages ? retryOptions.showMessages : 'all';
                 var messageId = null;
                 var messageObj = null;
                 var errorCallBack = retryOptions.error;
@@ -475,7 +479,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                         else {
                             retryCount++;
                             if ((retries > 0) && (jqXHR.status === 408 || jqXHR.status === 404 || jqXHR.status === 503 || jqXHR.status === 0)) {
-                                if (showMessages === true) {
+                                if (showMessages !== 'none') {
                                     //remove old retrying message
                                     removeMessage(messageId);
 
@@ -489,9 +493,12 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                                     messageId = self.getGuid();
                                     var summaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY : 
                                             'Not connected.';
-                                    var detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
-                                            'Retrying to connect to your cloud service. Retry count: {0}.';
-                                    detailMsg = self.formatMessage(detailMsg, retryCount);
+                                    var detailMsg = null;
+                                    if (showMessages === 'all') {
+                                        detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
+                                                'Retrying to connect to your cloud service. Retry count: {0}.';
+                                        detailMsg = self.formatMessage(detailMsg, retryCount);
+                                    }
                                     messageObj = {
                                         id: messageId, 
                                         action: 'show', 
@@ -508,8 +515,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                                 return false;
                             }
 
-                            var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
-                            if (showMessages === true) {
+                            if (showMessages !== 'none') {
                                 //remove old retrying message after retrying for 3 times
                                 removeMessage(messageId);
 
@@ -522,11 +528,15 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                                 //Set failure message to be shown on UI after 3 retries
                                 var errorSummaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY : 
                                         'Attempts to connect to your cloud service failed after {0} tries.';
-                                var errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg : 
-                                        (isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
-                                        'Could not connect to your cloud service after {0} tries.');
                                 errorSummaryMsg = self.formatMessage(errorSummaryMsg, retryLimit);
-                                errorDetailMsg = self.formatMessage(errorDetailMsg, retryLimit);
+                                var errorDetailMsg = null;
+                                if (showMessages === 'all') {
+                                    var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
+                                    errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg : 
+                                            (isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
+                                            'Could not connect to your cloud service after {0} tries.');
+                                    errorDetailMsg = self.formatMessage(errorDetailMsg, retryLimit);
+                                }
                                 messageObj = {
                                     id: self.getGuid(), 
                                     action: 'show', 
@@ -572,13 +582,12 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns 
              */ 
             self.ajaxGetWithRetry = function(urlOrOptions, options) {
-                var retryOptions = null;
+                var retryOptions = {};
                 if (typeof(urlOrOptions) === 'string' && typeof(options) === 'object') {
                     retryOptions = options;
                     retryOptions.url = urlOrOptions;
                 }
                 else if (typeof(urlOrOptions) === 'string' && typeof(options) === 'function') {
-                    retryOptions = {};
                     retryOptions.url = urlOrOptions;
                     retryOptions.success = options;
                 }
