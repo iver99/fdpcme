@@ -26,6 +26,26 @@ bash "create_servicemanger_properties_file"  do
     EOH
 end
 
+# set the MW_HOME environment variable
+# so we can start the WLS server
+#
+ruby_block "set_MW_HOME" do
+  block do
+    ENV['MW_HOME']=node["oracle_home"]
+  end
+  action :create
+end
+
+ruby_block "set_JAVA_HOME" do
+    block do
+        ENV['JAVA_HOME']=node["java_home"]
+    end
+    action :create
+end
+
+#common WLS recipe
+include_recipe 'cookbook-emcs-emsaas-weblogic::default'
+
 #common setup/start for a managed Server
 include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_setup'
 
