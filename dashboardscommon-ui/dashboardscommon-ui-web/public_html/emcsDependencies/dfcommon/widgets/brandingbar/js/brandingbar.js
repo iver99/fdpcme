@@ -213,7 +213,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                             oj.Logger.info('No available notifications found by URL: ' + urlNotificationCheck);
                             self.notificationDisabled(true);
                         },
-                        showMessages: false
+                        showMessages: 'none'
                     });
                 };
                 
