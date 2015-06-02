@@ -42,13 +42,13 @@
 
                     <div class="emaas-appheader-toolbar-container">
                         <!--div class="emaas-appheader-toolbar oj-toolemaas-appheader-toolbarbar-no-chrome" aria-controls="player" data-bind="ojComponent: {component:'ojToolbar'}"-->
-			<div class="emaas-appheader-toolbar oj-toolemaas-appheader-toolbarbar-no-chrome">
+			<div class="emaas-appheader-toolbar oj-toolemaas-appheader-toolbarbar-no-chrome oj-toolbar">
                             <!-- ko if: notificationVisible -->
                             <button id="notificationButton" class="oj-button-half-chrome emaas-appheader-toolbar-button"
                                     data-bind="ojComponent: {component:'ojButton', display:'icons', 
                                                 label: textNotifications, disabled: notificationDisabled,
                                                 icons: {start: 'fa-icon-font fa-notification'}}, 
-                                    click: notificationMenuHandler, attr: {title: textNotifications}" role="button" tabindex="-1">
+                                    click: notificationMenuHandler, attr: {title: textNotifications}" role="button" tabindex="0">
                             </button>
                             <!-- /ko -->
                             <!-- ko if: navLinksVisible -->
@@ -56,7 +56,7 @@
                                     data-bind="ojComponent: {component:'ojButton', display:'icons', 
                                                 label: textAppNavigator, 
                                                 icons: {start: 'fa-icon-font fa-compass'}}, 
-                                    click: linkMenuHandler, attr: {title: textAppNavigator}" role="button" tabindex="-1">
+                                    click: linkMenuHandler, attr: {title: textAppNavigator}" role="button" tabindex="0">
                                 <!--<img class="emaas-appheader-toolbar-button-icon" data-bind="attr: {alt: textAppNavigator, src: navLinksIcon, title: textAppNavigator}"/>--> 
                             </button>
                             <!-- /ko -->
@@ -67,7 +67,7 @@
                             
                             <button id="menubutton"
                                     class='oj-button-half-chrome emaas-appheader-toolbar-button'
-                                    data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}">
+                                    data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}" tabindex="0">
                             </button>
                         </div>
                     </div>
