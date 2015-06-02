@@ -577,6 +577,11 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                     retryOptions = options;
                     retryOptions.url = urlOrOptions;
                 }
+                else if (typeof(urlOrOptions) === 'string' && typeof(options) === 'function') {
+                    retryOptions = {};
+                    retryOptions.url = urlOrOptions;
+                    retryOptions.success = options;
+                }
                 else if (typeof(urlOrOptions) === 'object')
                     retryOptions = urlOrOptions;
                 
