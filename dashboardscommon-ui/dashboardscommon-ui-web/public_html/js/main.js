@@ -26,7 +26,7 @@ requirejs.config({
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
-        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
+        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {

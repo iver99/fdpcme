@@ -106,7 +106,9 @@
                     </div>
                     <div class="emaas-appheader-message-table-cell emaas-appheader-message-textbox">
                         <span class="emaas-appheader-message emaas-appheader-message-summary" data-bind="text: summary"></span>
+                        <!-- ko if: detail && detail !== '' -->
                         <span class="emaas-appheader-message emaas-appheader-message-detail" data-bind="text: detail"></span>
+                        <!-- /ko -->
                     </div>
                 </div>
                 <div style="float:right;padding-right: 20px;">
