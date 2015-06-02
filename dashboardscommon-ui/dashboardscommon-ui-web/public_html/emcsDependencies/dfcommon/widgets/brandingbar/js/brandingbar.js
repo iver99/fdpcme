@@ -1,4 +1,4 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', 'ojs/ojmenu', 'ojs/ojbutton'],
+define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojtoolbar', 'ojs/ojmenu', 'ojs/ojbutton'],
         function (localrequire, ko, $, dfumodel,oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
@@ -42,13 +42,31 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.toolbarLabel = ko.observable();
                 self.textNotifications = ko.observable();
                 self.appName = ko.observable();
+                self.hasMessages = ko.observable(true);
+                self.altTextError = ko.observable();
+                self.altTextWarn = ko.observable();
+                self.altTextConfirm = ko.observable();
+                self.altTextInfo = ko.observable();
+                self.altTextClear = ko.observable();
+                self.messageList = ko.observableArray();
+                self.clearMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/clearEntry_ena.png'); 
+                var errorMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_error_16.png'); 
+                var warnMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_warn_16.png'); 
+                var confirmMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_confirm_16.png'); 
+                var infoMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_info_16.png'); 
+                var messages = [];
+                
+                self.clearMessage = function(data, event) {
+                    removeMessage(data);
+                    self.messageList(messages);
+                };
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
                 self.aboutBoxNeedRefresh = ko.observable(false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
+                self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 var dfHomeUrl =dfu.discoverDFHomeUrl();
                 var subscribedApps = null;//dfu.getSubscribedApplications();
@@ -57,6 +75,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var appIdLogAnalytics = "LogAnalytics";
                 var appIdDashboard = "Dashboard";
                 var appIdTenantManagement = "TenantManagement";
+                var appIdError = "Error";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -92,7 +111,14 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     "serviceName": "TenantManagementUI",
                     "version": "0.1",
                     "helpTopicId": ""
-                };                
+                };     
+                appMap[appIdError] = {
+                    "appId": "Error",
+                    "appName": "", 
+                    "serviceName": "Error",
+                    "version": "0.1",
+                    "helpTopicId": "em_home_gs"
+                };    
             
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
@@ -100,6 +126,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
+                self.navLinksVisible = self.appId === 'Error' ? false : true;
                 
                 var appProperties = appMap[self.appId];
                 self.serviceName = appProperties['serviceName'];
@@ -132,6 +159,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
                     self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
                     self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
+                    self.altTextError(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR);
+                    self.altTextWarn(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN);
+                    self.altTextConfirm(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM);
+                    self.altTextInfo(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO);
                     
                     oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
@@ -172,7 +203,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 self.checkNotificationAvailability = function() {
                     oj.Logger.info("Start to check available notifications by URL:" + urlNotificationCheck, false);
-                    $.ajax(urlNotificationCheck, {
+                    dfu.ajaxWithRetry(urlNotificationCheck, {
                         success:function(data, textStatus, jqXHR) {
                             oj.Logger.info("Found available notifications. Trying to get notifications page link...", false);
                             if (urlNotificationShow === null)
@@ -181,7 +212,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         error:function(xhr, textStatus, errorThrown){
                             oj.Logger.info('No available notifications found by URL: ' + urlNotificationCheck);
                             self.notificationDisabled(true);
-                        }
+                        },
+                        showMessages: false
                     });
                 };
                 
@@ -245,26 +277,29 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     {
                         "label": self.helpMenuLabel,
                         "url": "#",
+                        "id":"emcpdf_oba_help",
                         "onclick": self.openHelpLink
 //                        ,"subNavItems": self.subHelpMenuItems
                     },
                     {
                         "label": self.aboutMenuLabel,
                         "url": "#",
+                        "id":"emcpdf_oba_about",
                         "onclick": self.openAboutBox
                     },
                     {
                         "label": self.signOutMenuLabel,
                         "url": "#",
+                        "id":"emcpdf_oba_logout",
                         "onclick": self.handleSignout
                     }
                 ];
                 
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getCssFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
-                var oracleLogoImg = getCssFilePath(localrequire, '../../../images/oracle_logo_lrg.png'); 
-                var navLinksImg = getCssFilePath(localrequire, '../../../images/compassIcon_32.png'); 
+                var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/dashboards-common-alta.css'); 
+                var oracleLogoImg = getFilePathRelativeToHtml(localrequire, '../../../images/oracle_logo_lrg.png'); 
+                var navLinksImg = getFilePathRelativeToHtml(localrequire, '../../../images/compassIcon_32.png'); 
 
 		self.brandingbarCss = cssFile;
                 self.oracleLogoImage = oracleLogoImg;
@@ -282,7 +317,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     appTenantManagement: appMap[appIdTenantManagement]
                 };
                 //Register a Knockout component for navigation links
-                if (!ko.components.isRegistered('df-oracle-nav-links')) {
+                if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
                     ko.components.register("df-oracle-nav-links",{
                         viewModel:{require:vmPath.substring(0, vmPath.length-3)},
                         template:{require:'text!'+templatePath}
@@ -327,6 +362,79 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     $("#links_menu").slideUp('normal');
                 });  
                 
+                window.addEventListener("message", receiveMessage, false);
+
+                function receiveMessage(event)
+                {
+                    if (event.origin !== window.location.protocol + '//' + window.location.host)
+                        return;
+                    var data = event.data;
+                    //Only handle received message for showing page level messages
+                    if (data && data.category && data.category === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
+                        if (data.action) {
+                            if (data.action.toUpperCase() === 'SHOW') {
+                                showMessage(data);
+                            }
+                            else if (data.action.toUpperCase() === 'REMOVE') {
+                                removeMessage(data);
+                            }
+                        }
+                        //Show message by default
+                        else {
+                            showMessage(data);
+                        }
+                    }
+                };
+                
+                function showMessage(data) {
+                    if (data) {
+                        var size = messages.length;
+                        var message = {};
+                        message.index = size;
+                        message.id = data.id ? data.id : dfu.getGuid();
+                        message.type = data.type;
+                        message.summary = data.summary;
+                        message.detail = data.detail;
+                        if (data.type && data.type.toUpperCase() === 'ERROR') {
+                            message.iconAltText = self.altTextError;
+                            message.icon = errorMessageIcon;
+                        }
+                        else if (data.type && data.type.toUpperCase() === 'WARN') {
+                            message.iconAltText = self.altTextWarn;
+                            message.icon = warnMessageIcon;
+                        }
+                        else if (data.type && data.type.toUpperCase() === 'CONFIRM') {
+                            message.iconAltText = self.altTextConfirm;
+                            message.icon = confirmMessageIcon;
+                        }
+                        else if (data.type && data.type.toUpperCase() === 'INFO') {
+                            message.iconAltText = self.altTextInfo;
+                            message.icon = infoMessageIcon;
+                        }
+                        
+                        messages.push(message);
+                        self.messageList(messages);
+                        
+                        //Remove message automatically if remove delay time is set
+                        if (data.removeDelayTime && typeof(data.removeDelayTime) === 'number') {
+                            setTimeout(function(){removeMessage(message);}, data.removeDelayTime);
+                        }
+                    }
+                };
+                
+                function removeMessage(data) {
+                    if (data && data.id) {
+                        for (i = 0; i < messages.length; i++) {
+                            if (messages[i].id === data.id) {
+                                messages.splice(i, 1);
+                                break;
+                            }
+                        }
+                    }
+                    
+                    self.messageList(messages);
+                };
+                
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");
                     var path = requireContext.toUrl(relPath);
@@ -334,7 +442,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     return path;
                 };
                 
-                function getCssFilePath(requireContext, relPath) {
+                function getFilePathRelativeToHtml(requireContext, relPath) {
                     return requireContext.toUrl(relPath);
                 };
                 
@@ -351,7 +459,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     oj.Logger.info("Start to load resource bundle and get subscribed applications.");
                     var defArray = [];
                     defArray.push(self.requireNlsBundle());
-                    defArray.push(self.getSubscribedApplications());
+                    //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
+                    //Even other apps are subscribed to current tenant as well, we don't show them
+                    if (self.appId === 'Dashboard')
+                        defArray.push(self.getSubscribedApplications());
                     var combinedPromise = $.when.apply($,defArray);
                     combinedPromise.done(function(){
                         refreshAppName();
@@ -365,6 +476,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 function refreshAppName() {
                     var subscribedServices = null;
                     var nls = self.nlsStrings();
+                    //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
+                    //Even other apps are subscribed to current tenant as well, we don't show them
+                    if (self.appId !== 'Dashboard' && self.appId !== 'Error')
+                        subscribedApps = [self.appId];
+                    else if (self.appId === 'Error')
+                        subscribedApps = [];
                     if (subscribedApps && subscribedApps.length > 0) {
                         for (i = 0; i < subscribedApps.length; i++) {
                             var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";

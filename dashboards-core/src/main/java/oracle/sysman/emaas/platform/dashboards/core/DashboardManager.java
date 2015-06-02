@@ -569,13 +569,23 @@ public class DashboardManager
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?8 )) ");
+				sb.append(" or p.owner like ?8");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?8)) ");
+				sb.append(" or lower(p.owner) like ?8");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
+
+			if (!ic) {
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?9 )) ");
+				paramList.add("%" + queryString + "%");
+			}
+			else {
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?9 )) ");
+				paramList.add("%" + queryString.toLowerCase(locale) + "%");
+			}
+
 			//			sb.append(" or lower(p.owner) = :owner)");
 			//			paramMap.put("owner", queryString.toLowerCase(locale));
 			//			sb.append(" and p.deleted = 0 ");

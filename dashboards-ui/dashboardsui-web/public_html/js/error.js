@@ -7,10 +7,13 @@ requirejs.config({
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
         'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
+        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/debug',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
         'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources'
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
+        'text': '../emcsDependencies/oraclejet/js/libs/require/text'
+        
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -43,9 +46,30 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
-    'ojs/ojcore'],
+    'ojs/ojcore'
+],
 function(ko, $, dfu, oj)
 {
+    if (!ko.components.isRegistered('df-oracle-branding-bar')) {
+        ko.components.register("df-oracle-branding-bar",{
+            viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
+            template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+        });
+    }
+    
+    function HeaderViewModel() {
+        var self = this;
+        self.userName = dfu.getUserName();
+        self.tenantName = dfu.getTenantName();
+        self.appId = "Error";
+        self.brandingbarParams = {
+            userName: self.userName,
+            tenantName: self.tenantName,
+            appId: self.appId,
+            isAdmin: true
+        };
+    };
+    
     function ErrorPageModel() {
         var self = this;
 
@@ -67,7 +91,8 @@ function(ko, $, dfu, oj)
     };
     
     $(document).ready(function() {
-        ko.applyBindings(new ErrorPageModel(), $('#global-html')[0]); 
+        ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);
+        ko.applyBindings(new ErrorPageModel(), $('#errorMain')[0]); 
         $('#global-body').show();
     });
 });

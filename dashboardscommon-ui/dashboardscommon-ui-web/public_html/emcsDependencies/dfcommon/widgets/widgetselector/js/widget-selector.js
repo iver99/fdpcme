@@ -47,6 +47,7 @@ define(['require',
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.widgetHandler = params.widgetHandler;
+                self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
                 self.widgetSelectorTitle = ko.observable(dialogTitle);
                 self.widgetGroupLabel = ko.observable();
                 self.searchBoxPlaceHolder = ko.observable();
@@ -300,7 +301,9 @@ define(['require',
                 
                 // Widget handler for selected widget
                 self.widgetSelectionConfirmed = function() {
-//                    $('#'+self.dialogId).ojDialog('close');
+                    //Close dialog if autoCloseDialog is true or not set
+                    if (self.autoCloseDialog !== false)
+                        $('#'+self.dialogId).ojDialog('close');
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
                         var selectedWidget = self.currentWidget();
                         self.widgetHandler(selectedWidget);
@@ -327,7 +330,7 @@ define(['require',
 //                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
-                        $.ajax({
+                        dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
@@ -343,7 +346,7 @@ define(['require',
                             async: false
                         });
 
-                        $.ajax({
+                        dfu.ajaxWithRetry({
                             url: widgetsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
