@@ -297,9 +297,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getCssFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
-                var oracleLogoImg = getCssFilePath(localrequire, '../../../images/oracle_logo_lrg.png'); 
-                var navLinksImg = getCssFilePath(localrequire, '../../../images/compassIcon_32.png'); 
+                var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/dashboards-common-alta.css'); 
+                var oracleLogoImg = getFilePathRelativeToHtml(localrequire, '../../../images/oracle_logo_lrg.png'); 
+                var navLinksImg = getFilePathRelativeToHtml(localrequire, '../../../images/compassIcon_32.png'); 
 
 		self.brandingbarCss = cssFile;
                 self.oracleLogoImage = oracleLogoImg;
@@ -450,7 +450,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     return path;
                 };
                 
-                function getCssFilePath(requireContext, relPath) {
+                function getFilePathRelativeToHtml(requireContext, relPath) {
                     var path = requireContext.toUrl(relPath);
                     //remove urlArgs string appended by requirejs urlArgs config from file path
                     var index = path.indexOf('?');
