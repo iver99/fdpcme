@@ -50,17 +50,22 @@ public class DashboardsUiCORSFilter implements Filter
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
-		hRes.addHeader("Access-Control-Allow-Origin", "*");
-		if (hReq.getHeader("Origin") != null) {
+
+		// Only add CORS headers if the developer mode is enabled to add them
+		if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
+
+		    hRes.addHeader("Access-Control-Allow-Origin", "*");
+		    if (hReq.getHeader("Origin") != null) {
 			// allow cookies
 			hRes.addHeader("Access-Control-Allow-Credentials", "true");
-		}
-		else {
+		    }
+		    else {
 			// non-specific origin, cannot support cookies
+		    }
+		    hRes.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); //add more methods as necessary
+		    hRes.addHeader("Access-Control-Allow-Headers",
+				   "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,X-SSO-CLIENT");
 		}
-		hRes.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers",
-				"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,X-SSO-CLIENT");
 
 		//handle Authorization header
 		/*

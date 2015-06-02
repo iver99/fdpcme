@@ -27,11 +27,17 @@ public class IntgSampleWfCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
-		HttpServletResponse hRes = (HttpServletResponse) response;
-		hRes.addHeader("Access-Control-Allow-Origin", "*");
-		hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+	    // Only add CORS headers if the developer mode is enabled to add them
+	    if (!(new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists())) {
 		chain.doFilter(request, response);
+		return;
+	    }
+
+	    HttpServletResponse hRes = (HttpServletResponse) response;
+	    hRes.addHeader("Access-Control-Allow-Origin", "*");
+	    hRes.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); //add more methods as necessary
+	    hRes.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+	    chain.doFilter(request, response);
 	}
 
 	@Override
