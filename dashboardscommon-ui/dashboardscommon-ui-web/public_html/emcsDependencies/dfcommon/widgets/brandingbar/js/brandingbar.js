@@ -66,7 +66,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.aboutBoxNeedRefresh = ko.observable(false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
+                self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 var dfHomeUrl =dfu.discoverDFHomeUrl();
                 var subscribedApps = null;//dfu.getSubscribedApplications();
