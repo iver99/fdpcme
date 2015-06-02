@@ -503,14 +503,27 @@ define(['require',
                 // Get file path relative to js
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    var index = jsRootMain.indexOf('?');
+                    if (index !== -1) 
+                        jsRootMain = jsRootMain.substring(0, index);
                     var path = requireContext.toUrl(relPath);
                     path = path.substring(jsRootMain.length);
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    index = path.indexOf('?');
+                    if (index !== -1) 
+                        path = path.substring(0, index);
                     return path;
                 };
                 
                 // Get file path relative to html
                 function getFilePathRelativeToHtml(requireContext, relPath) {
-                    return requireContext.toUrl(relPath);
+                    var path = requireContext.toUrl(relPath);
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    var index = path.indexOf('?');
+                    if (index !== -1) 
+                        path = path.substring(0, index);
+                    return path;
                 };
                 
                 // Calculate the time difference between current date and the last modification date

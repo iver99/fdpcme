@@ -66,7 +66,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.aboutBoxNeedRefresh = ko.observable(false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
-                self.isAdmin = params.isAdmin ? params.isAdmin : false;
+                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 var dfHomeUrl =dfu.discoverDFHomeUrl();
                 var subscribedApps = null;//dfu.getSubscribedApplications();
@@ -297,9 +297,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
                 var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/dashboards-common-alta.css'); 
-                var oracleLogoImg = getFilePathRelativeToHtml(localrequire, '../../../images/oracle_logo_lrg.png'); 
-                var navLinksImg = getFilePathRelativeToHtml(localrequire, '../../../images/compassIcon_32.png'); 
+                var cssFile = getCssFilePath(localrequire, '../../../css/dashboards-common-alta.css'); 
+                var oracleLogoImg = getCssFilePath(localrequire, '../../../images/oracle_logo_lrg.png'); 
+                var navLinksImg = getCssFilePath(localrequire, '../../../images/compassIcon_32.png'); 
 
 		self.brandingbarCss = cssFile;
                 self.oracleLogoImage = oracleLogoImg;
@@ -437,13 +437,26 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    var index = jsRootMain.indexOf('?');
+                    if (index !== -1) 
+                        jsRootMain = jsRootMain.substring(0, index);
                     var path = requireContext.toUrl(relPath);
                     path = path.substring(jsRootMain.length);
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    index = path.indexOf('?');
+                    if (index !== -1) 
+                        path = path.substring(0, index);
                     return path;
                 };
                 
-                function getFilePathRelativeToHtml(requireContext, relPath) {
-                    return requireContext.toUrl(relPath);
+                function getCssFilePath(requireContext, relPath) {
+                    var path = requireContext.toUrl(relPath);
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    var index = path.indexOf('?');
+                    if (index !== -1) 
+                        path = path.substring(0, index);
+                    return path;
                 };
                 
                 function checkNotifications() {
