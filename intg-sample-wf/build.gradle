@@ -34,14 +34,14 @@ artifactory {
 			maven = true 
 		} 
 	} 
-	resolve {  
+/*	resolve {  
 		repository {  
 			repoKey = 'repo'  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 			maven = true  
 		} 
-	}  
+	}  */
 } 
 
 configurations {

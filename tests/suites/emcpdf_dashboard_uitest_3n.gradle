@@ -26,7 +26,7 @@
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/repo"
+            url = "${artifactory_contextUrl}/emaas-virtual"
         }
     }
     dependencies {
@@ -39,7 +39,7 @@ repositories {
     /* To check if the jar is available in local maven repository */
     mavenLocal()
     maven {
-        url = "${artifactory_contextUrl}/repo"
+        url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
 //apply plugin: 'em-test-infra'

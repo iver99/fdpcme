@@ -59,7 +59,8 @@ public class RegistryLookupAPI extends AbstractAPI
 			}
 			else {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
-						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR",
+								getSafeOutputString(serviceName), getSafeOutputString(version)));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 		}
@@ -87,7 +88,8 @@ public class RegistryLookupAPI extends AbstractAPI
 			validateInitializeTenantIdUserName(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
-						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR", serviceName, version, rel));
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR",
+								getSafeOutputString(serviceName), getSafeOutputString(version), getSafeOutputString(rel)));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 
@@ -97,7 +99,8 @@ public class RegistryLookupAPI extends AbstractAPI
 			}
 			else {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE,
-						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR", serviceName, version, rel));
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR",
+								getSafeOutputString(serviceName), getSafeOutputString(version), getSafeOutputString(rel)));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 		}
@@ -125,8 +128,8 @@ public class RegistryLookupAPI extends AbstractAPI
 			validateInitializeTenantIdUserName(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE,
-						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR", serviceName,
-								version, rel));
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR",
+								getSafeOutputString(serviceName), getSafeOutputString(version), getSafeOutputString(rel)));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 			Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(serviceName, version, rel, tenantIdParam);
@@ -135,8 +138,8 @@ public class RegistryLookupAPI extends AbstractAPI
 			}
 			else {
 				ErrorEntity error = new ErrorEntity(ErrorEntity.REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE,
-						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR", serviceName,
-								version, rel));
+						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR",
+								getSafeOutputString(serviceName), getSafeOutputString(version), getSafeOutputString(rel)));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 		}
@@ -150,6 +153,17 @@ public class RegistryLookupAPI extends AbstractAPI
 			ErrorEntity error = new ErrorEntity(ErrorEntity.UNKNOWN_ERROR_CODE, MessageUtils.getDefaultBundleString(
 					"UNKNOWN_ERROR", e.getLocalizedMessage()));
 			return Response.status(Status.SERVICE_UNAVAILABLE).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
+		}
+	}
+
+	private String getSafeOutputString(String input)
+	{
+		if (input == null) {
+			return "null";
+		}
+		else {
+			return input.replaceAll("&", "&amp;").replaceAll(">", "&gt;").replaceAll("\"", "&quot;").replaceAll("'", "&apos;")
+					.replaceAll("<", "&lt;");
 		}
 	}
 }
