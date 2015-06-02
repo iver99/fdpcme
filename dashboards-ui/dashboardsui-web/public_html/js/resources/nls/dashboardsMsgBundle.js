@@ -106,7 +106,7 @@ define({
       "DBS_BUILDER_CREATE_WIDGET_ICN_URL": "ICON URL",
       "DBS_BUILDER_CREATE_WIDGET_HISGRM_URL": "Histogram URL",
       "DBS_BUILDER_CHANGE_URL_TITLE": "Change URL",
-      "DBS_BUILDER_TILE_ACTIONS": "Actions",
+      "DBS_BUILDER_TILE_ACTIONS": "Configure widget",
       "DBS_BUILDER_TILE_DELETE": "Delete",
       "DBS_BUILDER_TILE_WIDER": "Wider",
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
