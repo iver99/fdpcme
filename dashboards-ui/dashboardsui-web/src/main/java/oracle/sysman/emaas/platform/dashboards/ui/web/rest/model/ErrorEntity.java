@@ -42,6 +42,14 @@ public class ErrorEntity
 
 	public static final int UNKNOWN_ERROR_CODE = 9999;
 
+	// let's keep the error code range the same with Dashboard API
+	// important: don't assign value larger than this value to dashboard ui request errors
+	public static final Integer DASHBOARD_UI_MAX_ERROR_CODE = 19999;
+	// important: don't assign value larger than this value to dashboard resource errors
+	public static final Integer DASHBOARD_RESOURCE_MAX_ERROR_CODE = 29999;
+	// important: don't assign value larger than this value to dashboard security errors
+	public static final Integer DASHBOARD_SECURITY_MAX_ERROR_CODE = 39999;
+
 	public static final ErrorEntity CONFIGURATIONS_GENERIC_ERROR = new ErrorEntity(CONFIGURATIONS_GENERIC_ERROR_CODE,
 			MessageUtils.getDefaultBundleString("CONFIGURATIONS_GENERIC_ERROR"));
 	public static final ErrorEntity CONFIGURATIONS_REGISTRATION_ERROR = new ErrorEntity(CONFIGURATIONS_REGISTRATION_ERROR_CODE,
