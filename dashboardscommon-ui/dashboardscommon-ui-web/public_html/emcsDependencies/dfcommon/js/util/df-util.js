@@ -518,28 +518,30 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             /**
              * Ajax call with retry logic
              * 
-             * Note:
-             * Parameter urlOrOptions can be a URL string (e.g. '/sso.static/dashboards.subscribedapps'), 
-             * in such case the ajax call will be in pattern $.ajax(url, options).
-             * Otherwise urlOrOptions should be a Object which holds all the settings (including url) required by an ajax call, 
-             * in such case the ajax call will be in pattern $.ajax(options).
+             * Supported patterns:
+             * 1. ajaxWithRetry(url)
+             *    url: a target URL string (e.g. '/sso.static/dashboards.subscribedapps')
+             * 2. ajaxWithRetry(options)
+             *    options: a Object which holds all the settings (including url) required by an ajax call.
+             *             Support standard jquery settings and additional options "retryLimit", "showMessages"
+             * 3. ajaxWithRetry(url, options)
+             *    url: a target URL string
+             *    options: a Object which contains the settings required by an ajax call
+             *             Support standard jquery settings and additional options "retryLimit", "showMessages"
+             * 4. ajaxWithRetry(url, successCallback)
+             *     url: a target URL string
+             *     successCallback: success call back function
+             * 5. ajaxWithRetry(url, successCallback, options)
+             *     url: a target URL string
+             *     successCallback: success call back function
+             *     options: a Object which contains the settings required by an ajax call
+             *             Support standard jquery settings and additional options "retryLimit", "showMessages"
              * 
-             * @param {String}/{Object} urlOrOptions
-             * @param {Object} options
              * @returns 
              */ 
-            self.ajaxWithRetry = function(urlOrOptions, options) {
-                var retryOptions = {};
-                if (typeof(urlOrOptions) === 'string' && typeof(options) === 'object') {
-                    retryOptions = options;
-                    retryOptions.url = urlOrOptions;
-                }
-                else if (typeof(urlOrOptions) === 'string' && typeof(options) === 'function') {
-                    retryOptions.url = urlOrOptions;
-                    retryOptions.success = options;
-                }
-                else if (typeof(urlOrOptions) === 'object')
-                    retryOptions = urlOrOptions;
+            self.ajaxWithRetry = function() {
+                var args = arguments;
+                var retryOptions = getAjaxOptions(args);
                 var retryCount = 0;
                 var retryLimit = retryOptions.retryLimit ? retryOptions.retryLimit : 3;
                 var showMessages = retryOptions.showMessages ? retryOptions.showMessages : 'all';
@@ -661,28 +663,30 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             /**
              * Make an ajax get call with retry logic
              * 
-             * Note:
-             * Parameter urlOrOptions can be a URL string (e.g. '/sso.static/dashboards.subscribedapps'), 
-             * in such case the ajax call will be in pattern $.ajax(url, options).
-             * Otherwise urlOrOptions should be a Object which holds all the settings (including url) required by an ajax call, 
-             * in such case the ajax call will be in pattern $.ajax(options).
+             * Supported patterns:
+             * 1. ajaxGetWithRetry(url)
+             *    url: a target URL string (e.g. '/sso.static/dashboards.subscribedapps')
+             * 2. ajaxGetWithRetry(options)
+             *    options: a Object which holds all the settings (including url) required by an ajax call.
+             *             Support standard jquery settings and additional options "retryLimit", "showMessages"
+             * 3. ajaxGetWithRetry(url, options)
+             *    url: a target URL string
+             *    options: a Object which contains the settings required by an ajax call
+             *             Support standard jquery settings and additional options "retryLimit", "showMessages"
+             * 4. ajaxGetWithRetry(url, successCallback)
+             *     url: a target URL string
+             *     successCallback: success call back function
+             * 5. ajaxGetWithRetry(url, successCallback, options)
+             *     url: a target URL string
+             *     successCallback: success call back function
+             *     options: a Object which contains the settings required by an ajax call
+             *             Support standard jquery settings and additional options "retryLimit", "showMessages"
              * 
-             * @param {String}/{Object} urlOrOptions
-             * @param {Object} options
              * @returns 
              */ 
-            self.ajaxGetWithRetry = function(urlOrOptions, options) {
-                var retryOptions = {};
-                if (typeof(urlOrOptions) === 'string' && typeof(options) === 'object') {
-                    retryOptions = options;
-                    retryOptions.url = urlOrOptions;
-                }
-                else if (typeof(urlOrOptions) === 'string' && typeof(options) === 'function') {
-                    retryOptions.url = urlOrOptions;
-                    retryOptions.success = options;
-                }
-                else if (typeof(urlOrOptions) === 'object')
-                    retryOptions = urlOrOptions;
+            self.ajaxGetWithRetry = function() {
+                var args = arguments;
+                var retryOptions = getAjaxOptions(args);
                 
                 //Set ajax call type to GET
                 retryOptions.type = 'GET';
@@ -710,6 +714,36 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 var i=1;
                 while(i<arguments.length) message=message.replace("{"+(i-1)+"}",arguments[i++]);
                 return message;
+            };
+            
+            function getAjaxOptions(args) {
+                var argsLength = args.length;
+                var retryOptions = {};
+                if (argsLength === 1) {
+                    if (typeof(args[0]) === 'string')
+                        retryOptions.url = args[0];
+                    if (typeof(args[0]) === 'object')
+                        retryOptions = args[0];
+                }
+                else if (argsLength === 2) {
+                    if (typeof(args[0]) === 'string' && typeof(args[1]) === 'object') {
+                        retryOptions = args[1];
+                        retryOptions.url = args[0];
+                    }
+                    else if (typeof(args[0]) === 'string' && typeof(args[1]) === 'function') {
+                        retryOptions.url = args[0];
+                        retryOptions.success = args[1];
+                    }
+                }
+                else if (argsLength === 3) {
+                    if (typeof(args[0]) === 'string' && typeof(args[1]) === 'function' && typeof(args[2]) === 'object') {
+                        retryOptions = args[2];
+                        retryOptions.url = args[0];
+                        retryOptions.success = args[1];
+                    }
+                }
+                
+                return retryOptions;
             };
             
             function logMessage(url, messageType, messageText) {
