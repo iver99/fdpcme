@@ -375,10 +375,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {string array or null if no application is subscribed}, 
              * e.g. 
              * [
-			 * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
-			 * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
-			 * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
-			 * ]
+	     * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
+	     * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
+	     * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
+	     * ]
              */
             self.getSubscribedApplicationsWithEdition = function() {
                 if (!self.tenantName) {
@@ -419,10 +419,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * 
              * e.g. 
              * [
-			 * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
-			 * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
-			 * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
-			 * ]
+             * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
+             * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
+	     * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
+	     * ]
              */
             self.checkSubscribedApplicationsWithEdition = function(callbackFunc) {
                 if (!self.tenantName) {
@@ -537,7 +537,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              *     options: a Object which contains the settings required by an ajax call
              *             Support standard jquery settings and additional options "retryLimit", "showMessages"
              * 
-             * @returns 
+             * @returns {Deferred Object}
              */ 
             self.ajaxWithRetry = function() {
                 var args = arguments;
@@ -682,7 +682,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              *     options: a Object which contains the settings required by an ajax call
              *             Support standard jquery settings and additional options "retryLimit", "showMessages"
              * 
-             * @returns 
+             * @returns {Deferred Object}
              */ 
             self.ajaxGetWithRetry = function() {
                 var args = arguments;
@@ -695,6 +695,11 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 return self.ajaxWithRetry(retryOptions);
             };
             
+            /**
+             * Generate a GUID string
+             * 
+             * @returns {String}
+             */ 
             self.getGuid = function() {
                 function S4() {
                    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -703,6 +708,18 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
             };
             
+            /**
+             * Show a page level message in branding bar
+             * 
+             * @param {Object} message message to be shown on UI, supported properties include:
+             *          type:	         String, Required. Message type, should be one of "error", "warn", "confirm", "info".
+             *          summary:	 String, Required. Message summary.
+             *          detail:	         String, Optional. Message details.
+             *          removeDelayTime: Number, Optional. Delay time (in milliseconds) for the message to be closed automatically from common message UI. 
+             *                           If not specified, it will not be closed automatically by default.
+             * 
+             * @returns 
+             */ 
             self.showMessage = function(message) {
                 if (message) {
                     message.category = 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE';
@@ -710,6 +727,14 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 }
             };
             
+            /**
+             * Format a message by replacing the placeholds inside the message string with parameters passed in
+             * 
+             * @param {String} message message to be formatted.
+             * @param {Array} args parameters used to replace the placeholds
+             * 
+             * @returns 
+             */ 
             self.formatMessage = function(message) {
                 var i=1;
                 while(i<arguments.length) message=message.replace("{"+(i-1)+"}",arguments[i++]);
