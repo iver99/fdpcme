@@ -106,7 +106,7 @@ define({
       "DBS_BUILDER_CREATE_WIDGET_ICN_URL": "ICON URL",
       "DBS_BUILDER_CREATE_WIDGET_HISGRM_URL": "Histogram URL",
       "DBS_BUILDER_CHANGE_URL_TITLE": "Change URL",
-      "DBS_BUILDER_TILE_ACTIONS": "Actions",
+      "DBS_BUILDER_TILE_ACTIONS": "Configure widget",
       "DBS_BUILDER_TILE_DELETE": "Delete",
       "DBS_BUILDER_TILE_WIDER": "Wider",
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
@@ -160,7 +160,7 @@ define({
       "DBS_BUILDER_TIMESELECTOR_OPTION_CUSTOM":"Custom",
       "DBS_BUILDER_TIMESELECTOR_CUSTOM_LAST":"Last",
       "DBS_BUILDER_TIMESELECTOR_CUSTOM_RANGE":"Range",
-      "DBS_BUILDER_MSG_CHANGES_SAVED": "Changes on the dashboard have been saved",
+      "DBS_BUILDER_MSG_CHANGES_SAVED": "Changes on the dashboard have been saved successfully.",
       
       
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",

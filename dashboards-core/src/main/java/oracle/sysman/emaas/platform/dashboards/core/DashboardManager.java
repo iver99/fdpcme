@@ -536,10 +536,11 @@ public class DashboardManager
 			sbApps.append(String.valueOf(app.getValue()));
 		}
 
+                //11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
 		StringBuilder sb = new StringBuilder(
 				" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
 						+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
-						+ "where p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or (p.is_system = ?5 and p.application_type in ("
+						+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or (p.is_system = ?5 and p.application_type in ("
 						+ sbApps.toString() + "))) ");
 		List<Object> paramList = new ArrayList<Object>();
 		String currentUser = UserContext.getCurrentUser();
