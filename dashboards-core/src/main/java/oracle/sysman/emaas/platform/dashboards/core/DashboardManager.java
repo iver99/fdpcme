@@ -527,6 +527,7 @@ public class DashboardManager
 		if (apps == null || apps.isEmpty()) {
 			throw new TenantWithoutSubscriptionException();
 		}
+		/*
 		if (filter != null) {
 			if (filter.getIncludedApplicationTypes() != null && !filter.getIncludedApplicationTypes().isEmpty()) {
 				List<DashboardApplicationType> filteredTypes = new ArrayList<DashboardApplicationType>();
@@ -540,7 +541,7 @@ public class DashboardManager
 					apps.remove(type);
 				}
 			}
-		}
+		}*/
 
 		StringBuilder sb = null;
 		int index = 1;
@@ -601,6 +602,8 @@ public class DashboardManager
 					sb.append(" p.application_type = " + filter.getIncludedApplicationTypes().get(i).getValue() + " ");
 					//paramList.add(filter.getIncludedApplicationTypes().get(i).getValue());
 				}
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
+						+ filter.getIncludedWidgetProvidersString() + " )) ");
 				sb.append(" ) ");
 			}
 
@@ -669,9 +672,15 @@ public class DashboardManager
 		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)) {
 			sb.append(" order by lower(p.name), p.name, p.dashboard_Id DESC");
 		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME.equals(orderBy)) {
+			sb.append(" order by CASE WHEN p.creation_Date IS NULL THEN 0 ELSE 1 END DESC, p.creation_Date DESC, p.dashboard_Id DESC");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)) {
+			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
+		}
 		else {
 			//order by last access date
-			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
+			sb.append(" order by p.application_Type, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
 		}
 		StringBuilder sbQuery = new StringBuilder(sb);
 		sbQuery.insert(0, "select p.* ");

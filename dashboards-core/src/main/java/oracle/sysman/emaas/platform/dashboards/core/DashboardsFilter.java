@@ -21,6 +21,11 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
  */
 public class DashboardsFilter
 {
+	public static final String APM_PROVIDER_APMUI = "ApmUI";
+	public static final String ITA_PROVIDER_EMCI = "EmcitasApplications";
+	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
+	public static final String LA_PROVIDER_LS = "LoganService";
+
 	private List<String> includedTypes;
 	private List<String> includedApps;
 	private List<String> includedOwners;
@@ -83,6 +88,45 @@ public class DashboardsFilter
 	public List<String> getIncludedTypes()
 	{
 		return includedTypes;
+	}
+
+	public List<String> getIncludedWidgetProviders()
+	{
+		if (includedApps == null || includedApps.isEmpty()) {
+			return null;
+		}
+		List<String> sb = new ArrayList<String>();
+		for (String app : includedApps) {
+			if (DashboardApplicationType.APM_STRING.equals(app)) {
+				sb.add(APM_PROVIDER_APMUI);
+			}
+			if (DashboardApplicationType.ITA_SRING.equals(app)) {
+				sb.add(ITA_PROVIDER_EMCI);
+			}
+			if (DashboardApplicationType.ITA_SRING.equals(app)) {
+				sb.add(ITA_PROVIDER_TA);
+			}
+			if (DashboardApplicationType.LA_STRING.equals(app)) {
+				sb.add(LA_PROVIDER_LS);
+			}
+		}
+		return sb;
+	}
+
+	public String getIncludedWidgetProvidersString()
+	{
+		List<String> ps = getIncludedWidgetProviders();
+		if (ps == null || ps.isEmpty()) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < ps.size(); i++) {
+			if (i != 0) {
+				sb.append(",");
+			}
+			sb.append("'" + ps.get(i) + "'");
+		}
+		return sb.toString();
 	}
 
 	/**
