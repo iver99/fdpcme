@@ -96,7 +96,7 @@ $.widget('dbs.dbsDashboardPanel',
                 if (self.options.dashboard.widgets && self.options.dashboard.widgets.length > 4)
                 {
                     self.contentPage3Ele.addClass(self.classNames['pageScroll']);
-                }*/
+                }
                 _element.animate({margin:'-=5px', height:'+=10px', width:'+=10px'},
                 {
                     duration: 300,
@@ -104,7 +104,7 @@ $.widget('dbs.dbsDashboardPanel',
                      if ($.isFunction(callback)) callback(); 
                     }
                 });
-                
+                */
                 
                 self.active = true;
                 self._trigger('activated', event, _dashboard);
@@ -120,7 +120,7 @@ $.widget('dbs.dbsDashboardPanel',
                 self.titleElement.removeClass(self.classNames['active']);
                 _toolbarEle.removeClass(self.classNames['active']);
                 //self.contentPage3Ele.removeClass(self.classNames['pageScroll']);
-                
+                /*
                 _element.animate({margin:'+=5px', height:'-=10px', width:'-=10px'},
                 {
                     duration: 150,
@@ -128,6 +128,7 @@ $.widget('dbs.dbsDashboardPanel',
                      if ($.isFunction(callback)) callback(); 
                     }
                 });
+                */
     
                 self.active = false;
                 self._trigger('deactivated');
