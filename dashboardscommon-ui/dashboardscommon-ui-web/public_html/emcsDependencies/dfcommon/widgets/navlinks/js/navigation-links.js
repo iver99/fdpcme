@@ -11,13 +11,24 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
-                self.dashboardsLabel = ko.observable();
                 self.visualAnalyzersLabel = ko.observable();
                 self.administrationLabel = ko.observable();
-                self.allDashboardsLinkLabel = ko.observable();
+                self.homeLinkLabel = ko.observable();
+                self.cloudServicesLabel = ko.observable();
                 
+                self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
+                
+                var cs = [
+                    {name: ' IT Analytics',
+                    href: '/emsaasui/emcpdfui/home.html?filter=ita'},
+                    {name: 'Log Analytics',
+                    href: '/emsaasui/emlacore/html/log-analytics-search.html'},
+//                    {name: 'Application Performance Monitoring',
+//                    href: '/emsaasui/apmUi/index.html'}
+                ];
+                self.cloudServices(cs);
                 
                 var nlsStringsAvailable = false;
                 
@@ -83,6 +94,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 */
                 function discoverLinks() {
                     var fetchServiceLinks = function(data) {
+                        if (data.cloudServices && data.cloudServices.length > 0) {
+                            self.cloudServices(data.cloudServices);
+                        }
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
@@ -135,18 +149,20 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 function refreshLinks() {
                     dfHomeUrl = dfu.discoverDFHomeUrl();
                     
-                    //Fetch available quick links and administration links from service manager registry
-                    if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {
+                    //Fetch available cloud services, visual analyzers and administration links
+                    if (self.cloudServices().length === 0 || 
+                        self.visualAnalyzers().length === 0 || 
+                        (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
                 };        
                 
                 function refreshNlsStrings(nlsStrings) {
                     if (nlsStrings) {
-                        self.dashboardsLabel(nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
                         self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
                         self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
-                        self.allDashboardsLinkLabel(nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL);
+                        self.homeLinkLabel(nlsStrings.BRANDING_BAR_NAV_HOME_LABEL);
+                        self.cloudServicesLabel(nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL);
                     }
                 }
             }
