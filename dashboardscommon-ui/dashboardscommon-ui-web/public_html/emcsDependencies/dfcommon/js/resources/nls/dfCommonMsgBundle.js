@@ -23,6 +23,7 @@ define({
       "BRANDING_BAR_LINKS_BTN_LABEL": "Links",
       "BRANDING_BAR_NAV_DASHBOARDS_LABEL": "Dashboards",
       "BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL": "Visual Analyzers",
+      "BRANDING_BAR_NAV_EXPLORE_DATA_LABEL": "Explore Data",
       "BRANDING_BAR_NAV_ADMIN_LABEL": "Administration",
       "BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL": "All Dashboards",
       "BRANDING_BAR_ABOUT_DIALOG_TITLE": "About Cloud Service",

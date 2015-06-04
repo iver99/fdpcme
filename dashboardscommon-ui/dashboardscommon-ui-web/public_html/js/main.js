@@ -110,7 +110,7 @@ require(['knockout',
                 var self = this;
                 self.userName = 'emcsadmin';
                 self.tenantName = 'emaastesttenant1';
-                self.appId = "Error"; //"Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
+                self.appId = "Dashboard"; //"Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,

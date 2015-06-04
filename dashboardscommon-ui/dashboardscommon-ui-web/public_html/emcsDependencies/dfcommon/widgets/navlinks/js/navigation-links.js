@@ -144,7 +144,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 function refreshNlsStrings(nlsStrings) {
                     if (nlsStrings) {
                         self.dashboardsLabel(nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
-                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL);
+                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
                         self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
                         self.allDashboardsLinkLabel(nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL);
                     }
