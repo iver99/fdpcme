@@ -274,8 +274,18 @@ define(['knockout',
              * Ajax call with retry logic
              * @returns 
              */ 
-            self.ajaxWithRetry = function(urlOrOpt, options) {
-                return dfu.ajaxWithRetry(urlOrOpt, options);
+            self.ajaxWithRetry = function() {
+		var args = arguments;
+		if(args.length == 1) {
+		     return dfu.ajaxWithRetry(args[0]);
+		}else if(args.length == 2) {
+		     return dfu.ajaxWithRetry(args[0], args[1]);
+		}else if(args.length == 3) {
+		     return dfu.ajaxWithRetry(args[0], args[1], args[2]);
+		}else {
+	             console.log("Arguments number is wrong.");
+		}
+                
             };
             
             /**
