@@ -312,6 +312,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     tenantName: self.tenantName,
                     nlsStrings: self.nlsStrings,
                     isAdmin: self.isAdmin,
+                    appMap: appMap,
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],
                     appTenantManagement: appMap[appIdTenantManagement]

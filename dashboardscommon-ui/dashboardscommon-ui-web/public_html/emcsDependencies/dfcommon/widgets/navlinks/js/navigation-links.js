@@ -7,6 +7,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
+                var appMap = params.appMap;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
@@ -20,17 +21,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
                 
-                var cs = [
-                    {name: ' IT Analytics',
-                    href: '/emsaasui/emcpdfui/home.html?filter=ita'},
-                    {name: 'Log Analytics',
-                    href: '/emsaasui/emlacore/html/log-analytics-search.html'},
-//                    {name: 'Application Performance Monitoring',
-//                    href: '/emsaasui/apmUi/index.html'}
-                ];
-                self.cloudServices(cs);
-                
                 var nlsStringsAvailable = false;
+                var nlsStrings = null;
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -54,7 +46,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                     if (value.needRefresh){
                         if (!nlsStringsAvailable) {
                             refreshNlsStrings(params.nlsStrings());
-                            nlsStringsAvailable = true;
                         }
                         refreshLinks();
                         params.navLinksNeedRefresh(false);
@@ -95,7 +86,19 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 function discoverLinks() {
                     var fetchServiceLinks = function(data) {
                         if (data.cloudServices && data.cloudServices.length > 0) {
-                            self.cloudServices(data.cloudServices);
+                            var cloudServices = data.cloudServices;
+                            var cloudServiceList = [];
+                                for (var i = 0; i < cloudServices.length; i++) {
+                                    if (nlsStringsAvailable && appMap !== null)
+                                        cloudServiceList.push(
+                                            {name: nlsStrings[appMap[cloudServices[i].name].appName], 
+                                            href: cloudServices[i].href});
+                                    else 
+                                        cloudServiceList.push(
+                                            {name: cloudServices[i].name, 
+                                            href: cloudServices[i].href});
+                                }
+                            self.cloudServices(cloudServiceList);
                         }
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
@@ -157,12 +160,30 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                     }
                 };        
                 
-                function refreshNlsStrings(nlsStrings) {
-                    if (nlsStrings) {
-                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
-                        self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
-                        self.homeLinkLabel(nlsStrings.BRANDING_BAR_NAV_HOME_LABEL);
-                        self.cloudServicesLabel(nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL);
+                function refreshNlsStrings(nls) {
+                    if (nls) {
+                        nlsStringsAvailable = true;
+                        nlsStrings = nls;
+                        self.visualAnalyzersLabel(nls.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
+                        self.administrationLabel(nls.BRANDING_BAR_NAV_ADMIN_LABEL);
+                        self.homeLinkLabel(nls.BRANDING_BAR_NAV_HOME_LABEL);
+                        self.cloudServicesLabel(nls.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL);
+                        
+                        var cloudServices = self.cloudServices();
+                        if (cloudServices && cloudServices.length > 0) {
+                            var cloudServiceList = [];
+                                for (var i = 0; i < cloudServices.length; i++) {
+                                    if (appMap !== null)
+                                        cloudServiceList.push(
+                                            {name: nls[appMap[cloudServices[i].name].appName], 
+                                            href: cloudServices[i].href});
+                                    else 
+                                        cloudServiceList.push(
+                                            {name: cloudServices[i].name, 
+                                            href: cloudServices[i].href});
+                                }
+                            self.cloudServices(cloudServiceList);
+                        }
                     }
                 }
             }
