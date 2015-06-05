@@ -512,6 +512,7 @@ public class DashboardCRUD
 	public void dashboard_fullquery()
 	{
 		int totalResults = 0;
+		int totalResults_apptype = 0;
 		int count = 0;
 		int limit = 0;
 		String dashboard_id = "";
@@ -525,8 +526,8 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken)
-					.when()
-					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&types=SINGLEPAGE,NORMAL&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
+							.when()
+							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			List<String> list_dashboards = res1.jsonPath().get("dashboards.name");
 			totalResults = res1.jsonPath().getInt("totalResults");
@@ -535,7 +536,7 @@ public class DashboardCRUD
 			Assert.assertEquals(count, list_dashboards.size());
 			Assert.assertEquals(limit, 240);
 
-			//get dashboards with type
+			//get dashboards with apptype
 			System.out.println("List SINGLEPAGE dashboard...");
 			Response res2 = RestAssured
 					.given()
@@ -543,16 +544,15 @@ public class DashboardCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken)
-					.when()
-					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&types=SINGLEPAGE&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
+							"Authorization", authToken).when()
+							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=ITAnalytics&owners=Oracle,Others");
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			List<String> list_dashboards2 = res2.jsonPath().get("dashboards.name");
-			totalResults = res2.jsonPath().getInt("totalResults");
+			totalResults_apptype = res2.jsonPath().getInt("totalResults");
 			count = res2.jsonPath().getInt("count");
 			Assert.assertEquals(count, list_dashboards2.size());
-			for (int i = 0; i < count; i++) {
-				Assert.assertEquals(res2.jsonPath().getString("dashboards.type[" + i + "]"), "SINGLEPAGE");
+			if (totalResults_apptype > totalResults) {
+				Assert.fail("Query the dashboards with apptype failed!");
 			}
 
 			//get dashboards with owner
@@ -582,8 +582,8 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken)
-					.when()
-					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&types=SINGLEPAGE,NORMAL&appTypes=LogAnalytics,APM,ITAnalytics&owners=Others");
+							.when()
+							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Others");
 			Assert.assertTrue(res4.getStatusCode() == 200);
 			System.out.println(res4.asString());
 			List<String> list_dashboards3 = res4.jsonPath().get("dashboards.name");
@@ -602,9 +602,8 @@ public class DashboardCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken)
-					.when()
-					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
+							"Authorization", authToken).when()
+							.get("/dashboards?offset=0&limit=240&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
 			Assert.assertTrue(res5.getStatusCode() == 200);
 			List<String> list_dashboards5 = res5.jsonPath().get("dashboards.name");
 			totalResults = res5.jsonPath().getInt("totalResults");
@@ -621,7 +620,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&types=SINGLEPAGE,NORMAL&owners=Oracle,Others");
+							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&owners=Oracle,Others");
 			Assert.assertTrue(res6.getStatusCode() == 200);
 			List<String> list_dashboards6 = res6.jsonPath().get("dashboards.name");
 			totalResults = res6.jsonPath().getInt("totalResults");
@@ -637,9 +636,8 @@ public class DashboardCRUD
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken)
-							.when()
-							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&types=SINGLEPAGE,NORMAL&appTypes=LogAnalytics,APM,ITAnalytics");
+							"Authorization", authToken).when()
+					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics");
 			Assert.assertTrue(res7.getStatusCode() == 200);
 			List<String> list_dashboards7 = res7.jsonPath().get("dashboards.name");
 			totalResults = res7.jsonPath().getInt("totalResults");
@@ -710,7 +708,7 @@ public class DashboardCRUD
 			Assert.assertEquals(res2.jsonPath().getString("dashboards.id[0]"), dashboard_id);
 
 			System.out
-			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
+					.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -785,6 +783,85 @@ public class DashboardCRUD
 	}
 
 	@Test
+	public void dashboard_orderByCreationDate()
+	{
+		String dashboard_id = "";
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Sort By Creation Date");
+			System.out.println("");
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=creation_Date");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			List<String> list_dashboards = res1.jsonPath().get("dashboards.createdOn");
+			for (int i = 0; i < list_dashboards.size() - 1; i++) {
+				if (list_dashboards.get(i).compareTo(list_dashboards.get(i + 1)) < 0) {
+					Assert.fail("The order is wrong!!");
+				}
+			}
+
+			System.out.println("Create a new dashboard");
+			String jsonString1 = "{ \"name\":\"Test_LastAccess\"}";
+			Response res2 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).body(jsonString1).when().post("/dashboards");
+			System.out.println(res2.asString());
+			System.out.println("==POST operation is done");
+			System.out.println("											");
+			System.out.println("Status code is: " + res2.getStatusCode());
+			Assert.assertTrue(res2.getStatusCode() == 201);
+			System.out.println("											");
+
+			dashboard_id = res2.jsonPath().getString("id");
+
+			System.out.println("Verfiy the newly created dashboard is the first one in dashboard list");
+			Response res3 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=creation_Date");
+			System.out.println("Status code is: " + res3.getStatusCode());
+			Assert.assertTrue(res3.getStatusCode() == 200);
+			Assert.assertEquals(res3.jsonPath().get("dashboards.name[0]"), "Test_LastAccess");
+			Assert.assertEquals(res3.jsonPath().getString("dashboards.id[0]"), dashboard_id);
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+		finally {
+			if (!dashboard_id.equals("")) {
+				System.out.println("cleaning up the dashboard that is created above using DELETE method");
+				Response res = RestAssured
+						.given()
+						.contentType(ContentType.JSON)
+						.log()
+						.everything()
+						.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+								"Authorization", authToken).when().delete("/dashboards/" + dashboard_id);
+				System.out.println(res.asString());
+				System.out.println("Status code is: " + res.getStatusCode());
+				Assert.assertTrue(res.getStatusCode() == 204);
+			}
+			System.out.println("											");
+			System.out.println("------------------------------------------");
+			System.out.println("											");
+		}
+
+	}
+
+	@Test
 	public void dashboard_orderByLastAccess()
 	{
 		String dashboard_id = "";
@@ -823,7 +900,7 @@ public class DashboardCRUD
 			Assert.assertEquals(res2.jsonPath().getString("dashboards.id[0]"), dashboard_id);
 
 			System.out
-			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
+					.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -1026,7 +1103,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
+							.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			list_dashboards = res3.jsonPath().get("dashboards.name");
 			totalResults = res3.jsonPath().getInt("totalResults");
