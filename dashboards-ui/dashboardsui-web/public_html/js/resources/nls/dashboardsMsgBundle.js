@@ -29,7 +29,7 @@ define({
       "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
       "DBS_HOME_CREATE_BTN_TT_TITLE": "How do I use this page?",
       "DBS_HOME_SELECT_SORT_BY_LABEL": "Sort by",
-      "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last opened by me",
+      "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last Accessed",
       "DBS_HOME_SELECT_SORT_NAME": "Name",
       "DBS_HOME_SELECT_SORT_CREATION_TIME": "Creation Date",
       "DBS_HOME_SELECT_SORT_DEFAULT": "Default",
@@ -47,13 +47,14 @@ define({
       "DBS_HOME_FILTER_TYPE_LABEL": "Type",
       "DBS_HOME_FILTER_TYPE_APP": "App",
       "DBS_HOME_FILTER_TYPE_DSB": "Dashboard",
-      "DBS_HOME_FILTER_SERVICE_LABEL": "Cloud Services & choices",
+      "DBS_HOME_FILTER_SERVICE_LABEL": "Cloud Services",
       "DBS_HOME_FILTER_SERVICE_LA": "Log Analytics",
       "DBS_HOME_FILTER_SERVICE_APM": "Application Performance Monitoring ",
+      "DBS_HOME_FILTER_SERVICE_APM_ABBR": "APM",
       "DBS_HOME_FILTER_SERVICE_ITA": "IT Analytics",
       "DBS_HOME_FILTER_CREATOR_LABEL": "Creator",
       "DBS_HOME_FILTER_CREATOR_ORACLE": "Oracle",
-      "DBS_HOME_FILTER_CREATOR_OTHER": "Other",
+      "DBS_HOME_FILTER_CREATOR_OTHER": "Me",
       "DBS_HOME_COME_SOON_DLG_INFO": "Information",
       "DBS_HOME_COME_SOON_DLG_BODY": "Coming soon...",
       "DBS_HOME_CFM_DLG_DELETE_DSB": "Delete Dashboard",
@@ -187,8 +188,6 @@ define({
       "DBS_ERROR_URL": "Requested URL is: "
       
 
-},
-  "fr": true,
-  "cs": true
+}
 });
 
