@@ -90,7 +90,7 @@
     max-width: 1024px;
     min-width: 50px
 } 
-
+    
 .dbs-summaries-container {
     //background: #ffffff;
 }
@@ -338,3 +338,18 @@ a:hover {
 .busy, .busy *{
     cursor: progress !important;   
 }
+
+@media print, screen {
+    .dbs-filter-panel-sm {
+    width: 12%; }
+    .dbs-tiles-panel-sm {
+    width: 88%; }
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1024px) {
+    .dbs-filter-panel-lg {
+    width: 16%; }
+    .dbs-tiles-panel-lg {
+    width: 84%; }
+}
+

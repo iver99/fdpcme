@@ -1,20 +1,6 @@
 <!DOCTYPE html>
 
-<!-- ************************ IMPORTANT INFORMATION ************************************
-This file and Quick Start project are provided as an example of how to configure a JET application.
-It contains the Oracle JET framework and a default requireJS configuration file to show how JET can be setup
-in a common application. This project template can be used in conjunction with demo code from the JET website 
-to test JET component behvior and interactions.
-
-Any CSS styling with the prefix "demo-" is for demonstration only and is not provided as part of the JET framework.
-
-The Header and Footer sections are provided for demonstration only. They are not part of the JET framework. 
-Best practice patterns are provided as part of the JET website under the Samples section.
-
-Aria Landmark role attributes are added to the different sections of the application for accessibility compliance.
-If you change the type of content for a specific section from what is defined, you should also change the 
-role value for that section to represent the appropriate content type.
-***************************** IMPORTANT INFORMATION ************************************ -->
+<!-- Dashboards home -->
 
 <html lang="en-us">
     <head>
@@ -36,8 +22,7 @@ role value for that section to represent the appropriate content type.
     </head>
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
-        <div id="globalBody" style="display: none"> <!-- This div helps make sure the footer stays at the bottom of the page -->
-
+        <div id="globalBody" style="display: none"> 
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
             -->
@@ -55,7 +40,7 @@ role value for that section to represent the appropriate content type.
                             <div id="dhometab" class="dbs-tab-container">
                                     <!-- Home toolbar start -->
                                     <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
-                                                <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-4 oj-xl-6">
+                                                <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
                                                     <input id="sinput" type="text" name="searchInput"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                                                   ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
@@ -71,12 +56,14 @@ role value for that section to represent the appropriate content type.
                                                 </span>
                                                 
                                                 <span id="homettbtns" class="oj-md-float-end">
-                                                <!--label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
+                                                <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
                                                 <select id="sortcb"  data-bind="ojComponent: {component: 'ojSelect', value: sortBy, optionChange: handleSortByChanged, 
-                                                   rootAttributes: {style:'width: 10em; max-width:20em'}}"/>
+                                                   rootAttributes: {style:'width: 11em; max-width:20em'}}"/>
+                                                        <option value="name" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME')"></option>
 		                                        <option value="access_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE')"></option>
-                                                        <option value="name" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME')">Name</option>
-                                                </select-->
+                                                        <option value="creation_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME')"></option>
+                                                        <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
+                                                </select>
                                                 
                                                 <button id="cbtn" class="dbs-home-button-create-new-dashboard"
                                                         data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
@@ -108,10 +95,10 @@ role value for that section to represent the appropriate content type.
                                     </div>
                                     <!-- paging end -->
                                     <div class="oj-row oj-cols-nopad" style="max-width: none;">
-                                        <div id="filterpanel" class="oj-col" style="width: 12%; min-width: 90px; max-width: 200px;">
+                                        <div id="filterpanel" class="dbs-filter-panel-sm dbs-filter-panel-lg oj-col" style="max-width: 220px;">
                                             <!-- filter panel start-->
                                             <div style="margin-top: 5px; padding: 10px; background-color: #FFFFFF">
-                                                <label id="typecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_LABEL')"></label>
+                                                <!--label id="typecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_LABEL')"></label>
                                                 <div id="typecb"  aria-labelledby="typecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: typeFilter, optionChange: handleTypeFilterChanged}">
                                                     <span class="oj-choice-row">
                                                         <input id="appopt" type="checkbox" name="types" value="SINGLEPAGE">
@@ -121,10 +108,14 @@ role value for that section to represent the appropriate content type.
                                                         <input id="dbopt" type="checkbox" name="types" value="NORMAL">
                                                         <label for="dbopt" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_DSB')"></label>
                                                     </span>
-                                                </div>
+                                                </div-->
                                                 <div data-bind="visible: showServiceFilter">
                                                 <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
                                                 <div id="servicecb"  aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: serviceFilter, optionChange: handleServiceFilterChanged}">
+                                                    <span class="oj-choice-row" data-bind="visible: showItaServiceFilter">
+                                                        <input id="itaopt" type="checkbox" name="services" value="ITAnalytics">
+                                                        <label for="itaopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_ITA')"></label>
+                                                    </span>
                                                     <span class="oj-choice-row" data-bind="visible: showLaServiceFilter">
                                                         <input id="laopt" type="checkbox" name="services" value="LogAnalytics">
                                                         <label for="laopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LA')"></label>
@@ -132,10 +123,6 @@ role value for that section to represent the appropriate content type.
                                                     <span class="oj-choice-row" data-bind="visible: showApmSrviceFilter">
                                                         <input id="apmopt" type="checkbox" name="services" value="APM">
                                                         <label for="apmopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_APM')"></label>
-                                                    </span>
-                                                    <span class="oj-choice-row" data-bind="visible: showItaServiceFilter">
-                                                        <input id="itaopt" type="checkbox" name="services" value="ITAnalytics">
-                                                        <label for="itaopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_ITA')"></label>
                                                     </span>
                                                 </div>
                                                 </div>
@@ -153,7 +140,7 @@ role value for that section to represent the appropriate content type.
                                             </div>
                                             <!-- filter panel end-->
                                         </div>
-                                        <div class="oj-col" style="width: 88%;">
+                                        <div class="dbs-tiles-panel-sm dbs-tiles-panel-lg oj-col">
                                             <!-- tiles panel start -->
                                             <div id="dtabhomesc" class="dbs-summaries-container">
                                                 <!-- ko foreach: dashboards -->

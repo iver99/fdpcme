@@ -150,10 +150,10 @@ require(['dbs/dbsmodel',
                         //console.log("filter width: "+_filterwidth);
                         var _padding = (_tabwidth - _filterwidth) % (335 /*panel width + panel margin*/);
                         //console.log("_padding: " + Math.floor(_padding/2));
-                        var _calpadding = (_tabwidth <= 760 ) ? 10 : Math.floor(_padding/2);
+                        var _calpadding = (_tabwidth <= 800 ) ? 5 : Math.floor(_padding/2);
                     
                         var _rpadding = _calpadding;
-                        if (_tabwidth > 760)
+                        if (_tabwidth > 800)
                         {
                             if (isDrag === true) _rpadding = _rpadding + 13;
                             else _rpadding = _rpadding + 10;

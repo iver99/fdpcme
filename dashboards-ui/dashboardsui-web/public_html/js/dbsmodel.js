@@ -170,7 +170,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
-        self.sortBy = ko.observable('access_Date');
+        self.sortBy = ko.observable('default');
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
         self.comingsoonDialogModel = new comingsoonDialogModel();
@@ -459,6 +459,30 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.preferences = undefined;
         self.sApplications = undefined;
         
+        var getUrlParam = function(name) {
+                        //name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+            return results === null ? "" : results[1];//decodeURIComponent(results[1].replace(/\+/g, " "));
+        };
+        
+        self.getIsIta = function () {
+            return (getUrlParam("filter") === "ita" ? true : false);
+        };
+        /*
+        self.checkItaService = function () {
+            if (self.getIsIta() === true)
+            {
+                if (self.sApplications === undefined)
+                {
+                    self.sApplications = {applications:[]};
+                }
+                if ($.inArray("ITAnalytics", self.sApplications['applications']) < 0)
+                {
+                    self.sApplications['applications'].push("ITAnalytics");
+                }
+            }
+        };*/
+                    
         self.getShowLaService = function() {
             if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0) return true;
             return false;
@@ -486,8 +510,16 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.getDashboardsFilter = function () {
             var filter = self.getDashboardsFilterPref();
+            var _appTypes = (filter['appTypes'] === undefined ? [] : filter['appTypes']);
+            if (self.getIsIta() === true)
+            {
+                if ($.inArray("ITAnalytics", _appTypes) < 0)
+                {
+                    _appTypes.push("ITAnalytics");
+                }
+            }
             return {types: (filter['types'] === undefined ? [] : filter['types']), 
-                appTypes: (filter['appTypes'] === undefined ? [] : filter['appTypes']), 
+                appTypes: _appTypes, 
                 owners: (filter['owners'] === undefined ? [] : filter['owners'])};
         };
         
