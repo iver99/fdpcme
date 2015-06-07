@@ -239,8 +239,7 @@ DashboardPaging.prototype.create = function(attributes, options)
 DashboardPaging.prototype.remove = function(model, options)
 {
     var self = this;
-    dfu.ajaxWithRetry({
-       url: model.get('href'),
+    dfu.ajaxWithRetry(model.get('href'), {
        type: 'DELETE',
        headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {
