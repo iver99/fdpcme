@@ -19,5 +19,8 @@ public class DashboardConstants
 
 	public static final String DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME = "access_Date";
 	public static final String DASHBOARD_QUERY_ORDER_BY_NAME = "name";
+	public static final String DASHBOARD_QUERY_ORDER_BY_CREATE_TIME = "creation_Date";
+	public static final String DASHBOARD_QUERY_ORDER_BY_APP_TYPE = "application_Type";
+	public static final String DASHBOARD_QUERY_ORDER_BY_DEFAULT = "default";
 
 }
