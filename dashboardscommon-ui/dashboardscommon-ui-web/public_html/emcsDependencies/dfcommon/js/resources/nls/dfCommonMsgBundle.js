@@ -36,7 +36,7 @@ define({
       "BRANDING_BAR_ABOUT_DIALOG_CLOSE_BTN_LABEL": "Close",
       "BRANDING_BAR_ABOUT_DIALOG_ICON_ALT_TEXT": "About Cloud Service icon",
       "BRANDING_BAR_TOOLBAR_LABEL": "Toolbar",
-      "BRANDING_BAR_APP_NAME_APM": "Application Performance Monitoring",
+      "BRANDING_BAR_APP_NAME_APM": "APM",
       "BRANDING_BAR_APP_NAME_IT_ANALYTICS": "IT Analytics",
       "BRANDING_BAR_APP_NAME_LOG_ANALYTICS": "Log Analytics",
       "BRANDING_BAR_APP_NAME_DASHBOARD": "Dashboards",
