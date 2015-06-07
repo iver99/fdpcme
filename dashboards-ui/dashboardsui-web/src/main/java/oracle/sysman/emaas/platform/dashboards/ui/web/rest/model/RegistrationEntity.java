@@ -53,6 +53,17 @@ public class RegistrationEntity
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
 	public static final String NAME_REGISTRY_VERSION = "0.1";
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
+
+	public static final String APM_SERVICENAME = "ApmUI";
+	public static final String APM_URL = "/emsaasui/apmUi/index.html";
+	public static final String LA_SERVICENAME = "LoganService";
+	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
+	public static final String ITA_SERVICENAME = "EmcitasApplications";
+	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
+	public static final String TA_SERVICENAME = "TargetAnalytics";
+	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
+	public static final String TMUI_SERVICENAME = "TenantManagementUI";
+
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
@@ -102,6 +113,25 @@ public class RegistrationEntity
 	public List<LinkEntity> getAdminLinks()
 	{
 		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+	}
+
+	public List<LinkEntity> getCloudServices()
+	{
+		List<LinkEntity> list = new ArrayList<LinkEntity>();
+		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
+		for (String app : subscribedApps) {
+			if (APM_SERVICENAME.equals(app)) {
+				list.add(new LinkEntity(ApplicationOPCName.APM.toString(), APM_URL, APM_SERVICENAME, "1.0.0")); //version is hard coded now
+			}
+			else if (LA_SERVICENAME.equals(app)) {
+				list.add(new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), LA_URL, LA_SERVICENAME, "1.0.0")); //version is hard coded now
+			}
+			else if (ITA_SERVICENAME.equals(app)) {
+				list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, "1.0.0")); //version is hard coded now
+
+			}
+		}
+		return list;
 	}
 
 	/**
@@ -242,19 +272,19 @@ public class RegistrationEntity
 		}
 		for (String app : apps) {
 			if (ApplicationOPCName.APM.toString().equals(app)) {
-				appSet.add("ApmUI");
+				appSet.add(APM_SERVICENAME);
 			}
 			else if (ApplicationOPCName.ITAnalytics.toString().equals(app)) {
-				appSet.add("EmcitasApplications");
-				appSet.add("TargetAnalytics");
+				appSet.add(ITA_SERVICENAME);
+				appSet.add(TA_SERVICENAME);
 			}
 			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
-				appSet.add("LoganService");
+				appSet.add(LA_SERVICENAME);
 			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI should be subscribed accordingly as agreement now
 		if (appSet.size() > 0 && isAdmin) {
-			appSet.add("TenantManagementUI");
+			appSet.add(TMUI_SERVICENAME);
 		}
 		return appSet;
 	}

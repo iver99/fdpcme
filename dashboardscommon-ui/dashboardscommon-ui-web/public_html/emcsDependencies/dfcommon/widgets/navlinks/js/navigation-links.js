@@ -7,19 +7,22 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
+                var appMap = params.appMap;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
-                self.dashboardsLabel = ko.observable();
                 self.visualAnalyzersLabel = ko.observable();
                 self.administrationLabel = ko.observable();
-                self.allDashboardsLinkLabel = ko.observable();
+                self.homeLinkLabel = ko.observable();
+                self.cloudServicesLabel = ko.observable();
                 
+                self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
                 
                 var nlsStringsAvailable = false;
+                var nlsStrings = null;
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -43,7 +46,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                     if (value.needRefresh){
                         if (!nlsStringsAvailable) {
                             refreshNlsStrings(params.nlsStrings());
-                            nlsStringsAvailable = true;
                         }
                         refreshLinks();
                         params.navLinksNeedRefresh(false);
@@ -83,6 +85,21 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 */
                 function discoverLinks() {
                     var fetchServiceLinks = function(data) {
+                        if (data.cloudServices && data.cloudServices.length > 0) {
+                            var cloudServices = data.cloudServices;
+                            var cloudServiceList = [];
+                                for (var i = 0; i < cloudServices.length; i++) {
+                                    if (nlsStringsAvailable && appMap !== null)
+                                        cloudServiceList.push(
+                                            {name: nlsStrings[appMap[cloudServices[i].name].appName], 
+                                            href: cloudServices[i].href});
+                                    else 
+                                        cloudServiceList.push(
+                                            {name: cloudServices[i].name, 
+                                            href: cloudServices[i].href});
+                                }
+                            self.cloudServices(cloudServiceList);
+                        }
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
@@ -135,18 +152,38 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 function refreshLinks() {
                     dfHomeUrl = dfu.discoverDFHomeUrl();
                     
-                    //Fetch available quick links and administration links from service manager registry
-                    if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {
+                    //Fetch available cloud services, visual analyzers and administration links
+                    if (self.cloudServices().length === 0 || 
+                        self.visualAnalyzers().length === 0 || 
+                        (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
                 };        
                 
-                function refreshNlsStrings(nlsStrings) {
-                    if (nlsStrings) {
-                        self.dashboardsLabel(nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
-                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL);
-                        self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
-                        self.allDashboardsLinkLabel(nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL);
+                function refreshNlsStrings(nls) {
+                    if (nls) {
+                        nlsStringsAvailable = true;
+                        nlsStrings = nls;
+                        self.visualAnalyzersLabel(nls.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
+                        self.administrationLabel(nls.BRANDING_BAR_NAV_ADMIN_LABEL);
+                        self.homeLinkLabel(nls.BRANDING_BAR_NAV_HOME_LABEL);
+                        self.cloudServicesLabel(nls.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL);
+                        
+                        var cloudServices = self.cloudServices();
+                        if (cloudServices && cloudServices.length > 0) {
+                            var cloudServiceList = [];
+                                for (var i = 0; i < cloudServices.length; i++) {
+                                    if (appMap !== null)
+                                        cloudServiceList.push(
+                                            {name: nls[appMap[cloudServices[i].name].appName], 
+                                            href: cloudServices[i].href});
+                                    else 
+                                        cloudServiceList.push(
+                                            {name: cloudServices[i].name, 
+                                            href: cloudServices[i].href});
+                                }
+                            self.cloudServices(cloudServiceList);
+                        }
                     }
                 }
             }
