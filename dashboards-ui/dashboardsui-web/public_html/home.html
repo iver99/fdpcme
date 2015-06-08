@@ -39,7 +39,11 @@
                         <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
                             <div id="dhometab" class="dbs-tab-container">
                                     <!-- Home toolbar start -->
-                                    <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
+                                    <div class="dbs-filter-panel-sm  dbs-filter-panel-md dbs-filter-panel-lg dbs-filter-panel-xsl dbs-filter-panel-xl oj-col" style="max-width: 220px; padding-top: 10px;">
+                                        <button id="cbtn" class="dbs-home-button oj-button oj-component oj-enabled oj-button-text-only oj-component-initnode oj-default" data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
+                                                        ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}" title=" Click to create a dashboard and add widgets of your choice." role="button"><span class="oj-button-text">Create Dashboard</span></button>
+                                    </div>
+                                    <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="min-height: 50px;padding-left: 5px; padding-top: 10px; padding-right: 0px; border-left: 1px solid #d6dfe6;">
                                                 <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
                                                     <input id="sinput" type="text" name="searchInput"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
@@ -110,11 +114,11 @@
                                                         <label for="dbopt" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_DSB')"></label>
                                                     </span>
                                                 </div-->
-                                                <div style="text-align:center; margin-bottom: 20px;">
+<!--                                                <div style="text-align:center; margin-bottom: 20px;">
                                                     <button id="cbtn" class="dbs-home-button"
                                                         data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
                                                         ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
-                                                </div>
+                                                </div>-->
                                                 <div data-bind="visible: showServiceFilter">
                                                 <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
                                                 <div id="servicecb"  aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: serviceFilter, optionChange: handleServiceFilterChanged}">
@@ -147,7 +151,7 @@
                                             </div>
                                             <!-- filter panel end-->
                                         </div>
-                                        <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col">
+                                        <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="border-left: 1px solid #d6dfe6;">
                                             <!-- tiles panel start -->
                                             <div id="dtabhomesc" class="dbs-summaries-container">
                                                 <!-- ko foreach: dashboards -->
