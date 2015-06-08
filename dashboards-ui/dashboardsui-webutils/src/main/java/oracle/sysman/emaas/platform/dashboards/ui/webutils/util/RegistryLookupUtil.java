@@ -19,7 +19,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQ
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.services.AvailabilityServiceManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,71 +30,9 @@ public class RegistryLookupUtil
 {
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
 
-	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
-	{
-		List<Link> matched = new ArrayList<Link>();
-		if (relPrefix != null) {
-			for (Link link : instance.getLinks()) {
-				if (link.getRel() != null ? link.getRel().startsWith(relPrefix) : "".startsWith(relPrefix)) {
-					matched.add(link);
-				}
-			}
-		}
-		return matched;
-	}
-
-	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version, String tenantName)
-	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
-		if (link != null) {
-			return new EndpointEntity(serviceName, version, link.getHref());
-		}
-		else {
-			return null;
-		}
-		/*
-		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		SanitizedInstanceInfo sanitizedInstance;
-		InstanceInfo internalInstance = null;
-		try {
-		    internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
-		    sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
-		    if (sanitizedInstance == null) {
-		        String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		        //                return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
-		        // this happens when
-		        //    1. no instance exists based on the query criteria
-		        // or
-		        //    2. the selected instance does not expose any safe endpoints that are externally routeable (e.g., no HTTPS virtualEndpoints)
-		        //
-		        // In this case, need to trigger the failover scheme, or alternatively, one could use the plural form of the lookup, and loop through the returned instances
-		    }
-		    else {
-		        String url = RegistryLookupUtil.getExternalEndPoint(sanitizedInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		    }
-		}
-		catch (Exception e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		    if (internalInstance != null) {
-		        String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		    }
-		}
-		return null;
-		 */
-	}
-
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
-	}
-
-	public static Link getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel, String tenantName)
-	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)

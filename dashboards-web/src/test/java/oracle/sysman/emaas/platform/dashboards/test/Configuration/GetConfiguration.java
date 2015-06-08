@@ -8,9 +8,9 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.test.Configuration;
+package oracle.sysman.emaas.platform.dashboards.test.Configuration;
 
-import oracle.sysman.emaas.platform.dashboards.ui.test.common.CommonTest;
+import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

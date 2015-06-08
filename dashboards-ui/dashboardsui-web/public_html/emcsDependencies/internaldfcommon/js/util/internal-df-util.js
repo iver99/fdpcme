@@ -106,7 +106,7 @@ define(['knockout',
             
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-                return '/emsaasui/emcpdfui/api/configurations/registration';
+                return '/sso.static/dashboards.configurations/registration';
 //                return 'data/servicemanager.json';
             };
 

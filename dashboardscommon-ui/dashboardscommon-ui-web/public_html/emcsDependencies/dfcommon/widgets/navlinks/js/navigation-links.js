@@ -115,7 +115,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
 
                         }
                     };                   
-                    var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
+                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDefaultHeader(), 

@@ -2,7 +2,6 @@
     <wb-module deploy-name="dashboardsui-web">
         <wb-resource deploy-path="/" source-path="/public_html" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <property name="java-output-path" value="/dashboardsui-web/build/classes"/>
         <property name="context-root" value="emsaasui/emcpdfui"/>
     </wb-module>

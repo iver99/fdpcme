@@ -55,7 +55,7 @@ public class FavoriteAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			dm.addFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -77,7 +77,7 @@ public class FavoriteAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			dm.removeFavoriteDashboard(dashboardId, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -99,7 +99,7 @@ public class FavoriteAPI extends APIBase
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			List<Dashboard> pd = manager.getFavoriteDashboards(tenantId);
 			List<FavoriteEntity> entities = new ArrayList<FavoriteEntity>();
 			if (pd != null) {
@@ -130,7 +130,7 @@ public class FavoriteAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			boolean isFavorite = dm.isDashboardFavorite(dbd.getDashboardId(), tenantId);
 			IsFavoriteEntity ife = new IsFavoriteEntity();
