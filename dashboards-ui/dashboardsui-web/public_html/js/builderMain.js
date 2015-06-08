@@ -9,6 +9,10 @@
  * http://jquery.org/license
  */
 requirejs.config({
+    // Setup module id mapping
+    map: {
+        'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'}
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
