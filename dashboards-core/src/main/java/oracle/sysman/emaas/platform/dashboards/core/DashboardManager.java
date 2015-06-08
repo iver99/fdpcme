@@ -39,13 +39,6 @@ import org.apache.logging.log4j.Logger;
 
 public class DashboardManager
 {
-	private static final Logger logger = LogManager.getLogger(DashboardManager.class);
-	private static DashboardManager instance;
-
-	static {
-		instance = new DashboardManager();
-	}
-
 	/**
 	 * Returns the singleton instance for dashboard manager
 	 *
@@ -54,6 +47,14 @@ public class DashboardManager
 	public static DashboardManager getInstance()
 	{
 		return instance;
+	}
+
+	private static final Logger logger = LogManager.getLogger(DashboardManager.class);
+
+	private static DashboardManager instance;
+
+	static {
+		instance = new DashboardManager();
 	}
 
 	private DashboardManager()
@@ -658,12 +659,12 @@ public class DashboardManager
 
 			if (!ic) {
 				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?" + index++
-						+ " )) ");
+						+ " ) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
 				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?"
-						+ index++ + " )) ");
+						+ index++ + " ) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 
