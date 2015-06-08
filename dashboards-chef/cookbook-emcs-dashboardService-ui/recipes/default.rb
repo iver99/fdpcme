@@ -7,7 +7,12 @@
 #	
 #	Refer https://confluence.oraclecorp.com/confluence/display/EMS/Cutover+to+deployment+on+WLS+Managed+Servers for details
 #
-
+ruby_block "set_ENVs" do
+  block do
+    ENV['SAAS_REGISTRY_URLS']=node["serviceUrls"]
+  end
+  action :create
+end
 #Block to create the servicemanager.properties file
 bash "create_servicemanger_properties_file"  do
   code <<-EOH

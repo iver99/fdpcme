@@ -9,6 +9,14 @@
 #	Refer https://confluence.oraclecorp.com/confluence/display/EMS/Cutover+to+deployment+on+WLS+Managed+Servers for details
 #
 
+
+ruby_block "set_ENVs" do
+  block do
+    ENV['SAAS_REGISTRY_URLS']=node["serviceUrls"]
+  end
+  action :create
+end
+
 #Recipe to create schema - this is completely re-entrant, run as many times
 include_recipe 'cookbook-emcs-dashboardService-api::dashboard_schema'
 
