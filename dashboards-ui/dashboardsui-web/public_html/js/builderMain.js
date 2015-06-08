@@ -36,7 +36,8 @@ requirejs.config({
         'canvg':'../emcsDependencies/canvg/canvg',
         'd3':'../emcsDependencies/d3/d3.min',
         'emcta':'../../emcta/ta/js',
-        'emcla':'/emsaasui/emlacore/js'
+        'emcla':'/emsaasui/emlacore/js',
+        'emcsutl': '../emcsDependencies/dfcommon/js/util'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
