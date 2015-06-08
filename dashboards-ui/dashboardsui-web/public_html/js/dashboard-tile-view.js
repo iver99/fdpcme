@@ -17,7 +17,7 @@ define(['knockout',
         'ojs/ojpopup'
     ],
     
-    function(ko, $, dtm, dfu)
+    function(ko, $, dtm, dfu, oj)
     {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
@@ -229,7 +229,28 @@ define(['knockout',
                 }
             };
             
+            self.nameValidated = true;
+            self.noSameNameValidator = {
+                'validate' : function (value) {
+                    self.nameValidated = true;
+                    if (self.dashboardName() === value)
+                        return true;
+                    value = value + "";
+
+                    if (value && dtm.isDashboardNameExisting(value)) {
+                        $('#builder-dbd-name-input').focus();
+                        self.nameValidated = false;
+                        throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_SAME_NAME_EXISTS_ERROR"));
+                    }
+                    return true;
+                }
+            };
+            
             self.okChangeDashboardName = function() {
+            	var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                nameInput('validate');
+                if (!self.nameValidated)
+                    return;
                 if (!$('#builder-dbd-name-input')[0].value) {
                     $('#builder-dbd-name-input').focus();
                     return;
@@ -241,7 +262,16 @@ define(['knockout',
                 dashboard.name(self.dashboardName());
             };
             
+            $('#builder-dbd-name-input').on('blur', function(evt) {
+                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
+                    self.cancelChangeDashboardName();
+                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
+                    self.okChangeDashboardName();
+            });
+            
             self.cancelChangeDashboardName = function() {
+            	var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                nameInput('reset');
                 self.dashboardNameEditing(self.dashboardName());
                 if ($('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-name').removeClass('editing');
