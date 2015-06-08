@@ -141,7 +141,8 @@ require(['dbs/dbsmodel',
                     dashboardsViewModle = new model.ViewModel(predataModel);
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
-
+                    
+                    /*
                     function setMainAreaPadding(isDrag)
                     {
                         //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
@@ -149,15 +150,22 @@ require(['dbs/dbsmodel',
                         var _filterwidth = document.getElementById('filterpanel').offsetWidth;
                         //console.log("tab width: "+_tabwidth);
                         //console.log("filter width: "+_filterwidth);
-                        var _padding = (_tabwidth - _filterwidth) % (335 /*panel width + panel margin*/);
+                        var _padding = (_tabwidth - _filterwidth) % (335 panel width + panel margin);
                         //console.log("_padding: " + Math.floor(_padding/2));
                         var _calpadding = (_tabwidth <= 800 ) ? 5 : Math.floor(_padding/2);
                     
                         var _rpadding = _calpadding;
-                        if (_tabwidth > 800)
+                        if (_tabwidth > 1440)
                         {
-                            if (isDrag === true) _rpadding = _rpadding + 13;
-                            else _rpadding = _rpadding + 10;
+                            _rpadding = _rpadding + 25;
+                        }
+                        else if (_tabwidth > 800)
+                        {
+                            
+                            //if (isDrag === true) _rpadding = _rpadding + 13;
+                            //else _rpadding = _rpadding + 10;
+                            
+                           _rpadding = _rpadding + 13;
                         }
                         $("#dhometab").attr({
                            "style" : "padding-left: "+ _calpadding  + "px;" //"padding-right: "+ _rpadding  + "px;" 
@@ -167,12 +175,13 @@ require(['dbs/dbsmodel',
                            "style" : "padding-right: "+ _rpadding  + "px;" 
                         });
                     };
+                    
                     $(window).resize(function() {
                         setMainAreaPadding(true);
                     });
                     setTimeout(function() {
                         setMainAreaPadding();
-                    }, 0);
+                    }, 0);*/
                     
                     
 

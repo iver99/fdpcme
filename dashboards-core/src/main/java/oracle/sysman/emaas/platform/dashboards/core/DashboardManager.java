@@ -563,7 +563,7 @@ public class DashboardManager
 				sbApps.append(String.valueOf(app.getValue()));
 			}
 
-                //11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
+			//11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
 			sb = new StringBuilder(
 					" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
 							+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
@@ -603,6 +603,7 @@ public class DashboardManager
 					sb.append(" p.application_type = " + filter.getIncludedApplicationTypes().get(i).getValue() + " ");
 					//paramList.add(filter.getIncludedApplicationTypes().get(i).getValue());
 				}
+				sb.append(" or p.is_system < 1 ");
 				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.PROVIDER_NAME in ("
 						+ filter.getIncludedWidgetProvidersString() + " )) ");
 				sb.append(" ) ");

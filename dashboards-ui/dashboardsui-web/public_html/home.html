@@ -36,7 +36,7 @@
 
             <!-- main content -->
             <div id="mainContent" style="display: none;">
-                        <div class="main-content-area">
+                        <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
                             <div id="dhometab" class="dbs-tab-container">
                                     <!-- Home toolbar start -->
                                     <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
@@ -55,7 +55,7 @@
                                                     </button> 
                                                 </span>
                                                 
-                                                <span id="homettbtns" class="oj-md-float-end">
+                                                <span id="homettbtns" class="oj-md-float-end dbs-rbtns-panel-md dbs-rbtns-panel-lg dbs-rbtns-panel-xsl dbs-rbtns-panel-xl">
                                                 <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
                                                 <select id="sortcb"  data-bind="ojComponent: {component: 'ojSelect', value: sortBy, optionChange: handleSortByChanged, 
                                                    rootAttributes: {style:'width: 11em; max-width:20em'}}"/>
@@ -65,11 +65,12 @@
                                                         <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
                                                 </select>
                                                 
-                                                <button id="cbtn" class="dbs-home-button-create-new-dashboard"
-                                                        data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
+                                                <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
+                                                        data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
                                                 <button id="exploreDataBtn"
                                                     data-bind="ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
-                                                                             menu: '#exploreDataMenu'}, attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
+                                                                             menu: '#exploreDataMenu', rootAttributes: {'style': 'margin-left: 8px;'}}, 
+                                                               attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
                                                 </button>
                                                 <ul id="exploreDataMenu" style="display:none"
                                                     data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
@@ -95,9 +96,9 @@
                                     </div>
                                     <!-- paging end -->
                                     <div class="oj-row oj-cols-nopad" style="max-width: none;">
-                                        <div id="filterpanel" class="dbs-filter-panel-sm dbs-filter-panel-lg oj-col" style="max-width: 220px;">
+                                        <div id="filterpanel" class="dbs-filter-panel-sm  dbs-filter-panel-md dbs-filter-panel-lg dbs-filter-panel-xsl dbs-filter-panel-xl oj-col" style="max-width: 220px;">
                                             <!-- filter panel start-->
-                                            <div style="margin-top: 5px; padding: 10px; background-color: #FFFFFF">
+                                            <div style="margin-top: 5px; padding: 10px;">
                                                 <!--label id="typecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_LABEL')"></label>
                                                 <div id="typecb"  aria-labelledby="typecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: typeFilter, optionChange: handleTypeFilterChanged}">
                                                     <span class="oj-choice-row">
@@ -109,6 +110,11 @@
                                                         <label for="dbopt" data-bind="text: getNlsString('DBS_HOME_FILTER_TYPE_DSB')"></label>
                                                     </span>
                                                 </div-->
+                                                <div style="text-align:center; margin-bottom: 20px;">
+                                                    <button id="cbtn" class="dbs-home-button"
+                                                        data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
+                                                        ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
+                                                </div>
                                                 <div data-bind="visible: showServiceFilter">
                                                 <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
                                                 <div id="servicecb"  aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: serviceFilter, optionChange: handleServiceFilterChanged}">
@@ -141,7 +147,7 @@
                                             </div>
                                             <!-- filter panel end-->
                                         </div>
-                                        <div class="dbs-tiles-panel-sm dbs-tiles-panel-lg oj-col">
+                                        <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col">
                                             <!-- tiles panel start -->
                                             <div id="dtabhomesc" class="dbs-summaries-container">
                                                 <!-- ko foreach: dashboards -->
