@@ -40,10 +40,9 @@ define(['jquery', 'ojs/ojcore', './df-util'],
                     });
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
-//                      location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="
-//                                        + encodeURIComponent(location.href);
-//                      return null;
-                    return {"tenant": 'emaastesttenant1', "user": 'emcsadmin', "tenantUser": 'emaastesttenant1.emcsadmin'};
+                      location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="
+                                        + encodeURIComponent(location.href);
+                      return null;
                   }
                   else
                       return {"tenant": tenantName, "user": userName, "tenantUser": tenantUser}; 
