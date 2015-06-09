@@ -95,7 +95,7 @@ a:hover {
     width: 24%;
     display: inline-block;
     vertical-align: top;
-    
+    min-width: 330px;
 }
 #links_menu .iconCircle {
     width: 100px;
@@ -115,14 +115,14 @@ a:hover {
     margin-left: 20px;
     text-align:left; 
 }
-@media screen and (max-width: 1200px) and (min-width:900px) {
+@media screen and (max-width: 1331px) and (min-width:1000px) {
     #links_menu .links-content-container {
         margin : 30px auto;
-        width: 920px;
+        min-width: 1000px;
         text-align:left; 
     }
     .headerMenuItem {
-        width: 300px;
+        /*width: 300px;*/
         display: inline-block;
         vertical-align: top;
     }
@@ -130,14 +130,14 @@ a:hover {
         margin-bottom: 30px;
     }
 }
-@media screen and (max-width: 920px) and (min-width:600px) {
+@media screen and (max-width: 1000px) and (min-width:670px) {
     #links_menu .links-content-container {
         margin : 30px auto;
-        width: 620px;
+        min-width: 670px;
         text-align:left; 
     }
     .headerMenuItem {
-        width: 300px;
+        /*width: 300px;*/
         display: inline-block;
         vertical-align: top;
     }
@@ -145,17 +145,22 @@ a:hover {
         margin-bottom: 30px;
     }
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 670px) {
     #links_menu .links-content-container {
         margin : 30px auto;
-        width: 320px;
+        min-width: 330px;
         text-align:left; 
     }
+        
     .headerMenuItem {
-        width: 300px;
+        /*width: 300px;*/
         display: inline-block;
         margin-top: 30px;
         vertical-align: top;
+    }
+    
+    .headerMenuItem:first-child {
+        margin-top: 0px;
     }
 }
 /*#iconLink{
@@ -293,7 +298,7 @@ a:hover {
   cursor: default;
 }
 
-@media screen and (max-width: 1023px) {
+/*@media screen and (max-width: 1023px) {*/
     .emaas-appheader-lite .emaas-appheader-seperator {
         display: none;
     }
@@ -322,8 +327,8 @@ a:hover {
     .fa-compass:before {
         font-size:xx-large;
     }
-}
-@media screen and (min-width: 1024px) {
+/*}*/
+/*@media screen and (min-width: 1024px) {
     .emaas-appheader-lite .emaas-appheader-seperator {
         display: inline-block;
     }
@@ -342,7 +347,7 @@ a:hover {
         width:24px;
         height:24px;
     }
-}
+}*/
 
 .emaas-appheader-message-box {
         padding-left: 30px;

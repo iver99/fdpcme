@@ -80,6 +80,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 appMap[appIdAPM] = {
                     "appId": "APM",
                     "appName": "BRANDING_BAR_APP_NAME_APM",
+                    "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
                     "serviceName": "apmUI",
                     "version": "0.1",
                     "helpTopicId": "em_apm_gs"
