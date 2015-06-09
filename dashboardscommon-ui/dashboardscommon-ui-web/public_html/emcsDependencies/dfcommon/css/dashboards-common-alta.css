@@ -354,6 +354,7 @@ a:hover {
         min-height: 36px;
         vertical-align: middle;
         line-height: 36px;
+        overflow: hidden;
     }
     .emaas-appheader-message-box-error {
         background-color: #FFDFDF;
@@ -393,6 +394,7 @@ a:hover {
     }
     .emaas-appheader-message-textbox {
         padding-left:10px;
+        line-height: 20px;
     }
     .emaas-appheader-message-table-cell {
         display: table-cell;
