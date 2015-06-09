@@ -91,7 +91,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                                 for (var i = 0; i < cloudServices.length; i++) {
                                     if (nlsStringsAvailable && appMap !== null)
                                         cloudServiceList.push(
-                                            {name: nlsStrings[appMap[cloudServices[i].name].appName], 
+                                            {name: appMap[cloudServices[i].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[i].name].serviceDisplayName] : 
+                                                nlsStrings[appMap[cloudServices[i].name].appName], 
                                             href: cloudServices[i].href});
                                     else 
                                         cloudServiceList.push(
