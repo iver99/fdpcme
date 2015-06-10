@@ -7,9 +7,10 @@
  * Then, call the usual JET oj.logger methods.  This custom logger intercepts those logs
  * and sends them to your logger url (passed in initialization).
  */
-define(['ojs/ojcore'],
-    function(oj)
+define(['ojs/ojcore', '../emcsDependencies/dfcommon/js/util/df-util'],
+    function(oj, dfumodel)
     {
+        
         // Custom logger.
         var customLogger = {};
 
@@ -83,6 +84,8 @@ define(['ojs/ojcore'],
         var logOwner = "UnknownTenant.UnknownUser";
         
         var serverUrlToSendLogs = null;
+        
+        var dfu = null;
 
         /**
          * Cache the log and send to server if cache limit is reached.
@@ -137,7 +140,7 @@ define(['ojs/ojcore'],
                 //TODO: Change to use callServiceManager.
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
-                $.ajax({
+                dfu.ajaxWithRetry({
                     url: serverUrlToSendLogs,
                     type: "POST",
                     data: JSON.stringify({"tenantId": logOwner, "logs": {"logArray": logsCacheCloned}}),//TODO replace hard coded one with real tenant user
@@ -154,7 +157,6 @@ define(['ojs/ojcore'],
                     },
                     description: "custom logger: Sending logs to server",
                     async:false
-                }).done(function(){
                 });
             };
 
@@ -195,6 +197,9 @@ define(['ojs/ojcore'],
             {
                 logOwner = tenantUser;
                 serverUrlToSendLogs = url;
+                var userName = logOwner.substring(logOwner.indexOf('.')+1);
+                var tenantName = logOwner.substring(0, logOwner.indexOf('.'));
+                dfu = new dfumodel(userName, tenantName);
 
                 if (maxInterval != undefined) {
                     logsCacheMaxInterval = maxInterval;

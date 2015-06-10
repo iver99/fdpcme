@@ -23,6 +23,7 @@ public class CommonSecurityException extends DashboardException
 	public static final String VALID_X_REMOTE_USER_REQUIRED = "VALID_X_REMOTE_USER_REQUIRED";
 	public static final String X_USER_IDENTITY_DOMAIN_NAME_REQUIRED = "X_USER_IDENTITY_DOMAIN_NAME_REQUIRED";
 
+	// keep this the same with Dashboard-API
 	public static final Integer DASHBOARD_COMMON_SECURITY_ERROR_CODE = 30000;
 
 	/**
