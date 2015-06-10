@@ -6,8 +6,8 @@ ext.archivesBaseName = archiveBaseName
  
 // SQL Source directories 
 ext.sqlDir = file('src/main/sql')
-version = '1.0.0'
- 
+//version = '1.0.0'
+version = project.ext.getServiceVersion("DashboardService-API")
 ext.schemaDistDir = "${serviceDistDir}/${archiveBaseName}" 
  
 // Default tasks 
