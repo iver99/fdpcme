@@ -84,6 +84,16 @@ body, html {
   font-weight: bold;
 }
 
+#builder-dbd-name .dbd-display-hover-area h1 {
+  font-size: 1.286rem;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  margin: 0;
+  display: inline;	
+}
+
 #builder-dbd-name input {
   font-size: 1.286rem;
   font-family: inherit;
@@ -129,6 +139,8 @@ body, html {
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  margin-top: 1px;
+  margin-bottom: 1px;
 }
 
 #builder-dbd-description .dbd-display-hover-area {
@@ -253,12 +265,11 @@ body, html {
   vertical-align: middle;
 }
 
-.dbd-tile-header .dbd-tile-title {
+.dbd-tile-header h2.dbd-tile-title {
   height: 2.34rem;
   line-height: 2.34rem;
   font-weight: bold;
   padding-right: 48px;
-  margin-right: -48px;
   width: 100%;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -266,6 +277,13 @@ body, html {
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  font-size: 1.0em;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  margin: 0px;
+  margin-right: -48px;
 }
 
 .dbd-tile-header .dbd-tile-action {

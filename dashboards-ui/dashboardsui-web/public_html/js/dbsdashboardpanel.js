@@ -278,7 +278,7 @@ $.widget('dbs.dbsDashboardPanel',
                 self._setBase64ScreenShot(_ss);
             }
             else {
-              $.ajax({
+              dfu.ajaxWithRetry({
                    //This will be a page which will return the base64 encoded string
                    url: self.options['dashboard']['screenShotHref'], 
                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information

@@ -42,7 +42,7 @@ define([
                 var ssfUrl = dfu.discoverSavedSearchServiceUrl();
                 if (ssfUrl && ssfUrl !== '') {
                     var searchUrl = ssfUrl + '/search/'+widget.id;
-                    $.ajax({
+                    dfu.ajaxWithRetry({
                         url: searchUrl,
                         headers: dfu.getSavedSearchServiceRequestHeader(),
                         success: function(data, textStatus) {
@@ -100,12 +100,12 @@ define([
             };
             
             function fetchResults() {
-                $.ajax({type: 'POST', contentType:'application/json',url: qlBaseUrl+'jobs', data: ko.toJSON(queryString),
+                dfu.ajaxWithRetry({type: 'POST', contentType:'application/json',url: qlBaseUrl+'jobs', data: ko.toJSON(queryString),
                     headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1"
                         ,"Authorization":"Basic d2VibG9naWM6d2VsY29tZTE="},
                     success: function(data, textStatus){
                         var resultsUrl = qlBaseUrl + data.job.queries.demoEMQLVizQuery.resultsLink; 
-                        $.ajax({type: 'GET', contentType:'application/json',url: resultsUrl,
+                        dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: resultsUrl,
                             headers:{'X-USER-IDENTITY-DOMAIN-NAME':"TenantOPC1"
                                 ,"Authorization":"Basic d2VibG9naWM6d2VsY29tZTE="},
                             success: function(data, textStatus){

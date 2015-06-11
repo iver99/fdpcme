@@ -47,6 +47,7 @@ define(['require',
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.widgetHandler = params.widgetHandler;
+                self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
                 self.widgetSelectorTitle = ko.observable(dialogTitle);
                 self.widgetGroupLabel = ko.observable();
                 self.searchBoxPlaceHolder = ko.observable();
@@ -300,7 +301,9 @@ define(['require',
                 
                 // Widget handler for selected widget
                 self.widgetSelectionConfirmed = function() {
-//                    $('#'+self.dialogId).ojDialog('close');
+                    //Close dialog if autoCloseDialog is true or not set
+                    if (self.autoCloseDialog !== false)
+                        $('#'+self.dialogId).ojDialog('close');
                     if (self.widgetHandler && $.isFunction(self.widgetHandler)) {
                         var selectedWidget = self.currentWidget();
                         self.widgetHandler(selectedWidget);
@@ -327,7 +330,7 @@ define(['require',
 //                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
-                        $.ajax({
+                        dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
@@ -343,7 +346,7 @@ define(['require',
                             async: false
                         });
 
-                        $.ajax({
+                        dfu.ajaxWithRetry({
                             url: widgetsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
@@ -500,14 +503,27 @@ define(['require',
                 // Get file path relative to js
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    var index = jsRootMain.indexOf('?');
+                    if (index !== -1) 
+                        jsRootMain = jsRootMain.substring(0, index);
                     var path = requireContext.toUrl(relPath);
                     path = path.substring(jsRootMain.length);
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    index = path.indexOf('?');
+                    if (index !== -1) 
+                        path = path.substring(0, index);
                     return path;
                 };
                 
                 // Get file path relative to html
                 function getFilePathRelativeToHtml(requireContext, relPath) {
-                    return requireContext.toUrl(relPath);
+                    var path = requireContext.toUrl(relPath);
+                    //remove urlArgs string appended by requirejs urlArgs config from file path
+                    var index = path.indexOf('?');
+                    if (index !== -1) 
+                        path = path.substring(0, index);
+                    return path;
                 };
                 
                 // Calculate the time difference between current date and the last modification date

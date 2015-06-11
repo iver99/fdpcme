@@ -72,7 +72,7 @@ define([
             };
             
             function fetchResults() {
-                $.ajax({type: 'POST', contentType:'application/json',url: taUrl, data: ko.toJSON(queryString)
+                dfu.ajaxWithRetry({type: 'POST', contentType:'application/json',url: taUrl, data: ko.toJSON(queryString)
                     ,headers: {"Authorization":"Basic d2VibG9naWM6d2VsY29tZTE="},
                     success: function(data, textStatus){
                         querySuccessCallBack(data);
