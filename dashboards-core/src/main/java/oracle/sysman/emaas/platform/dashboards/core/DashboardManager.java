@@ -1,6 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -546,13 +545,12 @@ public class DashboardManager
 
 		StringBuilder sb = null;
 		int index = 1;
-		if (apps.isEmpty()) {
+		if (true/*apps.isEmpty()*/) {
 			// no subscribe apps
 			sb = new StringBuilder(
-					" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
-							+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
-							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?3 and p.owner = ?4 ");
-			index = 5;
+					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and p.owner = le.accessed_By and p.tenant_Id = le.tenant_Id) "
+							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?1 and p.owner = ?2 ");
+			index = 3;
 		}
 		else {
 			StringBuilder sbApps = new StringBuilder();
@@ -566,21 +564,16 @@ public class DashboardManager
 
 			//11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
 			sb = new StringBuilder(
-					" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
-							+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
-							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?3 and (p.owner = ?4 or (p.is_system = ?5 and p.application_type in ("
+					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and p.owner = le.accessed_By and p.tenant_Id = le.tenant_Id) "
+							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?1 and (p.owner = ?2 or (p.is_system = 1 and p.application_type in ("
 							+ sbApps.toString() + "))) ");
-			index = 6;
+
+			index = 3;
 		}
 		List<Object> paramList = new ArrayList<Object>();
 		String currentUser = UserContext.getCurrentUser();
-		paramList.add(currentUser);
-		paramList.add(tenantId);
 		paramList.add(tenantId);
 		paramList.add(currentUser);
-		if (!apps.isEmpty()) {
-			paramList.add(1);
-		}
 
 		if (filter != null) {
 			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
@@ -693,25 +686,36 @@ public class DashboardManager
 		EntityManager em = dsf.getEntityManager();
 		Query listQuery = em.createNativeQuery(jpqlQuery, EmsDashboard.class);
 		initializeQueryParams(listQuery, paramList);
-		listQuery.setFirstResult(firstResult);
-		listQuery.setMaxResults(maxResults);
+		//listQuery.setFirstResult(firstResult);
+		//listQuery.setMaxResults(maxResults);
 		@SuppressWarnings("unchecked")
 		List<EmsDashboard> edList = listQuery.getResultList();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
-		for (EmsDashboard ed : edList) {
-			dbdList.add(Dashboard.valueOf(ed));
-		}
 
-		StringBuilder sbCount = new StringBuilder(sb);
-		sbCount.insert(0, "select count(*) ");
-		String jpqlCount = sbCount.toString();
-		logger.debug(jpqlCount);
-		Query countQuery = em.createNativeQuery(jpqlCount);
-		initializeQueryParams(countQuery, paramList);
-		Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+		if (edList != null && !edList.isEmpty()) {
+			for (int i = 0; i < maxResults && i + firstResult < edList.size(); i++) {
+				//				int idx = i + firstResult;
+				//				if (idx >= edList.size()) {
+				//					break;
+				//				}
+				dbdList.add(Dashboard.valueOf(edList.get(i + firstResult)));
+			}
+		}
+		Long totalResults = edList == null ? 0L : Long.valueOf(edList.size());
 		PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 				maxResults, dbdList);
 		return pd;
+		/*
+				StringBuilder sbCount = new StringBuilder(sb);
+				sbCount.insert(0, "select count(*) ");
+				String jpqlCount = sbCount.toString();
+				logger.debug(jpqlCount);
+				Query countQuery = em.createNativeQuery(jpqlCount);
+				initializeQueryParams(countQuery, paramList);
+				Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
+				PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
+						maxResults, dbdList);
+				return pd;*/
 	}
 
 	/**
