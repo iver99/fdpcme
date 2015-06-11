@@ -45,7 +45,8 @@
   </filter>
   <filter-mapping>
     <filter-name>clickjack.filter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/home.html</url-pattern>
+    <url-pattern>/builder.html</url-pattern>
   </filter-mapping>
   	<security-constraint>
 	  <web-resource-collection>
