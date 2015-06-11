@@ -543,7 +543,8 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 var args = arguments;
                 var retryOptions = getAjaxOptions(args);
                 var retryCount = 0;
-                var retryLimit = retryOptions.retryLimit ? retryOptions.retryLimit : 3;
+                var retryLimit = retryOptions.retryLimit !== null && 
+                        typeof(retryOptions.retryLimit) === 'number' ? retryOptions.retryLimit : 3;
                 var showMessages = retryOptions.showMessages ? retryOptions.showMessages : 'summary';
                 var messageId = null;
                 var messageObj = null;
