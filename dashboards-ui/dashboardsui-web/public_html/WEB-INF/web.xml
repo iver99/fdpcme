@@ -45,12 +45,8 @@
   </filter>
   <filter-mapping>
     <filter-name>clickjack.filter</filter-name>
-    <url-pattern>/emsaasui/emcpdfui/home.html</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <filter-mapping>
-    <filter-name>clickjack.filter</filter-name>
-    <url-pattern>/emsaasui/emcpdfui/builder.html</url-pattern>
-  </filter-mapping> 
   	<security-constraint>
 	  <web-resource-collection>
 	    <web-resource-name>secure-pages</web-resource-name>
