@@ -35,6 +35,22 @@
     <filter-name>compress.filter</filter-name>
     <url-pattern>*.js</url-pattern>
   </filter-mapping>
+  <filter>
+  	<filter-name>clickjack.filter</filter-name>
+    <filter-class>oracle.sysman.emaas.platform.dashboards.ui.web.ClickjackingFilter</filter-class>
+    <init-param>
+    	<param-name>mode</param-name>
+    	<param-value>DENY</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>clickjack.filter</filter-name>
+    <url-pattern>/emsaasui/emcpdfui/home.html</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>clickjack.filter</filter-name>
+    <url-pattern>/emsaasui/emcpdfui/builder.html</url-pattern>
+  </filter-mapping> 
   	<security-constraint>
 	  <web-resource-collection>
 	    <web-resource-name>secure-pages</web-resource-name>
