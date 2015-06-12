@@ -90,7 +90,7 @@ echo "Version: #{node["SAAS_version"]}" >> #{node["log_dir"]}/dashboardServiceDa
 echo "SQL Dir: #{node["sql_dir"]}" >> #{node["log_dir"]}/dashboardServiceDatasource.log
 cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}
 
-
+echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/********@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/dashboardServiceDatasource.log
 export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
 
 echo "running the script now" >> #{node["log_dir"]}/dashboardServiceDatasource.log
@@ -122,7 +122,7 @@ else
 	cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}/upgrade
 	
 	echo "Running upgrade script now" >> #{node["log_dir"]}/dashboardServiceDatasource.log
-	
+	echo "#{node["dbhome"]}/bin/sqlplus #{node["SAAS_schema_user"]}/*******@#{node["db_host"]}:#{node["db_port"]}/#{node["db_service"]}" >> #{node["log_dir"]}/dashboardServiceDatasource.log	
 	echo "CWD:" >> #{node["log_dir"]}/dashboardServiceDatasource.log
 	pwd >> #{node["log_dir"]}/dashboardServiceDatasource.log
 	for file in upgrade.sql
