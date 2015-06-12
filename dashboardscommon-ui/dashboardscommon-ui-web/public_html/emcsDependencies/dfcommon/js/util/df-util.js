@@ -545,6 +545,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 var retryCount = 0;
                 var retryLimit = retryOptions.retryLimit !== null && 
                         typeof(retryOptions.retryLimit) === 'number' ? retryOptions.retryLimit : 3;
+                retryLimit = retryLimit > 0 ? retryLimit : 0;
                 var showMessages = retryOptions.showMessages ? retryOptions.showMessages : 'summary';
                 var messageId = null;
                 var messageObj = null;
