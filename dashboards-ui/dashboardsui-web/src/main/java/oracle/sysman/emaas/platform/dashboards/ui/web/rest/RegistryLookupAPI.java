@@ -55,6 +55,7 @@ public class RegistryLookupAPI extends AbstractAPI
 			}
 			EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPoint(serviceName, version, tenantIdParam);
 			if (endPoint != null) {
+				endPoint = RegistryLookupUtil.replaceWithVanityUrl(endPoint, tenantIdParam, serviceName);
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(endPoint)).build();
 			}
 			else {
@@ -94,6 +95,7 @@ public class RegistryLookupAPI extends AbstractAPI
 			}
 
 			Link lk = RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, tenantIdParam);
+			lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantIdParam, serviceName);
 			if (lk != null) {
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();
 			}
@@ -133,6 +135,7 @@ public class RegistryLookupAPI extends AbstractAPI
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 			Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(serviceName, version, rel, tenantIdParam);
+			lk = RegistryLookupUtil.replaceWithVanityUrl(lk, tenantIdParam, serviceName);
 			if (lk != null) {
 				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(lk)).build();
 			}

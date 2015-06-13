@@ -97,14 +97,6 @@ public class RegistrationEntity
 	//	}
 
 	/**
-	 * @return Administration links discovered from service manager
-	 */
-	public List<LinkEntity> getAdminLinks()
-	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-	}
-
-	/**
 	 * @return the rest API end point for dashboard framework
 	 * @throws Exception
 	 */
@@ -150,6 +142,14 @@ public class RegistrationEntity
 	//	}
 
 	/**
+	 * @return Administration links discovered from service manager
+	 */
+	public List<LinkEntity> getAdminLinks()
+	{
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+	}
+
+	/**
 	 * @return the rest API end point for SSF
 	 * @throws Exception
 	 */
@@ -173,15 +173,18 @@ public class RegistrationEntity
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
 	{
+		String tenantName = TenantContext.getCurrentTenant();
 		for (Link link : links) {
 			String key = serviceName + "_" + version + "_" + link.getRel();
 			if (!linksMap.containsKey(key)) {
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
+				le = replaceWithVanityUrl(le, tenantName, serviceName);
 				linksMap.put(key, le);
 			}
 			else if (linksMap.get(key).getHref().toLowerCase().startsWith("http://")
 					&& link.getHref().toLowerCase().startsWith("https://")) {
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
+				le = replaceWithVanityUrl(le, tenantName, serviceName);
 				linksMap.put(key, le);
 			}
 		}
@@ -242,14 +245,14 @@ public class RegistrationEntity
 		}
 		for (String app : apps) {
 			if (ApplicationOPCName.APM.toString().equals(app)) {
-				appSet.add("ApmUI");
+				appSet.add(RegistryLookupUtil.APM_SERVICE);
 			}
 			else if (ApplicationOPCName.ITAnalytics.toString().equals(app)) {
-				appSet.add("EmcitasApplications");
-				appSet.add("TargetAnalytics");
+				appSet.add(RegistryLookupUtil.ITA_SERVICE);
+				appSet.add(RegistryLookupUtil.TA_SERVICE);
 			}
 			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
-				appSet.add("LoganService");
+				appSet.add(RegistryLookupUtil.LA_SERVICE);
 			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI should be subscribed accordingly as agreement now
@@ -276,10 +279,10 @@ public class RegistrationEntity
 		_logger.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
 		Map<String, LinkEntity> linksMap = new HashMap<String, LinkEntity>();
 		Map<String, LinkEntity> dashboardLinksMap = new HashMap<String, LinkEntity>();
+		String tenantName = TenantContext.getCurrentTenant();
 		for (InstanceInfo internalInstance : instanceList) {
 			List<Link> links = internalInstance.getLinksWithRelPrefix(linkPrefix);
 			try {
-				String tenantName = TenantContext.getCurrentTenant();
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
 					sanitizedInstance = LookupManager.getInstance().getLookupClient()
@@ -313,6 +316,7 @@ public class RegistrationEntity
 		while (iterDashboardLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterDashboardLinks.next();
 			LinkEntity val = entry.getValue();
+			val = replaceWithVanityUrl(val, tenantName, val.getServiceName());
 			linkList.add(val);
 		}
 
@@ -321,7 +325,10 @@ public class RegistrationEntity
 		while (iterLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterLinks.next();
 			LinkEntity val = entry.getValue();
+			_logger.debug("Retrieved link for RegistrationEntity from linksMap. service name is {}, and href is {}",
+					val.getServiceName(), val.getHref());
 			if (!dashboardLinksMap.containsKey(entry.getKey())) {
+				val = replaceWithVanityUrl(val, tenantName, val.getServiceName());
 				linkList.add(val);
 			}
 		}
@@ -329,4 +336,10 @@ public class RegistrationEntity
 		return linkList;
 	}
 
+	private LinkEntity replaceWithVanityUrl(LinkEntity lk, String tenantName, String serviceName)
+	{
+		String href = RegistryLookupUtil.replaceWithVanityUrl(lk.getHref(), tenantName, serviceName);
+		lk.setHref(href);
+		return lk;
+	}
 }
