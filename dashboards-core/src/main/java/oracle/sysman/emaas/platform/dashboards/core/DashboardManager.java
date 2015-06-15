@@ -545,7 +545,7 @@ public class DashboardManager
 
 		StringBuilder sb = null;
 		int index = 1;
-		if (true/*apps.isEmpty()*/) {
+		if (apps.isEmpty()) {
 			// no subscribe apps
 			sb = new StringBuilder(
 					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and p.owner = le.accessed_By and p.tenant_Id = le.tenant_Id) "
