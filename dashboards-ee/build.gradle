@@ -71,9 +71,7 @@ task appServerInit << {
 
 	dependencies 
 	{
-	        // we are pulling in wlfullclient from "http://artifactory.oraclecorp.com/artifactory/emaas-sandbox-local/" as a temp measure
-          	// once we get right set of JARs figured out - we will remove this
-        	appServer compile(group: 'test', name: 'wlfullclient', version: '2.6')
+			appServer compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0')
 	} 
 	if (!project.hasProperty('serverHost')) { 
 		project.ext.serverHost = "$appServerconfig.serverName"; 
