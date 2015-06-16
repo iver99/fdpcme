@@ -566,7 +566,7 @@ public class DashboardCRUD
 							"Authorization", authToken).when().get("/dashboards");
 			System.out.println("Status code is: " + res4.getStatusCode());
 			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Application Performance Monitoring");
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Enterprise Overview");
 			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[0]"), "1");
 			Assert.assertEquals(res4.jsonPath().get("dashboards.name[1]"), "Test_LastAccess");
 			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[1]"), dashboard_id);
@@ -593,7 +593,7 @@ public class DashboardCRUD
 			Assert.assertTrue(res6.getStatusCode() == 200);
 			Assert.assertEquals(res6.jsonPath().get("dashboards.name[0]"), "Test_LastAccess");
 			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[0]"), dashboard_id);
-			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Application Performance Monitoring");
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Enterprise Overview");
 			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[1]"), "1");
 
 		}
