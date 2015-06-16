@@ -164,6 +164,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.altTextWarn(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN);
                     self.altTextConfirm(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM);
                     self.altTextInfo(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO);
+                    self.altTextClear(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR);
                     
                     oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
