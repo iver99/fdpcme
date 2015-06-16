@@ -6,13 +6,13 @@
     </head>
     <body>
         <div id="global-time-selector">
-            <div id="time_selector_box" data-bind="click:showTimeSelector" tabindex="0">
+            <div id="time_selector_box" data-bind="click:showTimeSelector, attr: {'aria-label': getNlsString('DBS_BUILDER_TIMESELECTOR_BOX_LABEL')}"  tabindex="0">
                     <div id="time_selector_txt">
                         <span data-bind="text: label" style="font-weight: bold;"></span>
                         <span data-bind="text: timeRange"></span>
                     </div>
                     <div id="time_selector_icon">
-                        <i class="fa-icon-font fa-caret-down"></i>
+                        <i class="fa-icon-font fa-caret-down" role="button" data-bind="attr: {'aria-label': getNlsString('DBS_BUILDER_TIMESELECTOR_ICON_ALT_TEXT')}"></i>
                     </div>
                 </div>
             </div>
