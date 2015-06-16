@@ -57,7 +57,7 @@
                      "operation": "schema_deployment"
             },
             {
-                     "name": "cookbook-emcs-dashboardService-api::schema_onboard",
+                     "name": "cookbook-emcs-dashboardService-api::schema_on_board",
                      "operation": "schema_on_boarding"
             }
          ],
