@@ -541,7 +541,7 @@ define(['knockout',
                                     var worksheetName = 'WS_4_QDG_WIDGET';
                                     var workSheetCreatedBy = 'sysman';
                                     var qdgId = 'chart1';
-                                    var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+                                    var ssfUrl = '/sso.static/savedsearch.categories'; //dfu.discoverSavedSearchServiceUrl();
                                     if (ssfUrl && ssfUrl !== '') {
                                         var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
                                         var widgetDetails = null;

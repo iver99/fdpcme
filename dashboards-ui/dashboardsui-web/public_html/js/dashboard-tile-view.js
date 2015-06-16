@@ -324,7 +324,7 @@ define(['knockout',
                 oj.Logger.log("Saved Search service is not available! Try again later.");
             }
             else {
-                var categoryUrl = dfu.buildFullUrl(ssfUrl,'categories');
+                var categoryUrl = '/sso.static/savedsearch.categories'; //dfu.buildFullUrl(ssfUrl,'categories');
                 dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: categoryUrl,
                     headers: dfu.getSavedSearchServiceRequestHeader(), 
                     async: false,

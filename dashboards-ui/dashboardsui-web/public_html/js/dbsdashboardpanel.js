@@ -280,7 +280,7 @@ $.widget('dbs.dbsDashboardPanel',
             else {
               dfu.ajaxWithRetry({
                    //This will be a page which will return the base64 encoded string
-                   url: self.options['dashboard']['screenShotHref'], 
+                   url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
                    success: function(response){
                        var __ss = (response.screenShot ? response.screenShot : undefined);
