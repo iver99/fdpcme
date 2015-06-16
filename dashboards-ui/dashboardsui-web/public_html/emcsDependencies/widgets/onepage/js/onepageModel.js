@@ -23,7 +23,7 @@ define([
                 var providerAssetRoot = tile.PROVIDER_ASSET_ROOT();
 
                 if (providerName && providerVersion && providerAssetRoot) {
-                    self.fullUrl = ko.observable(dfu.df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot));
+                    self.fullUrl = ko.observable(dfu.df_util_widget_lookup_assetRootUrl(providerName, providerVersion, providerAssetRoot, false));
                 } else { 
                     self.fullUrl = ko.observable("about:blank");
                 }

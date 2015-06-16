@@ -133,7 +133,7 @@ define(['knockout',
             if (!tile)
                 return;
             
-            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT());
+            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
             var kocVM = tile.WIDGET_VIEWMODEL();
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                 kocVM = assetRoot + kocVM;
@@ -523,7 +523,7 @@ define(['knockout',
                                 newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                              }else if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
-                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
+                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
                                     if (assetRoot===null){
                                         console.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                     }
