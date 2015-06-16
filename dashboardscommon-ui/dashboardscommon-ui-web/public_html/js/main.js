@@ -9,6 +9,12 @@
  * http://jquery.org/license
  */
 requirejs.config({
+    //Set up module mapping
+    map: {
+        'prefutil': 
+            {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
+             'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -110,7 +116,7 @@ require(['knockout',
                 var self = this;
                 self.userName = 'emcsadmin';
                 self.tenantName = 'emaastesttenant1';
-                self.appId = "Error"; //"Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
+                self.appId = "Dashboard"; //"Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,

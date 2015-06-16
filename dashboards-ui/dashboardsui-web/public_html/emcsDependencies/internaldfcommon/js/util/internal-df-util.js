@@ -5,36 +5,39 @@
  */
 define(['knockout',
         'jquery',
-        '../emcsDependencies/dfcommon/js/util/df-util'
+        '../emcsDependencies/dfcommon/js/util/df-util',
+        '../emcsDependencies/dfcommon/js/util/usertenant-util'
     ],
     
-    function(ko, $, dfumodel)
+    function(ko, $, dfumodel, userTenantUtil)
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
             
             self.getUserTenantFromCookie = function() {
-                var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
-                var cookieArray = document.cookie.split(';');
-                var tenantName=null; //in case tenant name is not got
-                var tenantUser=null; //in case use name is not got
-                for (var i = 0; i < cookieArray.length; i++) {
-                    var c = cookieArray[i];
-                    if (c.indexOf(userTenantPrefix) !== -1) {
-                        tenantUser = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
-                        var dotPos = tenantUser.indexOf(".");
-                        if (tenantUser && dotPos>0){
-                           tenantName= tenantUser.substring(0,dotPos);
-                        }
-                        break;
-                    }
-                }
-                if ((!tenantName || !tenantUser) && location.href && location.href.indexOf("error.html") === -1) {
-                	location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href);
-                	return null;
-                }
-                else
-                	return {"tenant": tenantName, "tenantUser": tenantUser};
+                return userTenantUtil.getUserTenant();
+                
+//                var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
+//                var cookieArray = document.cookie.split(';');
+//                var tenantName=null; //in case tenant name is not got
+//                var tenantUser=null; //in case use name is not got
+//                for (var i = 0; i < cookieArray.length; i++) {
+//                    var c = cookieArray[i];
+//                    if (c.indexOf(userTenantPrefix) !== -1) {
+//                        tenantUser = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
+//                        var dotPos = tenantUser.indexOf(".");
+//                        if (tenantUser && dotPos>0){
+//                           tenantName= tenantUser.substring(0,dotPos);
+//                        }
+//                        break;
+//                    }
+//                }
+//                if ((!tenantName || !tenantUser) && location.href && location.href.indexOf("error.html") === -1) {
+//                	location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href);
+//                	return null;
+//                }
+//                else
+//                	return {"tenant": tenantName, "tenantUser": tenantUser};
             };
             
             var userTenant = self.getUserTenantFromCookie();
@@ -276,11 +279,11 @@ define(['knockout',
              */ 
             self.ajaxWithRetry = function() {
 		var args = arguments;
-		if(args.length == 1) {
+		if(args.length === 1) {
 		     return dfu.ajaxWithRetry(args[0]);
-		}else if(args.length == 2) {
+		}else if(args.length === 2) {
 		     return dfu.ajaxWithRetry(args[0], args[1]);
-		}else if(args.length == 3) {
+		}else if(args.length === 3) {
 		     return dfu.ajaxWithRetry(args[0], args[1], args[2]);
 		}else {
 	             console.log("Arguments number is wrong.");
