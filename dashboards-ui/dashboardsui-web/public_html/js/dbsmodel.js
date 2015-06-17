@@ -500,8 +500,8 @@ function(dsf, oj, ko, $, dfu, pfu)
         
         self.getShowServiceFilter = function() {
             if (self.getShowLaService() === true 
-                    && self.getShowApmService() === true 
-                    && self.getShowItaService() === true)
+                    || self.getShowApmService() === true 
+                    || self.getShowItaService() === true)
             {
                 return true;
             }
