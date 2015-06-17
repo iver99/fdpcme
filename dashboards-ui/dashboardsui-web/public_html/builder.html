@@ -177,13 +177,13 @@ role value for that section to represent the appropriate content type.
                           </button>
                         </span-->
                     </div>
-                    <div style="display:none; min-width:100px; min-height:50px;" id="add-widget-tooltip" 
+<!--                    <div style="display:none; min-width:100px; min-height:50px;" id="add-widget-tooltip" 
                          data-bind="ojComponent: {component: 'ojPopup',
                                               tail: 'simple',
                                               position: {'my': 'right top', 'at': 'start bottom', 'of': '#add-widget-button'}}">
                                  <h1 data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></h1>
                                  <br/><span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_DETAIL')"></span><br/>
-                    </div>
+                    </div>-->
                 </div>
 <!--                <div style="display:none;" id="parent-message-dialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
@@ -513,6 +513,18 @@ role value for that section to represent the appropriate content type.
                             <!--div class="oj-col oj-sm-4"></div-->
                             
                         </div>
+                        <!-- ko if:$root.isEmpty() -->
+                        <div id="addWidgetToolTip" style="padding-top: 64px; text-align: center">
+                            <img src="css/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;"/>
+                            <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
+                            <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
+                            <p style="font-size: 16px;">
+                                <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1')"></span>
+                                <a data-bind="click: $root.openAddWidgetDialog, text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_ADD_LINK')"></a>
+                                <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2')"></span>
+                            </p>
+                        </div>
+                        <!-- /ko -->
                         <div class="oj-row dbd-column stretch-height" data-bind="foreach: dashboard.tiles, sortableList: dashboard.tiles" id="tiles-row">
                             <div class="dbd-tile dbd-tile-sortable oj-col" data-bind="attr: {'id': 'tile' + clientGuid}, css: tileDisplayClass()">
                                 <div class="dbd-tile-header">

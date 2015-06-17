@@ -624,14 +624,28 @@ define(['knockout',
                 $('#'+addWidgetDialogId).ojDialog('close');
             };
             
-            self.showAddWidgetTooltip = function() {
-                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
-                   $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
-                }
-            };
-            
+//            self.showAddWidgetTooltip = function() {
+//                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
+//                   $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
+//                }
+//            };
+                        
             // code to be executed at the end after function defined
-            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
+//            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
+                        
+            $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
+                self.handleAddWidgetTooltip();
+            });
+            
+            self.handleAddWidgetTooltip = function() {
+                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
+                    $("#addWidgetToolTip").css("display", "block");
+                }else {
+                    $("#addWidgetToolTip").css("display", "none");
+                }
+            }
+            
+            tilesViewModel.registerTileRemoveCallback(self.handleAddWidgetTooltip);
         }
         
         return {"DashboardTilesView": DashboardTilesView, 
