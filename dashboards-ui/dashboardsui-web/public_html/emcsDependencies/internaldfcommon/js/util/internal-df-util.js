@@ -314,6 +314,13 @@ define(['knockout',
             	dfu.showMessage(messageObj);
             };
             
+            /**
+             * Discover logout url for current logged in user
+             */
+            self.discoverLogoutUrl = function() {
+            	return dfu.discoverLogoutUrl();
+            };
+            
         }
         return new InternalDashboardFrameworkUtility();
     }
