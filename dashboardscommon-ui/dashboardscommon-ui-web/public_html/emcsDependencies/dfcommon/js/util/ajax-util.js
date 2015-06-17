@@ -381,8 +381,16 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
             
             function getFilePath(requireContext, relPath) {
                 var jsRootMain = requireContext.toUrl("");
+                //remove urlArgs string appended by requirejs urlArgs config from file path
+                var index = jsRootMain.indexOf('?');
+                if (index !== -1) 
+                    jsRootMain = jsRootMain.substring(0, index);
                 var path = requireContext.toUrl(relPath);
                 path = path.substring(jsRootMain.length);
+                //remove urlArgs string appended by requirejs urlArgs config from file path
+                index = path.indexOf('?');
+                if (index !== -1) 
+                    path = path.substring(0, index);
                 return path;
             };
             
