@@ -16,7 +16,7 @@ public class DashBoardPageId {
 	public static final String DashBoardDescBoxID = "dbsHDpIn";
 	public static final String DashOKButtonID = "createDsb";
 	public static final String WidgetAddButtonID = "add-widget-button";
-	public static final String DashBoardSaveID = "//*[@id='dashboard-screenshot']";
+	public static final String DashBoardSaveID = "dashboard-screenshot";
 	public static final String WidgetAddButton = "//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
 	public static final String WidgetDialogCloseButtonID = "div[15]/div[3]/div/span";
 	public static final String DashBoardID = "//div[@class='oj-panel dbs-summary-container']";// and @aria-dashboard='1127']";
@@ -26,5 +26,55 @@ public class DashBoardPageId {
 	public static final String OverviewCloseID = "overviewClose";
 	public static final String DashBoardName = "//span[@id='builder-dbd-name-display-hover-area']";
 	public static final String AddBtn = "widget-selector-okbtn";
+	public static final String closeBtnID = "//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span";
+	public static final String LinkID = "linksButton";
+	public static final String DashBoardLinkID = "link=All Dashboards";
+	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='1']";
+	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";
+	public static final String Database_Resource_Planning_ID = "//div[@aria-dashboard='3']";
+	public static final String Garbage_Collection_Overhead_ID = "//div[@aria-dashboard='4']";
+	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";
+	public static final String Database_Configuration_and_Storage_By_Version_ID = "//div[@aria-dashboard='6']";
+	public static final String WebLogic_Servers_by_JDK_Version_ID = "//div[@aria-dashboard='7']";
+	public static final String Top_25_Databases_by_Resource_Consumption_ID = "//div[@aria-dashboard='8']";
+	public static final String Top_25_WebLogic_Servers_by_Heap_Usage_ID = "//div[@aria-dashboard='9']";
+	public static final String Top_25_WebLogic_Servers_by_Load_ID = "//div[@aria-dashboard='10']";
+	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
+	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
+	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
 	
+	public static final String SortDropListID = "//*[@id='ojChoiceId_sortcb_selected']";//ojChoiceId_sortcb";//ojChoiceId_sortcb_selected";//sortcb";
+	public static final String Access_Date_ID = "/html/body/div/div/div/ul/li[2]/div";
+	
+	
+	//search
+	public static final String SearchDSBoxID = "sinput";
+	
+	//link
+	public static final String HomeLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a";
+	//IT Analytics link
+	public static final String ITALinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
+	//Log Analytics link
+	public static final String LALinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
+	//APM link
+	public static final String APMLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
+	//Log link
+	public static final String LOGLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
+	//AWR Analytics link
+	public static final String AWRALinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+	//Flex link
+	public static final String FlexLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
+	//Target link
+	public static final String TargetLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[3]/div[2]/div[5]/a";
+	//Customer Software link
+	public static final String CustomLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[4]/div[2]/div[2]/a";
+	//IT Analytics Administration link
+	public static final String ITA_Admin_LinkID ="/html/body/div[2]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
+	
+	//check box
+	public static final String ITA_Check_BoxID = "itaopt";
+	public static final String LA_BoxID = "laopt";
+	public static final String APM_BoxID = "apmopt";
+	public static final String Oracle_BoxID = "oracleopt";
+	public static final String Other_BoxID = "otheropt";
 }
