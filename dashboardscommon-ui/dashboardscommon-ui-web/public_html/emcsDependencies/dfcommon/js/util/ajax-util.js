@@ -71,7 +71,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
                 var showMessages = isValidShowMessageOption(retryOptions.showMessages) ? retryOptions.showMessages : 'all';
                 //Retry delay time in milliseconds, if not set, will be 2 seconds by default
                 var retryDelayTime = retryOptions.retryDelayTime !== null && 
-                        typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 2000;
+                        typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 500;
                 var messageId = null;
                 var messageObj = null;
                 var errorCallBack = retryOptions.error;
