@@ -14,7 +14,9 @@ public class WidgetAddPage {
 	public void clickWidgetOnTable(String widgetName) throws Exception
 	{
 		//driver.click("//span[text()='"+widgetName+"']");
+		driver.getLogger().info("after clicking css");
 		driver.click("css=img.widget-selector-screenshot");
+		driver.getLogger().info("after clicking css");
 	}
 	
 	
