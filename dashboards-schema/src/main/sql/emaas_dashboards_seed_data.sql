@@ -554,15 +554,15 @@ values (1,'Enterprise Overview',0,' ',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'O
 em_overview_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (2,'Database Performance Analytics',1,'Database Performance Analytics',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+values (2,'Performance Analytics: Database',1,'Database Performance Analytics',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
 dbperf_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (3,'Database Resource Planning',1,'Database Resource Planning',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+values (3,'Resource Analytics: Database',1,'Database Resource Planning',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
 dbhealth_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
-values (4,'Garbage Collection Overhead',1,'Analyze overhead of Garbage Collection and its impact of WebLogic performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
+values (4,'Performance Analytics: Middleware',1,'Analyze overhead of Garbage Collection and its impact of WebLogic performance',SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle',1,2,0,0,'&TENANT_ID',
 mwperf_screenshot);
 
 Insert into EMS_DASHBOARD (DASHBOARD_ID,NAME,TYPE,DESCRIPTION,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,IS_SYSTEM,APPLICATION_TYPE,ENABLE_TIME_RANGE,DELETED,TENANT_ID,SCREEN_SHOT) 
