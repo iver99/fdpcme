@@ -349,6 +349,33 @@ define(['knockout',
             });
         }
         
+        function isDashboardNameExisting(name) {
+            if (!name)
+                return false;
+            var exists = false;
+            var url = getBaseUrl() + "?queryString=" + name + "&limit=2&offset=0";
+            $.ajax(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (data && data.dashboards && data.dashboards.length > 0) {
+                        for (var i = 0; i < data.dashboards.length; i++) {
+                            if (name === data.dashboards[i].name) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                    }
+                },
+                error: function(e) {
+                    console.log(e.responseText);
+                },
+                async: false
+            });
+            return exists;
+        }
+        
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
             dfu.ajaxWithRetry(url, {
@@ -858,6 +885,7 @@ define(['knockout',
             "DashboardTilesViewModel": DashboardTilesViewModel,
             "DashboardViewModel": DashboardViewModel,
             "loadDashboard": loadDashboard,
+            "isDashboardNameExisting": isDashboardNameExisting,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "updateDashboard": updateDashboard,
