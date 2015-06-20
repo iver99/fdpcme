@@ -133,7 +133,7 @@ define(['knockout',
             if (!tile)
                 return;
             
-            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT());
+            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
             var kocVM = tile.WIDGET_VIEWMODEL();
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
                 kocVM = assetRoot + kocVM;
@@ -349,6 +349,33 @@ define(['knockout',
             });
         }
         
+        function isDashboardNameExisting(name) {
+            if (!name)
+                return false;
+            var exists = false;
+            var url = getBaseUrl() + "?queryString=" + name + "&limit=2&offset=0";
+            $.ajax(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (data && data.dashboards && data.dashboards.length > 0) {
+                        for (var i = 0; i < data.dashboards.length; i++) {
+                            if (name === data.dashboards[i].name) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                    }
+                },
+                error: function(e) {
+                    console.log(e.responseText);
+                },
+                async: false
+            });
+            return exists;
+        }
+        
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
             dfu.ajaxWithRetry(url, {
@@ -523,7 +550,7 @@ define(['knockout',
                                 newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
                              }else if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
-                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root);
+                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
                                     if (assetRoot===null){
                                         console.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                     }
@@ -541,7 +568,7 @@ define(['knockout',
                                     var worksheetName = 'WS_4_QDG_WIDGET';
                                     var workSheetCreatedBy = 'sysman';
                                     var qdgId = 'chart1';
-                                    var ssfUrl = dfu.discoverSavedSearchServiceUrl();
+                                    var ssfUrl = '/sso.static/savedsearch.categories'; //dfu.discoverSavedSearchServiceUrl();
                                     if (ssfUrl && ssfUrl !== '') {
                                         var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
                                         var widgetDetails = null;
@@ -858,6 +885,7 @@ define(['knockout',
             "DashboardTilesViewModel": DashboardTilesViewModel,
             "DashboardViewModel": DashboardViewModel,
             "loadDashboard": loadDashboard,
+            "isDashboardNameExisting": isDashboardNameExisting,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "updateDashboard": updateDashboard,
