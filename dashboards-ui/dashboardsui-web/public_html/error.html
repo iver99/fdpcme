@@ -51,6 +51,13 @@
                         <span data-bind="text: invalidUrlLabel"></span>
                         <a class="dbd-error-url" data-bind="text: invalidUrl, attr: {href: invalidUrl}"></a>
                     </div>
+                    <br><br><br>
+                    <div>
+                    	<button class="oj-button-primary" data-bind="click: signOut, 
+                    					ojComponent: {component: 'ojButton', label: oj.Translations.getTranslatedString('COMMON_BTN_OK')}, 
+                    					attr: {title: oj.Translations.getTranslatedString('DBS_ERROR_BTN_SIGN_OUT')}" 
+                    			style="text-align: center"></button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -211,18 +211,34 @@ define(['knockout',
                 return userTenant;
             };
             
+            self.getRelUrlFromFullUrl = function(url) {
+            	if (!url)
+            		return url;
+            	var protocolIndex = url.indexOf('://');
+            	if (protocolIndex === -1)
+            		return url;
+            	var urlNoProtocol = url.substring(protocolIndex + 3);
+            	var relPathIndex = urlNoProtocol.indexOf('/');
+            	if (relPathIndex === -1)
+            		return url;
+            	return urlNoProtocol.substring(relPathIndex);
+            };
+            
             /**
              * Discover service asset root path by provider information
              * @param {String} providerName
              * @param {String} providerVersion
              * @param {String} providerAssetRoot
+             * @param {String} relUrlExpected indicates if a relative url is expected or not, false means full url is returned
              * @returns {String} assetRoot
              */
-            self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
+            self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot, relUrlExpected){
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo){
                     var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot);
                     if (assetRoot){
+                    	if (relUrlExpected)
+                    		assetRoot = self.getRelUrlFromFullUrl(assetRoot);
                         return assetRoot;
                     }else{
                         console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
@@ -296,6 +312,13 @@ define(['knockout',
              */
             self.showMessage = function(messageObj) {
             	dfu.showMessage(messageObj);
+            };
+            
+            /**
+             * Discover logout url for current logged in user
+             */
+            self.discoverLogoutUrl = function() {
+            	return dfu.discoverLogoutUrl();
             };
             
         }

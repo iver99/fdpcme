@@ -46,7 +46,9 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
-    'ojs/ojcore'
+    'ojs/ojcore',
+    'ojs/ojknockout',
+    'ojs/ojbutton'
 ],
 function(ko, $, dfu, oj)
 {
@@ -88,6 +90,12 @@ function(ko, $, dfu, oj)
             self.invalidUrl = decodeURIComponent(self.invalidUrl);
         }
         self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
+        
+        self.signOut = function() {
+            var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + encodeURIComponent(location.href);
+            window.location.href = logoutUrl;
+            oj.Logger.info("Logged out. URL: " + logoutUrl, true);
+        };
     };
     
     $(document).ready(function() {

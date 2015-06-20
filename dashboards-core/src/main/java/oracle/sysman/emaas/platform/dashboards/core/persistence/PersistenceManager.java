@@ -93,7 +93,7 @@ public class PersistenceManager
 				props.put("javax.persistence.jdbc.url", url);
 				String user = "EMAAS_DASHBOARDS";
 				props.put("javax.persistence.jdbc.user", user);
-				String password = "oracle123";
+				String password = "welcome1";
 				props.put("javax.persistence.jdbc.password", password);
 		
 			}
