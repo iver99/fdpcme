@@ -52,6 +52,10 @@ end
 #common WLS recipe
 include_recipe 'cookbook-emcs-emsaas-weblogic::default'
 
+#Populate db details
+include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
+
+
 #common setup/start for a managed Server
 include_recipe 'cookbook-emcs-emsaas-weblogic::managedServer_setup'
 
