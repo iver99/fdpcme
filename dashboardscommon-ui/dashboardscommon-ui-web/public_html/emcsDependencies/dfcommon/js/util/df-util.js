@@ -776,6 +776,19 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 return message;
             };
             
+            self.getRelUrlFromFullUrl = function(url) {
+            	if (!url)
+            		return url;
+            	var protocolIndex = url.indexOf('://');
+            	if (protocolIndex === -1)
+            		return url;
+            	var urlNoProtocol = url.substring(protocolIndex + 3);
+            	var relPathIndex = urlNoProtocol.indexOf('/');
+            	if (relPathIndex === -1)
+            		return url;
+            	return urlNoProtocol.substring(relPathIndex);
+            };
+            
             function isValidShowMessageOption(messageOption) {
                 return messageOption === "none" || messageOption === "summary" || 
                         messageOption === "all";
