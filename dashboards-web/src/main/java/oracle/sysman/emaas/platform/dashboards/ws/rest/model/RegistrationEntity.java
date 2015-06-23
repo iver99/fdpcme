@@ -148,19 +148,19 @@ public class RegistrationEntity
 	//		return ssfVersion;
 	//	}
 
-	/**
-	 * @return the rest API end point for SSF
-	 * @throws Exception
-	 */
-	public String getSsfRestApiEndPoint() throws Exception
-	{
-		String ep = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
-				TenantContext.getCurrentTenant());
-		return ep;
-		//		if (true) {
-		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
-		//		}
-	}
+	//	/**
+	//	 * @return the rest API end point for SSF
+	//	 * @throws Exception
+	//	 */
+	//	public String getSsfRestApiEndPoint() throws Exception
+	//	{
+	//		String ep = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
+	//				TenantContext.getCurrentTenant());
+	//		return ep;
+	//		//		if (true) {
+	//		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
+	//		//		}
+	//	}
 
 	/**
 	 * @return Visual analyzer links discovered from service manager
