@@ -218,7 +218,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 self.notificationCheckCallback = function(url) {
-                    urlNotificationCheck = url;
+                    urlNotificationCheck = dfu.getRelUrlFromFullUrl(url);
                     if (urlNotificationCheck) {
                         self.notificationVisible(true);
                         self.checkNotificationAvailability();
@@ -240,7 +240,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 //SSO logout handler
                 self.handleSignout = function() {
                     var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
-                    var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + ssoLogoutEndUrl;
+                    var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                     window.location.href = logoutUrl;
                     oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
                 };
