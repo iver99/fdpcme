@@ -518,6 +518,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             /**
              * Ajax call with retry logic
              * 
+             * Note:
+             * This API is deprecated. Please use the corresponding API in ajax-util instead. 
+             * Keep it here for now and will be removed in the future.
+             * 
              * Supported patterns:
              * 1. ajaxWithRetry(url)
              *    url: a target URL string (e.g. '/sso.static/dashboards.subscribedapps')
@@ -543,22 +547,41 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 var args = arguments;
                 var retryOptions = getAjaxOptions(args);
                 var retryCount = 0;
-                var retryLimit = retryOptions.retryLimit ? retryOptions.retryLimit : 3;
-                var showMessages = retryOptions.showMessages ? retryOptions.showMessages : 'all';
+                var retryLimit = retryOptions.retryLimit !== null && 
+                        typeof(retryOptions.retryLimit) === 'number' ? retryOptions.retryLimit : 3;
+                retryLimit = retryLimit > 0 ? retryLimit : 0;
+                var showMessages = isValidShowMessageOption(retryOptions.showMessages) ? retryOptions.showMessages : 'all';
+                //Retry delay time in milliseconds, if not set, will be 2 seconds by default
+                var retryDelayTime = retryOptions.retryDelayTime !== null && 
+                        typeof(retryOptions.retryDelayTime) === 'number' ? retryOptions.retryDelayTime : 500;
                 var messageId = null;
                 var messageObj = null;
                 var errorCallBack = retryOptions.error;
                 retryOptions.error = null;
+                var beforeSendCallback = retryOptions.beforeSend;
+                retryOptions.beforeSend = function(jqXHR, settings) {
+                    jqXHR.url = retryOptions.url;
+                    //Call individual beforeSend callback if exists
+                    if (beforeSendCallback && $.isFunction(beforeSendCallback))
+                        beforeSendCallback(jqXHR, settings);
+                    //Otherwise call beforeSend callback if it has been set up by $.ajaxSetup()
+                    else {
+                        var beforeSendInAjaxSetup = $.ajaxSetup()['beforeSend'];
+                        if (beforeSendInAjaxSetup && $.isFunction(beforeSendInAjaxSetup))
+                            beforeSendInAjaxSetup(jqXHR, settings);
+                    }
+                };
                 
                 var ajaxCallDfd = $.Deferred();
  
                 (function ajaxCall (retries) {
                     var dfd = $.ajax(retryOptions);
-                    dfd.done(function (data) {
+                    dfd.done(function (data, textStatus, jqXHR) {
                         removeMessage(messageId);
-                        ajaxCallDfd.resolve(data);
+                        ajaxCallDfd.resolve(data, textStatus, jqXHR);
                     });
                     dfd.fail(function (jqXHR, textStatus, errorThrown) {
+                        //TODO: session timeout handling as below is not available actually, need to update once find out the solution to catch status 302
                         //If session timeout (status = 302), make a browser refresh call which then will redirect to sso login page
                         if (jqXHR.status === 302) {
                             var sessionTimeoutMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING : 
@@ -568,82 +591,82 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                             location.reload(true);
                         }
                         //Do retry
-                        else {
+                        else if (jqXHR.status === 408 || jqXHR.status === 503 || jqXHR.status === 0) {
                             retryCount++;
-                            if ((retries > 0) && (jqXHR.status === 408 || jqXHR.status === 404 || jqXHR.status === 503 || jqXHR.status === 0)) {
-                                if (showMessages !== 'none') {
-                                    //remove old retrying message
-                                    removeMessage(messageId);
-
-                                    //show new retrying message, if resource bundle not loaded yet show default message
-                                    if (!isNlsStringsLoaded) {
-                                        var nlsWarnMsg = 'Resource bundle has not finished loading in df-util, show default messages instead.';
-                                        logMessage(retryOptions.url, 'warn', nlsWarnMsg);
-                                    }
-
-                                    //Set message to be shown on UI
-                                    messageId = self.getGuid();
-                                    var summaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY : 
-                                            'Not connected.';
-                                    var detailMsg = null;
-                                    if (showMessages === 'all') {
-                                        detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
-                                                'Retrying to connect to your cloud service. Retry count: {0}.';
-                                        detailMsg = self.formatMessage(detailMsg, retryCount);
-                                    }
-                                    messageObj = {
-                                        id: messageId, 
-                                        action: 'show', 
-                                        type: 'warn', 
-                                        summary: summaryMsg, 
-                                        detail: detailMsg};
-
-                                    //Show message on UI
-                                    self.showMessage(messageObj);
-                                }
-                                
-                                //Do retry once again if failed
-                                ajaxCall(retries - 1);
-                                return false;
-                            }
-
-                            if (showMessages !== 'none') {
-                                //remove old retrying message after retrying for 3 times
+                            if (retries > 0) {
+                                //remove old retrying message
                                 removeMessage(messageId);
 
-                                //show new retry error message
+                                //show new retrying message, if resource bundle not loaded yet show default message
                                 if (!isNlsStringsLoaded) {
-                                    var nlsWarnMsg = 'Resource bundle has not finished loading in df-util, show default messages instead.';
+                                    var nlsWarnMsg = 'Resource bundle has not finished loading in ajax-util, show default messages instead.';
                                     logMessage(retryOptions.url, 'warn', nlsWarnMsg);
                                 }
 
-                                //Set failure message to be shown on UI after 3 retries
+                                //Set message to be shown on UI
+                                messageId = self.getGuid();
+                                var summaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY : 
+                                        'Not connected.';
+                                var detailMsg = null;
+                                //Show retrying message detail
+                                detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
+                                        'Retrying to connect to your cloud service. Retry count: {0}.';
+                                detailMsg = self.formatMessage(detailMsg, retryCount);
+                                messageObj = {
+                                    id: messageId, 
+                                    action: 'show', 
+                                    type: 'warn', 
+                                    summary: summaryMsg, 
+                                    detail: detailMsg};
+
+                                //Always show retrying message summary and detail on UI
+                                self.showMessage(messageObj);
+                                
+                                //Do retry once again if failed
+                                setTimeout(function(){ajaxCall(retries - 1);}, retryDelayTime);
+                                
+                                return false;
+                            }
+                            
+                            //remove old retrying message after retries
+                            removeMessage(messageId);
+                            
+                            if (showMessages !== 'none') {
+                                //show new retry error message
+                                if (!isNlsStringsLoaded) {
+                                    var nlsWarnMsg = 'Resource bundle has not finished loading in ajax-util, show default messages instead.';
+                                    logMessage(retryOptions.url, 'warn', nlsWarnMsg);
+                                }
+
+                                //Set failure message to be shown on UI after retries
                                 var errorSummaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY : 
-                                        'Attempts to connect to your cloud service failed after {0} tries.';
+                                            'Attempts to connect to your cloud service failed after {0} tries.';
                                 errorSummaryMsg = self.formatMessage(errorSummaryMsg, retryLimit);
+                                    
                                 var errorDetailMsg = null;
                                 if (showMessages === 'all') {
                                     var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
                                     errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg : 
                                             (isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
-                                            'Could not connect to your cloud service after {0} tries.');
-                                    errorDetailMsg = self.formatMessage(errorDetailMsg, retryLimit);
+                                            'Could not connect to your cloud service.');
+                                    errorDetailMsg = self.formatMessage(errorDetailMsg);
                                 }
                                 messageObj = {
                                     id: self.getGuid(), 
                                     action: 'show', 
-                                    type: 'error', 
+                                    type: "error", 
                                     summary: errorSummaryMsg,
                                     detail: errorDetailMsg};
 
                                 //Show error message on UI
                                 self.showMessage(messageObj);
+                                
+                                //Log message
+                                var errorMsg = "Attempts to connect to your cloud service failed after {0} tries. Target URL: {1}.";
+                                errorMsg = self.formatMessage(errorMsg, retryLimit, retryOptions.url);
+                                //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
+                                logMessage(retryOptions.url, 'error', errorMsg);
                             }
-
-                            var errorMsg = "Attempts to connect to your cloud service failed after {0} tries. Target URL: {1}.";
-                            errorMsg = self.formatMessage(errorMsg, retryLimit, retryOptions.url);
-                            //Output log to console if requested url is logging api to avoid endless loop, otherwise output to server side
-                            logMessage(retryOptions.url, 'error', errorMsg);
                         }
                         
                         //Call error callback if the ajax call finally failed
@@ -662,6 +685,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             
             /**
              * Make an ajax get call with retry logic
+             * 
+             * Note:
+             * This API is deprecated. Please use the corresponding API in ajax-util instead. 
+             * Keep it here for now and will be removed in the future.
              * 
              * Supported patterns:
              * 1. ajaxGetWithRetry(url)
@@ -711,6 +738,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             /**
              * Show a page level message in branding bar
              * 
+             * Note:
+             * This API is deprecated. Please use the corresponding API in message-util instead. 
+             * Keep it here for now and will be removed in the future.
+             * 
              * @param {Object} message message to be shown on UI, supported properties include:
              *          type:	         String, Required. Message type, should be one of "error", "warn", "confirm", "info".
              *          summary:	 String, Required. Message summary.
@@ -730,6 +761,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             /**
              * Format a message by replacing the placeholds inside the message string with parameters passed in
              * 
+             * Note:
+             * This API is deprecated. Please use the corresponding API in message-util instead. 
+             * Keep it here for now and will be removed in the future.
+             * 
              * @param {String} message message to be formatted.
              * @param {Array} args parameters used to replace the placeholds
              * 
@@ -739,6 +774,11 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 var i=1;
                 while(i<arguments.length) message=message.replace("{"+(i-1)+"}",arguments[i++]);
                 return message;
+            };
+            
+            function isValidShowMessageOption(messageOption) {
+                return messageOption === "none" || messageOption === "summary" || 
+                        messageOption === "all";
             };
             
             function getAjaxOptions(args) {
@@ -751,7 +791,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                         retryOptions = args[0];
                 }
                 else if (argsLength === 2) {
-                    if (typeof(args[0]) === 'string' && typeof(args[1]) === 'object') {
+                    if (typeof(args[0]) === 'string' && args[1] !== null && typeof(args[1]) === 'object') {
                         retryOptions = args[1];
                         retryOptions.url = args[0];
                     }
@@ -759,12 +799,39 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                         retryOptions.url = args[0];
                         retryOptions.success = args[1];
                     }
+                    else if (typeof(args[0]) === 'string' && 
+                            (typeof(args[1]) === 'undefined' || args[1] === null)) {
+                        retryOptions.url = args[0];
+                    }
+                    else if (args[0] !== null && typeof(args[0]) === 'object' && 
+                            (typeof(args[1]) === 'undefined' || args[1] === null)) {
+                        retryOptions = args[0];
+                    }
                 }
                 else if (argsLength === 3) {
-                    if (typeof(args[0]) === 'string' && typeof(args[1]) === 'function' && typeof(args[2]) === 'object') {
+                    if (typeof(args[0]) === 'string' && 
+                            typeof(args[1]) === 'function' && 
+                            args[2] !== null && typeof(args[2]) === 'object') {
                         retryOptions = args[2];
                         retryOptions.url = args[0];
                         retryOptions.success = args[1];
+                    }
+                    else if (typeof(args[0]) === 'string' && 
+                            typeof(args[1]) === 'function' && 
+                            (typeof(args[2]) === 'undefined' || args[2] === null)) {
+                        retryOptions.url = args[0];
+                        retryOptions.success = args[1];
+                    }
+                    else if (typeof(args[0]) === 'string' && 
+                            (args[1] === null || typeof(args[1]) === 'undefined') && 
+                            args[2] !== null && typeof(args[2]) === 'object') {
+                        retryOptions = args[2];
+                        retryOptions.url = args[0];
+                    }
+                    else if (typeof(args[0]) === 'string' && 
+                            (args[1] === null || typeof(args[1]) === 'undefined') && 
+                            (args[2] === null || typeof(args[2]) === 'undefined')) {
+                        retryOptions.url = args[0];
                     }
                 }
                 
@@ -828,20 +895,29 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                         respJson.errorMessage !== "") {
                     message = respJson.errorMessage;
                 } 
-                else {
-                    var respText = xhr.responseText;
-                    if (typeof respText !== "undefined" && respText !== "") {
-                        message = respText;
-                    }
-                }
+                //do not show response text for now, as it may contains information not friendly to the end user
+//                else {
+//                    var respText = xhr.responseText;
+//                    if (typeof respText !== "undefined" && respText !== "") {
+//                        message = respText;
+//                    }
+//                }
                 
                 return message;
             };
             
             function getFilePath(requireContext, relPath) {
                 var jsRootMain = requireContext.toUrl("");
+                //remove urlArgs string appended by requirejs urlArgs config from file path
+                var index = jsRootMain.indexOf('?');
+                if (index !== -1) 
+                    jsRootMain = jsRootMain.substring(0, index);
                 var path = requireContext.toUrl(relPath);
                 path = path.substring(jsRootMain.length);
+                //remove urlArgs string appended by requirejs urlArgs config from file path
+                index = path.indexOf('?');
+                if (index !== -1) 
+                    path = path.substring(0, index);
                 return path;
             };
             

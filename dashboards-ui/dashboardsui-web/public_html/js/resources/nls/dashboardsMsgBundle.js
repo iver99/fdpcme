@@ -61,6 +61,7 @@ define({
       "DBS_HOME_DSB_PAGE_WIDGETS": "Widgets",
       "DBS_BUILDER_LOADING": "Loading...",
       "DBS_BUILDER_NAME_EDIT": "Double click to edit name",
+      "DBS_BUILDER_SAME_NAME_EXISTS_ERROR": "Dashboard with the same name exists already",
       "DBS_BUILDER_REQUIRE_NAME": "Name is required",
       "DBS_BUILDER_BTN_ADD_WIDGET": "Add Widgets",
       "DBS_BUILDER_BTN_ADD": "Add",
@@ -129,6 +130,7 @@ define({
       "DBS_BUILDER_TIMESELECTOR_MINUTES":"Minutes",
       "DBS_BUILDER_TIMESELECTOR_HOURS":"Hours",
       "DBS_BUILDER_TIMESELECTOR_DAYS":"Days",
+      "DBS_BUILDER_TIMESELECTOR_BOX_LABEL": "Time selector box",
       "DBS_BUILDER_TIMESELECTOR_ICON_ALT_TEXT":"Click to open the time selector",
       "DBS_BUILDER_TIMESELECTOR_MONTH_JAN":"Jan",
       "DBS_BUILDER_TIMESELECTOR_MONTH_FEB":"Feb",
@@ -174,7 +176,8 @@ define({
       "DBS_ERROR_PAGE_NOT_FOUND_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it.",
       "DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it. Reason: \"No service is subscribed\"",
       "DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID": "Error: failed to retrieve user or tenant for cookie 'ORA_EMSAAS_USERNAME_AND_TENANTNAME' is missing or invalid",
-      "DBS_ERROR_URL": "Requested URL is: "
+      "DBS_ERROR_URL": "Requested URL is: ",
+      "DBS_ERROR_BTN_SIGN_OUT": "Sign Out"
       
 
 },
