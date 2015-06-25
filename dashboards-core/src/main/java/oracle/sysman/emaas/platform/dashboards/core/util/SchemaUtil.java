@@ -275,13 +275,7 @@ public class SchemaUtil {
 
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 
-	public static void main(String[] args)
-	{
-		SchemaUtil rct = new SchemaUtil();
-		String res = rct.get("http://slc08twq.us.oracle.com:7001/lifecycle-schema-service/LifecycleInvManager/schemaDeployments");
-		String schemaName = rct.getSchemaUserBySoftwareName(res, "dashboardService-api");
-		System.out.println(schemaName);
-	}
+	
 
 	public String get(String url)
 	{
