@@ -7,6 +7,8 @@ import java.util.Properties;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import oracle.sysman.emaas.platform.dashboards.core.util.SchemaUtil;
 import oracle.sysman.qatool.uifwk.utils.Utils; 
 public class PersistenceManager
 {
@@ -91,7 +93,11 @@ public class PersistenceManager
 				
 				String url = "jdbc:oracle:thin:@"+Utils.getProperty("ODS_HOSTNAME")+":"+Utils.getProperty("ODS_PORT")+":"+Utils.getProperty("ODS_SERVICE");
 				props.put("javax.persistence.jdbc.url", url);
-				String user = "EMAAS_DASHBOARDS";
+				SchemaUtil rct = new SchemaUtil();
+				String res = rct.get("http://"+Utils.getProperty("EMCS_NODE1_HOSTNAME")+":7001/lifecycle-schema-service/LifecycleInvManager/schemaDeployments");
+				String schemaName = rct.getSchemaUserBySoftwareName(res, "dashboardService-api");
+				
+				String user = schemaName;
 				props.put("javax.persistence.jdbc.user", user);
 				String password = "welcome1";
 				props.put("javax.persistence.jdbc.password", password);

@@ -35,5 +35,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-1.0.4.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
