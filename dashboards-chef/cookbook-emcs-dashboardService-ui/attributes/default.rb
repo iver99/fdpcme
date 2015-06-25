@@ -12,6 +12,7 @@ default["log_dir"] = "#{node["run_dir"]}/logs"
 default["infra_dir"] = "#{node["base_dir"]}/InfrastructureSoftware"
 default["platform_dir"] = "#{node["base_dir"]}/PlatformServices"
 default["apps_dir"] = "#{node["base_dir"]}/Applications"
+default["app_dir"] = "#{node["apps_dir"]}"
 
 # java directories
 default["jdk_dir"] = "#{node["infra_dir"]}/java"
@@ -50,6 +51,6 @@ default["SAAS_entityNamingDomain"]="DatabaseTenantMapping"
 default["SAAS_entityNamingKey"]="tenantid"
 
 default["SAAS_earSelfCheck"]="emaas"
-default["SAAS_earfile"]="emaas-applications-dashboards-ui-#{node["SAAS_version"]}"
+default["SAAS_earfile"]="emaas-applications-dashboards-ui-#{node["SAAS_version"]}.ear"
 default["SAAS_deploymentUuid"]="0"
 

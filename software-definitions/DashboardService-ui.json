@@ -10,7 +10,7 @@
           "operation": "deploy"
          },
                  {
-                  "name": "cookbook-emcs-emsaas-weblogic::undeploy_app",
+                  "name": "cookbook-emcs-emsaas-weblogic::managedServer_undeployApp",
                   "operation": "undeploy",
                   "configurations":
                    [
@@ -21,7 +21,7 @@
                    ]
                    },
 		   {
-                    "name": "cookbook-emcs-emsaas-weblogic::start_app",
+                    "name": "cookbook-emcs-emsaas-weblogic::managedServer_startApp",
                     "operation": "start",
                     "configurations":
                     [
@@ -32,7 +32,7 @@
                     ]
                   },
                   {
-                   "name": "cookbook-emcs-emsaas-weblogic::stop_app",
+                   "name": "cookbook-emcs-emsaas-weblogic::managedServer_stopApp",
                    "operation": "stop",
                     "configurations":
                     [
