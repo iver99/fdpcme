@@ -34,6 +34,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
+ * @author guobaochen moving registry APIs from DF UI to DF API project
  */
 @Path("/v1/registry")
 public class RegistryLookupAPI extends APIBase
