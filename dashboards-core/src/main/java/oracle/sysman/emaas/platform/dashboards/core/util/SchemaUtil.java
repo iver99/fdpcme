@@ -273,7 +273,7 @@ public class SchemaUtil {
 		}
 	}
 
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
 
 	
 
