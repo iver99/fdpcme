@@ -9,6 +9,12 @@
  * http://jquery.org/license
  */
 requirejs.config({
+    //Set up module mapping
+    map: {
+        'prefutil': 
+            {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
+             'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
