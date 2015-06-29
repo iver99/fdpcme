@@ -8,22 +8,24 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
+package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 /**
- * @author miao
+ * @author aduan
  */
-public class EndpointEntity
+public class LinkEntity
 {
+	private String name;
+	private String href;
 	private String serviceName;
 	private String version;
-	private String href;
 
-	public EndpointEntity(String serviceName, String version, String href)
+	public LinkEntity(String name, String href, String serviceName, String version)
 	{
-		setServiceName(serviceName);
-		setVersion(version);
-		setHref(href);
+		this.name = name;
+		this.href = href;
+		this.serviceName = serviceName;
+		this.version = version;
 	}
 
 	/**
@@ -35,6 +37,14 @@ public class EndpointEntity
 	}
 
 	/**
+	 * @return the name
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
 	 * @return the serviceName
 	 */
 	public String getServiceName()
@@ -43,7 +53,7 @@ public class EndpointEntity
 	}
 
 	/**
-	 * @return the version
+	 * @return the serviceVersion
 	 */
 	public String getVersion()
 	{
@@ -60,6 +70,15 @@ public class EndpointEntity
 	}
 
 	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	/**
 	 * @param serviceName
 	 *            the serviceName to set
 	 */
@@ -69,11 +88,11 @@ public class EndpointEntity
 	}
 
 	/**
-	 * @param version
-	 *            the version to set
+	 * @param serviceVersion
+	 *            the serviceVersion to set
 	 */
-	public void setVersion(String version)
+	public void setVersion(String serviceVersion)
 	{
-		this.version = version;
+		version = serviceVersion;
 	}
 }

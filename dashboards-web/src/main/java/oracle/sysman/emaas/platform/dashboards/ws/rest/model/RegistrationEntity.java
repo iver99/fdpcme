@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.web.rest.model;
+package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +24,10 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -179,19 +178,19 @@ public class RegistrationEntity
 	//		return ssfVersion;
 	//	}
 
-	/**
-	 * @return the rest API end point for SSF
-	 * @throws Exception
-	 */
-	public String getSsfRestApiEndPoint() throws Exception
-	{
-		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
-				TenantContext.getCurrentTenant());
-		return entity != null ? entity.getHref() : null;
-		//		if (true) {
-		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
-		//		}
-	}
+	//	/**
+	//	 * @return the rest API end point for SSF
+	//	 * @throws Exception
+	//	 */
+	//	public String getSsfRestApiEndPoint() throws Exception
+	//	{
+	//		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
+	//				TenantContext.getCurrentTenant());
+	//		return entity != null ? entity.getHref() : null;
+	//		//		if (true) {
+	//		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
+	//		//		}
+	//	}
 
 	/**
 	 * @return Visual analyzer links discovered from service manager
@@ -203,15 +202,18 @@ public class RegistrationEntity
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
 	{
+		String tenantName = TenantContext.getCurrentTenant();
 		for (Link link : links) {
 			String key = serviceName + "_" + version + "_" + link.getRel();
 			if (!linksMap.containsKey(key)) {
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
+				le = replaceWithVanityUrl(le, tenantName, serviceName);
 				linksMap.put(key, le);
 			}
 			else if (linksMap.get(key).getHref().toLowerCase().startsWith("http://")
 					&& link.getHref().toLowerCase().startsWith("https://")) {
 				LinkEntity le = new LinkEntity(getLinkName(link.getRel()), link.getHref(), serviceName, version);
+				le = replaceWithVanityUrl(le, tenantName, serviceName);
 				linksMap.put(key, le);
 			}
 		}
@@ -306,10 +308,10 @@ public class RegistrationEntity
 		_logger.info("Got Subscribed applications:", subscribedApps != null ? subscribedApps.toString() : "null");
 		Map<String, LinkEntity> linksMap = new HashMap<String, LinkEntity>();
 		Map<String, LinkEntity> dashboardLinksMap = new HashMap<String, LinkEntity>();
+		String tenantName = TenantContext.getCurrentTenant();
 		for (InstanceInfo internalInstance : instanceList) {
 			List<Link> links = internalInstance.getLinksWithRelPrefix(linkPrefix);
 			try {
-				String tenantName = TenantContext.getCurrentTenant();
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
 					sanitizedInstance = LookupManager.getInstance().getLookupClient()
@@ -343,6 +345,7 @@ public class RegistrationEntity
 		while (iterDashboardLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterDashboardLinks.next();
 			LinkEntity val = entry.getValue();
+			val = replaceWithVanityUrl(val, tenantName, val.getServiceName());
 			linkList.add(val);
 		}
 
@@ -351,7 +354,10 @@ public class RegistrationEntity
 		while (iterLinks.hasNext()) {
 			Map.Entry<String, LinkEntity> entry = iterLinks.next();
 			LinkEntity val = entry.getValue();
+			_logger.debug("Retrieved link for RegistrationEntity from linksMap. service name is {}, and href is {}",
+					val.getServiceName(), val.getHref());
 			if (!dashboardLinksMap.containsKey(entry.getKey())) {
+				val = replaceWithVanityUrl(val, tenantName, val.getServiceName());
 				linkList.add(val);
 			}
 		}
@@ -359,4 +365,10 @@ public class RegistrationEntity
 		return linkList;
 	}
 
+	private LinkEntity replaceWithVanityUrl(LinkEntity lk, String tenantName, String serviceName)
+	{
+		String href = RegistryLookupUtil.replaceWithVanityUrl(lk.getHref(), tenantName, serviceName);
+		lk.setHref(href);
+		return lk;
+	}
 }

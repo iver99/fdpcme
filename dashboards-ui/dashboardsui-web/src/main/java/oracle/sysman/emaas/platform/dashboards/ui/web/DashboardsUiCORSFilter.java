@@ -138,7 +138,12 @@ public class DashboardsUiCORSFilter implements Filter
 						if (apmLink != null && !StringUtil.isEmpty(apmLink.getHref())) {
 							logger.info("Tenant subscribes to APM only, and redirecting dashboard home page to APM home: "
 									+ apmLink.getHref());
-							hRes.sendRedirect(apmLink.getHref());
+							String targetUrl = RegistryLookupUtil.replaceWithVanityUrl(apmLink.getHref(), opcTenantId,
+									RegistryLookupUtil.APM_SERVICE);
+							logger.info(
+									"The APM link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
+									apmLink.getHref(), targetUrl);
+							hRes.sendRedirect(targetUrl);
 							return;
 						}
 						else {

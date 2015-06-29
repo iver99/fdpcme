@@ -70,7 +70,7 @@ public class DashboardAPI extends APIBase
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			d = manager.saveNewDashboard(d, tenantId);
 			updateDashboardAllHref(d, tenantIdParam);
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
@@ -98,7 +98,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dsb = manager.getDashboardById(dashboardId, tenantId);
 			if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
 				throw new DeleteSystemDashboardException();
@@ -125,7 +125,7 @@ public class DashboardAPI extends APIBase
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
 			String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantIdParam);
@@ -152,7 +152,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
@@ -186,7 +186,7 @@ public class DashboardAPI extends APIBase
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			DashboardsFilter filter = new DashboardsFilter();
 			filter.setIncludedAppsFromString(appTypes);
 			filter.setIncludedOwnersFromString(owners);
@@ -228,7 +228,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			input.setDashboardId(dashboardId);
 			if (input.getIsSystem() != null && input.getIsSystem()) {
 				throw new CommonSecurityException(

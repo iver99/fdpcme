@@ -8,24 +8,22 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.web.rest.model;
+package oracle.sysman.emaas.platform.dashboards.core.util;
 
 /**
- * @author aduan
+ * @author miao
  */
-public class LinkEntity
+public class EndpointEntity
 {
-	private String name;
-	private String href;
 	private String serviceName;
 	private String version;
+	private String href;
 
-	public LinkEntity(String name, String href, String serviceName, String version)
+	public EndpointEntity(String serviceName, String version, String href)
 	{
-		this.name = name;
-		this.href = href;
-		this.serviceName = serviceName;
-		this.version = version;
+		setServiceName(serviceName);
+		setVersion(version);
+		setHref(href);
 	}
 
 	/**
@@ -37,14 +35,6 @@ public class LinkEntity
 	}
 
 	/**
-	 * @return the name
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
 	 * @return the serviceName
 	 */
 	public String getServiceName()
@@ -53,7 +43,7 @@ public class LinkEntity
 	}
 
 	/**
-	 * @return the serviceVersion
+	 * @return the version
 	 */
 	public String getVersion()
 	{
@@ -70,15 +60,6 @@ public class LinkEntity
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
-	 */
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	/**
 	 * @param serviceName
 	 *            the serviceName to set
 	 */
@@ -88,11 +69,11 @@ public class LinkEntity
 	}
 
 	/**
-	 * @param serviceVersion
-	 *            the serviceVersion to set
+	 * @param version
+	 *            the version to set
 	 */
-	public void setVersion(String serviceVersion)
+	public void setVersion(String version)
 	{
-		version = serviceVersion;
+		this.version = version;
 	}
 }

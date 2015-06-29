@@ -11,7 +11,11 @@
 requirejs.config({
     // Setup module id mapping
     map: {
-        'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'}
+        'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'},
+        '*': {
+              'ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
+              'message-util': '../emcsDependencies/dfcommon/js/util/message-util'
+             }        
     },
     // Path mappings for the logical module names
     paths: {

@@ -112,6 +112,19 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         }
                         if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
                             if (params.app){
+                            	// let's use relative url for customer software for admin link
+                            	for (var i = 0; i < data.adminLinks.length; i++) {
+                            		var link = data.adminLinks[i];
+                            		if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
+                            			if (link.href.indexOf('customersoftware') !== -1){
+                            				var protocolIndex = link.href.indexOf('://');
+                                    		var urlNoProtocol = link.href.substring(protocolIndex + 3);
+                                    		var relPathIndex = urlNoProtocol.indexOf('/');
+                                    		link.href = urlNoProtocol.substring(relPathIndex);
+                                    		break;
+                            			}
+                            		}
+                            	}
                                 if (params.app.appId===params.appDashboard.appId){
                                     self.adminLinks(data.adminLinks);//show all avail admin links
                                 }else{ //show app related admin link and tenant management UI admin link only
@@ -133,7 +146,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
 
                         }
                     };                   
-                    var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
+                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDefaultHeader(), 
@@ -151,7 +164,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function refreshLinks() {
-                    dfHomeUrl = dfu.discoverDFHomeUrl();
+                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
                     
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 

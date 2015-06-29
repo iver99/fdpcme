@@ -76,8 +76,12 @@ public class APIBase
 
 	}
 
-	public void initializeUserContext(String userTenant) throws CommonSecurityException
+	public void initializeUserContext(String opcTenantId, String userTenant) throws CommonSecurityException
 	{
+		if (opcTenantId == null || "".equals(opcTenantId)) {
+			throw new CommonSecurityException(
+					MessageUtils.getDefaultBundleString(CommonSecurityException.X_USER_IDENTITY_DOMAIN_REQUIRED));
+		}
 		if (userTenant == null || "".equals(userTenant)) {
 			throw new CommonSecurityException(
 					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
