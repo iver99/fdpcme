@@ -457,6 +457,7 @@ dependencies {
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6'){ transitive = false }
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6'){ transitive = false }
 
+	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
 	
 	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){ transitive = false }
@@ -480,6 +481,9 @@ dependencies {
 		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.29'],
 		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.29'],
 		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.29'],
+		[group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
+		[group: 'com.oracle.weblogic', name: 'jersey-server-1.17.1', version: '12.1.2-0-0'],
+		[group: 'com.oracle.weblogic', name: 'jersey-servlet-1.17.1', version: '12.1.2-0-0']
 	)
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 		module('commons-net:commons-net:1.4.1') {
