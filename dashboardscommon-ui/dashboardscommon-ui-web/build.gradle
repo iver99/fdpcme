@@ -6,6 +6,9 @@ apply plugin: 'war'
 apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
 
+apply plugin: 'TestInfraPlugin'
+apply from: 'test.gradle'
+
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
@@ -21,6 +24,17 @@ targetCompatibility = 1.7
 
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
+
+buildscript {
+    repositories {
+        maven {
+            url = "${artifactory_contextUrl}/emaas-virtual"
+        }
+    }
+    dependencies {
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true        
+	}  
+}
 
 //define the JS source locations
 
