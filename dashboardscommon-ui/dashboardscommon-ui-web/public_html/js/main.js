@@ -78,6 +78,8 @@ require(['knockout',
     'jquery',
     'ojs/ojcore',
     'loggingutil', 
+    '../emcsDependencies/dfcommon/js/util/usertenant-util',
+    '../emcsDependencies/dfcommon/js/util/message-util',
     'prefutil',
 //    'ojs/ojcomponents',
 //    'jqueryui',
@@ -90,11 +92,20 @@ require(['knockout',
     'ojs/ojdialog'
 //    'ojs/ojmenu'
 ],
-        function(ko, $, oj, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
-        {          
+        function(ko, $, oj, _emJETCustomLogger, userTenantUtil, msgUtilModel) // this callback gets executed when all required modules are loaded
+        { 
+            //appId: "Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
+            var appId = getUrlParam("appId"); 
+            appId = appId !== null && appId !== "" ? appId : "Dashboard"; 
+            var isAdmin = getUrlParam("isAdmin");
+            isAdmin = isAdmin === "false" ? false : true;
+            var userName = userTenantUtil.getUserName(); //'emcsadmin';
+            var tenantName = userTenantUtil.getTenantName(); //'emaastesttenant1';
+            var tenantDotUser = userName && tenantName ? tenantName+"."+userName : "";
+            
             var logger = new _emJETCustomLogger();
             var logReceiver = "/sso.static/dashboards.logging/logs";
-            logger.initialize(logReceiver, 60000, 20000, 8, 'emaastesttenant1.emcsadmin');
+            logger.initialize(logReceiver, 60000, 20000, 8, tenantDotUser);
             // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
             // If you comment the line below, our current log calls will not be output!
             logger.setLogLevel(oj.Logger.LEVEL_LOG);
@@ -110,18 +121,28 @@ require(['knockout',
                     viewModel:{require:'../emcsDependencies/dfcommon/widgets/widgetselector/js/widget-selector'},
                     template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
                 });
-            }     
-
+            } 
+            
+            /**
+            * Get URL parameter value according to URL parameter name
+            * @param {String} name
+            * @returns {parameter value}
+            */
+            function getUrlParam(name){
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+                return results === null ? "" : results[1];                
+            };
+            
             function HeaderViewModel() {
                 var self = this;
-                self.userName = 'emcsadmin';
-                self.tenantName = 'emaastesttenant1';
-                self.appId = "Dashboard"; //"Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
+                
                 self.brandingbarParams = {
-                    userName: self.userName,
-                    tenantName: self.tenantName,
-                    appId: self.appId,
-                    isAdmin:true
+                    userName: userName,
+                    tenantName: tenantName,
+                    appId: appId,
+                    relNotificationCheck: "existActiveWarning",
+                    relNotificationShow: "warnings",
+                    isAdmin: isAdmin
                 };
             };
             
@@ -133,24 +154,69 @@ require(['knockout',
                 var screenWidth = screen.availWidth;
                 var widgetBoxWidth = 362;
                 var widgetsContainerPaddingWidth = (screenWidth - widgetBoxWidth*4)/2;
+                var msgUtil = new msgUtilModel();
+                var autoCloseWidgetSelector = appId === "Dashboard" ? false : true;
+                var dialogTitle = appId === "Dashboard" ? "Add Widgets" : "Open";
+                var dialogConfirmBtnLabel = appId === "Dashboard" ? "Add" : "Open";
                 self.widgetsContainerPadding = '0px '+widgetsContainerPaddingWidth+'px '+ '0px '+widgetsContainerPaddingWidth+'px';
                 self.pageTitle = 'Sample page for dashboard common ui components testing only';
                 self.widgetList = ko.observableArray(widgetArray);
+                self.addWidgetBtnLabel = appId === "Dashboard" ? "Add" : "Open";
+                
+                var appIdAPM = "APM";
+                var appIdITAnalytics = "ITAnalytics";
+                var appIdLogAnalytics = "LogAnalytics";
+                var appIdDashboard = "Dashboard";
+                var appIdTenantManagement = "TenantManagement";
+                var appIdError = "Error";
+                var appMap = {};
+                appMap[appIdAPM] = {
+                    "providerName": null,
+                    "providerVersion": null
+                };
+                appMap[appIdITAnalytics] = {
+                    "providerName": "TargetAnalytics",
+                    "providerVersion": "1.0.5"
+                };
+                appMap[appIdLogAnalytics] = {
+                    "providerName": "LoganService",
+                    "providerVersion": "0.1"
+                };
+                appMap[appIdDashboard] = {
+                    "providerName": null,
+                    "providerVersion": null
+                };
+                appMap[appIdTenantManagement] = {
+                    "providerName": null,
+                    "providerVersion": null
+                };     
+                appMap[appIdError] = {
+                    "providerName": null,
+                    "providerVersion": null
+                };    
                 
                 self.addSelectedWidgetToDashboard = function(widget) {
                     widgetArray.push(widget);
                     self.widgetList(widgetArray);
+                    var msgObj = {
+                        type: "confirm",
+                        summary: "Success.",
+                        detail: "Add selected widget to dashboard successfully.",
+                        removeDelayTime: 5000
+                    };
+                    msgUtil.showMessage(msgObj);
                 };
 
                 self.widgetSelectorParams = {
                     dialogId: widgetSelectorDialogId,
-                    dialogTitle: 'Add Widgets', 
-                    affirmativeButtonLabel: 'Add',
-                    userName: 'SYSMAN',
-                    tenantName: 'TenantOPC1',
+                    dialogTitle: dialogTitle, 
+                    affirmativeButtonLabel: dialogConfirmBtnLabel,
+                    userName: userName,
+                    tenantName: tenantName,
                     widgetHandler: self.addSelectedWidgetToDashboard
-    //                ,providerName: null     //'TargetAnalytics' 
-    //                ,providerVersion: null  //'1.0.5'
+                    ,providerName: appMap[appId].providerName
+                    ,providerVersion: appMap[appId].providerVersion
+                    ,autoCloseDialog: autoCloseWidgetSelector
     //                ,providerName: 'TargetAnalytics' 
     //                ,providerVersion: '1.0.5'
     //                ,providerName: 'DashboardFramework' 

@@ -14,9 +14,11 @@
                 <div id="widget-selector-search-container">
                     <div id="widget-selector-searchbox" 
                          data-bind="css: {'widget-searchbox-with-filter': widgetGroupFilterVisible(), 'widget-searchbox-without-filter': !widgetGroupFilterVisible()}">
-                        <div id="widget-selector-search-input">
+                        <div id="widget-selector-search-input"
+                             data-bind="css: {'widget-search-input-with-filter': widgetGroupFilterVisible(), 'widget-search-input-without-filter': !widgetGroupFilterVisible()}">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
+                                            css: {'widget-searchtxt-with-filter': widgetGroupFilterVisible(), 'widget-searchtxt-without-filter': !widgetGroupFilterVisible()},
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             <button class="oj-button-half-chrome widget-selector-clear-button" data-bind="click: clearSearchText, visible: clearButtonVisible,
