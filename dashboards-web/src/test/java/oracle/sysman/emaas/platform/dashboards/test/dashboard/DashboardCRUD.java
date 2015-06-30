@@ -920,7 +920,7 @@ public class DashboardCRUD
 							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=access_Date");
 			System.out.println("Status code is: " + res4.getStatusCode());
 			Assert.assertTrue(res4.getStatusCode() == 200);
-			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Application Performance Monitoring");
+			Assert.assertEquals(res4.jsonPath().get("dashboards.name[0]"), "Enterprise Overview");
 			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[0]"), "1");
 			Assert.assertEquals(res4.jsonPath().get("dashboards.name[1]"), "Test_LastAccess");
 			Assert.assertEquals(res4.jsonPath().getString("dashboards.id[1]"), dashboard_id);
@@ -992,11 +992,18 @@ public class DashboardCRUD
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			List<String> list_dashboards = res1.jsonPath().get("dashboards.name");
 			for (int i = 0; i < list_dashboards.size() - 1; i++) {
-				if (list_dashboards.get(i).compareTo(list_dashboards.get(i + 1)) > 0) {
+				if (list_dashboards.get(i).compareToIgnoreCase(list_dashboards.get(i + 1)) > 0) {
 					Assert.fail("The order is wrong!!");
 				}
+				else if (list_dashboards.get(i).compareToIgnoreCase(list_dashboards.get(i + 1)) == 0) {
+					if (list_dashboards.get(i).compareTo(list_dashboards.get(i + 1)) > 0) {
+						Assert.fail("The order is wrong!!");
+					}
+				}
+				else {
+					//correct
+				}
 			}
-
 			System.out.println("Create a new dashboard");
 			String jsonString1 = "{ \"name\":\"Test_SortByName\"}";
 			Response res2 = RestAssured
@@ -1027,8 +1034,13 @@ public class DashboardCRUD
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			list_dashboards = res3.jsonPath().get("dashboards.name");
 			for (int i = 0; i < list_dashboards.size() - 1; i++) {
-				if (list_dashboards.get(i).compareTo(list_dashboards.get(i + 1)) > 0) {
+				if (list_dashboards.get(i).compareToIgnoreCase(list_dashboards.get(i + 1)) > 0) {
 					Assert.fail("The order is wrong!!");
+				}
+				if (list_dashboards.get(i).compareToIgnoreCase(list_dashboards.get(i + 1)) == 0) {
+					if (list_dashboards.get(i).compareTo(list_dashboards.get(i + 1)) > 0) {
+						Assert.fail("The order is wrong!!");
+					}
 				}
 			}
 		}
