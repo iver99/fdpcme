@@ -37,8 +37,11 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 /**
  * @author guobaochen
  */
-public class SchemaUtil {
+public class SchemaUtil { 
 
+	//added constant
+	
+	
 	private static String ITEMS ="items";
 	private static class SchemaDeployment
 	{
@@ -386,7 +389,7 @@ public class SchemaUtil {
 		}
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
-			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class );
+			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class , items);
 			if (sdlist == null | sdlist.isEmpty()) {
 				return null;
 			}
