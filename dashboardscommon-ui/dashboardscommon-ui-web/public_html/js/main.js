@@ -162,6 +162,7 @@ require(['knockout',
                 self.pageTitle = 'Sample page for dashboard common ui components testing only';
                 self.widgetList = ko.observableArray(widgetArray);
                 self.addWidgetBtnLabel = appId === "Dashboard" ? "Add" : "Open";
+                self.addWidgetBtnDisabled = (appId === "Dashboard" || appId === "ITAnalytics" || appId === "LogAnalytics") ? false : true;
                 
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="dashboardscommonui-ee">
         <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
-        <dependent-module archiveName="dashboardscommonui-web.war" deploy-path="/" handle="module:/resource/dashboardscommonui-web/dashboardscommonui-web">
+        <dependent-module archiveName="dashboards-common-ui-web.war" deploy-path="/" handle="module:/resource/dashboardscommonui-web/dashboards-common-ui-web">
             <dependent-object/>
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+	<dependent-module archiveName="dashboardscommonui-webutils.jar" deploy-path="/lib" handle="module:/resource/dashboardscommonui-webutils/dashboardscommonui-webutils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="registry-lookup-client-0.23.6.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar">
