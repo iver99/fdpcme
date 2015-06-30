@@ -14,14 +14,19 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+
+
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource.Builder;
@@ -34,7 +39,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
  */
 public class SchemaUtil {
 
-
+	private static String ITEMS ="items";
 	private static class SchemaDeployment
 	{
 		private String deploymentId;
@@ -275,7 +280,90 @@ public class SchemaUtil {
 
 	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
 
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	private static class SchemaDeploymentUrls
+	{
+		private List<String> virtualEndpoints;
+		private List<String> canonicalEndpoints;
+
+		/**
+		 * @return the canonicalEndpoints
+		 */
+		public List<String> getCanonicalEndpoints()
+		{
+			return canonicalEndpoints;
+		}
+
+		/**
+		 * @return the virtualEndpoints
+		 */
+		public List<String> getVirtualEndpoints()
+		{
+			return virtualEndpoints;
+		}
+
+		/**
+		 * @param canonicalEndpoints
+		 *            the canonicalEndpoints to set
+		 */
+		public void setCanonicalEndpoints(List<String> canonicalEndpoints)
+		{
+			this.canonicalEndpoints = canonicalEndpoints;
+		}
+
+		/**
+		 * @param virtualEndpoints
+		 *            the virtualEndpoints to set
+		 */
+		public void setVirtualEndpoints(List<String> virtualEndpoints)
+		{
+			this.virtualEndpoints = virtualEndpoints;
+		}
+
+	}
+
 	
+	public static List<String> getDeploymentUrl(String json)
+	{
+		if (json == null || "".equals(json)) {
+			return null;
+		}
+
+		java.util.HashSet<String> urlSet = new java.util.HashSet<String>();
+
+		try {
+			JsonUtil ju = JsonUtil.buildNormalMapper();
+			
+			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, ITEMS);
+			if (sdlist == null | sdlist.isEmpty()) {
+				return null;
+			}
+			for (SchemaDeploymentUrls sd : sdlist) {
+				for (String temp : sd.getCanonicalEndpoints()) {
+					if (temp.contains("https")) {
+						continue;
+					}
+					urlSet.add(temp);
+				}
+				for (String temp : sd.getVirtualEndpoints()) {
+					if (temp.contains("https")) {
+						continue;
+					}
+					urlSet.add(temp);
+				}
+
+			}
+		}
+		catch (Exception e) {
+
+			logger.error("an error occureed while getting schema name", e);
+			return null;
+		}
+		List<String> urls = new ArrayList();
+		urls.addAll(urlSet);
+		return urls;
+	}
+
 
 	public String get(String url)
 	{
@@ -298,7 +386,7 @@ public class SchemaUtil {
 		}
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
-			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class);
+			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class );
 			if (sdlist == null | sdlist.isEmpty()) {
 				return null;
 			}

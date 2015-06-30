@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/integTest/java"/>
+	<classpathentry kind="src" path="src/integTest/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
 		<attributes>
@@ -16,9 +17,9 @@
 			<attribute name="optional" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-asl-1.9.12.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.12.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-core-1.17.1.jar"/>
@@ -48,5 +49,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-webutils"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/javax.ws.rs-api-2.0.jar"/>
+	<classpathentry kind="lib" path="/scratch/cawei/git/dynamic_schema/dependencies/artifactory/em-qatool-os-webdriver-1.0.7.jar"/>
+	<classpathentry kind="lib" path="/scratch/cawei/git/dynamic_schema/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

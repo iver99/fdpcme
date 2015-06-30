@@ -2,6 +2,7 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -23,6 +24,10 @@ public class PersistenceManager
 	private static final String CONNECTION_PROPS_FILE = "TestNG.properties";
 	private static PersistenceManager singleton;
 	private static Object lock = new Object();
+	private static final String SERVICE_MANAGER_URL = "SERVICE_MANAGER_URL";
+	private static final String DEPLOY_URL = "/instances?servicename=LifecycleInventoryService";
+	private static final String SERVICE_NAME = "dashboardService-api";
+	 private static final String DEPLY_SCHEMA = "/schemaDeployments?softwareName=dashboardService-api";
 
 	public static PersistenceManager getInstance()
 	{
@@ -82,6 +87,20 @@ public class PersistenceManager
 		return emf;
 	}
 
+	
+	/*public static void main(String args[])
+	{
+		SchemaUtil rct = new SchemaUtil();				
+		String url = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1" + DEPLOY_URL;
+		String data = rct.get(url);		
+		List<String> urlList = rct.getDeploymentUrl(data );
+		data = rct.get(urlList.get(0)+DEPLY_SCHEMA);
+		String schemaName = rct.getSchemaUserBySoftwareName(data, SERVICE_NAME);
+		System.out.println(schemaName);
+	}*/
+	
+	
+	
 	private void initialize()
 	{
 		if (IS_TEST_ENV) {
@@ -93,12 +112,21 @@ public class PersistenceManager
 				
 				String url = "jdbc:oracle:thin:@"+Utils.getProperty("ODS_HOSTNAME")+":"+Utils.getProperty("ODS_PORT")+":"+Utils.getProperty("ODS_SERVICE");
 				props.put("javax.persistence.jdbc.url", url);
-				SchemaUtil rct = new SchemaUtil();
-				String res = rct.get("http://"+Utils.getProperty("EMCS_NODE1_HOSTNAME")+":7001/lifecycle-schema-service/LifecycleInvManager/schemaDeployments");
-				String schemaName = rct.getSchemaUserBySoftwareName(res, "dashboardService-api");
+				SchemaUtil rct = new SchemaUtil();				
+				String data = Utils.getProperty(SERVICE_MANAGER_URL) + DEPLOY_URL;
+				 data = rct.get(url);		
+				List<String> urlList = rct.getDeploymentUrl(data );
+				String schemaName = null;
+				for(String tmp :urlList)					
+				{
+					data = rct.get(tmp+DEPLY_SCHEMA);				
+					List<String> urls=rct.getDeploymentUrl(data);				
+					 schemaName = rct.getSchemaUserBySoftwareName(data, SERVICE_NAME);	
+					if(schemaName!=null)
+						break;
+				}		
 				
-				String user = schemaName;
-				props.put("javax.persistence.jdbc.user", user);
+				props.put("javax.persistence.jdbc.user", schemaName);
 				String password = "welcome1";
 				props.put("javax.persistence.jdbc.password", password);
 		
