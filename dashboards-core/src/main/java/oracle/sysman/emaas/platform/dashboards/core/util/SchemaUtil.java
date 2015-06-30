@@ -389,7 +389,7 @@ public class SchemaUtil {
 		}
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
-			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class , items);
+			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class );
 			if (sdlist == null | sdlist.isEmpty()) {
 				return null;
 			}
