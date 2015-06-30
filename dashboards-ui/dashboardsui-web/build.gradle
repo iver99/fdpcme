@@ -460,10 +460,10 @@ dependencies {
 	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
 	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){ transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-17062', ext: 'war'){ transitive = false }
