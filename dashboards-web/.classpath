@@ -49,7 +49,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-webutils"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/javax.ws.rs-api-2.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/dynamic_schema/dependencies/artifactory/em-qatool-os-webdriver-1.0.7.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/dynamic_schema/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
