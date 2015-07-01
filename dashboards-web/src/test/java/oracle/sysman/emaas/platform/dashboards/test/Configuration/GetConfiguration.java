@@ -69,7 +69,7 @@ public class GetConfiguration
 			//Assert.assertNotNull(res.jsonPath().get("ssfServiceName"));
 			//Assert.assertNotNull(res.jsonPath().get("ssfVersion"));
 			//Assert.assertNotNull(res.jsonPath().get("dfRestApiEndPoint"));
-			Assert.assertNotNull(res.jsonPath().get("ssfRestApiEndPoint"));
+			Assert.assertNotNull(res.jsonPath().get("cloudServices"));
 			Assert.assertNotNull(res.jsonPath().get("adminLinks"));
 			Assert.assertNotNull(res.jsonPath().get("visualAnalyzers"));
 
