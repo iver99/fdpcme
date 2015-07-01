@@ -226,7 +226,9 @@ public class TestDashBoard extends LoginAndLogout{
 				
 		DashBoardUtils.openDBCreatePage();
 		DashBoardUtils.inputDashBoardInfo();
-		
+		//verify input info's existence
+		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
+		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
 		DashBoardUtils.waitForMilliSeconds(500);
 		
 		DashBoardUtils.clickOKButton();		

@@ -428,7 +428,11 @@ public class DashBoardUtils {
 				
 		waitForMilliSeconds(500);
 		driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
-				
+		
+		//verify title and desc of dashboard
+		Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
+		Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+		
 		driver.click(DashBoardPageId.WidgetAddButtonID);
 				
 		widgetName = WidgetPageId.widgetName;
@@ -460,6 +464,11 @@ public class DashBoardUtils {
 			         
 			driver.getLogger().info("start to test in navigateWidget");
 			waitForMilliSeconds(500);
+			
+			//verify title and desc of dashboard
+			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
+			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+			
 			driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 			driver.click(DashBoardPageId.WidgetAddButtonID);					
 			
@@ -572,7 +581,8 @@ public class DashBoardUtils {
 	public static void searchDashBoard(String board) throws Exception
 	{
 		driver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
-		driver.click("/html/body/div[2]/div/div/div/div/div[2]/div/span/button[2]");
+		driver.click("/html/body/div[2]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
+		
 	}
 	public static void checkBrandingBarLink() throws Exception
 	{
@@ -602,12 +612,12 @@ public class DashBoardUtils {
 	public static void clickCheckBox() throws Exception
 	{
 		//check APM cloud service 
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.APM_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.APM_BoxID)).click();
 		Assert.assertTrue(doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		Assert.assertFalse(doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.APM_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.APM_BoxID)).click();
 		//check ita box
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.ITA_Check_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Resource_Planning_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Garbage_Collection_Overhead_ID));
@@ -618,12 +628,12 @@ public class DashBoardUtils {
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Load_ID));
 		Assert.assertFalse(doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.ITA_Check_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
 		//check la box
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.LA_BoxID)).click();
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.LA_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
 		//check oracle created
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.Oracle_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.Oracle_BoxID)).click();
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Resource_Planning_ID));
@@ -634,12 +644,22 @@ public class DashBoardUtils {
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_Databases_by_Resource_Consumption_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Load_ID));		
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.Oracle_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.Oracle_BoxID)).click();
 		//check me created
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.Other_BoxID)).click();
-		driver.getWebDriver().findElement(By.Id(DashBoardPageId.Other_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.Other_BoxID)).click();
+		driver.getWebDriver().findElement(By.id(DashBoardPageId.Other_BoxID)).click();
 		
 		
+	}
+	public static String getText(String id)
+	{
+		WebElement we = driver.getWebDriver().findElement(By.xpath(id));
+		return we.getText();
+	}
+	public static String getTextByID(String id)
+	{
+		WebElement we = driver.getWebDriver().findElement(By.id(id));
+		return we.getText();
 	}
 }
 >>>>>>> 364af9a... Add the following features:

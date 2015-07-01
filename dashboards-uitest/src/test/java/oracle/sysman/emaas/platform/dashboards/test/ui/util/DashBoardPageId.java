@@ -77,4 +77,10 @@ public class DashBoardPageId {
 	public static final String APM_BoxID = "apmopt";
 	public static final String Oracle_BoxID = "oracleopt";
 	public static final String Other_BoxID = "otheropt";
+	
+	//id of dashboard name
+	public static final String DashboardNameID = "/html/body/div[3]/div/div/div/div/div/span/h1";
+	//id of dashboard desc
+	public static final String DashboardDescID = "/html/body/div[3]/div/div/div/div[2]/div/span/span";
+	
 }
