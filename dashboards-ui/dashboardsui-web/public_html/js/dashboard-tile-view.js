@@ -250,16 +250,17 @@ define(['knockout',
                 var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
                 nameInput('validate');
                 if (!self.nameValidated)
-                    return;
+                    return false;
                 if (!$('#builder-dbd-name-input')[0].value) {
                     $('#builder-dbd-name-input').focus();
-                    return;
+                    return false;
                 }
                 self.dashboardName(self.dashboardNameEditing());
                 if ($('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-name').removeClass('editing');
                 }
                 dashboard.name(self.dashboardName());
+                return true;
             };
             
             $('#builder-dbd-name-input').on('blur', function(evt) {
@@ -305,6 +306,14 @@ define(['knockout',
                 if ($('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-description').removeClass('editing');
                 }
+            };
+            
+            self.isNameUnderEdit = function() {
+            	return $('#builder-dbd-name').hasClass('editing');
+            };
+            
+            self.isDescriptionUnderEdit = function() {
+            	return $('#builder-dbd-description').hasClass('editing');
             };
             
             self.handleSettingsDialogOpen = function() {
@@ -488,6 +497,18 @@ define(['knockout',
             //Temp codes for widget test for integrators -- end
             
             self.handleDashboardSave = function() {
+            	if (self.isNameUnderEdit()) {
+            		try {
+            			if (!self.okChangeDashboardName())
+            				return;  // validator not passed, so do not save
+            		}
+            		catch (e) {
+            			return;
+            		}
+            	}
+            	if (self.isDescriptionUnderEdit()) {
+            		self.okChangeDashboardDescription();
+            	}
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
                 var nodesToRecover = [];
