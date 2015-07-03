@@ -324,8 +324,8 @@ function(dsf, oj, ko, $, dfu, pfu)
                                 // a server error record
                                  oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                             }
-                            _trackObj = new oj.InvalidComponentTracker();
-                            self.tracker(_trackObj);
+                            //_trackObj = new oj.InvalidComponentTracker();
+                            //self.tracker(_trackObj);
                             self.createMessages.push(new oj.Message(_m));
                             _trackObj.showMessages();
                             _trackObj.focusOnFirstInvalid();
