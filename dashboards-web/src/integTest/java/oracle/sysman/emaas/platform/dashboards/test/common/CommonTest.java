@@ -15,13 +15,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource.Builder;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 
-import oracle.sysman.emaas.platform.dashboards.core.util.SchemaUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+
+
 import oracle.sysman.qatool.uifwk.utils.Utils;
 public class CommonTest
 {
@@ -45,15 +55,14 @@ public class CommonTest
 	
 	public static void main(String ar[]) throws Exception
 	{
-		/*String  name = "http://slc07hgf.us.oracle.com:7001/registry/servicemanager/registry/v1";
+		String  name = "http://slc08twq.us.oracle.com:7004/registry/servicemanager/registry/v1";
 		name = name + DSB_DEPLOY_URL;
-		String data = getData(name);
-		SchemaUtil obj = new SchemaUtil();
-		List<String>  url=   obj.getDeploymentUrl(data);
+		String data = getData(name);		
+		List<String>  url=  getDeploymentUrl(data);
 		System.out.println(url.get(0));
 		
 		System.out.println(getDomainName(url.get(0)));
-		System.out.println(getPort(url.get(0)));*/
+		System.out.println(getPort(url.get(0)));
 	}
 	
 
@@ -79,8 +88,8 @@ public class CommonTest
 		String  name = getServiceManagerUrl();
 		name = name + DSB_DEPLOY_URL;
 		String data = getData(name);
-		SchemaUtil obj = new SchemaUtil();
-		List<String>  url=   obj.getDeploymentUrl(data);
+		
+		List<String>  url=   getDeploymentUrl(data);
 		           
 		//HOSTNAME = prop.getProperty("hostname");
 		HOSTNAME= getDomainName(url.get(0));
@@ -111,14 +120,107 @@ public class CommonTest
 		return  Utils.getProperty("SERVICE_MANAGER_URL");
 	}
 	
+	
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	private static class SchemaDeploymentUrls
+	{
+		private List<String> virtualEndpoints;
+		private List<String> canonicalEndpoints;
+
+		/**
+		 * @return the canonicalEndpoints
+		 */
+		public List<String> getCanonicalEndpoints()
+		{
+			return canonicalEndpoints;
+		}
+
+		/**
+		 * @return the virtualEndpoints
+		 */
+		public List<String> getVirtualEndpoints()
+		{
+			return virtualEndpoints;
+		}
+
+		/**
+		 * @param canonicalEndpoints
+		 *            the canonicalEndpoints to set
+		 */
+		public void setCanonicalEndpoints(List<String> canonicalEndpoints)
+		{
+			this.canonicalEndpoints = canonicalEndpoints;
+		}
+
+		/**
+		 * @param virtualEndpoints
+		 *            the virtualEndpoints to set
+		 */
+		public void setVirtualEndpoints(List<String> virtualEndpoints)
+		{
+			this.virtualEndpoints = virtualEndpoints;
+		}
+
+	}
+
+
+	public static List<String> getDeploymentUrl(String json)
+	{
+		if (json == null || "".equals(json)) {
+			return null;
+		}
+
+		java.util.HashSet<String> urlSet = new java.util.HashSet<String>();
+
+		try {
+			JsonUtil ju = JsonUtil.buildNormalMapper();
+			
+			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, "items");
+			if (sdlist == null | sdlist.isEmpty()) {
+				return null;
+			}
+			for (SchemaDeploymentUrls sd : sdlist) {
+				for (String temp : sd.getCanonicalEndpoints()) {
+					if (temp.contains("https")) {
+						continue;
+					}
+					urlSet.add(temp);
+				}
+				for (String temp : sd.getVirtualEndpoints()) {
+					if (temp.contains("https")) {
+						continue;
+					}
+					urlSet.add(temp);
+				}
+
+			}
+		}
+		catch (Exception e) {
+
+		//	logger.error("an error occureed while getting schema name", e);
+			return null;
+		}
+		List<String> urls = new ArrayList<String>();
+		urls.addAll(urlSet);
+		return urls;
+	}
+
+
+	
+	
 	private static String getData(String url)
 	{
-		SchemaUtil obj = new SchemaUtil();
-		String data =obj.get(url);
-		return data;
+		if (url==null || url.trim().equals("")) {
+			return null;
+		}
+
+		ClientConfig cc = new DefaultClientConfig();
+		Client client = Client.create(cc);
+		client.addFilter(new HTTPBasicAuthFilter("weblogic", "welcome1"));
+		Builder builder = client.resource(UriBuilder.fromUri(url).build()).type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON);
+		return builder.get(String.class);
 	}
-	
-	
 
 	public String getAuthToken()
 	{
