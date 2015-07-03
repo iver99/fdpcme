@@ -473,6 +473,14 @@ define(['knockout',
                 return !self.dashboard.tiles() || self.dashboard.tiles().length === 0;
             };
             
+            var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
+            self.openAddWidgetDialog = function() {
+            	var maximizedTile = self.getMaximizedTile();
+            	if (maximizedTile)
+            		self.restore(maximizedTile);
+                $('#'+addWidgetDialogId).ojDialog('open');
+            };
+            
             self.registerTileRemoveCallback = function(callbackMethod) {
                 self.tileRemoveCallbacks.push(callbackMethod);
             };
