@@ -88,7 +88,7 @@ public class PersistenceManager
 	}
 
 	
-	public static void main(String args[])
+/*	public static void main(String args[])
 	{
 		
 		SchemaUtil rct = new SchemaUtil();				
@@ -98,7 +98,7 @@ public class PersistenceManager
 		data = rct.get(urlList.get(0)+DEPLY_SCHEMA);
 		String schemaName = rct.getSchemaUserBySoftwareName(data, SERVICE_NAME);
 		System.out.println(schemaName);
-	}
+	}*/
 	
 	
 	
