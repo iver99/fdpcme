@@ -9,12 +9,13 @@
  * http://jquery.org/license
  */
 requirejs.config({
-    //Set up module mapping
-    map: {
-        'prefutil': 
-            {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-             'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
-    },
+//    urlArgs: "v=1.0",
+//    //Set up module mapping
+//    map: {
+//        'prefutil': 
+//            {'df-util': '/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/js/util/df-util',
+//             'usertenant-util': '/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/js/util/usertenant-util'}
+//    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -31,8 +32,9 @@ requirejs.config({
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
-        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util'
+        'loggingutil':'/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/js/util/logging-util',
+        'prefutil':'/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/js/util/preference-util',
+        'emcpdfcommon': '/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -78,29 +80,24 @@ require(['knockout',
     'jquery',
     'ojs/ojcore',
     'loggingutil', 
-    '../emcsDependencies/dfcommon/js/util/usertenant-util',
-    '../emcsDependencies/dfcommon/js/util/message-util',
+    'emcpdfcommon/js/util/usertenant-util',
+    'emcpdfcommon/js/util/message-util',
     'prefutil',
-//    'ojs/ojcomponents',
-//    'jqueryui',
-//    'ojs/ojmodel',
     'ojs/ojknockout',
-//    'ojs/ojknockout-model',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
-//    'ojs/ojselectcombobox',
     'ojs/ojdialog'
-//    'ojs/ojmenu'
 ],
-        function(ko, $, oj, _emJETCustomLogger, userTenantUtil, msgUtilModel) // this callback gets executed when all required modules are loaded
+        function(ko, $, oj, _emJETCustomLogger, userTenantUtilModel, msgUtilModel) // this callback gets executed when all required modules are loaded
         { 
             //appId: "Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
             var appId = getUrlParam("appId"); 
             appId = appId !== null && appId !== "" ? appId : "Dashboard"; 
             var isAdmin = getUrlParam("isAdmin");
             isAdmin = isAdmin === "false" ? false : true;
-            var userName = userTenantUtil.getUserName(); //'emcsadmin';
-            var tenantName = userTenantUtil.getTenantName(); //'emaastesttenant1';
+            var userTenantUtil = new userTenantUtilModel();
+            var userName = userTenantUtil.getUserName(); 
+            var tenantName = userTenantUtil.getTenantName(); 
             var tenantDotUser = userName && tenantName ? tenantName+"."+userName : "";
             
             var logger = new _emJETCustomLogger();
@@ -112,14 +109,14 @@ require(['knockout',
                 
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar.js'},
+                    template:{require:'text!/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
             }
             if (!ko.components.isRegistered('df-widget-selector')) {
                 ko.components.register("df-widget-selector",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/widgetselector/js/widget-selector'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
+                    viewModel:{require:'/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/widgetselector/js/widget-selector.js'},
+                    template:{require:'text!/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
                 });
             } 
             
@@ -140,8 +137,8 @@ require(['knockout',
                     userName: userName,
                     tenantName: tenantName,
                     appId: appId,
-                    relNotificationCheck: "existActiveWarning",
-                    relNotificationShow: "warnings",
+//                    relNotificationCheck: "existActiveWarning",
+//                    relNotificationShow: "warnings",
                     isAdmin: isAdmin
                 };
             };
@@ -214,10 +211,10 @@ require(['knockout',
                     affirmativeButtonLabel: dialogConfirmBtnLabel,
                     userName: userName,
                     tenantName: tenantName,
-                    widgetHandler: self.addSelectedWidgetToDashboard
-                    ,providerName: appMap[appId].providerName
-                    ,providerVersion: appMap[appId].providerVersion
-                    ,autoCloseDialog: autoCloseWidgetSelector
+                    widgetHandler: self.addSelectedWidgetToDashboard,
+                    providerName: appMap[appId].providerName,
+                    providerVersion: appMap[appId].providerVersion,
+                    autoCloseDialog: autoCloseWidgetSelector
     //                ,providerName: 'TargetAnalytics' 
     //                ,providerVersion: '1.0.5'
     //                ,providerName: 'DashboardFramework' 

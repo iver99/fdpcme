@@ -2,7 +2,7 @@
 <html>
     <head>
         <!-- Style classes used by this branding bar. -->
-        <link rel="stylesheet" data-bind="attr:{href: brandingbarCss}" type="text/css"/>
+        <link rel="stylesheet" href="/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/css/dashboards-common-alta.css" type="text/css"/>
     </head>
     <body>
         <div class="emaas-appheader">
@@ -11,7 +11,7 @@
                 <!-- logo -->  
                 <div class="emaas-appheader-logo" data-bind="attr: {'aria-label': textOracle}">
                     <div class="emaas-appheader-appname-table-cell-middle">
-                        <img class="emaas-appheader-logo-img" data-bind="attr: {alt: textOracle, src: oracleLogoImage}, click: gotoHomePage"/> 
+                        <img class="emaas-appheader-logo-img" src="/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/oracle_logo_lrg.png" data-bind="attr: {alt: textOracle}, click: gotoHomePage"/> 
                     </div>
                     <div class="emaas-appheader-appname-table-cell-middle" style="padding-left: 4px">
                         <span class="emaas-appheader-appname" data-bind="text: productName"></span>
@@ -113,7 +113,9 @@
                     </div>
                 </div>
                 <div style="float:right;padding-right: 20px;">
-                    <img class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" data-bind="attr: {alt: $parent.altTextClear, src: $parent.clearMessageIcon}, click: $parent.clearMessage"/>
+                    <img class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" 
+                         src="/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/clearEntry_ena.png"
+                         data-bind="attr: {alt: $parent.altTextClear}, click: $parent.clearMessage"/>
                 </div>
             </div>
              <!-- /ko -->

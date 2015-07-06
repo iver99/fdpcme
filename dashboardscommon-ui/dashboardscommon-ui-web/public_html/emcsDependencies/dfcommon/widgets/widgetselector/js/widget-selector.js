@@ -1,41 +1,18 @@
-define(['require',
+define([
     'knockout', 
     'jquery', 
-    '../../../js/util/df-util', 
+    'emcpdfcommon/js/util/df-util', 
     'ojs/ojcore', 
-    '../../../js/util/typeahead-search', 
+    'ojL10n!emcpdfcommon/js/resources/nls/dfCommonMsgBundle',
+    'emcpdfcommon/js/util/typeahead-search', 
     'ojs/ojselectcombobox', 
     'ojs/ojdialog',
     'ojs/ojinputtext',
     'ojs/ojbutton'
     ],
-        function (localrequire, ko, $, dfumodel, oj) {
+        function (ko, $, dfumodel, oj, nls) {
             function WidgetSelectorViewModel(params) {
                 var self = this;
-                
-                //Config requireJS i18n plugin if not configured yet
-                var i18nPluginPath = getFilePath(localrequire,'../../../js/resources/i18n.js');
-                i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length-3);
-                var requireConfig = requirejs.s.contexts._;
-                var locale = null;
-                var i18nConfigured = false;
-                var childCfg = requireConfig.config;
-                if (childCfg.config && childCfg.config.ojL10n) {
-                    locale =childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
-                }
-                if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
-                    i18nConfigured = true;
-                }
-                if (i18nConfigured === false) {
-                    requirejs.config({
-                        config: locale ? {i18n: {locale: locale}} : {},
-                        paths: {
-                            'i18n': i18nPluginPath
-                        }
-                    });
-                }
-                var nlsResourceBundle = getFilePath(localrequire,'../../../js/resources/nls/dfCommonMsgBundle.js');
-                nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
                 
                 // Get input parameters and set UI strings
                 var affirmativeTxt = $.isFunction(params.affirmativeButtonLabel) ? params.affirmativeButtonLabel() : params.affirmativeButtonLabel;
@@ -48,38 +25,20 @@ define(['require',
                         (params.dialogId ? params.dialogId : 'widgetSelectorDialog');
                 self.widgetHandler = params.widgetHandler;
                 self.autoCloseDialog = $.isFunction(params.autoCloseDialog) ? params.autoCloseDialog() : params.autoCloseDialog;
-                self.widgetSelectorTitle = ko.observable(dialogTitle);
-                self.widgetGroupLabel = ko.observable();
-                self.searchBoxPlaceHolder = ko.observable();
-                self.searchButtonLabel = ko.observable();
-                self.clearButtonLabel = ko.observable();
-                self.affirmativeButtonLabel = ko.observable(affirmativeTxt);
-                self.widgetScreenShotPageTitle = ko.observable();
-                self.widgetDescPageTitle = ko.observable();
+                self.widgetSelectorTitle = dialogTitle ? dialogTitle : nls.WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE;
+                self.widgetGroupLabel = nls.WIDGET_SELECTOR_WIDGET_GROUP_LABEL;
+                self.searchBoxPlaceHolder = nls.WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER;
+                self.searchButtonLabel = nls.WIDGET_SELECTOR_SEARCH_BTN_LABEL;
+                self.clearButtonLabel = nls.WIDGET_SELECTOR_CLEAR_BTN_LABEL;
+                self.affirmativeButtonLabel = affirmativeTxt ? affirmativeTxt : nls.WIDGET_SELECTOR_DEFAULT_AFFIRMATIVE_BTN_LABEL;
+                self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
+                self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
+                        
                 self.widgetGroupFilterVisible = ko.observable(true);
-                self.nlsStrings = null;
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
                 
-                // Get NLS strings
-                require(['i18n!'+nlsResourceBundle],
-                    function(nls) { 
-                        self.nlsStrings = nls;
-                        if (!self.widgetSelectorTitle())
-                            self.widgetSelectorTitle(nls.WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE);
-                        if (!self.affirmativeButtonLabel())
-                            self.affirmativeButtonLabel(nls.WIDGET_SELECTOR_DEFAULT_AFFIRMATIVE_BTN_LABEL);
-                        self.widgetGroupLabel(nls.WIDGET_SELECTOR_WIDGET_GROUP_LABEL);
-                        self.searchBoxPlaceHolder(nls.WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER);
-                        self.searchButtonLabel(nls.WIDGET_SELECTOR_SEARCH_BTN_LABEL);
-                        self.clearButtonLabel(nls.WIDGET_SELECTOR_CLEAR_BTN_LABEL);
-                        self.widgetScreenShotPageTitle(nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE);
-                        self.widgetDescPageTitle(nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE);
-                    });
-                
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/widget-selector-alta.css'); 
-		self.widgetSelectorCss = cssFile;
                 
                 // Initialize widget group and widget data
                 self.categoryValue=ko.observableArray(["all|all|All"]);
@@ -90,12 +49,10 @@ define(['require',
                 var curGroupWidgets = [];
                 var integratorWidgets = [];
                 var widgetGroupList = [];
-//                var dbsWidgetArray = [];
                 var curPageWidgets=[];
                 var searchResultArray = [];
                 var index=0;
                 var pageSize = 8;
-//                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
                 var curPage = 1;
                 var totalPage = 0;
                 var naviFromSearchResults = false;
@@ -313,24 +270,26 @@ define(['require',
                     }
                 };
                 
-                // Refresh widget/widget group data and UI displaying
-                function refreshWidgets() {
-                    widgetArray = [];
-                    curGroupWidgets = [];
-                    curPageWidgets=[];
-                    searchResultArray = [];
-                    index=0;
-                    widgetIndex = 0;
-                    widgetGroupList = [];
-                    assetRootList = {};
-                    self.currentWidget(null);
-                    self.confirmBtnDisabled(true);
-//                    if (ssfUrl && ssfUrl !== '') {
-//                        var widgetsUrl = dfu.buildFullUrl(ssfUrl,'widgets');
-//                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
-                        var widgetsUrl = '/sso.static/savedsearch.widgets';
-                        var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
-                        dfu.ajaxWithRetry({
+                function getWidgets() {
+                    var widgetsUrl = '/sso.static/savedsearch.widgets';
+                    return dfu.ajaxWithRetry({
+                            url: widgetsUrl,
+                            headers: dfu.getSavedSearchServiceRequestHeader(),
+                            success: function(data, textStatus) {
+                                integratorWidgets = data;
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
+                            },
+                            async: true
+                        });  
+                };
+                
+                var getWidgetGroupsDeferred = null;
+                function getWidgetGroups() {
+                    getWidgetGroupsDeferred = $.Deferred();
+                    var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
+                    dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
@@ -340,31 +299,15 @@ define(['require',
                                 }
                             },
                             error: function(xhr, textStatus, errorThrown){
+                                getWidgetGroupsDeferred.reject(xhr, textStatus, errorThrown);
                                 oj.Logger.error('Error when fetching widget groups by URL: '+widgetgroupsUrl+'.');
-//                                console.log('Error when fetching widget groups!');
                             },
-                            async: false
+                            async: true
                         });
-
-                        dfu.ajaxWithRetry({
-                            url: widgetsUrl,
-                            headers: dfu.getSavedSearchServiceRequestHeader(),
-                            success: function(data, textStatus) {
-                                integratorWidgets = loadWidgets(data);
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
-//                                console.log('Error when fetching widgets!');
-                            },
-                            async: false
-                        });  
-
-//                        dbsWidgetArray = loadWidgets(dbsBuiltinWidgets);
-//                    }
-//                    else {
-//                        oj.Logger.warn('Failed to discover available Saved Search service URL.');
-//                    }
-
+                    return getWidgetGroupsDeferred.promise();
+                };
+                
+                function refreshPageData() {
                     curPage = 1;
                     totalPage = (widgetArray.length%pageSize === 0 ? widgetArray.length/pageSize : Math.floor(widgetArray.length/pageSize) + 1);
                     naviFromSearchResults = false;
@@ -378,6 +321,30 @@ define(['require',
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
                 };
                 
+                // Refresh widget/widget group data and UI displaying
+                function refreshWidgets() {
+                    widgetArray = [];
+                    curGroupWidgets = [];
+                    curPageWidgets=[];
+                    searchResultArray = [];
+                    index=0;
+                    widgetIndex = 0;
+                    widgetGroupList = [];
+                    assetRootList = {};
+                    self.currentWidget(null);
+                    self.confirmBtnDisabled(true);
+                    refreshPageData();
+                    
+                    $.when(getWidgetGroups(), getWidgets()).then(function(){
+                        oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
+                        loadWidgets(integratorWidgets);
+                        refreshPageData();
+                    })
+                    .fail(function(xhr, textStatus, errorThrown){
+                        oj.Logger.error("Failed to fetch widget groups and widgets.");
+                    });
+                };
+                
                 // Load widgets from ajax call result data
                 function loadWidgets(data) {
                     var targetWidgetArray = [];
@@ -387,43 +354,11 @@ define(['require',
                                     (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
-//                                if (!widget.WIDGET_ICON || widget.WIDGET_ICON === '') {
-//                                   if (widget.WIDGET_GROUP_NAME==='Log Analytics') {
-//                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-//                                   }
-//                                   else if (widget.WIDGET_GROUP_NAME==='Target Analytics') {
-//                                       widget.WIDGET_ICON = 'css/images/targets_16_ena.png';
-//                                   }
-//                                   else if (widget.WIDGET_GROUP_NAME==='IT Analytics') {
-//                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-//                                   }
-//                                   else if (widget.WIDGET_GROUP_NAME==='Demo Analytics') {
-//                                       widget.WIDGET_ICON = 'css/images/navi_logs_16_ena.png';
-//                                   }
-//                                   else if (widget.WIDGET_GROUP_NAME==='Dashboards Built-In') {
-//                                       widget.WIDGET_ICON = 'css/images/dashboard-32.png';
-//                                   }
-//                                   else {
-//                                       widget.WIDGET_ICON = 'css/images/widgets_alt.png';
-//                                   }
-//                                }
-//                                else {
-//                                    var pname = widget.PROVIDER_NAME;
-//                                    var pversion = widget.PROVIDER_VERSION;
-//                                    var gname = widget.WIDGET_GROUP_NAME;
-//                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
-//                                    widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
-//                                }
 
                                 if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
-//                                    var noImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/no-image-available.png');
-                                    var laImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
-                                    var taImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
-                                    var itaImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
-//                                    if (i%3 === 2) 
-//                                        widget.WIDGET_HISTOGRAM = noImagePath;
-//                                    else
-//                                        widget.WIDGET_HISTOGRAM = sampleImagePath;
+                                    var laImagePath = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/sample-widget-histogram.png";
+                                    var taImagePath = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/sample-widget-histogram.png";
+                                    var itaImagePath = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/sample-widget-histogram.png";
                                     if ('LoganService' === widget.PROVIDER_NAME) {
                                         widget.WIDGET_HISTOGRAM = laImagePath;
                                     }
@@ -464,12 +399,13 @@ define(['require',
                 // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
                     var targetWidgetGroupArray = [];
-                    var labelAll = self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
+                    var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
                     var groupAll = {value:'all|all|All', label: labelAll};
                     var pname = null; //'DashboardFramework';
                     var pversion = null; // '1.0';
                     var gname = null; //self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;
-                    var assetRoot = '';
+                    var assetRootCnt = 0;
+//                    var assetRoot = '';
 //                    var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                     targetWidgetGroupArray.push(groupAll);
 //                    if ((!widgetProviderName && !widgetProviderVersion) || 
@@ -490,40 +426,18 @@ define(['require',
                                 if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
-
-                                    assetRoot = dfu.discoverUrl(pname, pversion, data[i].PROVIDER_ASSET_ROOT);
-                                    assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+                                    
+                                    dfu.discoverUrlAsync(pname, pversion, data[i].PROVIDER_ASSET_ROOT, function(assetRoot){
+                                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+                                        assetRootCnt++;
+                                        if (assetRootCnt === data.length)
+                                            getWidgetGroupsDeferred.resolve();
+                                    });
                                 }
                             }
                         }
                     }
                     return targetWidgetGroupArray;
-                };
-                
-                // Get file path relative to js
-                function getFilePath(requireContext, relPath) {
-                    var jsRootMain = requireContext.toUrl("");
-                    //remove urlArgs string appended by requirejs urlArgs config from file path
-                    var index = jsRootMain.indexOf('?');
-                    if (index !== -1) 
-                        jsRootMain = jsRootMain.substring(0, index);
-                    var path = requireContext.toUrl(relPath);
-                    path = path.substring(jsRootMain.length);
-                    //remove urlArgs string appended by requirejs urlArgs config from file path
-                    index = path.indexOf('?');
-                    if (index !== -1) 
-                        path = path.substring(0, index);
-                    return path;
-                };
-                
-                // Get file path relative to html
-                function getFilePathRelativeToHtml(requireContext, relPath) {
-                    var path = requireContext.toUrl(relPath);
-                    //remove urlArgs string appended by requirejs urlArgs config from file path
-                    var index = path.indexOf('?');
-                    if (index !== -1) 
-                        path = path.substring(0, index);
-                    return path;
                 };
                 
                 // Calculate the time difference between current date and the last modification date
@@ -538,40 +452,40 @@ define(['require',
                         var day = 24*hour;
                         var month = 60*day;
                         var year = 12*month;
-                        var agoText = " "+self.nlsStrings.WIDGET_SELECTOR_TIME_DIFF_AGO;
+                        var agoText = " "+ nls.WIDGET_SELECTOR_TIME_DIFF_AGO;
                         var diffCount = null;
                         var diffUnit = null;
                         if (timediff < 60*1000) {
-                            result = self.nlsStrings.WIDGET_SELECTOR_TIME_DIFF_A_MOMENT + agoText;
+                            result = nls.WIDGET_SELECTOR_TIME_DIFF_A_MOMENT + agoText;
                         }
                         else if (timediff >= min && timediff < hour) {
                             diffCount = Math.round(timediff/min);
-                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_MINS : 
-                                    self.nlsStrings.WIDGET_SELECTOR_TIME_MIN;
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_MINS : 
+                                    nls.WIDGET_SELECTOR_TIME_MIN;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= hour && timediff < day) {
                             diffCount = Math.round(timediff/hour);
-                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_HOURS : 
-                                    self.nlsStrings.WIDGET_SELECTOR_TIME_HOUR;
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_HOURS : 
+                                    nls.WIDGET_SELECTOR_TIME_HOUR;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= day && timediff < month) {
                             diffCount = Math.round(timediff/day);
-                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_DAYS : 
-                                    self.nlsStrings.WIDGET_SELECTOR_TIME_DAY;
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_DAYS : 
+                                    nls.WIDGET_SELECTOR_TIME_DAY;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= month && timediff < year) {
                             diffCount = Math.round(timediff/month);
-                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_MONTHS : 
-                                    self.nlsStrings.WIDGET_SELECTOR_TIME_MONTH;
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_MONTHS : 
+                                    nls.WIDGET_SELECTOR_TIME_MONTH;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                         else if (timediff >= year) {
                             diffCount = Math.round(timediff/year);
-                            diffUnit = diffCount > 1 ? self.nlsStrings.WIDGET_SELECTOR_TIME_YEARS : 
-                                    self.nlsStrings.WIDGET_SELECTOR_TIME_YEAR;
+                            diffUnit = diffCount > 1 ? nls.WIDGET_SELECTOR_TIME_YEARS : 
+                                    nls.WIDGET_SELECTOR_TIME_YEAR;
                             result = diffCount + " " + diffUnit + agoText;
                         }
                     }

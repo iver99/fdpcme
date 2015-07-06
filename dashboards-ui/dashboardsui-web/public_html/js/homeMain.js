@@ -10,11 +10,11 @@
  */
 requirejs.config({
     //Set up module mapping
-    map: {
-        'prefutil': 
-            {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-             'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
-    },
+//    map: {
+//        'prefutil': 
+//            {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
+//             'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
+//    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -31,10 +31,11 @@ requirejs.config({
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'prefutil':'/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/js/util/preference-util',
+        'loggingutil':'/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/js/util/logging-util',
         'dbs': '../js',
-        'require':'../emcsDependencies/oraclejet/js/libs/require/require'
+        'require':'../emcsDependencies/oraclejet/js/libs/require/require',
+        'emcpdfcommon': '/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -105,8 +106,8 @@ require(['dbs/dbsmodel',
            
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar.js'},
+                    template:{require:'text!/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
             }
             

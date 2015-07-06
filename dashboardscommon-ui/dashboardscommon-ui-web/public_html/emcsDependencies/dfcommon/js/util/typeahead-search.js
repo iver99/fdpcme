@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojs/ojcore', 'jquery', 'knockout','jqueryui', './usertenant-util', './df-util'], 
+define(['jquery', 'knockout', 'emcpdfcommon/js/util/ajax-util'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
         */
-function(oj, $, ko, jqui, ututil, dfumodel)
+function($, ko, ajaxUtilModel)
 {
-    var dfu = new dfumodel(ututil.getUserName(), ututil.getTenantName());
+    var ajaxUtil = new ajaxUtilModel();
     
 (function ()
 { // make sure register is running
@@ -183,7 +183,7 @@ $.widget( "dbs.typeAheadSearch", {
 				if ( that.xhr ) {
 					that.xhr.abort();
 				}
-				that.xhr = dfu.ajaxWithRetry({
+				that.xhr = ajaxUtil.ajaxWithRetry({
 					url: url,
 					data: request,
 					dataType: "json",

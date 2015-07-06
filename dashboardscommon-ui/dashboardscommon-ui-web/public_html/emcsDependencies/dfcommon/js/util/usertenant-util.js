@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'ojs/ojcore', './df-util'],
-    function($, oj, dfumodel)
+define(['jquery', 'ojs/ojcore', 'emcpdfcommon/js/util/ajax-util'],
+    function($, oj, ajaxUtilModel)
     {
         function DashboardFrameworkUserTenantUtility() {
             var self = this;
-            var dfu = new dfumodel();
+            var ajaxUtil = new ajaxUtilModel();
             
             /**
              * Get logged in user and tenant name from web service
@@ -23,7 +23,7 @@ define(['jquery', 'ojs/ojcore', './df-util'],
                 var userName = null;   //in case use name is not got
                 var tenantUser = null; //in case tenantName.userName is not got
                 
-                dfu.ajaxWithRetry({
+                ajaxUtil.ajaxWithRetry({
                     type: "GET",
                     url: "/sso.static/loggedInUser",
                     async: false,
@@ -40,9 +40,9 @@ define(['jquery', 'ojs/ojcore', './df-util'],
                     });
 
                   if ((!tenantName || !userName) && location.href && location.href.indexOf("error.html") === -1) {
-                      location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="
-                                        + encodeURIComponent(location.href);
-                      return null;
+                        location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl="
+                                          + encodeURIComponent(location.href);
+                        return null;
                   }
                   else
                       return {"tenant": tenantName, "user": userName, "tenantUser": tenantUser}; 
@@ -83,7 +83,7 @@ define(['jquery', 'ojs/ojcore', './df-util'],
             };
         }
         
-        return new DashboardFrameworkUserTenantUtility();
+        return DashboardFrameworkUserTenantUtility;
     }
 );
 

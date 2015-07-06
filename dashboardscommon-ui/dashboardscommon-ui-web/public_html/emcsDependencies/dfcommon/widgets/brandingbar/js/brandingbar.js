@@ -1,75 +1,51 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojtoolbar', 'ojs/ojmenu', 'ojs/ojbutton'],
-        function (localrequire, ko, $, dfumodel,oj) {
+define([
+    'knockout', 
+    'jquery', 
+    'emcpdfcommon/js/util/df-util', 
+    'ojs/ojcore', 
+    'ojL10n!emcpdfcommon/js/resources/nls/dfCommonMsgBundle',
+    'ojs/ojknockout', 
+    'ojs/ojtoolbar', 
+    'ojs/ojmenu', 
+    'ojs/ojbutton'],
+        function (ko, $, dfumodel,oj, nls) {
             function BrandingBarViewModel(params) {
                 var self = this;
                 
-                //Config requireJS i18n plugin if not configured yet
-                var i18nPluginPath = getFilePath(localrequire,'../../../js/resources/i18n.js');
-                i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length-3);
-                var requireConfig = requirejs.s.contexts._;
-                var locale = null;
-                var i18nConfigured = false;
-                var childCfg = requireConfig.config;
-                if (childCfg.config && childCfg.config.ojL10n) {
-                    locale =childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
-                }
-                if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
-                    i18nConfigured = true;
-                }
-                if (i18nConfigured === false) {
-                    requirejs.config({
-                        config: locale ? {i18n: {locale: locale}} : {},
-                        paths: {
-                            'i18n': i18nPluginPath
-                        }
-                    });
-                }
-                else {
-                    requirejs.config({
-                        config: locale ? {i18n: {locale: locale}} : {}
-                    });
-                }
-                
                 //NLS strings
-                self.productName = ko.observable();
-                self.preferencesMenuLabel = ko.observable();
-                self.helpMenuLabel = ko.observable();
-                self.aboutMenuLabel = ko.observable();
-                self.signOutMenuLabel = ko.observable();
-                self.linkBtnLabel = ko.observable();
-                self.textOracle = ko.observable();
-                self.textAppNavigator = ko.observable();
-                self.toolbarLabel = ko.observable();
-                self.textNotifications = ko.observable();
+                self.productName = nls.BRANDING_BAR_MANAGEMENT_CLOUD;
+                self.preferencesMenuLabel = nls.BRANDING_BAR_MENU_PREFERENCES;
+                self.helpMenuLabel = nls.BRANDING_BAR_MENU_HELP;
+                self.aboutMenuLabel = nls.BRANDING_BAR_MENU_ABOUT;
+                self.signOutMenuLabel = nls.BRANDING_BAR_MENU_SIGN_OUT;
+                self.linkBtnLabel = nls.BRANDING_BAR_LINKS_BTN_LABEL;
+                self.textOracle = nls.BRANDING_BAR_TEXT_ORACLE;
+                self.textAppNavigator = nls.BRANDING_BAR_TEXT_APP_NAVIGATOR;
+                self.toolbarLabel = nls.BRANDING_BAR_TOOLBAR_LABEL;
+                self.textNotifications = nls.BRANDING_BAR_TEXT_NOTIFICATIONS;
+                self.altTextError = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR;
+                self.altTextWarn = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN;
+                self.altTextConfirm = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM;
+                self.altTextInfo = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO;
+                self.altTextClear = nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR;
                 self.appName = ko.observable();
+                
                 self.hasMessages = ko.observable(true);
-                self.altTextError = ko.observable();
-                self.altTextWarn = ko.observable();
-                self.altTextConfirm = ko.observable();
-                self.altTextInfo = ko.observable();
-                self.altTextClear = ko.observable();
                 self.messageList = ko.observableArray();
-                self.clearMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/clearEntry_ena.png'); 
-                var errorMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_error_16.png'); 
-                var warnMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_warn_16.png'); 
-                var confirmMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_confirm_16.png'); 
-                var infoMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_info_16.png'); 
+                var errorMessageIcon = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/stat_error_16.png"; 
+                var warnMessageIcon = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/stat_warn_16.png"; 
+                var confirmMessageIcon = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/stat_confirm_16.png"; 
+                var infoMessageIcon = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/images/stat_info_16.png"; 
                 var messages = [];
                 
-                self.clearMessage = function(data, event) {
-                    removeMessage(data);
-                    self.messageList(messages);
-                };
-                
-                self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
                 self.aboutBoxNeedRefresh = ko.observable(false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var dfHomeUrl =dfu.discoverDFHomeUrl();
-                var subscribedApps = null;//dfu.getSubscribedApplications();
+                var dfHomeUrl = "/emsaasui/emcpdfui/home.html";
+                var subscribedApps = null;
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
                 var appIdLogAnalytics = "LogAnalytics";
@@ -132,58 +108,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.serviceName = appProperties['serviceName'];
                 self.serviceVersion = appProperties['version'];
                 
-                var getSubscribedAppsDeferred = null;
-                self.getSubscribedAppsCallback = function(apps) {
-                    subscribedApps = apps;
-                    oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
-                    getSubscribedAppsDeferred.resolve();
+                self.clearMessage = function(data, event) {
+                    removeMessage(data);
+                    self.messageList(messages);
                 };
                 
-                self.getSubscribedApplications = function() {
-                    oj.Logger.info("Start to get subscribed applications for branding bar.", false);
-                    getSubscribedAppsDeferred = $.Deferred();
-                    dfu.checkSubscribedApplications(self.getSubscribedAppsCallback);
-                    return getSubscribedAppsDeferred.promise();
-                };
-                
-                var requireNlsBundleDeferred = null;
-                self.requireNlsBundleCallback = function(nls) {
-                    self.nlsStrings(nls);
-                    self.productName(nls.BRANDING_BAR_MANAGEMENT_CLOUD);
-                    self.preferencesMenuLabel(nls.BRANDING_BAR_MENU_PREFERENCES);
-                    self.helpMenuLabel(nls.BRANDING_BAR_MENU_HELP);
-                    self.aboutMenuLabel(nls.BRANDING_BAR_MENU_ABOUT);
-                    self.signOutMenuLabel(nls.BRANDING_BAR_MENU_SIGN_OUT);
-                    self.linkBtnLabel(nls.BRANDING_BAR_LINKS_BTN_LABEL);
-                    self.textOracle(nls.BRANDING_BAR_TEXT_ORACLE);
-                    self.textAppNavigator(nls.BRANDING_BAR_TEXT_APP_NAVIGATOR);
-                    self.toolbarLabel(nls.BRANDING_BAR_TOOLBAR_LABEL);
-                    self.textNotifications(nls.BRANDING_BAR_TEXT_NOTIFICATIONS);
-                    self.altTextError(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR);
-                    self.altTextWarn(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN);
-                    self.altTextConfirm(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM);
-                    self.altTextInfo(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO);
-                    
-                    oj.Logger.info("Finished loading resource bundle for branding bar.", false);
-                    requireNlsBundleDeferred.resolve();
-                };
-                
-                self.requireNlsBundleErrorCallback = function(error) {
-                    oj.Logger.error("Failed to load resource bundle for branding bar: " + error.message , false);
-                    requireNlsBundleDeferred.reject(error.message);
-                };
-                
-                self.requireNlsBundle = function() {
-                    var nlsResourceBundle = getFilePath(localrequire,'../../../js/resources/nls/dfCommonMsgBundle.js');
-                    oj.Logger.info("Start to load resource bundle for branding bar. Resource bundle file: " + nlsResourceBundle, false);
-                    nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
-                    requireNlsBundleDeferred = $.Deferred();
-                    require(['i18n!'+nlsResourceBundle], self.requireNlsBundleCallback, self.requireNlsBundleErrorCallback);
-                    return requireNlsBundleDeferred.promise();
-                };
-                
-                //Get subscribed application names and load nls strings
-                getSubscribedAppsAndRefreshNlsStrings();
+                //Get subscribed application names
+                getSubscribedApplications();
                 
                 var urlNotificationCheck = null;
                 var urlNotificationShow = null;
@@ -199,8 +130,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                         oj.Logger.info("Failed to get notifications page link.", false);
                     }
                 };
-                
-                
+                   
                 self.checkNotificationAvailability = function() {
                     oj.Logger.info("Start to check available notifications by URL:" + urlNotificationCheck, false);
                     dfu.ajaxWithRetry(urlNotificationCheck, {
@@ -247,16 +177,14 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 //Go to home page
                 self.gotoHomePage = function() {
-                    var homeUrl = dfu.discoverDFHomeUrl();
-                    oj.Logger.info("Go to home page by URL: " + homeUrl, false);
-                    window.location.href = homeUrl;
+                    oj.Logger.info("Go to home page by URL: " + dfHomeUrl, false);
+                    window.location.href = dfHomeUrl;
                 };
                 
                 //Open about box
                 //aboutbox id
                 self.aboutBoxId = 'aboutBox';
                 self.openAboutBox = function() {
-                    self.aboutBoxNeedRefresh(true);
                     $('#' + self.aboutBoxId).ojDialog('open');
                 };
                 
@@ -295,22 +223,15 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     }
                 ];
                 
-                var templatePath = getFilePath(localrequire, '../../navlinks/navigation-links.html');
-                var vmPath = getFilePath(localrequire, '../../navlinks/js/navigation-links.js');
-                var cssFile = getFilePathRelativeToHtml(localrequire, '../../../css/dashboards-common-alta.css'); 
-                var oracleLogoImg = getFilePathRelativeToHtml(localrequire, '../../../images/oracle_logo_lrg.png'); 
-                var navLinksImg = getFilePathRelativeToHtml(localrequire, '../../../images/compassIcon_32.png'); 
-
-		self.brandingbarCss = cssFile;
-                self.oracleLogoImage = oracleLogoImg;
-                self.navLinksIcon = navLinksImg;
+                var templatePath = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/navlinks/navigation-links.html";
+                var vmPath = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/navlinks/js/navigation-links.js";
                 
                 //Parameters for navigation links ko component
                 self.navLinksKocParams = {
                     navLinksNeedRefresh: self.navLinksNeedRefresh, 
                     userName: self.userName, 
                     tenantName: self.tenantName,
-                    nlsStrings: self.nlsStrings,
+                    nlsStrings: nls,
                     isAdmin: self.isAdmin,
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],
@@ -319,22 +240,21 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
                     ko.components.register("df-oracle-nav-links",{
-                        viewModel:{require:vmPath.substring(0, vmPath.length-3)},
+                        viewModel:{require:vmPath},
                         template:{require:'text!'+templatePath}
                     });
                 }
                 
                 //Parameters for about dialog ko component
                 self.aboutBoxKocParams = {
-                    aboutBoxNeedRefresh: self.aboutBoxNeedRefresh, 
                     id: self.aboutBoxId,
-                    nlsStrings: self.nlsStrings };
+                    nlsStrings: nls };
                 //Register a Knockout component for about box
-                var aboutTemplatePath = getFilePath(localrequire, '../../aboutbox/aboutBox.html');
-                var aboutVmPath = getFilePath(localrequire, '../../aboutbox/js/aboutBox.js');
+                var aboutTemplatePath = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/aboutbox/aboutBox.html";
+                var aboutVmPath = "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/aboutbox/js/aboutBox.js";
                 if (!ko.components.isRegistered('df-oracle-about-box')) {
                     ko.components.register("df-oracle-about-box",{
-                        viewModel:{require:aboutVmPath.substring(0, aboutVmPath.length-3)},
+                        viewModel:{require:aboutVmPath},
                         template:{require:'text!'+aboutTemplatePath}
                     });
                 }
@@ -435,30 +355,6 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.messageList(messages);
                 };
                 
-                function getFilePath(requireContext, relPath) {
-                    var jsRootMain = requireContext.toUrl("");
-                    //remove urlArgs string appended by requirejs urlArgs config from file path
-                    var index = jsRootMain.indexOf('?');
-                    if (index !== -1) 
-                        jsRootMain = jsRootMain.substring(0, index);
-                    var path = requireContext.toUrl(relPath);
-                    path = path.substring(jsRootMain.length);
-                    //remove urlArgs string appended by requirejs urlArgs config from file path
-                    index = path.indexOf('?');
-                    if (index !== -1) 
-                        path = path.substring(0, index);
-                    return path;
-                };
-                
-                function getFilePathRelativeToHtml(requireContext, relPath) {
-                    var path = requireContext.toUrl(relPath);
-                    //remove urlArgs string appended by requirejs urlArgs config from file path
-                    var index = path.indexOf('?');
-                    if (index !== -1) 
-                        path = path.substring(0, index);
-                    return path;
-                };
-                
                 function checkNotifications() {
                     oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
                             self.relNotificationCheck+", relNotificationShow: "+self.relNotificationShow, false);
@@ -468,27 +364,19 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     }
                 };
                 
-                function getSubscribedAppsAndRefreshNlsStrings() {
-                    oj.Logger.info("Start to load resource bundle and get subscribed applications.");
-                    var defArray = [];
-                    defArray.push(self.requireNlsBundle());
-                    //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
-                    //Even other apps are subscribed to current tenant as well, we don't show them
-                    if (self.appId === 'Dashboard')
-                        defArray.push(self.getSubscribedApplications());
-                    var combinedPromise = $.when.apply($,defArray);
-                    combinedPromise.done(function(){
-                        refreshAppName();
-                        oj.Logger.info("Finished loading resource bundle and getting subscribed applications.");
-                    });
-                    combinedPromise.fail(function(ex){
-                        oj.Logger.error("Failed to load resource bundle and get subscribed applications: "+ex);
-                    }); 
+                function getSubscribedAppsCallback(apps) {
+                    oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
+                    subscribedApps = apps;
+                    refreshAppName();
+                };
+                
+                function getSubscribedApplications() {
+                    oj.Logger.info("Start to get subscribed applications for branding bar.", false);
+                    dfu.checkSubscribedApplications(getSubscribedAppsCallback);
                 };
                 
                 function refreshAppName() {
                     var subscribedServices = null;
-                    var nls = self.nlsStrings();
                     //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
                     //Even other apps are subscribed to current tenant as well, we don't show them
                     if (self.appId !== 'Dashboard' && self.appId !== 'Error')

@@ -1,8 +1,8 @@
 
-define(['knockout','jquery', './usertenant-util', './df-util'],
-function(ko, $, ututil, dfumodel)
+define(['jquery', 'emcpdfcommon/js/util/ajax-util'],
+function($, ajaxUtilModel)
 {
-    var dfu = new dfumodel(ututil.getUserName(), ututil.getTenantName());
+    var ajaxUtil = new ajaxUtilModel();
     
     /**
      * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
@@ -15,7 +15,7 @@ function(ko, $, ututil, dfumodel)
     
     PreferenceUtility.prototype.getPreference = function(key, options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
-        var _ajax = dfu.ajaxWithRetry({
+        var _ajax = ajaxUtil.ajaxWithRetry({
             url: self.prefRestApiUrl + "/" + key,
             type: 'GET',
             async: _async,
@@ -32,7 +32,7 @@ function(ko, $, ututil, dfumodel)
     
     PreferenceUtility.prototype.getAllPreferences = function(options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
-        var _ajax = dfu.ajaxWithRetry({
+        var _ajax = ajaxUtil.ajaxWithRetry({
             url: self.prefRestApiUrl,
             type: 'GET',
             async: _async,
@@ -49,7 +49,7 @@ function(ko, $, ututil, dfumodel)
     
     PreferenceUtility.prototype.removeAllPreferences = function(options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
-        var _ajax = dfu.ajaxWithRetry({
+        var _ajax = ajaxUtil.ajaxWithRetry({
             url: self.prefRestApiUrl,
             type: 'DELETE',
             async: _async,
@@ -66,7 +66,7 @@ function(ko, $, ututil, dfumodel)
     
     PreferenceUtility.prototype.removePreference = function(key, options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
-        var _ajax = dfu.ajaxWithRetry({
+        var _ajax = ajaxUtil.ajaxWithRetry({
             url: self.prefRestApiUrl + "/" + key,
             type: 'DELETE',
             async: _async,
@@ -83,7 +83,7 @@ function(ko, $, ututil, dfumodel)
     
     PreferenceUtility.prototype.setPreference = function(key, value, options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
-        var _ajax = dfu.ajaxWithRetry({
+        var _ajax = ajaxUtil.ajaxWithRetry({
             url: self.prefRestApiUrl + "/" + key,
             type: 'PUT',
             async: _async,

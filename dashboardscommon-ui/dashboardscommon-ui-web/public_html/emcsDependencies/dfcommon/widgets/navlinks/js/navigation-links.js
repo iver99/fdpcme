@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
+define(['knockout', 'jquery', 'emcpdfcommon/js/util/df-util', 'ojs/ojcore'],
         function (ko, $, dfumodel, oj) {
             function NavigationLinksViewModel(params) {
                 var self = this;
@@ -6,20 +6,19 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
+                var nlsStrings = params.nlsStrings ? params.nlsStrings : {};
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
-                self.dashboardsLabel = ko.observable();
-                self.visualAnalyzersLabel = ko.observable();
-                self.administrationLabel = ko.observable();
-                self.allDashboardsLinkLabel = ko.observable();
+                self.dashboardsLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
+                self.visualAnalyzersLabel = nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL;
+                self.administrationLabel = nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL;
+                self.allDashboardsLinkLabel = nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL;
                 
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
-                
-                var nlsStringsAvailable = false;
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -41,10 +40,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 
                 refreshListener.subscribe(function (value) {
                     if (value.needRefresh){
-                        if (!nlsStringsAvailable) {
-                            refreshNlsStrings(params.nlsStrings());
-                            nlsStringsAvailable = true;
-                        }
                         refreshLinks();
                         params.navLinksNeedRefresh(false);
                     }
@@ -146,22 +141,13 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function refreshLinks() {
-                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
+                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';
                     
                     //Fetch available quick links and administration links from service manager registry
                     if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
                 };        
-                
-                function refreshNlsStrings(nlsStrings) {
-                    if (nlsStrings) {
-                        self.dashboardsLabel(nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
-                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL);
-                        self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
-                        self.allDashboardsLinkLabel(nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL);
-                    }
-                }
             }
             return NavigationLinksViewModel;
         });

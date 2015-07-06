@@ -5,14 +5,19 @@
  */
 define(['knockout',
         'jquery',
-        '../emcsDependencies/dfcommon/js/util/df-util',
-        '../emcsDependencies/dfcommon/js/util/usertenant-util'
+        'emcpdfcommon/js/util/df-util',
+        'emcpdfcommon/js/util/usertenant-util',
+        'emcpdfcommon/js/util/ajax-util',
+        'emcpdfcommon/js/util/message-util'
     ],
     
-    function(ko, $, dfumodel, userTenantUtil)
+    function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel)
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
+            var userTenantUtil = new userTenantUtilModel();
+            var ajaxUtil = new ajaxUtilModel();
+            var msgUtil = new msgUtilModel();
             
             self.getUserTenantFromCookie = function() {
                 return userTenantUtil.getUserTenant();
@@ -87,7 +92,7 @@ define(['knockout',
             self.getRegistrationInfo=function(){
              
                 if (self.registrationInfo===null){
-                    dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
+                    ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
                         dataType: 'json',
                         headers: dfu.getDefaultHeader(), 
                         async: false,
@@ -295,23 +300,15 @@ define(['knockout',
              */ 
             self.ajaxWithRetry = function() {
 		var args = arguments;
-		if(args.length === 1) {
-		     return dfu.ajaxWithRetry(args[0]);
-		}else if(args.length === 2) {
-		     return dfu.ajaxWithRetry(args[0], args[1]);
-		}else if(args.length === 3) {
-		     return dfu.ajaxWithRetry(args[0], args[1], args[2]);
-		}else {
-	             console.log("Arguments number is wrong.");
-		}
-                
+		var options = ajaxUtil.getAjaxOptions(args);
+                return ajaxUtil.ajaxWithRetry(options);
             };
             
             /**
              * Display message
              */
             self.showMessage = function(messageObj) {
-            	dfu.showMessage(messageObj);
+            	msgUtil.showMessage(messageObj);
             };
             
             /**

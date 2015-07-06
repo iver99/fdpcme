@@ -1,41 +1,14 @@
-define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
-    function(localrequire, ko, $, oj, msgUtilModel)
+define([
+    'jquery', 
+    'ojs/ojcore', 
+    'emcpdfcommon/js/util/message-util', 
+    'ojL10n!emcpdfcommon/js/resources/nls/dfCommonMsgBundle'
+],
+    function($, oj, msgUtilModel, nls)
     {
         function DashboardFrameworkAjaxUtility() {
             var self = this;
             var messageUtil = new msgUtilModel();
-            
-            //Config requireJS i18n plugin if not configured yet
-            var i18nPluginPath = getFilePath(localrequire,'../resources/i18n.js');
-            i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length-3);
-            var requireConfig = requirejs.s.contexts._;
-            var locale = null;
-            var i18nConfigured = false;
-            var childCfg = requireConfig.config;
-            if (childCfg.config && childCfg.config.ojL10n) {
-                locale =childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
-            }
-            if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
-                i18nConfigured = true;
-            }
-            if (i18nConfigured === false) {
-                requirejs.config({
-                    config: locale ? {i18n: {locale: locale}} : {},
-                    paths: {
-                        'i18n': i18nPluginPath
-                    }
-                });
-            }
-            else {
-                requirejs.config({
-                    config: locale ? {i18n: {locale: locale}} : {}
-                });
-            }
-            
-            var isNlsStringsLoaded = false;
-            var nlsStrings = ko.observable();
-            
-            requireNlsBundle();
             
             /**
              * Ajax call with retry logic
@@ -102,8 +75,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
                         //TODO: session timeout handling as below is not available actually, need to update once find out the solution to catch status 302
                         //If session timeout (status = 302), make a browser refresh call which then will redirect to sso login page
                         if (jqXHR.status === 302) {
-                            var sessionTimeoutMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING : 
-                                    'Session timeout. Redirecting to SSO login page now...';
+                            var sessionTimeoutMsg = nls.BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING;
                             logMessage(retryOptions.url, 'warn', sessionTimeoutMsg);
                             
                             location.reload(true);
@@ -112,23 +84,15 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
                         else if (jqXHR.status === 408 || jqXHR.status === 503 || jqXHR.status === 0) {
                             retryCount++;
                             if (retries > 0) {
-                                //remove old retrying message
+                                //remove old retry message
                                 removeMessage(messageId);
 
-                                //show new retrying message, if resource bundle not loaded yet show default message
-                                if (!isNlsStringsLoaded) {
-                                    var nlsWarnMsg = 'Resource bundle has not finished loading in ajax-util, show default messages instead.';
-                                    logMessage(retryOptions.url, 'warn', nlsWarnMsg);
-                                }
-
-                                //Set message to be shown on UI
+                                //Set new retry message to be shown on UI
                                 messageId = getGuid();
-                                var summaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY : 
-                                        'Not connected.';
+                                var summaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY;
                                 var detailMsg = null;
-                                //Show retrying message detail
-                                detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
-                                        'Retrying to connect to your cloud service. Retry count: {0}.';
+                                //Show retry message detail
+                                detailMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL;
                                 detailMsg = messageUtil.formatMessage(detailMsg, retryCount);
                                 messageObj = {
                                     id: messageId, 
@@ -137,7 +101,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
                                     summary: summaryMsg, 
                                     detail: detailMsg};
 
-                                //Always show retrying message summary and detail on UI
+                                //Always show retry message summary and detail on UI
                                 messageUtil.showMessage(messageObj);
                                 
                                 //Do retry once again if failed
@@ -151,22 +115,15 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
                             
                             if (showMessages !== 'none') {
                                 //show new retry error message
-                                if (!isNlsStringsLoaded) {
-                                    var nlsWarnMsg = 'Resource bundle has not finished loading in ajax-util, show default messages instead.';
-                                    logMessage(retryOptions.url, 'warn', nlsWarnMsg);
-                                }
-
                                 //Set failure message to be shown on UI after retries
-                                var errorSummaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY : 
-                                            'Attempts to connect to your cloud service failed after {0} tries.';
+                                var errorSummaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY;
                                 errorSummaryMsg = messageUtil.formatMessage(errorSummaryMsg, retryLimit);
                                     
                                 var errorDetailMsg = null;
                                 if (showMessages === 'all') {
                                     var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
                                     errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg : 
-                                            (isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
-                                            'Could not connect to your cloud service.');
+                                            nls.BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL;
                                     errorDetailMsg = messageUtil.formatMessage(errorDetailMsg);
                                 }
                                 messageObj = {
@@ -377,38 +334,6 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore', './message-util'],
 //                }
                 
                 return message;
-            };
-            
-            function getFilePath(requireContext, relPath) {
-                var jsRootMain = requireContext.toUrl("");
-                //remove urlArgs string appended by requirejs urlArgs config from file path
-                var index = jsRootMain.indexOf('?');
-                if (index !== -1) 
-                    jsRootMain = jsRootMain.substring(0, index);
-                var path = requireContext.toUrl(relPath);
-                path = path.substring(jsRootMain.length);
-                //remove urlArgs string appended by requirejs urlArgs config from file path
-                index = path.indexOf('?');
-                if (index !== -1) 
-                    path = path.substring(0, index);
-                return path;
-            };
-            
-            function requireNlsBundleCallback(nls) {
-                nlsStrings(nls);
-                isNlsStringsLoaded = true;
-                oj.Logger.info("Finished loading resource bundle for ajax-util.", false);
-            };
-
-            function requireNlsBundleErrorCallback(error) {
-                oj.Logger.error("Failed to load resource bundle for ajax-util: " + error.message , false);
-            };
-
-            function requireNlsBundle() {
-                var nlsResourceBundle = getFilePath(localrequire,'../resources/nls/dfCommonMsgBundle.js');
-                oj.Logger.info("Start to load resource bundle for ajax-util. Resource bundle file: " + nlsResourceBundle, false);
-                nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length-3);
-                require(['i18n!'+nlsResourceBundle], requireNlsBundleCallback, requireNlsBundleErrorCallback);
             };
             
         }
