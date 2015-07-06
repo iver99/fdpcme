@@ -25,6 +25,18 @@ targetCompatibility = 1.7
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
 
+
+repositories {
+    /* Looks into local maven repository for artifacts */
+    mavenLocal()
+    maven {
+        url = "${artifactory_contextUrl}/emaas-virtual"
+    }
+}
+
+
+
+
 buildscript {
     repositories {
         maven {
@@ -217,6 +229,19 @@ publishing {
 	    artifact(buildDFCommonLibZip)
 	    artifactId 'emcs-ui-framework-common'
 	}
+        integTest(MavenPublication) {
+            setArtifactId(project.name + '-' + integTestJar.appendix)
+            artifact integTestJar.archivePath
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+                    dependency.appendNode('version', it.moduleVersion)
+                }
+            }
+        }
     }
     repositories {
         maven {
@@ -233,4 +258,4 @@ dependencies {
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-17062', ext: 'war'){ transitive = false }	
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
 }
-
+build.dependsOn integTestJar
