@@ -23,12 +23,12 @@ import javax.ws.rs.core.UriBuilder;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.LogConfig;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Properties;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 
 
@@ -46,6 +46,10 @@ public class CommonTest
 	private static final String SERVICE_NAME = "Dashboard-API";
 	private static final String DOMAIN = "www.";
 	private static final String DSB_DEPLOY_URL = "/instances?servicename=Dashboard-API";
+	private static final String AUTHORIZATION = "Authorization";
+	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
+
+
 
 	/**
 	 * Sets up RESTAssured defaults before executing test cases Enables logging Reading the inputs from the testenv.properties
@@ -208,19 +212,47 @@ public class CommonTest
 
 	
 	
-	private static String getData(String url)
+	public String getData(String url)
 	{
-		if (url==null || url.trim().equals("")) {
+		
+		 if (url==null || url.trim().equals("")) {
 			return null;
 		}
 
-		ClientConfig cc = new DefaultClientConfig();
-		Client client = Client.create(cc);
-		client.addFilter(new HTTPBasicAuthFilter("weblogic", "welcome1"));
-		Builder builder = client.resource(UriBuilder.fromUri(url).build()).type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON);
-		return builder.get(String.class);
+		BufferedReader in = null;
+		InputStreamReader inReader = null;
+		StringBuffer response = new StringBuffer();
+		try {
+			URL schema_dep_url = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
+			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
+			//int responseCode = con.getResponseCode();
+			inReader = new InputStreamReader(con.getInputStream());
+			in = new BufferedReader(inReader);
+			String inputLine;
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+		}
+		catch (IOException e) {
+
+			System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (inReader != null) {
+					inReader.close();
+				}
+			}
+			catch (IOException ioEx) {
+				//ignore
+			}
+
+		}
+		return response.toString();
 	}
+
 
 	public String getAuthToken()
 	{
