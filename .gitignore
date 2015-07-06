@@ -127,6 +127,7 @@ deploy/
 dist/
 generated/
 gitonly/sidekick/output/
+maven-home/
 nbproject/
 test-coverage/
 test-output/
