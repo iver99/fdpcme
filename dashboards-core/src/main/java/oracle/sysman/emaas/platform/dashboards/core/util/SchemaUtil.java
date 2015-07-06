@@ -21,18 +21,18 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Properties;	 
 
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 
 /**
  * @author guobaochen
@@ -43,6 +43,8 @@ public class SchemaUtil {
 	
 	
 	private static String ITEMS ="items";
+	private static final String AUTHORIZATION = "Authorization";
+	 private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
 	private static class SchemaDeployment
 	{
 		private String deploymentId;
@@ -374,12 +376,38 @@ public class SchemaUtil {
 			return null;
 		}
 
-		ClientConfig cc = new DefaultClientConfig();
-		Client client = Client.create(cc);
-		client.addFilter(new HTTPBasicAuthFilter("weblogic", "welcome1"));
-		Builder builder = client.resource(UriBuilder.fromUri(url).build()).type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON);
-		return builder.get(String.class);
+		BufferedReader in = null;
+		InputStreamReader inReader = null;
+		StringBuffer response = new StringBuffer();
+		try {
+			URL schema_dep_url = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
+			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
+			//int responseCode = con.getResponseCode();
+			inReader = new InputStreamReader(con.getInputStream());
+			in = new BufferedReader(inReader);
+			String inputLine;
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+		}
+		catch (IOException e) {
+
+			System.out.println("an error occureed while getting details by url" + " ::" + url + "  " + e.toString());
+			try {
+				if (in != null) {
+					in.close();
+				}
+				if (inReader != null) {
+					inReader.close();
+				}
+			}
+			catch (IOException ioEx) {
+				//ignore
+			}
+
+		}
+		return response.toString();
 	}
 
 	public String getSchemaUserBySoftwareName(String json, String softwareName)
