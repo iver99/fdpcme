@@ -37,10 +37,8 @@
 
 .main-content-area {
     margin: 0px;
-    padding-right: 10px;
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 0px;
+    /*padding-top: 10px;*/
 }
 
 .dbs-tab-container {
@@ -93,7 +91,7 @@
     max-width: 1024px;
     min-width: 50px
 } 
-
+    
 .dbs-summaries-container {
     //background: #ffffff;
 }
@@ -260,33 +258,6 @@ ul.dbs-summary-rows li {
 
 .oj-label-required:before{content:'*'}
 
-#dtabhomettb #cbtn{
-    margin-bottom: 4px; 
-    margin-left: 8px;
-    margin-right: 8px;
-    background-image: none;
-    //margin-left: 6px;
-    text-shadow: none;
-
-    color: #ffffff;
-    font-weight: bold;
-    background-color: #0572ce;
-    background: linear-gradient(to bottom, #0470c9 0%, #0571cd 50%, #0479d8 100%);
-    border: 1px solid #0476d3;
-    border-radius: 2px;
-    
-    text-align: right;
-     box-shadow:none;  
-    
-} 
-
-#dtabhomettb #cbtn:hover{
-    
-    background-color: #3a9aea;
-    border: 1px solid #3a9aea;  
-    background-image: none;
-
-}  
 
 #ojDialogWrapper-cDsbDialog #createDialogFooter #createDsb{
     margin-bottom: 4px; 
@@ -302,7 +273,7 @@ ul.dbs-summary-rows li {
     border-radius: 2px;
     
     text-align: right;
-     box-shadow:none;      
+    box-shadow:none;      
 }
 
 #ojDialogWrapper-cDsbDialog #createDialogFooter #createDsb:hover{
@@ -312,9 +283,7 @@ ul.dbs-summary-rows li {
 }
 
 .oj-button.dbs-home-button {
-    margin-bottom: 4px; 
     background-image: none;
-    margin-left: 6px;
     text-shadow: none;
 
     color: #ffffff;
@@ -325,7 +294,7 @@ ul.dbs-summary-rows li {
     border-radius: 2px;
     
     text-align: right;
-     box-shadow:none;      
+    box-shadow:none;        
 }
 
 .oj-button.dbs-home-button:hover{
@@ -341,3 +310,89 @@ a:hover {
 .busy, .busy *{
     cursor: progress !important;   
 }
+
+@media print, screen {
+    
+    .main-content-area-sm {
+        margin-left: auto;
+        margin-right: auto;
+        float: none;
+        width: 550px;
+        min-width: 550px;
+        max-width: 550px;
+    }
+    .dbs-filter-panel-sm {
+    width: 35%; }
+    .dbs-tiles-panel-sm {
+    width: 65%; }
+}
+
+@media print and (orientation: landscape), screen and (min-width: 840px) {
+    .dbs-filter-panel-md {
+    width: 20%; }
+    .dbs-tiles-panel-md {
+    width: 80%; }
+    .dbs-rbtns-panel-md {
+        padding-right: 13px;
+    }
+    .main-content-area-md {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 840px;
+    min-width: 840px;
+    max-width: 840px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1193px) {
+    .dbs-filter-panel-lg {
+    width: 16%; }
+    .dbs-tiles-panel-lg {
+    width: 84%; }
+    .dbs-rbtns-panel-lg {
+        padding-right: 10px;
+    }
+    .main-content-area-lg {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1193px;
+    min-width: 1193px;
+    max-width: 1193px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1535px) {
+    .dbs-filter-panel-xsl {
+    width: 13%; }
+    .dbs-tiles-panel-xsl {
+    width: 87%; }
+    .dbs-rbtns-panel-xsl {
+        padding-right: 10px;
+    }
+    .main-content-area-xsl {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1535px;
+    min-width: 1535px;
+    max-width: 1535px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1890px) {
+    .dbs-filter-panel-xl {
+    width: 11%; }
+    .dbs-tiles-panel-xl {
+    width: 89%; }
+    .dbs-rbtns-panel-xl {
+        padding-right: 20px;
+    }
+    .main-content-area-xl {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1890px;
+    min-width: 1890px;
+    max-width: 1890px;}
+}
+
+

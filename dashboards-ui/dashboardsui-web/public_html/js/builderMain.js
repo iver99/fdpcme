@@ -271,7 +271,8 @@ require(['knockout',
                         }
                     });
 
-                    toolBarModel.showAddWidgetTooltip();
+//                    toolBarModel.showAddWidgetTooltip();
+                    toolBarModel.handleAddWidgetTooltip();
                     tilesViewMode.postDocumentShow();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 

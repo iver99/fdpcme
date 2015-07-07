@@ -26,6 +26,26 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  */
 public class ErrorEntity
 {
+
+	public static final ErrorEntity CONFIGURATIONS_GENERIC_ERROR = new ErrorEntity(
+			DashboardErrorConstants.CONFIGURATIONS_GENERIC_ERROR_CODE,
+			MessageUtils.getDefaultBundleString("CONFIGURATIONS_GENERIC_ERROR"));
+	public static final ErrorEntity CONFIGURATIONS_REGISTRATION_ERROR = new ErrorEntity(
+			DashboardErrorConstants.CONFIGURATIONS_REGISTRATION_ERROR_CODE,
+			MessageUtils.getDefaultBundleString("CONFIGURATIONS_REGISTRATION_ERROR"));
+	public static final ErrorEntity CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR = new ErrorEntity(
+			DashboardErrorConstants.CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR_CODE,
+			MessageUtils.getDefaultBundleString("CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR"));
+	public static final ErrorEntity CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR = new ErrorEntity(
+			DashboardErrorConstants.CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR_CODE,
+			MessageUtils.getDefaultBundleString("CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR"));
+	public static final ErrorEntity CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR = new ErrorEntity(
+			DashboardErrorConstants.CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR_CODE,
+			MessageUtils.getDefaultBundleString("CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR"));
+
+	//	public static final ErrorEntity REGISTRY_LOOKUP_GENERIC_ERROR = new ErrorEntity(REGISTRY_LOOKUP_GENERIC_ERROR_CODE,
+	//			MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_GENERIC_ERROR"));
+
 	private Integer errorCode;
 	private String errorMessage;
 
@@ -48,6 +68,12 @@ public class ErrorEntity
 			errorCode = de.getErrorCode();
 			errorMessage = de.getMessage();
 		}
+	}
+
+	public ErrorEntity(Integer errorCode, String errorMessage)
+	{
+		setErrorCode(errorCode);
+		setErrorMessage(errorMessage);
 	}
 
 	public ErrorEntity(IOException e)

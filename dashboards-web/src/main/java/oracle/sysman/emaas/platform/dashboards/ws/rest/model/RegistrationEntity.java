@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.web.rest.model;
+package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +24,10 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Sanitized
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.TenantContext;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,6 +52,17 @@ public class RegistrationEntity
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
 	public static final String NAME_REGISTRY_VERSION = "0.1";
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
+
+	public static final String APM_SERVICENAME = "ApmUI";
+	public static final String APM_URL = "/emsaasui/apmUi/index.html";
+	public static final String LA_SERVICENAME = "LoganService";
+	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
+	public static final String ITA_SERVICENAME = "EmcitasApplications";
+	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
+	public static final String TA_SERVICENAME = "TargetAnalytics";
+	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
+	public static final String TMUI_SERVICENAME = "TenantManagementUI";
+
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
 
@@ -95,6 +105,33 @@ public class RegistrationEntity
 	//	{
 	//		return new String(LookupManager.getInstance().getAuthorizationToken());
 	//	}
+
+	/**
+	 * @return Administration links discovered from service manager
+	 */
+	public List<LinkEntity> getAdminLinks()
+	{
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+	}
+
+	public List<LinkEntity> getCloudServices()
+	{
+		List<LinkEntity> list = new ArrayList<LinkEntity>();
+		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
+		for (String app : subscribedApps) {
+			if (APM_SERVICENAME.equals(app)) {
+				list.add(new LinkEntity(ApplicationOPCName.APM.toString(), APM_URL, APM_SERVICENAME, "1.0.0")); //version is hard coded now
+			}
+			else if (LA_SERVICENAME.equals(app)) {
+				list.add(new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), LA_URL, LA_SERVICENAME, "1.0.0")); //version is hard coded now
+			}
+			else if (ITA_SERVICENAME.equals(app)) {
+				list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, "1.0.0")); //version is hard coded now
+
+			}
+		}
+		return list;
+	}
 
 	/**
 	 * @return the rest API end point for dashboard framework
@@ -141,27 +178,19 @@ public class RegistrationEntity
 	//		return ssfVersion;
 	//	}
 
-	/**
-	 * @return Administration links discovered from service manager
-	 */
-	public List<LinkEntity> getAdminLinks()
-	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-	}
-
-	/**
-	 * @return the rest API end point for SSF
-	 * @throws Exception
-	 */
-	public String getSsfRestApiEndPoint() throws Exception
-	{
-		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
-				TenantContext.getCurrentTenant());
-		return entity != null ? entity.getHref() : null;
-		//		if (true) {
-		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
-		//		}
-	}
+	//	/**
+	//	 * @return the rest API end point for SSF
+	//	 * @throws Exception
+	//	 */
+	//	public String getSsfRestApiEndPoint() throws Exception
+	//	{
+	//		EndpointEntity entity = RegistryLookupUtil.getServiceExternalEndPoint(NAME_SSF_SERVICENAME, NAME_SSF_VERSION,
+	//				TenantContext.getCurrentTenant());
+	//		return entity != null ? entity.getHref() : null;
+	//		//		if (true) {
+	//		//			return "https://slc07hcn.us.oracle.com:4443/microservice/2875e44b-1a71-4bf2-9544-82ddc3b2d486";
+	//		//		}
+	//	}
 
 	/**
 	 * @return Visual analyzer links discovered from service manager
@@ -245,19 +274,19 @@ public class RegistrationEntity
 		}
 		for (String app : apps) {
 			if (ApplicationOPCName.APM.toString().equals(app)) {
-				appSet.add(RegistryLookupUtil.APM_SERVICE);
+				appSet.add(APM_SERVICENAME);
 			}
 			else if (ApplicationOPCName.ITAnalytics.toString().equals(app)) {
-				appSet.add(RegistryLookupUtil.ITA_SERVICE);
-				appSet.add(RegistryLookupUtil.TA_SERVICE);
+				appSet.add(ITA_SERVICENAME);
+				appSet.add(TA_SERVICENAME);
 			}
 			else if (ApplicationOPCName.LogAnalytics.toString().equals(app)) {
-				appSet.add(RegistryLookupUtil.LA_SERVICE);
+				appSet.add(LA_SERVICENAME);
 			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI should be subscribed accordingly as agreement now
 		if (appSet.size() > 0 && isAdmin) {
-			appSet.add("TenantManagementUI");
+			appSet.add(TMUI_SERVICENAME);
 		}
 		return appSet;
 	}

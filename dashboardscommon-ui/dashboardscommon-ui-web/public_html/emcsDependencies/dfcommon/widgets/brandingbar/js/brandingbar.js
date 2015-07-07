@@ -56,6 +56,7 @@ define([
                 appMap[appIdAPM] = {
                     "appId": "APM",
                     "appName": "BRANDING_BAR_APP_NAME_APM",
+                    "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
                     "serviceName": "apmUI",
                     "version": "0.1",
                     "helpTopicId": "em_apm_gs"
@@ -233,6 +234,7 @@ define([
                     tenantName: self.tenantName,
                     nlsStrings: nls,
                     isAdmin: self.isAdmin,
+                    appMap: appMap,
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],
                     appTenantManagement: appMap[appIdTenantManagement]

@@ -63,14 +63,15 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
+            	return '/sso.static/savedsearch.navigation';
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-                var regInfo = self.getRegistrationInfo();
-                if (regInfo && regInfo.ssfRestApiEndPoint){
-                    return regInfo.ssfRestApiEndPoint;
-                }else{
-                    console.log("Failed to discovery SSF REST API end point");
-                    return null;
-                }
+//                var regInfo = self.getRegistrationInfo();
+//                if (regInfo && regInfo.ssfRestApiEndPoint){
+//                    return regInfo.ssfRestApiEndPoint;
+//                }else{
+//                    console.log("Failed to discovery SSF REST API end point");
+//                    return null;
+//                }
             };
 
             /**
@@ -114,7 +115,7 @@ define(['knockout',
             
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-                return '/emsaasui/emcpdfui/api/configurations/registration';
+                return '/sso.static/dashboards.configurations/registration';
 //                return 'data/servicemanager.json';
             };
 

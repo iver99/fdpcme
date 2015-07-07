@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.web.rest;
+package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,19 +25,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.ErrorEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.web.rest.model.RegistrationEntity;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.model.RegistrationEntity;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * @author miao
+ * @author guobaochen moving registry APIs from DF UI to DF API project
  */
-@Path("/configurations")
-public class ConfigurationAPI extends AbstractAPI
+@Path("/v1/configurations")
+public class ConfigurationAPI extends APIBase
 {
 	private static Logger _logger = LogManager.getLogger(ConfigurationAPI.class);
 
@@ -107,7 +108,7 @@ public class ConfigurationAPI extends AbstractAPI
 			return responseError; //need redeployment to remove error with fix
 		}
 		try {
-			validateInitializeTenantIdUserName(tenantIdParam, userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Response resp = Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity()))
 					.build();
 			return resp;
@@ -119,28 +120,4 @@ public class ConfigurationAPI extends AbstractAPI
 			return Response.status(ee.getStatusCode()).entity(JsonUtil.buildNormalMapper().toJson(ee)).build();
 		}
 	}
-
-	//	private void initializeUserTenantContext(String userTenant) throws CommonSecurityException
-	//	{
-	//		if (userTenant == null || "".equals(userTenant)) {
-	//			throw new CommonSecurityException(
-	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-	//		}
-	//		int idx = userTenant.indexOf(".");
-	//		if (idx <= 0) {
-	//			throw new CommonSecurityException(
-	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-	//		}
-	//		String userName = userTenant.substring(idx + 1, userTenant.length());
-	//		if (userName == null || "".equals(userName)) {
-	//			throw new CommonSecurityException(
-	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-	//		}
-	//		String tenantName = userTenant.substring(0, idx);
-	//		if (tenantName == null || "".equals(tenantName)) {
-	//			throw new CommonSecurityException(
-	//					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
-	//		}
-	//		TenantContext.setCurrentTenant(tenantName);
-	//	}
 }

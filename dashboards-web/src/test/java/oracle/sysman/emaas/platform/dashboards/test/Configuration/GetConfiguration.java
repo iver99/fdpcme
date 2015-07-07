@@ -8,9 +8,9 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.test.Configuration;
+package oracle.sysman.emaas.platform.dashboards.test.Configuration;
 
-import oracle.sysman.emaas.platform.dashboards.ui.test.common.CommonTest;
+import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -69,7 +69,7 @@ public class GetConfiguration
 			//Assert.assertNotNull(res.jsonPath().get("ssfServiceName"));
 			//Assert.assertNotNull(res.jsonPath().get("ssfVersion"));
 			//Assert.assertNotNull(res.jsonPath().get("dfRestApiEndPoint"));
-			Assert.assertNotNull(res.jsonPath().get("ssfRestApiEndPoint"));
+			Assert.assertNotNull(res.jsonPath().get("cloudServices"));
 			Assert.assertNotNull(res.jsonPath().get("adminLinks"));
 			Assert.assertNotNull(res.jsonPath().get("visualAnalyzers"));
 

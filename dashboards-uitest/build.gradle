@@ -10,9 +10,9 @@ buildscript {
         maven {
             url = "${artifactory_contextUrl}/emaas-virtual"
         }
-/*        maven {
+        maven {
             url = "${artifactory_contextUrl}/repo"
-        }*/
+        }
     }
 
     dependencies {
@@ -32,11 +32,11 @@ artifactory {
             maven = true
             }
     }
-   /* resolve {
+    resolve {
             repository {
                 repoKey = "repo"
             }
-        }*/
+        }
     
 }
 
@@ -57,7 +57,7 @@ from sourceSets.test.output
 
 check.dependsOn TestJar
 
-group = 'com.oracle.emaas.emcpdf.Webdriver.uitest'
+group = 'com.oracle.emaas.emcpdf.Webdriver.uitest3'
 
 publishing {
         publications {

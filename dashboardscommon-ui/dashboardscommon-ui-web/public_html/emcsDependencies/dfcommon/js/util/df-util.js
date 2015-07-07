@@ -76,9 +76,9 @@ define([
                 }
 
                 var result =null;
-                var url ="/emsaasui/emcpdfui/api/registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                var url ="/sso.static/dashboards.registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
                 if (typeof rel==="string"){
-                    url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                    url = "/sso.static/dashboards.registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
                 self.ajaxWithRetry(url,{
@@ -131,9 +131,9 @@ define([
                     return;
                 }
 
-                var url ="/emsaasui/emcpdfui/api/registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                var url ="/sso.static/dashboards.registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
                 if (typeof rel==="string"){
-                    url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                    url = "/sso.static/dashboards.registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
                 self.ajaxWithRetry(url, {
@@ -184,7 +184,7 @@ define([
                     return null;                    
                 }
                 var result =null;
-                var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                var url= "/sso.static/dashboards.registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
 
                 self.ajaxWithRetry(url,{
                     type: 'get',
@@ -235,7 +235,7 @@ define([
                     return;                    
                 }
                 
-                var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                var url= "/sso.static/dashboards.registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 self.ajaxWithRetry(url,{
                     type: 'get',
                     dataType: 'json',

@@ -8,15 +8,17 @@ define(['knockout', 'jquery', 'emcpdfcommon/js/util/df-util', 'ojs/ojcore'],
                 var dfu = new dfumodel(userName, tenantName);
                 var nlsStrings = params.nlsStrings ? params.nlsStrings : {};
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
+                var appMap = params.appMap;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
-                self.dashboardsLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
                 self.visualAnalyzersLabel = nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL;
                 self.administrationLabel = nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL;
-                self.allDashboardsLinkLabel = nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL;
+                self.homeLinkLabel = nlsStrings.nls.BRANDING_BAR_NAV_HOME_LABEL;
+                self.cloudServicesLabel = nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL;
                 
+                self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
                 
@@ -78,6 +80,22 @@ define(['knockout', 'jquery', 'emcpdfcommon/js/util/df-util', 'ojs/ojcore'],
                 */
                 function discoverLinks() {
                     var fetchServiceLinks = function(data) {
+                        if (data.cloudServices && data.cloudServices.length > 0) {
+                            var cloudServices = data.cloudServices;
+                            var cloudServiceList = [];
+                                for (var i = 0; i < cloudServices.length; i++) {
+                                    if (appMap !== null)
+                                        cloudServiceList.push(
+                                            {name: appMap[cloudServices[i].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[i].name].serviceDisplayName] : 
+                                                nlsStrings[appMap[cloudServices[i].name].appName], 
+                                            href: cloudServices[i].href});
+                                    else 
+                                        cloudServiceList.push(
+                                            {name: cloudServices[i].name, 
+                                            href: cloudServices[i].href});
+                                }
+                            self.cloudServices(cloudServiceList);
+                        }
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
@@ -123,7 +141,7 @@ define(['knockout', 'jquery', 'emcpdfcommon/js/util/df-util', 'ojs/ojcore'],
 
                         }
                     };                   
-                    var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
+                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDefaultHeader(), 
@@ -143,12 +161,15 @@ define(['knockout', 'jquery', 'emcpdfcommon/js/util/df-util', 'ojs/ojcore'],
                 function refreshLinks() {
                     dfHomeUrl = '/emsaasui/emcpdfui/home.html';
                     
-                    //Fetch available quick links and administration links from service manager registry
-                    if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {
+                    //Fetch available cloud services, visual analyzers and administration links
+                    if (self.cloudServices().length === 0 || 
+                        self.visualAnalyzers().length === 0 || 
+                        (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
                 };        
             }
             return NavigationLinksViewModel;
         });
+
 

@@ -29,8 +29,10 @@ define({
       "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
       "DBS_HOME_CREATE_BTN_TT_TITLE": "How do I use this page?",
       "DBS_HOME_SELECT_SORT_BY_LABEL": "Sort by",
-      "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last opened by me",
+      "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last Accessed",
       "DBS_HOME_SELECT_SORT_NAME": "Name",
+      "DBS_HOME_SELECT_SORT_CREATION_TIME": "Creation Date",
+      "DBS_HOME_SELECT_SORT_DEFAULT": "Default",
       "DBS_HOME_CREATE_BTN_TT_CONTENT": " Click to create a dashboard and add widgets of your choice.",
       "DBS_HOME_EXPLORE_BTN_LABEL": "Explore Data",
       "DBS_HOME_EXPLORE_BTN_TT": "Click to select a Visual Analyzer which allows you to explore data.",
@@ -42,6 +44,17 @@ define({
       "DBS_HOME_CREATE_DLG_INVALID_NAME": "You must enter a non empty name and its length should be less than 64 characters.",
       "DBS_HOME_CREATE_DLG_INVALID_DES_SUM": "Description is invalid",
       "DBS_HOME_CREATE_DLG_INVALID_DES": "You must enter a description with less than 256 characters.",
+      "DBS_HOME_FILTER_TYPE_LABEL": "Type",
+      "DBS_HOME_FILTER_TYPE_APP": "App",
+      "DBS_HOME_FILTER_TYPE_DSB": "Dashboard",
+      "DBS_HOME_FILTER_SERVICE_LABEL": "Cloud Services",
+      "DBS_HOME_FILTER_SERVICE_LA": "Log Analytics",
+      "DBS_HOME_FILTER_SERVICE_APM": "Application Performance Monitoring ",
+      "DBS_HOME_FILTER_SERVICE_APM_ABBR": "APM",
+      "DBS_HOME_FILTER_SERVICE_ITA": "IT Analytics",
+      "DBS_HOME_FILTER_CREATOR_LABEL": "Creator",
+      "DBS_HOME_FILTER_CREATOR_ORACLE": "Oracle",
+      "DBS_HOME_FILTER_CREATOR_OTHER": "Me",
       "DBS_HOME_COME_SOON_DLG_INFO": "Information",
       "DBS_HOME_COME_SOON_DLG_BODY": "Coming soon...",
       "DBS_HOME_CFM_DLG_DELETE_DSB": "Delete Dashboard",
@@ -65,8 +78,13 @@ define({
       "DBS_BUILDER_REQUIRE_NAME": "Name is required",
       "DBS_BUILDER_BTN_ADD_WIDGET": "Add Widgets",
       "DBS_BUILDER_BTN_ADD": "Add",
-      "DBS_BUILDER_BTN_ADD_HINT_TITLE": "How do I use this page?",
-      "DBS_BUILDER_BTN_ADD_HINT_DETAIL": "Click the + button and add new widgets to your dashboard",
+//      "DBS_BUILDER_BTN_ADD_HINT_TITLE": "How do I use this page?",
+//      "DBS_BUILDER_BTN_ADD_HINT_DETAIL": "Click the + button and add new widgets to your dashboard",
+      "DBS_BUILDER_BTN_ADD_HINT_TITLE": "Your dashboard has no data to display",
+      "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1": "Add one or more widgets to see data in the dashboard",
+      "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1": "Click ",
+      "DBS_BUILDER_BTN_ADD_HINT_ADD_LINK": "Add",
+      "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2": " to get started",
       "DBS_BUILDER_BTN_SAVE_DASHBOARD": "Save Dashboard",
       "DBS_BUILDER_SETTINGS": "Settings",
       "DBS_BUILDER_FILTERS": "FILTERS",
@@ -180,8 +198,6 @@ define({
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out"
       
 
-},
-  "fr": true,
-  "cs": true
+}
 });
 

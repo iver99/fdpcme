@@ -1,6 +1,6 @@
-package oracle.sysman.emaas.platform.dashboard.ui.test.RegistryLookup;
+package oracle.sysman.emaas.platform.dashboards.test.RegistryLookup;
 
-import oracle.sysman.emaas.platform.dashboards.ui.test.common.CommonTest;
+import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -128,7 +128,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=0.1");
+							.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=0.1");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -223,7 +223,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=999");
+							.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=999");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -257,7 +257,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=sso.home");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -313,7 +313,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=Dashboard-UI&version=&rel=sso.home");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -335,7 +335,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -357,7 +357,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=abc&version=0.1&rel=sso.home");
+							.get("registry/lookup/link?serviceName=abc&version=0.1&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -378,7 +378,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=Dashboard-UI&version=999&rel=sso.home");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=999&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res4.getStatusCode());
@@ -400,7 +400,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=abc");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=abc");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
@@ -437,7 +437,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -473,7 +473,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=&version=0.1&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=&version=0.1&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -495,7 +495,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -517,7 +517,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -539,7 +539,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=wrong&version=0.1&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=wrong&version=0.1&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -561,7 +561,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=999&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=999&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res4.getStatusCode());
@@ -583,7 +583,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=abc");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=abc");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());

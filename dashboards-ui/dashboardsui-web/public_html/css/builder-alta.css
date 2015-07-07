@@ -131,7 +131,14 @@ body, html {
   margin-right: -180px;
 }
 
-#builder-toolbar-left, #builder-dbd-description .dbd-display-hover-area, #builder-dbd-description .dbd-display-area-text {
+#builder-dbd-description .dbd-display-hover-area {
+  box-sizing: border-box;
+  float: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#builder-toolbar-left, #builder-dbd-description .dbd-display-area-text {
   width: 100%;
   -moz-box-sizing: border-box;
   box-sizing: border-box;

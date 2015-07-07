@@ -247,19 +247,20 @@ define(['knockout',
             };
             
             self.okChangeDashboardName = function() {
-            	var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
                 nameInput('validate');
                 if (!self.nameValidated)
-                    return;
+                    return false;
                 if (!$('#builder-dbd-name-input')[0].value) {
                     $('#builder-dbd-name-input').focus();
-                    return;
+                    return false;
                 }
                 self.dashboardName(self.dashboardNameEditing());
                 if ($('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-name').removeClass('editing');
                 }
                 dashboard.name(self.dashboardName());
+                return true;
             };
             
             $('#builder-dbd-name-input').on('blur', function(evt) {
@@ -270,7 +271,7 @@ define(['knockout',
             });
             
             self.cancelChangeDashboardName = function() {
-            	var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
                 nameInput('reset');
                 self.dashboardNameEditing(self.dashboardName());
                 if ($('#builder-dbd-name').hasClass('editing')) {
@@ -305,6 +306,14 @@ define(['knockout',
                 if ($('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-description').removeClass('editing');
                 }
+            };
+            
+            self.isNameUnderEdit = function() {
+            	return $('#builder-dbd-name').hasClass('editing');
+            };
+            
+            self.isDescriptionUnderEdit = function() {
+            	return $('#builder-dbd-description').hasClass('editing');
             };
             
             self.handleSettingsDialogOpen = function() {
@@ -488,6 +497,18 @@ define(['knockout',
             //Temp codes for widget test for integrators -- end
             
             self.handleDashboardSave = function() {
+            	if (self.isNameUnderEdit()) {
+            		try {
+            			if (!self.okChangeDashboardName())
+            				return;  // validator not passed, so do not save
+            		}
+            		catch (e) {
+            			return;
+            		}
+            	}
+            	if (self.isDescriptionUnderEdit()) {
+            		self.okChangeDashboardDescription();
+            	}
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
                 var nodesToRecover = [];
@@ -654,14 +675,28 @@ define(['knockout',
                 $('#'+addWidgetDialogId).ojDialog('close');
             };
             
-            self.showAddWidgetTooltip = function() {
-                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
-                   $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
-                }
-            };
-            
+//            self.showAddWidgetTooltip = function() {
+//                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
+//                   $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
+//                }
+//            };
+                        
             // code to be executed at the end after function defined
-            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
+//            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
+                        
+            $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
+                self.handleAddWidgetTooltip();
+            });
+            
+            self.handleAddWidgetTooltip = function() {
+                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
+                    $("#addWidgetToolTip").css("display", "block");
+                }else {
+                    $("#addWidgetToolTip").css("display", "none");
+                }
+            }
+            
+            tilesViewModel.registerTileRemoveCallback(self.handleAddWidgetTooltip);
         }
         
         return {"DashboardTilesView": DashboardTilesView, 
