@@ -356,7 +356,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			InfoManager.getInstance().getInfo().setLinks(links);
 
 			logger.info("Registering service with 'Service Registry'");
-			RegistrationManager.getInstance().getRegistrationClient().registerWith(null);
+			RegistrationManager.getInstance().getRegistrationClient().register();
 			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 
 			setRegistrationComplete(Boolean.TRUE);

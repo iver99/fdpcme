@@ -17,7 +17,7 @@ define(['knockout',
         'ojs/ojpopup'
     ],
     
-    function(ko, $, dtm, dfu)
+    function(ko, $, dtm, dfu, oj)
     {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
@@ -229,7 +229,28 @@ define(['knockout',
                 }
             };
             
+            self.nameValidated = true;
+            self.noSameNameValidator = {
+                'validate' : function (value) {
+                    self.nameValidated = true;
+                    if (self.dashboardName() === value)
+                        return true;
+                    value = value + "";
+
+                    if (value && dtm.isDashboardNameExisting(value)) {
+                        $('#builder-dbd-name-input').focus();
+                        self.nameValidated = false;
+                        throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_SAME_NAME_EXISTS_ERROR"));
+                    }
+                    return true;
+                }
+            };
+            
             self.okChangeDashboardName = function() {
+            	var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                nameInput('validate');
+                if (!self.nameValidated)
+                    return;
                 if (!$('#builder-dbd-name-input')[0].value) {
                     $('#builder-dbd-name-input').focus();
                     return;
@@ -241,7 +262,16 @@ define(['knockout',
                 dashboard.name(self.dashboardName());
             };
             
+            $('#builder-dbd-name-input').on('blur', function(evt) {
+                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
+                    self.cancelChangeDashboardName();
+                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
+                    self.okChangeDashboardName();
+            });
+            
             self.cancelChangeDashboardName = function() {
+            	var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                nameInput('reset');
                 self.dashboardNameEditing(self.dashboardName());
                 if ($('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-name').removeClass('editing');
@@ -324,8 +354,8 @@ define(['knockout',
                 oj.Logger.log("Saved Search service is not available! Try again later.");
             }
             else {
-                var categoryUrl = dfu.buildFullUrl(ssfUrl,'categories');
-                $.ajax({type: 'GET', contentType:'application/json',url: categoryUrl,
+                var categoryUrl = '/sso.static/savedsearch.categories'; //dfu.buildFullUrl(ssfUrl,'categories');
+                dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: categoryUrl,
                     headers: dfu.getSavedSearchServiceRequestHeader(), 
                     async: false,
                     success: function(data, textStatus){
@@ -435,7 +465,7 @@ define(['knockout',
                                         folder:{id: 999}, description: widgetToSave.description, 
                                         queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
                     var saveSearchUrl = dfu.buildFullUrl(ssfUrl,"search");
-                    $.ajax({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
+                    dfu.ajaxWithRetry({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
                         headers: dfu.getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
                         success: function(data, textStatus){
                             $('#createWidgetDialog').ojDialog('close');
@@ -469,7 +499,11 @@ define(['knockout',
                     var height = $(node).height();
                     var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
                     var canvas = document.createElement('canvas');
-                    canvg(canvas, svg);
+                    try {
+                    	canvg(canvas, svg);
+                    } catch (e) {
+                    	oj.Logger.error(e);
+                    }
                     nodesToRecover.push({
                         parent: parentNode,
                         child: node
@@ -483,43 +517,57 @@ define(['knockout',
                 });
                 html2canvas($('#tiles-row'), {
                     onrendered: function(canvas) {
-                        var ctx = canvas.getContext('2d');
-                        ctx.webkitImageSmoothingEnabled = false;
-                        ctx.mozImageSmoothingEnabled = false;
-                        ctx.imageSmoothingEnabled = false;
-                        var data = canvas.toDataURL();
-                        nodesToRemove.forEach(function(pair) {
-                            pair.parent.removeChild(pair.child);
-                        });
-                        nodesToRecover.forEach(function(pair) {
-                            pair.parent.appendChild(pair.child);
-                        });
-                        outputData.screenShot = data;
-                        if (window.opener && window.opener.childMessageListener) {
-                            var jsonValue = JSON.stringify(outputData);
-                            console.log(jsonValue);
-                            window.opener.childMessageListener(jsonValue);
-                        }
-                        tilesViewModel.dashboard.screenShot = ko.observable(data);
-                        var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
-                            'include': ['screenShot', 'description', 'height', 
-                                'isMaximized', 'title', 'type', 'width', 
-                                'tileParameters', 'name', 'systemParameter', 
-                                'tileId', 'value'],
-                            'ignore': ["createdOn", "href", "owner", 
-                                "screenShotHref", "systemDashboard",
-                                "customParameters", "clientGuid", "dashboard", 
-                                "fireDashboardItemChangeEvent", "getParameter", 
-                                "maximizeEnabled", "narrowerEnabled", 
-                                "onDashboardItemChangeEvent", "restoreEnabled", 
-                                "setParameter", "shouldHide", "systemParameters", 
-                                "tileDisplayClass", "widerEnabled", "widget"]
-                        });
-                        var dashboardId = tilesViewModel.dashboard.id();
-                        dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
-                            console.log(error.errorMessage());
-                        });
+                    	try {
+                    		var ctx = canvas.getContext('2d');
+                    		ctx.webkitImageSmoothingEnabled = false;
+                    		ctx.mozImageSmoothingEnabled = false;
+                    		ctx.imageSmoothingEnabled = false;
+                    		var data = canvas.toDataURL();
+                    		nodesToRemove.forEach(function(pair) {
+                    			pair.parent.removeChild(pair.child);
+                    		});
+                    		nodesToRecover.forEach(function(pair) {
+                    			pair.parent.appendChild(pair.child);
+                    		});
+                    		outputData.screenShot = data;
+                    		tilesViewModel.dashboard.screenShot = ko.observable(data);
+                    		if (window.opener && window.opener.childMessageListener) {
+                    			var jsonValue = JSON.stringify(outputData);
+                    			console.log(jsonValue);
+                    			window.opener.childMessageListener(jsonValue);
+                    		}
+                    	} catch (e) {
+                    		oj.Logger.error(e);
+                    	}
+                    	self.handleSaveUpdateToServer();
+                    	dfu.showMessage({
+                    		type: 'confirm',
+                    		summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
+                    		detail: '',
+                    		removeDelayTime: 5000
+                    	});
                     }  
+                });
+            };
+            
+            self.handleSaveUpdateToServer = function() {
+                var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
+                    'include': ['screenShot', 'description', 'height', 
+                        'isMaximized', 'title', 'type', 'width', 
+                        'tileParameters', 'name', 'systemParameter', 
+                        'tileId', 'value'],
+                    'ignore': ["createdOn", "href", "owner", 
+                        "screenShotHref", "systemDashboard",
+                        "customParameters", "clientGuid", "dashboard", 
+                        "fireDashboardItemChangeEvent", "getParameter", 
+                        "maximizeEnabled", "narrowerEnabled", 
+                        "onDashboardItemChangeEvent", "restoreEnabled", 
+                        "setParameter", "shouldHide", "systemParameters", 
+                        "tileDisplayClass", "widerEnabled", "widget"]
+                });
+                var dashboardId = tilesViewModel.dashboard.id();
+                dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
+                    console.log(error.errorMessage());
                 });
             };
             
@@ -585,7 +633,8 @@ define(['knockout',
                 affirmativeButtonLabel: getNlsString('DBS_BUILDER_BTN_ADD'),
                 userName: dfu.getUserName(),
                 tenantName: dfu.getTenantName(),
-                widgetHandler: self.addSelectedWidgetToDashboard
+                widgetHandler: self.addSelectedWidgetToDashboard,
+                autoCloseDialog: false
 //                ,providerName: null     //'TargetAnalytics' 
 //                ,providerVersion: null  //'1.0.5'
 //                ,providerName: 'TargetAnalytics' 

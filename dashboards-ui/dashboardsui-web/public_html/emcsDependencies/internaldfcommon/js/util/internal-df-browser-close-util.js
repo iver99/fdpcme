@@ -21,7 +21,7 @@ define(['knockout',
                      //e.stopPropagation works in Firefox.
                      if (e.stopPropagation) {
                        e.stopPropagation();
-                       e.preventDefault();
+//                       e.preventDefault();
                      }
                      if ($.isFunction(self.action)){
                         self.action(); 

@@ -194,7 +194,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
 	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
 	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "dashboards";
-	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preference";
+	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preferences";
 	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "subscribedapps";
 	private static final String NAV_STATIC_LOGGING = NAV_API_BASE + "logging";
 
@@ -351,10 +351,10 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("static/dashboards.preference").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.preference")
+				links.add(new Link().withRel("static/dashboards.preferences")
 						.withHref(applicationUrlHttps + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttp != null) {

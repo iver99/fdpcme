@@ -9,6 +9,14 @@
  * http://jquery.org/license
  */
 requirejs.config({
+    // Setup module id mapping
+    map: {
+        'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'},
+        '*': {
+              'ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
+              'message-util': '../emcsDependencies/dfcommon/js/util/message-util'
+             }        
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -16,6 +24,7 @@ requirejs.config({
         'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
+        'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/debug',
         'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
         'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
@@ -35,7 +44,8 @@ requirejs.config({
         'canvg':'../emcsDependencies/canvg/canvg',
         'd3':'../emcsDependencies/d3/d3.min',
         'emcta':'../../emcta/ta/js',
-        'emcla':'/emsaasui/emlacore/js'
+        'emcla':'/emsaasui/emlacore/js',
+        'emcsutl': '../emcsDependencies/dfcommon/js/util'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {

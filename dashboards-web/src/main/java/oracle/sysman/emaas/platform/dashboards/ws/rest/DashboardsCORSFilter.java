@@ -43,6 +43,11 @@ public class DashboardsCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
+	        // Only add CORS headers if the developer mode is enabled to add them
+	        if (!(new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists())) {
+		    chain.doFilter(request, response);
+		    return;
+	        }
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");

@@ -50,7 +50,8 @@ function(dfu, oj, ko, $)
         var self = this;
         var url = self.getNavLink();
         if (typeof url==="string"){
-            window.open(self.getNavLink());
+            //window.open(self.getNavLink());
+            window.location = self.getNavLink();
         }
     };
     
@@ -65,7 +66,7 @@ function(dfu, oj, ko, $)
                 var providerName = tiles[0]["PROVIDER_NAME"];
                 var version = tiles[0]["PROVIDER_VERSION"];
                 var assetRoot = tiles[0]["PROVIDER_ASSET_ROOT"];
-                var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot);
+                var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot, false);
                 this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
                    console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 

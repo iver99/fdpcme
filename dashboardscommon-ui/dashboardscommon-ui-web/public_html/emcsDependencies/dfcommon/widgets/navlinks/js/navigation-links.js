@@ -6,7 +6,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
-                self.isAdmin = $.isFunction(params.isAdmin) ? params.isAdmin() : params.isAdmin;
+                var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
+                self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
+                self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
                 self.dashboardsLabel = ko.observable();
@@ -18,6 +20,19 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 self.visualAnalyzers = ko.observableArray();
                 
                 var nlsStringsAvailable = false;
+                
+                //Refresh admin links if isAdmin is observable and will be updated at a later point
+                if (isAdminObservable) {
+                    params.isAdmin.subscribe(function(value) {
+                        self.isAdmin = value;
+                        self.isAdminLinksVisible(value);
+                        //Refresh links only if the links menu drop down is visible
+                        if ($('#links_menu').is(':visible')) {
+                            refreshLinks();
+                        }
+                    });
+                }
+                
                 var refreshListener = ko.computed(function(){
                     return {
                         needRefresh: params.navLinksNeedRefresh()
@@ -79,6 +94,19 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         }
                         if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
                             if (params.app){
+                            	// let's use relative url for customer software for admin link
+                            	for (var i = 0; i < data.adminLinks.length; i++) {
+                            		var link = data.adminLinks[i];
+                            		if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
+                            			if (link.href.indexOf('customersoftware') !== -1){
+                            				var protocolIndex = link.href.indexOf('://');
+                                    		var urlNoProtocol = link.href.substring(protocolIndex + 3);
+                                    		var relPathIndex = urlNoProtocol.indexOf('/');
+                                    		link.href = urlNoProtocol.substring(relPathIndex);
+                                    		break;
+                            			}
+                            		}
+                            	}
                                 if (params.app.appId===params.appDashboard.appId){
                                     self.adminLinks(data.adminLinks);//show all avail admin links
                                 }else{ //show app related admin link and tenant management UI admin link only
@@ -101,7 +129,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         }
                     };                   
                     var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
-                    $.ajax({
+                    dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDefaultHeader(), 
                         contentType:'application/json',
@@ -118,7 +146,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function refreshLinks() {
-                    dfHomeUrl = dfu.discoverDFHomeUrl();
+                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
                     
                     //Fetch available quick links and administration links from service manager registry
                     if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {

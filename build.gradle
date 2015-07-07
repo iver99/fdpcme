@@ -1,4 +1,5 @@
-import java.util.logging.LogManager.Cleaner;  
+import java.util.logging.LogManager.Cleaner;
+import org.gradle.api.artifacts.Configuration.State  
 
 //ext.distDir = "${rootDir}/../../dist" 
 ext.distDir = "${rootDir}/dist"  
@@ -14,12 +15,15 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
 apply plugin: 'TestInfraPlugin'
+
 allprojects {  
 	apply plugin: 'artifactory' 
 	apply plugin: 'artifactory-publish'	
 	apply plugin: 'DevInfraPlugin' 
 	apply plugin: 'maven-publish'
         apply plugin: 'TestInfraPlugin'
+	apply plugin: 'JSPlugin'
+
 	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
@@ -31,7 +35,27 @@ allprojects {
 		} 
 	}  
 //	mavenCentral()  
-	}  
+	} 
+	
+	configurations.all {
+        // Exclude findbugs annotations from all configurations.
+        // In the current world, this is being brought in
+        // by an improperly configured registry client.  We've
+        // attempted to exclude it there, but it occasionally still
+        // sneaks through when some other project that includes
+        // the registry client is included.  In that case,
+        // the registry client's pom is reconsulted without our
+        // exclusion advice, and it's back. This upsets the lawyers.
+        logger.debug "Processing Configuration: $it.name, $it.state"
+        if (it.state == Configuration.State.UNRESOLVED)
+        {
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+        }
+        else
+        {
+            logger.debug "Configuration $it.name state is $it.state so exclusion is not viable"
+        }
+	}
 }
 
 artifactory { 
@@ -45,14 +69,14 @@ artifactory {
 			maven = true 
 		} 
 	} 
-	resolve {  
+/*	resolve {  
 		repository {  
 			repoKey = 'repo'  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 			maven = true  
 		} 
-	}  
+	}  */
 } 
 
 
@@ -82,8 +106,8 @@ dependencies {
 	               'org.apache.logging.log4j:log4j-api:2.0.1'
 	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
-	prebuild_servicemanager 'emaas.platform:registry-client:1.0.1',
-                                'emaas.platform:registry-lookup-client:1.0.1'
+	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.0.0+',
+                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.jdbc:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
@@ -116,9 +140,9 @@ dependencies {
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.0',
 			'com.oracle.emaas.emdi:em-qatool-os-webdriver:1.0.4'
-	prebuild_wlfullc 'test:wlfullclient:2.6'
+	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2',
-			'emaas.platform:registry-lookup-client:1.0.1'
+			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -136,6 +160,8 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
    into "$afDir"
+   rename(/registry-client-1.0.0-\d+.jar/, 'registry-client-1.0.0.jar')
+   rename(/registry-lookup-client-1.0.0-\d+.jar/, 'registry-lookup-client-1.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile
@@ -166,8 +192,8 @@ project(':dashboards-web'){
 		compile project(':dashboards-core')
 				
 		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-    		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '1.0.1') 
-		compile(group: 'emaas.platform', name: 'registry-client', version: '1.0.1') 
+    		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+') 
+		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+') 
 		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
 			module('commons-net:commons-net:1.4.1'){
 				dependencies 'oro:oro:2.0.8:jar'
@@ -192,8 +218,9 @@ buildscript {
 	dependencies {  
 		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
 		classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
+		classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
 
-		 classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
 
 	}  
 }

@@ -5,7 +5,8 @@ configurations {
     appServer     
 }
 
-version = '1.0.0'
+//version = '1.0.0'
+version = project.ext.getServiceVersion("DashboardService-API")
 group = 'emaas/applications/dashboards-framework'
 
 def artifactId = appName 
@@ -35,8 +36,8 @@ dependencies
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1') {transitive=false }
 	earlib (group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.1') {transitive=false}
 	earlib (group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.3') {transitive=false}
-	earlib (group: 'emaas.platform', name:'registry-lookup-client', version:'1.0.1') {transitive=false}
-	earlib (group: 'emaas.platform', name:'registry-client', version: '1.0.1') {transitive=false }
+	earlib (group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') {transitive=false}
+	earlib (group: 'com.oracle.emaas.emcpsm', name:'registry-client', version: '1.0.0+') {transitive=false }
 	earlib (group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2') {transitive=false}
 //	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.1') {transitive=false}
 //	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.1') {transitive=false}
@@ -71,9 +72,7 @@ task appServerInit << {
 
 	dependencies 
 	{
-	        // we are pulling in wlfullclient from "http://artifactory.oraclecorp.com/artifactory/emaas-sandbox-local/" as a temp measure
-          	// once we get right set of JARs figured out - we will remove this
-        	appServer compile(group: 'test', name: 'wlfullclient', version: '2.6')
+			appServer compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0')
 	} 
 	if (!project.hasProperty('serverHost')) { 
 		project.ext.serverHost = "$appServerconfig.serverName"; 

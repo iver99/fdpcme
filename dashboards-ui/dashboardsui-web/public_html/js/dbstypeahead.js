@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['ojs/ojcore', 'jquery', 'knockout','jqueryui'], 
+define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout','jqueryui'], 
        /*
         * @param {Object} oj 
         * @param {jQuery} $
         */
-function(oj, $, ko)
+function(dfu, oj, $, ko)
 {
     
 (function ()
@@ -187,7 +187,7 @@ $.widget( "dbs.dbsTypeAhead", {
 				if ( that.xhr ) {
 					that.xhr.abort();
 				}
-				that.xhr = $.ajax({
+				that.xhr = dfu.ajaxWithRetry({
 					url: url,
 					data: request,
 					dataType: "json",

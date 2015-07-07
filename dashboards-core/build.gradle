@@ -30,7 +30,7 @@ repositories {
     /* Looks into local maven repository for artifacts */
     mavenLocal()
     maven {
-        url = "${artifactory_contextUrl}/repo"
+        url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
 
@@ -86,7 +86,7 @@ publishing {
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/repo"
+            url = "${artifactory_contextUrl}/emaas-virtual"
         }
     }
     dependencies {
@@ -113,7 +113,7 @@ dependencies {
 	compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12')  { transitive = false }
 	compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12')  { transitive = false }
 	compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2')  { transitive = false }
-	compile(group: 'emaas.platform', name: 'registry-client', version: '1.0.1')  
+	compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+')  
 	compile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
 	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.4') {transitive=false}
 

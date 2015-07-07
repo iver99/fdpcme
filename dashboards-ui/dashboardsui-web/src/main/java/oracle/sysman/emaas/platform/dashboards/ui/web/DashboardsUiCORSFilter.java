@@ -9,7 +9,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,12 +30,14 @@ public class DashboardsUiCORSFilter implements Filter
 {
 	private final Logger logger = LogManager.getLogger(DashboardsUiCORSFilter.class);
 	private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
+
 	//	private static final String DEFAULT_USER = "SYSMAN";
 	//	private static final String DEFAULT_TENANT = "TenantOPC1";
 
 	//	private static final String AUTHORIZATION_HEADER = "Authorization"; //header name needed for authorization
 	//	private static final String COOKIE_X_USER_IDENTITY_DOMAIN_NAME = "X-USER-IDENTITY-DOMAIN-NAME";
-	private static final String COOKIE_X_REMOTE_USER = "ORA_EMSAAS_USERNAME_AND_TENANTNAME";
+	//	private static final String COOKIE_X_REMOTE_USER = "ORA_EMSAAS_USERNAME_AND_TENANTNAME";
+	//	private static final String COOKIE_X_REMOTE_USER_PATH = "/emsaasui/emcpdfui";
 
 	@Override
 	public void destroy()
@@ -49,17 +50,22 @@ public class DashboardsUiCORSFilter implements Filter
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
-		hRes.addHeader("Access-Control-Allow-Origin", "*");
-		if (hReq.getHeader("Origin") != null) {
-			// allow cookies
-			hRes.addHeader("Access-Control-Allow-Credentials", "true");
+
+		// Only add CORS headers if the developer mode is enabled to add them
+		if (new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
+
+			hRes.addHeader("Access-Control-Allow-Origin", "*");
+			if (hReq.getHeader("Origin") != null) {
+				// allow cookies
+				hRes.addHeader("Access-Control-Allow-Credentials", "true");
+			}
+			else {
+				// non-specific origin, cannot support cookies
+			}
+			hRes.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); //add more methods as necessary
+			hRes.addHeader("Access-Control-Allow-Headers",
+					"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,X-SSO-CLIENT");
 		}
-		else {
-			// non-specific origin, cannot support cookies
-		}
-		hRes.addHeader("Access-Control-Allow-Methods", "GET, OPTIONS"); //add more methods as necessary
-		hRes.addHeader("Access-Control-Allow-Headers",
-				"Origin, X-Requested-With, Content-Type, Accept, Authorization, X-USER-IDENTITY-DOMAIN-NAME, X-REMOTE-USER,X-SSO-CLIENT");
 
 		//handle Authorization header
 		/*
@@ -77,6 +83,7 @@ public class DashboardsUiCORSFilter implements Filter
 		HttpServletRequest httpReq = (HttpServletRequest) request;
 		String userTenant = httpReq.getHeader(OAM_REMOTE_USER_HEADER);
 
+		/*
 		// default value in case there is no OAM header
 		//		if (userTenant == null){
 		//			// default value for X-REMOTE-USER
@@ -89,9 +96,12 @@ public class DashboardsUiCORSFilter implements Filter
 			for (Cookie cookie : hReq.getCookies()) {
 				if (COOKIE_X_REMOTE_USER.equals(cookie.getName())) {
 					remoteUserExists = true;
-					if (!StringUtil.isEmpty(userTenant)) {
+					String oldCookieValue = cookie.getValue();
+					if (!StringUtil.isEmpty(userTenant) && !userTenant.equals(oldCookieValue)) {
 						updatedCookie = cookie;
 						updatedCookie.setValue(userTenant);
+						updatedCookie.setPath(COOKIE_X_REMOTE_USER_PATH);
+						logger.info("Value of Cookie:" + COOKIE_X_REMOTE_USER + " is updated to " + userTenant);
 					}
 					break;
 				}
@@ -100,10 +110,14 @@ public class DashboardsUiCORSFilter implements Filter
 		if (!remoteUserExists && !StringUtil.isEmpty(userTenant)) {
 			//X-REMOTE-USER should contain <tenant name>.<user name>, keep the original value then
 			updatedCookie = new Cookie(COOKIE_X_REMOTE_USER, userTenant);
+			updatedCookie.setPath(COOKIE_X_REMOTE_USER_PATH);
+			logger.info("New Cookie:" + COOKIE_X_REMOTE_USER + " with value: " + userTenant + " is created");
+
 		}
 		if (updatedCookie != null) {
 			hRes.addCookie(updatedCookie);
 		}
+		 */
 
 		// redirecting check: make sure exception(s) don't have impact on the process
 		try {
@@ -124,7 +138,12 @@ public class DashboardsUiCORSFilter implements Filter
 						if (apmLink != null && !StringUtil.isEmpty(apmLink.getHref())) {
 							logger.info("Tenant subscribes to APM only, and redirecting dashboard home page to APM home: "
 									+ apmLink.getHref());
-							hRes.sendRedirect(apmLink.getHref());
+							String targetUrl = RegistryLookupUtil.replaceWithVanityUrl(apmLink.getHref(), opcTenantId,
+									RegistryLookupUtil.APM_SERVICE);
+							logger.info(
+									"The APM link is replaced with vanity URL from original url: \"{}\" to final url: \"{}\"",
+									apmLink.getHref(), targetUrl);
+							hRes.sendRedirect(targetUrl);
 							return;
 						}
 						else {

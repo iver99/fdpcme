@@ -19,7 +19,7 @@ ext.restDocOutputDir = "${restDocRootDir}"
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/repo"
+            url = "${artifactory_contextUrl}/emaas-virtual"
         }
     }
     dependencies {
@@ -124,7 +124,7 @@ repositories {
     /* Looks into local maven repository for artifacts */
     mavenLocal()
     maven {
-        url = "${artifactory_contextUrl}/repo"
+        url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
 

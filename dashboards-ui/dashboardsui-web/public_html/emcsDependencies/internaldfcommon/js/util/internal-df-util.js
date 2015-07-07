@@ -5,36 +5,39 @@
  */
 define(['knockout',
         'jquery',
-        '../emcsDependencies/dfcommon/js/util/df-util'
+        '../emcsDependencies/dfcommon/js/util/df-util',
+        '../emcsDependencies/dfcommon/js/util/usertenant-util'
     ],
     
-    function(ko, $, dfumodel)
+    function(ko, $, dfumodel, userTenantUtil)
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
             
             self.getUserTenantFromCookie = function() {
-                var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
-                var cookieArray = document.cookie.split(';');
-                var tenantName=null; //in case tenant name is not got
-                var tenantUser=null; //in case use name is not got
-                for (var i = 0; i < cookieArray.length; i++) {
-                    var c = cookieArray[i];
-                    if (c.indexOf(userTenantPrefix) !== -1) {
-                        tenantUser = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
-                        var dotPos = tenantUser.indexOf(".");
-                        if (tenantUser && dotPos>0){
-                           tenantName= tenantUser.substring(0,dotPos);
-                        }
-                        break;
-                    }
-                }
-                if ((!tenantName || !tenantUser) && location.href && location.href.indexOf("error.html") === -1) {
-                	location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href);
-                	return null;
-                }
-                else
-                	return {"tenant": tenantName, "tenantUser": tenantUser};
+                return userTenantUtil.getUserTenant();
+                
+//                var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
+//                var cookieArray = document.cookie.split(';');
+//                var tenantName=null; //in case tenant name is not got
+//                var tenantUser=null; //in case use name is not got
+//                for (var i = 0; i < cookieArray.length; i++) {
+//                    var c = cookieArray[i];
+//                    if (c.indexOf(userTenantPrefix) !== -1) {
+//                        tenantUser = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
+//                        var dotPos = tenantUser.indexOf(".");
+//                        if (tenantUser && dotPos>0){
+//                           tenantName= tenantUser.substring(0,dotPos);
+//                        }
+//                        break;
+//                    }
+//                }
+//                if ((!tenantName || !tenantUser) && location.href && location.href.indexOf("error.html") === -1) {
+//                	location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href);
+//                	return null;
+//                }
+//                else
+//                	return {"tenant": tenantName, "tenantUser": tenantUser};
             };
             
             var userTenant = self.getUserTenantFromCookie();
@@ -84,7 +87,7 @@ define(['knockout',
             self.getRegistrationInfo=function(){
              
                 if (self.registrationInfo===null){
-                    $.ajax({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
+                    dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
                         dataType: 'json',
                         headers: dfu.getDefaultHeader(), 
                         async: false,
@@ -208,18 +211,34 @@ define(['knockout',
                 return userTenant;
             };
             
+            self.getRelUrlFromFullUrl = function(url) {
+            	if (!url)
+            		return url;
+            	var protocolIndex = url.indexOf('://');
+            	if (protocolIndex === -1)
+            		return url;
+            	var urlNoProtocol = url.substring(protocolIndex + 3);
+            	var relPathIndex = urlNoProtocol.indexOf('/');
+            	if (relPathIndex === -1)
+            		return url;
+            	return urlNoProtocol.substring(relPathIndex);
+            };
+            
             /**
              * Discover service asset root path by provider information
              * @param {String} providerName
              * @param {String} providerVersion
              * @param {String} providerAssetRoot
+             * @param {String} relUrlExpected indicates if a relative url is expected or not, false means full url is returned
              * @returns {String} assetRoot
              */
-            self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot){
+            self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot, relUrlExpected){
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo){
                     var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot);
                     if (assetRoot){
+                    	if (relUrlExpected)
+                    		assetRoot = self.getRelUrlFromFullUrl(assetRoot);
                         return assetRoot;
                     }else{
                         console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
@@ -268,6 +287,38 @@ define(['knockout',
              */
             self.discoverQuickLink = function(serviceName, version, rel){
                 return dfu.discoverLinkWithRelPrefix(serviceName, version, rel);
+            };
+            
+            /**
+             * Ajax call with retry logic
+             * @returns 
+             */ 
+            self.ajaxWithRetry = function() {
+		var args = arguments;
+		if(args.length === 1) {
+		     return dfu.ajaxWithRetry(args[0]);
+		}else if(args.length === 2) {
+		     return dfu.ajaxWithRetry(args[0], args[1]);
+		}else if(args.length === 3) {
+		     return dfu.ajaxWithRetry(args[0], args[1], args[2]);
+		}else {
+	             console.log("Arguments number is wrong.");
+		}
+                
+            };
+            
+            /**
+             * Display message
+             */
+            self.showMessage = function(messageObj) {
+            	dfu.showMessage(messageObj);
+            };
+            
+            /**
+             * Discover logout url for current logged in user
+             */
+            self.discoverLogoutUrl = function() {
+            	return dfu.discoverLogoutUrl();
             };
             
         }

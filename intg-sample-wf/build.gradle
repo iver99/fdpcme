@@ -34,14 +34,14 @@ artifactory {
 			maven = true 
 		} 
 	} 
-	resolve {  
+/*	resolve {  
 		repository {  
 			repoKey = 'repo'  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 			maven = true  
 		} 
-	}  
+	}  */
 } 
 
 configurations {
@@ -64,8 +64,8 @@ dependencies {
 	               'org.apache.logging.log4j:log4j-api:2.0.1'
 	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
-	prebuild_servicemanager 'emaas.platform:registry-client:1.0.1',
-                                'emaas.platform:registry-lookup-client:1.0.1'
+	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.0.0+',
+                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
 				 'oracle.ojdbc6:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
@@ -96,9 +96,9 @@ dependencies {
 			'com.jayway.restassured:xml-path:1.9.0',
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.0'
-	prebuild_wlfullc 'test:wlfullclient:2.6'
+	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2'
-			'emaas.platform:registry-lookup-client:1.0.1'
+			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 }
 
 buildscript {  
