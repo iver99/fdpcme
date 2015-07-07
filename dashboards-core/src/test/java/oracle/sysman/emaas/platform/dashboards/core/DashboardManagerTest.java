@@ -294,7 +294,8 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateUpdateSystemDashboard() throws DashboardException	{
+	public void testCreateUpdateSystemDashboard() throws DashboardException
+	{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
 		// try to insert system dashboard, and it should work also
@@ -427,60 +428,60 @@ public class DashboardManagerTest
 		}
 	}
 
-	@Test
-	public void testFavoriteDashboards() throws DashboardException
-	{
-		DashboardManager dm = DashboardManager.getInstance();
-		String name1 = "name1" + System.currentTimeMillis();
-		Long tenantId1 = 11L;
-		Dashboard dbd1 = new Dashboard();
-		dbd1.setName(name1);
-		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
-
-		List<Dashboard> dbList = dm.getFavoriteDashboards(tenantId1);
-		int originSize = dbList == null ? 0 : dbList.size();
-		// add+check
-		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-		dbList = dm.getFavoriteDashboards(tenantId1);
-		Assert.assertEquals(dbList.size(), originSize + 1);
-		// silent operation: re-add+check
-		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-		dbList = dm.getFavoriteDashboards(tenantId1);
-		Assert.assertEquals(dbList.size(), originSize + 1);
-		// remove+check
-		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-		dbList = dm.getFavoriteDashboards(tenantId1);
-		Assert.assertEquals(dbList.size(), originSize);
-		// silent operation: re-remove+check
-		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-		dbList = dm.getFavoriteDashboards(tenantId1);
-		Assert.assertEquals(dbList.size(), originSize);
-
-		// create & delete dashboard check
-		dm = DashboardManager.getInstance();
-		String name2 = "name2" + System.currentTimeMillis();
-		Dashboard dbd2 = new Dashboard();
-		dbd2.setName(name2);
-		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
-		dm.addFavoriteDashboard(dbd2.getDashboardId(), tenantId1);
-		dbList = dm.getFavoriteDashboards(tenantId1);
-		originSize = dbList == null ? 0 : dbList.size();
-		dm.deleteDashboard(dbd2.getDashboardId(), tenantId1);
-		dbList = dm.getFavoriteDashboards(tenantId1);
-		Assert.assertEquals(dbList.size(), originSize - 1);
-
-		// post test
-		try {
-			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-		}
-		catch (DashboardNotFoundException e) {
-		}
-		try {
-			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
-		}
-		catch (DashboardNotFoundException e) {
-		}
-	}
+	//	@Test
+	//	public void testFavoriteDashboards() throws DashboardException
+	//	{
+	//		DashboardManager dm = DashboardManager.getInstance();
+	//		String name1 = "name1" + System.currentTimeMillis();
+	//		Long tenantId1 = 11L;
+	//		Dashboard dbd1 = new Dashboard();
+	//		dbd1.setName(name1);
+	//		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
+	//
+	//		List<Dashboard> dbList = dm.getFavoriteDashboards(tenantId1);
+	//		int originSize = dbList == null ? 0 : dbList.size();
+	//		// add+check
+	//		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+	//		dbList = dm.getFavoriteDashboards(tenantId1);
+	//		Assert.assertEquals(dbList.size(), originSize + 1);
+	//		// silent operation: re-add+check
+	//		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+	//		dbList = dm.getFavoriteDashboards(tenantId1);
+	//		Assert.assertEquals(dbList.size(), originSize + 1);
+	//		// remove+check
+	//		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+	//		dbList = dm.getFavoriteDashboards(tenantId1);
+	//		Assert.assertEquals(dbList.size(), originSize);
+	//		// silent operation: re-remove+check
+	//		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+	//		dbList = dm.getFavoriteDashboards(tenantId1);
+	//		Assert.assertEquals(dbList.size(), originSize);
+	//
+	//		// create & delete dashboard check
+	//		dm = DashboardManager.getInstance();
+	//		String name2 = "name2" + System.currentTimeMillis();
+	//		Dashboard dbd2 = new Dashboard();
+	//		dbd2.setName(name2);
+	//		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
+	//		dm.addFavoriteDashboard(dbd2.getDashboardId(), tenantId1);
+	//		dbList = dm.getFavoriteDashboards(tenantId1);
+	//		originSize = dbList == null ? 0 : dbList.size();
+	//		dm.deleteDashboard(dbd2.getDashboardId(), tenantId1);
+	//		dbList = dm.getFavoriteDashboards(tenantId1);
+	//		Assert.assertEquals(dbList.size(), originSize - 1);
+	//
+	//		// post test
+	//		try {
+	//			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
+	//		}
+	//		catch (DashboardNotFoundException e) {
+	//		}
+	//		try {
+	//			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+	//		}
+	//		catch (DashboardNotFoundException e) {
+	//		}
+	//	}
 
 	@Test
 	public void testGetDashboardByName() throws DashboardException

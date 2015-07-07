@@ -395,58 +395,58 @@ define(['knockout',
             });
         }
         
-        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack)
-                        succCallBack(data.isFavorite);
-                },
-                error: function(e) {
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack)
+//                        succCallBack(data.isFavorite);
+//                },
+//                error: function(e) {
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'post',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'post',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'delete',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'delete',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
         function registerComponent(kocName, viewModel, template) {
             if (!ko.components.isRegistered(kocName)) {
@@ -897,10 +897,7 @@ define(['knockout',
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "updateDashboard": updateDashboard,
-            "registerComponent": registerComponent,
-            "loadIsFavorite": loadIsFavorite,
-            "setAsFavorite": setAsFavorite,
-            "removeFromFavorite": removeFromFavorite
+            "registerComponent": registerComponent
         };
     }
 );
