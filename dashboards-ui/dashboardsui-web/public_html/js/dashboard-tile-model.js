@@ -674,6 +674,9 @@ define(['knockout',
                    case "configure":
                        self.configure(tile);
                        break;
+                   case "refresh-this-widget":
+                       self.refreshThisWidget(tile);
+                       break; 
                }
            };
            
@@ -804,6 +807,11 @@ define(['knockout',
                     tile.configure();
                 }
             };
+
+            self.refreshThisWidget = function(tile) {
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
+                self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+            }
             
             self.changeUrl = function(tile) {
                 urlEditView.setEditedTile(tile);
