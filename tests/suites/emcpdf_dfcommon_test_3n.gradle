@@ -86,9 +86,9 @@ task small_deploy_3n_block(type: EMTest) {
 }
 
      task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
-	include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestAnalyzerPage.class"
+	//include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestAnalyzerPage.class"
 	include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestDashboardPage.class"
-	include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestOtherPage.class"
+	//include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestOtherPage.class"
 	
 	useRestAssured=true
 }
@@ -109,4 +109,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
 }
 
 
-task emcpdf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+task emcpdf_dfcommon_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
