@@ -44,10 +44,6 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "0.1";
 	private static final String SAVED_SEARCH_SERVICE_REL = "search";
 
-	private static final String DASHBOARD_UI_SERVICE_NAME = "Dashboard-UI";
-	private static final String DASHBOARD_UI_SERVICE_VERSION = "0.1";
-	private static final String DASHBOARD_UI_SERVICE_REL = "home";
-
 	private Timer timer;
 	private Integer notificationId;
 	private final RegistryServiceManager rsm;
@@ -114,21 +110,6 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			return;
 		}
 
-		// check df UI service's availability
-		boolean isDFUiAvailable = true;
-		try {
-			isDFUiAvailable = isDashboardUiAvailable();
-		}
-		catch (Exception e) {
-			isDFUiAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
-		}
-		if (!isDFUiAvailable) {
-			rsm.markOutOfService();
-			logger.info("Dashboards Common UI service is out of service because Dashboard UI service is unavailable");
-			return;
-		}
-
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
@@ -190,13 +171,6 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	{
 		Link lk = RegistryLookupUtil.getServiceInternalLink(DASHBOARD_API_SERVICE_NAME, DASHBOARD_API_SERVICE_VERSION,
 				DASHBOARD_API_SERVICE_REL, null);
-		return lk != null && !StringUtil.isEmpty(lk.getHref());
-	}
-
-	private boolean isDashboardUiAvailable()
-	{
-		Link lk = RegistryLookupUtil.getServiceInternalLink(DASHBOARD_UI_SERVICE_NAME, DASHBOARD_UI_SERVICE_VERSION,
-				DASHBOARD_UI_SERVICE_REL, null);
 		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 
