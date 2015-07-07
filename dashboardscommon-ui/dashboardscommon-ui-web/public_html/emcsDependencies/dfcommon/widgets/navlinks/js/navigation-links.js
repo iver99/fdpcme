@@ -15,7 +15,7 @@ define(['knockout', 'jquery', 'emcpdfcommon/js/util/df-util', 'ojs/ojcore'],
                 //NLS strings
                 self.visualAnalyzersLabel = nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL;
                 self.administrationLabel = nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL;
-                self.homeLinkLabel = nlsStrings.nls.BRANDING_BAR_NAV_HOME_LABEL;
+                self.homeLinkLabel = nlsStrings.BRANDING_BAR_NAV_HOME_LABEL;
                 self.cloudServicesLabel = nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL;
                 
                 self.cloudServices = ko.observableArray();
