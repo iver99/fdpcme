@@ -91,7 +91,7 @@
                                             </div>
                                             <!-- filter panel end-->
                                     </div>
-                                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px;">
+                                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;">
                                             <!-- Home toolbar start -->
                                             <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
                                                 <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
@@ -175,13 +175,13 @@
                         <div data-bind="with: selectedDashboard">
                             <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
-                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE')"></span><span data-bind="text: dashboard.type"></span><br/>
-                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_ISSYS')"></span><span data-bind="text: dashboard.systemDashboard"></span><br/>
+                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE')"></span><span data-bind="text: (dashboard.systemDashboard == true ? getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_SYS') : getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_USER')) "></span><br/>
+                            <!--span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_ISSYS')"></span><span data-bind="text: dashboard.systemDashboard"></span><br/-->
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
                             <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
                                 <button class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', label: 'Delete', icons: {start:'oj-fwk-icon icon-trashcan-ena-16'}, disabled: dashboard.systemDashboard}, click: $root.handleDashboardDeleted"></button>
-                                <button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $root.handleCloseDashboardPop"></button>
+                                <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $root.handleCloseDashboardPop"></button-->
                             </div>
                         </div>
                         
@@ -273,6 +273,8 @@
                         <div class="oj-dialog-footer">
                             <button data-bind="click: confirmDialogModel.okFunction, 
                                                ojComponent: { component: 'ojButton', label: confirmDialogModel.okLabel, rootAttributes: {style:'margin-right:5px'}}"></button>
+                            <button data-bind="visible: confirmDialogModel.showCancel, click: confirmDialogModel.close, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         </div>
                     </div>
                     <!-- Confirmation dilog end -->

@@ -76,6 +76,8 @@ define({
       "DBS_HOME_DSB_PAGE_INFO_CREATE": "Created By: ",
       "DBS_HOME_DSB_PAGE_INFO_CDATE": "Creation Date: ",
       "DBS_HOME_DSB_PAGE_INFO_TYPE": "Type: ",
+      "DBS_HOME_DSB_PAGE_INFO_TYPE_SYS": "System Dashboard",
+      "DBS_HOME_DSB_PAGE_INFO_TYPE_USER": "User Dashboard",
       "DBS_HOME_DSB_PAGE_INFO_ISSYS": "System Dashboard: ",
       "DBS_BUILDER_LOADING": "Loading...",
       "DBS_BUILDER_NAME_EDIT": "Double click to edit name",
