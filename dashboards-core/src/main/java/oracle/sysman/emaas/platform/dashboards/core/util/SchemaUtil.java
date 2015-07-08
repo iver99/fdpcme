@@ -29,7 +29,7 @@ import java.net.URL;
 import java.util.Properties;	 
 
 
-import org.apache.commons.lang.StringUtils;
+//import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -372,9 +372,10 @@ public class SchemaUtil {
 
 	public String get(String url)
 	{
-		if (StringUtils.isEmpty(url)) {
+		if (url == null || "".equals(url.trim())) {
 			return null;
 		}
+		
 
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
