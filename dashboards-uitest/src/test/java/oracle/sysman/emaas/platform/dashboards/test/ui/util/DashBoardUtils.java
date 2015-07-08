@@ -107,8 +107,16 @@ public class DashBoardUtils {
 		driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 		
 		//verify title and desc of dashboard
-		Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
-		Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+		/*if( getText(DashBoardPageId.DashboardNameID) == null)
+		{
+			Assert.assertEquals(getText(DashBoardPageId.MDashboardNameID),"AAA_testDashboard");
+			Assert.assertEquals(getText(DashBoardPageId.MDashboardDescID),"AAA_testDashBoard desc");
+		}
+		else*/{
+			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
+			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+		}
+				
 		
 		driver.click(DashBoardPageId.WidgetAddButtonID);
 				
@@ -143,8 +151,15 @@ public class DashBoardUtils {
 			waitForMilliSeconds(500);
 			
 			//verify title and desc of dashboard
-			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
-			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+			/*if( getText(DashBoardPageId.DashboardNameID) == null)
+			{
+				Assert.assertEquals(getText(DashBoardPageId.MDashboardNameID),"AAA_testDashboard");
+				Assert.assertEquals(getText(DashBoardPageId.MDashboardDescID),"AAA_testDashBoard desc");
+			}
+			else{
+				Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
+				Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+			}*/
 			
 			driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 			driver.click(DashBoardPageId.WidgetAddButtonID);					

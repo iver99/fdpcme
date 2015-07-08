@@ -54,9 +54,9 @@ public class DashBoardPageId {
 	public static final String HomeLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a";
 	//IT Analytics link
 	public static final String ITALinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
-	//Log Analytics link
+	//Log Analytics link/html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a
 	public static final String LALinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
-	//APM link
+	//APM link /html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a
 	public static final String APMLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
 	//Log link
 	public static final String LOGLinkID = "/html/body/div[2]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
@@ -78,9 +78,15 @@ public class DashBoardPageId {
 	public static final String Oracle_BoxID = "oracleopt";
 	public static final String Other_BoxID = "otheropt";
 	
-	//id of dashboard name
-	public static final String DashboardNameID = "/html/body/div[3]/div/div/div/div/div/span/h1";
+	//id of dashboard name /html/body/div[2]/div/div/div/div/div/span/h1 /html/body/div[2]/div/div/div/div[2]/div/span/span,/html/body/div[3]/div/div/div/div/div/span/h1;/html/body/div[2]/div/div/div/div[2]/div/span/span
+	public static final String DashboardNameID = "/html/body/div[2]/div/div/div/div/div/span/h1";
+	public static final String MDashboardNameID = "/html/body/div[3]/div/div/div/div/div/span/h1";
 	//id of dashboard desc
-	public static final String DashboardDescID = "/html/body/div[3]/div/div/div/div[2]/div/span/span";
+	public static final String DashboardDescID = "/html/body/div[2]/div/div/div/div[2]/div/span/span";
+	public static final String MDashboardDescID = "/html/body/div[3]/div/div/div/div[2]/div/span/span";
+	
+	//remove dashboard
+	public static final String InfoBtnID = "/html/body/div[2]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
+	public static final String RmBtnID = "/html/body/div/div/div/div/div/div/div[2]/button";
 	
 }
