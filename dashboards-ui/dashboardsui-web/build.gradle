@@ -460,10 +460,10 @@ dependencies {
 	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
 	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'1.9.0'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){ transitive = false }
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-17062', ext: 'war'){ transitive = false }
@@ -475,12 +475,12 @@ dependencies {
 		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip', changing: true)
 	}
 
-	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.29'
+	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	restDoc(
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.29'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.29'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.29'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.29'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.28'],
+		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.28'],
 		[group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
 		[group: 'com.oracle.weblogic', name: 'jersey-server-1.17.1', version: '12.1.2-0-0'],
 		[group: 'com.oracle.weblogic', name: 'jersey-servlet-1.17.1', version: '12.1.2-0-0']
