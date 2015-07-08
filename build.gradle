@@ -97,7 +97,7 @@ configurations {
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
 	prebuild_tenant { transitive = false }
-
+compile.exclude group: "com.google.code.findbugs", module: "annotations"
 }
 
 dependencies {
@@ -140,7 +140,7 @@ dependencies {
 			'com.jayway.restassured:rest-assured:2.3.1',
 			'com.oracle.emaas.emdi:em-qatool-os-webdriver:1.0.7'
 	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
-	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2',
+	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
 			'emaas.platform:registry-lookup-client:0.23.6'
 }
 
