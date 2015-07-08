@@ -416,7 +416,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     start = oj.IntlConverterUtils.dateToLocalIso(start);
                     end = oj.IntlConverterUtils.dateToLocalIso(end);                    
 
-                    self.dateTimeInfo("<span style='font-weight:bold'>" + self.timePeriod() + ":</span>" +
+                    self.dateTimeInfo("<span style='font-weight:bold'>" + self.timePeriod() + ": </span>" +
                             self.dateTimeConverter.format(start) +
                             "<span style='font-weight:bold'> - </span>" +
                             self.dateTimeConverter.format(end));
