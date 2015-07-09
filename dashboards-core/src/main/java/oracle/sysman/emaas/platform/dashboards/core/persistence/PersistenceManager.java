@@ -1,15 +1,21 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import oracle.sysman.qatool.uifwk.utils.Utils; 
+
+import oracle.sysman.qatool.uifwk.utils.Utils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class PersistenceManager
 {
+	private static final Logger logger = LogManager.getLogger(PersistenceManager.class);
+
 	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
 	 */
@@ -83,19 +89,20 @@ public class PersistenceManager
 	private void initialize()
 	{
 		if (IS_TEST_ENV) {
+			logger.info("Dashboard JPA Persistence Manager is now running in test environment");
 			// testng local properties
 			Properties props = loadProperties(CONNECTION_PROPS_FILE);
 			// lrg env only
 			if (System.getenv("T_WORK") != null) {
-				
-				
-				String url = "jdbc:oracle:thin:@"+Utils.getProperty("ODS_HOSTNAME")+":"+Utils.getProperty("ODS_PORT")+":"+Utils.getProperty("ODS_SERVICE");
+
+				String url = "jdbc:oracle:thin:@" + Utils.getProperty("ODS_HOSTNAME") + ":" + Utils.getProperty("ODS_PORT") + ":"
+						+ Utils.getProperty("ODS_SERVICE");
 				props.put("javax.persistence.jdbc.url", url);
 				String user = "EMAAS_DASHBOARDS";
 				props.put("javax.persistence.jdbc.user", user);
 				String password = "welcome1";
 				props.put("javax.persistence.jdbc.password", password);
-		
+
 			}
 			createEntityManagerFactory(TEST_PERSISTENCE_UNIT, props);
 		}
@@ -109,13 +116,13 @@ public class PersistenceManager
 		Properties connectionProps = new Properties();
 		InputStream input = null;
 		try {
-			input = PersistenceManager.class.getResourceAsStream("/"+testPropsFile);//new FileInputStream(testPropsFile);
+			input = PersistenceManager.class.getResourceAsStream("/" + testPropsFile);//new FileInputStream(testPropsFile);
 			connectionProps.load(input);
 			return connectionProps;
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
-
+			//			ex.printStackTrace();
+			logger.error(ex.getLocalizedMessage(), ex);
 		}
 		return connectionProps;
 
@@ -124,5 +131,6 @@ public class PersistenceManager
 	protected synchronized void createEntityManagerFactory(String puName, Properties props)
 	{
 		emf = Persistence.createEntityManagerFactory(puName, props);
+		logger.debug("EntityManagerFactory has been created with properties {}", props == null ? null : props.toString());
 	}
 }

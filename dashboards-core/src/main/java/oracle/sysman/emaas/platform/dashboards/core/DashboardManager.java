@@ -368,13 +368,19 @@ public class DashboardManager
 	public EmsDashboardLastAccess getLastAccess(Long dashboardId, Long tenantId)
 	{
 		if (dashboardId == null || dashboardId <= 0) {
+			logger.debug("Last access for dashboard not found for dashboard id {} is invalid", dashboardId);
 			return null;
 		}
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+			if (ed == null) {
+				logger.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
+				return null;
+			}
+			if (ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+				logger.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
 				return null;
 			}
 			em = dsf.getEntityManager();
@@ -503,6 +509,9 @@ public class DashboardManager
 	public PaginatedDashboards listDashboards(String queryString, final Integer offset, Integer pageSize, Long tenantId,
 			boolean ic, String orderBy, DashboardsFilter filter) throws DashboardException
 	{
+		logger.debug(
+				"Listing dashboards with parameters: queryString={}, offset={}, pageSize={}, tenantId={}, ic={}, orderBy={}, filter={}",
+				queryString, offset, pageSize, tenantId, ic, orderBy, filter);
 		if (offset != null && offset < 0) {
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_QUERY_INVALID_OFFSET));
@@ -761,6 +770,7 @@ public class DashboardManager
 	public Dashboard saveNewDashboard(Dashboard dbd, Long tenantId) throws DashboardException
 	{
 		if (dbd == null) {
+			logger.debug("Dashboard is not saved: it's impossible to save null dashboard");
 			return null;
 		}
 		EntityManager em = null;
@@ -847,6 +857,7 @@ public class DashboardManager
 	public Dashboard updateDashboard(Dashboard dbd, Long tenantId) throws DashboardException
 	{
 		if (dbd == null) {
+			logger.debug("Dashboard is not updated: it's impossible to update null dashboard");
 			return null;
 		}
 		EntityManager em = null;
@@ -925,6 +936,7 @@ public class DashboardManager
 	public void updateLastAccessDate(Long dashboardId, Long tenantId, DashboardServiceFacade dsf)
 	{
 		if (dashboardId == null || dashboardId <= 0) {
+			logger.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
 			return;
 		}
 		EntityManager em = null;
@@ -980,6 +992,7 @@ public class DashboardManager
 	private boolean isDashboardAccessbyCurrentTenant(EmsDashboard ed) throws TenantWithoutSubscriptionException
 	{
 		if (ed == null) {
+			logger.debug("null dashboard is not accessed by current tenant");
 			return false;
 		}
 		List<DashboardApplicationType> datList = getTenantApplications();
@@ -988,6 +1001,7 @@ public class DashboardManager
 		}
 		Boolean isSystem = DataFormatUtils.integer2Boolean(ed.getIsSystem());
 		if (!isSystem) { // check system dashboard only
+			logger.debug("dashboard with id {} is accessed by current tenant", ed.getDashboardId());
 			return true;
 		}
 		Integer at = ed.getApplicationType();
