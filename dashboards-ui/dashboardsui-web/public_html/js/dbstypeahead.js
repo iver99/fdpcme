@@ -209,7 +209,7 @@ $.widget( "dbs.dbsTypeAhead", {
                                 else _fetchSize = _dsFetchSize;
                             }
                             _dataSource = _dsFac.build(request.term, _fetchSize);
-                            _dataSource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
+                            _dataSource['pagingDS'].setPage(0, {
                                 success: function() {
                                     //console.log("[dbsTypeAhead] fetch success");
                                     response(_dataSource);
