@@ -11,12 +11,16 @@
 package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
@@ -39,6 +43,9 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
 	private static final String DASHBOARD_API_SERVICE_VERSION = "0.1";
 	private static final String DASHBOARD_API_SERVICE_REL = "base";
+
+	private static final String DASHBOARD_COMMON_UI_SERVICE_NAME = "Dashboard-Common-UI";
+	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "0.1";
 
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "0.1";
@@ -110,6 +117,23 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			return;
 		}
 
+		if (false) {// disable until common ui service is delivered
+			// check if dashboard common UI service availability
+			boolean isCommonUIAvailable = true;
+			try {
+				isCommonUIAvailable = isCommonUIAvailable();
+			}
+			catch (Exception e) {
+				isCommonUIAvailable = false;
+				logger.error(e.getLocalizedMessage(), e);
+			}
+			if (!isCommonUIAvailable) {
+				rsm.markOutOfService();
+				logger.info("Dashboards UI service is out of service because Dashboard Common UI service is unavailable");
+				return;
+			}
+		}
+
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
@@ -164,6 +188,20 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		catch (InstanceNotFoundException e) {
 			logger.error(e.getLocalizedMessage(), e);
+		}
+	}
+
+	private boolean isCommonUIAvailable()
+	{
+		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(DASHBOARD_COMMON_UI_SERVICE_NAME)
+				.withVersion(DASHBOARD_COMMON_UI_SERVICE_VERSION).build();
+		try {
+			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			return result != null && !result.isEmpty();
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return false;
 		}
 	}
 
