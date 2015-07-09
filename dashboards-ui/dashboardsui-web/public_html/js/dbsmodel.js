@@ -142,11 +142,7 @@ function(dsf, oj, ko, $, dfu, pfu)
     function ViewModel() {
         
         var self = this;
-        self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
 //        self.dfRestApiUrl = dfu.discoverDFRestApiUrl();
-        //welcome
-        self.prefUtil = new pfu("/sso.static/dashboards.preferences"/*dfu.buildFullUrl(self.dfRestApiUrl,'preferences')*/, dfu.getDashboardsRequestHeader());
-        self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
         
         //dashboards
         self.showSeachClear = ko.observable(false);
@@ -192,6 +188,11 @@ function(dsf, oj, ko, $, dfu, pfu)
                 oj.Logger.error("Error when fetching data for paginge data source. " + (jqXHR ? jqXHR.responseText : ""));
             }
         } );
+        //welcome
+        self.prefUtil = new pfu("/sso.static/dashboards.preferences"/*dfu.buildFullUrl(self.dfRestApiUrl,'preferences')*/, dfu.getDashboardsRequestHeader());
+        self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil);
+        
+        self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
