@@ -31,6 +31,7 @@ role value for that section to represent the appropriate content type.
 
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
+	<link rel="stylesheet" href="emcsDependencies/dfcommon/widgets/datetime-picker/css/datetime-picker.css"/>
 
         <!-- RequireJS bootstrap file -->
         <script data-main="js/builderMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
@@ -506,10 +507,13 @@ role value for that section to represent the appropriate content type.
                                                                 value: categoryValue,
                                                                 optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:373px;'}}"-->
-                               <df-time-selector params="{model:timeSelectorModel}"></df-time-selector>
+                               <!--df-time-selector params="{model:timeSelectorModel}" ></df-time-selector-->
+			       <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}"></div>
                             </div>
                             <div class="oj-col oj-sm-6">
                                 <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>
+				<!--div data-bind="component: {name: 'df-auto-refresh', params: autoRefreshParams}" style="float:right;padding-right: 10px"></div-->
+				<!--df-auto-refresh params="autoRefreshParams"></df-auto-refresh-->
                             </div>
                             <!--div class="oj-col oj-sm-4"></div-->
                             
@@ -548,7 +552,15 @@ role value for that section to represent the appropriate content type.
                                                       <span class="oj-menu-item-icon demo-icon-font">
                                                           <img src="images/qual_gear_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_CFG')}"/></span>
                                                       <span data-bind="text: getNlsString('DBS_BUILDER_TILE_CFG')"></span></a>
-                                                </li> 
+                                                </li>
+                                                <li id="refresh-this-widget">
+                                                    <a href="#">
+                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                            <img src="images/func_refresh_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_REFRESH')}"/>
+                                                        </span>
+                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REFRESH')"></span>
+                                                    </a>
+                                                </li>
                                                 <li id="delete" data-bind="css: { 'oj-disabled': editDisabled()}">
                                                   <a href="#">
                                                       <span class="oj-menu-item-icon demo-icon-font">

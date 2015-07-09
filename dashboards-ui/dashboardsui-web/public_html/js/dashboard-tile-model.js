@@ -395,58 +395,58 @@ define(['knockout',
             });
         }
         
-        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack)
-                        succCallBack(data.isFavorite);
-                },
-                error: function(e) {
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack)
+//                        succCallBack(data.isFavorite);
+//                },
+//                error: function(e) {
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'post',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'post',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'delete',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'delete',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
         function registerComponent(kocName, viewModel, template) {
             if (!ko.components.isRegistered(kocName)) {
@@ -682,6 +682,9 @@ define(['knockout',
                    case "configure":
                        self.configure(tile);
                        break;
+                   case "refresh-this-widget":
+                       self.refreshThisWidget(tile);
+                       break; 
                }
            };
            
@@ -812,6 +815,11 @@ define(['knockout',
                     tile.configure();
                 }
             };
+
+            self.refreshThisWidget = function(tile) {
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
+                self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+            }
             
             self.changeUrl = function(tile) {
                 urlEditView.setEditedTile(tile);
@@ -880,8 +888,47 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });
-        }
-        
+
+	var initStart = new Date(new Date() - 24*60*60*1000);
+        var initEnd = new Date();
+ 	self.timeSelectorModel.viewStart(initStart);
+        self.timeSelectorModel.viewEnd(initEnd);
+	self.datetimePickerParams = {
+	    startDateTime: initStart,
+ 	    endDateTime: initEnd,	   
+	    callback: function(start, end) {
+		self.timeSelectorModel.viewStart(start);
+		self.timeSelectorModel.viewEnd(end);
+		self.timeSelectorModel.timeRangeChange(true);		
+	    }
+	}
+
+/**
+	self.refreshCallback = function(start, end) {
+	    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(start,end),null);
+            self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+	}
+	self.timeRangeStart = ko.observable(new Date(new Date() - 24*60*60*1000));
+        self.timeRangeEnd = ko.observable(new Date());
+	self.datetimePickerParams = {
+	    startDateTime: new Date() - 24*60*60*1000,
+ 	    endDateTime: new Date(),
+	    callback: function(start, end) {
+		self.timeRangeStart(start);
+		self.timeRangeEnd(end);
+		self.refreshCallback(start, end);
+	    }
+	}
+	self.autoRefreshParams = ko.computed(function() {
+    	    return {
+	        timeRangeStart: self.timeRangeStart(),
+        	timeRangeEnd: self.timeRangeEnd(),
+	    	refreshCallback: self.refreshCallback
+	    }
+	}, self);
+**/
+
+    }
         function DashboardViewModel() {
             var self = this;
             
@@ -897,10 +944,7 @@ define(['knockout',
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "updateDashboard": updateDashboard,
-            "registerComponent": registerComponent,
-            "loadIsFavorite": loadIsFavorite,
-            "setAsFavorite": setAsFavorite,
-            "removeFromFavorite": removeFromFavorite
+            "registerComponent": registerComponent
         };
     }
 );

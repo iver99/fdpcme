@@ -592,54 +592,54 @@ define(['knockout',
                 });
             };
             
-            self.isFavorite = ko.observable(false);
-            self.initializeIsFavorite = function() {
-                dtm.loadIsFavorite(self.dashboardId, function(isFavorite){
-                    self.isFavorite(isFavorite);
-                }, function(e) {
-                    console.log(e.errorMessage());
-                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
-                });
-            }();  
+//            self.isFavorite = ko.observable(false);
+//            self.initializeIsFavorite = function() {
+//                dtm.loadIsFavorite(self.dashboardId, function(isFavorite){
+//                    self.isFavorite(isFavorite);
+//                }, function(e) {
+//                    console.log(e.errorMessage());
+//                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
+//                });
+//            }();  
             
-            self.addToFavorites = function() {
-                dtm.setAsFavorite(self.dashboardId, function() {
-                    self.isFavorite(true);
-//                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-//                    outputData.eventType = "ADD_TO_FAVORITES";
-//                    if (window.opener && window.opener.childMessageListener) {
-//                        var jsonValue = JSON.stringify(outputData);
-//                        console.log(jsonValue);
-//                        window.opener.childMessageListener(jsonValue);
-//                        if (window.opener.navigationsModelCallBack())
-//                        {
-//                            navigationsModel(window.opener.navigationsModelCallBack());
-//                        }
-//                    }
-                }, function(e) {
-                    console.log(e.errorMessage());
-                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
-                });
-            };
-            self.deleteFromFavorites = function() {
-                dtm.removeFromFavorite(self.dashboardId, function() {
-                    self.isFavorite(false);
-//                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-//                    outputData.eventType = "REMOVE_FROM_FAVORITES";
-//                    if (window.opener && window.opener.childMessageListener) {
-//                        var jsonValue = JSON.stringify(outputData);
-//                        console.log(jsonValue);
-//                        window.opener.childMessageListener(jsonValue);
-//                        if (window.opener.navigationsModelCallBack())
-//                        {
-//                            navigationsModel(window.opener.navigationsModelCallBack());
-//                        }
-//                    }
-                }, function(e) {
-                    console.log(e.errorMessage());
-                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
-                });
-            };
+//            self.addToFavorites = function() {
+//                dtm.setAsFavorite(self.dashboardId, function() {
+//                    self.isFavorite(true);
+////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+////                    outputData.eventType = "ADD_TO_FAVORITES";
+////                    if (window.opener && window.opener.childMessageListener) {
+////                        var jsonValue = JSON.stringify(outputData);
+////                        console.log(jsonValue);
+////                        window.opener.childMessageListener(jsonValue);
+////                        if (window.opener.navigationsModelCallBack())
+////                        {
+////                            navigationsModel(window.opener.navigationsModelCallBack());
+////                        }
+////                    }
+//                }, function(e) {
+//                    console.log(e.errorMessage());
+//                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
+//                });
+//            };
+//            self.deleteFromFavorites = function() {
+//                dtm.removeFromFavorite(self.dashboardId, function() {
+//                    self.isFavorite(false);
+////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+////                    outputData.eventType = "REMOVE_FROM_FAVORITES";
+////                    if (window.opener && window.opener.childMessageListener) {
+////                        var jsonValue = JSON.stringify(outputData);
+////                        console.log(jsonValue);
+////                        window.opener.childMessageListener(jsonValue);
+////                        if (window.opener.navigationsModelCallBack())
+////                        {
+////                            navigationsModel(window.opener.navigationsModelCallBack());
+////                        }
+////                    }
+//                }, function(e) {
+//                    console.log(e.errorMessage());
+//                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
+//                });
+//            };
             
             //Add widget dialog
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';

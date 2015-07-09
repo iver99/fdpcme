@@ -218,12 +218,38 @@ function(dsf, oj, ko, $, dfu, pfu)
             data.dashboardModel.openDashboardPage();
         };
         
+        self.handleShowDashboardPop = function(event, data) {
+            //console.log(data);
+            var popup = $("#dsbinfopop");
+            var isOpen = !popup.ojPopup("isOpen");
+            if (!isOpen)
+            {
+                popup.ojPopup("close");//popup.html("");
+            }
+            self.selectedDashboard(data);
+            if (data.element)
+            {
+                popup.ojPopup('open', data.element, {'at': 'right center', 'my': 'start center'});
+            }
+        };
+        
+        self.handleCloseDashboardPop = function(event, data) {
+            //console.log(data);
+            var popup = $("#dsbinfopop");
+            var isOpen = !popup.ojPopup("isOpen");
+            if (!isOpen)
+            {
+                popup.ojPopup("close");//popup.html("");
+            }
+        };
+        
         self.handleDashboardDeleted = function(event, data) {
             //console.log(data);
-            self.selectedDashboard(data);
+            //self.selectedDashboard(data);
+            var _sd = self.selectedDashboard();
             self.confirmDialogModel.show(getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'), 
                          getNlsString('COMMON_BTN_DELETE'), 
-                         getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB_MSG', data.dashboard.name),
+                         getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB_MSG', _sd.dashboard.name),
                          self.confirmDashboardDelete);
         };
         
@@ -324,8 +350,8 @@ function(dsf, oj, ko, $, dfu, pfu)
                                 // a server error record
                                  oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                             }
-                            //_trackObj = new oj.InvalidComponentTracker();
-                            //self.tracker(_trackObj);
+                            _trackObj = new oj.InvalidComponentTracker();
+                            self.tracker(_trackObj);
                             self.createMessages.push(new oj.Message(_m));
                             _trackObj.showMessages();
                             _trackObj.focusOnFirstInvalid();

@@ -272,5 +272,7 @@ function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 };
 
-
+function getDateString(isoString) {
+    return (new Date(isoString)).toLocaleDateString();
+};
 
