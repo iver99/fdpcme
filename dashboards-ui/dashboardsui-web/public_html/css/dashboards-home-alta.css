@@ -15,8 +15,20 @@
 .icon-delete-ena-16:before{content:url("images/func_delete_16_ena.png");}
 
 .icon-trashcan-ena-16:before{content:url("images/func_trashcan_16_ena.png");}
+.oj-button.oj-hover .icon-trashcan-ena-16:before, .oj-button.oj-hover.oj-selected .icon-trashcan-ena-16:before {
+    content: url("images/func_trashcan_16_hov.png"); }
+.oj-button.oj-active .icon-trashcan-ena-16:before, .oj-button.oj-selected .icon-trashcan-ena-16:before {
+    content: url("images/func_trashcan_16_act.png"); }
+.oj-button.oj-disabled .icon-trashcan-ena-16:before {
+    content: url("images/func_trashcan_16_dis.png"); }
 
-.icon-locationinfo-16:before{content:url("images/func_locationinfo_16_act.png");}
+.icon-locationinfo-16:before{content:url("images/func_locationinfo_16_ena.png");}
+.oj-button.oj-hover .icon-locationinfo-16:before, .oj-button.oj-hover.oj-selected .icon-locationinfo-16:before {
+    content: url("images/func_locationinfo_16_hov.png"); }
+.oj-button.oj-active .icon-locationinfo-16:before, .oj-button.oj-selected .icon-locationinfo-16:before {
+    content: url("images/func_locationinfo_16_act.png"); }
+.oj-button.oj-disabled .icon-locationinfo-16:before {
+    content: url("images/func_locationinfo_16_dis.png"); }
 
 .dbs-welcome-centeredImage{
     text-align:center;
@@ -342,7 +354,7 @@ a:hover {
     width: 65%; }
 }
 
-@media print and (orientation: landscape), screen and (min-width: 840px) {
+@media print and (orientation: landscape), screen and (min-width: 850px) {
     .dbs-filter-panel-md {
     width: 20%; }
     .dbs-tiles-panel-md {
@@ -354,12 +366,12 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 840px;
-    min-width: 840px;
-    max-width: 840px;}
+    width: 850px;
+    min-width: 850px;
+    max-width: 850px;}
 }
 
-@media print and (orientation: landscape), screen and (min-width: 1193px) {
+@media print and (orientation: landscape), screen and (min-width: 1203px) {
     .dbs-filter-panel-lg {
     width: 16%; }
     .dbs-tiles-panel-lg {
@@ -371,12 +383,12 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 1193px;
-    min-width: 1193px;
-    max-width: 1193px;}
+    width: 1203px;
+    min-width: 1203px;
+    max-width: 1203px;}
 }
 
-@media print and (orientation: landscape), screen and (min-width: 1535px) {
+@media print and (orientation: landscape), screen and (min-width: 1545px) {
     .dbs-filter-panel-xsl {
     width: 13%; }
     .dbs-tiles-panel-xsl {
@@ -388,12 +400,12 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 1535px;
-    min-width: 1535px;
-    max-width: 1535px;}
+    width: 1545px;
+    min-width: 1545px;
+    max-width: 1545px;}
 }
 
-@media print and (orientation: landscape), screen and (min-width: 1890px) {
+@media print and (orientation: landscape), screen and (min-width: 1900px) {
     .dbs-filter-panel-xl {
     width: 11%; }
     .dbs-tiles-panel-xl {
@@ -405,9 +417,9 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     float: none;
-    width: 1890px;
-    min-width: 1890px;
-    max-width: 1890px;}
+    width: 1900px;
+    min-width: 1900px;
+    max-width: 1900px;}
 }
 
 

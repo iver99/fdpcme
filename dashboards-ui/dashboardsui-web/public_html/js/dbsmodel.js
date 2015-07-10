@@ -66,13 +66,15 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.title = ko.observable(title || '');
         self.okLabel = ko.observable(okLabel || '');
         self.message = ko.observable(message || '');
+        self.showCancel = ko.observable(false);
         
         self.okFunction = (okFunction && $.isFunction(okFunction)) ? okFunction : function() {}; 
         
-        self.show = function (title, okLabel, message, okFunction) {
+        self.show = function (title, okLabel, message, okFunction, showCancel) {
             self.title(title || '');
             self.okLabel(okLabel || '');
             self.message(message || '');
+            self.showCancel(showCancel || false);
             self.okFunction = function () {
                 var _okfunc = (okFunction && $.isFunction(okFunction)) ? okFunction : function() {};
                 _okfunc();
@@ -250,7 +252,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.confirmDialogModel.show(getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB'), 
                          getNlsString('COMMON_BTN_DELETE'), 
                          getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB_MSG', _sd.dashboard.name),
-                         self.confirmDashboardDelete);
+                         self.confirmDashboardDelete, true);
         };
         
         self.confirmDashboardDelete = function() {
