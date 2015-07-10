@@ -175,7 +175,7 @@
                         <div data-bind="with: selectedDashboard">
                             <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
-                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE')"></span><span data-bind="text: (dashboard.systemDashboard == true ? getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_SYS') : getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_USER')) "></span><br/>
+                            <!--span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE')"></span><span data-bind="text: (dashboard.systemDashboard == true ? getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_SYS') : getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_USER')) "></span><br/-->
                             <!--span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_ISSYS')"></span><span data-bind="text: dashboard.systemDashboard"></span><br/-->
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
