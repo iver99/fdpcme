@@ -32,21 +32,12 @@ ko.bindingHandlers.dbsDashboardPanel = {
                 
     },
     update: function(element, valueAccessor) {
-        /*var value = valueAccessor();
         
-        if (ko.unwrap(value))
-            element.focus();
-        else
-            element.blur();*/
     }
 };
 
-var TITLE_MAX_LENGTH = 34,
-    DESCRIPTION_MAX_LENGTH = 256,
-    //WIGDET_NAME_MAX_LENGTH = 34,
-    //DASHBOARD_TYPE_ONE_PAGE = "SINGLEPAGE",
+var TITLE_MAX_LENGTH = 34, 
     TAB_INDEX_ATTR = "tabindex";
-
 
 $.widget('dbs.dbsDashboardPanel',
 {
@@ -57,7 +48,7 @@ $.widget('dbs.dbsDashboardPanel',
             deactivated: null,
             navigated: null,
             deleteClicked: null,
-            contentTmplate: null,
+            showInfoClicked: null,
             dashboard: null,
             dashboardModel: null,
             data: null,
@@ -72,23 +63,17 @@ $.widget('dbs.dbsDashboardPanel',
             'headerToolbar': 'dbs-summary-header-toolbar',
             'pages': 'dbs-summary-pages',
             'page': 'dbs-summary-page',
-            'pageScroll':' dbs-summary-page-scroll',
             'active': 'active',
-            'pageImage': 'dbs-summary-page-image',
-            'pageDescription':'dbs-summary-page-description',
-            'controlls': 'dbs-summary-controlls',
-            'controll': 'dbs-summary-controll'
+            'pageImage': 'dbs-summary-page-image'
         },
         
         active: false,
-        currentPageNum: undefined,
-        showDescription: false,
         
         _activate: function(event, callback) {
             var self = this;
             if (self.active === false)
             {
-                var _dashboard = self.options['dashboard'], _element = self.element, _toolbarEle = self.toolbarElement;
+                var _element = self.element, _toolbarEle = self.toolbarElement;
                 _element.addClass(self.classNames['active']);
                 self.titleElement.addClass(self.classNames['active']);
                 _toolbarEle.addClass(self.classNames['active']);
@@ -103,11 +88,10 @@ $.widget('dbs.dbsDashboardPanel',
                     complete: function(){
                      if ($.isFunction(callback)) callback(); 
                     }
-                });
-                */
+                });*/
                 
                 self.active = true;
-                self._trigger('activated', event, _dashboard);
+                self._trigger('activated', event, {element: _element, dashboard: self.options['dashboard'], dashboardModel: self.options['dashboardModel']});
             }
         },
         
@@ -127,8 +111,7 @@ $.widget('dbs.dbsDashboardPanel',
                     complete: function(){
                      if ($.isFunction(callback)) callback(); 
                     }
-                });
-                */
+                });*/
     
                 self.active = false;
                 self._trigger('deactivated');
@@ -138,12 +121,10 @@ $.widget('dbs.dbsDashboardPanel',
         _create: function () {
             var self = this, _element = self.element;
             this._createComponent();
-            this._goToPage(this._getCurrentPageNum() || 1);
             this.element.attr("aria-dashboard", this.options['dashboard'].id);
             setTimeout(function() {
                 if(_element.is(":hover")) {
-                    //_element.css("background", "yellow");
-                    //self._activate(null);
+                    
                 }
                 else
                 {
@@ -153,8 +134,8 @@ $.widget('dbs.dbsDashboardPanel',
         },
 
         _createComponent: function () {
-            this._createHeader();
             this._createContent();
+            this._createHeader();
             
             var self = this, _name = self.name, _element = self.element;
             self.active = false;
@@ -182,14 +163,13 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createHeader: function() {
-            var self = this, _element = self.element, _name = self.name, 
-                     _isSys = self.options.dashboard['systemDashboard']; 
+            var self = this, _element = self.element, _name = self.name; 
             var _title = (self.options['dashboard']) ? self._truncateString(self.options['dashboard'].name, TITLE_MAX_LENGTH) : '';
             
             self.headerElement = $("<div></div>").addClass(self.classNames['headerContainer']);
             
             // add title
-            self.titleElement = $("<div><h2>" + _title + "</h2></div>")
+            self.titleElement = $("<div>" + _title + "</div>")
                                   .addClass(self.classNames['headerTitle']);
             self.headerElement.append(self.titleElement); 
             if (self.options['dashboard'].name &&  self.options['dashboard'].name.length > TITLE_MAX_LENGTH)
@@ -199,30 +179,16 @@ $.widget('dbs.dbsDashboardPanel',
             }
             
             // add toolbar
-            self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);//.attr({'id' : 'toolbar_' + (self.count++)});
-            if (_isSys === true)
-            {
-                self.lockElement = $("<span></span>").attr({"role": "img"})
-                        .css({"cursor": "default"})
-                        .addClass("dbs-lock-icon-24 dbs-icon oj-sm-float-end")
-                        .on('click.'+_name, function(event) {
-                            //prevent event bubble
-                            event.stopPropagation();
-                        });
-                self.toolbarElement.append(self.lockElement);
-            }
-            else
-            {
-                self.deleteElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', icons: {start:'icon-delete-ena-16 oj-fwk-icon'}}\"></button>")
+            self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);
+            
+            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click.'+_name, function(event) {
                         //prevent event bubble
                         event.stopPropagation();
-                        self._fireDeleteClicked(event);
-                    }); //$("<span>test</span>")
-                self.toolbarElement.append(self.deleteElement);
-            }
-             
+                        self._fireShowInfoClicked(event, self.infoElement);
+                    }); 
+            self.toolbarElement.append(self.infoElement);
             self.headerElement.append(self.toolbarElement); 
             _element.append(self.headerElement);
             
@@ -230,13 +196,8 @@ $.widget('dbs.dbsDashboardPanel',
         
         _createContent: function() {
             this._createContentPages();
-            this._createContentControlls();
             var self = this, _element = self.element;
-            self.contentElement = 
-                    $("<div></div>")
-                    .append(self.contentPagesEle)
-                    .append(self.contentCtlsEle);
-            _element.append(self.contentElement);
+            _element.append(self.contentPagesEle);
         },
         
         _setBase64ScreenShot: function(screenShot) {
@@ -261,17 +222,13 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createContentPages: function() {
-            var self = this, _dashboard = self.options['dashboard'], _dmodel = self.options.dashboardModel;
-            //        _wdts = _dashboard['widgets'] || _dashboard['tiles'];
-            //var _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
-            
+            var self = this,  _dmodel = self.options.dashboardModel;
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
             //image page
             self.contentPage1ImgEle = undefined;//$("<img>").addClass(self.classNames['pageImage']).attr('alt', "");
-            self.contentPage1Ele = $("<div></div>")//.addClass(self.classNames['active'])
-                    .addClass(self.classNames['page']);//.append(self.contentPage1ImgEle);
-            //self.contentPage1Ele.append(self.contentPage1ImgEle);
+            self.contentPage1Ele = $("<div></div>").addClass(self.classNames['active'])
+                    .addClass(self.classNames['page']);
             
             if (_dmodel['screenShot'])
             {
@@ -282,7 +239,7 @@ $.widget('dbs.dbsDashboardPanel',
               dfu.ajaxWithRetry({
                    //This will be a page which will return the base64 encoded string
                    url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
-                   headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},//Pass the required header information
+                   headers: dfu.getDashboardsRequestHeader(),
                    success: function(response){
                        var __ss = (response.screenShot ? response.screenShot : undefined);
                        self._setBase64ScreenShot(__ss);
@@ -298,175 +255,14 @@ $.widget('dbs.dbsDashboardPanel',
               });
             }
             self.contentPagesEle.append(self.contentPage1Ele);
-            //description page
-            var _dtext = self.options.dashboard['description'];
-            if (_dtext && _dtext !== null && _dtext.length > 0)
-            {
-                self.showDescription = true;
-            }
-            if (!_dtext) _dtext = '';
-            if (self.showDescription === true)
-            {
-                self.contentPage2CntEle = $("<p></p>").addClass(self.classNames['pageDescription']).html(self._truncateString(_dtext, DESCRIPTION_MAX_LENGTH));
-                self.contentPage2Ele = $("<div></div>")
-                    .addClass(self.classNames['page']).append(self.contentPage2CntEle);
-                self.contentPagesEle.append(self.contentPage2Ele);
-            }
-            /*
-            // remove widget bullet
-            //widgets page
-            self.contentPage3TlEle = $("<div></div>").text(getNlsString('DBS_HOME_DSB_PANEL_WIDGETS')).css({"text-align": "center", "max-height": "16px", "font-weight":"bold"});//.append("<h6>Widgets</h6>");
-            
-            self.contentPage3CntEle = $("<ul></ul>").addClass("dbs-summary-rows");
-            if (_wdts && _wdts.length > 0)
-            {
-                $.each(_wdts, function( index, widget ) {
-                    var __tileEle = $("<li ></li>")
-                            .text(self._truncateString(widget['title'], WIGDET_NAME_MAX_LENGTH));
-                    if (widget['title'] && widget['title'].length > WIGDET_NAME_MAX_LENGTH)
-                    {
-                        __tileEle.attr("title", widget['title']);
-                    }
-                    self.contentPage3CntEle.append(__tileEle);
-                //alert( index + ": " + value ); 
-                });
-            }
-            self.contentPage3Ele = $("<div></div>")
-                    .addClass(self.classNames['page'])
-                    .append(self.contentPage3TlEle)
-                    .append(self.contentPage3CntEle);
-            // remove widget bullet
-            self.contentPagesEle.append(self.contentPage3Ele);
-            */
-        },
-        
-        _createContentControlls: function() {
-            var self = this, _name = self.name;
-            self.contentCtlsEle = $("<div></div>")
-                    .addClass(self.classNames['controlls']);
-            self.contentCtl1Ele = $("<div></div>")
-                    .addClass(self.classNames['controll']).append($("<span></span>"))
-                    .bind('click.' + _name, function (event) {
-                        self._goToPage(1);
-                        event.stopPropagation();
-                    }).keydown(function(event){ 
-                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
-                        if (keyCode === 13) { // enter key
-                            self._goToPage(1);
-                            event.stopPropagation();
-                        }
-                    })
-                    .attr(TAB_INDEX_ATTR, '0')
-                    .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'))
-                    .attr("title", getNlsString('DBS_HOME_DSB_PAGE_SCREEN_SHOT'));
-            
-            if (self.showDescription === true)
-            {
-                self.contentCtlsEle.append(self.contentCtl1Ele);
-                self.contentCtl2Ele = $("<div></div>")
-                    .addClass(self.classNames['controll']).append($("<span></span>"))
-                    .bind('click.' + _name, function (event) {
-                        self._goToPage(2);
-                        event.stopPropagation();
-                    }).keydown(function(event){ 
-                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
-                        if (keyCode === 13) { // enter key
-                            self._goToPage(2);
-                            event.stopPropagation();
-                        }
-                    })
-                    .attr(TAB_INDEX_ATTR, '0')
-                    .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'))
-                    .attr("title", getNlsString('DBS_HOME_DSB_PAGE_DESCRIPTION'));
-                self.contentCtlsEle.append(self.contentCtl2Ele);
-            }
-            /*
-            self.contentCtl3Ele = $("<div></div>")
-                    .addClass(self.classNames['controll']).append($("<span></span>"))
-                    .bind('click.' + _name, function (event) {
-                        self._goToPage(3);
-                        event.stopPropagation();
-                    }).keydown(function(event){ 
-                        var keyCode = (event.keyCode ? event.keyCode : event.which);   
-                        if (keyCode === 13) { // enter key
-                            self._goToPage(3);
-                            event.stopPropagation();
-                        }
-                    })
-                    .attr(TAB_INDEX_ATTR, '0')
-                    .attr("aria-label", getNlsString('DBS_HOME_DSB_PAGE_WIDGETS'))
-                    .attr("title", getNlsString('DBS_HOME_DSB_PAGE_WIDGETS'));
-            self.contentCtlsEle.append(self.contentCtl3Ele);
-            */
-        },
-        
-        _goToPage: function(num) {
-            var self = this, _aclass = self.classNames['active'];
-            if (num && num > 0 && num <= 3)
-            {
-                self._removePageFocus();
-                switch ( num ) {
-                case 1:
-                    self.contentPage1Ele.addClass(_aclass);
-                    self.contentCtl1Ele.addClass(_aclass);
-                    self._setCurrentPageNum(1);
-                    break;
-                case 2:
-                    if (self.showDescription === true)
-                    {
-                        self.contentPage2Ele.addClass(_aclass);
-                        self.contentCtl2Ele.addClass(_aclass);
-                        self._setCurrentPageNum(2);
-                    }
-                    break;
-                /*
-                case 3:
-                    self.contentPage3Ele.addClass(_aclass);
-                    self.contentCtl3Ele.addClass(_aclass);
-                    self._setCurrentPageNum(3);
-                    break;
-                */
-                }
-            }
-        },
-        
-        _removePageFocus: function() {
-            var self = this, _aclass = self.classNames['active'];
-            switch ( self.currentPageNum || -1 ) {
-                case 1:
-                    self.contentPage1Ele.removeClass(_aclass);
-                    self.contentCtl1Ele.removeClass(_aclass);
-                    //self._setCurrentPageNum(undefined);
-                    break;
-                case 2:
-                    if (self.showDescription === true)
-                    {
-                        self.contentPage2Ele.removeClass(_aclass);
-                        self.contentCtl2Ele.removeClass(_aclass);
-                    }
-                    //self._setCurrentPageNum(undefined);
-                    break;
-                /*
-                case 3:
-                    self.contentPage3Ele.removeClass(_aclass);
-                    self.contentCtl3Ele.removeClass(_aclass);
-                    //self._setCurrentPageNum(undefined);
-                    break;
-                */
-            }
-        },
-        
-        _setCurrentPageNum: function(num) {
-            this.currentPageNum = num;
-            this.options.dashboard['currentPageNum'] = num;
-        },
-        
-        _getCurrentPageNum: function() {
-            return this.options.dashboard['currentPageNum'] || this.currentPageNum || undefined; 
         },
         
         _fireDeleteClicked: function(event) {
             this._trigger('deleteClicked', event, {dashboard: this.options['dashboard'], dashboardModel: this.options['dashboardModel']});
+        },
+        
+        _fireShowInfoClicked: function(event, ele) {
+            this._trigger('showInfoClicked', event, {dashboard: this.options['dashboard'], dashboardModel: this.options['dashboardModel'], element: ele});
         },
         
         _fireNavigated: function(event) {
@@ -476,8 +272,7 @@ $.widget('dbs.dbsDashboardPanel',
         
         _destroyComponent: function() {
             var self = this;
-            if (self.lockElement && self.lockElement.length > 0) self.lockElement.unbind("click." + self.name);
-            if (self.deleteElement && self.deleteElement.length > 0) self.deleteElement.unbind("click." + self.name);
+            if (self.infoElement && self.infoElement.length > 0) self.infoElement.unbind("click." + self.name);
             self.element.find("*").removeAttr('style').removeClass().remove();
             self.element.unbind("." + self.name);
             //self.element.unbind("mouseenter." + self.name);
@@ -488,7 +283,6 @@ $.widget('dbs.dbsDashboardPanel',
         _destroy: function () {
             var self = this;
             self._destroyComponent();
-           
         },
         
         refresh: function () {
@@ -500,8 +294,7 @@ $.widget('dbs.dbsDashboardPanel',
             this._deactivate(null);
             self._destroyComponent();
             self._createComponent();
-            ko.applyBindings({}, self.deleteElement[0]);      
-            self._goToPage(self.currentPageNum);
+            ko.applyBindings({}, self.infoElement[0]); 
         }
 });
 

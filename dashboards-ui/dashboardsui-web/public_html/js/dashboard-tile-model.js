@@ -682,6 +682,9 @@ define(['knockout',
                    case "configure":
                        self.configure(tile);
                        break;
+                   case "refresh-this-widget":
+                       self.refreshThisWidget(tile);
+                       break; 
                }
            };
            
@@ -812,6 +815,11 @@ define(['knockout',
                     tile.configure();
                 }
             };
+
+            self.refreshThisWidget = function(tile) {
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
+                self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+            }
             
 //            self.changeUrl = function(tile) {
 //                urlEditView.setEditedTile(tile);
@@ -880,8 +888,47 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });
-        }
-        
+
+	var initStart = new Date(new Date() - 24*60*60*1000);
+        var initEnd = new Date();
+ 	self.timeSelectorModel.viewStart(initStart);
+        self.timeSelectorModel.viewEnd(initEnd);
+	self.datetimePickerParams = {
+	    startDateTime: initStart,
+ 	    endDateTime: initEnd,	   
+	    callback: function(start, end) {
+		self.timeSelectorModel.viewStart(start);
+		self.timeSelectorModel.viewEnd(end);
+		self.timeSelectorModel.timeRangeChange(true);		
+	    }
+	}
+
+/**
+	self.refreshCallback = function(start, end) {
+	    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(start,end),null);
+            self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+	}
+	self.timeRangeStart = ko.observable(new Date(new Date() - 24*60*60*1000));
+        self.timeRangeEnd = ko.observable(new Date());
+	self.datetimePickerParams = {
+	    startDateTime: new Date() - 24*60*60*1000,
+ 	    endDateTime: new Date(),
+	    callback: function(start, end) {
+		self.timeRangeStart(start);
+		self.timeRangeEnd(end);
+		self.refreshCallback(start, end);
+	    }
+	}
+	self.autoRefreshParams = ko.computed(function() {
+    	    return {
+	        timeRangeStart: self.timeRangeStart(),
+        	timeRangeEnd: self.timeRangeEnd(),
+	    	refreshCallback: self.refreshCallback
+	    }
+	}, self);
+**/
+
+    }
 //        function DashboardViewModel() {
 //            var self = this;
 //            

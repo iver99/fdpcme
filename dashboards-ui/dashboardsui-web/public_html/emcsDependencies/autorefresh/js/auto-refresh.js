@@ -13,16 +13,21 @@ define(['knockout', 'jquery'],
 
                     var oldTo = model.viewEnd();
                     var oldFrom = model.viewStart();
+/**
+var oldTo = params.timeRangeEnd;
+var oldFrom = params.timeRangeStart;
+var refreshCallback = params.refreshCallback;
+**/		  
                     if (oldTo && oldFrom) {
                         var duration = oldTo.getTime() - oldFrom.getTime();
                         var newFrom = new Date(now.getTime() - duration);
                         var newTo = now;
                         model.viewStart(newFrom);
                         model.viewEnd(newTo);
-
+//refreshCallback(newFrom, newTo);			
                         console.log(newFrom + "..." + newTo);
                     }
-                    model.timeRangeChange(true);
+                   model.timeRangeChange(true);
 
                 }
 

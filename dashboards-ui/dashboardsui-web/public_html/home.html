@@ -154,6 +154,7 @@
                                                     data-tag data-bind="dbsDashboardPanel: {
                                                                    activated: null,
                                                                    deactivated: null,
+                                                                   showInfoClicked: $root.handleShowDashboardPop,
                                                                    deleteClicked: $root.handleDashboardDeleted,
                                                                    navigated: $root.handleDashboardClicked,
                                                                    data: $data
@@ -168,6 +169,25 @@
                             <!-- Home tab end -->
                         </div>
 
+                    <!-- dashboard info popup start-->
+                    <div id="dsbinfopop"  style="display:none; width:260px;" 
+                                              data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
+                        <div data-bind="with: selectedDashboard">
+                            <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
+                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
+                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE')"></span><span data-bind="text: dashboard.type"></span><br/>
+                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_ISSYS')"></span><span data-bind="text: dashboard.systemDashboard"></span><br/>
+                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
+                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
+                            <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
+                                <button class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', label: 'Delete', icons: {start:'oj-fwk-icon icon-trashcan-ena-16'}, disabled: dashboard.systemDashboard}, click: $root.handleDashboardDeleted"></button>
+                                <button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $root.handleCloseDashboardPop"></button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <!-- dashboard info popup end-->
+                    
                     <!-- Create Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
