@@ -38,12 +38,16 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 /**
  * @author guobaochen
  */
-public class TenantSubscriptionUtil {
-	public static class RestClient {
-		public RestClient() {
+public class TenantSubscriptionUtil
+{
+	public static class RestClient
+	{
+		public RestClient()
+		{
 		}
 
-		public String get(String url) {
+		public String get(String url)
+		{
 			if (StringUtils.isEmpty(url)) {
 				return null;
 			}
@@ -52,7 +56,14 @@ public class TenantSubscriptionUtil {
 			Client client = Client.create(cc);
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
-			logger.debug("Retrieved authorization token from registration manager: " + auth);
+			if (StringUtil.isEmpty(auth)) {
+				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+			}
+			else {
+				logger.info(
+						"RestClient is connecting to url after getting authorization token from registration manager. Target url is: {}",
+						url);
+			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			return builder.get(String.class);
@@ -61,7 +72,8 @@ public class TenantSubscriptionUtil {
 
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 
-	public static List<String> getTenantSubscribedServices(String tenant) {
+	public static List<String> getTenantSubscribedServices(String tenant)
+	{
 		if (tenant == null) {
 			return null;
 		}
@@ -148,7 +160,8 @@ public class TenantSubscriptionUtil {
 		}
 	}
 
-	public static boolean isAPMServiceOnly(List<String> services) {
+	public static boolean isAPMServiceOnly(List<String> services)
+	{
 		if (services == null || services.size() != 1) {
 			return false;
 		}

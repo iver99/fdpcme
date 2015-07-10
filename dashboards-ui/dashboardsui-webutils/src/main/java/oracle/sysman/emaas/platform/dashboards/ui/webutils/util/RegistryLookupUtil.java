@@ -420,28 +420,8 @@ public class RegistryLookupUtil
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			}
 			if (result != null && result.size() > 0) {
-
-				//find https link first
-				for (InstanceInfo internalInstance : result) {
-					List<Link> links = null;
-					if (prefixMatch) {
-						links = internalInstance.getLinksWithRelPrefixWithProtocol(rel, "https");
-					}
-					else {
-						links = internalInstance.getLinksWithProtocol(rel, "https");
-					}
-
-					if (links != null && links.size() > 0) {
-						lk = links.get(0);
-						break;
-					}
-				}
-
-				if (lk != null) {
-					return lk;
-				}
-
-				//https link is not found, then find http link
+				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
+				// find http link only
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = null;
 					if (prefixMatch) {
