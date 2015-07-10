@@ -190,7 +190,7 @@ require(['knockout',
             };
             
            
-            var urlChangeView = new dtv.TileUrlEditView();
+//            var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
             var dsbId = dfu.getUrlParam("dashboardId");
@@ -220,7 +220,7 @@ require(['knockout',
                         }
                     }
                     var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
-                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
+                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
 
@@ -256,7 +256,7 @@ require(['knockout',
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                     ko.applyBindings(tilesViewMode, $('#global-html')[0]);   
-                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
+//                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
 
                     $("#loading").hide();
                     $('#globalBody').show();
@@ -305,16 +305,16 @@ function updateOnePageHeight(event) {
     }
 };
 
-function truncateString(str, length) {
-    if (str && length > 0 && str.length > length)
-    {
-        var _tlocation = str.indexOf(' ', length);
-        if ( _tlocation <= 0 )
-            _tlocation = length;
-        return str.substring(0, _tlocation) + "...";
-    }
-    return str;
-};
+//function truncateString(str, length) {
+//    if (str && length > 0 && str.length > length)
+//    {
+//        var _tlocation = str.indexOf(' ', length);
+//        if ( _tlocation <= 0 )
+//            _tlocation = length;
+//        return str.substring(0, _tlocation) + "...";
+//    }
+//    return str;
+//};
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);

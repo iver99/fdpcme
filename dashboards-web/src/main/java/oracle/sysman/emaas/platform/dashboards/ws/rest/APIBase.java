@@ -26,11 +26,16 @@ import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author wenjzhu
  */
 public class APIBase
 {
+	private static Logger logger = LogManager.getLogger(APIBase.class);
+
 	@Context
 	protected UriInfo uriInfo;
 	private final JsonUtil jsonUtil;
@@ -45,6 +50,7 @@ public class APIBase
 	public Response buildErrorResponse(ErrorEntity error)
 	{
 		if (error == null) {
+			logger.error("Returning a empty response because specified error entity is empty");
 			return null;
 		}
 		return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
@@ -111,10 +117,12 @@ public class APIBase
 	protected Dashboard updateDashboardHref(Dashboard dbd, String tenantName)
 	{
 		if (dbd == null) {
+			logger.error("Error: updating href for a null dashboard");
 			return null;
 		}
 		String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantName);
 		if (StringUtil.isEmpty(externalBase)) {
+			logger.error("Error: updating href for a dashboard with null or empty base external url");
 			return null;
 		}
 		String href = externalBase + (externalBase.endsWith("/") ? "" : "/") + dbd.getDashboardId();

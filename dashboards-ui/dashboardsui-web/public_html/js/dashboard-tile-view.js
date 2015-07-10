@@ -126,32 +126,32 @@ define(['knockout',
             };
         }
         
-        function TileUrlEditView() {
-            var self = this;
-            self.tileToChange = ko.observable();
-            self.url = ko.observable();
-            self.tracker = ko.observable();
-            
-            self.setEditedTile = function(tile) {
-                self.tileToChange(tile);
-                self.originalUrl = tile.url();
-            };
-            
-            self.applyUrlChange = function() {
-                var trackerObj = ko.utils.unwrapObservable(self.tracker),
-                    hasInvalidComponents = trackerObj["invalidShown"];
-                if (hasInvalidComponents) {
-                    trackerObj.showMessages();
-                    trackerObj.focusOnFirstInvalid();
-                } else
-                    $('#urlChangeDialog').ojDialog('close');
-            };
-            
-            self.cancelUrlChange = function() {
-                self.tileToChange().url(self.originalUrl);
-                $('#urlChangeDialog').ojDialog('close');
-            };
-        }
+//        function TileUrlEditView() {
+//            var self = this;
+//            self.tileToChange = ko.observable();
+//            self.url = ko.observable();
+//            self.tracker = ko.observable();
+//            
+//            self.setEditedTile = function(tile) {
+//                self.tileToChange(tile);
+//                self.originalUrl = tile.url();
+//            };
+//            
+//            self.applyUrlChange = function() {
+//                var trackerObj = ko.utils.unwrapObservable(self.tracker),
+//                    hasInvalidComponents = trackerObj["invalidShown"];
+//                if (hasInvalidComponents) {
+//                    trackerObj.showMessages();
+//                    trackerObj.focusOnFirstInvalid();
+//                } else
+//                    $('#urlChangeDialog').ojDialog('close');
+//            };
+//            
+//            self.cancelUrlChange = function() {
+//                self.tileToChange().url(self.originalUrl);
+//                $('#urlChangeDialog').ojDialog('close');
+//            };
+//        }
         
         function TimeSliderDisplayView() {
             var self = this;
@@ -503,6 +503,7 @@ define(['knockout',
             				return;  // validator not passed, so do not save
             		}
             		catch (e) {
+                    	oj.Logger.error(e);
             			return;
             		}
             	}
@@ -700,7 +701,7 @@ define(['knockout',
         }
         
         return {"DashboardTilesView": DashboardTilesView, 
-            "TileUrlEditView": TileUrlEditView, 
+//            "TileUrlEditView": TileUrlEditView, 
             "TimeSliderDisplayView": TimeSliderDisplayView,
             "ToolBarModel": ToolBarModel};
     }

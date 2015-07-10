@@ -457,7 +457,7 @@ define(['knockout',
             }
         }
         
-        function DashboardTilesViewModel(dashboard, tilesView, urlEditView) {
+        function DashboardTilesViewModel(dashboard, tilesView/*, urlEditView*/) {
             var self = this;
                         
             self.dashboard = dashboard;
@@ -511,7 +511,7 @@ define(['knockout',
                           newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
                         }
                     }else if (widget.WIDGET_GROUP_NAME !== 'Demo Analytics') { //====new logic !==999
-                        var assetRoot = null;
+//                        var assetRoot = null;
                         //find KOC name for registration. if valid registration is not detected, use default one.
                         if (provider_name===undefined || provider_version===undefined || provider_asset_root===undefined){
                             if (widget.WIDGET_GROUP_NAME==='Log Analytics' || widget.WIDGET_GROUP_NAME==='Target Analytics'){
@@ -821,10 +821,10 @@ define(['knockout',
                 self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
             }
             
-            self.changeUrl = function(tile) {
-                urlEditView.setEditedTile(tile);
-                $('#urlChangeDialog').ojDialog('open');
-            };
+//            self.changeUrl = function(tile) {
+//                urlEditView.setEditedTile(tile);
+//                $('#urlChangeDialog').ojDialog('open');
+//            };
             
             self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
@@ -853,7 +853,7 @@ define(['knockout',
             self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
                     var defArray = [];
-                    for (i = 0; i < self.dashboard.tiles().length; i++) {
+                    for (var i = 0; i < self.dashboard.tiles().length; i++) {
                         var aTile = self.dashboard.tiles()[i];
                         defArray.push(self.fireDashboardItemChangeEventTo(aTile,dashboardItemChangeEvent));
                     }
@@ -929,16 +929,16 @@ define(['knockout',
 **/
 
     }
-        function DashboardViewModel() {
-            var self = this;
-            
-            self.name = observable("LaaS Dashboard");
-            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
-        }
+//        function DashboardViewModel() {
+//            var self = this;
+//            
+//            self.name = observable("LaaS Dashboard");
+//            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
+//        }
         
         return {"DashboardTile": DashboardTile, 
             "DashboardTilesViewModel": DashboardTilesViewModel,
-            "DashboardViewModel": DashboardViewModel,
+//            "DashboardViewModel": DashboardViewModel,
             "loadDashboard": loadDashboard,
             "isDashboardNameExisting": isDashboardNameExisting,
             "initializeFromCookie": initializeFromCookie,

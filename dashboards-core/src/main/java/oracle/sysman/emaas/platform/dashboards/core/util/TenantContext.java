@@ -10,15 +10,21 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author guobaochen
  */
 public class TenantContext
 {
+	private static final Logger logger = LogManager.getLogger(TenantContext.class);
+
 	private static final ThreadLocal<String> tenantThreadLocal = new ThreadLocal<String>();
 
 	public static void clearCurrentUser()
 	{
+		logger.debug("TenantContext is cleared");
 		String tenant = tenantThreadLocal.get();
 		if (tenant != null) {
 			tenantThreadLocal.remove();
@@ -32,6 +38,7 @@ public class TenantContext
 
 	public static void setCurrentTenant(String tenant)
 	{
+		logger.debug("TenantContext is set with new tenant value {}", tenant);
 		tenantThreadLocal.set(tenant);
 	}
 
