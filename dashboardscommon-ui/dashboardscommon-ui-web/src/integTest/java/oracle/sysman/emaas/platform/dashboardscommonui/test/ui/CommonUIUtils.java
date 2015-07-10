@@ -25,8 +25,8 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 public class CommonUIUtils
 {
 	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
-	static String sUrl = CommonUIUtils.getEmaasPropertyValue("COMMONUI_URL");
-	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("COMMONUI_REGISTRY_URL");
+	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
+	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
 	static String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
 	static String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
 
@@ -66,20 +66,20 @@ public class CommonUIUtils
 					sPropertyValue = "emaastesttenant1";
 				}
 			}
-			//			else if (sProperty.equals("OHS_REGISTRY_URL")) {
-			//				sPropertyValue = emaasProp.getProperty("OHS_REGISTRY_URL");
-			//				if (sPropertyValue == null) {
-			//					CommonUIUtils.commonUITestLog("The OHS_REGISTRY_URL property value is null ... set it to a different value.");
-			//					sUrl = CommonUIUtils.getEmaasPropertyValue("COMMONUI_URL");
-			//					if (sUrl == null) {
-			//						sPropertyValue = null;
-			//					}
-			//					else {
-			//						CommonUIUtils.commonUITestLog("The OHS_URL property is '" + sOhsUrl + "'.");
-			//						sPropertyValue = sOhsUrl + "/registry";
-			//					}
-			//				}
-			//}
+			else if (sProperty.equals("OHS_REGISTRY_URL")) {
+				sPropertyValue = emaasProp.getProperty("OHS_REGISTRY_URL");
+				if (sPropertyValue == null) {
+					CommonUIUtils.commonUITestLog("The OHS_REGISTRY_URL property value is null ... set it to a different value.");
+					sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
+					if (sOhsUrl == null) {
+						sPropertyValue = null;
+					}
+					else {
+						CommonUIUtils.commonUITestLog("The OHS_URL property is '" + sOhsUrl + "'.");
+						sPropertyValue = sOhsUrl + "/registry";
+					}
+				}
+			}
 			else if (sProperty.equals("SSO_USERNAME")) {
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
@@ -96,14 +96,14 @@ public class CommonUIUtils
 					sPropertyValue = "Welcome1!";
 				}
 			}
-			//			else if (sProperty.equals("COMMON_UI_URL_SUFFIX")) {
-			//				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
-			//				if (sPropertyValue == null) {
-			//					CommonUIUtils
-			//					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/emcpdfcommonui/home.html'.");
-			//					sPropertyValue = "/emsaasui/emcpdfcommonui/home.html";
-			//				}
-			//			}
+			else if (sProperty.equals("COMMON_UI_URL_SUFFIX")) {
+				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
+				if (sPropertyValue == null) {
+					CommonUIUtils
+							.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/emcpdfcommonui/home.html'.");
+					sPropertyValue = "/emsaasui/emcpdfcommonui/home.html";
+				}
+			}
 			else {
 				sPropertyValue = emaasProp.getProperty(sProperty);
 			}
@@ -139,12 +139,12 @@ public class CommonUIUtils
 
 		String sCommonUiUrl = "";
 
-		if (sUrl == null) {
+		if (sOhsUrl == null) {
 			driver.getLogger().info("sUrl is null ... return false from loginCommonUI().");
 			return false;
 		}
 		else {
-			sCommonUiUrl = sUrl;
+			sCommonUiUrl = sOhsUrl + sCommonUiUrlSuffix;
 			driver.getLogger().info("sCommonUiUrl is " + sCommonUiUrl);
 		}
 
@@ -160,12 +160,12 @@ public class CommonUIUtils
 
 		String sCommonUiUrl = "";
 
-		if (sUrl == null) {
+		if (sOhsUrl == null) {
 			driver.getLogger().info("sUrl is null ... return false from loginCommonUI().");
 			return false;
 		}
 		else {
-			sCommonUiUrl = sUrl + parameters;
+			sCommonUiUrl = sOhsUrl + sCommonUiUrlSuffix + parameters;
 			driver.getLogger().info("sCommonUiUrl is " + sCommonUiUrl);
 		}
 

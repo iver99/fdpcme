@@ -39,27 +39,40 @@ public class TestAnalyzerPage extends CommonUIUtils
 		webdriver.takeScreenShot();
 
 		//verify the product name,app name,content of page
+		webdriver.getLogger().info("Verify the page content");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sProductText));
+		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
+		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		webdriver.getLogger().info("The App is:  " + webdriver.getText(UIControls.sAppText));
+		//Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Log Analytics");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
+		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
+		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
+				"Sample page for dashboard common ui components testing only");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 
-		Assert.assertTrue(webdriver.isTextPresent("Add", UIControls.sPageText));
-
 		//click the compass icon
-
+		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
 
 		//verify the menus
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sLinksMenu));
+		webdriver.getLogger().info("Verify the Links menu displayed");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: block;");
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboards));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardIcon));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLabel));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLink));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHome));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLink));
+
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudService));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLink));
 
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzer));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerIcon));
@@ -71,30 +84,52 @@ public class TestAnalyzerPage extends CommonUIUtils
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLabel));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLink));
 
+		Thread.sleep(10000);
+
+		webdriver.getLogger().info("Click the Application navigator icon again");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sLinksMenu));
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Links menu disappeared");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 
-		//click Add Widget icon
+		//click Open Widget icon
+		webdriver.getLogger().info("Verify if Open Widgets icon displayed");
+		Assert.assertTrue(webdriver.isDisplayed(UIControls.sAddWidgetIcon));
+		webdriver.getLogger().info("The buton is:  " + webdriver.getText(UIControls.sAddWidgetIcon));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetIcon), "Open");
 
+		webdriver.getLogger().info("Click the Open icon");
+		webdriver.click(UIControls.sAddWidgetIcon);
+		Thread.sleep(5000);
+
+		webdriver.getLogger().info("Verify the Open Widgets window is opened");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
+		webdriver.getLogger().info("The window title is:  " + webdriver.getText(UIControls.sWidgetWindowTitle));
+		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWidgetWindowTitle));
+		webdriver.takeScreenShot();
+		webdriver.getLogger().info("Verify the Open button is disabled");
+		webdriver.getLogger().info("The button is:  " + webdriver.getText(UIControls.sAddWidgetBtn));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Open");
+		webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+
+		//Open a widget
+		webdriver.getLogger().info("Select a widget and open it in the main page");
+		webdriver.getLogger().info("Select a widget");
+		webdriver.click(UIControls.sWidgetSelct);
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click Open button");
 		webdriver.click(UIControls.sAddWidgetBtn);
+		webdriver.takeScreenShot();
+		Thread.sleep(5000);
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-
-		//Add a widget
-		webdriver.select(UIControls.sWidgetSelct, UIControls.sWidgetSelct);
-		webdriver.click(UIControls.sAddWidgetBtn);
-		webdriver.takeScreenShot();
-		webdriver.click(UIControls.sCloseWidget);
-		webdriver.takeScreenShot();
-
+		webdriver.getLogger().info("Verify the widget has been opened in main page");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
 		webdriver.takeScreenShot();
 
 		//logout
+		webdriver.getLogger().info("Logout");
 		CommonUIUtils.logoutCommonUI(webdriver);
 
 	}
@@ -102,7 +137,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	@Test
 	public void testLogAnalyzerPage_withAllPara_notAdmin() throws Exception
 	{
-		String testName = this.getClass().getName() + ".testLogAnalyzerPage_withAllPara_Admin";
+		String testName = this.getClass().getName() + ".testLogAnalyzerPage_withAllPara_notAdmin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 
 		//login
@@ -117,62 +152,97 @@ public class TestAnalyzerPage extends CommonUIUtils
 		webdriver.takeScreenShot();
 
 		//verify the product name,app name,content of page
+		webdriver.getLogger().info("Verify the page content");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sProductText));
+		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
+		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		webdriver.getLogger().info("The App is:  " + webdriver.getText(UIControls.sAppText));
+		//Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Log Analytics");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
+		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
+		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
+				"Sample page for dashboard common ui components testing only");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 
-		Assert.assertTrue(webdriver.isTextPresent("Add", UIControls.sPageText));
-
 		//click the compass icon
-
+		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
 
 		//verify the menus
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sLinksMenu));
+		webdriver.getLogger().info("Verify the Links menu displayed");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: block;");
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboards));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardIcon));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLabel));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLink));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHome));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLink));
+
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudService));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLink));
 
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzer));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerLabel));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerLink));
 
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdmin));
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdminIcon));
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdminLabel));
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdminLink));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdmin));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminIcon));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLabel));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLink));
 
+		Thread.sleep(10000);
+
+		webdriver.getLogger().info("Click the Application navigator icon again");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sLinksMenu));
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Links menu disappeared");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 
-		//click Add Widget icon
+		//click Open Widget icon
+		webdriver.getLogger().info("Verify if Open Widgets icon displayed");
+		Assert.assertTrue(webdriver.isDisplayed(UIControls.sAddWidgetIcon));
+		webdriver.getLogger().info("The buton is:  " + webdriver.getText(UIControls.sAddWidgetIcon));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetIcon), "Open");
 
-		webdriver.click(UIControls.sAddWidgetBtn);
+		webdriver.getLogger().info("Click the Open icon");
+		webdriver.click(UIControls.sAddWidgetIcon);
+		Thread.sleep(5000);
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWdigetWindowTitle));
+		webdriver.getLogger().info("Verify the Open Widgets window is opened");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
+		webdriver.getLogger().info("The window title is:  " + webdriver.getText(UIControls.sWidgetWindowTitle));
+		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWidgetWindowTitle));
 		webdriver.takeScreenShot();
-		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
+		webdriver.getLogger().info("Verify the Open button is disabled");
+		webdriver.getLogger().info("The button is:  " + webdriver.getText(UIControls.sAddWidgetBtn));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Open");
+		webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
 
 		//Add a widget
-		webdriver.select(UIControls.sWidgetSelct, UIControls.sWidgetSelct);
+		webdriver.getLogger().info("Select a widget and open it in the main page");
+		webdriver.getLogger().info("Select a widget");
+		webdriver.click(UIControls.sWidgetSelct);
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click Open button");
 		webdriver.click(UIControls.sAddWidgetBtn);
 		webdriver.takeScreenShot();
-		webdriver.click(UIControls.sCloseWidget);
-		webdriver.takeScreenShot();
+		Thread.sleep(5000);
 
+		webdriver.getLogger().info("Verify the widget has been opened in main page");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
 		webdriver.takeScreenShot();
 
 		//logout
+		webdriver.getLogger().info("Logout");
 		CommonUIUtils.logoutCommonUI(webdriver);
 
 	}
@@ -180,7 +250,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	@Test
 	public void testLogAnalyzerPage_withOnePara_Admin() throws Exception
 	{
-		String testName = this.getClass().getName() + ".testLogAnalyzerPage_withAllPara_Admin";
+		String testName = this.getClass().getName() + ".testLogAnalyzerPage_withOnePara_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 
 		//login
@@ -195,27 +265,40 @@ public class TestAnalyzerPage extends CommonUIUtils
 		webdriver.takeScreenShot();
 
 		//verify the product name,app name,content of page
+		webdriver.getLogger().info("Verify the page content");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sProductText));
+		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
+		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		webdriver.getLogger().info("The App is:  " + webdriver.getText(UIControls.sAppText));
+		//Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Log Analytics");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
+		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
+		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
+				"Sample page for dashboard common ui components testing only");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 
-		Assert.assertTrue(webdriver.isTextPresent("Add", UIControls.sPageText));
-
 		//click the compass icon
-
+		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
 
 		//verify the menus
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sLinksMenu));
+		webdriver.getLogger().info("Verify the Links menu displayed");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: block;");
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboards));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardIcon));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLabel));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLink));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHome));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLink));
+
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudService));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLink));
 
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzer));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerIcon));
@@ -227,30 +310,52 @@ public class TestAnalyzerPage extends CommonUIUtils
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLabel));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLink));
 
+		Thread.sleep(10000);
+
+		webdriver.getLogger().info("Click the Application navigator icon again");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sLinksMenu));
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Links menu disappeared");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 
-		//click Add Widget icon
+		//click Open Widget icon
+		webdriver.getLogger().info("Verify if Open Widgets icon displayed");
+		Assert.assertTrue(webdriver.isDisplayed(UIControls.sAddWidgetIcon));
+		webdriver.getLogger().info("The buton is:  " + webdriver.getText(UIControls.sAddWidgetIcon));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetIcon), "Open");
 
+		webdriver.getLogger().info("Click the Open icon");
+		webdriver.click(UIControls.sAddWidgetIcon);
+		Thread.sleep(5000);
+
+		webdriver.getLogger().info("Verify the Open Widgets window is opened");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
+		webdriver.getLogger().info("The window title is:  " + webdriver.getText(UIControls.sWidgetWindowTitle));
+		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWidgetWindowTitle));
+		webdriver.takeScreenShot();
+		webdriver.getLogger().info("Verify the Open button is disabled");
+		webdriver.getLogger().info("The button is:  " + webdriver.getText(UIControls.sAddWidgetBtn));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Open");
+		webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+
+		//Open a widget
+		webdriver.getLogger().info("Select a widget and open it in the main page");
+		webdriver.getLogger().info("Select a widget");
+		webdriver.click(UIControls.sWidgetSelct);
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click Open button");
 		webdriver.click(UIControls.sAddWidgetBtn);
+		webdriver.takeScreenShot();
+		Thread.sleep(5000);
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-
-		//Add a widget
-		webdriver.select(UIControls.sWidgetSelct, UIControls.sWidgetSelct);
-		webdriver.click(UIControls.sAddWidgetBtn);
-		webdriver.takeScreenShot();
-		webdriver.click(UIControls.sCloseWidget);
-		webdriver.takeScreenShot();
-
+		webdriver.getLogger().info("Verify the widget has been opened in main page");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
 		webdriver.takeScreenShot();
 
 		//logout
+		webdriver.getLogger().info("Logout");
 		CommonUIUtils.logoutCommonUI(webdriver);
 
 	}
@@ -258,7 +363,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	@Test
 	public void testTargetAnalyzerPage_withAllPara_Admin() throws Exception
 	{
-		String testName = this.getClass().getName() + ".testLogAnalyzerPage_withAllPara_Admin";
+		String testName = this.getClass().getName() + ".testTargetAnalyzerPage_withAllPara_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 
 		//login
@@ -273,27 +378,40 @@ public class TestAnalyzerPage extends CommonUIUtils
 		webdriver.takeScreenShot();
 
 		//verify the product name,app name,content of page
+		webdriver.getLogger().info("Verify the page content");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sProductText));
+		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
+		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		webdriver.getLogger().info("The App is:  " + webdriver.getText(UIControls.sAppText));
+		//Assert.assertEquals(webdriver.getText(UIControls.sAppText), "IT Analytics");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
+		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
+		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
+				"Sample page for dashboard common ui components testing only");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 
-		Assert.assertTrue(webdriver.isTextPresent("Add", UIControls.sPageText));
-
 		//click the compass icon
-
+		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
 
 		//verify the menus
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sLinksMenu));
+		webdriver.getLogger().info("Verify the Links menu displayed");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: block;");
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboards));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardIcon));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLabel));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLink));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHome));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLink));
+
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudService));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLink));
 
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzer));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerIcon));
@@ -305,30 +423,52 @@ public class TestAnalyzerPage extends CommonUIUtils
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLabel));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLink));
 
+		Thread.sleep(10000);
+
+		webdriver.getLogger().info("Click the Application navigator icon again");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sLinksMenu));
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Links menu disappeared");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 
-		//click Add Widget icon
+		//click Open Widget icon
+		webdriver.getLogger().info("Verify if Open Widgets icon displayed");
+		Assert.assertTrue(webdriver.isDisplayed(UIControls.sAddWidgetIcon));
+		webdriver.getLogger().info("The buton is:  " + webdriver.getText(UIControls.sAddWidgetIcon));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetIcon), "Open");
 
+		webdriver.getLogger().info("Click the Open icon");
+		webdriver.click(UIControls.sAddWidgetIcon);
+		Thread.sleep(5000);
+
+		webdriver.getLogger().info("Verify the Open Widgets window is opened");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
+		webdriver.getLogger().info("The window title is:  " + webdriver.getText(UIControls.sWidgetWindowTitle));
+		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWidgetWindowTitle));
+		webdriver.takeScreenShot();
+		webdriver.getLogger().info("Verify the Open button is disabled");
+		webdriver.getLogger().info("The button is:  " + webdriver.getText(UIControls.sAddWidgetBtn));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Open");
+		webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+
+		//Open a widget
+		webdriver.getLogger().info("Select a widget and open it in the main page");
+		webdriver.getLogger().info("Select a widget");
+		webdriver.click(UIControls.sWidgetSelct);
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click Open button");
 		webdriver.click(UIControls.sAddWidgetBtn);
+		webdriver.takeScreenShot();
+		Thread.sleep(5000);
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-
-		//Add a widget
-		webdriver.select(UIControls.sWidgetSelct, UIControls.sWidgetSelct);
-		webdriver.click(UIControls.sAddWidgetBtn);
-		webdriver.takeScreenShot();
-		webdriver.click(UIControls.sCloseWidget);
-		webdriver.takeScreenShot();
-
+		webdriver.getLogger().info("Verify the widget has been opened in main page");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
 		webdriver.takeScreenShot();
 
 		//logout
+		webdriver.getLogger().info("Logout");
 		CommonUIUtils.logoutCommonUI(webdriver);
 
 	}
@@ -336,7 +476,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	@Test
 	public void testTargetAnalyzerPage_withAllPara_notAdmin() throws Exception
 	{
-		String testName = this.getClass().getName() + ".testLogAnalyzerPage_withAllPara_Admin";
+		String testName = this.getClass().getName() + ".testTargetAnalyzerPage_withAllPara_notAdmin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 
 		//login
@@ -351,62 +491,97 @@ public class TestAnalyzerPage extends CommonUIUtils
 		webdriver.takeScreenShot();
 
 		//verify the product name,app name,content of page
+		webdriver.getLogger().info("Verify the page content");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sProductText));
+		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
+		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		webdriver.getLogger().info("The App is:  " + webdriver.getText(UIControls.sAppText));
+		//Assert.assertEquals(webdriver.getText(UIControls.sAppText), "IT Analytics");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
+		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
+		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
+				"Sample page for dashboard common ui components testing only");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 
-		Assert.assertTrue(webdriver.isTextPresent("Add", UIControls.sPageText));
-
 		//click the compass icon
-
+		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
 
 		//verify the menus
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sLinksMenu));
+		webdriver.getLogger().info("Verify the Links menu displayed");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: block;");
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboards));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardIcon));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLabel));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLink));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHome));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLink));
+
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudService));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLink));
 
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzer));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerLabel));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerLink));
 
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdmin));
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdminIcon));
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdminLabel));
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sAdminLink));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdmin));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminIcon));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLabel));
+		//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLink));
 
+		Thread.sleep(10000);
+
+		webdriver.getLogger().info("Click the Application navigator icon again");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sLinksMenu));
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Links menu disappeared");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 
-		//click Add Widget icon
+		//click Open Widget icon
+		webdriver.getLogger().info("Verify if Open Widgets icon displayed");
+		Assert.assertTrue(webdriver.isDisplayed(UIControls.sAddWidgetIcon));
+		webdriver.getLogger().info("The buton is:  " + webdriver.getText(UIControls.sAddWidgetIcon));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetIcon), "Open");
 
+		webdriver.getLogger().info("Click the Open icon");
+		webdriver.click(UIControls.sAddWidgetIcon);
+		Thread.sleep(5000);
+
+		webdriver.getLogger().info("Verify the Open Widgets window is opened");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
+		webdriver.getLogger().info("The window title is:  " + webdriver.getText(UIControls.sWidgetWindowTitle));
+		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWidgetWindowTitle));
+		webdriver.takeScreenShot();
+		webdriver.getLogger().info("Verify the Open button is disabled");
+		webdriver.getLogger().info("The button is:  " + webdriver.getText(UIControls.sAddWidgetBtn));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Open");
+		webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+
+		//Open a widget
+		webdriver.getLogger().info("Select a widget and open it in the main page");
+		webdriver.getLogger().info("Select a widget");
+		webdriver.click(UIControls.sWidgetSelct);
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click Open button");
 		webdriver.click(UIControls.sAddWidgetBtn);
+		webdriver.takeScreenShot();
+		Thread.sleep(5000);
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-
-		//Add a widget
-		webdriver.select(UIControls.sWidgetSelct, UIControls.sWidgetSelct);
-		webdriver.click(UIControls.sAddWidgetBtn);
-		webdriver.takeScreenShot();
-		webdriver.click(UIControls.sCloseWidget);
-		webdriver.takeScreenShot();
-
+		webdriver.getLogger().info("Verify the widget has been opened in main page");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
 		webdriver.takeScreenShot();
 
 		//logout
+		webdriver.getLogger().info("Logout");
 		CommonUIUtils.logoutCommonUI(webdriver);
 
 	}
@@ -414,7 +589,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	@Test
 	public void testTargetAnalyzerPage_withOnePara_Admin() throws Exception
 	{
-		String testName = this.getClass().getName() + ".testLogAnalyzerPage_withAllPara_Admin";
+		String testName = this.getClass().getName() + ".testTargetAnalyzerPage_withOnePara_Admin";
 		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
 
 		//login
@@ -429,27 +604,40 @@ public class TestAnalyzerPage extends CommonUIUtils
 		webdriver.takeScreenShot();
 
 		//verify the product name,app name,content of page
+		webdriver.getLogger().info("Verify the page content");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sProductText));
+		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
+		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		webdriver.getLogger().info("The App is:  " + webdriver.getText(UIControls.sAppText));
+		//Assert.assertEquals(webdriver.getText(UIControls.sAppText), "IT Analytics");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
+		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
+		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
+				"Sample page for dashboard common ui components testing only");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 
-		Assert.assertTrue(webdriver.isTextPresent("Add", UIControls.sPageText));
-
 		//click the compass icon
-
+		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
 
 		//verify the menus
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sLinksMenu));
+		webdriver.getLogger().info("Verify the Links menu displayed");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: block;");
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboards));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardIcon));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLabel));
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sDashboardLink));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHome));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sHomeLink));
+
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudService));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceIcon));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLabel));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCloudServiceLink));
 
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzer));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAnalyzerIcon));
@@ -461,32 +649,53 @@ public class TestAnalyzerPage extends CommonUIUtils
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLabel));
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAdminLink));
 
+		Thread.sleep(10000);
+
+		webdriver.getLogger().info("Click the Application navigator icon again");
 		webdriver.click(UIControls.sCompassIcon);
 		webdriver.takeScreenShot();
-		Assert.assertFalse(webdriver.isElementPresent(UIControls.sLinksMenu));
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Links menu disappeared");
+		Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
 
-		//click Add Widget icon
+		//click Open Widget icon
+		webdriver.getLogger().info("Verify if Open Widgets icon displayed");
+		Assert.assertTrue(webdriver.isDisplayed(UIControls.sAddWidgetIcon));
+		webdriver.getLogger().info("The buton is:  " + webdriver.getText(UIControls.sAddWidgetIcon));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetIcon), "Open");
 
+		webdriver.getLogger().info("Click the Open icon");
+		webdriver.click(UIControls.sAddWidgetIcon);
+		Thread.sleep(5000);
+
+		webdriver.getLogger().info("Verify the Open Widgets window is opened");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
+		webdriver.getLogger().info("The window title is:  " + webdriver.getText(UIControls.sWidgetWindowTitle));
+		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWidgetWindowTitle));
+		webdriver.takeScreenShot();
+		webdriver.getLogger().info("Verify the Open button is disabled");
+		webdriver.getLogger().info("The button is:  " + webdriver.getText(UIControls.sAddWidgetBtn));
+		Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Open");
+		webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+
+		//Open a widget
+		webdriver.getLogger().info("Select a widget and open it in the main page");
+		webdriver.getLogger().info("Select a widget");
+		webdriver.click(UIControls.sWidgetSelct);
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click Open button");
 		webdriver.click(UIControls.sAddWidgetBtn);
+		webdriver.takeScreenShot();
+		Thread.sleep(5000);
 
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-		Assert.assertTrue(webdriver.isTextPresent("Open", UIControls.sWdigetWindowTitle));
-		webdriver.takeScreenShot();
-
-		//Add a widget
-		webdriver.select(UIControls.sWidgetSelct, UIControls.sWidgetSelct);
-		webdriver.click(UIControls.sAddWidgetBtn);
-		webdriver.takeScreenShot();
-		webdriver.click(UIControls.sCloseWidget);
-		webdriver.takeScreenShot();
-
+		webdriver.getLogger().info("Verify the widget has been opened in main page");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
 		webdriver.takeScreenShot();
 
 		//logout
+		webdriver.getLogger().info("Logout");
 		CommonUIUtils.logoutCommonUI(webdriver);
-
 	}
 
 }

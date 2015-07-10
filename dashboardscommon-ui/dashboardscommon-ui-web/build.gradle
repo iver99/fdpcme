@@ -37,16 +37,16 @@ repositories {
 
 
 
-buildscript {
-    repositories {
-        maven {
-            url = "${artifactory_contextUrl}/emaas-virtual"
-        }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true        
-	}  
-}
+//buildscript {
+//    repositories {
+//        maven {
+//            url = "${artifactory_contextUrl}/emaas-virtual"
+//        }
+//    }
+//    dependencies {
+       // classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true        
+//	}  
+//}
 
 //define the JS source locations
 
@@ -223,12 +223,12 @@ task buildDFCommonLibZip(type: Zip){
 
 publishing {
     publications {
-	maven(MavenPublication) {
-	    version "${publish_version}"
-	    groupId "${publish_group}"
-	    artifact(buildDFCommonLibZip)
-	    artifactId 'emcs-ui-framework-common'
-	}
+	//maven(MavenPublication) {
+	//    version "${publish_version}"
+	//    groupId "${publish_group}"
+	//    artifact(buildDFCommonLibZip)
+	//    artifactId 'emcs-ui-framework-common'
+	//}
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
