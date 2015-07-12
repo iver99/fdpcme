@@ -540,11 +540,12 @@ define(['knockout',
                 html2canvas($('#tiles-row'), {
                     onrendered: function(canvas) {
                     	try {
-                    		var ctx = canvas.getContext('2d');
-                    		ctx.webkitImageSmoothingEnabled = false;
-                    		ctx.mozImageSmoothingEnabled = false;
-                    		ctx.imageSmoothingEnabled = false;
-                    		var data = canvas.toDataURL();
+                    		var resize_canvas = document.createElement('canvas');
+                    		resize_canvas.width = 320;//canvas.width*0.5; 
+                    		resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;//canvas.height * 0.5;
+                    		var resize_ctx = resize_canvas.getContext('2d');
+                			resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
+                			var data = resize_canvas.toDataURL("image/jpeg", 0.8);
                     		nodesToRemove.forEach(function(pair) {
                     			pair.parent.removeChild(pair.child);
                     		});
