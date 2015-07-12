@@ -196,13 +196,12 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
                                                    filter['types'], filter['appTypes'], filter['owners']);
         self.datasource = self.dsFactory.build("", self.pageSize());
-        self.datasource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
+        self.datasource['pagingDS'].setPage(0, { 
             'success': function() {
                 self.pagingDatasource( self.datasource['pagingDS'] );
                 if (self.datasource['pagingDS'].totalSize() <= 0)
                 {
-                    if (self.welcomeDialogModel.showWelcome === false 
-                        && self.datasource['pagingDS'].totalSize() <= 0)
+                    if (self.welcomeDialogModel.showWelcome === false)
                     {
                         $('#cbtn-tooltip').ojPopup('open', "#cbtn");
                     }
