@@ -10,9 +10,9 @@ buildscript {
         maven {
             url = "${artifactory_contextUrl}/emaas-virtual"
         }
-        maven {
+        /*maven {
             url = "${artifactory_contextUrl}/repo"
-        }
+        }*/
     }
 
     dependencies {
@@ -34,17 +34,16 @@ artifactory {
     }
     resolve {
             repository {
-                repoKey = "repo"
+                repoKey = "emaas-virtual"
             }
         }
-    
 }
 
 
 sourceSets {
         test {
         resources.srcDirs = ["src/test/java"]    
-        compileClasspath = configurations.lrgConfig + configurations.webdriver
+        compileClasspath = configurations.testConfig + configurations.webdriver + compileClasspath + configurations.testNG
         }
     }
 
@@ -64,9 +63,9 @@ publishing {
                   TestPublish(MavenPublication) {
                 setArtifactId(project.name)
                 artifact TestJar.archivePath
-                pom.withXml { XmlProvider xmlProvider ->
+                pom.withXml { 
                         def dependencies = asNode().appendNode('dependencies')
-                        configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                        configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
                                 def dependency = dependencies.appendNode('dependency')
                                 dependency.appendNode('groupId', it.moduleGroup)
                                 dependency.appendNode('artifactId', it.moduleName)
