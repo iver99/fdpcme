@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="intg-sample-wf-web">
-        <wb-resource deploy-path="/" source-path="/public_html" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <property name="java-output-path" value="/intg-sample-wf-web/build/classes"/>
-        <property name="context-root" value="emsaasui/emcpdf-intg-sample-wf"/>
-    </wb-module>
-</project-modules>
