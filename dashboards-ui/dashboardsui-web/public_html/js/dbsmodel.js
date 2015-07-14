@@ -231,6 +231,14 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.selectedDashboard(data);
             if (data.element)
             {
+                if (data.dashboard.systemDashboard == true)
+                {
+                    popup.ojPopup( "option", "initialFocus", "none" );
+                }
+                else
+                {
+                    popup.ojPopup( "option", "initialFocus", "firstFocusable" );
+                }
                 popup.ojPopup('open', data.element, {'at': 'right center', 'my': 'start center'});
             }
         };
