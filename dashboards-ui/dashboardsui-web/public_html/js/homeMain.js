@@ -273,5 +273,17 @@ function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 };
 
-
+function getDateString(isoString) {
+    //console.log(isoString);
+    if (isoString && isoString.length > 0)
+    {
+        var s = isoString.split(/[\-\.\+: TZ]/g);
+        //console.log(s);
+        if (s.length > 1)
+        {
+            return new Date(s[0], s[1], s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();
+        }
+    }
+    return "";
+};
 

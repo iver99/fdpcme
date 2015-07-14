@@ -126,32 +126,32 @@ define(['knockout',
             };
         }
         
-        function TileUrlEditView() {
-            var self = this;
-            self.tileToChange = ko.observable();
-            self.url = ko.observable();
-            self.tracker = ko.observable();
-            
-            self.setEditedTile = function(tile) {
-                self.tileToChange(tile);
-                self.originalUrl = tile.url();
-            };
-            
-            self.applyUrlChange = function() {
-                var trackerObj = ko.utils.unwrapObservable(self.tracker),
-                    hasInvalidComponents = trackerObj["invalidShown"];
-                if (hasInvalidComponents) {
-                    trackerObj.showMessages();
-                    trackerObj.focusOnFirstInvalid();
-                } else
-                    $('#urlChangeDialog').ojDialog('close');
-            };
-            
-            self.cancelUrlChange = function() {
-                self.tileToChange().url(self.originalUrl);
-                $('#urlChangeDialog').ojDialog('close');
-            };
-        }
+//        function TileUrlEditView() {
+//            var self = this;
+//            self.tileToChange = ko.observable();
+//            self.url = ko.observable();
+//            self.tracker = ko.observable();
+//            
+//            self.setEditedTile = function(tile) {
+//                self.tileToChange(tile);
+//                self.originalUrl = tile.url();
+//            };
+//            
+//            self.applyUrlChange = function() {
+//                var trackerObj = ko.utils.unwrapObservable(self.tracker),
+//                    hasInvalidComponents = trackerObj["invalidShown"];
+//                if (hasInvalidComponents) {
+//                    trackerObj.showMessages();
+//                    trackerObj.focusOnFirstInvalid();
+//                } else
+//                    $('#urlChangeDialog').ojDialog('close');
+//            };
+//            
+//            self.cancelUrlChange = function() {
+//                self.tileToChange().url(self.originalUrl);
+//                $('#urlChangeDialog').ojDialog('close');
+//            };
+//        }
         
         function TimeSliderDisplayView() {
             var self = this;
@@ -503,6 +503,7 @@ define(['knockout',
             				return;  // validator not passed, so do not save
             		}
             		catch (e) {
+                    	oj.Logger.error(e);
             			return;
             		}
             	}
@@ -539,11 +540,12 @@ define(['knockout',
                 html2canvas($('#tiles-row'), {
                     onrendered: function(canvas) {
                     	try {
-                    		var ctx = canvas.getContext('2d');
-                    		ctx.webkitImageSmoothingEnabled = false;
-                    		ctx.mozImageSmoothingEnabled = false;
-                    		ctx.imageSmoothingEnabled = false;
-                    		var data = canvas.toDataURL();
+                    		var resize_canvas = document.createElement('canvas');
+                    		resize_canvas.width = 320;//canvas.width*0.5; 
+                    		resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;//canvas.height * 0.5;
+                    		var resize_ctx = resize_canvas.getContext('2d');
+                			resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
+                			var data = resize_canvas.toDataURL("image/jpeg", 0.8);
                     		nodesToRemove.forEach(function(pair) {
                     			pair.parent.removeChild(pair.child);
                     		});
@@ -592,54 +594,54 @@ define(['knockout',
                 });
             };
             
-            self.isFavorite = ko.observable(false);
-            self.initializeIsFavorite = function() {
-                dtm.loadIsFavorite(self.dashboardId, function(isFavorite){
-                    self.isFavorite(isFavorite);
-                }, function(e) {
-                    console.log(e.errorMessage());
-                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
-                });
-            }();  
+//            self.isFavorite = ko.observable(false);
+//            self.initializeIsFavorite = function() {
+//                dtm.loadIsFavorite(self.dashboardId, function(isFavorite){
+//                    self.isFavorite(isFavorite);
+//                }, function(e) {
+//                    console.log(e.errorMessage());
+//                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
+//                });
+//            }();  
             
-            self.addToFavorites = function() {
-                dtm.setAsFavorite(self.dashboardId, function() {
-                    self.isFavorite(true);
-//                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-//                    outputData.eventType = "ADD_TO_FAVORITES";
-//                    if (window.opener && window.opener.childMessageListener) {
-//                        var jsonValue = JSON.stringify(outputData);
-//                        console.log(jsonValue);
-//                        window.opener.childMessageListener(jsonValue);
-//                        if (window.opener.navigationsModelCallBack())
-//                        {
-//                            navigationsModel(window.opener.navigationsModelCallBack());
-//                        }
-//                    }
-                }, function(e) {
-                    console.log(e.errorMessage());
-                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
-                });
-            };
-            self.deleteFromFavorites = function() {
-                dtm.removeFromFavorite(self.dashboardId, function() {
-                    self.isFavorite(false);
-//                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-//                    outputData.eventType = "REMOVE_FROM_FAVORITES";
-//                    if (window.opener && window.opener.childMessageListener) {
-//                        var jsonValue = JSON.stringify(outputData);
-//                        console.log(jsonValue);
-//                        window.opener.childMessageListener(jsonValue);
-//                        if (window.opener.navigationsModelCallBack())
-//                        {
-//                            navigationsModel(window.opener.navigationsModelCallBack());
-//                        }
-//                    }
-                }, function(e) {
-                    console.log(e.errorMessage());
-                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
-                });
-            };
+//            self.addToFavorites = function() {
+//                dtm.setAsFavorite(self.dashboardId, function() {
+//                    self.isFavorite(true);
+////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+////                    outputData.eventType = "ADD_TO_FAVORITES";
+////                    if (window.opener && window.opener.childMessageListener) {
+////                        var jsonValue = JSON.stringify(outputData);
+////                        console.log(jsonValue);
+////                        window.opener.childMessageListener(jsonValue);
+////                        if (window.opener.navigationsModelCallBack())
+////                        {
+////                            navigationsModel(window.opener.navigationsModelCallBack());
+////                        }
+////                    }
+//                }, function(e) {
+//                    console.log(e.errorMessage());
+//                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
+//                });
+//            };
+//            self.deleteFromFavorites = function() {
+//                dtm.removeFromFavorite(self.dashboardId, function() {
+//                    self.isFavorite(false);
+////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
+////                    outputData.eventType = "REMOVE_FROM_FAVORITES";
+////                    if (window.opener && window.opener.childMessageListener) {
+////                        var jsonValue = JSON.stringify(outputData);
+////                        console.log(jsonValue);
+////                        window.opener.childMessageListener(jsonValue);
+////                        if (window.opener.navigationsModelCallBack())
+////                        {
+////                            navigationsModel(window.opener.navigationsModelCallBack());
+////                        }
+////                    }
+//                }, function(e) {
+//                    console.log(e.errorMessage());
+//                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
+//                });
+//            };
             
             //Add widget dialog
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
@@ -700,7 +702,7 @@ define(['knockout',
         }
         
         return {"DashboardTilesView": DashboardTilesView, 
-            "TileUrlEditView": TileUrlEditView, 
+//            "TileUrlEditView": TileUrlEditView, 
             "TimeSliderDisplayView": TimeSliderDisplayView,
             "ToolBarModel": ToolBarModel};
     }

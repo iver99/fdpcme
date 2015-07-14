@@ -72,7 +72,34 @@ define({
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service. Retry count: {0}.",
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Attempts to connect to your cloud service failed after {0} tries.",
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Could not connect to your cloud service.",
-      "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now..."
+      "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
+       //datetime picker
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 mins",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 mins",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 mins",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS": "Last 4 hours",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS": "Last 6 hours",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY": "Last 1 day",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS": "Last 7 days",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS": "Last 30 days",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS": "Last 90 days",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM": "Custom",
+      "DATETIME_PICKER_BUTTONS_APPLY_BUTTON": "Apply",
+      "DATETIME_PICKER_BUTTONS_CANCEL_BUTTON": "Cancel",
+      "DATETIME_PICKER_MONTHS_JANUARY": "January",
+      "DATETIME_PICKER_MONTHS_FEBRUARY": "February",
+      "DATETIME_PICKER_MONTHS_MARCH": "March",
+      "DATETIME_PICKER_MONTHS_APRIL": "April",
+      "DATETIME_PICKER_MONTHS_MAY": "May",
+      "DATETIME_PICKER_MONTHS_JUNE": "June",
+      "DATETIME_PICKER_MONTHS_JULY": "July",
+      "DATETIME_PICKER_MONTHS_AUGUST": "August",
+      "DATETIME_PICKER_MONTHS_SEPTEMBER": "September",
+      "DATETIME_PICKER_MONTHS_OCTOBER": "October",
+      "DATETIME_PICKER_MONTHS_NOVEMBER": "November",
+      "DATETIME_PICKER_MONTHS_DECEMBER": "December",
+      "DATETIME_PICKER_TIME_RANGE": "Time Range",
+      "DATETIME_PICKER_ERROR": "Error!"
 }
 });
 

@@ -144,10 +144,14 @@ require(['knockout',
                     template:{require:'text!/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
                 });
             }
-            ko.components.register("df-time-selector",{
-                viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
-                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
-            });
+//            ko.components.register("df-time-selector",{
+//                viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
+//                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
+//            });
+	    ko.components.register("df-datetime-picker",{
+         	viewModel: {require: '../emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker'},
+	        template: {require: 'text!../emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html'}
+	    });
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
                 template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
@@ -187,7 +191,7 @@ require(['knockout',
             };
             
            
-            var urlChangeView = new dtv.TileUrlEditView();
+//            var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
             var dsbId = dfu.getUrlParam("dashboardId");
@@ -217,7 +221,7 @@ require(['knockout',
                         }
                     }
                     var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
-                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
+                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
 
@@ -253,7 +257,7 @@ require(['knockout',
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                     ko.applyBindings(tilesViewMode, $('#global-html')[0]);   
-                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
+//                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
 
                     $("#loading").hide();
                     $('#globalBody').show();
@@ -302,16 +306,16 @@ function updateOnePageHeight(event) {
     }
 };
 
-function truncateString(str, length) {
-    if (str && length > 0 && str.length > length)
-    {
-        var _tlocation = str.indexOf(' ', length);
-        if ( _tlocation <= 0 )
-            _tlocation = length;
-        return str.substring(0, _tlocation) + "...";
-    }
-    return str;
-};
+//function truncateString(str, length) {
+//    if (str && length > 0 && str.length > length)
+//    {
+//        var _tlocation = str.indexOf(' ', length);
+//        if ( _tlocation <= 0 )
+//            _tlocation = length;
+//        return str.substring(0, _tlocation) + "...";
+//    }
+//    return str;
+//};
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);

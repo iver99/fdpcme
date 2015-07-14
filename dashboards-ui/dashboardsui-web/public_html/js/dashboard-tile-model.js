@@ -395,58 +395,58 @@ define(['knockout',
             });
         }
         
-        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack)
-                        succCallBack(data.isFavorite);
-                },
-                error: function(e) {
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack)
+//                        succCallBack(data.isFavorite);
+//                },
+//                error: function(e) {
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'post',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'post',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'delete',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'delete',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
         function registerComponent(kocName, viewModel, template) {
             if (!ko.components.isRegistered(kocName)) {
@@ -457,7 +457,7 @@ define(['knockout',
             }
         }
         
-        function DashboardTilesViewModel(dashboard, tilesView, urlEditView) {
+        function DashboardTilesViewModel(dashboard, tilesView/*, urlEditView*/) {
             var self = this;
                         
             self.dashboard = dashboard;
@@ -511,7 +511,7 @@ define(['knockout',
                           newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
                         }
                     }else if (widget.WIDGET_GROUP_NAME !== 'Demo Analytics') { //====new logic !==999
-                        var assetRoot = null;
+//                        var assetRoot = null;
                         //find KOC name for registration. if valid registration is not detected, use default one.
                         if (provider_name===undefined || provider_version===undefined || provider_asset_root===undefined){
                             if (widget.WIDGET_GROUP_NAME==='Log Analytics' || widget.WIDGET_GROUP_NAME==='Target Analytics'){
@@ -682,6 +682,9 @@ define(['knockout',
                    case "configure":
                        self.configure(tile);
                        break;
+                   case "refresh-this-widget":
+                       self.refreshThisWidget(tile);
+                       break; 
                }
            };
            
@@ -812,11 +815,16 @@ define(['knockout',
                     tile.configure();
                 }
             };
+
+            self.refreshThisWidget = function(tile) {
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
+                self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+            }
             
-            self.changeUrl = function(tile) {
-                urlEditView.setEditedTile(tile);
-                $('#urlChangeDialog').ojDialog('open');
-            };
+//            self.changeUrl = function(tile) {
+//                urlEditView.setEditedTile(tile);
+//                $('#urlChangeDialog').ojDialog('open');
+//            };
             
             self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
@@ -845,7 +853,7 @@ define(['knockout',
             self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
                     var defArray = [];
-                    for (i = 0; i < self.dashboard.tiles().length; i++) {
+                    for (var i = 0; i < self.dashboard.tiles().length; i++) {
                         var aTile = self.dashboard.tiles()[i];
                         defArray.push(self.fireDashboardItemChangeEventTo(aTile,dashboardItemChangeEvent));
                     }
@@ -880,27 +888,63 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });
-        }
-        
-        function DashboardViewModel() {
-            var self = this;
-            
-            self.name = observable("LaaS Dashboard");
-            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
-        }
+
+	var initStart = new Date(new Date() - 24*60*60*1000);
+        var initEnd = new Date();
+ 	self.timeSelectorModel.viewStart(initStart);
+        self.timeSelectorModel.viewEnd(initEnd);
+	self.datetimePickerParams = {
+	    startDateTime: initStart,
+ 	    endDateTime: initEnd,	   
+	    callback: function(start, end) {
+		self.timeSelectorModel.viewStart(start);
+		self.timeSelectorModel.viewEnd(end);
+		self.timeSelectorModel.timeRangeChange(true);		
+	    }
+	}
+
+/**
+	self.refreshCallback = function(start, end) {
+	    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(start,end),null);
+            self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+	}
+	self.timeRangeStart = ko.observable(new Date(new Date() - 24*60*60*1000));
+        self.timeRangeEnd = ko.observable(new Date());
+	self.datetimePickerParams = {
+	    startDateTime: new Date() - 24*60*60*1000,
+ 	    endDateTime: new Date(),
+	    callback: function(start, end) {
+		self.timeRangeStart(start);
+		self.timeRangeEnd(end);
+		self.refreshCallback(start, end);
+	    }
+	}
+	self.autoRefreshParams = ko.computed(function() {
+    	    return {
+	        timeRangeStart: self.timeRangeStart(),
+        	timeRangeEnd: self.timeRangeEnd(),
+	    	refreshCallback: self.refreshCallback
+	    }
+	}, self);
+**/
+
+    }
+//        function DashboardViewModel() {
+//            var self = this;
+//            
+//            self.name = observable("LaaS Dashboard");
+//            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
+//        }
         
         return {"DashboardTile": DashboardTile, 
             "DashboardTilesViewModel": DashboardTilesViewModel,
-            "DashboardViewModel": DashboardViewModel,
+//            "DashboardViewModel": DashboardViewModel,
             "loadDashboard": loadDashboard,
             "isDashboardNameExisting": isDashboardNameExisting,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "updateDashboard": updateDashboard,
-            "registerComponent": registerComponent,
-            "loadIsFavorite": loadIsFavorite,
-            "setAsFavorite": setAsFavorite,
-            "removeFromFavorite": removeFromFavorite
+            "registerComponent": registerComponent
         };
     }
 );

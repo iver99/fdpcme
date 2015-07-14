@@ -41,6 +41,13 @@ repositories {
     maven {
         url = "${artifactory_contextUrl}/emaas-virtual"
     }
+
+         maven {
+          url = "${artifactory_contextUrl}/${artifactory_resolveRepoName}"
+       }
+    maven {
+        url = "${artifactory_contextUrl}/repo"
+    }
 }
 //apply plugin: 'em-test-infra'
 apply plugin: 'TestInfraPlugin'
@@ -52,7 +59,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  ***************************************************************************************************/
 
 //Update the lrgConfig configuration to specify where the test jar is.
- {
+ dependencies{
 testConfig (group: 'com.oracle.emaas.emcpdf.Webdriver.uitest3', name: 'dashboards-uitest', version: '1.0+')
 {
 exclude('module':'groovy')

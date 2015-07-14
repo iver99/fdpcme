@@ -142,11 +142,10 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.searchDashBoard("AAA_testDashboard");
 		DashBoardUtils.waitForMilliSeconds(500);
 		webd.takeScreenShot();
-		WebElement mainelement = webd.getElement(DashBoardPageId.ElementID);
-		WebElement deletebutton = webd.getElement(DashBoardPageId.DeleteBtnID);
-        Actions builder = new Actions(webd.getWebDriver());
-        builder.moveToElement(mainelement).moveToElement(deletebutton).click().perform();
-        
+		
+		webd.click(DashBoardPageId.InfoBtnID);
+		webd.click(DashBoardPageId.RmBtnID);
+		
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
 		DashBoardUtils.waitForMilliSeconds(500);
