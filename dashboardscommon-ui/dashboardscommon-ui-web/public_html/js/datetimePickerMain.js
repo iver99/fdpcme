@@ -17,7 +17,8 @@ requirejs.config({
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
-        'text': '../emcsDependencies/oraclejet/js/libs/require/text'
+        'text': '../emcsDependencies/oraclejet/js/libs/require/text',
+	'emcpdfcommon': '/testtest/emcsDependencies/dfcommon'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -36,9 +37,17 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-                //'ojtranslations/nls/ojtranslations': 'resources/nls/menu'
+               // 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
         }
+	,
+        text: {
+            useXhr: function (url, protocol, hostname, port) {
+              // allow cross-domain requests
+              // remote server allows CORS
+              return true;
+            }
+          }
     }
 });
 
@@ -61,8 +70,8 @@ require(['ojs/ojcore',
         function (oj, ko, $) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("date-time-picker", {
-                viewModel: {require: "../emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker"},
-                template: {require: "text!../emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html"}
+                viewModel: {require: "/testtest/emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker.js"},
+                template: {require: "text!/testtest/emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html"}
             });
 
             function MyViewModel() {

@@ -1,5 +1,5 @@
-define(["require", "knockout", "jquery", "ojs/ojcore"],
-        function (localrequire, ko, $, oj) {
+define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!emcpdfcommon/js/resources/nls/dfCommonMsgBundle'],
+        function (localrequire, ko, $, oj, nls) {
 
             /**
              * 
@@ -14,12 +14,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     }
                 }
                 return "";
-            }
-            function getFilePath(requireContext, relPath) {
-                var jsRootMain = requireContext.toUrl("");
-                var path = requireContext.toUrl(relPath);
-                path = path.substring(jsRootMain.length);
-                return path;
             }
 
             /**
@@ -61,30 +55,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 //                        format2: month2 + " " + day + "," + year
                     }
                 }
-
-                //Config requireJS i18n plugin if not configured yet
-                var i18nPluginPath = getFilePath(localrequire, '../../../js/resources/i18n.js');
-                i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length - 3);
-                var requireConfig = requirejs.s.contexts._;
-                var locale = null;
-                var i18nConfigured = false;
-                var childCfg = requireConfig.config;
-                if (childCfg.config && childCfg.config.ojL10n) {
-                    locale = childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
-                }
-                if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
-                    i18nConfigured = true;
-                }
-                if (i18nConfigured === false) {
-                    requirejs.config({
-                        config: locale ? {i18n: {locale: locale}} : {},
-                        paths: {
-                            'i18n': i18nPluginPath
-                        }
-                    });
-                }
-                var nlsResourceBundle = getFilePath(localrequire, '../../../js/resources/nls/dfCommonMsgBundle.js');
-                nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length - 3);
 
                 self.randomId = new Date().getTime();
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
@@ -190,61 +160,45 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.timeRangeMsg = ko.observable();
                 self.applyButton = ko.observable();
                 self.cancelButton = ko.observable();
-                self.nlsStrings = ko.observable();
-                var nlsString;
 
-                var nlsString = function () {
-                    var deferred = $.Deferred();
-                    require(['i18n!' + nlsResourceBundle],
-                            function (nls) {
-                                self.nlsStrings(nls);
-                                self.longMonths([nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
-                                    nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
-                                    nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER]);
-                                self.timePeriodLast15mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS);
-                                self.timePeriodLast30mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS);
-                                self.timePeriodLast60mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS);
-                                self.timePeriodLast4hours(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS);
-                                self.timePeriodLast6hours(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS);
-                                self.timePeriodLast1day(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY);
-                                self.timePeriodLast7days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS);
-                                self.timePeriodLast30days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS);
-                                self.timePeriodLast90days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS);
-                                self.timePeriodCustom(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM);
+		self.longMonths([nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
+                nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
+                nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER]);
+                self.timePeriodLast15mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS);
+                self.timePeriodLast30mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS);
+                self.timePeriodLast60mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS);
+                self.timePeriodLast4hours(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS);
+                self.timePeriodLast6hours(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS);
+                self.timePeriodLast1day(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY);
+                self.timePeriodLast7days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS);
+                self.timePeriodLast30days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS);
+                self.timePeriodLast90days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS);
+                self.timePeriodCustom(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM);
 
-                                self.errorMsg(nls.DATETIME_PICKER_ERROR);
-                                self.timeRangeMsg(nls.DATETIME_PICKER_TIME_RANGE);
+                self.errorMsg(nls.DATETIME_PICKER_ERROR);
+                self.timeRangeMsg(nls.DATETIME_PICKER_TIME_RANGE);
 
-                                self.applyButton(nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON);
-                                self.cancelButton(nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON);
+                self.applyButton(nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON);
+                self.cancelButton(nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON);
 
-                                deferred.resolve();
-                            });
-                    return deferred.promise();
-                };
-
-                $.when(nlsString()).done(function () {
-                    self.timePeriodObject = ko.computed(function () {
-                        var tmp = {};
-                        tmp[self.timePeriodLast15mins()] = [0, 15 * 60 * 1000];
-                        tmp[self.timePeriodLast30mins()] = [1, 30 * 60 * 1000];
-                        tmp[self.timePeriodLast60mins()] = [2, 60 * 60 * 1000];
-                        tmp[self.timePeriodLast4hours()] = [3, 4 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast6hours()] = [4, 6 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast1day()] = [5, 24 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast7days()] = [6, 7 * 24 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast30days()] = [7, 30 * 24 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast90days()] = [8, 90 * 24 * 60 * 60 * 1000];
-                        return tmp;
-                    }, self);
-                    self.monthObject = ko.computed(function () {
-                        var tmp = {};
-                        for (var i = 0; i < 12; i++) {
-                            tmp[self.longMonths()[i]] = i + 1;
-                        }
-                        return tmp;
-                    }, self);
-                });
+		self.timePeriodObject = ko.computed(function () {
+                    var tmp = {};
+                    tmp[self.timePeriodLast15mins()] = [0, 15 * 60 * 1000];
+                    tmp[self.timePeriodLast30mins()] = [1, 30 * 60 * 1000];
+                    tmp[self.timePeriodLast60mins()] = [2, 60 * 60 * 1000];
+                    tmp[self.timePeriodLast4hours()] = [3, 4 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast6hours()] = [4, 6 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast1day()] = [5, 24 * 60 * 60 * 1000];                    tmp[self.timePeriodLast7days()] = [6, 7 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast30days()] = [7, 30 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast90days()] = [8, 90 * 24 * 60 * 60 * 1000];
+                    return tmp;
+                }, self);
+                self.monthObject = ko.computed(function () {
+                    var tmp = {};
+                    for (var i = 0; i < 12; i++) {
+                        tmp[self.longMonths()[i]] = i + 1;
+                    }                    return tmp;
+                }, self);
 
                 if(params.callback) {
                     self.callback = params.callback;
@@ -347,7 +301,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 var curDate = new Date();
 
-                $.when(nlsString()).done(function () {
+                
                     if (params.startDateTime && params.endDateTime) {
                         //users input start date and end date
                         start = new Date(params.startDateTime);
@@ -432,7 +386,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     self.lastStartTime(self.startTime());
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
-                });
 
                 self.customClick = function () {
                     self.timePeriod(self.timePeriodCustom());
@@ -503,10 +456,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.changeDate = function (event, data) {
                     if (data.option == "value" && !self.selectByDrawer()) {
                         self.customClick();
-                        $.when(nlsString()).done(function () {
-                            self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
-                            self.updateRange(self.startDate(), self.endDate());
-                        });
+    
+                        self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                        self.updateRange(self.startDate(), self.endDate());
+                       
                     }
                 }
 
