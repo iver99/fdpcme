@@ -3,7 +3,8 @@
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_src"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/integTest/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/integTest/resources"/>
         <property name="java-output-path" value="/dashboards-web/build/classes"/>
         <property name="context-root" value="emcpdf"/>
     </wb-module>

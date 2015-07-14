@@ -28,7 +28,7 @@ dependencies {
 //	lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.8.8') { transitive = false }
 //        lrgConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.1') { transitive = false }
 
- //      lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12') { transitive = false }
-    //   lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12') { transitive = false }
-   //     lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
+       lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
+       lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
+       lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
 }
