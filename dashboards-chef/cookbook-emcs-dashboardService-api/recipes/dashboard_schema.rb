@@ -42,11 +42,11 @@ end
 #
 product_schema_name = "SYSEMS_T_#{node["SAAS_schema_id"]}" 
                   loadResourceCredential "Load Product Schema Credential" do
-                     credentialType "SchemaCredentials"
+                     credentialType "Schema"
                      credentialName "#{product_schema_name}"
                   end
 
-product_schema_password = node["SchemaCredentials"]["#{product_schema_name}"]["userCredential"]
+product_schema_password = node["Schema"]["#{product_schema_name}"]["userCredential"]
 #
 
 # Check existence of schema
