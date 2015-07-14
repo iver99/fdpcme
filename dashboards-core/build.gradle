@@ -118,5 +118,6 @@ dependencies {
 	compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
 	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 
+
 }
 build.dependsOn integTestJar

@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/integTest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboards-ee"/>
@@ -12,9 +13,9 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/testng-6.8.8.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/ojdbc6-12.1.0.1.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/json-path-1.8.1.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-asl-1.9.12.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.12.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jettison-1.3.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-entities"/>
@@ -35,5 +36,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-1.0.4.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

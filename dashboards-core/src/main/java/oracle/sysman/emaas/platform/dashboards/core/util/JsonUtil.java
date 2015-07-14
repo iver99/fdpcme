@@ -24,6 +24,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.codehaus.jackson.type.JavaType;
+import org.codehaus.jettison.json.JSONObject;
 
 public class JsonUtil
 {
@@ -130,6 +131,24 @@ public class JsonUtil
 
 		return (List<T>) this.fromJson(jsonString, constructParametricType(List.class, classMeta));
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> List<T> fromJsonToList(String jsonString, Class<T> classMeta,String field) throws IOException
+	{
+		
+		String result = "";
+		try {
+			JSONObject json1 = new JSONObject(jsonString);
+			result = json1.getString(field);
+		}
+		catch (Exception e) {
+			return null;
+		}
+		return (List<T>) this.fromJson(result, constructParametricType(List.class, classMeta));
+	}
+	
+	
+	
 
 	/**
 	 * Get Mapper
