@@ -3,6 +3,7 @@
         <wb-resource deploy-path="/" source-path="/public_html" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/integTest/java"/>
         <property name="java-output-path" value="/dashboardscommonui-web/build/classes"/>
         <property name="context-root" value="emsaasui/dfcommon"/>
     </wb-module>

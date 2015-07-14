@@ -5,7 +5,7 @@ version = '1.0.1'
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
-        compileClasspath = compileClasspath + configurations.testConfig + configurations.testNG+configurations.webdriver
+        compileClasspath = compileClasspath + configurations.testConfig + configurations.testNG+configurations.webdriver + configurations.restAssured
     }
 }
 
@@ -14,7 +14,9 @@ task integTestJar (type:Jar) {
     appendix = 'integ-tests'
 }
 dependencies {
-testCompile(group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.45.0'){transitive = false}
+	testCompile(group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.45.0'){transitive = false}
+	lrgConfig(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1') { transitive = false }
+	lrgConfig(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
 
 
 }

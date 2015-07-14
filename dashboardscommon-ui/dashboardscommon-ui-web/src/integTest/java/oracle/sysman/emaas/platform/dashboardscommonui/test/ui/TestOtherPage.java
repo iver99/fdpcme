@@ -47,6 +47,7 @@ public class TestOtherPage extends CommonUIUtils
 		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
 		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Application Performance Monitoring");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
@@ -130,6 +131,7 @@ public class TestOtherPage extends CommonUIUtils
 		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
 		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Application Performance Monitoring");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
@@ -213,6 +215,7 @@ public class TestOtherPage extends CommonUIUtils
 		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
 		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Application Performance Monitoring");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
@@ -388,6 +391,7 @@ public class TestOtherPage extends CommonUIUtils
 		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
 		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Set up Oracle Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
@@ -470,6 +474,7 @@ public class TestOtherPage extends CommonUIUtils
 		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
 		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Set up Oracle Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
@@ -553,6 +558,7 @@ public class TestOtherPage extends CommonUIUtils
 		webdriver.getLogger().info("The Product is:  " + webdriver.getText(UIControls.sProductText));
 		Assert.assertEquals(webdriver.getText(UIControls.sProductText), "Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAppText));
+		Assert.assertEquals(webdriver.getText(UIControls.sAppText), "Set up Oracle Management Cloud");
 		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 		Assert.assertEquals(webdriver.getText(UIControls.sPageText),

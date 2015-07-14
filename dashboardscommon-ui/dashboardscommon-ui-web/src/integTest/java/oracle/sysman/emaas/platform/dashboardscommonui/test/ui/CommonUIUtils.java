@@ -19,6 +19,10 @@ import java.util.Properties;
 import oracle.sysman.emsaas.login.LoginUtils;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.response.Response;
+
 /**
  * @author shangwan
  */
@@ -29,8 +33,12 @@ public class CommonUIUtils
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
 	static String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
 	static String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
+	static String sAuthToken = CommonUIUtils.getEmaasPropertyValue("SAAS_AUTH_TOKEN");
+	static String sAPIUrl = CommonUIUtils.getEmaasPropertyValue("DASHBOARD_API_ENDPOINT");
 
 	static String sCommonUiUrlSuffix = CommonUIUtils.getEmaasPropertyValue("COMMON_UI_URL_SUFFIX");
+
+	static String sAppName = "";
 
 	public static void commonUITestLog(String sDesc)
 	{
@@ -84,7 +92,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_USERNAME");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
+					.commonUITestLog("The SSO_USERNAME property value is null ... set it to a different value -- 'emcsadmin'.");
 					sPropertyValue = "emcsadmin";
 				}
 			}
@@ -92,7 +100,7 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("SSO_PASSWORD");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
+					.commonUITestLog("The SSO_PASSWORD property value is null ... set it to a different value -- 'Welcome1!'.");
 					sPropertyValue = "Welcome1!";
 				}
 			}
@@ -100,8 +108,25 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-							.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/emcpdfcommonui/home.html'.");
+					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/emcpdfcommonui/home.html'.");
 					sPropertyValue = "/emsaasui/emcpdfcommonui/home.html";
+				}
+			}
+			else if (sProperty.equals("SAAS_AUTH_TOKEN")) {
+				sPropertyValue = emaasProp.getProperty("SAAS_AUTH_TOKEN");
+				if (sPropertyValue == null) {
+					CommonUIUtils
+							.commonUITestLog("The DASHBOARD_API_ENDPOINT property value is null ... set it to a different value -- 'welcome1'.");
+					sPropertyValue = "Basic d2VibG9naWM6d2VsY29tZTE=";
+
+				}
+				else if (sProperty.equals("DASHBOARD_API_ENDPOINT")) {
+					sPropertyValue = emaasProp.getProperty("DASHBOARD_API_ENDPOINT");
+					if (sPropertyValue == null) {
+						CommonUIUtils
+								.commonUITestLog("The SAAS_AUTH_TOKEN property value is null ... set it to a different value .");
+						sPropertyValue = sOhsUrl + "/emcpdf/api/v1/";
+					}
 				}
 			}
 			else {
@@ -131,6 +156,53 @@ public class CommonUIUtils
 		}
 
 		return sPropertyValue;
+
+	}
+
+	public static void InitValue()
+	{
+		RestAssured.useRelaxedHTTPSValidation();
+		RestAssured.baseURI = sAPIUrl;
+
+		Response res1 = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", sTenantId, "X-REMOTE-USER", sTenantId + "." + sSsoUserName,
+						"Authorization", sAuthToken).when().get("/subscribedapps");
+		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
+		String s_appname = res1.jsonPath().getString("applications");
+		CommonUIUtils.commonUITestLog("The response content is:" + s_appname);
+		String[] ls_appname = s_appname.split(",");
+		for (int i = 0; i < ls_appname.length; i++) {
+			CommonUIUtils.commonUITestLog(i + " : " + ls_appname[i]);
+			if (ls_appname[i].contains("APM")) {
+				if (sAppName.equals("")) {
+					sAppName = "Application Performance Monitoring";
+				}
+				else {
+					sAppName = sAppName + " | Application Performance Monitoring";
+				}
+			}
+			else if (ls_appname[i].contains("LogAnalytics")) {
+				if (sAppName.equals("")) {
+					sAppName = "Log Analytics";
+				}
+				else {
+					sAppName = sAppName + " | Log Analytics";
+				}
+			}
+			else if (ls_appname[i].contains("ITAnalytics")) {
+				if (sAppName.equals("")) {
+					sAppName = "IT Analytics";
+				}
+				else {
+					sAppName = sAppName + " | IT Analytics";
+				}
+			}
+		}
+		CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
 
 	}
 

@@ -257,5 +257,8 @@ publishing {
 dependencies {
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-17062', ext: 'war'){ transitive = false }	
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
+	
+	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1') { transitive = false }
+	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
 }
 build.dependsOn integTestJar

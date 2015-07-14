@@ -17,7 +17,8 @@ public class UIControls
 {
 	//Begin: Text
 	public static final String sProductText = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[2]/span[1]";
-	public static final String sAppText = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[2]/span[2]";
+	//public static final String sAppText = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[2]/span[2]";
+	public static final String sAppText = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[3]/span";
 	public static final String sPageText = "//*[@id='toolbar-left']";
 	public static final String sHomeLabel = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]";
 	public static final String sCloudServiceLabel = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[2]/div[2]/div[1]";
@@ -61,5 +62,6 @@ public class UIControls
 	public static final String sAnalyzer = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[3]";
 	public static final String sAdmin = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[4]";
 	public static final String sWidget = "//*[@id='widgets-container']";
+	public static final String sCategorySelect = "//*[@id='ojChoiceId_categorySelect_selected']";
 	//End: Components
 }
