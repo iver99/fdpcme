@@ -26,6 +26,7 @@ public class DashBoardUtils {
 	{
 		driver=webDriver;
 		if(doesWebElementExist(DashBoardPageId.OverviewCloseID))  closeOverviewPage();
+                Assert.assertFalse(doesWebElementExist(DashBoardPageId.OverviewCloseID));
 		waitForMilliSeconds(5000);
 
 	}
