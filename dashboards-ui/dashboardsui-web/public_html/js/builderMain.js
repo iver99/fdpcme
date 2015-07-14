@@ -149,8 +149,8 @@ require(['knockout',
 //                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
 //            });
 	    ko.components.register("df-datetime-picker",{
-         	viewModel: {require: '../emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker'},
-	        template: {require: 'text!../emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html'}
+         	viewModel: {require: '/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker.js'},
+	        template: {require: 'text!/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html'}
 	    });
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
