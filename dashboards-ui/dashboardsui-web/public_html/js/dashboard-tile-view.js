@@ -246,6 +246,13 @@ define(['knockout',
                 }
             };
             
+            self.handleDashboardNameInputKeyPressed = function(vm, evt) {
+            	if (evt.keyCode == 13) {
+            		self.okChangeDashboardName();
+            	}
+            	return true;
+            };
+            
             self.okChangeDashboardName = function() {
                 var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
                 nameInput('validate');
@@ -284,6 +291,13 @@ define(['knockout',
                     $('#builder-dbd-description').addClass('editing');
                     $('#builder-dbd-description-input').focus();
                 }
+            };
+            
+            self.handleDashboardDescriptionInputKeyPressed = function(vm, evt) {
+            	if (evt.keyCode == 13) {
+            		self.okChangeDashboardDescription();
+            	}
+            	return true;
             };
             
             self.okChangeDashboardDescription = function() {
@@ -562,18 +576,19 @@ define(['knockout',
                     	} catch (e) {
                     		oj.Logger.error(e);
                     	}
-                    	self.handleSaveUpdateToServer();
-                    	dfu.showMessage({
-                    		type: 'confirm',
-                    		summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
-                    		detail: '',
-                    		removeDelayTime: 5000
+                    	self.handleSaveUpdateToServer(function() {
+                    		dfu.showMessage({
+                    			type: 'confirm',
+                    			summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
+                    			detail: '',
+                    			removeDelayTime: 5000
+                    		});
                     	});
                     }  
                 });
             };
             
-            self.handleSaveUpdateToServer = function() {
+            self.handleSaveUpdateToServer = function(succCallback) {
                 var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
@@ -589,7 +604,10 @@ define(['knockout',
                         "tileDisplayClass", "widerEnabled", "widget"]
                 });
                 var dashboardId = tilesViewModel.dashboard.id();
-                dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
+                dtm.updateDashboard(dashboardId, dashboardJSON, function() {
+                	if (succCallback)
+                		succCallback();
+                }, function(error) {
                     console.log(error.errorMessage());
                 });
             };
