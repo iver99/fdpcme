@@ -526,68 +526,79 @@ define(['knockout',
             	}
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
-                var nodesToRecover = [];
-                var nodesToRemove = [];
-                var elems = $('#tiles-row').find('svg');
-                elems.each(function(index, node) {
-                    var parentNode = node.parentNode;
-                    var width = $(node).width();
-                    var height = $(node).height();
-                    var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
-                    var canvas = document.createElement('canvas');
-                    try {
-                    	canvg(canvas, svg);
-                    } catch (e) {
-                    	oj.Logger.error(e);
-                    }
-                    nodesToRecover.push({
-                        parent: parentNode,
-                        child: node
-                    });
-                    parentNode.removeChild(node);
-                    nodesToRemove.push({
-                        parent: parentNode,
-                        child: canvas
-                    });
-                    parentNode.appendChild(canvas);
-                });
-                html2canvas($('#tiles-row'), {
-                    onrendered: function(canvas) {
-                    	try {
-                    		var resize_canvas = document.createElement('canvas');
-                    		resize_canvas.width = 320;//canvas.width*0.5; 
-                    		resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;//canvas.height * 0.5;
-                    		var resize_ctx = resize_canvas.getContext('2d');
-                			resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
-                			var data = resize_canvas.toDataURL("image/jpeg", 0.8);
-                    		nodesToRemove.forEach(function(pair) {
-                    			pair.parent.removeChild(pair.child);
-                    		});
-                    		nodesToRecover.forEach(function(pair) {
-                    			pair.parent.appendChild(pair.child);
-                    		});
-                    		outputData.screenShot = data;
-                    		tilesViewModel.dashboard.screenShot = ko.observable(data);
-                    		if (window.opener && window.opener.childMessageListener) {
-                    			var jsonValue = JSON.stringify(outputData);
-                    			console.log(jsonValue);
-                    			window.opener.childMessageListener(jsonValue);
-                    		}
-                    	} catch (e) {
-                    		oj.Logger.error(e);
-                    	}
-                    	self.handleSaveUpdateToServer(function() {
-                    		dfu.showMessage({
-                    			type: 'confirm',
-                    			summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
-                    			detail: '',
-                    			removeDelayTime: 5000
-                    		});
-                    	}, function(error) {
-                    		error && error.errorMessage() && dfu.showMessage({type: 'error', summary: error.errorMessage(), detail: '', removeDelayTime: 5000});
-                    	});
-                    }  
-                });
+                
+                if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
+                	var nodesToRecover = [];
+                	var nodesToRemove = [];
+                	var elems = $('#tiles-row').find('svg');
+                	elems.each(function(index, node) {
+                		var parentNode = node.parentNode;
+                		var width = $(node).width();
+                		var height = $(node).height();
+                		var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
+                		var canvas = document.createElement('canvas');
+                		try {
+                			canvg(canvas, svg);
+                		} catch (e) {
+                			oj.Logger.error(e);
+                		}
+                		nodesToRecover.push({
+                			parent: parentNode,
+                			child: node
+                		});
+                		parentNode.removeChild(node);
+                		nodesToRemove.push({
+                			parent: parentNode,
+                			child: canvas
+                		});
+                		parentNode.appendChild(canvas);
+                	});
+                	html2canvas($('#tiles-row'), {
+                		onrendered: function(canvas) {
+                			try {
+                				var resize_canvas = document.createElement('canvas');
+                				resize_canvas.width = 320;//canvas.width*0.5; 
+                				resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;//canvas.height * 0.5;
+                				var resize_ctx = resize_canvas.getContext('2d');
+                				resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
+                				var data = resize_canvas.toDataURL("image/jpeg", 0.8);
+                				nodesToRemove.forEach(function(pair) {
+                					pair.parent.removeChild(pair.child);
+                				});
+                				nodesToRecover.forEach(function(pair) {
+                					pair.parent.appendChild(pair.child);
+                				});
+                				outputData.screenShot = data;
+                				tilesViewModel.dashboard.screenShot = ko.observable(data);
+                			} catch (e) {
+                				oj.Logger.error(e);
+                			}
+                			self.handleSaveUpdateDashboard(outputData);
+                		}  		
+                	});
+            	}
+                else {
+                	tilesViewModel.dashboard.screenShot = ko.observable(null);
+        			self.handleSaveUpdateDashboard(outputData);
+                }
+            };
+            
+            self.handleSaveUpdateDashboard = function(outputData) {
+            	if (window.opener && window.opener.childMessageListener) {
+        			var jsonValue = JSON.stringify(outputData);
+        			console.log(jsonValue);
+        			window.opener.childMessageListener(jsonValue);
+        		}
+            	self.handleSaveUpdateToServer(function() {
+            		dfu.showMessage({
+            			type: 'confirm',
+            			summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
+            			detail: '',
+            			removeDelayTime: 5000
+            		});
+            	}, function(error) {
+            		error && error.errorMessage() && dfu.showMessage({type: 'error', summary: error.errorMessage(), detail: '', removeDelayTime: 5000});
+            	});
             };
             
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
