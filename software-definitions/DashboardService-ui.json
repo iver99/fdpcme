@@ -16,7 +16,7 @@
                    [
                             {
                               "name": "applicationName",
-                               "defaultValue": "DashboardService-ui"
+                               "defaultValue": "DashboardService-UI"
                              }
                    ]
                    },
@@ -27,7 +27,7 @@
                     [
                           {
                                 "name": "applicationName",
-                                "defaultValue": "DashboardService-ui"
+                                "defaultValue": "DashboardService-UI"
                             }
                     ]
                   },
@@ -38,7 +38,7 @@
                     [
                            {
                                  "name": "applicationName",
-                                 "defaultValue": "DashboardService-ui"
+                                 "defaultValue": "DashboardService-UI"
                             }
                      ]
                   }
