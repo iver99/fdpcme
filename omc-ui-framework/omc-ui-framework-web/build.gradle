@@ -168,7 +168,7 @@ project.task("cleanFont") << {
 
 clean.dependsOn cleanJet,cleanFont
 
-war.archiveName "dashboards-common-ui-web.war"
+war.archiveName "omc-ui-framework-web.war"
 
 copyJsSource.dependsOn unpackJETFromArtifactory, unpackFontFromArtifactory
 

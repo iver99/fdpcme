@@ -293,7 +293,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			logger.info("Checking RegistryService");
 			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", null) == null) {
 				setRegistrationComplete(Boolean.FALSE);
-				logger.error("Failed to found registryService. Dashboard-Common-UI registration is not complete.");
+				logger.error("Failed to found registryService. OMC-UI-Framework registration is not complete.");
 				return false;
 			}
 
@@ -336,11 +336,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 
 			setRegistrationComplete(Boolean.TRUE);
-			logger.info("Service manager is up. Completed Dashboard-Common-UI registration");
+			logger.info("Service manager is up. Completed OMC-UI-Framework registration");
 		}
 		catch (Exception e) {
 			setRegistrationComplete(Boolean.FALSE);
-			logger.error("Errors occurrs in registration. Service manager might be down. Dashboard-Common-UI registration is not complete.");
+			logger.error("Errors occurrs in registration. Service manager might be down. OMC-UI-Framework registration is not complete.");
 			logger.error(e.getLocalizedMessage(), e);
 			//			throw e;
 		}
