@@ -87,7 +87,8 @@ role value for that section to represent the appropriate content type.
                             </div>
                             <div id="builder-dbd-name-edit-area" class="dbd-edit-area">
                                 <input id="builder-dbd-name-input"
-                                       data-bind="ojComponent: {component: 'ojInputText', 
+                                       data-bind="event: {keypress: handleDashboardNameInputKeyPressed},valueUpdate: 'afterkeydown',
+                                       		   ojComponent: {component: 'ojInputText', 
                                                value: dashboardNameEditing, required: true, rootAttributes: {
                                                style:'max-width:55em; padding-top: 1px;'}, validators: [noSameNameValidator]}, 
                                                attr: {placeholder: getNlsString('DBS_BUILDER_REQUIRE_NAME')}" maxlength="64">
@@ -125,7 +126,8 @@ role value for that section to represent the appropriate content type.
                             </div>
                             <div id="builder-dbd-description-edit-area" class="dbd-edit-area">
                                 <input id="builder-dbd-description-input"
-                                       data-bind="ojComponent: {component: 'ojInputText', 
+                                       data-bind="event: {keypress: handleDashboardDescriptionInputKeyPressed},valueUpdate: 'afterkeydown',
+                                       		   ojComponent: {component: 'ojInputText', 
                                                value: dashboardDescriptionEditing, rootAttributes: {
                                                style:'max-width:55em;'}}" maxlength="256">
                                 <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"

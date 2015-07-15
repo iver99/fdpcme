@@ -181,7 +181,7 @@ $.widget( "dbs.dbsTypeAhead", {
 			this.source = function( request, response ) {
 				response( filterFunc( array, request.term ) );
 			};
-		} else if ( typeof this.options.source === "string" ) {
+		}/* else if ( typeof this.options.source === "string" ) {
 			url = this.options.source;
 			this.source = function( request, response ) {
 				if ( that.xhr ) {
@@ -199,7 +199,8 @@ $.widget( "dbs.dbsTypeAhead", {
 					}
 				});
 			};
-		} else if ( this.options.source && this.options.source['dsFactory']){
+		}*/ 
+                else if ( this.options.source && this.options.source['dsFactory']){
 			var _dsFac = this.options.source['dsFactory'], _dsFetchSize = this.options.source['fetchSize'], _dataSource;
                         this.source = function( request, response ) {
                             var _fetchSize = 20;
