@@ -487,8 +487,8 @@ define(['knockout',
             
             self.appendNewTile = function(name, description, width, widget) {
                 var newTile = null;
-
-                if (widget){
+                
+                if (widget) {
                     var koc_name = widget.WIDGET_KOC_NAME;
                     var template = widget.WIDGET_TEMPLATE;
                     var viewmodel = widget.WIDGET_VIEWMODEL;
@@ -496,162 +496,100 @@ define(['knockout',
                     var provider_version = widget.PROVIDER_VERSION;
                     var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
                     var widget_source = widget.WIDGET_SOURCE;
-                    if (widget.WIDGET_GROUP_NAME === 'Dashboards Built-In') {
-                        if (koc_name && template && viewmodel){
-                            if (!ko.components.isRegistered(koc_name)) {
-                                ko.components.register(koc_name,{
-                                      viewModel:{require:viewmodel},
-                                      template:{require:'text!'+template}
-                                  }); 
-                            }
-                            console.log("widget: " + koc_name + " is registered");
-                            console.log("widget template: " + template);
-                            console.log("widget viewmodel:: " + viewmodel);
-
-                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
-                        }
-                    }else if (widget.WIDGET_GROUP_NAME !== 'Demo Analytics') { //====new logic !==999
-//                        var assetRoot = null;
-                        //find KOC name for registration. if valid registration is not detected, use default one.
-                        if (provider_name===undefined || provider_version===undefined || provider_asset_root===undefined){
-                            if (widget.WIDGET_GROUP_NAME==='Log Analytics' || widget.WIDGET_GROUP_NAME==='Target Analytics'){
-                                provider_name =  "Dashboard Framework Integration Demo";
-                                provider_version =  "0.1";
-                                provider_asset_root =  "assetRoot"; 
-                            }else if (widget.WIDGET_GROUP_NAME==='IT Analytics'){
-                                
-                            }                           
-                        } 
-                        
-                        //TODO will remove below later on BEGIN
-                        if (koc_name===null || koc_name===undefined || viewmodel===null || viewmodel===undefined || template===null || template===undefined){
-                            if (widget.WIDGET_GROUP_NAME==='Log Analytics'){
-                                koc_name="demo-la-widget";
-                                viewmodel = "/demo/logAnalyticsWidget/js/demo-log-analytics.js";
-                                template ="/demo/logAnalyticsWidget/demo-log-analytics.html";
-                            }else if (widget.WIDGET_GROUP_NAME==='Target Analytics'){
-                                koc_name="demo-ta-widget";
-                                viewmodel = "/demo/targetAnalyticsWidget/js/demo-target-analytics.js";
-                                template ="/demo/targetAnalyticsWidget/demo-target-analytics.html";                               
-                            }else if (widget.WIDGET_GROUP_NAME==='IT Analytics'){
-                                koc_name="ita-widget";
-                                viewmodel = "/widgets/js/controller/qdg-component.js";
-                                template ="/widgets/html/qdg-component.html";                               
-                            }                           
-                        }
+//                    if (widget_source === 0) {
+//                        if (koc_name && template && viewmodel){
+//                            if (!ko.components.isRegistered(koc_name)) {
+//                                ko.components.register(koc_name,{
+//                                      viewModel:{require:viewmodel},
+//                                      template:{require:'text!'+template}
+//                                  }); 
+//                            }
+//                            console.log("widget: " + koc_name + " is registered");
+//                            console.log("widget template: " + template);
+//                            console.log("widget viewmodel:: " + viewmodel);
+//
+//                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
+//                        }
+//                    } 
+//                    else {                       
                         if (widget_source===null || widget_source===undefined){
                             widget_source=1;
                         }
-                        //TODO END
                         
-                        if (koc_name && viewmodel && template){
-                            if (widget_source===0){
-                                if (!ko.components.isRegistered(koc_name)) {
-                                    ko.components.register(koc_name,{
-                                          viewModel:{require:viewmodel},
-                                          template:{require:'text!'+template}
-                                      }); 
-                                    console.log("DF widget: "+koc_name+" is registered");
-                                    console.log("DF widget template: "+template);
-                                    console.log("DF widget viewmodel:: "+viewmodel);                                  
-                                }                            
-                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
-                             }else if (widget_source===1){
+                        if (koc_name && viewmodel && template) {
+                            if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
                                     var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
                                     if (assetRoot===null){
-                                        console.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
+                                        oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                     }
                                     ko.components.register(koc_name,{
                                           viewModel:{require:assetRoot+viewmodel},
                                           template:{require:'text!'+assetRoot+template}
                                       }); 
-                                    console.log("widget: "+koc_name+" is registered");
-                                    console.log("widget template: "+assetRoot+template);
-                                    console.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                                    oj.Logger.log("widget: "+koc_name+" is registered");
+                                    oj.Logger.log("widget template: "+assetRoot+template);
+                                    oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
 
                                 newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
-                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
-                                    var worksheetName = 'WS_4_QDG_WIDGET';
-                                    var workSheetCreatedBy = 'sysman';
-                                    var qdgId = 'chart1';
-                                    var ssfUrl = '/sso.static/savedsearch.categories'; //dfu.discoverSavedSearchServiceUrl();
-                                    if (ssfUrl && ssfUrl !== '') {
-                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
-                                        var widgetDetails = null;
-                                        dfu.ajaxWithRetry({
-                                            url: href,
-                                            headers: dfu.getSavedSearchServiceRequestHeader(),
-                                            success: function(data, textStatus) {
-                                                widgetDetails = data;
-                                            },
-                                            error: function(xhr, textStatus, errorThrown){
-                                                console.log('Error when get widget details!');
-                                            },
-                                            async: false
-                                        });
-
-                                        if (widgetDetails){
-                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
-                                               widget.parameters = {};
-                                               for(var i=0;i<widgetDetails.parameters.length;i++){
-                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
-                                               }
-                                            }                        
-                                        }
-                                    }
-                                    
-                                    // specific parameters for ita which is required. Retrieve them from SSF
-                                    if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
-                                        worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
-                                    if (widget.parameters["ITA_WIDGET_CREATEDBY"])
-                                        workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
-                                    if (widget.parameters["ITA_WIDGET_QDGID"])
-                                        qdgId = widget.parameters["ITA_WIDGET_QDGID"];
-
-                                    newTile.worksheetName = worksheetName;
-                                    newTile.createdBy = workSheetCreatedBy;
-                                    newTile.qdgId = qdgId;  
-                                }
-                            }else{
-                                console.error("Invalid WIDGET_SOURCE: "+widget_source);
+//                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
+//                                    var worksheetName = 'WS_4_QDG_WIDGET';
+//                                    var workSheetCreatedBy = 'sysman';
+//                                    var qdgId = 'chart1';
+//                                    var ssfUrl = '/sso.static/savedsearch.categories'; 
+//                                    if (ssfUrl && ssfUrl !== '') {
+//                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
+//                                        var widgetDetails = null;
+//                                        dfu.ajaxWithRetry({
+//                                            url: href,
+//                                            headers: dfu.getSavedSearchServiceRequestHeader(),
+//                                            success: function(data, textStatus) {
+//                                                widgetDetails = data;
+//                                            },
+//                                            error: function(xhr, textStatus, errorThrown){
+//                                                console.log('Error when get widget details!');
+//                                            },
+//                                            async: false
+//                                        });
+//
+//                                        if (widgetDetails){
+//                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+//                                               widget.parameters = {};
+//                                               for(var i=0;i<widgetDetails.parameters.length;i++){
+//                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
+//                                               }
+//                                            }                        
+//                                        }
+//                                    }
+//                                    
+//                                    // specific parameters for ita which is required. Retrieve them from SSF
+//                                    if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
+//                                        worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
+//                                    if (widget.parameters["ITA_WIDGET_CREATEDBY"])
+//                                        workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
+//                                    if (widget.parameters["ITA_WIDGET_QDGID"])
+//                                        qdgId = widget.parameters["ITA_WIDGET_QDGID"];
+//
+//                                    newTile.worksheetName = worksheetName;
+//                                    newTile.createdBy = workSheetCreatedBy;
+//                                    newTile.qdgId = qdgId;  
+//                                }
+                            } 
+                            else {
                                 oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
                             }
-                        }else{
-    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
-                            console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                        }
+                        else {
                             oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
-
-                    } 
-                    else  { 
-                       /**
-                        * Category with id=999 is used for integration development purpose only
-                        * Any widget with categoryId=999 is expected to registerwith absolute path (viewmodel & template)
-                        */
-                        if (koc_name && viewmodel && template){
-                            if (!ko.components.isRegistered(koc_name)) {
-                               ko.components.register(koc_name,{
-                                     viewModel:{require:viewmodel},
-                                     template:{require:'text!'+template}
-                                 }); 
-                               console.log("widget: "+koc_name+" is registered");
-                               console.log("widget template: "+template);
-                               console.log("widget viewmodel:: "+viewmodel);    
-                           }
-                           newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
-                        }else{
-    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
-                            console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
-                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
-                        }
-                    }
+//                    } 
+                    
                     if (newTile){
                        self.dashboard.tiles.push(newTile);
                     }
-                }else{
-                    console.error("Null widget passed to a tile");
+                }
+                else {
                     oj.Logger.error("Null widget passed to a tile");
                 }
 
