@@ -583,12 +583,14 @@ define(['knockout',
                     			detail: '',
                     			removeDelayTime: 5000
                     		});
+                    	}, function(error) {
+                    		error && error.errorMessage() && dfu.showMessage({type: 'error', summary: error.errorMessage(), detail: '', removeDelayTime: 5000});
                     	});
                     }  
                 });
             };
             
-            self.handleSaveUpdateToServer = function(succCallback) {
+            self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
                 var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
@@ -605,10 +607,10 @@ define(['knockout',
                 });
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
-                	if (succCallback)
-                		succCallback();
+                	succCallback && succCallback();
                 }, function(error) {
                     console.log(error.errorMessage());
+                    errorCallback && errorCallback(error);
                 });
             };
             
