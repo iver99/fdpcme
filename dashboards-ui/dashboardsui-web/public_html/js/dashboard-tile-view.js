@@ -363,6 +363,7 @@ define(['knockout',
                 }
                 return summaryData;
             };
+           
             
             self.handleDashboardSave = function() {
             	if (self.isNameUnderEdit()) {
@@ -411,8 +412,8 @@ define(['knockout',
                 		onrendered: function(canvas) {
                 			try {
                 				var resize_canvas = document.createElement('canvas');
-                				resize_canvas.width = 320;//canvas.width*0.5; 
-                				resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;//canvas.height * 0.5;
+                				resize_canvas.width = 320;
+                				resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;
                 				var resize_ctx = resize_canvas.getContext('2d');
                 				resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
                 				var data = resize_canvas.toDataURL("image/jpeg", 0.8);
@@ -451,7 +452,7 @@ define(['knockout',
             			removeDelayTime: 5000
             		});
             	}, function(error) {
-            		error && error.errorMessage() && dfu.showMessage({type: 'error', summary: error.errorMessage(), detail: '', removeDelayTime: 5000});
+            		error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
             	});
             };
             
