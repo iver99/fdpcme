@@ -189,6 +189,7 @@ define({
       "DBS_BUILDER_TIMESELECTOR_CUSTOM_LAST":"Last",
       "DBS_BUILDER_TIMESELECTOR_CUSTOM_RANGE":"Range",
       "DBS_BUILDER_MSG_CHANGES_SAVED": "Changes on the dashboard have been saved successfully.",
+      "DBS_BUILDER_MSG_ERROR_IN_SAVING": "Error occurred when saving the dashboard. Check console log or server log for details",
       
       
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
