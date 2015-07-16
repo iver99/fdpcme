@@ -3,6 +3,9 @@ package oracle.sysman.emaas.platform.dashboards.test.dashboard;
 import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.test.common.CommonTest;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.response.Response;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
