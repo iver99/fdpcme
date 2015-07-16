@@ -72,7 +72,8 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(500);
 		
 		DashBoardUtils.clickOKButton();		
-					
+		
+		webd.takeScreenShot();
 		//add widget
 		DashBoardUtils.addWidget(1,parentWindow);
 				
@@ -113,7 +114,7 @@ public class TestDashBoard extends LoginAndLogout{
 	public void testNavigateWidget() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testModifyDashBoard");
+		webd.getLogger().info("start to test in testNavigateDashBoard");
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
 		DashBoardUtils.waitForMilliSeconds(500);
