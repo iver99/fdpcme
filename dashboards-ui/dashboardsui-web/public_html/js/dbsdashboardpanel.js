@@ -236,11 +236,12 @@ $.widget('dbs.dbsDashboardPanel',
                 self._setBase64ScreenShot(_ss);
             }
             else {
-                if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'] > 0))
+                if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'].length > 0))
                 {
                     dfu.ajaxWithRetry({
                             //This will be a page which will return the base64 encoded string
-                        url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
+                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
+                        url: _dashboard['screenShotHref'],                   
                         headers: dfu.getDashboardsRequestHeader(),
                         success: function(response){
                             var __ss = (response.screenShot ? response.screenShot : undefined);

@@ -555,9 +555,9 @@ public class DashboardManager
 		if (apps.isEmpty()) {
 			// no subscribe apps
 			sb = new StringBuilder(
-					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and p.owner = le.accessed_By and p.tenant_Id = le.tenant_Id) "
-							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?1 and p.owner = ?2 ");
-			index = 3;
+					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
+							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?2 and p.owner = ?3 ");
+			index = 4;
 		}
 		else {
 			StringBuilder sbApps = new StringBuilder();
@@ -571,14 +571,15 @@ public class DashboardManager
 
 			//11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
 			sb = new StringBuilder(
-					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and p.owner = le.accessed_By and p.tenant_Id = le.tenant_Id) "
-							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?1 and (p.owner = ?2 or (p.is_system = 1 and p.application_type in ("
+					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
+							+ "where p.dashboard_Id not in (11,12,13) and p.deleted = 0 and p.tenant_Id = ?2 and (p.owner = ?3 or (p.is_system = 1 and p.application_type in ("
 							+ sbApps.toString() + "))) ");
 
-			index = 3;
+			index = 4;
 		}
 		List<Object> paramList = new ArrayList<Object>();
 		String currentUser = UserContext.getCurrentUser();
+		paramList.add(currentUser);
 		paramList.add(tenantId);
 		paramList.add(currentUser);
 

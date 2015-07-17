@@ -152,7 +152,7 @@
                                                 <!-- ko foreach: dashboards -->
                                                 <div class="oj-panel dbs-summary-container" 
                                                     data-tag data-bind="dbsDashboardPanel: {
-                                                                   activated: null,
+                                                                   activated: $root.handleShowDashboardPop,
                                                                    deactivated: null,
                                                                    showInfoClicked: $root.handleShowDashboardPop,
                                                                    deleteClicked: $root.handleDashboardDeleted,
