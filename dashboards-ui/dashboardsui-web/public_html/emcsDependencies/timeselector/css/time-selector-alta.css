@@ -75,7 +75,7 @@ and open the template in the editor.
 
 @font-face {
   font-family: 'FaFont';
-  src: url("/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/css/font-awesome/fonts/fontawesome-webfont.woff");
+  src: url("/emsaasui/uifwk/emcsDependencies/uifwk/css/font-awesome/fonts/fontawesome-webfont.woff");
   font-weight: normal;
   font-style: normal; 
 }

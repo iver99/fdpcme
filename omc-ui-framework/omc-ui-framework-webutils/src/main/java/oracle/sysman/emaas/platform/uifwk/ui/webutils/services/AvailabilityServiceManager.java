@@ -8,22 +8,18 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
+package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
-import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.util.StringUtil;
+import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +28,7 @@ import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
 
 /**
- * @author guobaochen
+ * @author aduan
  */
 public class AvailabilityServiceManager implements ApplicationServiceManager, NotificationListener
 {
@@ -43,9 +39,6 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
 	private static final String DASHBOARD_API_SERVICE_VERSION = "0.1";
 	private static final String DASHBOARD_API_SERVICE_REL = "base";
-
-	private static final String DASHBOARD_COMMON_UI_SERVICE_NAME = "OMC-UI-Framework";
-	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "0.1";
 
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "0.1";
@@ -61,12 +54,12 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#getName()
+	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#getName()
 	 */
 	@Override
 	public String getName()
 	{
-		return "Dashboard Service UI Timer Service";
+		return "OMC UI Framework Timer Service";
 	}
 
 	/* (non-Javadoc)
@@ -83,11 +76,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		// check if service manager is up and registration is complete
 		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.info("Dashboards UI service registration is not completed. Ignore dependant services availability checking");
+			logger.info("OMC UI Framework service registration is not completed. Ignore dependant services availability checking");
 			return;
 
 		}
-		// check ssf avaibility
+		// check ssf's avaibility
 		boolean isSSFAvailable = true;
 		try {
 			isSSFAvailable = isSavedSearchAvailable();
@@ -98,11 +91,11 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isSSFAvailable) {
 			rsm.markOutOfService();
-			logger.info("Dashboards UI service is out of service because Saved Search API service is unavailable");
+			logger.info("OMC UI Framework service is out of service because Saved Search API service is unavailable");
 			return;
 		}
 
-		// check df api service avaibility
+		// check df api service's availability
 		boolean isDFApiAvailable = true;
 		try {
 			isDFApiAvailable = isDashboardAPIAvailable();
@@ -113,31 +106,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isDFApiAvailable) {
 			rsm.markOutOfService();
-			logger.info("Dashboards UI service is out of service because Dashboard API service is unavailable");
+			logger.info("OMC UI Framework service is out of service because Dashboard API service is unavailable");
 			return;
-		}
-
-		if (false) {// disable until common ui service is delivered
-			// check if dashboard common UI service availability
-			boolean isCommonUIAvailable = true;
-			try {
-				isCommonUIAvailable = isCommonUIAvailable();
-			}
-			catch (Exception e) {
-				isCommonUIAvailable = false;
-				logger.error(e.getLocalizedMessage(), e);
-			}
-			if (!isCommonUIAvailable) {
-				rsm.markOutOfService();
-				logger.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
-				return;
-			}
 		}
 
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
-			logger.debug("Dashboards UI service is up");
+			logger.debug("OMC UI Framework service is up");
 		}
 		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -145,7 +121,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStart(weblogic.application.ApplicationLifecycleEvent)
+	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
@@ -153,13 +129,13 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		timer = new Timer();
 		timer.addNotificationListener(this, null, null);
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
-		notificationId = timer.addNotification("DashboardsUIServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
+		notificationId = timer.addNotification("OmcUiFrameworkServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
 		timer.start();
-		logger.info("Timer for dashboards UI service dependencies checking started. notificationId={}", notificationId);
+		logger.info("Timer for OMC UI Framework service dependencies checking started. notificationId={}", notificationId);
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
+	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#postStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
@@ -167,7 +143,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
+	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
 	public void preStart(ApplicationLifecycleEvent evt) throws Exception
@@ -175,7 +151,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	}
 
 	/* (non-Javadoc)
-	 * @see oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStop(weblogic.application.ApplicationLifecycleEvent)
+	 * @see oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationServiceManager#preStop(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
 	public void preStop(ApplicationLifecycleEvent evt) throws Exception
@@ -184,24 +160,10 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		try {
 			timer.stop();
 			timer.removeNotification(notificationId);
-			logger.info("Timer for dashboards UI dependencies checking stopped, notificationId={}", notificationId);
+			logger.info("Timer for OMC UI Framework dependencies checking stopped, notificationId={}", notificationId);
 		}
 		catch (InstanceNotFoundException e) {
 			logger.error(e.getLocalizedMessage(), e);
-		}
-	}
-
-	private boolean isCommonUIAvailable()
-	{
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(DASHBOARD_COMMON_UI_SERVICE_NAME)
-				.withVersion(DASHBOARD_COMMON_UI_SERVICE_VERSION).build();
-		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-			return result != null && !result.isEmpty();
-		}
-		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return false;
 		}
 	}
 

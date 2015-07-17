@@ -5,10 +5,10 @@
  */
 define(['knockout',
         'jquery',
-        'emcpdfcommon/js/util/df-util',
-        'emcpdfcommon/js/util/usertenant-util',
-        'emcpdfcommon/js/util/ajax-util',
-        'emcpdfcommon/js/util/message-util'
+        'uifwk/js/util/df-util',
+        'uifwk/js/util/usertenant-util',
+        'uifwk/js/util/ajax-util',
+        'uifwk/js/util/message-util'
     ],
     
     function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel)

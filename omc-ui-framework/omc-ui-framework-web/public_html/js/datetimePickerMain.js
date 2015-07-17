@@ -18,7 +18,7 @@ requirejs.config({
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
-	'emcpdfcommon': '/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon'
+	    'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -70,8 +70,8 @@ require(['ojs/ojcore',
         function (oj, ko, $) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("date-time-picker", {
-                viewModel: {require: "/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker.js"},
-                template: {require: "text!/emsaasui/emcpdfcommonui/emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html"}
+                viewModel: {require: "/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/js/datetime-picker.js"},
+                template: {require: "text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/datetime-picker.html"}
             });
 
             function MyViewModel() {
