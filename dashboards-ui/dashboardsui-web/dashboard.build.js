@@ -3,7 +3,7 @@
     baseUrl: "js",
     dir: "./build/public_html",
     optimize:"none",
-    optimizeCss: "none",
+    optimizeCss: "standard",
     modules: [
         {
             name: "builderMain"
