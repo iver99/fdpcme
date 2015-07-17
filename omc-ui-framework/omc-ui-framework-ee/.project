@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>dashboardscommonui-ee</name>
+	<name>omcuiframework-ee</name>
 	<comment></comment>
 	<projects>
-		<project>dashboardscommonui-web</project>
-		<project>dashboardscommonui-webutils</project>
+		<project>omcuiframework-web</project>
+		<project>omcuiframework-webutils</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
