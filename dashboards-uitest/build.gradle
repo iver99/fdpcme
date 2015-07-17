@@ -32,11 +32,11 @@ artifactory {
             maven = true
             }
     }
-   /* resolve {
+    resolve {
             repository {
-                repoKey = "repo"
+                repoKey = "emaas-virtual"
             }
-        }*/
+        }
     
 }
 
@@ -44,7 +44,7 @@ artifactory {
 sourceSets {
         test {
         resources.srcDirs = ["src/test/java"]    
-        compileClasspath = configurations.lrgConfig + configurations.webdriver
+        compileClasspath = configurations.testConfig + configurations.webdriver + compileClasspath + configurations.testNG
         }
     }
 
