@@ -15,7 +15,7 @@
                   [
                   {
                   "name": "applicationName",
-                  "defaultValue": "emaas-applications-dashboards-api"
+                  "defaultValue": "DashboardService-API"
                   }
                   ]
            },
@@ -26,7 +26,7 @@
                 [
                 {
                         "name": "applicationName",
-                        "defaultValue": "emaas-applications-dashboards-api"
+                        "defaultValue": "DashboardService-API"
                  }
                  ]
             },
@@ -37,7 +37,7 @@
                  [
                  {
                           "name": "applicationName",
-                          "defaultValue": "emaas-applications-dashboards-api"
+                          "defaultValue": "DashboardService-API"
                  }
                 ]
             },
