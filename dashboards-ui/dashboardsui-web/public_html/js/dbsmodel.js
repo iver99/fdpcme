@@ -28,6 +28,11 @@ function(dsf, oj, ko, $, dfu, pfu)
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
     
+    if (dfu.isDevMode()){
+       DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
+       PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
+       SUBSCIBED_APPS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"subscribedapps");        
+    }
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);

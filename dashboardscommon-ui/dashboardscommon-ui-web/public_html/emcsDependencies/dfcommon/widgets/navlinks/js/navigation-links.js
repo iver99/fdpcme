@@ -147,6 +147,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         }
                     };                   
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                    if (dfu.isDevMode()){
+                        serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"configurations/registration");
+                    }
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDefaultHeader(), 
@@ -165,7 +168,13 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 
                 function refreshLinks() {
                     dfHomeUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
-                    
+                    if (dfu.isDevMode()){
+                        dfHomeUrl = dfHomeUrl+"?devMode=true";
+                        var devDataUrl = dfu.getDevData().devDataUrl;
+                        if (devDataUrl!==undefined && devDataUrl!==""){
+                            dfHomeUrl+"&devDataUrl="+devDataUrl;
+                        }
+                    }
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 
                         self.visualAnalyzers().length === 0 || 

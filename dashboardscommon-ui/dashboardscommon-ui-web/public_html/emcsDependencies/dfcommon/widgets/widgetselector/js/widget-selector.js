@@ -330,6 +330,10 @@ define(['require',
 //                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
+                        if (dfu.isDevMode()){
+                            widgetsUrl=dfu.buildFullUrl(dfu.devData.ssfRestApiEndPoint,"/widgets");
+                            widgetgroupsUrl=dfu.buildFullUrl(dfu.devData.ssfRestApiEndPoint,"/widgetgroups");
+                        }
                         dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),

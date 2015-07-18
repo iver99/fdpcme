@@ -9,6 +9,7 @@ define(['jquery', 'ojs/ojcore', './df-util'],
         function DashboardFrameworkUserTenantUtility() {
             var self = this;
             var dfu = new dfumodel();
+            self.devMode=dfu.isDevMode();
             
             /**
              * Get logged in user and tenant name from web service
@@ -19,10 +20,13 @@ define(['jquery', 'ojs/ojcore', './df-util'],
              *                          "tenantUser": "emaastesttenant1.emcsadmin"}
              */ 
             self.getUserTenant = function() {
+                if (self.devMode){
+                    return dfu.getDevData().userTenant;
+                }
                 var tenantName = null; //in case tenant name is not got
                 var userName = null;   //in case use name is not got
                 var tenantUser = null; //in case tenantName.userName is not got
-                
+ 
                 dfu.ajaxWithRetry({
                     type: "GET",
                     url: "/sso.static/loggedInUser",
@@ -62,8 +66,13 @@ define(['jquery', 'ojs/ojcore', './df-util'],
                 return self.getUserTenant();
             };
             
-            var userTenant = self.getUserTenant();
-            
+//            var userTenant = self.getUserTenant();
+            var userTenant = null;
+            if (self.devMode){
+                userTenant=dfu.getDevData().userTenant;
+            }else{
+                userTenant = self.getUserTenant();
+            }
             /**
              * Get logged in user name
              * 

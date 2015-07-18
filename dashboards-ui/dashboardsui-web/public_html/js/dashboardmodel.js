@@ -83,7 +83,12 @@ function(dfu, oj, ko, $)
                 console.log("Invalid tiles: "+JSON.stringify(tiles));
             }
         }else{
-            return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
+            if (dfu.isDevMode()){
+                return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id+"&devMode=true";
+            }else{
+                return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
+            }
+            
         }
     };
 
