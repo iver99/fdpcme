@@ -5,6 +5,7 @@ import java.util.regex.Pattern
 apply plugin: 'war'
 apply plugin: 'maven-publish'
 apply plugin: 'artifactory-publish'
+//apply plugin: 'compass'
 
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
@@ -530,6 +531,26 @@ task minifyHomeJs(dependsOn: minifyBuilderJs, type: com.eriwen.gradle.js.tasks.M
     }
 }
 
+//compass {
+    // We package the gems into the .jar file (see compass dependencies)
+	// so that http proxy issues do not affect us.  To enable this, 
+	// we also build our own plugin for use.
+//    gemPath = file('build/.jruby/gems')
+ //   gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
+ //   gems = []
+ //   cssDir file('build/staging/public_html/css')
+ //   sassDir file ('public_html/scss')
+ //   debugInfo false // Defaults to true,
+                    // set to false to remove debug info from generated css file
+//    noLineComments true
+//    force true
+//}
+
+//compileSass {
+//     jvmArgs '-Xmx2048M'
+//}
+
+
 war.archiveName "dashboardsui-web.war"
 war {
 	from(compiledDir) {
@@ -544,7 +565,7 @@ war {
 	rootSpec.exclude("**/*.zip")
 }
 
-war.dependsOn minifyHomeJs
+war.dependsOn minifyHomeJs//,compileSass
 
 dependencies {
         providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
@@ -586,4 +607,6 @@ dependencies {
 				dependencies 'oro:oro:2.0.8:jar'
 		}
 	}
+
+//	compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
 }
