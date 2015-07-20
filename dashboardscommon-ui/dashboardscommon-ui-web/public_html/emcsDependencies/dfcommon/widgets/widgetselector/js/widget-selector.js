@@ -331,8 +331,8 @@ define(['require',
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
                         if (dfu.isDevMode()){
-                            widgetsUrl=dfu.buildFullUrl(dfu.devData.ssfRestApiEndPoint,"/widgets");
-                            widgetgroupsUrl=dfu.buildFullUrl(dfu.devData.ssfRestApiEndPoint,"/widgetgroups");
+                            widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                            widgetgroupsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgetgroups");
                         }
                         dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
