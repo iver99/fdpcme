@@ -304,9 +304,9 @@ public class DashBoardUtils {
 		//Home link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.HomeLinkID)).getText(),"Home");
 		//IT Analytics link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ITALinkID)).getText(),"Log Analytics");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ITALinkID)).getText(),"IT Analytics");
 		//Log Analytics link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LALinkID)).getText(),"IT Analytics");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LALinkID)).getText(),"Log Analytics");
 		//APM link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.APMLinkID)).getText(),"APM");
 		//Log link
@@ -319,7 +319,7 @@ public class DashBoardUtils {
 		//Target link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.TargetLinkID)).getText(),"Search");
 		//Customer Software link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.CustomLinkID)).getText(),"Customer Software");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.CustomLinkID)).getText(),"Agents");
 		//IT Analytics Administration link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ITA_Admin_LinkID)).getText(),"IT Analytics Administration");
 	}
