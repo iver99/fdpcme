@@ -363,7 +363,11 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
-            	return "/emsaasui/emcpdfui/home.html";
+            	var homeUrl = "/emsaasui/emcpdfui/home.html";
+                if (self.isDevMode()){
+                    homeUrl +="?devMode=true"; 
+                }
+                return homeUrl;
             };    
             
             /**
