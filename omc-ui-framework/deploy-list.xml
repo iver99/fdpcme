@@ -1,6 +1,6 @@
 <?xml version="1.0"?> 
  
-<service-artifacts name="omc-ui-framework"> 
+<service-artifacts name="OMC-UI-Framework"> 
       <file name='../omc-ui-framework/omc-ui-framework-ee/build/libs/emaas-applications-omc-ui-framework'
             serviceName='OMC-UI-Framework'> 
             <version>SERVICEVERSION</version> 
