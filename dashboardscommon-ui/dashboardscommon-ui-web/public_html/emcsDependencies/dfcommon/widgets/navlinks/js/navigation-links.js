@@ -115,15 +115,16 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             	// let's use relative url for customer software for admin link
                             	for (var i = 0; i < data.adminLinks.length; i++) {
                             		var link = data.adminLinks[i];
-                            		if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
-                            			if (link.href.indexOf('customersoftware') !== -1){
-                            				var protocolIndex = link.href.indexOf('://');
-                                    		var urlNoProtocol = link.href.substring(protocolIndex + 3);
-                                    		var relPathIndex = urlNoProtocol.indexOf('/');
-                                    		link.href = urlNoProtocol.substring(relPathIndex);
-                                    		break;
-                            			}
-                            		}
+//                            		if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
+//                            			if (link.href.indexOf('customersoftware') !== -1){
+//                                                    var protocolIndex = link.href.indexOf('://');
+//                                                    var urlNoProtocol = link.href.substring(protocolIndex + 3);
+//                                                    var relPathIndex = urlNoProtocol.indexOf('/');
+//                                                    link.href = urlNoProtocol.substring(relPathIndex);
+//                                                    break;
+//                            			}
+//                            		}
+                                        link.href = dfu.getRelUrlFromFullUrl(link.href);
                             	}
                                 if (params.app.appId===params.appDashboard.appId){
                                     self.adminLinks(data.adminLinks);//show all avail admin links
