@@ -354,7 +354,7 @@ define([
                                     (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
-
+                                
                                 if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
                                     var laImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
                                     var taImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
@@ -433,6 +433,10 @@ define([
                                         if (assetRootCnt === data.length)
                                             getWidgetGroupsDeferred.resolve();
                                     });
+                                }
+                                //If it's ITA, count it by hide it in UI
+                                else {
+                                    assetRootCnt++;
                                 }
                             }
                         }
