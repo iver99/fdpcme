@@ -434,7 +434,7 @@ define([
                                             getWidgetGroupsDeferred.resolve();
                                     });
                                 }
-                                //If it's ITA, count it by hide it in UI
+                                //If it's ITA, need to count it but hide in UI
                                 else {
                                     assetRootCnt++;
                                 }
