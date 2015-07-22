@@ -202,7 +202,7 @@ $.widget('dbs.dbsDashboardPanel',
         
         _setBase64ScreenShot: function(screenShot) {
             var self = this, _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
-            if (!screenShot)
+            if (!screenShot || screenShot === null)
             {
                 if (self.contentPage1ImgEle) 
                 {
@@ -222,7 +222,7 @@ $.widget('dbs.dbsDashboardPanel',
         },
         
         _createContentPages: function() {
-            var self = this,  _dmodel = self.options.dashboardModel;
+            var self = this,  _dmodel = self.options.dashboardModel, _dashboard = self.options['dashboard'];
             self.contentPagesEle = $("<div></div>")
                     .addClass(self.classNames['pages']);
             //image page
@@ -236,23 +236,32 @@ $.widget('dbs.dbsDashboardPanel',
                 self._setBase64ScreenShot(_ss);
             }
             else {
-              dfu.ajaxWithRetry({
-                   //This will be a page which will return the base64 encoded string
-                   url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
-                   headers: dfu.getDashboardsRequestHeader(),
-                   success: function(response){
-                       var __ss = (response.screenShot ? response.screenShot : undefined);
-                       self._setBase64ScreenShot(__ss);
-                       if (_dmodel)
-                       {
-                           //_dmodel.set("screenShot", _ss);
-                           _dmodel['screenShot'] = __ss;
-                       }
-                   },
-                   error : function(jqXHR, textStatus, errorThrown) {
-                    //console.log("Load image error");
-                   }
-              });
+                if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'].length > 0))
+                {
+                    dfu.ajaxWithRetry({
+                            //This will be a page which will return the base64 encoded string
+                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
+                        url: _dashboard['screenShotHref'],                   
+                        headers: dfu.getDashboardsRequestHeader(),
+                        success: function(response){
+                            var __ss = (response.screenShot ? response.screenShot : undefined);
+                            self._setBase64ScreenShot(__ss);
+                            if (_dmodel)
+                            {
+                                //_dmodel.set("screenShot", _ss);
+                                _dmodel['screenShot'] = __ss;
+                            }
+                        },
+                        error : function(jqXHR, textStatus, errorThrown) {
+                            self._setBase64ScreenShot(null);
+                            //console.log("Load image error");
+                        }
+                    });
+                }
+                else
+                {
+                     self._setBase64ScreenShot(null);
+                }
             }
             self.contentPagesEle.append(self.contentPage1Ele);
         },

@@ -169,7 +169,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     tmp[self.timePeriodLast60mins()] = [2, 60 * 60 * 1000];
                     tmp[self.timePeriodLast4hours()] = [3, 4 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast6hours()] = [4, 6 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast1day()] = [5, 24 * 60 * 60 * 1000];                    tmp[self.timePeriodLast7days()] = [6, 7 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast1day()] = [5, 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast7days()] = [6, 7 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast30days()] = [7, 30 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast90days()] = [8, 90 * 24 * 60 * 60 * 1000];
                     return tmp;
@@ -178,7 +179,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     var tmp = {};
                     for (var i = 0; i < 12; i++) {
                         tmp[self.longMonths()[i]] = i + 1;
-                    }                    return tmp;
+                    }
+                    return tmp;
                 }, self);
 
                 if(params.callback) {

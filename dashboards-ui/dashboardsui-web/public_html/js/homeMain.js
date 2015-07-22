@@ -149,54 +149,12 @@ require(['dbs/dbsmodel',
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
                     
-                    /*
-                    function setMainAreaPadding(isDrag)
-                    {
-                        //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
-                        var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
-                        var _filterwidth = document.getElementById('filterpanel').offsetWidth;
-                        //console.log("tab width: "+_tabwidth);
-                        //console.log("filter width: "+_filterwidth);
-                        var _padding = (_tabwidth - _filterwidth) % (335 panel width + panel margin);
-                        //console.log("_padding: " + Math.floor(_padding/2));
-                        var _calpadding = (_tabwidth <= 800 ) ? 5 : Math.floor(_padding/2);
-                    
-                        var _rpadding = _calpadding;
-                        if (_tabwidth > 1440)
-                        {
-                            _rpadding = _rpadding + 25;
-                        }
-                        else if (_tabwidth > 800)
-                        {
-                            
-                            //if (isDrag === true) _rpadding = _rpadding + 13;
-                            //else _rpadding = _rpadding + 10;
-                            
-                           _rpadding = _rpadding + 13;
-                        }
-                        $("#dhometab").attr({
-                           "style" : "padding-left: "+ _calpadding  + "px;" //"padding-right: "+ _rpadding  + "px;" 
-                        });
-                        
-                        $("#homettbtns").attr({
-                           "style" : "padding-right: "+ _rpadding  + "px;" 
-                        });
-                    };
-                    
-                    $(window).resize(function() {
-                        setMainAreaPadding(true);
-                    });
-                    setTimeout(function() {
-                        setMainAreaPadding();
-                    }, 0);*/
-                    
-                    
 
                     //window.addEventListener('message', childMessageListener, false);
-                    window.name = 'dashboardhome';
+                    //window.name = 'dashboardhome';
 
-                    if (window.parent && window.parent.updateOnePageHeight)
-                        window.parent.updateOnePageHeight('2000px');
+                    //if (window.parent && window.parent.updateOnePageHeight)
+                    //    window.parent.updateOnePageHeight('2000px');
                 }
                 predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
 
@@ -208,6 +166,7 @@ require(['dbs/dbsmodel',
  * listener on messages from child page
  * @param {type} builderData
  * @returns {undefined} */
+/*
 function childMessageListener(builderData) {
     //console.log(builderData);
     var _o = JSON.parse(builderData);
@@ -224,12 +183,13 @@ function childMessageListener(builderData) {
 //    }
     
 };
-
+*/
 /**
 *  Callback method to be invokced by child builder page to get dashboard data
 
  * @param {type} dashboardid
  * @returns {dashboarInfoCallBack.Anonym$0} */
+/*
 function dashboarDataCallBack(dashboardid) {
     var dashboard = dashboardsViewModle.getDashboard(dashboardid);
     // TODO: put code to retrieve dashboard data, and update code to add 'real' dashboard/widgets data below
@@ -255,7 +215,7 @@ function dashboarDataCallBack(dashboardid) {
                 {title: "CPU Load"},
                 {title: "Error Reports"}
             ]};
-};
+};*/
 
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
@@ -278,10 +238,10 @@ function getDateString(isoString) {
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        //console.log(s);
+        console.log(s);
         if (s.length > 1)
         {
-            return new Date(s[0], s[1], s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();
+            return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();
         }
     }
     return "";

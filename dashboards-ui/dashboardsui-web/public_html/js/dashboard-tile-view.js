@@ -246,6 +246,13 @@ define(['knockout',
                 }
             };
             
+            self.handleDashboardNameInputKeyPressed = function(vm, evt) {
+            	if (evt.keyCode == 13) {
+            		self.okChangeDashboardName();
+            	}
+            	return true;
+            };
+            
             self.okChangeDashboardName = function() {
                 var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
                 nameInput('validate');
@@ -284,6 +291,13 @@ define(['knockout',
                     $('#builder-dbd-description').addClass('editing');
                     $('#builder-dbd-description-input').focus();
                 }
+            };
+            
+            self.handleDashboardDescriptionInputKeyPressed = function(vm, evt) {
+            	if (evt.keyCode == 13) {
+            		self.okChangeDashboardDescription();
+            	}
+            	return true;
             };
             
             self.okChangeDashboardDescription = function() {
@@ -349,152 +363,7 @@ define(['knockout',
                 }
                 return summaryData;
             };
-            
-            //Temp codes for widget test for integrators -- start, to be removed in release version
-            self.resultTitle=ko.observable("");
-            self.resultMsg=ko.observable("");
-            self.categoryList=ko.observableArray([]);
-            self.useAbsolutePathForUrls=ko.observable(false);
-            self.providerInfoNeeded = ko.observable(true);
-            var ssfUrl = dfu.discoverSavedSearchServiceUrl();
-            var allCategories = [];
-            if (ssfUrl === null && ssfUrl !== "") {
-                console.log("Saved Search service is not available! Try again later.");
-                oj.Logger.log("Saved Search service is not available! Try again later.");
-            }
-            else {
-                var categoryUrl = '/sso.static/savedsearch.categories'; //dfu.buildFullUrl(ssfUrl,'categories');
-                dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: categoryUrl,
-                    headers: dfu.getSavedSearchServiceRequestHeader(), 
-                    async: false,
-                    success: function(data, textStatus){
-                        if (data && data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                allCategories.push({label:data[i].name, value:data[i].id});
-                            }
-                            self.categoryList(allCategories);
-                        }
-                    },
-                    error: function(data, textStatus){
-                        console.log('Failed to query categories!');
-                        oj.Logger.log('Failed to query categories!');
-                    }
-                });
-            }
-            
-//            self.newWidget = ko.observable({ 
-//                                providerName: "Log Analytics",
-//                                version: "1.0",
-//                                assetRoot: "assetRoot",
-//                                name: "TestWidget_001",
-//                                description: "Widget for test",
-//                                queryStr: "* | stats count by 'target type','log source'",
-//                                categoryId: allCategories[0].value+"",
-//                                kocName: "test-la-widget-1",
-//                                vmUrl: "../emcsDependencies/demo/logAnalyticsWidget/js/demo-log-analytics.js",
-//                                templateUrl: "../emcsDependencies/demo/logAnalyticsWidget/demo-log-analytics.html",
-//                                iconUrl: "",
-//                                histogramUrl: ""});
-            self.newWidget = ko.observable({
-                                providerName: "",
-                                version: "",
-                                assetRoot: "",
-                                name: "",
-                                description: "",
-                                queryStr: "",
-                                categoryId: allCategories && allCategories.length > 0 ? allCategories[0].value+"" : '',
-                                kocName: "",
-                                vmUrl: "",
-                                templateUrl: "",
-                                iconUrl: "",
-                                histogramUrl: ""});
-            
-            self.categoryOptionChangeHandler = function(event, data) {
-                if (data.option === "value") {
-                    if (data.value[0]===999 || data.value[0] === '999') {
-                        self.useAbsolutePathForUrls(true);
-                        self.providerInfoNeeded(false);
-                    }
-                    else {
-                        self.useAbsolutePathForUrls(false);
-                        self.providerInfoNeeded(true);
-                    }
-                }
-            };
-            
-            function showResultInfoDialog(title, msg) {
-                self.resultTitle(title);
-                self.resultMsg(msg);
-                $("#resultInfoDialog").ojDialog("open");
-            };
-            
-            self.createNewWidget = function() {
-                $("#createWidgetDialog").ojDialog("open");
-            };
-            
-            self.saveWidget = function() {
-//                var ssfUrl = dfu.discoverSavedSearchServiceUrl();
-                if (ssfUrl === null && ssfUrl !== "") {
-                    console.log("Saved Search service is not available! Failed to create the widget.");
-                    alert("Saved Search service is not available! Failed to create the widget.");
-                    return;
-                }
-                else {
-                    var widgetToSave = ko.toJS(self.newWidget);
-                    var params = [];
-                    if (self.providerInfoNeeded()===true) {
-                        if (widgetToSave.providerName && widgetToSave.providerName !== "") {
-                            params.push({name: "PROVIDER_NAME", type: "STRING", value: widgetToSave.providerName});
-                        }
-                        if (widgetToSave.version && widgetToSave.version !== "") {
-                            params.push({name: "PROVIDER_VERSION", type: "STRING", value: widgetToSave.version});
-                        }
-                        if (widgetToSave.assetRoot && widgetToSave.assetRoot !== "") {
-                            params.push({name: "PROVIDER_ASSET_ROOT", type: "STRING", value: widgetToSave.assetRoot});
-                        }
-                    }
-                    if (widgetToSave.kocName && widgetToSave.kocName !== "") {
-                        params.push({name: "WIDGET_KOC_NAME", type: "STRING", value: widgetToSave.kocName});
-                    }
-                    if (widgetToSave.vmUrl && widgetToSave.vmUrl !== "") {
-                        params.push({name: "WIDGET_VIEWMODEL", type: "STRING", value: widgetToSave.vmUrl});
-                    }
-                    if (widgetToSave.templateUrl && widgetToSave.templateUrl !== "") {
-                        params.push({name: "WIDGET_TEMPLATE", type: "STRING", value: widgetToSave.templateUrl});
-                    }
-                    if (widgetToSave.iconUrl && widgetToSave.iconUrl !== "") {
-                        params.push({name: "WIDGET_ICON", type: "STRING", value: widgetToSave.iconUrl});
-                    }
-                    if (widgetToSave.histogramUrl && widgetToSave.histogramUrl !== "") {
-                        params.push({name: "WIDGET_HISTOGRAM", type: "STRING", value: widgetToSave.histogramUrl});
-                    }
-                    params.push({name: "WIDGET_INTG_TESTING", type: "STRING", value: "YES"});
-                    var searchToSave = {name: widgetToSave.name, 
-                        category:{id:(widgetToSave.categoryId instanceof Array ? widgetToSave.categoryId[0] : widgetToSave.categoryId)},
-                                        folder:{id: 999}, description: widgetToSave.description, 
-                                        queryStr: widgetToSave.queryStr, parameters: params, isWidget:true};
-                    var saveSearchUrl = dfu.buildFullUrl(ssfUrl,"search");
-                    dfu.ajaxWithRetry({type: 'POST', contentType:'application/json',url: saveSearchUrl, 
-                        headers: dfu.getSavedSearchServiceRequestHeader(), data: ko.toJSON(searchToSave), async: false,
-                        success: function(data, textStatus){
-                            $('#createWidgetDialog').ojDialog('close');
-                            var msg = "Widget created successfully!";
-                            console.log(msg);
-                            showResultInfoDialog("Success", msg);
-                        },
-                        error: function(data, textStatus){
-                            $('#createWidgetDialog').ojDialog('close');
-                            var msg = "Failed to create the widget! \nStatus: " + 
-                                    data.status + "("+data.statusText+"), \nResponseText: "+data.responseText;
-                            console.log(msg);
-                            showResultInfoDialog("Error", msg);
-                        }
-                    });
-                    
-//                    refreshWidgets();
-                }
-            };
-            //Temp codes for widget test for integrators -- end
+           
             
             self.handleDashboardSave = function() {
             	if (self.isNameUnderEdit()) {
@@ -512,68 +381,82 @@ define(['knockout',
             	}
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
-                var nodesToRecover = [];
-                var nodesToRemove = [];
-                var elems = $('#tiles-row').find('svg');
-                elems.each(function(index, node) {
-                    var parentNode = node.parentNode;
-                    var width = $(node).width();
-                    var height = $(node).height();
-                    var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
-                    var canvas = document.createElement('canvas');
-                    try {
-                    	canvg(canvas, svg);
-                    } catch (e) {
-                    	oj.Logger.error(e);
-                    }
-                    nodesToRecover.push({
-                        parent: parentNode,
-                        child: node
-                    });
-                    parentNode.removeChild(node);
-                    nodesToRemove.push({
-                        parent: parentNode,
-                        child: canvas
-                    });
-                    parentNode.appendChild(canvas);
-                });
-                html2canvas($('#tiles-row'), {
-                    onrendered: function(canvas) {
-                    	try {
-                    		var resize_canvas = document.createElement('canvas');
-                    		resize_canvas.width = 320;//canvas.width*0.5; 
-                    		resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;//canvas.height * 0.5;
-                    		var resize_ctx = resize_canvas.getContext('2d');
-                			resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
-                			var data = resize_canvas.toDataURL("image/jpeg", 0.8);
-                    		nodesToRemove.forEach(function(pair) {
-                    			pair.parent.removeChild(pair.child);
-                    		});
-                    		nodesToRecover.forEach(function(pair) {
-                    			pair.parent.appendChild(pair.child);
-                    		});
-                    		outputData.screenShot = data;
-                    		tilesViewModel.dashboard.screenShot = ko.observable(data);
-                    		if (window.opener && window.opener.childMessageListener) {
-                    			var jsonValue = JSON.stringify(outputData);
-                    			console.log(jsonValue);
-                    			window.opener.childMessageListener(jsonValue);
-                    		}
-                    	} catch (e) {
-                    		oj.Logger.error(e);
-                    	}
-                    	self.handleSaveUpdateToServer();
-                    	dfu.showMessage({
-                    		type: 'confirm',
-                    		summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
-                    		detail: '',
-                    		removeDelayTime: 5000
-                    	});
-                    }  
-                });
+                
+                if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
+                	var nodesToRecover = [];
+                	var nodesToRemove = [];
+                	var elems = $('#tiles-row').find('svg');
+                	elems.each(function(index, node) {
+                		var parentNode = node.parentNode;
+                		var width = $(node).width();
+                		var height = $(node).height();
+                		var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
+                		var canvas = document.createElement('canvas');
+                		try {
+                			canvg(canvas, svg);
+                		} catch (e) {
+                			oj.Logger.error(e);
+                		}
+                		nodesToRecover.push({
+                			parent: parentNode,
+                			child: node
+                		});
+                		parentNode.removeChild(node);
+                		nodesToRemove.push({
+                			parent: parentNode,
+                			child: canvas
+                		});
+                		parentNode.appendChild(canvas);
+                	});
+                	html2canvas($('#tiles-row'), {
+                		onrendered: function(canvas) {
+                			try {
+                				var resize_canvas = document.createElement('canvas');
+                				resize_canvas.width = 320;
+                				resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;
+                				var resize_ctx = resize_canvas.getContext('2d');
+                				resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
+                				var data = resize_canvas.toDataURL("image/jpeg", 0.8);
+                				nodesToRemove.forEach(function(pair) {
+                					pair.parent.removeChild(pair.child);
+                				});
+                				nodesToRecover.forEach(function(pair) {
+                					pair.parent.appendChild(pair.child);
+                				});
+                				outputData.screenShot = data;
+                				tilesViewModel.dashboard.screenShot = ko.observable(data);
+                			} catch (e) {
+                				oj.Logger.error(e);
+                			}
+                			self.handleSaveUpdateDashboard(outputData);
+                		}  		
+                	});
+            	}
+                else {
+                	tilesViewModel.dashboard.screenShot = ko.observable(null);
+        			self.handleSaveUpdateDashboard(outputData);
+                }
             };
             
-            self.handleSaveUpdateToServer = function() {
+            self.handleSaveUpdateDashboard = function(outputData) {
+            	if (window.opener && window.opener.childMessageListener) {
+        			var jsonValue = JSON.stringify(outputData);
+        			console.log(jsonValue);
+        			window.opener.childMessageListener(jsonValue);
+        		}
+            	self.handleSaveUpdateToServer(function() {
+            		dfu.showMessage({
+            			type: 'confirm',
+            			summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
+            			detail: '',
+            			removeDelayTime: 5000
+            		});
+            	}, function(error) {
+            		error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+            	});
+            };
+            
+            self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
                 var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
@@ -589,8 +472,11 @@ define(['knockout',
                         "tileDisplayClass", "widerEnabled", "widget"]
                 });
                 var dashboardId = tilesViewModel.dashboard.id();
-                dtm.updateDashboard(dashboardId, dashboardJSON, null, function(error) {
+                dtm.updateDashboard(dashboardId, dashboardJSON, function() {
+                	succCallback && succCallback();
+                }, function(error) {
                     console.log(error.errorMessage());
+                    errorCallback && errorCallback(error);
                 });
             };
             

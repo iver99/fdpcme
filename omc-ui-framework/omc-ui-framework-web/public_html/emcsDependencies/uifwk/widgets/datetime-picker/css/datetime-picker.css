@@ -7,14 +7,10 @@
     border-style: solid;
     border-color: #dfe4e7;
     border-radius: 2px;
- /*   padding-top: 13px;
-    padding-bottom: 13px;*/
     padding-left:8px;
-    height: 32px;
- /*   width: 430px;*/  
+    height: 32px; 
     width: auto;
-    /*margin-top: 10px;*/
-    line-height: 32px; /*******/
+    line-height: 32px;
     display: inline-block;
 }
 .panel {
@@ -45,7 +41,7 @@
     border-color: #dfe4e7;
     padding-left: 8px;
     padding-top: 14px;
-    height: 23px; /*self define*/
+    height: 23px;
     width: 109px;
     display: block;
 }
@@ -58,17 +54,13 @@
 }
 
 .pickerPanel {
-    width: 510px; /***/
+    width: 510px;
     height: 391px;
     float: right;
 }
 .chosenDate {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
-    /*                border-style: solid;
-                    border-width: 1px;
-                    border-color: #dfe4e7;
-                    border-radius: 2px;*/
     display: inline;
     height: 30px;
     width: 60px;
@@ -82,10 +74,6 @@
 .chosenTime {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
-    /*                border-style: solid;
-                    border-width: 1px;
-                    border-color: #dfe4e7;
-                    border-radius: 2px;*/
     display: inline-block;
     height: 32px;
     width: 100px;
@@ -93,6 +81,13 @@
 }
 .buttons {
     margin: 10px;
+}
+.formatErrorMsg {
+    margin: 10px;
+    font-size: 14px;
+    color: red;
+    font-weight: bold;
+    width: 510px;
 }
 .datePicker {
     font-size: 14px;
@@ -109,12 +104,14 @@
 
 .date-selected {
     background-color: #0572ce;
-    /*border: 1px solid red;*/
-    /*color: #ffffff;*/
 }
 
 .input-focus {
     border: 1px solid  #47bdef;;
+}
+
+.input-error {
+    border: 2px solid #d66;
 }
 
 /*set min-width of ojInputText*/
@@ -148,6 +145,3 @@
 .oj-datepicker-calendar td a.oj-selected {
     color: #000000;
 }
-/*            .oj-inputdatetime-input {
-                height: 32px;
-            }*/

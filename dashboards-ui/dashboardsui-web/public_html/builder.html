@@ -87,7 +87,8 @@ role value for that section to represent the appropriate content type.
                             </div>
                             <div id="builder-dbd-name-edit-area" class="dbd-edit-area">
                                 <input id="builder-dbd-name-input"
-                                       data-bind="ojComponent: {component: 'ojInputText', 
+                                       data-bind="event: {keypress: handleDashboardNameInputKeyPressed},valueUpdate: 'afterkeydown',
+                                       		   ojComponent: {component: 'ojInputText', 
                                                value: dashboardNameEditing, required: true, rootAttributes: {
                                                style:'max-width:55em; padding-top: 1px;'}, validators: [noSameNameValidator]}, 
                                                attr: {placeholder: getNlsString('DBS_BUILDER_REQUIRE_NAME')}" maxlength="64">
@@ -125,7 +126,8 @@ role value for that section to represent the appropriate content type.
                             </div>
                             <div id="builder-dbd-description-edit-area" class="dbd-edit-area">
                                 <input id="builder-dbd-description-input"
-                                       data-bind="ojComponent: {component: 'ojInputText', 
+                                       data-bind="event: {keypress: handleDashboardDescriptionInputKeyPressed},valueUpdate: 'afterkeydown',
+                                       		   ojComponent: {component: 'ojInputText', 
                                                value: dashboardDescriptionEditing, rootAttributes: {
                                                style:'max-width:55em;'}}" maxlength="256">
                                 <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"
@@ -279,183 +281,6 @@ role value for that section to represent the appropriate content type.
                         name: 'df-widget-selector',
                         params: addWidgetDialogParams
                     }">
-                </div>
-                <div style="display:none;" id="createWidgetDialog" 
-                    data-bind="ojComponent:{component: 'ojDialog', 
-                            initialVisibility: 'hide',
-                            rootAttributes: { style: 'width: 600px; height:660px;'},
-                            title: getNlsString('DBS_BUILDER_CREATE_WIDGET_TITLE')}">  
-                    <div class="oj-dialog-header" aria-labelledby="dialog-title-id">
-                        <div class="oj-dialog-title">
-                            <span style="font-size: large;font-weight: bold;"><font color="DimGray" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_HEADER')"></font></span>
-                            <!--<a href="#" data-bind="click:function(){$('#createWidgetDialog').ojDialog('close');}" class="df-dialog-header-close">CLOSE</a>-->
-                        </div>
-                    </div>
-                    <div class="oj-dialog-body">
-                      <div id="editSearch" class="oj-md-3 oj-col">
-                        <div id="updateSearch" class="frame">
-                            <div id="editSearchForm" class="oj-form oj-md-odd-cols-4 oj-md-labels-inline">
-                                <form class="oj-form oj-md-odd-cols-11 oj-md-labels-inline" data-bind="with:newWidget">
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="providerName" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_PROVIDER_NAME')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="providerName" maxlength='30' style="width: 400px;" required
-                                                   data-bind="ojComponent:{component:'ojInputText', disabled: !$parent.providerInfoNeeded(), value:providerName}"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="version" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_VERSION')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="version" maxlength='30' style="width: 400px;" required
-                                                   data-bind="ojComponent:{component:'ojInputText',disabled: !$parent.providerInfoNeeded(), value:version}"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="assetRoot" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_ASSET_ROOT')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="assetRoot" maxlength='30' style="width: 400px;" required
-                                                   data-bind="ojComponent:{component:'ojInputText',disabled: !$parent.providerInfoNeeded(), value:assetRoot}"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="searchName" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_NAME')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="searchName" maxlength='30' style="width: 400px;" required
-                                                   data-bind="ojComponent:{component:'ojInputText',value:name}"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="description" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_DESC')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <textarea id="description" style="width: 400px;"
-                                                      data-bind="ojComponent: {component: 'ojTextArea'},value:description"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="queryString" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_QUR_STR')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <textarea id="queryString" style="width: 400px;" data-bind="ojComponent:{component:'ojTextArea'},value:queryStr"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="category" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_CAT')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <select id="category" required style="width:200px;" data-bind="ojComponent: {component: 'ojSelect', 
-                                                                                          value: categoryId, optionChange: $parent.categoryOptionChangeHandler,
-                                                                                          rootAttributes: {style:'max-width:20em'}}"> 
-                                                <!-- ko foreach: $parent.categoryList -->
-                                                <option data-bind="value:value, text:label"></option>
-                                                <!-- /ko -->
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label class="oj-label"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <table id="tblHints" style="width:400px;">
-                                                <tr>
-                                                    <td style="width:20px;">
-                                                        <img width="18" height="18" src="css/images/func_information_32.png" alt="hint"/>
-                                                    </td>
-                                                    <td>
-                                                        <!-- ko if: $parent.useAbsolutePathForUrls() === true -->
-                                                        <label class="oj-label" ><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_ABS_1ST')"></span><span style="font-size: medium" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_ABS_2ND')"></span><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_ABS_3RD')"></span></label>
-                                                        <!-- /ko -->
-                                                        <!-- ko if: $parent.useAbsolutePathForUrls() === false -->
-                                                        <label class="oj-label" ><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_REL_1ST')"></span><span style="font-size: medium" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_REL_2ND')"></span><span data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_INFO_REL_3RD')"></span></label>
-                                                        <!-- /ko -->
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="kocName" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_KOC_NAME')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="kocName" placeholder="" style="width: 400px;" required
-                                                   data-bind="ojComponent:{component:'ojInputText'}, value:kocName"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="vmUrl" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_VM_URL')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="vmUrl" required
-                                                   placeholder="" style="width: 400px;"
-                                                   data-bind="ojComponent:{component:'ojInputText'},value:vmUrl"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="templateUrl" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_TMPL_URL')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="templateUrl" required
-                                                   placeholder="" style="width: 400px;"
-                                                   data-bind="ojComponent:{component:'ojInputText'},value:templateUrl"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="iconUrl" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_ICN_URL')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="iconUrl"
-                                                   placeholder="" style="width: 400px;"
-                                                   data-bind="ojComponent:{component:'ojInputText'},value:iconUrl"/>
-                                        </div>
-                                    </div>
-                                    <div class="oj-row">
-                                        <div class="oj-col">
-                                            <label for="histogramUrl" class="oj-label" data-bind="text: getNlsString('DBS_BUILDER_CREATE_WIDGET_HISGRM_URL')"></label>
-                                        </div>
-                                        <div class="oj-col">
-                                            <input id="histogramUrl"
-                                                   placeholder="" style="width: 400px;"
-                                                   data-bind="ojComponent:{component:'ojInputText'},value:histogramUrl"/>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                  </div>     
-                  <div class="oj-dialog-footer">        
-                      <button data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_TEXT_CREATE')}, click: saveWidget"> 
-                      </button> 
-                  </div>  
-                </div> 
-                <div style="display:none;" id="resultInfoDialog"
-                    data-bind="ojComponent:{component: 'ojDialog', 
-                        initialVisibility: 'hide',
-                        rootAttributes: { style: 'width: 380px; height:160px;'},
-                        title: resultTitle}">     
-                  <div class="oj-dialog-body">
-                      <span data-bind="text:resultMsg"></span>
-                  </div>     
-                  <div class="oj-dialog-footer">        
-                      <button data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: function(){$('#resultInfoDialog').ojDialog('close');}"> 
-                      </button>
-                  </div>  
                 </div>
             </div>
             <!-- /ko -->

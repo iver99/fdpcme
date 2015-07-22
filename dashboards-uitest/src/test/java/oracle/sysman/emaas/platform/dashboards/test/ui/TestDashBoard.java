@@ -33,7 +33,8 @@ public class TestDashBoard extends LoginAndLogout{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testHomePage");	
 		DashBoardUtils.checkBrandingBarLink();
-				
+		DashBoardUtils.waitForMilliSeconds(5000);	
+		
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Resource_Planning_ID));
@@ -44,6 +45,7 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_Databases_by_Resource_Consumption_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Load_ID));
+		
 		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Health_Summary_ID));
 		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.WebLogic_Health_Summary_ID));
 		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Host_Health_Summary_ID));
@@ -72,7 +74,8 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(500);
 		
 		DashBoardUtils.clickOKButton();		
-					
+		
+		webd.takeScreenShot();
 		//add widget
 		DashBoardUtils.addWidget(1,parentWindow);
 				
@@ -113,7 +116,7 @@ public class TestDashBoard extends LoginAndLogout{
 	public void testNavigateWidget() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testModifyDashBoard");
+		webd.getLogger().info("start to test in testNavigateDashBoard");
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
 		DashBoardUtils.waitForMilliSeconds(500);

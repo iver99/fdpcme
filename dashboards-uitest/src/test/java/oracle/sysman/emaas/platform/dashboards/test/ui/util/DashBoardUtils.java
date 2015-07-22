@@ -26,14 +26,19 @@ public class DashBoardUtils {
 	public static void loadWebDriver(WebDriver webDriver) throws Exception
 	{
 		driver=webDriver;
+		waitForMilliSeconds(10000);
 		if(doesWebElementExist(DashBoardPageId.OverviewCloseID))  closeOverviewPage();
 		waitForMilliSeconds(5000);
-
+		Assert.assertFalse(doesWebElementExist(DashBoardPageId.OverviewCloseID));
+		waitForMilliSeconds(5000);
+		driver.takeScreenShot();
 	}
 	
 	public static void closeOverviewPage() throws Exception
 	{
+		driver.getLogger().info("before clicking overview button");
 		driver.click(DashBoardPageId.OverviewCloseID);
+		driver.getLogger().info("after clicking overview button");
 	}
 	
 	public static void openDBCreatePage() throws Exception
@@ -102,10 +107,14 @@ public class DashBoardUtils {
 	{
 		WidgetAddPage widgetAddPage;
 		String widgetName;
-				
+		
+		driver.getLogger().info("start to test in addWidget");
 		waitForMilliSeconds(500);
 		driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 		
+		driver.getLogger().info("add widget button is found");
+		driver.takeScreenShot();
+		waitForMilliSeconds(5000);
 		//verify title and desc of dashboard
 		/*if( getText(DashBoardPageId.DashboardNameID) == null)
 		{
@@ -116,10 +125,12 @@ public class DashBoardUtils {
 			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
 			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
 		}
-				
-		
+		driver.getLogger().info("before clicking add widget button");		
+		driver.takeScreenShot();
 		driver.click(DashBoardPageId.WidgetAddButtonID);
-				
+		
+		driver.getLogger().info("after clicking add widget button");		
+		driver.takeScreenShot();
 		widgetName = WidgetPageId.widgetName;
 		
 		widgetAddPage = new WidgetAddPage(driver);
@@ -128,17 +139,22 @@ public class DashBoardUtils {
 		widgetAddPage.searchWidget(widgetName);
 		waitForMilliSeconds(2000);			
 		
-				
+		driver.getLogger().info("before clicking widget button");		
+		driver.takeScreenShot();		
 		//select widget
 		widgetAddPage.clickWidgetOnTable(widgetName);
 		waitForMilliSeconds(2000);
+		driver.takeScreenShot();	
 		clickAddButton();
 		waitForMilliSeconds(2000);
 		clickCloseButton();
 		waitForMilliSeconds(2000);		
-		
+		driver.getLogger().info("before clicking save widget button");		
+		driver.takeScreenShot();
 		//save dashboard
 		clickSaveButton();
+		driver.getLogger().info("after clicking save widget button");		
+		driver.takeScreenShot();
  		 		
 	}
 	
@@ -148,7 +164,7 @@ public class DashBoardUtils {
 			String widgetName;			       
 			         
 			driver.getLogger().info("start to test in navigateWidget");
-			waitForMilliSeconds(500);
+			waitForMilliSeconds(5000);
 			
 			//verify title and desc of dashboard
 			/*if( getText(DashBoardPageId.DashboardNameID) == null)
@@ -217,10 +233,11 @@ public class DashBoardUtils {
 		driver.click("//div[@aria-dashboard="+dbID+"]");
 	}
 	
-	public static boolean doesWebElementExist(String selector)
+	public static boolean doesWebElementExist(String selector) throws Exception
 	{
 		                             
 		        WebElement el=driver.getWebDriver().findElement(By.id(selector));
+			   //boolean b = driver.isElementPresent(selector);
 			
 		       if(el.isDisplayed()){
 		    	   driver.getLogger().info("can get element");
@@ -234,7 +251,7 @@ public class DashBoardUtils {
 
 	}
 	
-	public static boolean doesWebElementExistByXPath(String xpath)
+	public static boolean doesWebElementExistByXPath(String xpath) throws Exception
 	{
 		                             
 		        WebElement el=driver.getWebDriver().findElement(By.xpath(xpath));
@@ -272,14 +289,18 @@ public class DashBoardUtils {
 	}
 	public static void searchDashBoard(String board) throws Exception
 	{
+		driver.takeScreenShot();
+		driver.getLogger().info("go into search DashBoard");
 		driver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
 		driver.click("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
+		driver.takeScreenShot();
 		
 	}
 	public static void checkBrandingBarLink() throws Exception
 	{
 		clickNavigatorLink();
 		waitForMilliSeconds(500);
+		driver.takeScreenShot();
 		//Home link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.HomeLinkID)).getText(),"Home");
 		//IT Analytics link
@@ -291,25 +312,28 @@ public class DashBoardUtils {
 		//Log link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LOGLinkID)).getText(),"Log");
 		//AWR Analytics link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AWRALinkID)).getText(),"AWR Analytics");
+		driver.takeScreenShot();
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AWRALinkID)).getText(),"Analyze");
 		//Flex link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.FlexLinkID)).getText(),"Flex");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.FlexLinkID)).getText(),"AWR");
 		//Target link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.TargetLinkID)).getText(),"Target");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.TargetLinkID)).getText(),"Search");
 		//Customer Software link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.CustomLinkID)).getText(),"Customer Software");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.CustomLinkID)).getText(),"Agents");
 		//IT Analytics Administration link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ITA_Admin_LinkID)).getText(),"IT Analytics Administration");
 	}
 	public static void clickCheckBox() throws Exception
 	{
+		
 		//check APM cloud service 
 		driver.getWebDriver().findElement(By.id(DashBoardPageId.APM_BoxID)).click();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		Assert.assertTrue(doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
-		Assert.assertFalse(doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
 		driver.getWebDriver().findElement(By.id(DashBoardPageId.APM_BoxID)).click();
 		//check ita box
 		driver.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Resource_Planning_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Garbage_Collection_Overhead_ID));
@@ -319,13 +343,13 @@ public class DashBoardUtils {
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_Databases_by_Resource_Consumption_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Load_ID));
-		Assert.assertFalse(doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		driver.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
 		//check la box
 		driver.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
 		driver.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
 		//check oracle created
 		driver.getWebDriver().findElement(By.id(DashBoardPageId.Oracle_BoxID)).click();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Resource_Planning_ID));

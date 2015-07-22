@@ -29,7 +29,7 @@ public class DashBoardPageId {
 	public static final String closeBtnID = "//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span";
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
-	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='1']";
+	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
 	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";
 	public static final String Database_Resource_Planning_ID = "//div[@aria-dashboard='3']";
 	public static final String Garbage_Collection_Overhead_ID = "//div[@aria-dashboard='4']";
