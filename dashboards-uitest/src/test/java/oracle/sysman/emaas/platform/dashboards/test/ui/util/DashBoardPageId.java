@@ -26,7 +26,7 @@ public class DashBoardPageId {
 	public static final String OverviewCloseID = "overviewClose";
 	public static final String DashBoardName = "//span[@id='builder-dbd-name-display-hover-area']";
 	public static final String AddBtn = "widget-selector-okbtn";
-	public static final String closeBtnID = "//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span";
+	public static final String closeBtnID = "/html/body/div[1]/div[2]/div/div[3]/div/span";//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span";
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
