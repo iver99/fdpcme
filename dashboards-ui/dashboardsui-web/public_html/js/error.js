@@ -8,7 +8,7 @@ requirejs.config({
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
         'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/debug',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
         'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
         'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
