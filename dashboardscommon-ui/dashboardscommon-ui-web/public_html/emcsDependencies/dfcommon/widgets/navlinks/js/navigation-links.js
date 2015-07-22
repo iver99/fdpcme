@@ -106,7 +106,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             var analyzerList = [];
                             for (var i = 0; i < analyzers.length; i++) {
                                 analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
-                                    href: analyzers[i].href});
+                                    href: dfu.getRelUrlFromFullUrl(analyzers[i].href)});
                             }
                             self.visualAnalyzers(analyzerList);
                         }
