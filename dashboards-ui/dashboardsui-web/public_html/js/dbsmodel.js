@@ -289,7 +289,11 @@ function(dsf, oj, ko, $, dfu, pfu)
             //window.open(ui.item.children("a")[0].value);
             if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
             {
-                window.location = dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value);
+                if (dfu.isDevMode()){
+                    window.location = dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value);
+                }else{
+                    window.location = ui.item.children("a")[0].value;
+                }
             }
         };
         
