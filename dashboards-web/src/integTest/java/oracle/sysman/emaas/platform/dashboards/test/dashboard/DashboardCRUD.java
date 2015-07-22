@@ -946,7 +946,7 @@ public class DashboardCRUD
 			Assert.assertTrue(res6.getStatusCode() == 200);
 			Assert.assertEquals(res6.jsonPath().get("dashboards.name[0]"), "Test_LastAccess");
 			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[0]"), dashboard_id);
-			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Application Performance Monitoring");
+			Assert.assertEquals(res6.jsonPath().get("dashboards.name[1]"), "Enterprise Overview");
 			Assert.assertEquals(res6.jsonPath().getString("dashboards.id[1]"), "1");
 		}
 		catch (Exception e) {
