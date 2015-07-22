@@ -1,5 +1,5 @@
-define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resources/nls/uifwkCommonMsgBundle'],
-        function (localrequire, ko, $, oj, nls) {
+define(["knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resources/nls/uifwkCommonMsgBundle'],
+        function (ko, $, oj, nls) {
 
             /**
              * 
@@ -9,7 +9,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
              */
             function in_array(string, array) {
                 for (var i in array) {
-                    if (array[i][1] == string) {
+                    if (array[i][1] === string) {
                         return i;
                     }
                 }
@@ -62,7 +62,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                 self.startTimeError = ko.observable(false);
                 self.endTimeError = ko.observable(false);
 				
-				self.showErrorMsg = ko.computed(function () {
+		self.showErrorMsg = ko.computed(function () {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError();
                 }, self);
                 
@@ -136,14 +136,14 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
                 self.errorMsg = ko.observable();
-				self.formatErrorMsg = ko.observable();
+		self.formatErrorMsg = ko.observable();
                 self.timeRangeMsg = ko.observable();
                 self.applyButton = ko.observable();
                 self.cancelButton = ko.observable();
 
-				self.longMonths([nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
-					nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
-					nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER]);
+		self.longMonths([nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
+				nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
+				nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER]);
                 self.timePeriodLast15mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS);
                 self.timePeriodLast30mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS);
                 self.timePeriodLast60mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS);
@@ -156,13 +156,13 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                 self.timePeriodCustom(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM);
 
                 self.errorMsg(nls.DATETIME_PICKER_ERROR);
-				self.formatErrorMsg(nls.DATETIME_PICKER_FORMAT_ERROR_MSG);
+		self.formatErrorMsg(nls.DATETIME_PICKER_FORMAT_ERROR_MSG);
                 self.timeRangeMsg(nls.DATETIME_PICKER_TIME_RANGE);
 
                 self.applyButton(nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON);
                 self.cancelButton(nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON);
 
-				self.timePeriodObject = ko.computed(function () {
+		self.timePeriodObject = ko.computed(function () {
                     var tmp = {};
                     tmp[self.timePeriodLast15mins()] = [0, 15 * 60 * 1000];
                     tmp[self.timePeriodLast30mins()] = [1, 30 * 60 * 1000];
@@ -217,21 +217,21 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     self.updateRange(self.startDate(), self.endDate());
                 });
                 self.valueSubscriber.subscribe(function (value) {
-                    if (self.startDate() == self.dateConverter2.format(self.value())) {
-                        if (self.lastFocus() == 1) {
+                    if (self.startDate() === self.dateConverter2.format(self.value())) {
+                        if (self.lastFocus() === 1) {
                             self.updateRange(self.startDate(), self.endDate());
                             self.endDateFocus(true);
-                        } else if (self.lastFocus() == 2) {
+                        } else if (self.lastFocus() === 2) {
                             self.endDateISO(self.value());
                             self.endDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                         }
-                    } else if (self.endDate() == self.dateConverter2.format(self.value())) {
-                        if (self.lastFocus() == 2) {
+                    } else if (self.endDate() === self.dateConverter2.format(self.value())) {
+                        if (self.lastFocus() === 2) {
                             self.updateRange(self.startDate(), self.endDate());
                             self.endDateFocus(true);
-                        } else if (self.lastFocus() == 1) {
+                        } else if (self.lastFocus() === 1) {
                             self.startDateISO(self.value());
                             self.endDateFocus(true);
                         } else {
@@ -239,10 +239,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                         }
                     } else {
                         var tmp = self.value();
-                        if (self.lastFocus() == 1) {
+                        if (self.lastFocus() === 1) {
                             self.startDateISO(tmp);
                             self.endDateFocus(true);
-                        } else if (self.lastFocus() == 2) {
+                        } else if (self.lastFocus() === 2) {
                             self.endDateISO(tmp);
                             self.endDateFocus(true);
                         } else {
@@ -382,7 +382,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     $(self.panelId + drawerId).css('background-color', '#ffffff');
                     $(self.panelId + drawerId).css('font-weight', 'bold');
                     
-                }
+                };
 
                 self.setFocusOnInput = function (idToFocus) {
                     var id;
@@ -420,15 +420,15 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
                     self.lastFocus(0);
-                }
+                };
 
                 self.autoFocus = function (id) {
                     self.selectByDrawer(false);
                     self.setFocusOnInput(id);
-                }
+                };
 
-                self.changeDate = function (event, data) {
-					try {
+                self.changeDate = function (event, data, value) {
+                    try {
                         self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
                         if (self.panelId) {
                             $(self.panelId + " #applyButton").ojButton({"disabled": false});
@@ -439,7 +439,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                         } else if (value === 2) {
                             self.endDateError(false);
                         }
-                        if (data.option == "value" && !self.selectByDrawer()) {
+                        if (data.option === "value" && !self.selectByDrawer()) {
                             self.customClick();
                             self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                             self.updateRange(self.startDate(), self.endDate());                            
@@ -465,7 +465,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                         self.startTimeError(false);
                         self.restoreBorderForTime(event.target);
 
-                        if (data.option == "value" && !self.selectByDrawer()) {
+                        if (data.option === "value" && !self.selectByDrawer()) {
                             self.setFocusOnInput("divStartTime_" + self.randomId);
                             self.lastFocus(0);
                             self.customClick();
@@ -473,7 +473,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     } else {
                         self.startTimeError(true);
                         $(event.target.parentNode.parentNode.parentNode).removeClass("input-focus");
-                        if (data.value === null || data.value.length == 0 || data.value.length == 1) {
+                        if (data.value === null || data.value.length === 0 || data.value.length === 1) {
                             self.setErrorBorderForTime(event.target);
                         }
                         if (self.panelId) {
@@ -490,7 +490,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                         self.endTimeError(false);
                         self.restoreBorderForTime(event.target);
                          
-                        if (data.option == "value" && !self.selectByDrawer()) {
+                        if (data.option === "value" && !self.selectByDrawer()) {
                             self.setFocusOnInput("divEndTime_" + self.randomId);
                             self.lastFocus(0);
                             self.customClick();
@@ -498,7 +498,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     } else {
                         self.endTimeError(true);
                         $(event.target.parentNode.parentNode.parentNode).removeClass("input-focus");
-                        if (data.value === null || data.value.length == 0 || data.value.length == 1) {
+                        if (data.value === null || data.value.length === 0 || data.value.length === 1) {
                             self.setErrorBorderForTime(event.target);
                         }
                         if (self.panelId) {
@@ -590,7 +590,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore", 'ojL10n!uifwk/js/resource
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                     $(self.panelId + ' .drawer').css('font-weight', 'normal');
 
-                    if ($(event.target).text() != self.timePeriodCustom()) {
+                    if ($(event.target).text() !== self.timePeriodCustom()) {
                         start = oj.IntlConverterUtils.dateToLocalIso(new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]));
                         end = oj.IntlConverterUtils.dateToLocalIso(curDate);
 
