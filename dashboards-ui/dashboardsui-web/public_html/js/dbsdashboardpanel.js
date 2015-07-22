@@ -150,6 +150,21 @@ $.widget('dbs.dbsDashboardPanel',
             .bind('click.' + _name, function (event) {
                 self._fireNavigated(event);
             });
+            this._on( this.element, {
+			keydown: function( event ) {
+                            var keyCode = $.ui.keyCode;
+                            switch ( event.keyCode ) {
+                                case keyCode.ENTER:
+                                        if (_element[0] === event.target)
+                                        {
+                                            self._fireNavigated(event);
+                                            event.preventDefault();
+                                        }
+					break;
+                                default: break;
+                            }            
+                        }
+                    });
         },
         
         _truncateString: function(str, length) {
