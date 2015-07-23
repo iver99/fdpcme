@@ -41,6 +41,9 @@ public class DashboardManagerTest
 	@Test
 	public void testCreateDashboardDifUserSameNameSameTenant() throws DashboardException
 	{
+		DashboardManager dm0 = DashboardManager.getInstance();
+
+		dm0.deleteDashboard(null, false, null);
 		// EMCPDF-85	Diff user is able to create dashboard with the same name for the same tenant
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -738,7 +741,7 @@ public class DashboardManagerTest
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
 				AssertJUnit
-						.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+				.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 			if (dbd.getName().equals(dbd13.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
