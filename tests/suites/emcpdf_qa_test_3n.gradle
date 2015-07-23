@@ -94,6 +94,7 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
+	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
 	useRestAssured=true
 }
 task small_deploy_3n_cleanup(type: EMTest) {
