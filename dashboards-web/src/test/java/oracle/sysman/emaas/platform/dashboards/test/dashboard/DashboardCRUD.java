@@ -1837,6 +1837,24 @@ public class DashboardCRUD
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
 					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 			System.out.println("											");
+			
+			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "", "X-REMOTE-USER",tenantid+"."+remoteuser,"Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res6.getStatusCode());
+			Assert.assertTrue(res6.getStatusCode() == 403);
+			Assert.assertEquals(res6.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res6.jsonPath().get("errorMessage"),
+					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
+			System.out.println("											");
+			
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid+"abc","X-REMOTE-USER", "X-REMOTE-USER",tenantid+"."+remoteuser, "Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res7.getStatusCode());
+			Assert.assertTrue(res7.getStatusCode() == 403);
+			Assert.assertEquals(res7.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res7.jsonPath().get("errorMessage"),
+					"Tenant Name is not recognized: "+tenantid+"abc");
+			System.out.println("											");
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -2080,6 +2098,24 @@ public class DashboardCRUD
 			Assert.assertTrue(res5.getStatusCode() == 403);
 			Assert.assertEquals(res5.jsonPath().get("errorCode"), 30000);
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
+					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
+			System.out.println("											");
+			
+			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER"," ","Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res6.getStatusCode());
+			Assert.assertTrue(res6.getStatusCode() == 403);
+			Assert.assertEquals(res6.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res6.jsonPath().get("errorMessage"),
+					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
+			System.out.println("											");
+			
+			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"X-REMOTE-USER", remoteuser, "Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res7.getStatusCode());
+			Assert.assertTrue(res7.getStatusCode() == 403);
+			Assert.assertEquals(res7.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res7.jsonPath().get("errorMessage"),
 					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
 			System.out.println("											");
 

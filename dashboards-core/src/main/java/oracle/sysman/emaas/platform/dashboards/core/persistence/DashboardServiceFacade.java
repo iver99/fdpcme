@@ -1,12 +1,10 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 //import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
@@ -127,12 +125,12 @@ public class DashboardServiceFacade
 		return entity;
 	}
 
-	public <T> T mergeEntity(T entity)
-	{
-		entity = em.merge(entity);
-		commitTransaction();
-		return entity;
-	}
+	//	public <T> T mergeEntity(T entity)
+	//	{
+	//		entity = em.merge(entity);
+	//		commitTransaction();
+	//		return entity;
+	//	}
 
 	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
 	{
@@ -162,31 +160,31 @@ public class DashboardServiceFacade
 		return emsPreference;
 	}
 
-	public <T> T persistEntity(T entity)
-	{
-		em.persist(entity);
-		commitTransaction();
-		return entity;
-	}
+	//	public <T> T persistEntity(T entity)
+	//	{
+	//		em.persist(entity);
+	//		commitTransaction();
+	//		return entity;
+	//	}
 
-	@SuppressWarnings("rawtypes")
-	public List queryByRange(String jpqlStmt, Class resultClass, Map<String, Object> params, int firstResult, int maxResults)
-	{
-		@SuppressWarnings("unchecked")
-		Query query = resultClass == null ? em.createQuery(jpqlStmt) : em.createQuery(jpqlStmt, resultClass);
-		if (params != null && params.size() > 0) {
-			for (Map.Entry<String, Object> p : params.entrySet()) {
-				query.setParameter(p.getKey(), p.getValue());
-			}
-		}
-		if (firstResult > 0) {
-			query = query.setFirstResult(firstResult);
-		}
-		if (maxResults > 0) {
-			query = query.setMaxResults(maxResults);
-		}
-		return query.getResultList();
-	}
+	//	@SuppressWarnings("rawtypes")
+	//	public List queryByRange(String jpqlStmt, Class resultClass, Map<String, Object> params, int firstResult, int maxResults)
+	//	{
+	//		@SuppressWarnings("unchecked")
+	//		Query query = resultClass == null ? em.createQuery(jpqlStmt) : em.createQuery(jpqlStmt, resultClass);
+	//		if (params != null && params.size() > 0) {
+	//			for (Map.Entry<String, Object> p : params.entrySet()) {
+	//				query.setParameter(p.getKey(), p.getValue());
+	//			}
+	//		}
+	//		if (firstResult > 0) {
+	//			query = query.setFirstResult(firstResult);
+	//		}
+	//		if (maxResults > 0) {
+	//			query = query.setMaxResults(maxResults);
+	//		}
+	//		return query.getResultList();
+	//	}
 
 	public void removeAllEmsPreferences(String username)
 	{
