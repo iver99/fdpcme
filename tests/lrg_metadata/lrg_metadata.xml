@@ -2,7 +2,6 @@
 <lrg-metadata>
      <lrg name="emcpdf_qa_test_3n" launcher="tests/suites/emcpdf_qa_test_3n.gradle" description="lrg for QATest">
          <pipelines>
-             <pipeline name="PRODUCT"/>
             <pipeline name="COMPONENT"/>
          </pipelines>
      </lrg>
@@ -10,13 +9,11 @@
 
      <lrg name="emcpdf_dev_test_3n" launcher="tests/suites/emcpdf_dev_test_3n.gradle" description="lrg for DEVTest">
              <pipelines>
-             <pipeline name="PRODUCT"/>
             <pipeline name="COMPONENT"/>
              </pipelines>
      </lrg>
      <lrg name="emcpdf_dashboard_uitest_3n" launcher="tests/suites/emcpdf_dashboard_uitest_3n.gradle" description="lrg for ui automation,running in farm">
              <pipelines>
-                         <pipeline name="PRODUCT"/>
             <pipeline name="COMPONENT"/>
              </pipelines>
      </lrg>
