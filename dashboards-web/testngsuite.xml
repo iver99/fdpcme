@@ -5,5 +5,8 @@
 		<packages>
 			<package name="oracle.sysman.emaas.platform.dashboards.test.*" />
 		</packages>
+		<classes>
+		    <class name="oracle.sysman.emaas.platform.dashboards.ws.ErrorEntityTest" />
+		</classes>
 	</test>
 </suite> 
