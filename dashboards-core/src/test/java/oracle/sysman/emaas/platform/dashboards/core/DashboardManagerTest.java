@@ -741,7 +741,7 @@ public class DashboardManagerTest
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
 				AssertJUnit
-				.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+						.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 			if (dbd.getName().equals(dbd13.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
@@ -770,7 +770,10 @@ public class DashboardManagerTest
 		Assert.assertEquals(allSize, pd.getTotalResults());
 
 		// query by page size/offset
-		pd = dm.listDashboards("key", 2, 2, tenant1, true);
+		DashboardsFilter filter = new DashboardsFilter();
+		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
+		filter.setIncludedOwnersFromString("Oracle,Others");
+		pd = dm.listDashboards("key", 2, 2, tenant1, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
 		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd7.getDashboardId());
 		Assert.assertEquals(2, pd.getDashboards().size());
 		Assert.assertEquals(2, pd.getLimit().intValue());
