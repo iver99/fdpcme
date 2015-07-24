@@ -1848,7 +1848,7 @@ public class DashboardCRUD
 			System.out.println("											");
 			
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid+"abc","X-REMOTE-USER", "X-REMOTE-USER",tenantid+"."+remoteuser, "Authorization", authToken).when().get("/dashboards");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid+"abc","X-REMOTE-USER",tenantid+"."+remoteuser, "Authorization", authToken).when().get("/dashboards");
 			System.out.println("Status code is: " + res7.getStatusCode());
 			Assert.assertTrue(res7.getStatusCode() == 403);
 			Assert.assertEquals(res7.jsonPath().get("errorCode"), 30000);
@@ -2116,6 +2116,24 @@ public class DashboardCRUD
 			Assert.assertTrue(res7.getStatusCode() == 403);
 			Assert.assertEquals(res7.jsonPath().get("errorCode"), 30000);
 			Assert.assertEquals(res7.jsonPath().get("errorMessage"),
+					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
+			System.out.println("											");
+			
+			Response res8 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"X-REMOTE-USER", tenantid+".", "Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res8.getStatusCode());
+			Assert.assertTrue(res8.getStatusCode() == 403);
+			Assert.assertEquals(res8.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res8.jsonPath().get("errorMessage"),
+					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
+			System.out.println("											");
+			
+			Response res9 = RestAssured.given().contentType(ContentType.JSON).log().everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"X-REMOTE-USER", "."+remoteuser, "Authorization", authToken).when().get("/dashboards");
+			System.out.println("Status code is: " + res9.getStatusCode());
+			Assert.assertTrue(res9.getStatusCode() == 403);
+			Assert.assertEquals(res9.jsonPath().get("errorCode"), 30000);
+			Assert.assertEquals(res9.jsonPath().get("errorMessage"),
 					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
 			System.out.println("											");
 

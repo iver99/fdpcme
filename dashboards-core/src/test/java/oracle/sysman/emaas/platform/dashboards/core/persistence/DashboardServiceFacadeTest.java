@@ -245,7 +245,7 @@ public class DashboardServiceFacadeTest
 	public void setUp() throws Exception
 	{
 		PersistenceManager.setTestEnv(true);
-		UserContext.setCurrentUser("test");
+		UserContext.setCurrentUser("SYSMAN");
 		// tenant id updated to number type
 		EntityManager em = null;
 		try {
@@ -294,7 +294,7 @@ public class DashboardServiceFacadeTest
 				dashboardServiceFacade.removeEmsDashboard(d);
 			}
 			dashboardServiceFacade.commitTransaction();
-			UserContext.clearCurrentUser();
+			//UserContext.clearCurrentUser();
 		}
 		finally {
 			if (em != null) {
