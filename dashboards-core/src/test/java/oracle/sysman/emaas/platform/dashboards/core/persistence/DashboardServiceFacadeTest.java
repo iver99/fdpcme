@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
@@ -244,7 +245,7 @@ public class DashboardServiceFacadeTest
 	public void setUp() throws Exception
 	{
 		PersistenceManager.setTestEnv(true);
-		//UserContext.setCurrentUser("test");
+		UserContext.setCurrentUser("SYSMAN");
 		// tenant id updated to number type
 		EntityManager em = null;
 		try {
