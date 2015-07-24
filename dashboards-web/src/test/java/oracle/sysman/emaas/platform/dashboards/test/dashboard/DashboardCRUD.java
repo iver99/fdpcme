@@ -1848,7 +1848,7 @@ public class DashboardCRUD
 			System.out.println("											");
 			
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid+"abc","X-REMOTE-USER", "X-REMOTE-USER",tenantid+"."+remoteuser, "Authorization", authToken).when().get("/dashboards");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid+"abc","X-REMOTE-USER",tenantid+"."+remoteuser, "Authorization", authToken).when().get("/dashboards");
 			System.out.println("Status code is: " + res7.getStatusCode());
 			Assert.assertTrue(res7.getStatusCode() == 403);
 			Assert.assertEquals(res7.jsonPath().get("errorCode"), 30000);

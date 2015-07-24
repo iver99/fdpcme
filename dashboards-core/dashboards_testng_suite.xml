@@ -6,6 +6,11 @@
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.DashboardManagerTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.PreferenceManagerTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacadeTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManagerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtilsTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.SchemaUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.TenantContextTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtilTest" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
