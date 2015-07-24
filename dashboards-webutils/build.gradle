@@ -10,6 +10,14 @@ jar {
                 include '**/*.xml'
         }
 }
+
+task runDEVTestSuite_webutil(type: Test){
+        useTestNG(){
+       useDefaultListeners = true
+       outputDirectory = file("$buildDir/testngoutput")
+        suites file('dashboards_webutils_testng_suite.xml')
+        }
+}
  
 dependencies { 
         compile project(':dashboards-core'){ transitive = false }

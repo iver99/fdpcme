@@ -3,13 +3,17 @@ apply plugin: 'eclipse'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 
-
-
-
-
 jar {
         from('src/main/java') {
                 include '**/*.xml'
+        }
+}
+
+task runDEVTestSuite_webuiutil(type: Test){
+        useTestNG(){
+       useDefaultListeners = true
+       outputDirectory = file("$buildDir/testngoutput")
+        suites file('dashboardsui_webutils_testng_suite.xml')
         }
 }
  
