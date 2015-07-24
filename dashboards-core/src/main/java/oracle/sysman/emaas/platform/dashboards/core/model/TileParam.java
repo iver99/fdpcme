@@ -227,7 +227,7 @@ public class TileParam
 		}
 		else if (PARAM_TYPE_BOOLEAN.equals(type)) {
 			int booleanValue = 0; // 0 for false, 1 for true
-			if (value != null && !value.equals("")) {
+			if (value == null || value.equals("")) {
 				numValue = new BigDecimal(0);
 				return;
 			}

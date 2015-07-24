@@ -5,6 +5,8 @@
 		<classes>
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.DashboardManagerTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.PreferenceManagerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationTypeTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.model.TileParamTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacadeTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManagerTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtilsTest" />

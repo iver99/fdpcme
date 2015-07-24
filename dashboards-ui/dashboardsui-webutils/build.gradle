@@ -24,4 +24,5 @@ dependencies {
         compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
+		testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 } 
