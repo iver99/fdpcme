@@ -3,6 +3,17 @@ apply plugin: 'eclipse'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 
+sourceSets {
+ main {
+     java {
+         srcDir 'src/main/java'
+		}
+     resources {
+          srcDir 'src/main/java'
+    		}
+  	}
+}
+
 jar {
         from('src/main/java') {
                 include '**/*.xml'
