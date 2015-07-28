@@ -50,9 +50,9 @@ public class DashBoardUtils {
 		driver.click(DashBoardPageId.CreateDSButtonID);
 	}
 	
-	public static void inputDashBoardInfo() throws Exception
+	public static void inputDashBoardInfo(String dbName) throws Exception
 	{
-		String dbName="AAA_testDashboard";
+		
 		String dbDesc="AAA_testDashBoard desc";
 		
 		driver.sendKeys(DashBoardPageId.DashBoardNameBoxID, dbName);
@@ -109,7 +109,7 @@ public class DashBoardUtils {
 		String widgetName;
 		
 		driver.getLogger().info("start to test in addWidget");
-		waitForMilliSeconds(500);
+		waitForMilliSeconds(2000);
 		driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 		
 		driver.getLogger().info("add widget button is found");
@@ -157,6 +157,161 @@ public class DashBoardUtils {
 		driver.takeScreenShot();
  		 		
 	}
+	
+	public static  void addWidget(int i,String parentHandle,String widgetName) throws Exception
+	{
+		WidgetAddPage widgetAddPage,widgetAddPage2;
+				
+		driver.getLogger().info("start to test in addWidget");
+		waitForMilliSeconds(2000);
+		driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
+		
+		driver.getLogger().info("add widget button is found");
+		driver.takeScreenShot();
+		waitForMilliSeconds(5000);
+		//verify title and desc of dashboard
+		/*if( getText(DashBoardPageId.DashboardNameID) == null)
+		{
+			Assert.assertEquals(getText(DashBoardPageId.MDashboardNameID),"AAA_testDashboard");
+			Assert.assertEquals(getText(DashBoardPageId.MDashboardDescID),"AAA_testDashBoard desc");
+		}
+		else{
+			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
+			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+		}*/
+		//modify name and desc
+		modifyDashboardInfo();
+				
+		driver.takeScreenShot();
+		driver.click(DashBoardPageId.WidgetAddButtonID);
+		
+				
+		driver.takeScreenShot();
+		
+		widgetAddPage = new WidgetAddPage(driver);
+
+		//search widget
+		widgetAddPage.searchWidget(widgetName);
+		waitForMilliSeconds(2000);			
+		
+			
+		driver.takeScreenShot();		
+		//select widget
+		widgetAddPage.clickWidgetOnTable(widgetName);
+		waitForMilliSeconds(2000);
+		driver.takeScreenShot();	
+		clickAddButton();
+		waitForMilliSeconds(2000);
+		
+		widgetAddPage2 = new WidgetAddPage(driver);
+		//search widget
+		widgetAddPage2.searchWidget("Top 10 Listeners by Load");//Database Top Errors");//");
+		waitForMilliSeconds(2000);			
+		
+			
+		driver.takeScreenShot();		
+		//select widget
+		widgetAddPage2.clickWidgetOnTable("Top 10 Listeners by Load");//Database Top Errors");//Top 10 Listeners by Load");
+		waitForMilliSeconds(2000);
+		driver.takeScreenShot();	
+		clickAddButton();
+		waitForMilliSeconds(2000);
+		
+		clickCloseButton();
+		waitForMilliSeconds(2000);		
+				
+		driver.takeScreenShot();
+		//save dashboard
+		clickSaveButton();
+			
+		driver.takeScreenShot();
+		waitForMilliSeconds(2000);
+		//add autorefresh
+		clickRefreshItem();
+		waitForMilliSeconds(2000);
+		//add time selector
+		clickTimePicker();
+		
+		TileManager tg = new TileManager(driver);
+		
+	    tg.tileOpen();
+		tg.tileDelete();
+		//save dashboard
+		clickSaveButton();
+		tg.tileOpen();
+		tg.tileMaximize();
+		tg.tileOpen();
+		tg.tileRestore();
+		tg.tileOpen();
+		tg.tileWider();
+		tg.tileOpen();
+		tg.tileNarrower();
+		tg.tileOpen();
+		tg.tileRefresh();
+		
+	}
+	
+	public static void modifyDashboardInfo() throws Exception
+	{
+		
+		WebElement mainelement = driver.getElement(DashBoardPageId.DashboardNameID);
+		WebElement editNamebutton = driver.getElement(DashBoardPageId.NameEditID);
+        Actions builder = new Actions(driver.getWebDriver());
+        builder.moveToElement(mainelement).moveToElement(editNamebutton).click().perform();        
+        driver.getElement(DashBoardPageId.NameInputID).clear();
+		driver.sendKeys(DashBoardPageId.NameInputID, "DBA_Name_Modify");
+		driver.click(DashBoardPageId.NameEditOKID);
+		
+		mainelement = driver.getElement(DashBoardPageId.DashboardDescID);
+		WebElement editDescbutton = driver.getElement(DashBoardPageId.DescEditID);
+        builder = new Actions(driver.getWebDriver());
+        builder.moveToElement(mainelement).moveToElement(editDescbutton).click().perform();  
+        driver.getElement(DashBoardPageId.DescInputID).clear();
+		driver.sendKeys(DashBoardPageId.DescInputID, "DBA_DESC_MODIFY");
+		driver.click(DashBoardPageId.DescEditOKID);
+		
+	}
+	
+	public static void clickRefreshItem() throws Exception
+	{
+		WebElement Box = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshID));//*[@id='oj-listbox-drop']"));//));
+		Box.click();
+
+		waitForMilliSeconds(500);
+		
+		driver.takeScreenShot();
+		WebElement DivisionList1 = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshBy_15_Secs_ID));//*[contains(@id,'oj-listbox-result-label')]")); //and contains(text(),'Last Accessed')]"));
+		DivisionList1.click();
+		DashBoardUtils.waitForMilliSeconds(500);
+		Box = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshID));//*[@id='oj-listbox-drop']"));//));
+		Box.click();
+		WebElement DivisionList2 = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshBy_30_Secs_ID));//*[contains(@id,'oj-listbox-result-label')]")); //and contains(text(),'Last Accessed')]"));
+		DivisionList2.click();
+		DashBoardUtils.waitForMilliSeconds(500);
+		Box = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshID));//*[@id='oj-listbox-drop']"));//));
+		Box.click();
+		WebElement DivisionList3 = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshBy_1_Min_ID));//*[contains(@id,'oj-listbox-result-label')]")); //and contains(text(),'Last Accessed')]"));
+		DivisionList3.click();
+		DashBoardUtils.waitForMilliSeconds(500);
+		Box = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshID));//*[@id='oj-listbox-drop']"));//));
+		Box.click();
+		WebElement DivisionList4 = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AutoRefreshBy_15_Mins_ID));//*[contains(@id,'oj-listbox-result-label')]")); //and contains(text(),'Last Accessed')]"));
+		DivisionList4.click();
+		
+		
+	}
+	public static void clickTimePicker() throws Exception
+	{
+		WebElement Box = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.TimePickerID));//*[@id='oj-listbox-drop']"));//));
+		Box.click();
+		
+		waitForMilliSeconds(2000);
+		driver.click(DashBoardPageId.DateID1);
+		driver.click(DashBoardPageId.DateID2);
+		waitForMilliSeconds(2000);
+		driver.click(DashBoardPageId.ApplyBtnID);
+	}
+
 	
 	public static void navigateWidget(String parentHandle) throws Exception
 	{
@@ -257,12 +412,12 @@ public class DashBoardUtils {
 		        WebElement el=driver.getWebDriver().findElement(By.xpath(xpath));
 			
 		       if(el.isDisplayed()){
-		    	   driver.getLogger().info("can get element");
+		    	   driver.getLogger().info("xpath:can get element");
 		    	   return true;              
 		       }		                                    
 		       else{
 		 
-		    	   driver.getLogger().info("can not get element");
+		    	   driver.getLogger().info("xpath:can not get element");
 		    	   return false;              
 		       }         
 
