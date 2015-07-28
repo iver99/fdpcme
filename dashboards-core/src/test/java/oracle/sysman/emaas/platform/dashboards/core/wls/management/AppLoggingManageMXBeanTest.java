@@ -8,12 +8,12 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.webutils.wls.management;
+package oracle.sysman.emaas.platform.dashboards.core.wls.management;
 
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import oracle.sysman.emaas.platform.dashboards.webutils.services.LoggingServiceManager;
+import oracle.sysman.emaas.platform.dashboards.core.wls.management.AppLoggingManageMXBean;
 
 import org.apache.logging.log4j.core.config.Configurator;
 import org.testng.Assert;
@@ -28,8 +28,8 @@ public class AppLoggingManageMXBeanTest
 	@BeforeMethod
 	public void beforeMethod() throws URISyntaxException
 	{
-		URL url = LoggingServiceManager.class.getResource("/log4j2_dsb.xml");
-		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
+		URL url = AppLoggingManageMXBeanTest.class.getResource("/log4j2_dsb.xml");
+		Configurator.initialize("root", AppLoggingManageMXBeanTest.class.getClassLoader(), url.toURI());
 	}
 
 	@Test

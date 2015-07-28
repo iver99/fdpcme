@@ -13,6 +13,7 @@
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.SchemaUtilTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.TenantContextTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.core.wls.management.AppLoggingManageMXBeanTest" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

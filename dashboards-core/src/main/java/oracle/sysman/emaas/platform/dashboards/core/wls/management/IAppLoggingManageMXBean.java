@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.webutils.wls.management;
+package oracle.sysman.emaas.platform.dashboards.core.wls.management;
 
 /**
  * @author guobaochen

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-0.23.6.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar"/>
@@ -18,6 +17,5 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-core-1.17.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/testng-6.8.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

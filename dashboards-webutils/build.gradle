@@ -5,18 +5,6 @@ apply plugin: 'maven-publish'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 
-sourceSets {
- main {
-     java {
-         srcDir 'src/main/java'
-		}
-     resources {
-          srcDir 'src/main/java'
-    		}
-  	}
- 
- }
-
 jar {
         from('src/main/java') {
                 include '**/*.xml'
@@ -43,5 +31,4 @@ dependencies {
         compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){ transitive = false }
         compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){ transitive = false }
         compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
-		testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 } 
