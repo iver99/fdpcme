@@ -63,44 +63,21 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             self.LOOKUP_REST_URL_BASE="/sso.static/dashboards.registry/lookup/";
             self.SUBSCIBED_APPS_REST_URL="/sso.static/dashboards.subscribedapps";
             self.SSF_REST_API_BASE="/sso.static/savedsearch.navigation";
-            var devMode=self.getUrlParam("devMode");
-            if (devMode===""){
-                devMode=false;
-            }else{
+            var devMode = (window.DEV_MODE!==null && typeof window.DEV_MODE ==="object");
+            var devData = window.DEV_MODE;
+            if (window.DEV_MODE!==null && typeof window.DEV_MODE ==="object"){
+                devMode=true;
+                devData.userTenant={"tenant": devData.tenant, "user": devData.user, "tenantUser": devData.tenant+"."+devData.user};
+                self.LOOKUP_REST_URL_BASE=self.buildFullUrl(devData.dfRestApiEndPoint,"registry/lookup/");
+                self.SUBSCIBED_APPS_REST_URL=self.buildFullUrl(devData.dfRestApiEndPoint,"subscribedapps");
+                self.SSF_REST_API_BASE=devData.ssfRestApiEndPoint;                
                 console.log("====>DEV MODE:"+devMode);
             }
+
             
             self.isDevMode = function(){
                 return devMode;
             }        
-            
-            var devData = undefined;
-            if (self.isDevMode()){
-                var url = self.getUrlParam("devDataUrl");
-                if (url===''){
-                    url = '/emsaasui/emcpdfui/data/servicemanager.json';
-                }
-                $.ajax({url: url,
-                    dataType: 'json',
-                    async:false,
-                    success: function (data, textStatus,jqXHR) {
-                        devData=data;
-                        if (devData){
-                            devData.userTenant={"tenant": devData.tenant, "user": devData.user, "tenantUser": devData.tenant+"."+devData.user};
-                            devData.devDataUrl = url;
-                            self.LOOKUP_REST_URL_BASE=self.buildFullUrl(devData.dfRestApiEndPoint,"registry/lookup/");
-                            self.SUBSCIBED_APPS_REST_URL=self.buildFullUrl(devData.dfRestApiEndPoint,"subscribedapps");
-                            self.SSF_REST_API_BASE=devData.ssfRestApiEndPoint;
-                        }else{
-                            console.error("====>defined DEV DATA"+devData);
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log(textStatus);
-                        oj.Logger.log(textStatus);
-                    }
-                });                
-            }
             
             self.getDevData=function(){
                 return devData;
@@ -364,9 +341,6 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              */
             self.discoverDFHomeUrl = function() {
             	var homeUrl = "/emsaasui/emcpdfui/home.html";
-                if (self.isDevMode()){
-                    homeUrl +="?devMode=true"; 
-                }
                 return homeUrl;
             };    
             
