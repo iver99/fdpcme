@@ -298,7 +298,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
 			logger.info("Checking RegistryService");
-			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", null) == null) {
+			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
 				setRegistrationComplete(Boolean.FALSE);
 				logger.error("Failed to found registryService. Dashboard-API registration is not complete.");
 				return false;
@@ -323,7 +323,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			logger.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());

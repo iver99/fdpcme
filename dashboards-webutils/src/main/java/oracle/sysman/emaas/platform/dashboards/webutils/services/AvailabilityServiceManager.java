@@ -38,7 +38,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private static final long PERIOD = Timer.ONE_MINUTE;
 
 	private static final String ENTITY_NAMING_SERVICE_NAME = "EntityNaming";
-	private static final String ENTITY_NAMING_SERVICE_VERSION = "0.1";
+	private static final String ENTITY_NAMING_SERVICE_VERSION = "1.0+";
 	private static final String ENTITY_NAMING_SERVICE_REL = "collection/domains";
 
 	private Timer timer;

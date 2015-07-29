@@ -289,7 +289,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {String}
              */
             self.discoverLogoutUrl = function() {
-                return self.discoverUrl('SecurityService', '0.1', 'sso.logout');
+                return self.discoverUrl('SecurityService', '1.0+', 'sso.logout');
             };
             
             /**
@@ -298,7 +298,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns 
              */
             self.discoverLogoutUrlAsync = function(callbackFunc) {
-                return self.discoverUrlAsync('SecurityService', '0.1', 'sso.logout', callbackFunc);
+                return self.discoverUrlAsync('SecurityService', '1.0+', 'sso.logout', callbackFunc);
             };
 
             /**
@@ -511,7 +511,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-//                return self.discoverUrl('SavedSearch', '0.1');
+//                return self.discoverUrl('SavedSearch', '1.0+');
                 return '/sso.static/savedsearch.navigation';
             };
             

@@ -103,7 +103,7 @@ public class TenantSubscriptionsAPI extends APIBase
 			initializeUserContext(userTenant);
 			String tenantName = TenantContext.getCurrentTenant();
 			// normal behavior here
-			Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("TenantService", "0.1", "collection/tenants", null);
+			Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("TenantService", "1.0+", "collection/tenants", null);
 			if (tenantsLink == null || tenantsLink.getHref() == null || "".equals(tenantsLink.getHref())) {
 				throw new TenantWithoutSubscriptionException();
 			}

@@ -487,7 +487,7 @@ define(['require',
                                 //Since there is no ITA widget in v1.0, we need to hide "IT Analytics" always from widget group dropdown list in "Add Widgets" dialog. 
                                 //We don't remove any ITA related data in SSF and only hide "IT Analytics" in "Add Widgets" dialog. 
                                 //We will enable it again post 1.0 once ITA widgets are ready.
-                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
+                                if (!(pname === 'EmcitasApplications' && pversion && pversion.indexOf('1.0') === 0 && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
 

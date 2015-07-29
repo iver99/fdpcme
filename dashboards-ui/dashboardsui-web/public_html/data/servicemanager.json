@@ -1,5 +1,5 @@
 {
-    "ssfVersion":"0.1",
+    "ssfVersion":"1.0",
     "ssfServiceName":"SavedSearch",
     "registryUrls":"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",
     "serviceUrls":"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",

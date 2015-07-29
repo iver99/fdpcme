@@ -23,7 +23,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
 import oracle.sysman.emaas.platform.dashboards.ui.web.rest.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.EndpointEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
@@ -42,16 +41,16 @@ public class RegistrationEntity
 
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
 	public static final String NAME_SSF_SERVICENAME = "SavedSearch";
-	public static final String NAME_SSF_VERSION = "0.1";
+	public static final String NAME_SSF_VERSION = "1.0+";
 	public static final String NAME_DASHBOARD_API_SERVICENAME = "Dashboard-API";
-	public static final String NAME_DASHBOARD_API_VERSION = "0.1";
+	public static final String NAME_DASHBOARD_API_VERSION = "1.0+";
 	public static final String NAME_QUICK_LINK = "quickLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
 	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
-	public static final String NAME_DASHBOARD_UI_VERSION = "0.1";
+	public static final String NAME_DASHBOARD_UI_VERSION = "1.0+";
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
-	public static final String NAME_REGISTRY_VERSION = "0.1";
+	public static final String NAME_REGISTRY_VERSION = "1.0+";
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;

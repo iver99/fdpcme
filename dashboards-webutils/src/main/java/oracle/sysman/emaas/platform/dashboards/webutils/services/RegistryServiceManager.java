@@ -296,7 +296,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
 			logger.info("Checking RegistryService");
-			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", null) == null) {
+			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
 				setRegistrationComplete(Boolean.FALSE);
 				logger.error("Failed to found registryService. Dashboard-API registration is not complete.");
 				return false;
@@ -321,7 +321,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			logger.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
@@ -341,11 +341,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("static/dashboards.preferences").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences")
+						.withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.preferences")
-						.withHref(applicationUrlHttps + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences").withHref(
+						applicationUrlHttps + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
