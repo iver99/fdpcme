@@ -107,4 +107,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
     mustRunAfter ([small_deploy_3n_block,DEVUiTest])
 }
 
-task emcpdf_dev_uitest_3n (dependsOn: [DEVUiTest, small_deploy_3n_cleanup])
+task emcpdf_dev_ui_test_3n (dependsOn: [DEVUiTest, small_deploy_3n_cleanup])
