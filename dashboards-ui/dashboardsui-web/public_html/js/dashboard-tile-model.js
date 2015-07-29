@@ -145,6 +145,9 @@ define(['knockout',
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var visualAnalyzerUrl = dfu.discoverQuickLink(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),"visualAnalyzer");
                 if (visualAnalyzerUrl){
+                    if (dfu.isDevMode()){
+                        visualAnalyzerUrl = dfu.getRelUrlFromFullUrl(visualAnalyzerUrl);  
+                    }
                     tile.configure = function(){
                         window.open(visualAnalyzerUrl+"?widgetId="+tile.WIDGET_UNIQUE_ID());
                     }
@@ -285,11 +288,11 @@ define(['knockout',
         }
         
         function getBaseUrl() {
+            if (dfu.isDevMode()){
+                return dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
+            }else{
         	return "/sso.static/dashboards.service";
-//            return dfu.discoverDFRestApiUrl();
-//            return "http://slc04pxi.us.oracle.com:7001";//TODO
-//            return "http://localhost:7001/emcpdf/api/v1/";
-//            return "http://slc00bqs.us.oracle.com:7021";
+            }
         }
         
         function initializeFromCookie() {
@@ -298,33 +301,21 @@ define(['knockout',
                 dtm.tenantName = userTenant.tenant;
                 dtm.userTenant  =  userTenant.tenantUser;      
             }
-            /*
-            var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
-            var userTenantPrefix = "X-REMOTE-USER=";
-            var cookieArray = document.cookie.split(';');
-            for (var i = 0; i < cookieArray.length; i++) {
-                var c = cookieArray[i];
-                if (c.indexOf(tenantNamePrefix) !== -1) {
-                    dtm.tenantName = c.substring(c.indexOf(tenantNamePrefix) + tenantNamePrefix.length, c.length);
-                } else if (c.indexOf(userTenantPrefix) !== -1) {
-                    dtm.userTenant = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
-                }
-            }
-            */
         }
         
         function getDefaultHeaders() {
             var headers = {
                 'Content-type': 'application/json',
-                'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1'
-//                ,'Authorization': dfu.getAuthToken()
+                'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : ''
             };
-//            dtm.userTenant='TenantOPC1.SYSMAN';
             if (dtm.userTenant){
                 headers['X-REMOTE-USER'] = dtm.userTenant;
             }else{
                 console.log("Warning: user name is not found: "+dtm.userTenant);
                 oj.Logger.warn("Warning: user name is not found: "+dtm.userTenant);
+            }
+            if (dfu.isDevMode()){
+                headers.Authorization="Basic "+btoa(dfu.getDevData().wlsAuth);
             }
             return headers;
         }
