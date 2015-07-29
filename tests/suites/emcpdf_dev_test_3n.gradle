@@ -64,7 +64,6 @@ task copyDependencies(type: Copy) {
     from configurations.lrgConfig
     into System.env.T_WORK
 }
-
  
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
@@ -92,6 +91,7 @@ task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
 	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
 	useRestAssured=true
+	ext.set("testType", "unit")
 }
 
 task small_deploy_3n_cleanup(type: EMTest) {
@@ -110,8 +110,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
  mustRunAfter ([small_deploy_3n_block,DEVTest])
 }
 
-
-
-
 task emcpdf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
-
