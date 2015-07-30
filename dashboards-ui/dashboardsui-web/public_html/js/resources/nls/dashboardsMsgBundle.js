@@ -204,7 +204,35 @@ define({
       "DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it. Reason: \"No service is subscribed\"",
       "DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID": "Error: failed to retrieve user or tenant for cookie 'ORA_EMSAAS_USERNAME_AND_TENANTNAME' is missing or invalid",
       "DBS_ERROR_URL": "Requested URL is: ",
-      "DBS_ERROR_BTN_SIGN_OUT": "Sign Out"
+      "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
+	  
+	  "LANDING_HOME_WELCOME_SLOGAN": "Welcome to Oracle Management Cloud",
+      "LANDING_HOME_APM": "Application Performance Monitoring",
+      "LANDING_HOME_APM_DESC": "Rapidly identify, response, and resolve your software roadblocks",
+      "LANDING_HOME_LA": "Log Analytics",
+      "LANDING_HOME_LA_DESC": "Next-generation log data management and analysis in cloud",
+      "LANDING_HOME_ITA": "IT Analytics",
+      "LANDING_HOME_ITA_DESC": "Operational big data intelligence for modern IT",
+      "LANDING_HOME_ITA_DB_PERFORMANCE": "Database Performance Analytics",
+      "LANDING_HOME_SELECT": "Select",
+      "LANDING_HOME_ITA_DB_RESOURCE": "Database Resource Analytics",
+      "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Middleware Performance Analytics",
+      "LANDING_HOME_ITA_SEARCH": "Search Data Explorer",
+      "LANDING_HOME_ITA_ANALYZE":"Analyze Data Explorer",
+      "LANDING_HOME_ITA_AWR": "AWR Data Explorer",
+      "LANDING_HOME_DASHBOARDS": "Dashboards",
+      "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
+      "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
+      "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
+      "LANDING_HOME_DATA_EXPLORERS_SEARCH": "Search",
+      "LANDING_HOME_DATA_EXPLORERS_ANALYZE": "Analyze",
+      "LANDING_HOME_DATA_EXPLORERS_AWR": "AWR",
+      "LANDING_HOME_DATA_EXPLORERS_LOG_ANALYTICS": "Log Analytics",
+      
+      "LANDING_HOME_LEARN_MORE": "Learn More",
+      "LANDING_HOME_GET_STARTED_LINK": "How to get started",
+      "LANDING_HOME_VIDEOS_LINK": "Videos",
+      "LANDING_HOME_COMMUNITY_LINK": "Management Cloud Community"
       
 
 }
