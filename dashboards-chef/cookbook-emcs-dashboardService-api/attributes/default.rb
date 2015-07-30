@@ -12,6 +12,7 @@ default["log_dir"] = "#{node["run_dir"]}/logs"
 default["infra_dir"] = "#{node["base_dir"]}/InfrastructureSoftware"
 default["platform_dir"] = "#{node["base_dir"]}/PlatformServices"
 default["apps_dir"] = "#{node["base_dir"]}/Applications"
+default["app_dir"] = "#{node["apps_dir"]}"
 
 # java directories
 default["jdk_dir"] = "#{node["infra_dir"]}/java"
@@ -50,6 +51,13 @@ default["SAAS_entityNamingDomain"]="DatabaseTenantMapping"
 default["SAAS_entityNamingKey"]="tenantid"
 
 default["SAAS_earSelfCheck"]="emaas"
-default["SAAS_earfile"]="emaas-applications-dashboards-ear-"
+default["SAAS_earfile"]="emaas-applications-dashboards-api-#{node["SAAS_version"]}.ear"
 default["SAAS_deploymentUuid"]="0"
 
+
+#To make SQL available to the LCMRepManager
+
+default["SAAS_Service_parent_dir"]="#{node["apps_dir"]}"
+default["SAAS_schema_archive_filename"]="#{node["sql_bundle"]}#{node["SAAS_version"]}.tgz"
+default["SAAS_schema_sql_root_dir"]="#{node["SAAS_Service_parent_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql/"
+default["SAAS_current_version"]="0.0.0"

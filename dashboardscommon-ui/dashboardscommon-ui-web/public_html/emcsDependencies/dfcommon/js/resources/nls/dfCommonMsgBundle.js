@@ -38,6 +38,11 @@ define({
       "BRANDING_BAR_APP_NAME_LOG_ANALYTICS": "Log Analytics",
       "BRANDING_BAR_APP_NAME_DASHBOARD": "Dashboards",
       "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI":"Set up Oracle Management Cloud",
+      "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_ERROR":"Error",
+      "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN":"Warning",
+      "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM":"Confirmation",
+      "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO":"Information",
+      "BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR":"Clear",
       "WIDGET_SELECTOR_DEFAULT_DIALOG_TITLE": "Open",
       "WIDGET_SELECTOR_WIDGET_GROUP_LABEL": "Widget Group",
       "WIDGET_SELECTOR_SEARCH_BOX_PLACEHOLDER": " Search widgets.",
@@ -59,10 +64,12 @@ define({
       "WIDGET_SELECTOR_WIDGET_GROUP_ALL": "All",
       "WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN": "Dashboards Built-In",
       "WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE": "Screen Shot",
-      "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description"
-},
-  "fr": true,
-  "cs": true,
-  "zh": true
+      "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY":"Not connected.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service. Retry count: {0}.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Attempts to connect to your cloud service failed after {0} tries.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Could not connect to your cloud service.",
+      "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now..."
+}
 });
 

@@ -180,6 +180,8 @@ a:hover {
 .emaas-appheader-logo .emaas-appheader-logo-img {
     vertical-align: middle;
     display:block;
+    width:158px;
+    height:19px;
 }
 
 .emaas-appheader-logo .emaas-appheader-logo-img:hover {
@@ -198,15 +200,6 @@ a:hover {
 
 .emaas-appheader-lite .emaas-appheader-appname-twoline {
     font-weight:normal;
-}
-
-.emaas-appheader-logo-oracle {
-    width: 158px;
-    height: 20px;
-}
-
-.emaas-appheader-logo-oracle:before{
-    content:url("../images/oracle_logo_lrg.png")
 }
 
 .emaas-appheader {
@@ -327,3 +320,69 @@ a:hover {
         height:24px;
     }
 }
+
+.emaas-appheader-message-box {
+        padding-left: 30px;
+        min-height: 36px;
+        vertical-align: middle;
+        line-height: 36px;
+        overflow: hidden;
+    }
+    .emaas-appheader-message-box-error {
+        background-color: #FFDFDF;
+        border-bottom: 1px #ffc5c5; 
+    }
+    .emaas-appheader-message-box-warn {
+        background-color: #FFEACA; 
+        border-bottom: 1px #ffe0b0; 
+    }
+    .emaas-appheader-message-box-confirm {
+        background-color: #D6F1DE;
+        border-bottom: 1px #c3ebcf;
+    }
+    .emaas-appheader-message-box-info {
+        background-color: #D9EDF8;
+        border-bottom: 1px #bfe4f8; 
+    }
+    .emaas-appheader-message {
+        font-size:14px;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: bold;
+        color: #333333;
+        text-align: left;
+        /*padding-left:10px;*/
+    }
+    .emaas-appheader-message-summary {
+        font-weight: bold;
+    }
+    .emaas-appheader-message-detail {
+        font-weight: normal;
+        padding-left:10px;
+    }
+    .emaas-appheader-message-icon{
+        vertical-align: middle;
+        height:16px;
+        width:16px;
+    }
+    .emaas-appheader-message-textbox {
+        padding-left:10px;
+        line-height: 20px;
+    }
+    .emaas-appheader-message-table-cell {
+        display: table-cell;
+    }
+    .emaas-appheader-message-icon-clear:hover {
+        cursor: pointer;
+    }
+/*    .emaas-appheader-message-icon-error:before{
+        content:url("../images/stat_error_16.png")
+    }
+    .emaas-appheader-message-icon-warn:before{
+        content:url("../images/stat_warn_16.png")
+    }
+    .emaas-appheader-message-icon-confirm:before{
+        content:url("../images/stat_confirm_16.png")
+    }
+    .emaas-appheader-message-icon-info:before{
+        content:url("../images/stat_info_16.png")
+    }*/

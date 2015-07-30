@@ -10,35 +10,35 @@
           "operation": "deploy"
          },
                  {
-                  "name": "cookbook-emcs-emsaas-weblogic::undeploy_app",
+                  "name": "cookbook-emcs-emsaas-weblogic::managedServer_undeployApp",
                   "operation": "undeploy",
                   "configurations":
                    [
                             {
                               "name": "applicationName",
-                               "defaultValue": "emaas-applications-dashboards-ui"
+                               "defaultValue": "DashboardService-UI"
                              }
                    ]
                    },
 		   {
-                    "name": "cookbook-emcs-emsaas-weblogic::start_app",
+                    "name": "cookbook-emcs-emsaas-weblogic::managedServer_startApp",
                     "operation": "start",
                     "configurations":
                     [
                           {
                                 "name": "applicationName",
-                                "defaultValue": "emaas-applications-dashboards-ui"
+                                "defaultValue": "DashboardService-UI"
                             }
                     ]
                   },
                   {
-                   "name": "cookbook-emcs-emsaas-weblogic::stop_app",
+                   "name": "cookbook-emcs-emsaas-weblogic::managedServer_stopApp",
                    "operation": "stop",
                     "configurations":
                     [
                            {
                                  "name": "applicationName",
-                                 "defaultValue": "emaas-applications-dashboards-ui"
+                                 "defaultValue": "DashboardService-UI"
                             }
                      ]
                   }

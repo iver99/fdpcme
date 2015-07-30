@@ -2,13 +2,13 @@
     <div class="headerMenuItem">
         <div class="headerMenuIcon">
             <div class="iconCircle" id="iconDashboard">
-                <i class="fa fa-icon-font fa-desktop"></i>
+                <i class="fa fa-icon-font fa-desktop" role="img" data-bind="attr: {'aria-label': dashboardsLabel}"></i>
             </div>
         </div>
         <div class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: dashboardsLabel"></div>
             <div class="oj-row" style="font-weight: bold">
-                <a data-bind="click: openDashboardHome, text: allDashboardsLinkLabel"></a>
+                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboardHome, text: allDashboardsLinkLabel"></a>
             </div>
 <!--            <div class="oj-row" style="font-weight: bold">
                 <a data-bind="click: openDashboardHome, text: 'Create Dashboard'"></a>
@@ -18,27 +18,27 @@
     <div class="headerMenuItem">
         <div class="headerMenuIcon">
             <div class="iconCircle" id="iconAnalyzer">
-                <i class="fa fa-icon-font fa-bar-chart"></i>
+                <i class="fa fa-icon-font fa-bar-chart" role="img" data-bind="attr: {'aria-label': visualAnalyzersLabel}"></i>
             </div>
         </div>
         <div class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: visualAnalyzersLabel"></div>
             <!-- ko foreach: visualAnalyzers -->
-            <div class="oj-row" style="font-weight: bold"><a data-bind="click: $parent.openLink, text: $parent.truncateString($data.name, 20)"></a></div>
+            <div class="oj-row" style="font-weight: bold"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 20)"></a></div>
             <!-- /ko -->
         </div>
     </div>
-    <!-- ko if: isAdmin -->
+    <!-- ko if: isAdminLinksVisible -->
     <div class="headerMenuItem">
         <div class="headerMenuIcon">
             <div class="iconCircle" id="iconCogs">
-                <i class="fa fa-icon-font fa-cogs"></i>
+                <i class="fa fa-icon-font fa-cogs" role="img" data-bind="attr: {'aria-label': administrationLabel}"></i>
             </div>
         </div>
         <div class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: administrationLabel"></div>
             <!-- ko foreach: adminLinks -->
-            <div class="oj-row" style="font-weight: bold"><a data-bind="click: $parent.openLink, text: $parent.truncateString($data.name, 20)"></a></div>
+            <div class="oj-row" style="font-weight: bold"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 20)"></a></div>
             <!-- /ko -->
         </div>
     </div>

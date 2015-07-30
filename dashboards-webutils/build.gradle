@@ -18,9 +18,9 @@ dependencies {
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
         compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6'){ transitive = false }
         compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6'){ transitive = false }
-        compile(group: 'emaas-platform-tenant-sdk', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
-        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.2.3'){ transitive = false }
-        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.2.3'){ transitive = false }
-        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.2.3'){ transitive = false }
-        compile(group: 'test', name: 'wlfullclient', version: '2.6'){ transitive = false }
+        compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
+        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.3.0'){ transitive = false }
+        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.3.0'){ transitive = false }
+        compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.3.0'){ transitive = false }
+        compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
 } 

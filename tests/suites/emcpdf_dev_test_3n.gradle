@@ -25,7 +25,7 @@
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/repo" }
+            url = "${artifactory_contextUrl}/emaas-virtual" }
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
@@ -35,7 +35,7 @@ repositories {
     /* To check if the jar is available in local maven repository */
     mavenLocal()
     maven {
-        url = "${artifactory_contextUrl}/repo"
+        url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
 apply plugin: 'TestInfraPlugin'
@@ -59,7 +59,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 repositories {
 	mavenLocal()
         maven {
-            url = "${artifactory_contextUrl}/repo" }
+            url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core-integ-tests', version: '1.0.1'){

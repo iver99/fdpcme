@@ -56,12 +56,21 @@ public class TenantSubscriptionUtil
 			Client client = Client.create(cc);
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
-			logger.debug("Retrieved authorization token from registration manager: " + auth);
+			if (StringUtil.isEmpty(auth)) {
+				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+			}
+			else {
+				logger.info(
+						"RestClient is connecting to url after getting authorization token from registration manager. Target url is: {}",
+						url);
+			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			return builder.get(String.class);
 		}
 	}
+
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
@@ -165,7 +174,5 @@ public class TenantSubscriptionUtil
 		}
 		return false;
 	}
-
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 
 }

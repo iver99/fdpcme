@@ -22,8 +22,8 @@ public class DashboardAPIUtil
 
 	public static final String DASHBOARD_API_VERSION = "0.1";
 
-	private static final String DASHBOARD_API_STATIC_REL = "static/dashboards.service";
-	private static final String PREFERENCE_API_STATIC_REL = "static/dashboards.preference";
+	private static final String DASHBOARD_API_STATIC_REL = "sso.static/dashboards.service";
+	private static final String PREFERENCE_API_STATIC_REL = "sso.static/dashboards.preferences";
 
 	public static String getExternalDashboardAPIBase(String tenantName)
 	{

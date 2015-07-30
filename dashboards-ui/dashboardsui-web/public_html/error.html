@@ -31,13 +31,33 @@
         <script data-main="js/error" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
     </head>
     <body>
-        <div id="global-body" class="dbd-error-area" style="display: none">
-            <div class="dbd-error-inner">
-                <img src="css/images/alert.png" data-bind="attr: {alt: errorPageMessage}">
-                <h4 class="dbd-error-msg" data-bind="text: errorPageMessage"></h4>
-                <div data-bind="visible: invalidUrl">
-                    <span data-bind="text: invalidUrlLabel"></span>
-                    <a class="dbd-error-url" data-bind="text: invalidUrl, attr: {href: invalidUrl}"></a>
+        <div id="global-body" style="display: none">
+            <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
+                Template is located in /templates/demoAppHeaderTemplate.html
+            -->
+            <header id="headerWrapper" >
+                <div data-bind="component: {
+                        name: 'df-oracle-branding-bar',
+                        params: brandingbarParams
+                    }">
+                </div>
+            </header>
+            
+            <div class="dbd-error-area" >
+                <div class="dbd-error-inner" id="errorMain">
+                    <img src="css/images/alert.png" data-bind="attr: {alt: errorPageMessage}">
+                    <h4 class="dbd-error-msg" data-bind="text: errorPageMessage"></h4>
+                    <div data-bind="visible: invalidUrl">
+                        <span data-bind="text: invalidUrlLabel"></span>
+                        <a class="dbd-error-url" data-bind="text: invalidUrl, attr: {href: invalidUrl}"></a>
+                    </div>
+                    <br><br><br>
+                    <div>
+                    	<button class="oj-button-primary" data-bind="click: signOut, 
+                    					ojComponent: {component: 'ojButton', label: oj.Translations.getTranslatedString('COMMON_BTN_OK')}, 
+                    					attr: {title: oj.Translations.getTranslatedString('DBS_ERROR_BTN_SIGN_OUT')}" 
+                    			style="text-align: center"></button>
+                    </div>
                 </div>
             </div>
         </div>

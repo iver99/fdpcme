@@ -9,6 +9,12 @@
  * http://jquery.org/license
  */
 requirejs.config({
+    //Set up module mapping
+    map: {
+        'prefutil': 
+            {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
+             'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -16,6 +22,7 @@ requirejs.config({
         'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
+        'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
         'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/debug',
         'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
         'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
@@ -23,7 +30,9 @@ requirejs.config({
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
-        'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min'
+        'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -68,6 +77,8 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'ojs/ojcore',
+    'loggingutil', 
+    'prefutil',
 //    'ojs/ojcomponents',
 //    'jqueryui',
 //    'ojs/ojmodel',
@@ -79,8 +90,15 @@ require(['knockout',
     'ojs/ojdialog'
 //    'ojs/ojmenu'
 ],
-        function(ko, $) // this callback gets executed when all required modules are loaded
-        {            
+        function(ko, $, oj, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        {          
+            var logger = new _emJETCustomLogger();
+            var logReceiver = "/sso.static/dashboards.logging/logs";
+            logger.initialize(logReceiver, 60000, 20000, 8, 'emaastesttenant1.emcsadmin');
+            // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+            // If you comment the line below, our current log calls will not be output!
+            logger.setLogLevel(oj.Logger.LEVEL_LOG);
+                
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
                     viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
@@ -96,9 +114,9 @@ require(['knockout',
 
             function HeaderViewModel() {
                 var self = this;
-                self.userName = 'SYSMAN';
-                self.tenantName = 'TenantOPC1';
-                self.appId = "Dashboard";
+                self.userName = 'emcsadmin';
+                self.tenantName = 'emaastesttenant1';
+                self.appId = "Dashboard"; //"Error";//"TenantManagement";//"LogAnalytics";//"ITAnalytics"; //"APM" //"Dashboard";
                 self.brandingbarParams = {
                     userName: self.userName,
                     tenantName: self.tenantName,

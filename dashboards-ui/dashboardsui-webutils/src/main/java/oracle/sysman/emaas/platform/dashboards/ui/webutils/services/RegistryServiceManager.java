@@ -27,6 +27,7 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceI
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -220,6 +221,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 	}
 
+	private Boolean registrationComplete = null;
+
 	private final Logger logger = LogManager.getLogger(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM
 			+ ".serviceregistry");
 
@@ -229,10 +232,15 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		return "Service Registry Service";
 	}
 
+	public Boolean isRegistrationComplete()
+	{
+		return registrationComplete;
+	}
+
 	/**
 	 * Update dashboards UI service status to out of service on service manager
 	 */
-	public void makeServiceOutOfService()
+	public void markOutOfService()
 	{
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.OUT_OF_SERVICE);
 	}
@@ -240,7 +248,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	/**
 	 * Update dashboards UI service status to up on service manager
 	 */
-	public void makeServiceUp()
+	public void markServiceUp()
 	{
 		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
 	}
@@ -249,68 +257,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		logger.info("Post-starting 'Service Registry' application service");
-		String applicationUrlHttp = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
-		logger.debug("Application URL(http) to register with 'Service Registry': " + applicationUrlHttp);
-		String applicationUrlHttps = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
-		logger.debug("Application URL(https) to register with 'Service Registry': " + applicationUrlHttps);
-
-		logger.info("Building 'Service Registry' configuration");
-		Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
-
-		ServiceConfigBuilder builder = new ServiceConfigBuilder();
-		builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
-		StringBuilder virtualEndPoints = new StringBuilder();
-		StringBuilder canonicalEndPoints = new StringBuilder();
-		if (applicationUrlHttp != null) {
-			virtualEndPoints.append(applicationUrlHttp + NAV_BASE);
-			canonicalEndPoints.append(applicationUrlHttp + NAV_BASE);
-		}
-		if (applicationUrlHttps != null) {
-			if (virtualEndPoints.length() > 0) {
-				virtualEndPoints.append(",");
-				canonicalEndPoints.append(",");
-			}
-			virtualEndPoints.append(applicationUrlHttps + NAV_BASE);
-			canonicalEndPoints.append(applicationUrlHttps + NAV_BASE);
-		}
-
-		builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
-		builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-		.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
-
-		logger.info("Initializing RegistrationManager");
-		RegistrationManager.getInstance().initComponent(builder.build());
-
-		List<Link> links = new ArrayList<Link>();
-		if (applicationUrlHttp != null) {
-			links.add(new Link().withRel("home").withHref(applicationUrlHttp + NAV_BASE_HOME));
-			links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
-			links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
-			links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
-		}
-		if (applicationUrlHttps != null) {
-			links.add(new Link().withRel("home").withHref(applicationUrlHttps + NAV_BASE_HOME));
-			links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
-			links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttps + NAV_STATIC_CONF));
-			links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
-		}
-
-		InfoManager.getInstance().getInfo().setLinks(links);
-
-		logger.info("Registering service with 'Service Registry'");
-		RegistrationManager.getInstance().getRegistrationClient().register();
-		RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
-		LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
-
-		//		logger.info("Post-starting service, attempting to create entityimanager factory");
-		//		PersistenceManager.getInstance().createEntityManagerFactory();
-		//		logger.info("Post-starting service, entityimanager factory created");
+		registerService();
 	}
 
 	@Override
 	public void postStop(ApplicationLifecycleEvent evt) throws Exception
 	{
-
 	}
 
 	@Override
@@ -328,5 +280,92 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		logger.info("Pre-stopping 'Service Registry' application service");
 		RegistrationManager.getInstance().getRegistrationClient().shutdown();
 		logger.debug("Pre-stopped 'Service Regsitry'");
+	}
+
+	public boolean registerService()
+	{
+		try {
+			logger.info("Registering service...");
+			String applicationUrlHttp = RegistryServiceManager.getApplicationUrl(UrlType.HTTP);
+			logger.debug("Application URL(http) to register with 'Service Registry': " + applicationUrlHttp);
+			String applicationUrlHttps = RegistryServiceManager.getApplicationUrl(UrlType.HTTPS);
+			logger.debug("Application URL(https) to register with 'Service Registry': " + applicationUrlHttps);
+
+			logger.info("Building 'Service Registry' configuration");
+			Properties serviceProps = PropertyReader.loadProperty(PropertyReader.SERVICE_PROPS);
+
+			logger.info("Initialize lookup manager");
+			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
+
+			logger.info("Checking RegistryService");
+			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", null) == null) {
+				setRegistrationComplete(Boolean.FALSE);
+				logger.error("Failed to found registryService. Dashboard-API registration is not complete.");
+				return false;
+			}
+
+			ServiceConfigBuilder builder = new ServiceConfigBuilder();
+			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"));
+			StringBuilder virtualEndPoints = new StringBuilder();
+			StringBuilder canonicalEndPoints = new StringBuilder();
+			if (applicationUrlHttp != null) {
+				virtualEndPoints.append(applicationUrlHttp + NAV_BASE);
+				canonicalEndPoints.append(applicationUrlHttp + NAV_BASE);
+			}
+			if (applicationUrlHttps != null) {
+				if (virtualEndPoints.length() > 0) {
+					virtualEndPoints.append(",");
+					canonicalEndPoints.append(",");
+				}
+				virtualEndPoints.append(applicationUrlHttps + NAV_BASE);
+				canonicalEndPoints.append(applicationUrlHttps + NAV_BASE);
+			}
+
+			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
+			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
+			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+
+			logger.info("Initializing RegistrationManager");
+			RegistrationManager.getInstance().initComponent(builder.build());
+
+			List<Link> links = new ArrayList<Link>();
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("home").withHref(applicationUrlHttp + NAV_BASE_HOME));
+				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
+				links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
+				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("home").withHref(applicationUrlHttps + NAV_BASE_HOME));
+				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
+				links.add(new Link().withRel("static/dashboardsui.configurations")
+						.withHref(applicationUrlHttps + NAV_STATIC_CONF));
+				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
+			}
+
+			InfoManager.getInstance().getInfo().setLinks(links);
+
+			logger.info("Registering service with 'Service Registry'");
+			RegistrationManager.getInstance().getRegistrationClient().register();
+			RegistrationManager.getInstance().getRegistrationClient().updateStatus(InstanceStatus.UP);
+
+			setRegistrationComplete(Boolean.TRUE);
+			logger.info("Service manager is up. Completed dashboard-UI registration");
+		}
+		catch (Exception e) {
+			setRegistrationComplete(Boolean.FALSE);
+			logger.error("Errors occurrs in registration. Service manager might be down. Dashboard-UI registration is not complete.");
+			logger.error(e.getLocalizedMessage(), e);
+			//			throw e;
+		}
+		//		logger.info("Post-starting service, attempting to create entityimanager factory");
+		//		PersistenceManager.getInstance().createEntityManagerFactory();
+		//		logger.info("Post-starting service, entityimanager factory created");
+		return registrationComplete;
+	}
+
+	public void setRegistrationComplete(Boolean isComplete)
+	{
+		registrationComplete = isComplete;
 	}
 }
