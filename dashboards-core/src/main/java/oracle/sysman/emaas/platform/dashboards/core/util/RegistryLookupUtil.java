@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 public class RegistryLookupUtil
 {
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
+	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
@@ -57,12 +58,15 @@ public class RegistryLookupUtil
 				"/getServiceExternalEndPoint/ Trying to retrieve service external end point for service: \"{}\", version: \"{}\", tenant: \"{}\"",
 				serviceName, version, tenantName);
 		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
+		itrLogger.debug("Retrieved instance {}", queryInfo);
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
 		try {
 			if (!StringUtil.isEmpty(tenantName)) {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
-				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+				itrLogger
+				.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
 				if (internalInstance == null) {
 					logger.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -71,8 +75,10 @@ public class RegistryLookupUtil
 			}
 			else {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
+				itrLogger.debug("Retrieved internal instance {} by using LookupClient.getInstance");
 			}
 			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
+			itrLogger.debug("Retrieved sanitized instance {} by using LookupClient.getSanitizedInstanceInfo");
 			if (sanitizedInstance == null) {
 				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
 				//				return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
@@ -303,13 +309,14 @@ public class RegistryLookupUtil
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = null;
 
 			if (!StringUtil.isEmpty(tenantName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					logger.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -323,6 +330,7 @@ public class RegistryLookupUtil
 			}
 			else {
 				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+				itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
 			}
 			if (result != null && result.size() > 0) {
 
@@ -341,13 +349,15 @@ public class RegistryLookupUtil
 						if (!StringUtil.isEmpty(tenantName)) {
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.warn("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
+							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
+									sanitizedInstance);
 						}
 						if (sanitizedInstance != null) {
 							if (prefixMatch) {
@@ -389,13 +399,15 @@ public class RegistryLookupUtil
 						if (!StringUtil.isEmpty(tenantName)) {
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.warn("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
+							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
+									sanitizedInstance);
 						}
 						if (sanitizedInstance != null) {
 							if (prefixMatch) {
@@ -437,13 +449,14 @@ public class RegistryLookupUtil
 		logger.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
+		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
 			List<InstanceInfo> result = null;
 			if (!StringUtil.isEmpty(tenantName)) {
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
-				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
 					logger.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -471,6 +484,7 @@ public class RegistryLookupUtil
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
+						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
 						return lk;
 					}
 				}

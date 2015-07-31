@@ -25,6 +25,7 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.AppMappingCollec
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.AppMappingEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainEntity;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.json.DomainsEntity;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.LogUtil.InteractionLogDirection;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +47,7 @@ public class TenantSubscriptionUtil
 		{
 		}
 
-		public String get(String url)
+		public String get(String url, String tenant)
 		{
 			if (StringUtils.isEmpty(url)) {
 				return null;
@@ -60,9 +61,9 @@ public class TenantSubscriptionUtil
 				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
 			else {
-				logger.info(
-						"RestClient is connecting to url after getting authorization token from registration manager. Target url is: {}",
-						url);
+				LogUtil.initializeInteractionLogContext(tenant, url, InteractionLogDirection.OUT);
+				itrLogger
+				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
@@ -71,6 +72,7 @@ public class TenantSubscriptionUtil
 	}
 
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
@@ -86,7 +88,7 @@ public class TenantSubscriptionUtil
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
 		String domainHref = domainLink.getHref();
 		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref);
+		String domainsResponse = rc.get(domainHref, tenant);
 		logger.info("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
@@ -110,7 +112,7 @@ public class TenantSubscriptionUtil
 			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 			logger.info("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
 					+ appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl);
+			String appMappingJson = rc.get(appMappingUrl, tenant);
 			logger.info("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;
