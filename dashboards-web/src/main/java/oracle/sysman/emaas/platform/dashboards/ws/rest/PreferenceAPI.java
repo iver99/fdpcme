@@ -63,6 +63,9 @@ public class PreferenceAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@DELETE
@@ -85,6 +88,9 @@ public class PreferenceAPI extends APIBase
 			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 
@@ -109,6 +115,9 @@ public class PreferenceAPI extends APIBase
 			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 
@@ -136,6 +145,9 @@ public class PreferenceAPI extends APIBase
 			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 
@@ -178,6 +190,9 @@ public class PreferenceAPI extends APIBase
 			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 

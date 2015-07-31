@@ -95,6 +95,9 @@ public class TenantSubscriptionsAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	private Response getSubscribedApplicationsWithEdition(String tenantIdParam, String userTenant)
@@ -111,7 +114,7 @@ public class TenantSubscriptionsAPI extends APIBase
 					+ tenantsLink.getHref());
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
 			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-			String tenantResponse = rc.get(tenantHref);
+			String tenantResponse = rc.get(tenantHref, tenantName);
 			logger.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
 			TenantDetailEntity de = ju.fromJson(tenantResponse, TenantDetailEntity.class);
@@ -133,6 +136,9 @@ public class TenantSubscriptionsAPI extends APIBase
 		catch (IOException | UniformInterfaceException e) {
 			logger.error(e);
 			return buildErrorResponse(new ErrorEntity(new TenantWithoutSubscriptionException()));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 }

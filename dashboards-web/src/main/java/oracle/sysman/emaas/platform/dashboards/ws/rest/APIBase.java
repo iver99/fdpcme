@@ -59,6 +59,12 @@ public class APIBase
 		return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
 	}
 
+	public void clearUserContext()
+	{
+		UserContext.clearCurrentUser();
+		TenantContext.clearCurrentUser();
+	}
+
 	public JsonUtil getJsonUtil()
 	{
 		return jsonUtil;

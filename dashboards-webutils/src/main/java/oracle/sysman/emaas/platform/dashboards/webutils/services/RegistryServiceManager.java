@@ -201,6 +201,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_LOGGING = NAV_API_BASE + "logging";
 	private static final String NAV_STATIC_REGISTRY = NAV_API_BASE + "registry";
 	private static final String NAV_STATIC_CONFIGURATIONS = NAV_API_BASE + "configurations";
+	private static final String NAV_LOGGING_CONFIG = NAV_API_BASE + "_logging/configs";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -389,6 +390,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("static/dashboards.configurations").withHref(
 						applicationUrlHttps + NAV_STATIC_CONFIGURATIONS));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("log/configuration").withHref(applicationUrlHttp + NAV_LOGGING_CONFIG));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("log/configuration").withHref(applicationUrlHttps + NAV_LOGGING_CONFIG));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 

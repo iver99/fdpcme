@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 public class RegistryLookupUtil
 {
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
+	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
@@ -57,6 +58,9 @@ public class RegistryLookupUtil
 				"/getServiceExternalEndPoint/ Trying to retrieve service external end point for service: \"{}\", version: \"{}\", tenant: \"{}\"",
 				serviceName, version, tenantName);
 		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		LogUtil.initializeInteractionLogContext(tenantName, "ServiceManager:" + serviceName + "/" + version,
+				LogUtil.InteractionLogDirection.OUT);
+		itrLogger.debug("Retrieved instance {}", queryInfo);
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
 		try {
@@ -437,6 +441,8 @@ public class RegistryLookupUtil
 		logger.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
+		LogUtil.initializeInteractionLogContext(tenantName, "ServiceManager:" + serviceName + "/" + version + "/" + rel,
+				LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
@@ -471,6 +477,7 @@ public class RegistryLookupUtil
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
+						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
 						return lk;
 					}
 				}

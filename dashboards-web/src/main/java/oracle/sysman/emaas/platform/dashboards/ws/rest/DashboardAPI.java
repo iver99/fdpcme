@@ -89,6 +89,9 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@DELETE
@@ -115,6 +118,9 @@ public class DashboardAPI extends APIBase
 			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 
@@ -143,6 +149,9 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 
 	}
 
@@ -168,6 +177,9 @@ public class DashboardAPI extends APIBase
 		catch (BasicServiceMalfunctionException e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 
@@ -212,6 +224,9 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@PUT
@@ -251,6 +266,9 @@ public class DashboardAPI extends APIBase
 		catch (BasicServiceMalfunctionException e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 

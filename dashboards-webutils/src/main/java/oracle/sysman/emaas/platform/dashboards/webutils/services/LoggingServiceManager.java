@@ -79,7 +79,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 			registerMBean(MBEAN_NAME);
 		}
 		catch (InstanceAlreadyExistsException e) {
-			logger.error("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
+			logger.warn("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
 			try {
 				unregisterMBean(MBEAN_NAME);
 			}

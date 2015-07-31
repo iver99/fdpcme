@@ -1,0 +1,137 @@
+/*
+ * Copyright (C) 2015 Oracle
+ * All rights reserved.
+ *
+ * $$File: $$
+ * $$DateTime: $$
+ * $$Author: $$
+ * $$Revision: $$
+ */
+
+package oracle.sysman.emaas.platform.dashboards.core.util;
+
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+
+/**
+ * @author guobaochen
+ */
+public class LogUtil
+{
+	/**
+	 * Direction for interaction log
+	 *
+	 * @author guobaochen
+	 */
+	public static enum InteractionLogDirection
+	{
+		/**
+		 * for all incoming service requests
+		 */
+		IN,
+		/**
+		 * for all outbound service request
+		 */
+		OUT
+	}
+
+	private static final Logger logger = LogManager.getLogger(LogUtil.class);
+	public static final String INTERACTION_LOG_PROP_TENANTID = "tenantId";
+	public static final String INTERACTION_LOG_VALUE_NA = "N/A";
+	public static final String INTERACTION_LOG_PROP_SERVICE_INVOKED = "serviceInvoked";
+	public static final String INTERACTION_LOG_PROP_DIRECTION = "direction";
+
+	private static final String INTERACTION_LOG_NAME = "oracle.sysman.emaas.platform.dashboards.interaction.log";
+
+	private static final String LOGGER_PROP_UPDATE_TIME = "DF_UPDATE_TIME";
+
+	/**
+	 * Clear the dashboard interaction log context
+	 */
+	public static void clearInteractionLogContext()
+	{
+		ThreadContext.remove(INTERACTION_LOG_PROP_SERVICE_INVOKED);
+		ThreadContext.remove(INTERACTION_LOG_PROP_DIRECTION);
+	}
+
+	/**
+	 * Returns the DashboardService-API interaction log
+	 *
+	 * @return
+	 */
+	public static final Logger getInteractionLogger()
+	{
+		return LogManager.getLogger(INTERACTION_LOG_NAME);
+	}
+
+	/**
+	 * Retrieve the long timestamp for update time for specified logger
+	 *
+	 * @param cfg
+	 * @param lc
+	 * @return
+	 */
+	public static Long getLoggerUpdateTime(Configuration cfg, LoggerConfig lc)
+	{
+		Map<String, String> cfgProps = cfg.getProperties();
+		if (cfgProps == null) {
+			return null;
+		}
+		String time = cfgProps.get(LOGGER_PROP_UPDATE_TIME + lc.getName());
+		if (time == null) {
+			return null;
+		}
+		return Long.valueOf(time);
+	}
+
+	/**
+	 * Initialize dashboard interaction log context
+	 *
+	 * @param serviceInvoked
+	 * @param direction
+	 */
+	public static void initializeInteractionLogContext(String tenantId, String serviceInvoked, InteractionLogDirection direction)
+	{
+		if (StringUtil.isEmpty(tenantId)) {
+			logger.debug("Initialize interaction log context: tenantId is null or empty");
+			tenantId = INTERACTION_LOG_VALUE_NA;
+		}
+		if (StringUtil.isEmpty(serviceInvoked)) {
+			logger.error("Failed to initialize interaction log context: serviceInvoked is null or empty");
+			return;
+		}
+		if (direction == null) {
+			logger.error("Failed to initialize interaction log context: direction is null");
+			return;
+		}
+		ThreadContext.put(INTERACTION_LOG_PROP_TENANTID, tenantId);
+		ThreadContext.put(INTERACTION_LOG_PROP_SERVICE_INVOKED, serviceInvoked);
+		if (InteractionLogDirection.IN.equals(direction)) {
+			ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, "IN");
+		}
+		else if (InteractionLogDirection.OUT.equals(direction)) {
+			ThreadContext.put(INTERACTION_LOG_PROP_DIRECTION, "OUT");
+		}
+	}
+
+	/**
+	 * Sets the update timestamp for specified logger
+	 *
+	 * @param cfg
+	 * @param lc
+	 * @param timestamp
+	 */
+	public static void setLoggerUpdateTime(Configuration cfg, LoggerConfig lc, Long timestamp)
+	{
+		if (timestamp == null) {
+			return;
+		}
+		Map<String, String> cfgProps = cfg.getProperties();
+		cfgProps.put(LOGGER_PROP_UPDATE_TIME + lc.getName(), timestamp.toString());
+	}
+}

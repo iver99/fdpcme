@@ -193,6 +193,23 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		HTTP, HTTPS
 	}
 
+	private static final String NAV_BASE = "/emsaasui/emcpdfui";
+
+	private static final String NAV_WELCOME = "/emsaasui/emcpdfui/welcome.html";
+
+	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
+	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
+	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+	static {
+		try {
+			WLS_RUNTIME_SERVICE_NAME = ObjectName
+					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
+		}
+		catch (Exception e) {
+			throw new Error("Well-known JMX names are corrupt - code bug", e);
+		}
+	}
+
 	private static String getApplicationUrl(UrlType urlType) throws Exception
 	{
 		InitialContext ctx = new InitialContext();
@@ -212,23 +229,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 		finally {
 			ctx.close();
-		}
-	}
-
-	private static final String NAV_BASE = "/emsaasui/emcpdfui";
-	private static final String NAV_WELCOME = "/emsaasui/emcpdfui/welcome.html";
-	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
-	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
-
-	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
-
-	static {
-		try {
-			WLS_RUNTIME_SERVICE_NAME = ObjectName
-					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
-		}
-		catch (Exception e) {
-			throw new Error("Well-known JMX names are corrupt - code bug", e);
 		}
 	}
 
