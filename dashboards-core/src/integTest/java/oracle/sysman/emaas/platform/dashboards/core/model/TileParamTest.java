@@ -1,8 +1,10 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
+import oracle.sysman.qatool.uifwk.webdriver.logging.EMTestLogger;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -12,26 +14,30 @@ import org.testng.annotations.Test;
  */
 public class TileParamTest
 {
+
 	@Test
 	public void testGetValue()
 	{
+		Logger logger = EMTestLogger.getLogger("testGetValue");
+
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_STRING);
 		tp.setStringValue("test");
-		Assert.assertEquals("test", tp.getValue());
+		Assert.assertEquals("test", tp.getValue(), tp.toString());
+		logger.info("Values inside TileParam is: " + tp.toString());
 
 		tp.setType(null);
 		BigDecimal bd = new BigDecimal(1024);
 		tp.setNumberValue(bd);
-		Assert.assertEquals(bd.toString(), tp.getValue());
+		Assert.assertEquals(bd.toString(), tp.getValue(), tp.toString());
 
 		tp.setType(TileParam.PARAM_TYPE_BOOLEAN);
 		tp.setLongValue(33L);
-		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setNumberValue(new BigDecimal(-33));
-		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString(), tp.toString());
 		tp.setNumberValue(null);
-		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString(), tp.toString());
 
 		tp.setType("Unknown type");
 		Assert.assertNull(tp.getValue());
@@ -40,13 +46,15 @@ public class TileParamTest
 	@Test
 	public void testSetValue() throws CommonFunctionalException
 	{
+		Logger logger = EMTestLogger.getLogger("testSetValue");
+
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_NUMBER);
 		tp.setValue(null);
-		Assert.assertEquals(Long.valueOf(0), tp.getLongValue());
+		Assert.assertEquals(Long.valueOf(0), tp.getLongValue(), tp.toString());
 
 		tp.setValue("3");
-		Assert.assertEquals(Long.valueOf(3), tp.getLongValue());
+		Assert.assertEquals(Long.valueOf(3), tp.getLongValue(), tp.toString());
 
 		try {
 			tp.setValue("abcde");
@@ -58,14 +66,18 @@ public class TileParamTest
 
 		tp.setType(TileParam.PARAM_TYPE_BOOLEAN);
 		tp.setValue("true");
-		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString());
+		logger.info("Values inside TileParam is: " + tp.toString());
+		System.out.println("Values inside TileParam is: " + tp.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue("TRUE");
-		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString());
+		logger.info("Values inside TileParam is: " + tp.toString());
+		System.out.println("Values inside TileParam is: " + tp.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue(null);
-		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString(), tp.toString());
 		tp.setValue("false");
-		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString(), tp.toString());
 		tp.setValue("abc");
-		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString());
+		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString(), tp.toString());
 	}
 }

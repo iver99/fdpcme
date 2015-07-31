@@ -1,10 +1,8 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.math.BigDecimal;
-import java.util.logging.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
-import oracle.sysman.qatool.uifwk.webdriver.logging.EMTestLogger;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -14,17 +12,13 @@ import org.testng.annotations.Test;
  */
 public class TileParamTest
 {
-
 	@Test
 	public void testGetValue()
 	{
-		Logger logger = EMTestLogger.getLogger("testGetValue");
-
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_STRING);
 		tp.setStringValue("test");
 		Assert.assertEquals("test", tp.getValue(), tp.toString());
-		logger.info("Values inside TileParam is: " + tp.toString());
 
 		tp.setType(null);
 		BigDecimal bd = new BigDecimal(1024);
@@ -46,8 +40,6 @@ public class TileParamTest
 	@Test
 	public void testSetValue() throws CommonFunctionalException
 	{
-		Logger logger = EMTestLogger.getLogger("testSetValue");
-
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_NUMBER);
 		tp.setValue(null);
@@ -66,10 +58,8 @@ public class TileParamTest
 
 		tp.setType(TileParam.PARAM_TYPE_BOOLEAN);
 		tp.setValue("true");
-		logger.info("Values inside TileParam is: " + tp.toString());
 		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue("TRUE");
-		logger.info("Values inside TileParam is: " + tp.toString());
 		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue(null);
 		Assert.assertEquals(tp.getValue(), Boolean.FALSE.toString(), tp.toString());
