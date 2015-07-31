@@ -1,4 +1,4 @@
-jar.archiveName='emcpdf_qa_test.jar'
+//jar.archiveName='emcpdf_qa_test.jar'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 
@@ -7,6 +7,12 @@ sourceSets {
         java.srcDir 'src/integTest/java'
         compileClasspath = configurations.testNG+configurations.restAssured + configurations.lrgConfig
     }
+}
+
+jar {
+        from('src/main/java') {
+                include '**/*.xml'
+        }
 }
 
 task integTestJar (type:Jar) {
