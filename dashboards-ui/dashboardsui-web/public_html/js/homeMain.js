@@ -67,8 +67,12 @@ require(['ojs/ojcore',
 ],
         function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var logger = new _emJETCustomLogger();
-            var logReceiver = "/sso.static/dashboards.logging/logs";
+            var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
+            if (dfu_model.isDevMode()){
+                logReceiver = dfu_model.buildFullUrl(dfu_model.getDevData().dfRestApiEndPoint,"logging/logs");
+            }
            
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
             logger.setLogLevel(oj.Logger.LEVEL_LOG);
@@ -136,12 +140,13 @@ require(['ojs/ojcore',
                 self.community = getNlsString("LANDING_HOME_COMMUNITY_LINK");
                 
                 self.ITA_Type = "select";
-                self.data_type = "select";
-
-                var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+                self.data_type = "select";                
                 
                 self.getServiceUrls = function() {
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                    if (dfu_model.isDevMode()){
+                        serviceUrl = dfu_model.buildFullUrl(dfu_model.getDevData().dfRestApiEndPoint,"configurations/registration");
+                    }
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu_model.getDefaultHeader(), 
