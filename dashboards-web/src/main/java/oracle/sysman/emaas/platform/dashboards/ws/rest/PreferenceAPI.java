@@ -31,6 +31,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
@@ -148,6 +149,10 @@ public class PreferenceAPI extends APIBase
 		Preference input = null;
 		try {
 			input = getJsonUtil().fromJson(inputJson.toString(), Preference.class);
+			if (input != null && input.getValue() != null) {
+				// the preference value should be html escaped.
+				input.setValue(StringEscapeUtils.escapeHtml4(input.getValue()));
+			}
 		}
 		catch (IOException e) {
 			//e.printStackTrace();
