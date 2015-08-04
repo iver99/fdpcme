@@ -38,5 +38,8 @@
         <dependent-module archiveName="dashboards-db.jar" deploy-path="/lib" handle="module:/resource/dashboards-entities/dashboards-entities">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="commons-lang3-3.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/commons-lang3-3.1.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
     </wb-module>
 </project-modules>
