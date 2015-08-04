@@ -200,16 +200,38 @@ require(['ojs/ojcore',
                         window.location.href = self.landingHomeUrls.APM;
                     }
                 }
-                self.openLogAnalytics = function() {
+                self.openLogAnalytics = function (data, event) {
+
                     oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
-                    if(self.landingHomeUrls.LogAnalytics) {
+                    if (self.landingHomeUrls.LogAnalytics) {
                         window.location.href = self.landingHomeUrls.LogAnalytics;
                     }
+
                 }
-                self.openITAnalytics = function() {
-                    oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
-                    if(self.landingHomeUrls.ITAnalytics) {
-                        window.location.href = self.landingHomeUrls.ITAnalytics;
+                self.openITAnalytics = function(data, event) {
+                    if (event.type == "click" || (event.type == "keypress" && event.keyCode == 13)) {
+                        oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
+                        if(self.landingHomeUrls.ITAnalytics) {
+                            window.location.href = self.landingHomeUrls.ITAnalytics;
+                        }
+                    } else if (event.type == "keypress" && event.keyCode == 9) {  //keyboard handle for Firefox                      
+                        if (event.shiftKey) {
+                            if (event.target.id == "ITA_wrapper") {
+                                $(event.target).blur();
+                                $("#LA_wrapper").focus();
+                            } else {
+                                $(event.target).blur();
+                                $("#ITA_wrapper").focus();
+                            }
+                        } else {
+                            if(event.target.id=="ITA_wrapper") {
+                                $(event.target).blur();
+                                $("#ITA_options").focus();
+                            }else {
+                                $(event.target).blur();
+                                $("#dashboards_wrapper").focus()
+                            }
+                        }
                     }
                 }
                 self.ITAOptionChosen = function(event, data) {
