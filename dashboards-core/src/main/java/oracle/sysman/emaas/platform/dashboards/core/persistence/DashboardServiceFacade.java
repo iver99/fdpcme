@@ -1,16 +1,14 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
+//import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
+//import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
@@ -48,11 +46,11 @@ public class DashboardServiceFacade
 		return em.find(EmsDashboard.class, dashboardId);
 	}
 
-	/** <code>select o from EmsDashboardFavorite o</code> */
-	public List<EmsDashboardFavorite> getEmsDashboardFavoriteFindAll()
-	{
-		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
-	}
+	//	/** <code>select o from EmsDashboardFavorite o</code> */
+	//	public List<EmsDashboardFavorite> getEmsDashboardFavoriteFindAll()
+	//	{
+	//		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
+	//	}
 
 	/** <code>select o from EmsDashboard o</code> */
 	public List<EmsDashboard> getEmsDashboardFindAll()
@@ -103,13 +101,13 @@ public class DashboardServiceFacade
 		return entity;
 	}
 
-	public EmsDashboardFavorite mergeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		EmsDashboardFavorite entity = null;
-		entity = em.merge(emsDashboardFavorite);
-		commitTransaction();
-		return entity;
-	}
+	//	public EmsDashboardFavorite mergeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
+	//	{
+	//		EmsDashboardFavorite entity = null;
+	//		entity = em.merge(emsDashboardFavorite);
+	//		commitTransaction();
+	//		return entity;
+	//	}
 
 	public EmsDashboardLastAccess mergeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
 	{
@@ -127,12 +125,12 @@ public class DashboardServiceFacade
 		return entity;
 	}
 
-	public <T> T mergeEntity(T entity)
-	{
-		entity = em.merge(entity);
-		commitTransaction();
-		return entity;
-	}
+	//	public <T> T mergeEntity(T entity)
+	//	{
+	//		entity = em.merge(entity);
+	//		commitTransaction();
+	//		return entity;
+	//	}
 
 	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
 	{
@@ -141,12 +139,12 @@ public class DashboardServiceFacade
 		return emsDashboard;
 	}
 
-	public EmsDashboardFavorite persistEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		em.persist(emsDashboardFavorite);
-		commitTransaction();
-		return emsDashboardFavorite;
-	}
+	//	public EmsDashboardFavorite persistEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
+	//	{
+	//		em.persist(emsDashboardFavorite);
+	//		commitTransaction();
+	//		return emsDashboardFavorite;
+	//	}
 
 	public EmsDashboardLastAccess persistEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
 	{
@@ -162,31 +160,31 @@ public class DashboardServiceFacade
 		return emsPreference;
 	}
 
-	public <T> T persistEntity(T entity)
-	{
-		em.persist(entity);
-		commitTransaction();
-		return entity;
-	}
+	//	public <T> T persistEntity(T entity)
+	//	{
+	//		em.persist(entity);
+	//		commitTransaction();
+	//		return entity;
+	//	}
 
-	@SuppressWarnings("rawtypes")
-	public List queryByRange(String jpqlStmt, Class resultClass, Map<String, Object> params, int firstResult, int maxResults)
-	{
-		@SuppressWarnings("unchecked")
-		Query query = resultClass == null ? em.createQuery(jpqlStmt) : em.createQuery(jpqlStmt, resultClass);
-		if (params != null && params.size() > 0) {
-			for (Map.Entry<String, Object> p : params.entrySet()) {
-				query.setParameter(p.getKey(), p.getValue());
-			}
-		}
-		if (firstResult > 0) {
-			query = query.setFirstResult(firstResult);
-		}
-		if (maxResults > 0) {
-			query = query.setMaxResults(maxResults);
-		}
-		return query.getResultList();
-	}
+	//	@SuppressWarnings("rawtypes")
+	//	public List queryByRange(String jpqlStmt, Class resultClass, Map<String, Object> params, int firstResult, int maxResults)
+	//	{
+	//		@SuppressWarnings("unchecked")
+	//		Query query = resultClass == null ? em.createQuery(jpqlStmt) : em.createQuery(jpqlStmt, resultClass);
+	//		if (params != null && params.size() > 0) {
+	//			for (Map.Entry<String, Object> p : params.entrySet()) {
+	//				query.setParameter(p.getKey(), p.getValue());
+	//			}
+	//		}
+	//		if (firstResult > 0) {
+	//			query = query.setFirstResult(firstResult);
+	//		}
+	//		if (maxResults > 0) {
+	//			query = query.setMaxResults(maxResults);
+	//		}
+	//		return query.getResultList();
+	//	}
 
 	public void removeAllEmsPreferences(String username)
 	{
@@ -202,13 +200,13 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
-	public void removeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		emsDashboardFavorite = em.find(EmsDashboardFavorite.class, new EmsDashboardFavoritePK(emsDashboardFavorite.getUserName(),
-				emsDashboardFavorite.getDashboard().getDashboardId()));
-		em.remove(emsDashboardFavorite);
-		commitTransaction();
-	}
+	//	public void removeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
+	//	{
+	//		emsDashboardFavorite = em.find(EmsDashboardFavorite.class, new EmsDashboardFavoritePK(emsDashboardFavorite.getUserName(),
+	//				emsDashboardFavorite.getDashboard().getDashboardId()));
+	//		em.remove(emsDashboardFavorite);
+	//		commitTransaction();
+	//	}
 
 	public void removeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
 	{

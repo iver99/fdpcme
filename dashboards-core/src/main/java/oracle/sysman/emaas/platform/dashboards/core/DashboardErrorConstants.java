@@ -19,6 +19,19 @@ package oracle.sysman.emaas.platform.dashboards.core;
  */
 public class DashboardErrorConstants
 {
+	// error code for configuration/registry
+	public static final int CONFIGURATIONS_GENERIC_ERROR_CODE = 1000;
+	public static final int CONFIGURATIONS_REGISTRATION_ERROR_CODE = 1100;
+	public static final int CONFIGURATIONS_REGISTRATION_REGISTRYURLS_NOT_FOUND_ERROR_CODE = 1101;
+	public static final int CONFIGURATIONS_REGISTRATION_SSF_SERVICENAME_NOT_FOUND_ERROR_CODE = 1102;
+	public static final int CONFIGURATIONS_REGISTRATION_SSF_VERSION_NOT_FOUND_ERROR_CODE = 1103;
+	public static final int REGISTRY_LOOKUP_GENERIC_ERROR_CODE = 2000;
+	public static final int REGISTRY_LOOKUP_LINK_NOT_FOUND_ERROR_CODE = 2001;
+	public static final int REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE = 2002;
+	public static final int REGISTRY_LOOKUP_LINK_WIT_REL_PREFIX_NOT_FOUND_ERROR_CODE = 2003;
+
+	public static final int UNKNOWN_ERROR_CODE = 9999;
+
 	public static final Integer DASHBOARD_COMMON_UI_ERROR_CODE = 10000;
 	public static final Integer DASHBOARD_SAME_NAME_EXISTS_ERROR_CODE = 10001;
 
