@@ -201,7 +201,7 @@ publishing {
 	    version "${publish_version}"
 	    groupId "${publish_group}"
 	    artifact(buildDFCommonLibZip)
-	    artifactId 'emcs-ui-framework-common'
+	    artifactId 'emcs-ui-framework-common-dev'
 	}
     }
     repositories {
