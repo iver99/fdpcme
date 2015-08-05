@@ -13,6 +13,7 @@ requirejs.config({
     map: {
         'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'},
         '*': {
+              'emcsutl/ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
               'ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
               'message-util': '../emcsDependencies/dfcommon/js/util/message-util'
              }        
