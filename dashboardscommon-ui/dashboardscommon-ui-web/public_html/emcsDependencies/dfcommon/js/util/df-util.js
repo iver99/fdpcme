@@ -826,7 +826,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             };
             
             /**
-             * return the window title according to given params.
+             * Generate the window title according to given params.
              * 
              * @param {type} pageName 
              * @param {type} contextName
@@ -834,7 +834,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @param {type} serviceName
              * @returns {String} 
              */
-            self.getWindowTitle = function(pageName, contextName, targetType, serviceName) {
+            self.generateWindowTitle = function(pageName, contextName, targetType, serviceName) {
                 var title = "";
                 var title_suffix = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE : 'Oracle Management Cloud';
                 if(pageName) {

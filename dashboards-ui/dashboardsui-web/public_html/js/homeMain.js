@@ -134,7 +134,7 @@ require(['dbs/dbsmodel',
            function TitleViewModel(){
                var self = this;
 //               self.homeTitle = getNlsString("DBS_HOME_TITLE");
-               self.homeTitle = dfu_model.getWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
+               self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
             //dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();
