@@ -250,7 +250,7 @@ DashboardPaging.prototype.create = function(attributes, options)
 DashboardPaging.prototype.remove = function(model, options)
 {
     var self = this;
-    dfu.ajaxWithRetry('/sso.static/dashboards.service/' + model.get('id'), {
+    dfu.ajaxWithRetry( model.get('href') /*'/sso.static/dashboards.service/' + model.get('id')*/, {
        type: 'DELETE',
        headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {
@@ -425,6 +425,20 @@ DashboardPaging.prototype.totalSize = function()
 DashboardPaging.prototype.getShowPagingObservable = function()
 {
     return this.showPagingObservable;
+};
+
+DashboardPaging.prototype.getModelFromWindow = function(id)
+{
+    var _i= 0, w = this.getWindow();
+    if (w && w !== null)
+    {
+        for (_i= 0 ; _i < w.length; _i++)
+        {
+            if (w[_i].id === id) return w[_i];
+        }
+    }
+        
+    return null;
 };
 
 return {'DashboardPaging': DashboardPaging};

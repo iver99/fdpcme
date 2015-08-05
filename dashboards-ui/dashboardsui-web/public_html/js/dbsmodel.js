@@ -27,7 +27,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
-    
+
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -169,6 +169,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.showItaServiceFilter = ko.observable(predata.getShowItaService());
         
         self.showSeachClear = ko.observable(false);
+        self.isTilesView = ko.observable('listview');
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
@@ -186,6 +187,12 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.dashboards = ko.computed(function() {
             return (self.pagingDatasource().getWindowObservable())();
         });
+        self.dashboardsTS = ko.observable();
+                //ko.computed(function() {
+        //    var _dbs =  (self.pagingDatasource().getWindowObservable())();
+        //    var _dbTS = new oj.ArrayTableDataSource(_dbs, {idAttribute: 'id'});
+        //    return _dbTS;
+        //});
         self.showPaging = ko.computed(function() {
             var _pds = ko.utils.unwrapObservable(self.pagingDatasource());
             if (_pds instanceof  oj.ArrayPagingDataSource) return false;
@@ -198,7 +205,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].setPage(0, { 
             'success': function() {
-                self.pagingDatasource( self.datasource['pagingDS'] );
+                self.refreshDashboardsView();
                 if (self.datasource['pagingDS'].totalSize() <= 0)
                 {
                     if (self.welcomeDialogModel.showWelcome === false)
@@ -211,6 +218,11 @@ function(dsf, oj, ko, $, dfu, pfu)
                 oj.Logger.error("Error when fetching data for paginge data source. " + (jqXHR ? jqXHR.responseText : ""));
             }
         } );
+        
+        self.refreshDashboardsView = function(createOrRemove) {
+            if (createOrRemove !== true) self.pagingDatasource( self.datasource['pagingDS'] );
+            self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
+        };
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
@@ -226,6 +238,14 @@ function(dsf, oj, ko, $, dfu, pfu)
             if (!isOpen)
             {
                 popup.ojPopup("close");//popup.html("");
+            }
+            if (data['id'])
+            {
+                data['dashboardModel'] = self.datasource['pagingDS'].getModelFromWindow(data['id']);
+                if(  data['dashboardModel'] )
+                {
+                    data['dashboard'] = data['dashboardModel'].attributes;
+                }
             }
             self.selectedDashboard(data);
             if (data.element)
@@ -268,6 +288,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
                         success: function () {
+                            self.refreshDashboardsView(true);
                             self.confirmDialogModel.close();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -339,6 +360,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                         
                         success: function(response) {
                             //console.log( " success ");
+                            self.refreshDashboardsView(true);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
                         },
@@ -451,7 +473,8 @@ function(dsf, oj, ko, $, dfu, pfu)
         {
             //console.log("searchResponse: "+data.content.collection.length);
             self.datasource = data.content;
-            self.pagingDatasource(data.content['pagingDS']);
+            //self.pagingDatasource(data.content['pagingDS']);
+            self.refreshDashboardsView();
         };
         
         self.forceSearch = function (event, data)

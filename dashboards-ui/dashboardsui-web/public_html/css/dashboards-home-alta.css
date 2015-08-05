@@ -30,6 +30,9 @@
 .oj-button.oj-disabled .icon-locationinfo-16:before {
     content: url("images/func_locationinfo_16_dis.png"); }
 
+.icon-gridview-16:before{content:url("images/func_ninesquareboxes_16_ena.png");}
+.icon-listview-16:before{content:url("images/func_threehorizontalbars_16_ena.png");}
+
 .dbs-welcome-centeredImage{
     text-align:center;
     margin-top:0px;
