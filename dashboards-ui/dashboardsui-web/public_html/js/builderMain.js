@@ -78,7 +78,8 @@ requirejs.config({
               return true;
             }
           }
-    }
+    },
+    waitSeconds: 60
 });
 
 var defaultTileHeight = 220;

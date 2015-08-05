@@ -59,7 +59,8 @@ requirejs.config({
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
         }
-    }
+    },
+    waitSeconds: 60
 });
 
 var dashboardsViewModle = undefined;

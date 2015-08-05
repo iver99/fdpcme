@@ -39,7 +39,8 @@ requirejs.config({
               return true;
             }
           }
-    }
+    },
+    waitSeconds: 60
 });
 
 
