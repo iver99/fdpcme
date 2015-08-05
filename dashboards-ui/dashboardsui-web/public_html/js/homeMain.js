@@ -11,6 +11,7 @@
 requirejs.config({
     //Set up module mapping
     map: {
+        '*': {'df-util' : '../emcsDependencies/dfcommon/js/util/df-util'},
         'prefutil': 
             {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
              'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
@@ -31,6 +32,7 @@ requirejs.config({
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
         'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
         'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
         'dbs': '../js',
@@ -75,6 +77,7 @@ require(['dbs/dbsmodel',
     'jquery',
     'ojs/ojcore',
     'dfutil',
+    'df-util',
     'loggingutil',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -90,7 +93,7 @@ require(['dbs/dbsmodel',
     'ojs/ojselectcombobox',
     'ojs/ojmenu'
 ],
-        function(model, ko, $, oj, dfu,_emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
 //            var dfRestApi = dfu.discoverDFRestApiUrl();
@@ -113,6 +116,8 @@ require(['dbs/dbsmodel',
                 });
             }
             
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            
             function HeaderViewModel() {
                 var self = this;
                 self.userName = dfu.getUserName();
@@ -128,7 +133,8 @@ require(['dbs/dbsmodel',
            
            function TitleViewModel(){
                var self = this;
-               self.homeTitle = getNlsString("DBS_HOME_TITLE");        
+//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
+               self.homeTitle = dfu_model.getWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
             //dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();
