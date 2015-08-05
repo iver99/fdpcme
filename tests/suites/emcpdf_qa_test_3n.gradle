@@ -52,7 +52,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-web-integ-tests-dev', version: '1.0.1') {
+    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-web-integ-tests', version: '1.0.1') {
 	exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
@@ -95,6 +95,7 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+	include "oracle/sysman/emaas/platform/dashboards/ws/*"
 	useRestAssured=true
 }
 task small_deploy_3n_cleanup(type: EMTest) {

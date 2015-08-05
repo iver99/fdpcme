@@ -27,7 +27,13 @@ function(dsf, oj, ko, $, dfu, pfu)
             DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
-
+   
+    if (dfu.isDevMode()){
+       DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
+       PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
+       SUBSCIBED_APPS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"subscribedapps");        
+    }
+    
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -313,7 +319,11 @@ function(dsf, oj, ko, $, dfu, pfu)
             //window.open(ui.item.children("a")[0].value);
             if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
             {
-                window.location = ui.item.children("a")[0].value;
+                if (dfu.isDevMode()){
+                    window.location = dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value);
+                }else{
+                    window.location = ui.item.children("a")[0].value;
+                }
             }
         };
         

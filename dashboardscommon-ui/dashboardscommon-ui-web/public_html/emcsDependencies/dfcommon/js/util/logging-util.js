@@ -140,6 +140,10 @@ define(['ojs/ojcore', '../emcsDependencies/dfcommon/js/util/df-util'],
                 //TODO: Change to use callServiceManager.
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
+                var headers = undefined;
+                if (dfu.isDevMode()){
+                    headers = {"Authorization":"Basic " + btoa(dfu.getDevData().wlsAuth)};
+                }
                 dfu.ajaxWithRetry({
                     url: serverUrlToSendLogs,
                     type: "POST",
@@ -156,6 +160,7 @@ define(['ojs/ojcore', '../emcsDependencies/dfcommon/js/util/df-util'],
                             "errorThrown: " + errorThrown);
                     },
                     description: "custom logger: Sending logs to server",
+                    headers: headers,
                     async:false
                 });
             };

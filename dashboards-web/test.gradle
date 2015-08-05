@@ -1,4 +1,4 @@
-jar.archiveName='emcpdf_qa_test.jar'
+//jar.archiveName='emcpdf_qa_test.jar'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 
@@ -9,19 +9,25 @@ sourceSets {
     }
 }
 
+jar {
+        from('src/main/java') {
+                include '**/*.xml'
+        }
+}
+
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests-dev'
+    appendix = 'integ-tests'
 }
 dependencies {
 
-
 	lrgConfig project(':dashboards-entities') { transitive = false }
 	lrgConfig project(':dashboards-core')   { transitive = false }
+	lrgConfig project(':dashboards-web')   { transitive = false }
 	lrgConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
 //	lrgConfig(group: 'javax', name: 'ejb', version: '3.2.0')
 	lrgConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
-	providedCompile(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
+	lrgConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
 	lrgConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){ transitive = false }
 	lrgConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
 
@@ -29,7 +35,7 @@ dependencies {
 	lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){ transitive = false }
 	lrgConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
 	
-	//lrgConfig(group: 'org.apache.commons', name:'commons-lang3', version:'3.1'){ transitive = false }
+//	lrgConfig(group: 'org.apache.commons', name:'commons-lang3', version:'3.1'){ transitive = false }
         lrgConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
 //	lrgConfig(group: 'org.hamcrest', name:'hamcrest-core', version: '1.3'){ transitive = false }
 //	lrgConfig(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1'){ transitive = false }

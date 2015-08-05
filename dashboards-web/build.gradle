@@ -15,7 +15,6 @@ ext.restDocOutputDir = "${restDocRootDir}"
 //group = 'com.oracle.emaas.emcpdf'
 //version = '1.0.1'
 
-
 buildscript {
     repositories {
         maven {
@@ -24,9 +23,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-		
-        
-}  
+    }  
 }
 
 configurations {
@@ -54,28 +51,22 @@ war {
 }
 
 sourceSets{
-test {
-                                java {
-                                          srcDirs = ['src/test/java']
-                                }
-                                resources.srcDirs = ['src/test/java']
-                            }
-
-
+	test {
+		java {
+			srcDirs = ['src/test/java']
+		}
+		resources.srcDirs = ['src/test/java']
+	}
 }
+
 task runQATestSuite(type: Test){
         useTestNG(){
-        dependsOn ':dashboards-ee:ear'
-        useDefaultListeners = true
-        outputDirectory = file("$buildDir/testngoutput")
-        suites file('testngsuite.xml')
+        	dependsOn ':dashboards-ee:ear'
+        	useDefaultListeners = true
+        	outputDirectory = file("$buildDir/testngoutput")
+        	suites file('testngsuite.xml')
         }
 }
-
-
-
-
-
 
 publishing {
     publications {
@@ -127,9 +118,6 @@ repositories {
         url = "${artifactory_contextUrl}/emaas-virtual"
     }
 }
-
-
-
 
 /**
  * Generates documentation for the REST service API
@@ -187,13 +175,14 @@ task ftpRestDoc << {
 	}
 
 sourceSets {
-                            test{
-                                java {
-                                          srcDirs = ['src/test/java']
-                                }
-                                resources.srcDirs = ['src/test/java']
-                            }
- }
+	test{
+		java {
+			srcDirs = ['src/test/java']
+		}
+		resources.srcDirs = ['src/test/java']
+	}
+}
+
 dependencies {
 	providedCompile project(':dashboards-entities') { transitive = false }
 	providedCompile project(':dashboards-core')  { transitive = false }
@@ -227,15 +216,6 @@ dependencies {
 	
 	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6') { transitive = false }
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
-
-	
-
-
-
-
-
-
-	
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	restDoc(

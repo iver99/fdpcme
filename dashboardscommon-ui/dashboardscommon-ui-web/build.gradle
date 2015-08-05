@@ -201,7 +201,7 @@ publishing {
 	    version "${publish_version}"
 	    groupId "${publish_group}"
 	    artifact(buildDFCommonLibZip)
-	    artifactId 'emcs-ui-framework-common-dev'
+	    artifactId 'emcs-ui-framework-common'
 	}
     }
     repositories {
@@ -216,7 +216,7 @@ publishing {
 }
 
 dependencies {
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.0-17062', ext: 'war'){ transitive = false }	
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.1-18149', ext: 'war'){ transitive = false }	
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
 }
 
