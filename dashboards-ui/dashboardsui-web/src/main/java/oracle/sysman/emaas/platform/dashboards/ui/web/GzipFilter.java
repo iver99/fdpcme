@@ -23,19 +23,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.sysman.emaas.platform.dashboards.ui.web.gzip.GzipServletResponseWrapper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Support to compress certain mime types for responses
- * 
+ *
  * @author guobaochen
  */
 public class GzipFilter implements Filter
 {
+	private static Logger logger = LogManager.getLogger(GzipFilter.class);
+
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
 	 */
 	@Override
 	public void destroy()
 	{
+		logger.debug("destroy for GzipFiler");
 	}
 
 	/* (non-Javadoc)
@@ -64,6 +70,7 @@ public class GzipFilter implements Filter
 	@Override
 	public void init(FilterConfig arg0) throws ServletException
 	{
+		logger.debug("init for GzipFiler");
 	}
 
 }

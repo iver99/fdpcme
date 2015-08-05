@@ -40,6 +40,7 @@ task runDEVTestSuite(type: Test){
        useDefaultListeners = true
        outputDirectory = file("$buildDir/testngoutput")
         suites file('dashboards_testng_suite.xml')
+	//suites '../dashboards-webutils/dashboards_webutils_testng_suite.xml'
         }
 }
 

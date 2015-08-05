@@ -80,6 +80,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 appMap[appIdAPM] = {
                     "appId": "APM",
                     "appName": "BRANDING_BAR_APP_NAME_APM",
+                    "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
                     "serviceName": "apmUI",
                     "version": "0.1",
                     "helpTopicId": "em_apm_gs"
@@ -163,6 +164,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.altTextWarn(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_WARN);
                     self.altTextConfirm(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM);
                     self.altTextInfo(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO);
+                    self.altTextClear(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR);
                     
                     oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
@@ -312,6 +314,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     tenantName: self.tenantName,
                     nlsStrings: self.nlsStrings,
                     isAdmin: self.isAdmin,
+                    appMap: appMap,
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],
                     appTenantManagement: appMap[appIdTenantManagement]

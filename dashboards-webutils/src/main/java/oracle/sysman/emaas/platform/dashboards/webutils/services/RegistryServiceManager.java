@@ -28,6 +28,8 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
+import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -197,6 +199,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preferences";
 	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "subscribedapps";
 	private static final String NAV_STATIC_LOGGING = NAV_API_BASE + "logging";
+	private static final String NAV_STATIC_REGISTRY = NAV_API_BASE + "registry";
+	private static final String NAV_STATIC_CONFIGURATIONS = NAV_API_BASE + "configurations";
 
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
@@ -331,7 +335,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			builder.virtualEndpoints(virtualEndPoints.toString()).canonicalEndpoints(canonicalEndPoints.toString());
 			builder.registryUrls(serviceProps.getProperty("registryUrls")).loadScore(0.9)
-			.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
+					.leaseRenewalInterval(3000, TimeUnit.SECONDS).serviceUrls(serviceProps.getProperty("serviceUrls"));
 
 			logger.info("Initializing RegistrationManager");
 			RegistrationManager.getInstance().initComponent(builder.build());
@@ -351,11 +355,12 @@ public class RegistryServiceManager implements ApplicationServiceManager
 				links.add(new Link().withRel("static/dashboards.service").withHref(applicationUrlHttps + NAV_STATIC_DASHBOARDS));
 			}
 			if (applicationUrlHttp != null) {
-				links.add(new Link().withRel("static/dashboards.preferences").withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences")
+						.withHref(applicationUrlHttp + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttps != null) {
-				links.add(new Link().withRel("static/dashboards.preferences")
-						.withHref(applicationUrlHttps + NAV_STATIC_PREFERENCE));
+				links.add(new Link().withRel("static/dashboards.preferences").withHref(
+						applicationUrlHttps + NAV_STATIC_PREFERENCE));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
@@ -370,6 +375,20 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("static/dashboards.logging").withHref(applicationUrlHttps + NAV_STATIC_LOGGING));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("static/dashboards.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("static/dashboards.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("static/dashboards.configurations").withHref(
+						applicationUrlHttp + NAV_STATIC_CONFIGURATIONS));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("static/dashboards.configurations").withHref(
+						applicationUrlHttps + NAV_STATIC_CONFIGURATIONS));
 			}
 			InfoManager.getInstance().getInfo().setLinks(links);
 

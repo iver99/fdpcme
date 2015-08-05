@@ -1,5 +1,5 @@
 
-jar.archiveName='emcpdf_dev_test.jar'
+//jar.archiveName='emcpdf_dev_test.jar'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 sourceSets {

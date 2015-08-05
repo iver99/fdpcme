@@ -54,7 +54,6 @@ public class TileParam
 	@JsonIgnore
 	private Tile tile;
 
-	@SuppressWarnings("unused")
 	@JsonProperty("value")
 	private String value;
 
@@ -227,12 +226,34 @@ public class TileParam
 		}
 		else if (PARAM_TYPE_BOOLEAN.equals(type)) {
 			int booleanValue = 0; // 0 for false, 1 for true
-			if (value != null && !value.equals("")) {
+			if (value == null || value.equals("")) {
 				numValue = new BigDecimal(0);
 				return;
 			}
 			booleanValue = Boolean.valueOf(value) ? 1 : 0;
 			numValue = BigDecimal.valueOf(booleanValue);
 		}
+	}
+
+	@JsonIgnore
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("[isSystem]: ");
+		sb.append(String.valueOf(isSystem));
+		sb.append("  [name]: ");
+		sb.append(name);
+		sb.append("  [type]: ");
+		sb.append(type);
+		sb.append("  [strValue]: ");
+		sb.append(strValue);
+		sb.append("  [dateValue]: ");
+		sb.append(dateValue);
+		sb.append("  [value]: ");
+		sb.append(value);
+		sb.append("  [numValue]: ");
+		sb.append(numValue);
+		return sb.toString();
 	}
 }

@@ -1,16 +1,93 @@
-apply plugin: 'java' 
-apply plugin: 'eclipse' 
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'TestInfraPlugin'
+apply from:'test.gradle'
+apply plugin: 'artifactory'
+apply plugin: 'artifactory-publish'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 
-
-
-
+sourceSets {
+    main {
+     java {
+         srcDir 'src/main/java'
+		}
+     resources {
+          srcDir 'src/main/java'
+    		}
+  	}
+}
 
 jar {
         from('src/main/java') {
                 include '**/*.xml'
         }
+}
+
+/*
+ * Define repositories from where to pick all the artifacts
+ */
+repositories {
+    /* Looks into local maven repository for artifacts */
+    mavenLocal()
+    maven {
+        url = "${artifactory_contextUrl}/emaas-virtual"
+    }
+}
+
+task runDEVTestSuite_webuiutil(type: Test){
+        useTestNG(){
+       useDefaultListeners = true
+       outputDirectory = file("$buildDir/testngoutput")
+        suites file('dashboardsui_webutils_testng_suite.xml')
+        }
+}
+
+publishing {
+    publications {
+        integTest(MavenPublication) {
+            setArtifactId(project.name + '-' + integTestJar.appendix)
+            artifact integTestJar.archivePath
+            pom.withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.moduleGroup)
+                    dependency.appendNode('artifactId', it.moduleName)
+		    if (it.moduleVersion != 'unspecified') {
+                        println "VERSION for ${it.moduleName} = ${it.moduleVersion}"
+                        dependency.appendNode('version', it.moduleVersion)
+                    }
+		    else {
+                        dependency.appendNode('version', '')
+
+	            }
+                }
+            }
+        }
+    }
+   repositories {
+        maven {
+            url "${artifactory_contextUrl}/${artifactory_repoKey}"
+            credentials {
+                username = "${artifactory_user}"
+                password =  "${artifactory_password}"
+            }
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        maven {
+            url = "${artifactory_contextUrl}/emaas-virtual"
+        }
+    }
+    dependencies {
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+    }  
 }
  
 dependencies { 
@@ -20,8 +97,11 @@ dependencies {
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+')
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+')
         compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
-				compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
+	compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
+	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 } 
+
+build.dependsOn integTestJar

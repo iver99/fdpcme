@@ -51,7 +51,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			pm.removeAllPreferences(tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -74,7 +74,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			pm.removePreference(key, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -98,7 +98,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Preference input = pm.getPreferenceByKey(key, tenantId);
 			return Response.ok(getJsonUtil().toJson(input)).build();
 		}
@@ -120,7 +120,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			List<Preference> ps = pm.listPreferences(tenantId);
 			if (ps != null) {
 				for (Preference p : ps) {
@@ -164,7 +164,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			input.setKey(key);
 
 			pm.savePreference(input, tenantId);
