@@ -17,7 +17,7 @@ jar {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests-dev'
+    appendix = 'integ-tests'
 }
 dependencies {
 
