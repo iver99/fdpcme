@@ -15,7 +15,8 @@ requirejs.config({
         '*': {
               'emcsutl/ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
               'ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
-              'message-util': '../emcsDependencies/dfcommon/js/util/message-util'
+              'message-util': '../emcsDependencies/dfcommon/js/util/message-util',
+              'df-util': '../emcsDependencies/dfcommon/js/util/df-util'
              }        
     },
     // Path mappings for the logical module names
@@ -36,6 +37,7 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
         'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'timeselector':'../emcsDependencies/timeselector/js',
