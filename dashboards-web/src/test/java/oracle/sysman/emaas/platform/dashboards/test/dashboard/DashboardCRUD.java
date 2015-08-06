@@ -526,8 +526,8 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken)
-							.when()
-							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
+					.when()
+					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
 			Assert.assertTrue(res1.getStatusCode() == 200);
 			List<String> list_dashboards = res1.jsonPath().get("dashboards.name");
 			totalResults = res1.jsonPath().getInt("totalResults");
@@ -545,7 +545,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=ITAnalytics&owners=Oracle,Others");
+					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=ITAnalytics&owners=Oracle,Others");
 			Assert.assertTrue(res2.getStatusCode() == 200);
 			List<String> list_dashboards2 = res2.jsonPath().get("dashboards.name");
 			totalResults_apptype = res2.jsonPath().getInt("totalResults");
@@ -582,8 +582,8 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken)
-							.when()
-							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Others");
+					.when()
+					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics&owners=Others");
 			Assert.assertTrue(res4.getStatusCode() == 200);
 			System.out.println(res4.asString());
 			List<String> list_dashboards3 = res4.jsonPath().get("dashboards.name");
@@ -603,7 +603,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("/dashboards?offset=0&limit=240&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
+					.get("/dashboards?offset=0&limit=240&appTypes=LogAnalytics,APM,ITAnalytics&owners=Oracle,Others");
 			Assert.assertTrue(res5.getStatusCode() == 200);
 			List<String> list_dashboards5 = res5.jsonPath().get("dashboards.name");
 			totalResults = res5.jsonPath().getInt("totalResults");
@@ -620,7 +620,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&owners=Oracle,Others");
+					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&owners=Oracle,Others");
 			Assert.assertTrue(res6.getStatusCode() == 200);
 			List<String> list_dashboards6 = res6.jsonPath().get("dashboards.name");
 			totalResults = res6.jsonPath().getInt("totalResults");
@@ -637,7 +637,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-					.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics");
+							.get("/dashboards?offset=0&limit=240&orderBy=access_Date&appTypes=LogAnalytics,APM,ITAnalytics");
 			Assert.assertTrue(res7.getStatusCode() == 200);
 			List<String> list_dashboards7 = res7.jsonPath().get("dashboards.name");
 			totalResults = res7.jsonPath().getInt("totalResults");
@@ -708,7 +708,7 @@ public class DashboardCRUD
 			Assert.assertEquals(res2.jsonPath().getString("dashboards.id[0]"), dashboard_id);
 
 			System.out
-					.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
+			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -862,6 +862,32 @@ public class DashboardCRUD
 	}
 
 	@Test
+	public void dashboard_orderByDefault()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Sort By Default");
+			System.out.println("Access the sort of system dashboard");
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Application Performance Monitoring");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Performance Analytics: Database");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[2]"), "Performance Analytics: Middleware");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[3]"), "Resource Analytics: Database");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
+
+	@Test
 	public void dashboard_orderByLastAccess()
 	{
 		String dashboard_id = "";
@@ -900,7 +926,7 @@ public class DashboardCRUD
 			Assert.assertEquals(res2.jsonPath().getString("dashboards.id[0]"), dashboard_id);
 
 			System.out
-					.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
+			.println("Access the system dashboard, then verify the system dashboard is the first one in dashboard list");
 			Response res3 = RestAssured
 					.given()
 					.contentType(ContentType.JSON)
@@ -1115,7 +1141,7 @@ public class DashboardCRUD
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
+					.get("/dashboards?queryString=Test_Dashboard_QueryAll&offset=0&limit=5");
 			Assert.assertTrue(res3.getStatusCode() == 200);
 			list_dashboards = res3.jsonPath().get("dashboards.name");
 			totalResults = res3.jsonPath().getInt("totalResults");
@@ -1837,23 +1863,32 @@ public class DashboardCRUD
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
 					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 			System.out.println("											");
-			
-			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", "", "X-REMOTE-USER",tenantid+"."+remoteuser,"Authorization", authToken).when().get("/dashboards");
+
+			Response res6 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", "", "X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization",
+							authToken).when().get("/dashboards");
 			System.out.println("Status code is: " + res6.getStatusCode());
 			Assert.assertTrue(res6.getStatusCode() == 403);
 			Assert.assertEquals(res6.jsonPath().get("errorCode"), 30000);
 			Assert.assertEquals(res6.jsonPath().get("errorMessage"),
 					"\"X-USER-IDENTITY-DOMAIN-NAME\" is missing in request header");
 			System.out.println("											");
-			
-			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid+"abc","X-REMOTE-USER",tenantid+"."+remoteuser, "Authorization", authToken).when().get("/dashboards");
+
+			Response res7 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid + "abc", "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards");
 			System.out.println("Status code is: " + res7.getStatusCode());
 			Assert.assertTrue(res7.getStatusCode() == 403);
 			Assert.assertEquals(res7.jsonPath().get("errorCode"), 30000);
-			Assert.assertEquals(res7.jsonPath().get("errorMessage"),
-					"Tenant Name is not recognized: "+tenantid+"abc");
+			Assert.assertEquals(res7.jsonPath().get("errorMessage"), "Tenant Name is not recognized: " + tenantid + "abc");
 			System.out.println("											");
 
 			System.out.println("											");
@@ -2100,36 +2135,48 @@ public class DashboardCRUD
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
 					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
 			System.out.println("											");
-			
+
 			Response res6 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER"," ","Authorization", authToken).when().get("/dashboards");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", " ", "Authorization", authToken).when()
+					.get("/dashboards");
 			System.out.println("Status code is: " + res6.getStatusCode());
 			Assert.assertTrue(res6.getStatusCode() == 403);
 			Assert.assertEquals(res6.jsonPath().get("errorCode"), 30000);
 			Assert.assertEquals(res6.jsonPath().get("errorMessage"),
 					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
 			System.out.println("											");
-			
+
 			Response res7 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"X-REMOTE-USER", remoteuser, "Authorization", authToken).when().get("/dashboards");
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", remoteuser, "Authorization", authToken)
+					.when().get("/dashboards");
 			System.out.println("Status code is: " + res7.getStatusCode());
 			Assert.assertTrue(res7.getStatusCode() == 403);
 			Assert.assertEquals(res7.jsonPath().get("errorCode"), 30000);
 			Assert.assertEquals(res7.jsonPath().get("errorMessage"),
 					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
 			System.out.println("											");
-			
-			Response res8 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"X-REMOTE-USER", tenantid+".", "Authorization", authToken).when().get("/dashboards");
+
+			Response res8 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + ".", "Authorization", authToken)
+					.when().get("/dashboards");
 			System.out.println("Status code is: " + res8.getStatusCode());
 			Assert.assertTrue(res8.getStatusCode() == 403);
 			Assert.assertEquals(res8.jsonPath().get("errorCode"), 30000);
 			Assert.assertEquals(res8.jsonPath().get("errorMessage"),
 					"Valid header \"X-REMOTE-USER\" in format of <tenant_name>.<user_name> is required");
 			System.out.println("											");
-			
-			Response res9 = RestAssured.given().contentType(ContentType.JSON).log().everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid,"X-REMOTE-USER", "."+remoteuser, "Authorization", authToken).when().get("/dashboards");
+
+			Response res9 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", "." + remoteuser, "Authorization",
+							authToken).when().get("/dashboards");
 			System.out.println("Status code is: " + res9.getStatusCode());
 			Assert.assertTrue(res9.getStatusCode() == 403);
 			Assert.assertEquals(res9.jsonPath().get("errorCode"), 30000);
