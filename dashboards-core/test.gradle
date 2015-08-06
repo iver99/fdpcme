@@ -1,5 +1,5 @@
 
-jar.archiveName='emcpdf_dev_test.jar'
+//jar.archiveName='emcpdf_dev_test.jar'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.0.1'
 sourceSets {
@@ -11,7 +11,7 @@ sourceSets {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests-dev'
+    appendix = 'integ-tests'
 }
 
 dependencies {

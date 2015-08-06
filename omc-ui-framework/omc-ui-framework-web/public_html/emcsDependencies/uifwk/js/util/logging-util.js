@@ -7,8 +7,8 @@
  * Then, call the usual JET oj.logger methods.  This custom logger intercepts those logs
  * and sends them to your logger url (passed in initialization).
  */
-define(['ojs/ojcore', 'uifwk/js/util/ajax-util'],
-    function(oj, ajaxUtilModel)
+define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
+    function(oj, ajaxUtilModel, dfumodel)
     {
         
         // Custom logger.
@@ -86,6 +86,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util'],
         var serverUrlToSendLogs = null;
         
         var ajaxUtil = new ajaxUtilModel();
+        var dfu = null;
 
         /**
          * Cache the log and send to server if cache limit is reached.
@@ -140,6 +141,10 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util'],
                 //TODO: Change to use callServiceManager.
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
+                var headers = undefined;
+                if (dfu.isDevMode()){
+                    headers = {"Authorization":"Basic " + btoa(dfu.getDevData().wlsAuth)};
+                }
                 ajaxUtil.ajaxWithRetry({
                     url: serverUrlToSendLogs,
                     type: "POST",
@@ -156,6 +161,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util'],
                             "errorThrown: " + errorThrown);
                     },
                     description: "custom logger: Sending logs to server",
+                    headers: headers,
                     async:false
                 });
             };
@@ -197,6 +203,9 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util'],
             {
                 logOwner = tenantUser;
                 serverUrlToSendLogs = url;
+                var userName = logOwner.substring(logOwner.indexOf('.')+1);
+                var tenantName = logOwner.substring(0, logOwner.indexOf('.'));
+                dfu = new dfumodel(userName, tenantName);
 
                 if (maxInterval != undefined) {
                     logsCacheMaxInterval = maxInterval;

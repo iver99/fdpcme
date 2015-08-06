@@ -49,10 +49,10 @@ public class ErrorEntity
 	private Integer errorCode;
 	private String errorMessage;
 
-	public ErrorEntity()
-	{
-
-	}
+	//	public ErrorEntity()
+	//	{
+	//
+	//	}
 
 	public ErrorEntity(BasicServiceMalfunctionException e)
 	{

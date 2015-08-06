@@ -32,6 +32,7 @@ public class WidgetAddPage {
 	
 	public void searchWidget(String widget) throws Exception
 	{
+		driver.getElement(WidgetPageId.searchBoxID).clear();
 		driver.sendKeys(WidgetPageId.searchBoxID, widget);
 	}
 	

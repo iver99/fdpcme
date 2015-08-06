@@ -150,6 +150,21 @@ $.widget('dbs.dbsDashboardPanel',
             .bind('click.' + _name, function (event) {
                 self._fireNavigated(event);
             });
+            this._on( this.element, {
+			keydown: function( event ) {
+                            var keyCode = $.ui.keyCode;
+                            switch ( event.keyCode ) {
+                                case keyCode.ENTER:
+                                        if (_element[0] === event.target)
+                                        {
+                                            self._fireNavigated(event);
+                                            event.preventDefault();
+                                        }
+					break;
+                                default: break;
+                            }            
+                        }
+                    });
         },
         
         _truncateString: function(str, length) {
@@ -238,10 +253,15 @@ $.widget('dbs.dbsDashboardPanel',
             else {
                 if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'].length > 0))
                 {
-                    dfu.ajaxWithRetry({
+                   
+              var url =  _dashboard['screenShotHref'];
+              if (dfu.isDevMode()){
+                  url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,'dashboards/'+ self.options['dashboard']['id'] + '/screenshot');
+              } 
+                   dfu.ajaxWithRetry({
                             //This will be a page which will return the base64 encoded string
                         //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
-                        url: _dashboard['screenShotHref'],                   
+                        url: url,                   
                         headers: dfu.getDashboardsRequestHeader(),
                         success: function(response){
                             var __ss = (response.screenShot ? response.screenShot : undefined);

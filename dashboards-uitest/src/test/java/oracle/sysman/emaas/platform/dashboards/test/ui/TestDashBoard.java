@@ -67,7 +67,8 @@ public class TestDashBoard extends LoginAndLogout{
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 				
 		DashBoardUtils.openDBCreatePage();
-		DashBoardUtils.inputDashBoardInfo();
+		String dbName="AAA_testDashboard";
+		DashBoardUtils.inputDashBoardInfo(dbName);
 		//verify input info's existence
 		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
 		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
@@ -157,6 +158,68 @@ public class TestDashBoard extends LoginAndLogout{
 					
 	}
 	
+	@Test
+	public void testSpecialDashBoard() throws Exception
+	{
+				
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		
+		webd.getLogger().info("start to test in testCreateSpecialDashBoard");
+		
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+				
+		DashBoardUtils.openDBCreatePage();
+		String dbName="testDashboard_Spec";
+		DashBoardUtils.inputDashBoardInfo(dbName);
+		DashBoardUtils.waitForMilliSeconds(5000);
+		//verify input info's existence
+		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
+		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		DashBoardUtils.clickOKButton();		
+		
+		webd.takeScreenShot();
+		String widgetName = "Database Errors Trend";
+		//add widget
+		DashBoardUtils.addWidget(1,parentWindow,widgetName);
+				
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
+			
+	}
 	
-	
+	@Test
+	public void testUserMenu() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testUserMenu");
+		
+		//check OOB delete protection
+		DashBoardUtils.searchDashBoard("Application Performance");
+		DashBoardUtils.waitForMilliSeconds(2000);
+		
+		webd.click(DashBoardPageId.InfoBtnID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
+		Assert.assertFalse(removeButton.isEnabled());
+		
+		webd.click(DashBoardPageId.MenuBtnID);
+		//about menu
+		webd.click(DashBoardPageId.AboutID);
+		DashBoardUtils.waitForMilliSeconds(5000);
+		Assert.assertEquals(webd.getWebDriver().findElement(By.xpath(DashBoardPageId.AboutContentID)).getText(),"Warning: Unauthorized access is strictly prohibited.");
+		webd.click(DashBoardPageId.AboutCloseID);
+		
+		//help menu
+		//webd.click(DashBoardPageId.MenuBtnID);
+		//webd.click(DashBoardPageId.HelpID);
+		//DashBoardUtils.waitForMilliSeconds(5000);
+		//Assert.assertEquals(webd.getWebDriver().findElement(By.xpath(DashBoardPageId.HelpContentID)).getText(),"Get Started");
+		
+		//signout menu
+		//webd.click(DashBoardPageId.MenuBtnID);
+		//webd.click(DashBoardPageId.SignOutID);
+	}
 }

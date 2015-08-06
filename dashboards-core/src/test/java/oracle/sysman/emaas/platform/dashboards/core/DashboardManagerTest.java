@@ -41,6 +41,9 @@ public class DashboardManagerTest
 	@Test
 	public void testCreateDashboardDifUserSameNameSameTenant() throws DashboardException
 	{
+		DashboardManager dm0 = DashboardManager.getInstance();
+
+		dm0.deleteDashboard(null, false, null);
 		// EMCPDF-85	Diff user is able to create dashboard with the same name for the same tenant
 		Dashboard dbd1 = new Dashboard();
 		DashboardManager dm = DashboardManager.getInstance();
@@ -767,7 +770,10 @@ public class DashboardManagerTest
 		Assert.assertEquals(allSize, pd.getTotalResults());
 
 		// query by page size/offset
-		pd = dm.listDashboards("key", 2, 2, tenant1, true);
+		DashboardsFilter filter = new DashboardsFilter();
+		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
+		filter.setIncludedOwnersFromString("Oracle,Others");
+		pd = dm.listDashboards("key", 2, 2, tenant1, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
 		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd7.getDashboardId());
 		Assert.assertEquals(2, pd.getDashboards().size());
 		Assert.assertEquals(2, pd.getLimit().intValue());

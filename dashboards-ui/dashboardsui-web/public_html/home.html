@@ -10,7 +10,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/emcsDependencies/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.0/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.1/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/dashboards-home-alta.css" type="text/css"/>
@@ -150,9 +150,9 @@
                                             <!-- tiles panel start -->
                                             <div id="dtabhomesc" class="dbs-summaries-container">
                                                 <!-- ko foreach: dashboards -->
-                                                <div class="oj-panel dbs-summary-container" 
+                                                <div tabindex="0" class="oj-panel dbs-summary-container" 
                                                     data-tag data-bind="dbsDashboardPanel: {
-                                                                   activated: $root.handleShowDashboardPop,
+                                                                   activated: null,
                                                                    deactivated: null,
                                                                    showInfoClicked: $root.handleShowDashboardPop,
                                                                    deleteClicked: $root.handleDashboardDeleted,
@@ -171,7 +171,7 @@
 
                     <!-- dashboard info popup start-->
                     <div id="dsbinfopop"  style="display:none; width:260px;" 
-                                              data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
+                                              data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', autoDismiss: 'focusLoss', initialFocus: 'none', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
                         <div data-bind="with: selectedDashboard">
                             <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>

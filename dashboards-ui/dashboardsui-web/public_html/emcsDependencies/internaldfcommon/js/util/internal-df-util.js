@@ -21,34 +21,22 @@ define(['knockout',
             
             self.getUserTenantFromCookie = function() {
                 return userTenantUtil.getUserTenant();
-                
-//                var userTenantPrefix = "ORA_EMSAAS_USERNAME_AND_TENANTNAME=";//e.g. TenantOPC1.SYSMAN
-//                var cookieArray = document.cookie.split(';');
-//                var tenantName=null; //in case tenant name is not got
-//                var tenantUser=null; //in case use name is not got
-//                for (var i = 0; i < cookieArray.length; i++) {
-//                    var c = cookieArray[i];
-//                    if (c.indexOf(userTenantPrefix) !== -1) {
-//                        tenantUser = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
-//                        var dotPos = tenantUser.indexOf(".");
-//                        if (tenantUser && dotPos>0){
-//                           tenantName= tenantUser.substring(0,dotPos);
-//                        }
-//                        break;
-//                    }
-//                }
-//                if ((!tenantName || !tenantUser) && location.href && location.href.indexOf("error.html") === -1) {
-//                	location.href = "/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID&invalidUrl=" + encodeURIComponent(location.href);
-//                	return null;
-//                }
-//                else
-//                	return {"tenant": tenantName, "tenantUser": tenantUser};
             };
             
             var userTenant = self.getUserTenantFromCookie();
             var userName = getUserName(userTenant);
             var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
             var dfu = new dfumodel(userName, tenantName);
+            var isDevMode=dfu.isDevMode(); 
+            var devData = dfu.getDevData();  
+            if (isDevMode){
+               self.getDevData = function(){
+                   return devData;
+               }
+            }
+            self.isDevMode = function(){
+                return isDevMode;
+            }
             
             self.getUserName = function() {
                 return userName;
@@ -63,35 +51,15 @@ define(['knockout',
              * @returns {String} url
              */
             self.discoverSavedSearchServiceUrl = function() {
-            	return '/sso.static/savedsearch.navigation';
-//                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-//                var regInfo = self.getRegistrationInfo();
-//                if (regInfo && regInfo.ssfRestApiEndPoint){
-//                    return regInfo.ssfRestApiEndPoint;
-//                }else{
-//                    console.log("Failed to discovery SSF REST API end point");
-//                    return null;
-//                }
+                if (self.isDevMode()){
+                   return self.getDevData().ssfRestApiEndPoint; 
+                }else{
+                    return '/sso.static/savedsearch.navigation';
+                }
             };
 
-            /**
-             * Discover available Saved Search service URL
-             * @returns {String} url
-             */
-//            self.discoverDFRestApiUrl = function() {
-//                var regInfo = self.getRegistrationInfo();
-//                if (regInfo && regInfo.dfRestApiEndPoint){
-//                    return regInfo.dfRestApiEndPoint;
-//                }else{
-//                    console.log("Failed to discovery DF REST API end point");
-//                    return null;
-//                }
-//            };
-              
-            
-             self.registrationInfo = null;
+            self.registrationInfo = null;
             self.getRegistrationInfo=function(){
-             
                 if (self.registrationInfo===null){
                     ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
                         dataType: 'json',
@@ -104,19 +72,17 @@ define(['knockout',
                             console.log('Failed to get registion info!');
                         }
                     });                     
-//                    $.ajaxSettings.async = false;
-//                    $.getJSON(self.getRegistrationEndPoint(), function(data) {
-//                        self.registrationInfo = data;
-//                    });
-//                    $.ajaxSettings.async = true; 
                 }
                 return self.registrationInfo;
             };
             
             self.getRegistrationEndPoint=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
-                return '/sso.static/dashboards.configurations/registration';
-//                return 'data/servicemanager.json';
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration"); 
+                }else{
+                    return '/sso.static/dashboards.configurations/registration';
+                }
             };
 
             /**
@@ -196,10 +162,6 @@ define(['knockout',
                 return dfu.buildFullUrl(root, path);
             };
                         
-//            self.getRegistryUrl = function() {
-//                var regInfo = self.getRegistrationInfo();
-//                return regInfo && regInfo.registryUrl ? regInfo.registryUrl : '';
-//            };
             
             /**
              * Get request header for Saved Search Service API call
@@ -253,25 +215,7 @@ define(['knockout',
                 } else {
                     return null;
                 }
-//                var assetRoot = null;
-//                if (providerName && providerVersion && providerAssetRoot){
-//                    var url = "api/registry/lookup/link?serviceName="+providerName+"&version="+providerVersion+"&rel="+providerAssetRoot;
-//                    $.ajax(url,{
-//                            success:function(data, textStatus,jqXHR) {
-//                                if (data){
-//                                    assetRoot = data.href;
-//                                }else{
-//                                    console.log("Got NULL assetRoot by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
-//
-//                                }
-//                            },
-//                            error:function(xhr, textStatus, errorThrown){
-//                                console.log("Warning: asset root not found by providerName="+providerName+", providerVersion="+providerVersion+", providerAssetRoot="+providerAssetRoot);
-//                            },
-//                            async:false
-//                        });
-//                }
-//                return assetRoot;
+
             };
             
             function getUserName(userTenant) {

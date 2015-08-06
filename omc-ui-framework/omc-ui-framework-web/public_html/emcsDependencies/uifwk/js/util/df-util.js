@@ -12,6 +12,18 @@ define([
             self.userName = userName;
             self.tenantName = tenantName;
                         
+            
+            /**
+             * Get URL parameter value according to URL parameter name
+             * @param {String} name
+             * @returns {parameter value}
+             */
+            self.getUrlParam = function(name){
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+                return results === null ? "" : results[1];                
+            };
+
+            
             /**
              * Catenate root and path to build full path
              * e.g.
@@ -56,7 +68,30 @@ define([
                     return root+"/"+path;
                 }
             };
+            
+            self.LOOKUP_REST_URL_BASE="/sso.static/dashboards.registry/lookup/";
+            self.SUBSCIBED_APPS_REST_URL="/sso.static/dashboards.subscribedapps";
+            self.SSF_REST_API_BASE="/sso.static/savedsearch.navigation";
+            var devMode = (window.DEV_MODE!==null && typeof window.DEV_MODE ==="object");
+            var devData = window.DEV_MODE;
+            if (window.DEV_MODE!==null && typeof window.DEV_MODE ==="object"){
+                devMode=true;
+                devData.userTenant={"tenant": devData.tenant, "user": devData.user, "tenantUser": devData.tenant+"."+devData.user};
+                self.LOOKUP_REST_URL_BASE=self.buildFullUrl(devData.dfRestApiEndPoint,"registry/lookup/");
+                self.SUBSCIBED_APPS_REST_URL=self.buildFullUrl(devData.dfRestApiEndPoint,"subscribedapps");
+                self.SSF_REST_API_BASE=devData.ssfRestApiEndPoint;                
+                console.log("====>DEV MODE:"+devMode);
+            }
 
+            
+            self.isDevMode = function(){
+                return devMode;
+            };        
+            
+            self.getDevData=function(){
+                return devData;
+            };
+            
             /**
              * 
              * Discover URL from Service Manager Registry
@@ -76,9 +111,9 @@ define([
                 }
 
                 var result =null;
-                var url ="/sso.static/dashboards.registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                var url =self.LOOKUP_REST_URL_BASE+"endpoint?serviceName="+serviceName+"&version="+version; 
                 if (typeof rel==="string"){
-                    url = "/sso.static/dashboards.registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                    url = self.LOOKUP_REST_URL_BASE+"link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
                 self.ajaxWithRetry(url,{
@@ -131,9 +166,9 @@ define([
                     return;
                 }
 
-                var url ="/sso.static/dashboards.registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                var url =self.LOOKUP_REST_URL_BASE+"endpoint?serviceName="+serviceName+"&version="+version; 
                 if (typeof rel==="string"){
-                    url = "/sso.static/dashboards.registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                    url = self.LOOKUP_REST_URL_BASE+"link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
                 self.ajaxWithRetry(url, {
@@ -184,7 +219,7 @@ define([
                     return null;                    
                 }
                 var result =null;
-                var url= "/sso.static/dashboards.registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                var url= self.LOOKUP_REST_URL_BASE+"linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
 
                 self.ajaxWithRetry(url,{
                     type: 'get',
@@ -235,7 +270,7 @@ define([
                     return;                    
                 }
                 
-                var url= "/sso.static/dashboards.registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                var url= self.LOOKUP_REST_URL_BASE+"linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 self.ajaxWithRetry(url,{
                     type: 'get',
                     dataType: 'json',
@@ -291,6 +326,9 @@ define([
 //                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
                     "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
                     "X-REMOTE-USER":self.tenantName+'.'+self.userName};
+                if (self.isDevMode()){
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
                 return defHeader;
             };
@@ -321,8 +359,7 @@ define([
                 }
                 
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps";
-
+                var url = self.SUBSCIBED_APPS_REST_URL;
                 var result = null;
                 self.ajaxWithRetry(url, {
                     type: 'get',
@@ -363,7 +400,7 @@ define([
                 }
                 
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps?withEdition=true";
+                var url = self.SUBSCIBED_APPS_REST_URL+"?withEdition=true";
 
                 var result = null;
                 $.ajax(url, {
@@ -411,7 +448,7 @@ define([
                 }
                 
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps?withEdition=true";
+                var url = self.SUBSCIBED_APPS_REST_URL+"?withEdition=true";
 
                 var result = null;
                 $.ajax(url, {
@@ -449,9 +486,9 @@ define([
                     oj.Logger.error("Specified user name is empty, and the query won't be executed.");
                     return;
                 }
-                
+
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps";
+                var url = self.SUBSCIBED_APPS_REST_URL;
 
                 self.ajaxWithRetry(url, {
                     type: 'get',
@@ -484,7 +521,7 @@ define([
 //                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
 //                return self.discoverUrl('SavedSearch', '0.1');
-                return '/sso.static/savedsearch.navigation';
+                return self.SSF_REST_API_BASE;
             };
             
             /**

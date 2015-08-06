@@ -25,8 +25,8 @@ public class DashBoardPageId {
 	public static final String DeleteBtnID_Dialog = "//div[@id='ojDialogWrapper-dbs_cfmDialog']/div[5]/button";
 	public static final String OverviewCloseID = "overviewClose";
 	public static final String DashBoardName = "//span[@id='builder-dbd-name-display-hover-area']";
-	public static final String AddBtn = "widget-selector-okbtn";
-	public static final String closeBtnID = "//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span";
+	public static final String AddBtn = "widget-selector-okbtn";//
+	public static final String closeBtnID = "/html/body/div[1]/div[2]/div/div[3]/div/span";//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span"; // ";";
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
@@ -88,5 +88,48 @@ public class DashBoardPageId {
 	//remove dashboard/html/body/div[3]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button
 	public static final String InfoBtnID = "/html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 	public static final String RmBtnID = "/html/body/div/div/div/div/div/div/div[2]/button";
+	
+	//help id and about id
+	public static final String MenuBtnID = "menubutton";
+	public static final String HelpID = "emcpdf_oba_help";
+	public static final String AboutID = "emcpdf_oba_about";
+	public static final String SignOutID = "emcpdf_oba_logout";
+	public static final String ExploreDataBtnID = "exploreDataBtn";
+	public static final String HelpContentID = "get_started";//task
+	public static final String AboutContentID = "/html/body/div[1]/div[2]/div/div[4]/div[2]/div[2]/p[2]";
+	public static final String AboutCloseID = "okButton";
+	
+	//edit dashboard
+	public static final String TimeRangeID = "/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button";
+	public static final String NameEditID = "builder-dbd-name-editor-btn";
+	public static final String DescEditID = "builder-dbd-description-editor-btn";
+	public static final String NameInputID = "builder-dbd-name-input";
+	public static final String DescInputID = "builder-dbd-description-input";
+	public static final String NameEditOKID = "builder-dbd-name-ok";
+	public static final String DescEditOKID = "builder-dbd-description-ok";
+	
+	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
+	public static final String AutoRefreshID = "//*[@id='ojChoiceId_autoRefreshSelect_selected']";
+	public static final String AutoRefreshBy_15_Secs_ID = "/html/body/div[1]/div/div/ul/li[2]/div";//oj-listbox-result-label-2";	
+	public static final String AutoRefreshBy_30_Secs_ID = "/html/body/div[1]/div/div/ul/li[3]/div";//oj-listbox-result-label-3";
+	public static final String AutoRefreshBy_1_Min_ID = "/html/body/div[1]/div/div/ul/li[4]/div";//oj-listbox-result-label-4";
+	public static final String AutoRefreshBy_15_Mins_ID = "/html/body/div[1]/div/div/ul/li[5]/div";//oj-listbox-result-label-5";
+	
+	//tile operation
+	public static final String ConfigTileID = "/html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
+	public static final String EditTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
+	public static final String RefreshTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
+	public static final String DeleteTileID = "/html/body/div[1]/div/ul/li[3]/a/span[2]";
+	public static final String WiderTileID = "/html/body/div[1]/div/ul/li[4]/a/span[2]";
+	public static final String NarrowerTileID = "/html/body/div[1]/div/ul/li[5]/a/span[2]";
+	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[6]/a/span[2]";
+	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
+	
+	//time picker /html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button
+	public static final String TimePickerID = "/html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";
+	public static final String ApplyBtnID = "applyButton";
+	public static final String CancelBtnID = "cancelButton";
+	public static final String DateID1 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/table/tbody/tr[4]/td[2]/a";
+	public static final String DateID2 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[2]/table/tbody/tr[4]/td[3]/a";
 	
 }

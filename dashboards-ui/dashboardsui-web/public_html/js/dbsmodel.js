@@ -28,6 +28,11 @@ function(dsf, oj, ko, $, dfu, pfu)
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
     
+    if (dfu.isDevMode()){
+       DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
+       PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
+       SUBSCIBED_APPS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"subscribedapps");        
+    }
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -230,6 +235,14 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.selectedDashboard(data);
             if (data.element)
             {
+//                if (data.dashboard.systemDashboard == true)
+//                {
+//                    popup.ojPopup( "option", "initialFocus", "none" );
+//                }
+//                else
+//                {
+//                    popup.ojPopup( "option", "initialFocus", "firstFocusable" );
+//                }
                 popup.ojPopup('open', data.element, {'at': 'right center', 'my': 'start center'});
             }
         };
@@ -284,7 +297,11 @@ function(dsf, oj, ko, $, dfu, pfu)
             //window.open(ui.item.children("a")[0].value);
             if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
             {
-                window.location = ui.item.children("a")[0].value;
+                if (dfu.isDevMode()){
+                    window.location = dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value);
+                }else{
+                    window.location = ui.item.children("a")[0].value;
+                }
             }
         };
         

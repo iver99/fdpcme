@@ -11,9 +11,9 @@ requirejs.config({
         'jqueryui-amd': '../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
@@ -48,7 +48,8 @@ requirejs.config({
               return true;
             }
           }
-    }
+    },
+    waitSeconds: 60
 });
 
 

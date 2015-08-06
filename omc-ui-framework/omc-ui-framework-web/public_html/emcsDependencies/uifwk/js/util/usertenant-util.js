@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util'],
-    function($, oj, ajaxUtilModel)
+define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
+    function($, oj, ajaxUtilModel, dfumodel)
     {
         function DashboardFrameworkUserTenantUtility() {
             var self = this;
+            var dfu = new dfumodel();
+            self.devMode=dfu.isDevMode();
             var ajaxUtil = new ajaxUtilModel();
             
             /**
@@ -19,6 +21,9 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util'],
              *                          "tenantUser": "emaastesttenant1.emcsadmin"}
              */ 
             self.getUserTenant = function() {
+                if (self.devMode){
+                    return dfu.getDevData().userTenant;
+                }
                 var tenantName = null; //in case tenant name is not got
                 var userName = null;   //in case use name is not got
                 var tenantUser = null; //in case tenantName.userName is not got
@@ -62,8 +67,13 @@ define(['jquery', 'ojs/ojcore', 'uifwk/js/util/ajax-util'],
                 return self.getUserTenant();
             };
             
-            var userTenant = self.getUserTenant();
-            
+//            var userTenant = self.getUserTenant();
+            var userTenant = null;
+            if (self.devMode){
+                userTenant=dfu.getDevData().userTenant;
+            }else{
+                userTenant = self.getUserTenant();
+            }
             /**
              * Get logged in user name
              * 
