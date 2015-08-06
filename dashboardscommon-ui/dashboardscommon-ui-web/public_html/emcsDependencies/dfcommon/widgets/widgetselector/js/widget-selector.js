@@ -447,6 +447,8 @@ define(['require',
                                     }
                                     else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
                                         widget.WIDGET_HISTOGRAM = itaImagePath;
+                                    }else{
+                                        widget.WIDGET_HISTOGRAM = itaImagePath;//default image
                                     }
                                 }
                                 else {
