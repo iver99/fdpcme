@@ -6,8 +6,10 @@
 
 define({
   "root": {
-      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
-      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
+//      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
+//      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
+      "DBS_HOME_TITLE_HOME": "Home",
+      "DBS_HOME_TITLE_DASHBOARDS": "Dashboards",
       "COMMON_BTN_OK": "OK",
       "COMMON_BTN_CANCEL": "Cancel",
       "COMMON_BTN_SAVE": "Save",

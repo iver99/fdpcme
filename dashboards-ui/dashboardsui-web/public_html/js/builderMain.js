@@ -15,7 +15,8 @@ requirejs.config({
         '*': {
               'emcsutl/ajax-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/ajax-util',
               'ajax-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/ajax-util',
-              'message-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/message-util'
+              'message-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/message-util',
+              'df-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util'
              }        
     },
     // Path mappings for the logical module names
@@ -36,6 +37,7 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'df-util':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util',
         'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'timeselector':'../emcsDependencies/timeselector/js',

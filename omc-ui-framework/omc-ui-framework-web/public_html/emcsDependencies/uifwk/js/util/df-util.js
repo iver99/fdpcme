@@ -658,6 +658,38 @@ define([
             		return url;
             	return urlNoProtocol.substring(relPathIndex);
             };
+
+            /**
+             * Generate the window title according to given params.
+             * 
+             * @param {type} pageName 
+             * @param {type} contextName
+             * @param {type} targetType
+             * @param {type} serviceName
+             * @returns {String} 
+             */
+            self.generateWindowTitle = function(pageName, contextName, targetType, serviceName) {
+                var title = "";
+                var title_suffix = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE : 'Oracle Management Cloud';
+                if(pageName) {
+                    title = title + pageName;
+                }
+                if(contextName) {
+                    title = pageName ? (title + ": ") : title;
+                    title = title + contextName;
+                    if(targetType) {
+                        title = title + " (" + targetType + ")";                   
+                    }
+                }
+                if(pageName || contextName) {
+                    title = title + " - ";
+                }
+                if(serviceName) {
+                    title = title + serviceName + " - ";
+                }
+                title = title + title_suffix;
+                return title;
+            };
             
         }
         

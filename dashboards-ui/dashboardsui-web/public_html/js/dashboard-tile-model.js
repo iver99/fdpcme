@@ -7,6 +7,7 @@ define(['knockout',
         'knockout.mapping',
         'timeselector/time-selector-model',
         'dfutil',
+        'df-util',
         'ojs/ojcore',
         'jquery',
         'jqueryui',
@@ -18,7 +19,7 @@ define(['knockout',
         'canvg'
     ],
     
-    function(ko, km, TimeSelectorModel,dfu)
+    function(ko, km, TimeSelectorModel,dfu, dfumodel)
     {
         var dtm = this;
         
@@ -452,7 +453,9 @@ define(['knockout',
             var self = this;
                         
             self.dashboard = dashboard;
-            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+//            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
