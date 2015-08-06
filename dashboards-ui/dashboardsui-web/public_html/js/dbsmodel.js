@@ -33,6 +33,7 @@ function(dsf, oj, ko, $, dfu, pfu)
        PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
        SUBSCIBED_APPS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"subscribedapps");        
     }
+    
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -517,20 +518,6 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.getIsIta = function () {
             return (getUrlParam("filter") === "ita" ? true : false);
         };
-        /*
-        self.checkItaService = function () {
-            if (self.getIsIta() === true)
-            {
-                if (self.sApplications === undefined)
-                {
-                    self.sApplications = {applications:[]};
-                }
-                if ($.inArray("ITAnalytics", self.sApplications['applications']) < 0)
-                {
-                    self.sApplications['applications'].push("ITAnalytics");
-                }
-            }
-        };*/
                     
         self.getShowLaService = function() {
             if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0) return true;
