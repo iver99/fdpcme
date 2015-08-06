@@ -28,6 +28,7 @@
         'promise': 'empty:',
         'dashboards': '.',
         'dfutil':'empty:',
+        'df-util':'empty:',
         'loggingutil':'empty:',
         'idfbcutil':'empty:',
         'timeselector':'empty:',
