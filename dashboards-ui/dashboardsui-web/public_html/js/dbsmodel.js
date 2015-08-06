@@ -337,16 +337,17 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.datasource['pagingDS'].create(_addeddb, {
                         'contentType': 'application/json',
                         
-                        success: function(response) {
+                        success: function(_model, _resp, _options) {
                             //console.log( " success ");
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
+                            _model.openDashboardPage();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             //console.log('Error in Create: ' + textStatus);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             self.createDashboardModel.isDisabled(false);
-                            var _m = getNlsString('COMMON_SERVER_ERROR');
+                            var _m = null; //getNlsString('COMMON_SERVER_ERROR');
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorMessage)
                             {
                                  _m = jqXHR[0].responseJSON.errorMessage;
@@ -359,11 +360,20 @@ function(dsf, oj, ko, $, dfu, pfu)
                                 // a server error record
                                  oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                             }
-                            _trackObj = new oj.InvalidComponentTracker();
-                            self.tracker(_trackObj);
-                            self.createMessages.push(new oj.Message(_m));
-                            _trackObj.showMessages();
-                            _trackObj.focusOnFirstInvalid();
+                            if (_m !== null)
+                            {
+                                _trackObj = new oj.InvalidComponentTracker();
+                                self.tracker(_trackObj);
+                                self.createMessages.push(new oj.Message(_m));
+                                _trackObj.showMessages();
+                                _trackObj.focusOnFirstInvalid();
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                            }
+                            else
+                            {
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                                $( "#cDsbDialog" ).ojDialog( "close" );
+                            }
                             /*
                             $( "#cDsbDialog" ).ojDialog( "close" );
                             self.confirmDialogModel.show("Error", "Ok", 
@@ -480,11 +490,6 @@ function(dsf, oj, ko, $, dfu, pfu)
                     }
                 });
             }
-        };
-        
-        self.getDashboard = function (id)
-        {
-           
         };
         
     };
