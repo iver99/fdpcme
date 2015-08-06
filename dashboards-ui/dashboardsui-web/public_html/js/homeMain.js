@@ -10,10 +10,10 @@
  */
 requirejs.config({
     //Set up module mapping
-    map: {
-        '*': 
-            {'df-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util'}
-    },
+//    map: {
+//        '*': 
+//            {'df-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util'}
+//    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -30,7 +30,7 @@ requirejs.config({
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'df-util':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util',
+//        'df-util':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util',
         'prefutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'dbs': '../js',
@@ -77,7 +77,7 @@ require(['dbs/dbsmodel',
     'jquery',
     'ojs/ojcore',
     'dfutil',
-    'df-util',
+    'uifwk/js/util/df-util',
     'loggingutil',
     'ojs/ojmodel',
     'ojs/ojknockout',

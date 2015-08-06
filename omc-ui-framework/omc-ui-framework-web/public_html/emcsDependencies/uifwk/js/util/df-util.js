@@ -1,9 +1,10 @@
 define([
     'jquery', 
     'ojs/ojcore', 
-    'uifwk/js/util/ajax-util'
+    'uifwk/js/util/ajax-util',
+    'ojL10n!uifwk/js/resources/nls/uifwkCommonMsgBundle'
 ],
-    function($, oj, ajaxUtilModel)
+    function($, oj, ajaxUtilModel, nls)
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
@@ -670,7 +671,7 @@ define([
              */
             self.generateWindowTitle = function(pageName, contextName, targetType, serviceName) {
                 var title = "";
-                var title_suffix = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE : 'Oracle Management Cloud';
+                var title_suffix = nls.BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE;
                 if(pageName) {
                     title = title + pageName;
                 }
