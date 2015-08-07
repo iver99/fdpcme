@@ -113,7 +113,7 @@ define(['require',
 //                        "PROVIDER_NAME": "DashboardFramework",
 //                        "PROVIDER_ASSET_ROOT": "asset",
 //                        "PROVIDER_VERSION": "1.0"}];
-                var assetRootList = {};
+//                var assetRootList = {};
                 var widgetIndex = 0;
                 self.widgetList = ko.observableArray(widgetArray);
                 self.curPageWidgetList = ko.observableArray(curPageWidgets);
@@ -333,7 +333,7 @@ define(['require',
                     index=0;
                     widgetIndex = 0;
                     widgetGroupList = [];
-                    assetRootList = {};
+//                    assetRootList = {};
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
 //                    if (ssfUrl && ssfUrl !== '') {
@@ -430,7 +430,7 @@ define(['require',
 //                                    widget.WIDGET_ICON = assetRoot + widget.WIDGET_ICON;
 //                                }
 
-                                if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
+                                if (!widget.WIDGET_VISUAL || widget.WIDGET_VISUAL === '') {
 //                                    var noImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/no-image-available.png');
                                     var laImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
                                     var taImagePath = getFilePathRelativeToHtml(localrequire, '../../../images/sample-widget-histogram.png');
@@ -440,24 +440,24 @@ define(['require',
 //                                    else
 //                                        widget.WIDGET_HISTOGRAM = sampleImagePath;
                                     if ('LoganService' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_HISTOGRAM = laImagePath;
+                                        widget.WIDGET_VISUAL = laImagePath;
                                     }
                                     else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_HISTOGRAM = taImagePath;
+                                        widget.WIDGET_VISUAL = taImagePath;
                                     }
                                     else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_HISTOGRAM = itaImagePath;
+                                        widget.WIDGET_VISUAL = itaImagePath;
                                     }else{
-                                        widget.WIDGET_HISTOGRAM = itaImagePath;//default image
+                                        widget.WIDGET_VISUAL = itaImagePath;//default image
                                     }
                                 }
-                                else {
-                                    var pname = widget.PROVIDER_NAME;
-                                    var pversion = widget.PROVIDER_VERSION;
-                                    var gname = widget.WIDGET_GROUP_NAME;
-                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
-                                    widget.WIDGET_HISTOGRAM = assetRoot + widget.WIDGET_HISTOGRAM;
-                                }
+//                                else {
+//                                    var pname = widget.PROVIDER_NAME;
+//                                    var pversion = widget.PROVIDER_VERSION;
+//                                    var gname = widget.WIDGET_GROUP_NAME;
+//                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
+//                                    widget.WIDGET_HISTOGRAM = assetRoot + widget.WIDGET_HISTOGRAM;
+//                                }
 
                                 if (!widget.WIDGET_DESCRIPTION)
                                     widget.WIDGET_DESCRIPTION = "";
@@ -486,7 +486,7 @@ define(['require',
                     var pname = null; //'DashboardFramework';
                     var pversion = null; // '1.0';
                     var gname = null; //self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;
-                    var assetRoot = '';
+//                    var assetRoot = '';
 //                    var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
                     targetWidgetGroupArray.push(groupAll);
 //                    if ((!widgetProviderName && !widgetProviderVersion) || 
@@ -508,8 +508,8 @@ define(['require',
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
 
-                                    assetRoot = dfu.discoverUrl(pname, pversion, data[i].PROVIDER_ASSET_ROOT);
-                                    assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
+//                                    assetRoot = dfu.discoverUrl(pname, pversion, data[i].PROVIDER_ASSET_ROOT);
+//                                    assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
                                 }
                             }
                         }
