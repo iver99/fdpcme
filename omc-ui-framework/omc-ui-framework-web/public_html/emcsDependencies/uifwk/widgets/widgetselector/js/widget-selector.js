@@ -47,7 +47,6 @@ define([
                 self.widgetGroups=ko.observableArray([{value: "all|all|All", label: "All"}]);
                 var widgetArray = [];
                 var curGroupWidgets = [];
-                var integratorWidgets = [];
                 var widgetGroupList = [];
                 var curPageWidgets=[];
                 var searchResultArray = [];
@@ -56,21 +55,6 @@ define([
                 var curPage = 1;
                 var totalPage = 0;
                 var naviFromSearchResults = false;
-//                var dbsBuiltinWidgets = [{
-//                        "WIDGET_UNIQUE_ID": 1,
-//                        "WIDGET_NAME": "Generic URL Widget",
-//                        "WIDGET_DESCRIPTION": "A generic widget to show a web page by a given URL",
-//                        "WIDGET_OWNER": "SYSMAN",
-//                        "WIDGET_CREATION_TIME": "2015-01-20T07:07:07.405Z",
-//                        "WIDGET_SOURCE": 0,
-//                        "WIDGET_GROUP_NAME": "Dashboards Built-In",
-//                        "WIDGET_TEMPLATE": "../emcsDependencies/widgets/iFrame/widget-iframe.html",
-//                        "WIDGET_KOC_NAME": "DF_V1_WIDGET_IFRAME",
-//                        "WIDGET_VIEWMODEL": "../emcsDependencies/widgets/iFrame/js/widget-iframe",
-//                        "PROVIDER_NAME": "DashboardFramework",
-//                        "PROVIDER_ASSET_ROOT": "asset",
-//                        "PROVIDER_VERSION": "1.0"}];
-                var assetRootList = {};
                 var widgetIndex = 0;
                 self.widgetList = ko.observableArray(widgetArray);
                 self.curPageWidgetList = ko.observableArray(curPageWidgets);
@@ -290,7 +274,7 @@ define([
                             url: widgetsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
-                                integratorWidgets = data;
+                                loadWidgets(data);
                             },
                             error: function(xhr, textStatus, errorThrown){
                                 oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
@@ -299,14 +283,12 @@ define([
                         });  
                 };
                 
-                var getWidgetGroupsDeferred = null;
                 function getWidgetGroups() {
-                    getWidgetGroupsDeferred = $.Deferred();
                     var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
                     if (dfu.isDevMode()){
                         widgetgroupsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgetgroups");
                     }
-                    dfu.ajaxWithRetry({
+                    return dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
                             success: function(data, textStatus) {
@@ -316,12 +298,10 @@ define([
                                 }
                             },
                             error: function(xhr, textStatus, errorThrown){
-                                getWidgetGroupsDeferred.reject(xhr, textStatus, errorThrown);
                                 oj.Logger.error('Error when fetching widget groups by URL: '+widgetgroupsUrl+'.');
                             },
                             async: true
                         });
-                    return getWidgetGroupsDeferred.promise();
                 };
                 
                 function refreshPageData() {
@@ -347,14 +327,12 @@ define([
                     index=0;
                     widgetIndex = 0;
                     widgetGroupList = [];
-                    assetRootList = {};
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
                     refreshPageData();
                     
                     $.when(getWidgetGroups(), getWidgets()).then(function(){
                         oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
-                        loadWidgets(integratorWidgets);
                         refreshPageData();
                     })
                     .fail(function(xhr, textStatus, errorThrown){
@@ -372,26 +350,19 @@ define([
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 
-                                if (!widget.WIDGET_HISTOGRAM || widget.WIDGET_HISTOGRAM === '') {
+                                if (!widget.WIDGET_VISUAL || widget.WIDGET_VISUAL === '') {
                                     var laImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
                                     var taImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
                                     var itaImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
                                     if ('LoganService' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_HISTOGRAM = laImagePath;
+                                        widget.WIDGET_VISUAL = laImagePath;
                                     }
                                     else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_HISTOGRAM = taImagePath;
+                                        widget.WIDGET_VISUAL = taImagePath;
                                     }
                                     else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_HISTOGRAM = itaImagePath;
+                                        widget.WIDGET_VISUAL = itaImagePath;
                                     }
-                                }
-                                else {
-                                    var pname = widget.PROVIDER_NAME;
-                                    var pversion = widget.PROVIDER_VERSION;
-                                    var gname = widget.WIDGET_GROUP_NAME;
-                                    var assetRoot = assetRootList[pname+'_'+pversion+'_'+gname];
-                                    widget.WIDGET_HISTOGRAM = assetRoot + widget.WIDGET_HISTOGRAM;
                                 }
 
                                 if (!widget.WIDGET_DESCRIPTION)
@@ -418,18 +389,10 @@ define([
                     var targetWidgetGroupArray = [];
                     var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
                     var groupAll = {value:'all|all|All', label: labelAll};
-                    var pname = null; //'DashboardFramework';
-                    var pversion = null; // '1.0';
-                    var gname = null; //self.nlsStrings.WIDGET_SELECTOR_WIDGET_GROUP_DASHBOARDS_BUILTIN;
-                    var assetRootCnt = 0;
-//                    var assetRoot = '';
-//                    var groupDashboardBuiltIn = {value: pname+'|'+pversion+'|'+gname, label:gname};
+                    var pname = null; 
+                    var pversion = null; 
+                    var gname = null; 
                     targetWidgetGroupArray.push(groupAll);
-//                    if ((!widgetProviderName && !widgetProviderVersion) || 
-//                            (widgetProviderName === pname && widgetProviderVersion === pversion)) {
-//                        targetWidgetGroupArray.push(groupDashboardBuiltIn);
-//                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
-//                    }
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             pname = data[i].PROVIDER_NAME;
@@ -443,17 +406,6 @@ define([
                                 if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
-                                    
-                                    dfu.discoverUrlAsync(pname, pversion, data[i].PROVIDER_ASSET_ROOT, function(assetRoot){
-                                        assetRootList[pname+'_'+pversion+'_'+gname] = assetRoot;
-                                        assetRootCnt++;
-                                        if (assetRootCnt === data.length)
-                                            getWidgetGroupsDeferred.resolve();
-                                    });
-                                }
-                                //If it's ITA, need to count it but hide in UI
-                                else {
-                                    assetRootCnt++;
                                 }
                             }
                         }
@@ -471,7 +423,7 @@ define([
                         var min = 60*1000;
                         var hour = 60*min;
                         var day = 24*hour;
-                        var month = 60*day;
+                        var month = 30*day;
                         var year = 12*month;
                         var agoText = " "+ nls.WIDGET_SELECTOR_TIME_DIFF_AGO;
                         var diffCount = null;
