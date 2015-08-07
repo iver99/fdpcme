@@ -83,6 +83,7 @@ task small_deploy_3n_block(type: EMTest) {
     }
     useWebdriver = true
     useRestAssured = true
+
 }
 
      task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
@@ -97,6 +98,7 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
 	include "oracle/sysman/emaas/platform/dashboards/ws/*"
 	useRestAssured=true
+ext.set("testType", "integration")
 }
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
@@ -116,3 +118,5 @@ task small_deploy_3n_cleanup(type: EMTest) {
 
 
 task emcpdf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+
+apply from: "../../codeCoverage/codeCoverage.gradle"
