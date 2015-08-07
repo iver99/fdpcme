@@ -111,3 +111,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
 }
 
 task emcpdf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+apply from: "../../codeCoverage/codeCoverage.gradle"
