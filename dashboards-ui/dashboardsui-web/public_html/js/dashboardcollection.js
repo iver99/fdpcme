@@ -13,6 +13,9 @@ function(dfu, oj, ko, $)
         var self = this, _options = options || {};
         self.queryString = _options['query'] || null;
         self.orderBy = _options['orderBy'] || null;
+        self.types = _options['types'] || null;
+        self.appTypes = _options['appTypes'] || null;
+        self.owners = _options['owners'] || null;
         //self.url 
         var _customPagingOptions = function(response){
           var _ret = {
@@ -41,7 +44,19 @@ function(dfu, oj, ko, $)
                 if (self.orderBy !== null) 
                 {
                     __url = __url + "&orderBy=" + self.orderBy;
-                }   
+                }
+                if (self.types !== null && self.types.length > 0) 
+                {
+                    __url = __url + "&types=" + self.types.join(",");
+                }
+                if (self.appTypes !== null && self.appTypes.length > 0) 
+                {
+                    __url = __url + "&appTypes=" + self.appTypes.join(",");
+                }
+                if (self.owners !== null && self.owners.length > 0) 
+                {
+                    __url = __url + "&owners=" + self.owners.join(",");
+                }
             }
             //console.log("[DashboardCollection] operation: "+ _operation +"  "+__url + " \n      Header: " + JSON.stringify(dfu.getDashboardsRequestHeader())); //return __url;
             return {

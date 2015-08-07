@@ -21,8 +21,8 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
+import oracle.sysman.emaas.platform.dashboards.core.wls.management.AppLoggingManageMXBean;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
-import oracle.sysman.emaas.platform.dashboards.webutils.wls.management.AppLoggingManageMXBean;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

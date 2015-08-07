@@ -128,30 +128,37 @@ DashboardPaging.prototype.getPage = function()
   return this._page;
 };
 
-DashboardPaging.prototype.setPage = function(value, options)
+DashboardPaging.prototype.setPage = function(v, opts)
 {
-  options = options || {};
-  value = parseInt(value, 10);
+  var self = this, options = opts || {}, value = parseInt(v, 10), 
+          _successCallback = self.setPageCallback || options['success'], _errorCallbakc = options['error'];
   try 
   {
-    oj.CollectionPagingDataSource.superclass.handleEvent.call(this, oj.PagingModel.EventType['BEFOREPAGE'], {'page' : value, 'previousPage' : this._page});
+    DashboardPaging.superclass.handleEvent.call(this, oj.PagingModel.EventType['BEFOREPAGE'], {'page' : value, 'previousPage' : this._page});
   }
   catch (err)
   {
     return Promise.reject(null);
   }
-  this.pageSize = options['pageSize'] != null ? options['pageSize'] : this.pageSize;
-  options['startIndex'] = value * this.pageSize;
+  //this.pageSize = options['pageSize'] != null ? options['pageSize'] : this.pageSize;
+  //options['startIndex'] = value * this.pageSize;
   var previousPage = this._page;
   this._page = value;
-  this._startIndex = options['startIndex'];
-  var self = this;
+  if (this._page >= 0 && this._page === previousPage) 
+  {
+      return Promise.resolve(null);
+  }
+  this._startIndex = value * this.pageSize;
   
   return new Promise(function(resolve, reject)
   {
     self.fetch({'startIndex': self._startIndex, 
             'success': function() {
-                oj.CollectionPagingDataSource.superclass.handleEvent.call(self, oj.PagingModel.EventType['PAGE'], {'page' : self._page, 'previousPage' : previousPage});
+                DashboardPaging.superclass.handleEvent.call(self, oj.PagingModel.EventType['PAGE'], {'page' : self._page, 'previousPage' : previousPage});
+                if ($.isFunction(_successCallback))
+                {
+                   _successCallback({'page' : self._page, 'previousPage' : previousPage});
+                }
                 resolve(null);
             },
             'error': function(jqXHR, textStatus, errorThrown) {
@@ -159,6 +166,10 @@ DashboardPaging.prototype.setPage = function(value, options)
                 // restore old page
                 self._page = previousPage;
                 self._startIndex = self._page * self.pageSize;
+                if ($.isFunction(_errorCallbakc))
+                {
+                   _successCallback(jqXHR, textStatus, errorThrown);
+                }
                 reject(null);  
             }
         } );
@@ -209,25 +220,24 @@ DashboardPaging.prototype.create = function(attributes, options)
         }
         _m.save(attributes, {
                         'forceNew': true,
-                        success: function (model, resp, options) {
-                            self._fetch(opts);
-                            model.openDashboardPage();
-                           /*
-                           self.collection.add(model, {at: 0, merge: true}).then(function(val){
-                                self._refreshDataWindow().then(function() {
-                                    //self.handleEvent("add", {index: 0});
-                                    self._processSuccess(opts, "add", {index: 0});
-                                });
-                           });*/
+                        success: function (_model, _resp, _options) {
+                            opts['success'](_model, _resp, _options);
+                            /* //no need for refresh, nav directly
+                            self._fetch( { 
+                                'contentType': 'application/json',
+                                success: function() {
+                                    if ($.isFunction(opts['success']))
+                                    {
+                                        opts['success'](_model, _resp, _options);
+                                    }
+                                }, 
+                                error: opts['error']});*/
+                            //model.openDashboardPage();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             self._processError(opts, jqXHR, textStatus, errorThrown);
                             //console.log('Error in Create: ' + textStatus);
                         }});
-        /*
-        this.collection.add(attributes, {at: 0, merge:true}).then(function(val){
-            self._refreshDataWindow().then(function() {self._processSuccess(opts)});
-        });*/
     }
     catch (e) {
         var _e = e;
@@ -239,7 +249,11 @@ DashboardPaging.prototype.create = function(attributes, options)
 DashboardPaging.prototype.remove = function(model, options)
 {
     var self = this;
-    dfu.ajaxWithRetry('/sso.static/dashboards.service/' + model.get('id'), {
+    var url="/sso.static/dashboards.service/";
+    if (dfu.isDevMode()){
+        url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
+    }
+    dfu.ajaxWithRetry(url + model.get('id'), {
        type: 'DELETE',
        headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {

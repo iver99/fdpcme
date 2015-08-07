@@ -22,7 +22,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,71 +38,9 @@ public class RegistryLookupUtil
 	public static final String LA_SERVICE = "LoganService";
 	public static final String TA_SERVICE = "TargetAnalytics";
 
-	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
-	{
-		List<Link> matched = new ArrayList<Link>();
-		if (relPrefix != null) {
-			for (Link link : instance.getLinks()) {
-				if (link.getRel() != null ? link.getRel().startsWith(relPrefix) : "".startsWith(relPrefix)) {
-					matched.add(link);
-				}
-			}
-		}
-		return matched;
-	}
-
-	public static EndpointEntity getServiceExternalEndPoint(String serviceName, String version, String tenantName)
-	{
-		Link link = RegistryLookupUtil.getServiceExternalLink(serviceName, version, "sso.endpoint/virtual", tenantName);
-		if (link != null) {
-			return new EndpointEntity(serviceName, version, link.getHref());
-		}
-		else {
-			return null;
-		}
-		/*
-		InstanceInfo queryInfo = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
-		SanitizedInstanceInfo sanitizedInstance;
-		InstanceInfo internalInstance = null;
-		try {
-		    internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
-		    sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
-		    if (sanitizedInstance == null) {
-		        String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		        //                return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
-		        // this happens when
-		        //    1. no instance exists based on the query criteria
-		        // or
-		        //    2. the selected instance does not expose any safe endpoints that are externally routeable (e.g., no HTTPS virtualEndpoints)
-		        //
-		        // In this case, need to trigger the failover scheme, or alternatively, one could use the plural form of the lookup, and loop through the returned instances
-		    }
-		    else {
-		        String url = RegistryLookupUtil.getExternalEndPoint(sanitizedInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		    }
-		}
-		catch (Exception e) {
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		    if (internalInstance != null) {
-		        String url = RegistryLookupUtil.getInternalEndPoint(internalInstance);
-		        return new EndpointEntity(serviceName, version, url);
-		    }
-		}
-		return null;
-		 */
-	}
-
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, false, tenantName);
-	}
-
-	public static Link getServiceExternalLinkWithRelPrefix(String serviceName, String version, String rel, String tenantName)
-	{
-		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
@@ -111,35 +48,9 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
 	}
 
-	public static EndpointEntity replaceWithVanityUrl(EndpointEntity ep, String tenantName, String serviceName)
-	{
-		if (ep == null || StringUtils.isEmpty(serviceName)) {
-			return ep;
-		}
-		Map<String, String> vanityBaseUrls = RegistryLookupUtil.getVanityBaseURLs(tenantName);
-		if (vanityBaseUrls != null && vanityBaseUrls.containsKey(serviceName)) {
-			ep = RegistryLookupUtil.replaceVanityUrlDomainForEndpointEntity(vanityBaseUrls.get(serviceName), ep, tenantName);
-			logger.debug("Completed to (try to) replace URL with vanity URL. Updated url is {}", ep.getHref());
-		}
-		return ep;
-	}
-
-	public static Link replaceWithVanityUrl(Link lk, String tenantName, String serviceName)
-	{
-		if (lk == null || StringUtils.isEmpty(serviceName)) {
-			return lk;
-		}
-		Map<String, String> vanityBaseUrls = RegistryLookupUtil.getVanityBaseURLs(tenantName);
-		if (vanityBaseUrls != null && vanityBaseUrls.containsKey(serviceName)) {
-			lk = RegistryLookupUtil.replaceVanityUrlDomainForLink(vanityBaseUrls.get(serviceName), lk, tenantName);
-			logger.debug("Completed to (try to) replace URL with vanity URL. Updated url is {}", lk.getHref());
-		}
-		return lk;
-	}
-
 	public static String replaceWithVanityUrl(String url, String tenantName, String serviceName)
 	{
-		if (url == null || StringUtils.isEmpty(serviceName)) {
+		if (url == null || StringUtil.isEmpty(serviceName)) {
 			return url;
 		}
 		Map<String, String> vanityBaseUrls = RegistryLookupUtil.getVanityBaseURLs(tenantName);
@@ -149,73 +60,6 @@ public class RegistryLookupUtil
 		}
 		return url;
 	}
-
-	//    private static String getExternalEndPoint(SanitizedInstanceInfo instance)
-	//    {
-	//        if (instance == null) {
-	//            return null;
-	//        }
-	//        String endPoint = null;
-	//        List<String> endpoints = new ArrayList<String>();
-	//        // virtual end points contains the URLs to the service that may be reached from outside the cloud
-	//        List<String> virtualEndpoints = instance.getVirtualEndpoints();
-	//        endpoints.addAll(virtualEndpoints);
-	//        List<String> canonicalEndpoints = instance.getCanonicalEndpoints();
-	//        endpoints.addAll(canonicalEndpoints);
-	//        if (endpoints != null && endpoints.size() > 0) {
-	//            for (String ep : endpoints) {
-	//                if (ep.startsWith("https://")) {
-	//                    return ep;
-	//                }
-	//                if (endPoint == null) {
-	//                    endPoint = ep;
-	//                }
-	//            }
-	//        }
-	//
-	//        return endPoint;
-	//    }
-
-	//    private static String getInternalEndPoint(InstanceInfo instance)
-	//    {
-	//        if (instance == null) {
-	//            return null;
-	//        }
-	//        String endPoint = null;
-	//        List<String> endpoints = new ArrayList<String>();
-	//        // virtual end points contains the URLs to the service that may be reached from outside the cloud
-	//        List<String> virtualEndpoints = instance.getVirtualEndpoints();
-	//        endpoints.addAll(virtualEndpoints);
-	//        List<String> canonicalEndpoints = instance.getCanonicalEndpoints();
-	//        endpoints.addAll(canonicalEndpoints);
-	//        if (endpoints != null && endpoints.size() > 0) {
-	//            for (String ep : endpoints) {
-	//                if (ep.startsWith("https://")) {
-	//                    return ep;
-	//                }
-	//                if (endPoint == null) {
-	//                    endPoint = ep;
-	//                }
-	//            }
-	//        }
-	//
-	//        return endPoint;
-	//    }
-
-	//    private static String getInternalEndPoint(List<InstanceInfo> instances)
-	//    {
-	//        if (instances == null) {
-	//            return null;
-	//        }
-	//        String endPoint = null;
-	//        for (InstanceInfo instance : instances) {
-	//            endPoint = RegistryLookupUtil.getInternalEndPoint(instance);
-	//            if (endPoint != null) {
-	//                return endPoint;
-	//            }
-	//        }
-	//        return endPoint;
-	//    }
 
 	private static List<Link> getLinksWithProtocol(String protocol, List<Link> links)
 	{
@@ -386,28 +230,8 @@ public class RegistryLookupUtil
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			if (result != null && result.size() > 0) {
-
-				//find https link first
-				for (InstanceInfo internalInstance : result) {
-					List<Link> links = null;
-					if (prefixMatch) {
-						links = internalInstance.getLinksWithRelPrefixWithProtocol(rel, "https");
-					}
-					else {
-						links = internalInstance.getLinksWithProtocol(rel, "https");
-					}
-
-					if (links != null && links.size() > 0) {
-						lk = links.get(0);
-						break;
-					}
-				}
-
-				if (lk != null) {
-					return lk;
-				}
-
-				//https link is not found, then find http link
+				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
+				// find http link only
 				for (InstanceInfo internalInstance : result) {
 					List<Link> links = null;
 					if (prefixMatch) {
@@ -525,36 +349,9 @@ public class RegistryLookupUtil
 		return vanityBaseUrl;
 	}
 
-	private static EndpointEntity replaceVanityUrlDomainForEndpointEntity(String domainPort, EndpointEntity ee, String tenantName)
-	{
-		logger.debug("/replaceDomainForEndpointEntity/ Trying to replace endpoint entity \"{}\" with domain \"{}\"",
-				ee != null ? ee.getHref() : null, domainPort);
-		if (StringUtil.isEmpty(domainPort) || ee == null || StringUtil.isEmpty(ee.getHref())) {
-			return ee;
-		}
-		String replacedHref = RegistryLookupUtil.replaceVanityUrlDomainForUrl(domainPort, ee.getHref(), tenantName);
-		logger.debug("/replaceDomainForEndpointEntity/ Endpoint entity \"{}\" URL (after replaced) is \"{}\"", ee.getHref(),
-				replacedHref);
-		ee.setHref(replacedHref);
-		return ee;
-	}
-
-	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
-	{
-		logger.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"", lk != null ? lk.getHref()
-				: null, domainPort);
-		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
-			return lk;
-		}
-		String replacedHref = RegistryLookupUtil.replaceVanityUrlDomainForUrl(domainPort, lk.getHref(), tenantName);
-		logger.debug("/replaceDomainForLink/ Link \"{}\" URL (after replaced) is \"{}\"", lk.getHref(), replacedHref);
-		lk.withHref(replacedHref);
-		return lk;
-	}
-
 	private static String replaceVanityUrlDomainForUrl(String vanityBaseUrl, String targetUrl, String tenantName)
 	{
-		if (StringUtils.isEmpty(vanityBaseUrl) || StringUtils.isEmpty(targetUrl) || targetUrl.indexOf("://") == -1) {
+		if (StringUtil.isEmpty(vanityBaseUrl) || StringUtil.isEmpty(targetUrl) || targetUrl.indexOf("://") == -1) {
 			return targetUrl;
 		}
 		// replace URLs started with tenant only

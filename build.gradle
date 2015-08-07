@@ -97,7 +97,7 @@ configurations {
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
 	prebuild_tenant { transitive = false }
-
+compile.exclude group: "com.google.code.findbugs", module: "annotations"
 }
 
 dependencies {
@@ -120,10 +120,9 @@ dependencies {
 	prebuild_apacheHttp 'org.apache.httpcomponents:httpclient:4.3.1',
 			    'org.apache.httpcomponents:httpcore:4.3',
 			    'org.apache.httpcomponents:httpmime:4.3.1'
-	prebuild_jaxrs  'org.codehaus.jackson:jackson-core-asl:1.9.12',
-			'org.codehaus.jackson:jackson-mapper-asl:1.9.12',
+	prebuild_jaxrs  'org.codehaus.jackson:jackson-core-asl:1.9.13',
+			'org.codehaus.jackson:jackson-mapper-asl:1.9.13',
 			'org.codehaus.jackson:jackson-jaxrs:1.9.2', 
-			'org.codehaus.jackson:jackson-mapper-asl:1.9.12',
 			'org.codehaus.jackson:jackson-xc:1.9.2'	,		
 			'com.sun.jersey:jersey-core:1.17.1',
 			'com.sun.jersey:jersey-json:1.17.1', 
@@ -135,14 +134,15 @@ dependencies {
 			'com.sun.jersey.contribs:jersey-multipart:1.17.1',
 			'org.codehaus.groovy:groovy-all:2.2.1',
 			'org.apache.commons:commons-lang3:3.1',
-			'com.jayway.restassured:json-path:1.8.1',
-			'com.jayway.restassured:xml-path:1.9.0',
+			'com.jayway.restassured:json-path:2.3.1',
+			'com.jayway.restassured:xml-path:2.3.1',
 			'com.jayway.restassured:rest-assured-common:2.3.1',
 			'com.jayway.restassured:rest-assured:2.3.0',
 			'com.oracle.emaas.emdi:em-qatool-os-webdriver:1.0.4',
 			'com.oracle.emaas.emdi:emsaas-qatool-jet-utility:1.0.4'
+
 	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
-	prebuild_tenant 'emaas-platform-tenant-sdk:emaas-platform-tenant-sdk:0.2',
+	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
 			'emaas.platform:registry-lookup-client:0.23.6'
 }
 

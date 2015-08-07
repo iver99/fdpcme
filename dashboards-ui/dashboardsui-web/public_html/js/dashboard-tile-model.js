@@ -7,6 +7,7 @@ define(['knockout',
         'knockout.mapping',
         'timeselector/time-selector-model',
         'dfutil',
+        'uifwk/js/util/df-util',
         'ojs/ojcore',
         'jquery',
         'jqueryui',
@@ -18,7 +19,7 @@ define(['knockout',
         'canvg'
     ],
     
-    function(ko, km, TimeSelectorModel,dfu)
+    function(ko, km, TimeSelectorModel,dfu, dfumodel)
     {
         var dtm = this;
         
@@ -145,6 +146,9 @@ define(['knockout',
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
                 var visualAnalyzerUrl = dfu.discoverQuickLink(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),"visualAnalyzer");
                 if (visualAnalyzerUrl){
+                    if (dfu.isDevMode()){
+                        visualAnalyzerUrl = dfu.getRelUrlFromFullUrl(visualAnalyzerUrl);  
+                    }
                     tile.configure = function(){
                         window.open(visualAnalyzerUrl+"?widgetId="+tile.WIDGET_UNIQUE_ID());
                     }
@@ -285,11 +289,11 @@ define(['knockout',
         }
         
         function getBaseUrl() {
+            if (dfu.isDevMode()){
+                return dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
+            }else{
         	return "/sso.static/dashboards.service";
-//            return dfu.discoverDFRestApiUrl();
-//            return "http://slc04pxi.us.oracle.com:7001";//TODO
-//            return "http://localhost:7001/emcpdf/api/v1/";
-//            return "http://slc00bqs.us.oracle.com:7021";
+            }
         }
         
         function initializeFromCookie() {
@@ -298,33 +302,21 @@ define(['knockout',
                 dtm.tenantName = userTenant.tenant;
                 dtm.userTenant  =  userTenant.tenantUser;      
             }
-            /*
-            var tenantNamePrefix = "X-USER-IDENTITY-DOMAIN-NAME=";
-            var userTenantPrefix = "X-REMOTE-USER=";
-            var cookieArray = document.cookie.split(';');
-            for (var i = 0; i < cookieArray.length; i++) {
-                var c = cookieArray[i];
-                if (c.indexOf(tenantNamePrefix) !== -1) {
-                    dtm.tenantName = c.substring(c.indexOf(tenantNamePrefix) + tenantNamePrefix.length, c.length);
-                } else if (c.indexOf(userTenantPrefix) !== -1) {
-                    dtm.userTenant = c.substring(c.indexOf(userTenantPrefix) + userTenantPrefix.length, c.length);
-                }
-            }
-            */
         }
         
         function getDefaultHeaders() {
             var headers = {
                 'Content-type': 'application/json',
-                'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : 'TenantOPC1'
-//                ,'Authorization': dfu.getAuthToken()
+                'X-USER-IDENTITY-DOMAIN-NAME': dtm.tenantName ? dtm.tenantName : ''
             };
-//            dtm.userTenant='TenantOPC1.SYSMAN';
             if (dtm.userTenant){
                 headers['X-REMOTE-USER'] = dtm.userTenant;
             }else{
                 console.log("Warning: user name is not found: "+dtm.userTenant);
                 oj.Logger.warn("Warning: user name is not found: "+dtm.userTenant);
+            }
+            if (dfu.isDevMode()){
+                headers.Authorization="Basic "+btoa(dfu.getDevData().wlsAuth);
             }
             return headers;
         }
@@ -395,58 +387,58 @@ define(['knockout',
             });
         }
         
-        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'get',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function(data) {
-                    if (succCallBack)
-                        succCallBack(data.isFavorite);
-                },
-                error: function(e) {
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'get',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function(data) {
+//                    if (succCallBack)
+//                        succCallBack(data.isFavorite);
+//                },
+//                error: function(e) {
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'post',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'post',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
-        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
-            dfu.ajaxWithRetry(url, {
-                type: 'delete',
-                dataType: "json",
-                headers: getDefaultHeaders(),
-                success: function() {
-                    if (succCallBack)
-                        succCallBack();
-                },
-                error: function(e) {
-                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
-                    if (errorCallBack)
-                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-                }
-            });
-        }
+//        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
+//            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
+//            dfu.ajaxWithRetry(url, {
+//                type: 'delete',
+//                dataType: "json",
+//                headers: getDefaultHeaders(),
+//                success: function() {
+//                    if (succCallBack)
+//                        succCallBack();
+//                },
+//                error: function(e) {
+//                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
+//                    if (errorCallBack)
+//                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+//                }
+//            });
+//        }
         
         function registerComponent(kocName, viewModel, template) {
             if (!ko.components.isRegistered(kocName)) {
@@ -457,11 +449,13 @@ define(['knockout',
             }
         }
         
-        function DashboardTilesViewModel(dashboard, tilesView, urlEditView) {
+        function DashboardTilesViewModel(dashboard, tilesView/*, urlEditView*/) {
             var self = this;
                         
             self.dashboard = dashboard;
-            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+//            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
@@ -473,14 +467,22 @@ define(['knockout',
                 return !self.dashboard.tiles() || self.dashboard.tiles().length === 0;
             };
             
+            var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
+            self.openAddWidgetDialog = function() {
+            	var maximizedTile = self.getMaximizedTile();
+            	if (maximizedTile)
+            		self.restore(maximizedTile);
+                $('#'+addWidgetDialogId).ojDialog('open');
+            };
+            
             self.registerTileRemoveCallback = function(callbackMethod) {
                 self.tileRemoveCallbacks.push(callbackMethod);
             };
             
             self.appendNewTile = function(name, description, width, widget) {
                 var newTile = null;
-
-                if (widget){
+                
+                if (widget) {
                     var koc_name = widget.WIDGET_KOC_NAME;
                     var template = widget.WIDGET_TEMPLATE;
                     var viewmodel = widget.WIDGET_VIEWMODEL;
@@ -488,162 +490,100 @@ define(['knockout',
                     var provider_version = widget.PROVIDER_VERSION;
                     var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
                     var widget_source = widget.WIDGET_SOURCE;
-                    if (widget.WIDGET_GROUP_NAME === 'Dashboards Built-In') {
-                        if (koc_name && template && viewmodel){
-                            if (!ko.components.isRegistered(koc_name)) {
-                                ko.components.register(koc_name,{
-                                      viewModel:{require:viewmodel},
-                                      template:{require:'text!'+template}
-                                  }); 
-                            }
-                            console.log("widget: " + koc_name + " is registered");
-                            console.log("widget template: " + template);
-                            console.log("widget viewmodel:: " + viewmodel);
-
-                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
-                        }
-                    }else if (widget.WIDGET_GROUP_NAME !== 'Demo Analytics') { //====new logic !==999
-                        var assetRoot = null;
-                        //find KOC name for registration. if valid registration is not detected, use default one.
-                        if (provider_name===undefined || provider_version===undefined || provider_asset_root===undefined){
-                            if (widget.WIDGET_GROUP_NAME==='Log Analytics' || widget.WIDGET_GROUP_NAME==='Target Analytics'){
-                                provider_name =  "Dashboard Framework Integration Demo";
-                                provider_version =  "0.1";
-                                provider_asset_root =  "assetRoot"; 
-                            }else if (widget.WIDGET_GROUP_NAME==='IT Analytics'){
-                                
-                            }                           
-                        } 
-                        
-                        //TODO will remove below later on BEGIN
-                        if (koc_name===null || koc_name===undefined || viewmodel===null || viewmodel===undefined || template===null || template===undefined){
-                            if (widget.WIDGET_GROUP_NAME==='Log Analytics'){
-                                koc_name="demo-la-widget";
-                                viewmodel = "/demo/logAnalyticsWidget/js/demo-log-analytics.js";
-                                template ="/demo/logAnalyticsWidget/demo-log-analytics.html";
-                            }else if (widget.WIDGET_GROUP_NAME==='Target Analytics'){
-                                koc_name="demo-ta-widget";
-                                viewmodel = "/demo/targetAnalyticsWidget/js/demo-target-analytics.js";
-                                template ="/demo/targetAnalyticsWidget/demo-target-analytics.html";                               
-                            }else if (widget.WIDGET_GROUP_NAME==='IT Analytics'){
-                                koc_name="ita-widget";
-                                viewmodel = "/widgets/js/controller/qdg-component.js";
-                                template ="/widgets/html/qdg-component.html";                               
-                            }                           
-                        }
+//                    if (widget_source === 0) {
+//                        if (koc_name && template && viewmodel){
+//                            if (!ko.components.isRegistered(koc_name)) {
+//                                ko.components.register(koc_name,{
+//                                      viewModel:{require:viewmodel},
+//                                      template:{require:'text!'+template}
+//                                  }); 
+//                            }
+//                            console.log("widget: " + koc_name + " is registered");
+//                            console.log("widget template: " + template);
+//                            console.log("widget viewmodel:: " + viewmodel);
+//
+//                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
+//                        }
+//                    } 
+//                    else {                       
                         if (widget_source===null || widget_source===undefined){
                             widget_source=1;
                         }
-                        //TODO END
                         
-                        if (koc_name && viewmodel && template){
-                            if (widget_source===0){
-                                if (!ko.components.isRegistered(koc_name)) {
-                                    ko.components.register(koc_name,{
-                                          viewModel:{require:viewmodel},
-                                          template:{require:'text!'+template}
-                                      }); 
-                                    console.log("DF widget: "+koc_name+" is registered");
-                                    console.log("DF widget template: "+template);
-                                    console.log("DF widget viewmodel:: "+viewmodel);                                  
-                                }                            
-                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
-                             }else if (widget_source===1){
+                        if (koc_name && viewmodel && template) {
+                            if (widget_source===1){
                                  if (!ko.components.isRegistered(koc_name)) {
                                     var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
                                     if (assetRoot===null){
-                                        console.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
+                                        oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                     }
                                     ko.components.register(koc_name,{
                                           viewModel:{require:assetRoot+viewmodel},
                                           template:{require:'text!'+assetRoot+template}
                                       }); 
-                                    console.log("widget: "+koc_name+" is registered");
-                                    console.log("widget template: "+assetRoot+template);
-                                    console.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                                    oj.Logger.log("widget: "+koc_name+" is registered");
+                                    oj.Logger.log("widget template: "+assetRoot+template);
+                                    oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
 
                                 newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
-                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
-                                    var worksheetName = 'WS_4_QDG_WIDGET';
-                                    var workSheetCreatedBy = 'sysman';
-                                    var qdgId = 'chart1';
-                                    var ssfUrl = '/sso.static/savedsearch.categories'; //dfu.discoverSavedSearchServiceUrl();
-                                    if (ssfUrl && ssfUrl !== '') {
-                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
-                                        var widgetDetails = null;
-                                        dfu.ajaxWithRetry({
-                                            url: href,
-                                            headers: dfu.getSavedSearchServiceRequestHeader(),
-                                            success: function(data, textStatus) {
-                                                widgetDetails = data;
-                                            },
-                                            error: function(xhr, textStatus, errorThrown){
-                                                console.log('Error when get widget details!');
-                                            },
-                                            async: false
-                                        });
-
-                                        if (widgetDetails){
-                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
-                                               widget.parameters = {};
-                                               for(var i=0;i<widgetDetails.parameters.length;i++){
-                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
-                                               }
-                                            }                        
-                                        }
-                                    }
-                                    
-                                    // specific parameters for ita which is required. Retrieve them from SSF
-                                    if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
-                                        worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
-                                    if (widget.parameters["ITA_WIDGET_CREATEDBY"])
-                                        workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
-                                    if (widget.parameters["ITA_WIDGET_QDGID"])
-                                        qdgId = widget.parameters["ITA_WIDGET_QDGID"];
-
-                                    newTile.worksheetName = worksheetName;
-                                    newTile.createdBy = workSheetCreatedBy;
-                                    newTile.qdgId = qdgId;  
-                                }
-                            }else{
-                                console.error("Invalid WIDGET_SOURCE: "+widget_source);
+//                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
+//                                    var worksheetName = 'WS_4_QDG_WIDGET';
+//                                    var workSheetCreatedBy = 'sysman';
+//                                    var qdgId = 'chart1';
+//                                    var ssfUrl = '/sso.static/savedsearch.categories'; 
+//                                    if (ssfUrl && ssfUrl !== '') {
+//                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
+//                                        var widgetDetails = null;
+//                                        dfu.ajaxWithRetry({
+//                                            url: href,
+//                                            headers: dfu.getSavedSearchServiceRequestHeader(),
+//                                            success: function(data, textStatus) {
+//                                                widgetDetails = data;
+//                                            },
+//                                            error: function(xhr, textStatus, errorThrown){
+//                                                console.log('Error when get widget details!');
+//                                            },
+//                                            async: false
+//                                        });
+//
+//                                        if (widgetDetails){
+//                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+//                                               widget.parameters = {};
+//                                               for(var i=0;i<widgetDetails.parameters.length;i++){
+//                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
+//                                               }
+//                                            }                        
+//                                        }
+//                                    }
+//                                    
+//                                    // specific parameters for ita which is required. Retrieve them from SSF
+//                                    if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
+//                                        worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
+//                                    if (widget.parameters["ITA_WIDGET_CREATEDBY"])
+//                                        workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
+//                                    if (widget.parameters["ITA_WIDGET_QDGID"])
+//                                        qdgId = widget.parameters["ITA_WIDGET_QDGID"];
+//
+//                                    newTile.worksheetName = worksheetName;
+//                                    newTile.createdBy = workSheetCreatedBy;
+//                                    newTile.qdgId = qdgId;  
+//                                }
+                            } 
+                            else {
                                 oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
                             }
-                        }else{
-    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
-                            console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                        }
+                        else {
                             oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
                         }
-
-                    } 
-                    else  { 
-                       /**
-                        * Category with id=999 is used for integration development purpose only
-                        * Any widget with categoryId=999 is expected to registerwith absolute path (viewmodel & template)
-                        */
-                        if (koc_name && viewmodel && template){
-                            if (!ko.components.isRegistered(koc_name)) {
-                               ko.components.register(koc_name,{
-                                     viewModel:{require:viewmodel},
-                                     template:{require:'text!'+template}
-                                 }); 
-                               console.log("widget: "+koc_name+" is registered");
-                               console.log("widget template: "+template);
-                               console.log("widget viewmodel:: "+viewmodel);    
-                           }
-                           newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
-                        }else{
-    //                       newTile =new DashboardTile(self.dashboard,"demo-la-widget",name, description, width, widget); 
-                            console.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
-                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
-                        }
-                    }
+//                    } 
+                    
                     if (newTile){
                        self.dashboard.tiles.push(newTile);
                     }
-                }else{
-                    console.error("Null widget passed to a tile");
+                }
+                else {
                     oj.Logger.error("Null widget passed to a tile");
                 }
 
@@ -674,6 +614,9 @@ define(['knockout',
                    case "configure":
                        self.configure(tile);
                        break;
+                   case "refresh-this-widget":
+                       self.refreshThisWidget(tile);
+                       break; 
                }
            };
            
@@ -804,11 +747,16 @@ define(['knockout',
                     tile.configure();
                 }
             };
+
+            self.refreshThisWidget = function(tile) {
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
+                self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+            }
             
-            self.changeUrl = function(tile) {
-                urlEditView.setEditedTile(tile);
-                $('#urlChangeDialog').ojDialog('open');
-            };
+//            self.changeUrl = function(tile) {
+//                urlEditView.setEditedTile(tile);
+//                $('#urlChangeDialog').ojDialog('open');
+//            };
             
             self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
@@ -837,7 +785,7 @@ define(['knockout',
             self.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 if (dashboardItemChangeEvent){
                     var defArray = [];
-                    for (i = 0; i < self.dashboard.tiles().length; i++) {
+                    for (var i = 0; i < self.dashboard.tiles().length; i++) {
                         var aTile = self.dashboard.tiles()[i];
                         defArray.push(self.fireDashboardItemChangeEventTo(aTile,dashboardItemChangeEvent));
                     }
@@ -872,27 +820,63 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });
-        }
-        
-        function DashboardViewModel() {
-            var self = this;
-            
-            self.name = observable("LaaS Dashboard");
-            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
-        }
+
+	var initStart = new Date(new Date() - 24*60*60*1000);
+        var initEnd = new Date();
+ 	self.timeSelectorModel.viewStart(initStart);
+        self.timeSelectorModel.viewEnd(initEnd);
+	self.datetimePickerParams = {
+	    startDateTime: initStart,
+ 	    endDateTime: initEnd,	   
+	    callback: function(start, end) {
+		self.timeSelectorModel.viewStart(start);
+		self.timeSelectorModel.viewEnd(end);
+		self.timeSelectorModel.timeRangeChange(true);		
+	    }
+	}
+
+/**
+	self.refreshCallback = function(start, end) {
+	    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(start,end),null);
+            self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
+	}
+	self.timeRangeStart = ko.observable(new Date(new Date() - 24*60*60*1000));
+        self.timeRangeEnd = ko.observable(new Date());
+	self.datetimePickerParams = {
+	    startDateTime: new Date() - 24*60*60*1000,
+ 	    endDateTime: new Date(),
+	    callback: function(start, end) {
+		self.timeRangeStart(start);
+		self.timeRangeEnd(end);
+		self.refreshCallback(start, end);
+	    }
+	}
+	self.autoRefreshParams = ko.computed(function() {
+    	    return {
+	        timeRangeStart: self.timeRangeStart(),
+        	timeRangeEnd: self.timeRangeEnd(),
+	    	refreshCallback: self.refreshCallback
+	    }
+	}, self);
+**/
+
+    }
+//        function DashboardViewModel() {
+//            var self = this;
+//            
+//            self.name = observable("LaaS Dashboard");
+//            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
+//        }
         
         return {"DashboardTile": DashboardTile, 
             "DashboardTilesViewModel": DashboardTilesViewModel,
-            "DashboardViewModel": DashboardViewModel,
+//            "DashboardViewModel": DashboardViewModel,
             "loadDashboard": loadDashboard,
             "isDashboardNameExisting": isDashboardNameExisting,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "updateDashboard": updateDashboard,
-            "registerComponent": registerComponent,
-            "loadIsFavorite": loadIsFavorite,
-            "setAsFavorite": setAsFavorite,
-            "removeFromFavorite": removeFromFavorite
+            "registerComponent": registerComponent
         };
     }
 );

@@ -181,7 +181,7 @@ $.widget( "dbs.dbsTypeAhead", {
 			this.source = function( request, response ) {
 				response( filterFunc( array, request.term ) );
 			};
-		} else if ( typeof this.options.source === "string" ) {
+		}/* else if ( typeof this.options.source === "string" ) {
 			url = this.options.source;
 			this.source = function( request, response ) {
 				if ( that.xhr ) {
@@ -199,7 +199,8 @@ $.widget( "dbs.dbsTypeAhead", {
 					}
 				});
 			};
-		} else if ( this.options.source && this.options.source['dsFactory']){
+		}*/ 
+                else if ( this.options.source && this.options.source['dsFactory']){
 			var _dsFac = this.options.source['dsFactory'], _dsFetchSize = this.options.source['fetchSize'], _dataSource;
                         this.source = function( request, response ) {
                             var _fetchSize = 20;
@@ -209,7 +210,7 @@ $.widget( "dbs.dbsTypeAhead", {
                                 else _fetchSize = _dsFetchSize;
                             }
                             _dataSource = _dsFac.build(request.term, _fetchSize);
-                            _dataSource['pagingDS'].fetch({'startIndex': 0, 'fetchType': 'init', 
+                            _dataSource['pagingDS'].setPage(0, {
                                 success: function() {
                                     //console.log("[dbsTypeAhead] fetch success");
                                     response(_dataSource);

@@ -28,6 +28,7 @@
         'promise': 'empty:',
         'dashboards': '.',
         'dfutil':'empty:',
+        'uifwk/js/util/df-util':'empty:',
         'loggingutil':'empty:',
         'idfbcutil':'empty:',
         'timeselector':'empty:',
@@ -39,6 +40,6 @@
         'emcta':'../../emcta/ta/js',
         'dbs': '../js',
         'require':'empty:',
-        'prefutil':'empty:',
+        'prefutil':'empty:'
     }
 })

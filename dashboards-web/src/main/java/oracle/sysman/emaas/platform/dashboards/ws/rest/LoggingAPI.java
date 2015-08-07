@@ -18,7 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import oracle.sysman.emaas.platform.dashboards.webutils.wls.management.AppLoggingManageMXBean;
+import oracle.sysman.emaas.platform.dashboards.core.wls.management.AppLoggingManageMXBean;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

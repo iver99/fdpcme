@@ -55,26 +55,44 @@ public class TenantSubscriptionUtil
 			Client client = Client.create(cc);
 			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
 			String auth = String.copyValueOf(authToken);
-			logger.info("Retrieved authorization token from registration manager: " + auth);
+			if (StringUtil.isEmpty(auth)) {
+				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+			}
+			else {
+				logger.debug(
+						"RestClient is connecting to url after getting authorization token from registration manager. Target url is: {}",
+						url);
+			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
 			return builder.get(String.class);
 		}
 	}
 
+	private static Boolean IS_TEST_ENV = null;
+
+	private static Object lock = new Object();
+
+	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
+
 	public static List<String> getTenantSubscribedServices(String tenant)
 	{
 		// for junit test only
 		if (Boolean.TRUE.equals(IS_TEST_ENV)) {
+			logger.warn("In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
 		}
 
 		// normal behavior here
 		if (tenant == null) {
+			logger.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
 			return null;
 		}
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains", null);
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
+			logger.warn(
+					"Failed to get entity naming service, or its rel (collection/domains) link is empty. Exists the retrieval of subscribed service for tenant {}",
+					tenant);
 			return null;
 		}
 		logger.info("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
@@ -156,6 +174,7 @@ public class TenantSubscriptionUtil
 
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
+		logger.debug("Checking if only APM is subscribed, checked services are {}", services == null ? null : services.toString());
 		if (services == null || services.size() != 1) {
 			return false;
 		}
@@ -177,10 +196,4 @@ public class TenantSubscriptionUtil
 			}
 		}
 	}
-
-	private static Boolean IS_TEST_ENV = null;
-
-	private static Object lock = new Object();
-
-	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 }

@@ -185,8 +185,6 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
 	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
-	private static final String NAV_STATIC_CONF = "/emsaasui/emcpdfui/api/configurations";
-	private static final String NAV_STATIC_REGISTRY = "/emsaasui/emcpdfui/api/registry";
 	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
 
 	static {
@@ -332,15 +330,15 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("home").withHref(applicationUrlHttp + NAV_BASE_HOME));
 				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
-				links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
-				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
+				//				links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
+				//				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
 			}
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("home").withHref(applicationUrlHttps + NAV_BASE_HOME));
 				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
-				links.add(new Link().withRel("static/dashboardsui.configurations")
-						.withHref(applicationUrlHttps + NAV_STATIC_CONF));
-				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
+				//				links.add(new Link().withRel("static/dashboardsui.configurations")
+				//						.withHref(applicationUrlHttps + NAV_STATIC_CONF));
+				//				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttps + NAV_STATIC_REGISTRY));
 			}
 
 			InfoManager.getInstance().getInfo().setLinks(links);

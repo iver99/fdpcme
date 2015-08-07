@@ -31,6 +31,7 @@ import javax.ws.rs.core.Response.Status;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
+import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
@@ -69,7 +70,7 @@ public class DashboardAPI extends APIBase
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			d = manager.saveNewDashboard(d, tenantId);
 			updateDashboardAllHref(d, tenantIdParam);
 			return Response.status(Status.CREATED).entity(getJsonUtil().toJson(d)).build();
@@ -97,7 +98,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dsb = manager.getDashboardById(dashboardId, tenantId);
 			if (dsb != null && dsb.getIsSystem() != null && dsb.getIsSystem()) {
 				throw new DeleteSystemDashboardException();
@@ -124,7 +125,7 @@ public class DashboardAPI extends APIBase
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			String ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			//String screenShotUrl = uriInfo.getBaseUri() + "v1/dashboards/" + dashboardId + "/screenshot";
 			String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantIdParam);
@@ -151,7 +152,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
 			updateDashboardAllHref(dbd, tenantIdParam);
 			return Response.ok(getJsonUtil().toJson(dbd)).build();
@@ -171,7 +172,8 @@ public class DashboardAPI extends APIBase
 	public Response queryDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("queryString") String queryString,
 			@DefaultValue("") @QueryParam("limit") Integer limit, @DefaultValue("0") @QueryParam("offset") Integer offset,
-			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy)
+			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
+			@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners)
 	{
 		String qs = null;
 		try {
@@ -184,8 +186,12 @@ public class DashboardAPI extends APIBase
 		try {
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
-			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy);
+			initializeUserContext(tenantIdParam, userTenant);
+			DashboardsFilter filter = new DashboardsFilter();
+			filter.setIncludedAppsFromString(appTypes);
+			filter.setIncludedOwnersFromString(owners);
+			filter.setIncludedTypesFromString(types);
+			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {
 					updateDashboardAllHref(d, tenantIdParam);
@@ -222,7 +228,7 @@ public class DashboardAPI extends APIBase
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			input.setDashboardId(dashboardId);
 			if (input.getIsSystem() != null && input.getIsSystem()) {
 				throw new CommonSecurityException(
