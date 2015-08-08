@@ -258,6 +258,7 @@ $.widget('dbs.dbsDashboardPanel',
               if (dfu.isDevMode()){
                   url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,'dashboards/'+ self.options['dashboard']['id'] + '/screenshot');
               } 
+              url = dfu.getRelUrlFromFullUrl(url);
                    dfu.ajaxWithRetry({
                             //This will be a page which will return the base64 encoded string
                         //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
