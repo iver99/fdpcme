@@ -570,6 +570,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.getDashboardsFilterPref = function () {
             var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
             if (filter === undefined || filter.length === 0) return {};
+            filter = $("<div/>").html(filter).text();
             return JSON.parse(filter);
         };
         
