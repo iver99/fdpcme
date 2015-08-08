@@ -60,19 +60,19 @@ public class RegistryLookupUtil
 		SanitizedInstanceInfo sanitizedInstance;
 		InstanceInfo internalInstance = null;
 		try {
-			internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
-
 			if (!StringUtil.isEmpty(tenantName)) {
-				sanitizedInstance = LookupManager.getInstance().getLookupClient()
-						.getSanitizedInstanceInfo(internalInstance, tenantName);
-				logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}", sanitizedInstance,
-						tenantName);
+				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+				if (internalInstance == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
 			}
 			else {
-				sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
-				logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo w/o tenant info",
-						sanitizedInstance);
+				internalInstance = LookupManager.getInstance().getLookupClient().getInstance(queryInfo);
 			}
+			sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance);
 			if (sanitizedInstance == null) {
 				return RegistryLookupUtil.getInternalEndPoint(internalInstance);
 				//				return "https://slc07hcn.us.oracle.com:4443/microservice/c8c62151-e90d-489a-83f8-99c741ace530/";
@@ -305,7 +305,25 @@ public class RegistryLookupUtil
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			List<InstanceInfo> result = null;
+
+			if (!StringUtil.isEmpty(tenantName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
 			if (result != null && result.size() > 0) {
 
 				//find https link first
@@ -319,18 +337,8 @@ public class RegistryLookupUtil
 					}
 
 					try {
-						SanitizedInstanceInfo sanitizedInstance = null;
-						if (!StringUtil.isEmpty(tenantName)) {
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance, tenantName);
-							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
-									sanitizedInstance, tenantName);
-						}
-						else {
-							logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
-							sanitizedInstance = LookupManager.getInstance().getLookupClient()
-									.getSanitizedInstanceInfo(internalInstance);
-						}
+						SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
+								.getSanitizedInstanceInfo(internalInstance);
 						if (sanitizedInstance != null) {
 							if (prefixMatch) {
 								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
@@ -413,7 +421,24 @@ public class RegistryLookupUtil
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
 			if (result != null && result.size() > 0) {
 				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
 				//https link is not found, then find http link
@@ -605,5 +630,4 @@ public class RegistryLookupUtil
 		logger.info("After replacing with vanity url, the target url is: \"{}\"", sb.toString());
 		return sb.toString();
 	}
-
 }
