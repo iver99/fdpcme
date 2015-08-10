@@ -46,7 +46,7 @@ public class DashboardsUiCORSFilter implements Filter
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-			ServletException
+	ServletException
 	{
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
