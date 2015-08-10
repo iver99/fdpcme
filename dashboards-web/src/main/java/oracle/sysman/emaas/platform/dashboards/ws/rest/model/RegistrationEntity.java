@@ -59,6 +59,7 @@ public class RegistrationEntity
 	//	public static final String APM_URL = "/emsaasui/apmUi/index.html";
 	public static final String LA_SERVICENAME = "LoganService";
 	public static final String LA_VERSION = "0.1"; //TODO change to 1.0+ at right time
+	public static final String LA_HOME_LINK = "sso.search";
 	//no home link is needed
 	//	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
 	public static final String ITA_SERVICENAME = "EmcitasApplications";
@@ -132,9 +133,11 @@ public class RegistrationEntity
 				list.add(le);
 			}
 			else if (LA_SERVICENAME.equals(app)) {
-				String url = RegistryLookupUtil.getServiceExternalEndPoint(LA_SERVICENAME, LA_VERSION, tenantName);
-				url = RegistryLookupUtil.replaceWithVanityUrl(url, tenantName, LA_SERVICENAME);
-				list.add(new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), url, LA_SERVICENAME, LA_VERSION));
+				Link l = RegistryLookupUtil.getServiceExternalLink(LA_SERVICENAME, LA_VERSION, LA_HOME_LINK, tenantName);
+				LinkEntity le = new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), l.getHref(), LA_SERVICENAME,
+						LA_VERSION);
+				le = replaceWithVanityUrl(le, tenantName, LA_SERVICENAME);
+				list.add(le);
 			}
 			else if (ITA_SERVICENAME.equals(app)) {
 				list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, ITA_VERSION)); //version is hard coded now
