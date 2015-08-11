@@ -15,5 +15,5 @@ SET HEADING ON
 SET FEEDBACK ON
 WHENEVER SQLERROR EXIT ROLLBACK
 
-@./upgrade_impl_dml_tmp.sql
+@&EMSAAS_SQL_ROOT/1.0.15/upgrade_impl_dml_tmp.sql
 
