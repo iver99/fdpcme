@@ -8,7 +8,7 @@ configurations {
 //version = '1.0.0'
 version = project.ext.getServiceVersion("DashboardService-ui")
 group = 'emaas/applications/dashboards-framework'
-
+deployname=artifactPrefix+'dashboards-ui'
 def artifactId = 'dashboardsui' 
 def groupId = group 
 def versionNumber = version
@@ -102,7 +102,7 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "emaas-applications-dashboards-ui-1.0.10",
+		name:       "emaas-applications-dashboards-ui-${version}",
 		targets:	'Server-6',
 		adminurl:   t3URL,  
 		user:       adminUser, 
@@ -122,7 +122,7 @@ task appServerUndeploy{
 		println "Undeploying ${appName_ui}-${version} from ${t3URL}" 
 
 		ant.wldeploy(action:'undeploy',  
-		name:       "emaas-applications-dashboards-ui-1.0.10",
+		name:       "${deployname}-${version}",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
