@@ -56,7 +56,7 @@
 
 #widget-selector-widgets {
     float: left;
-    width:848px;
+    width:853px;
     height:420px;
 }
 
@@ -76,7 +76,6 @@
     float: left; 
     padding-left: 5px; 
     border:0;
-    width: 558px;
     height: 30px;
     background: none; 
     font-size: 14px;
@@ -85,11 +84,22 @@
     margin-left: 0;
     margin-top: 0;
 }
+#widget-selector-searchbox .widget-searchtxt-with-filter { 
+   width: 558px;
+}
+#widget-selector-searchbox .widget-searchtxt-without-filter { 
+   width: 768px;
+}
 
 #widget-selector-searchbox #widget-selector-search-input {
     float:left;
-    width:588px;
     height:30px;
+}
+#widget-selector-searchbox .widget-search-input-with-filter {
+    width:588px;
+}
+#widget-selector-searchbox .widget-search-input-without-filter {
+    width: 798px;
 }
 
 .widget-searchbox-with-filter {

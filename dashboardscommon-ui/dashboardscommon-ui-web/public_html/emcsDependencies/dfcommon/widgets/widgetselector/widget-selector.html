@@ -8,15 +8,17 @@
         <div style="display:none;" 
             data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle, resizeBehavior: 'none',
-                rootAttributes: { style: 'width: 866px;'}}, attr: {id: dialogId}">   
+                rootAttributes: { style: 'width: 867px;'}}, attr: {id: dialogId}">   
             <div class="oj-dialog-body" style="height: 510px;" >
                 <!--<label for="categorySelect" hidden style='padding: 0px; margin: 0px; width:0px;height:0px;' data-bind="text: widgetGroupLabel"></label>-->
                 <div id="widget-selector-search-container">
                     <div id="widget-selector-searchbox" 
                          data-bind="css: {'widget-searchbox-with-filter': widgetGroupFilterVisible(), 'widget-searchbox-without-filter': !widgetGroupFilterVisible()}">
-                        <div id="widget-selector-search-input">
+                        <div id="widget-selector-search-input"
+                             data-bind="css: {'widget-search-input-with-filter': widgetGroupFilterVisible(), 'widget-search-input-without-filter': !widgetGroupFilterVisible()}">
                             <input id="searchTxt" maxlength='100' autofocus="autofocus"
                                data-bind="ojComponent:{component:'ojInputText',value: searchText}, 
+                                            css: {'widget-searchtxt-with-filter': widgetGroupFilterVisible(), 'widget-searchtxt-without-filter': !widgetGroupFilterVisible()},
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             <button class="oj-button-half-chrome widget-selector-clear-button" data-bind="click: clearSearchText, visible: clearButtonVisible,
