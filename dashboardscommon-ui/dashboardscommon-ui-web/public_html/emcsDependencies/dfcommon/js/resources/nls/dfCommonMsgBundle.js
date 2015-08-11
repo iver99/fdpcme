@@ -101,7 +101,8 @@ define({
       "DATETIME_PICKER_MONTHS_DECEMBER": "December",
       "DATETIME_PICKER_TIME_RANGE": "Time Range",
       "DATETIME_PICKER_ERROR": "Error!",
-      "DATETIME_PICKER_FORMAT_ERROR_MSG": "Invalid data! Enter \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time!"
+      "DATETIME_PICKER_FORMAT_ERROR_MSG": "Invalid data! Enter \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time!",
+      "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "Invalid data! Start time is later than endtime!"
 }
 });
 

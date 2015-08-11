@@ -91,9 +91,18 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.endDateError = ko.observable(false);
                 self.startTimeError = ko.observable(false);
                 self.endTimeError = ko.observable(false);
+                self.timeValidateError = ko.observable(false);
                 
                 self.showErrorMsg = ko.computed(function () {
                     return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError();
+                }, self);
+                
+                self.showTimeValidateErrorMsg = ko.computed(function() {
+                    return !self.startDateError() && !self.endDateError() && !self.startTimeError() && !self.endTimeError() && self.timeValidateError();
+                }, self);
+
+                self.applyButtonDisable = ko.computed(function() {
+                    return self.startDateError() || self.endDateError() || self.startTimeError() || self.endTimeError() || self.timeValidateError();
                 }, self);
 
                 self.startDateSubscriber = ko.computed(function () {
@@ -166,6 +175,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.monthObject = ko.observable();
                 self.errorMsg = ko.observable();
                 self.formatErrorMsg = ko.observable();
+                self.timeValidateErrorMsg = ko.observable();
                 self.timeRangeMsg = ko.observable();
                 self.applyButton = ko.observable();
                 self.cancelButton = ko.observable();
@@ -193,6 +203,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                                 self.errorMsg(nls.DATETIME_PICKER_ERROR);
                                 self.formatErrorMsg(nls.DATETIME_PICKER_FORMAT_ERROR_MSG);
+                                self.timeValidateErrorMsg(nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
                                 self.timeRangeMsg(nls.DATETIME_PICKER_TIME_RANGE);
 
                                 self.applyButton(nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON);
@@ -336,7 +347,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             $(eleId).css('background-color', '#ffffff');
                             $(eleId).css('font-weight', 'bold');
                         } else {
-                            self.customClick();
+                            customClick();
                         }
                     } else if (!params.startDatetime && params.endDateTime) {
                         self.timePeriod(self.timePeriodLast15mins());
@@ -353,7 +364,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         oj.Logger.warn("The user just input end time");
 
                     } else if (params.startDateTime && !params.endDateTime) {
-                        self.customClick();
+                        customClick();
                         start = new Date(params.startDateTime);
                         end = new Date();
                     } else {
@@ -407,7 +418,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     self.lastTimePeriod(self.timePeriod());
                 });
 
-                self.customClick = function () {
+                function customClick() {
                     self.timePeriod(self.timePeriodCustom());
                     self.selectByDrawer(false);
 
@@ -475,9 +486,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.changeDate = function (event, data, value) {
                     try {
                         self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": false});
-                        }
+                        
                         $(event.target).removeClass("input-error");
                         if (value === 1) {
                             self.startDateError(false);
@@ -485,11 +494,15 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             self.endDateError(false);
                         }
                         if (data.option == "value" && !self.selectByDrawer()) {
-                            self.customClick();
+                            customClick();
                             $.when(nlsString()).done(function () {
                                 self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                                 self.updateRange(self.startDate(), self.endDate());
                             });
+                        }
+                        timeValidate();
+                        if (self.panelId) {
+                            $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
                         }
                     } catch (e) {
                         if (value === 1) {
@@ -506,16 +519,18 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 self.changeStartTime = function (event, data) {
                     if (typeof data.value === "string") {
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": false});
-                        }
+                        
                         self.startTimeError(false);
                         self.restoreBorderForTime(event.target);
 
                         if (data.option == "value" && !self.selectByDrawer()) {
                             self.setFocusOnInput("divStartTime_" + self.randomId);
                             self.lastFocus(0);
-                            self.customClick();
+                            customClick();
+                        }
+                        timeValidate();
+                        if (self.panelId) {
+                            $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
                         }
                     } else {
                         self.startTimeError(true);
@@ -531,16 +546,18 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 self.changeEndTime = function (event, data) {
                     if (typeof data.value === "string") {
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": false});
-                        }
+                        
                         self.endTimeError(false);
                         self.restoreBorderForTime(event.target);
                          
                         if (data.option == "value" && !self.selectByDrawer()) {
                             self.setFocusOnInput("divEndTime_" + self.randomId);
                             self.lastFocus(0);
-                            self.customClick();
+                            customClick();
+                        }
+                        timeValidate();
+                        if (self.panelId) {
+                            $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
                         }
                     } else {
                         self.endTimeError(true);
@@ -551,6 +568,16 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         if (self.panelId) {
                             $(self.panelId + " #applyButton").ojButton({"disabled": true});
                         }
+                    }
+                }
+                
+                function timeValidate() {
+                    var start = self.startDateISO().slice(0, 10) + self.startTime();
+                    var end = self.endDateISO().slice(0, 10) + self.endTime();
+                    if(start > end) {
+                        self.timeValidateError(true);
+                    }else {
+                        self.timeValidateError(false);
                     }
                 }
 
