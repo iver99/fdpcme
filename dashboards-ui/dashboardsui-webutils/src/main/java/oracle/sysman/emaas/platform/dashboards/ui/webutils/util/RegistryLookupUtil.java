@@ -120,7 +120,24 @@ public class RegistryLookupUtil
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
 			if (result != null && result.size() > 0) {
 
 				//find https link first
@@ -228,7 +245,24 @@ public class RegistryLookupUtil
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
-			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				logger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
 			if (result != null && result.size() > 0) {
 				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
 				// find http link only

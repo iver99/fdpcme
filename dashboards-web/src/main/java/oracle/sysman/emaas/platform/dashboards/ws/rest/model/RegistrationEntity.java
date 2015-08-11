@@ -54,13 +54,19 @@ public class RegistrationEntity
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 
 	public static final String APM_SERVICENAME = "ApmUI";
-	public static final String APM_URL = "/emsaasui/apmUi/index.html";
+	public static final String APM_VERSION = "0.1"; //TODO change to 1.0+ at right time
+	public static final String APM_HOME_LINK = "sso.home";
+	//	public static final String APM_URL = "/emsaasui/apmUi/index.html";
 	public static final String LA_SERVICENAME = "LoganService";
-	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
+	public static final String LA_VERSION = "0.1"; //TODO change to 1.0+ at right time
+	public static final String LA_HOME_LINK = "sso.search";
+	//no home link is needed
+	//	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
 	public static final String ITA_SERVICENAME = "EmcitasApplications";
+	public static final String ITA_VERSION = "0.1"; //TODO change to 1.0+ at right time
 	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
 	public static final String TA_SERVICENAME = "TargetAnalytics";
-	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
+	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
 
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
@@ -118,15 +124,23 @@ public class RegistrationEntity
 	{
 		List<LinkEntity> list = new ArrayList<LinkEntity>();
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
+		String tenantName = TenantContext.getCurrentTenant();
 		for (String app : subscribedApps) {
 			if (APM_SERVICENAME.equals(app)) {
-				list.add(new LinkEntity(ApplicationOPCName.APM.toString(), APM_URL, APM_SERVICENAME, "1.0.0")); //version is hard coded now
+				Link l = RegistryLookupUtil.getServiceExternalLink(APM_SERVICENAME, APM_VERSION, APM_HOME_LINK, tenantName);
+				LinkEntity le = new LinkEntity(ApplicationOPCName.APM.toString(), l.getHref(), APM_SERVICENAME, APM_VERSION);
+				le = replaceWithVanityUrl(le, tenantName, APM_SERVICENAME);
+				list.add(le);
 			}
 			else if (LA_SERVICENAME.equals(app)) {
-				list.add(new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), LA_URL, LA_SERVICENAME, "1.0.0")); //version is hard coded now
+				Link l = RegistryLookupUtil.getServiceExternalLink(LA_SERVICENAME, LA_VERSION, LA_HOME_LINK, tenantName);
+				LinkEntity le = new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), l.getHref(), LA_SERVICENAME,
+						LA_VERSION);
+				le = replaceWithVanityUrl(le, tenantName, LA_SERVICENAME);
+				list.add(le);
 			}
 			else if (ITA_SERVICENAME.equals(app)) {
-				list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, "1.0.0")); //version is hard coded now
+				list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, ITA_VERSION)); //version is hard coded now
 
 			}
 		}
