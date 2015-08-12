@@ -44,6 +44,7 @@ requirejs.config({
         'canvg':'../emcsDependencies/canvg/canvg',
         'd3':'../emcsDependencies/d3/d3.min',
         'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '../emcsDependencies/dfcommon/js/util'
     },
