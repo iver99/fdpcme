@@ -116,7 +116,19 @@
                     <img class="emaas-appheader-message-icon emaas-appheader-message-icon-clear" data-bind="attr: {alt: $parent.altTextClear, src: $parent.clearMessageIcon}, click: $parent.clearMessage"/>
                 </div>
             </div>
-             <!-- /ko -->
+            <!-- /ko -->
+            <!-- ko if: (hasHiddenMessages() === true || hiddenMessagesExpanded() === true) -->
+            <div class="emaas-appheader-message-box emaas-appheader-message-box-tool" >
+                <div style="float:right;padding-right: 20px;">
+                    <!-- ko if: hiddenMessagesExpanded() === false -->
+                    <a data-bind="attr: {href: 'javascript: this.click()', title: showMoreLinkTitle}, click: expandAllMessages, text: showMoreLinkTxt"></a>
+                    <!-- /ko -->
+                    <!-- ko if: hiddenMessagesExpanded() === true -->
+                    <a data-bind="attr: {href: 'javascript: this.click()', title: showFirstNOnlyTitle}, click: collapseMessages, text: showFirstNOnlyTxt"></a>
+                    <!-- /ko -->
+                </div>
+            </div>
+            <!-- /ko -->
         </div>
         <!-- /ko -->
     </body>

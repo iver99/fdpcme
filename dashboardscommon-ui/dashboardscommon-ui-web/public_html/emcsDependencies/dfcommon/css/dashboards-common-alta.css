@@ -372,6 +372,10 @@ a:hover {
         background-color: #D9EDF8;
         border-bottom: 1px #bfe4f8; 
     }
+    .emaas-appheader-message-box-tool {
+        background-color: #f0f0f0;
+        border-bottom: 1px #c4ced7; 
+    }
     .emaas-appheader-message {
         font-size:14px;
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;

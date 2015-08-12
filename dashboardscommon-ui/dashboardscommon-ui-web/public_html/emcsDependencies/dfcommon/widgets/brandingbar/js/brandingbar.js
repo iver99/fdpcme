@@ -1,7 +1,8 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojtoolbar', 'ojs/ojmenu', 'ojs/ojbutton'],
-        function (localrequire, ko, $, dfumodel,oj) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js/util/message-util', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojtoolbar', 'ojs/ojmenu', 'ojs/ojbutton'],
+        function (localrequire, ko, $, dfumodel, msgUtilModel, oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
+                var msgUtil = new msgUtilModel();
                 
                 //Config requireJS i18n plugin if not configured yet
                 var i18nPluginPath = getFilePath(localrequire,'../../../js/resources/i18n.js');
@@ -54,12 +55,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var warnMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_warn_16.png'); 
                 var confirmMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_confirm_16.png'); 
                 var infoMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_info_16.png'); 
-                var messages = [];
-                
-                self.clearMessage = function(data, event) {
-                    removeMessage(data);
-                    self.messageList(messages);
-                };
+                var hiddenMessages = [];
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -133,6 +129,15 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.serviceName = appProperties['serviceName'];
                 self.serviceVersion = appProperties['version'];
                 
+                self.showMoreLinkTxt = ko.observable();
+                self.showMoreLinkTitle = ko.observable();
+                self.showFirstNOnlyTxt = ko.observable();
+                self.showFirstNOnlyTitle = ko.observable();
+                
+                self.clearMessage = function(data, event) {
+                    removeMessage(data);
+                };
+                
                 var getSubscribedAppsDeferred = null;
                 self.getSubscribedAppsCallback = function(apps) {
                     subscribedApps = apps;
@@ -165,6 +170,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.altTextConfirm(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM);
                     self.altTextInfo(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO);
                     self.altTextClear(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR);
+                    self.showMoreLinkTxt(nls.BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_MORE);
+                    self.showMoreLinkTitle(nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_MORE);
+                    self.showFirstNOnlyTxt(msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_FIRST, maxMsgDisplayCnt));
+                    self.showFirstNOnlyTitle(msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_FIRST, maxMsgDisplayCnt));
                     
                     oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
@@ -365,15 +374,55 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     $("#links_menu").slideUp('normal');
                 });  
                 
+                var maxMsgDisplayCnt = $.isFunction(params.maxMessageDisplayCount) ? params.maxMessageDisplayCount() : 
+                        (typeof(params.maxMessageDisplayCount) === "number" && params.maxMessageDisplayCount > 0 ?
+                            params.maxMessageDisplayCount : 3);
+                var displayMessages = [];
+                var displayMessageCount = 0; //Count messages displayed except the retry in progress message
+                var retryingMessageIds = [];
+                var currentRetryingMsgId = null;
+                var currentRetryFailMsgId = null;
+                var catRetryInProgress = "retry_in_progress";
+                var catRetryFail = "retry_fail";
+                self.hasHiddenMessages = ko.observable(false);
+                self.hiddenMessagesExpanded = ko.observable(false);
+                
                 window.addEventListener("message", receiveMessage, false);
-
+                
+                self.expandAllMessages = function(data, event) {
+                    for (var i = 0; i < hiddenMessages.length; i++) {
+                        displayMessages.push(hiddenMessages[i]);
+                        displayMessageCount++;
+                    }
+                    hiddenMessages = [];
+                    self.messageList(displayMessages);
+                    self.hasHiddenMessages(false);
+                    self.hiddenMessagesExpanded(true);
+                };
+                
+                self.collapseMessages = function(data, event) {
+                    displayMessageCount = maxMsgDisplayCnt;
+                    var displayMsgCnt = maxMsgDisplayCnt;
+                    if (currentRetryingMsgId !== null) {
+                        displayMsgCnt++;
+                    }
+                    
+                    for (var i = displayMsgCnt; i < displayMessages.length; i++) {
+                        hiddenMessages.push(displayMessages[i]);
+                    }
+                    displayMessages.splice(displayMsgCnt, displayMessages.length - displayMsgCnt);
+                    self.messageList(displayMessages);
+                    self.hasHiddenMessages(true);
+                    self.hiddenMessagesExpanded(false);
+                };
+                
                 function receiveMessage(event)
                 {
                     if (event.origin !== window.location.protocol + '//' + window.location.host)
                         return;
                     var data = event.data;
                     //Only handle received message for showing page level messages
-                    if (data && data.category && data.category === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
+                    if (data && data.tag && data.tag === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
                         if (data.action) {
                             if (data.action.toUpperCase() === 'SHOW') {
                                 showMessage(data);
@@ -391,13 +440,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 function showMessage(data) {
                     if (data) {
-                        var size = messages.length;
                         var message = {};
-                        message.index = size;
                         message.id = data.id ? data.id : dfu.getGuid();
                         message.type = data.type;
                         message.summary = data.summary;
                         message.detail = data.detail;
+                        message.category = data.category;
                         if (data.type && data.type.toUpperCase() === 'ERROR') {
                             message.iconAltText = self.altTextError;
                             message.icon = errorMessageIcon;
@@ -415,8 +463,40 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                             message.icon = infoMessageIcon;
                         }
                         
-                        messages.push(message);
-                        self.messageList(messages);
+                        if (message.category === catRetryInProgress) {
+                            if (retryingMessageIds.length === 0) {
+                                displayMessages.splice(0, 0, message);
+                                currentRetryingMsgId = message.id;
+                            }
+                            retryingMessageIds.push(message.id);
+                        }
+                        else if (message.category !== catRetryInProgress) {
+                            var isMsgNeeded = true;
+                            if (message.category === catRetryFail && currentRetryFailMsgId !== null) {
+                                isMsgNeeded = false;
+                            }
+                            else if (message.category === catRetryFail){
+                                currentRetryFailMsgId = message.id;
+                            }
+                            
+                            if (isMsgNeeded === true) {
+                                if (displayMessageCount < maxMsgDisplayCnt || self.hiddenMessagesExpanded()) {
+                                    displayMessages.push(message);
+                                    displayMessageCount++;
+                                }
+                                else {
+                                    hiddenMessages.push(message);
+                                }
+                            }
+                        } 
+                        
+                        self.messageList(displayMessages);
+                        if (hiddenMessages.length > 0) {
+                            self.hasHiddenMessages(true);
+                        }
+                        else {
+                            self.hasHiddenMessages(false);
+                        }
                         
                         //Remove message automatically if remove delay time is set
                         if (data.removeDelayTime && typeof(data.removeDelayTime) === 'number') {
@@ -426,17 +506,56 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 function removeMessage(data) {
-                    if (data && data.id) {
-                        for (i = 0; i < messages.length; i++) {
-                            if (messages[i].id === data.id) {
-                                messages.splice(i, 1);
-                                break;
+                    if (data.category === catRetryInProgress) {
+                        retryingMessageIds = removeItemByValue(retryingMessageIds, data.id);
+                        if (retryingMessageIds.length === 0 && currentRetryingMsgId !== null) {
+                            displayMessages = removeItemByPropertyValue(displayMessages, 'id', currentRetryingMsgId);
+                            currentRetryingMsgId = null;
+                        }
+                    }
+                    else if (data && data.id) {
+                        var originDispMsgCnt = displayMessages.length;
+                        hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'id', data.id);
+                        displayMessages = removeItemByPropertyValue(displayMessages, 'id', data.id);
+                        if (originDispMsgCnt > displayMessages.length) {
+                            displayMessageCount--;
+                            if (hiddenMessages.length > 0) {
+                                var newMsg = hiddenMessages[0];
+                                displayMessages.push(newMsg);
+                                hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'id', newMsg.id);
+                                displayMessageCount++;
                             }
+                        }
+                        if (data.category === catRetryFail) {
+                            currentRetryFailMsgId = null;
                         }
                     }
                     
-                    self.messageList(messages);
+                    self.messageList(displayMessages);
+                    if (hiddenMessages.length > 0) {
+                        self.hasHiddenMessages(true);
+                        self.hiddenMessagesExpanded(false);
+                    }
+                    else {
+                        self.hasHiddenMessages(false);
+                        if (displayMessageCount <= maxMsgDisplayCnt)
+                            self.hiddenMessagesExpanded(false);
+                    }
                 };
+                
+                function removeItemByValue(obj, value)
+                {
+                    return obj.filter(function (val) {
+                        return val !== value;
+                    });
+                }
+                
+                function removeItemByPropertyValue(obj, prop, value)
+                {
+                    return obj.filter(function (val) {
+                        return val[prop] !== value;
+                    });
+                }
                 
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");
