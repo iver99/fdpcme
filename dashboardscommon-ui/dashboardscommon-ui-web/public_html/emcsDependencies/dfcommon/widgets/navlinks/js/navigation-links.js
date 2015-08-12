@@ -7,19 +7,22 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
+                var appMap = params.appMap;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
-                self.dashboardsLabel = ko.observable();
                 self.visualAnalyzersLabel = ko.observable();
                 self.administrationLabel = ko.observable();
-                self.allDashboardsLinkLabel = ko.observable();
+                self.homeLinkLabel = ko.observable();
+                self.cloudServicesLabel = ko.observable();
                 
+                self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
                 
                 var nlsStringsAvailable = false;
+                var nlsStrings = null;
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -43,7 +46,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                     if (value.needRefresh){
                         if (!nlsStringsAvailable) {
                             refreshNlsStrings(params.nlsStrings());
-                            nlsStringsAvailable = true;
                         }
                         refreshLinks();
                         params.navLinksNeedRefresh(false);
@@ -83,12 +85,32 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 */
                 function discoverLinks() {
                     var fetchServiceLinks = function(data) {
+                        if (data.cloudServices && data.cloudServices.length > 0) {
+                            var cloudServices = data.cloudServices;
+                            var cloudServiceList = [];
+                                for (var i = 0; i < cloudServices.length; i++) {
+                                    if (nlsStringsAvailable && appMap !== null)
+                                        cloudServiceList.push(
+                                            {name: appMap[cloudServices[i].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[i].name].serviceDisplayName] : 
+                                                nlsStrings[appMap[cloudServices[i].name].appName], 
+                                            href: cloudServices[i].href});
+                                    else 
+                                        cloudServiceList.push(
+                                            {name: cloudServices[i].name, 
+                                            href: cloudServices[i].href});
+                                }
+                            self.cloudServices(cloudServiceList);
+                        }
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
                             for (var i = 0; i < analyzers.length; i++) {
+                                var aurl = analyzers[i].href;
+                                if (dfu.isDevMode()){
+                                    aurl = dfu.getRelUrlFromFullUrl(aurl);
+                                }
                                 analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
-                                    href: analyzers[i].href});
+                                    href: aurl});
                             }
                             self.visualAnalyzers(analyzerList);
                         }
@@ -99,13 +121,16 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             		var link = data.adminLinks[i];
                             		if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
                             			if (link.href.indexOf('customersoftware') !== -1){
-                            				var protocolIndex = link.href.indexOf('://');
-                                    		var urlNoProtocol = link.href.substring(protocolIndex + 3);
-                                    		var relPathIndex = urlNoProtocol.indexOf('/');
-                                    		link.href = urlNoProtocol.substring(relPathIndex);
-                                    		break;
+                                                    var protocolIndex = link.href.indexOf('://');
+                                                    var urlNoProtocol = link.href.substring(protocolIndex + 3);
+                                                    var relPathIndex = urlNoProtocol.indexOf('/');
+                                                    link.href = urlNoProtocol.substring(relPathIndex);
+                                                    break;
                             			}
                             		}
+                                        if (dfu.isDevMode()){
+                                            link.href = dfu.getRelUrlFromFullUrl(link.href);
+                                        }
                             	}
                                 if (params.app.appId===params.appDashboard.appId){
                                     self.adminLinks(data.adminLinks);//show all avail admin links
@@ -128,7 +153,10 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
 
                         }
                     };                   
-                    var serviceUrl = "/emsaasui/emcpdfui/api/configurations/registration";
+                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                    if (dfu.isDevMode()){
+                        serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"configurations/registration");
+                    }
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu.getDefaultHeader(), 
@@ -147,19 +175,38 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 
                 function refreshLinks() {
                     dfHomeUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
-                    
-                    //Fetch available quick links and administration links from service manager registry
-                    if (self.visualAnalyzers().length === 0 || (self.adminLinks().length === 0 && self.isAdmin === true)) {
+                    //Fetch available cloud services, visual analyzers and administration links
+                    if (self.cloudServices().length === 0 || 
+                        self.visualAnalyzers().length === 0 || 
+                        (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
                 };        
                 
-                function refreshNlsStrings(nlsStrings) {
-                    if (nlsStrings) {
-                        self.dashboardsLabel(nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
-                        self.visualAnalyzersLabel(nlsStrings.BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL);
-                        self.administrationLabel(nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL);
-                        self.allDashboardsLinkLabel(nlsStrings.BRANDING_BAR_NAV_ALL_DASHBOARDS_LABEL);
+                function refreshNlsStrings(nls) {
+                    if (nls) {
+                        nlsStringsAvailable = true;
+                        nlsStrings = nls;
+                        self.visualAnalyzersLabel(nls.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
+                        self.administrationLabel(nls.BRANDING_BAR_NAV_ADMIN_LABEL);
+                        self.homeLinkLabel(nls.BRANDING_BAR_NAV_HOME_LABEL);
+                        self.cloudServicesLabel(nls.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL);
+                        
+                        var cloudServices = self.cloudServices();
+                        if (cloudServices && cloudServices.length > 0) {
+                            var cloudServiceList = [];
+                                for (var i = 0; i < cloudServices.length; i++) {
+                                    if (appMap !== null)
+                                        cloudServiceList.push(
+                                            {name: nls[appMap[cloudServices[i].name].appName], 
+                                            href: cloudServices[i].href});
+                                    else 
+                                        cloudServiceList.push(
+                                            {name: cloudServices[i].name, 
+                                            href: cloudServices[i].href});
+                                }
+                            self.cloudServices(cloudServiceList);
+                        }
                     }
                 }
             }

@@ -22,9 +22,9 @@ requirejs.config({
         'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
@@ -59,7 +59,8 @@ requirejs.config({
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
         }
-    }
+    },
+    waitSeconds: 60
 });
 
 var dashboardsViewModle = undefined;
@@ -96,6 +97,9 @@ require(['dbs/dbsmodel',
 //            var dfRestApi = dfu.discoverDFRestApiUrl();
 //            if (dfRestApi){
                 var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
+                if (dfu.isDevMode()){
+                    logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
+                }
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
@@ -127,7 +131,7 @@ require(['dbs/dbsmodel',
                var self = this;
                self.homeTitle = getNlsString("DBS_HOME_TITLE");        
            }
-            dashboardsViewModle = new model.ViewModel();
+            //dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();
             var titleVM = new TitleViewModel();
 
@@ -141,45 +145,22 @@ require(['dbs/dbsmodel',
                 $('#globalBody').show();
                 // Setup bindings for the header and footer then display everything
                 //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));
-                
-                ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
-                $('#mainContent').show(); 
-                
-                function setMainAreaPadding(isDrag)
-                {
-                    //console.log("home tab offset width: " + document.getElementById('dhometab').offsetWidth);
-                    var _tabwidth = document.getElementById('dhometab').offsetWidth;//$("#dhometab").width();
-                    //console.log("tab width: "+_tabwidth);
-                    var _padding = _tabwidth % (335 /*panel width + panel margin*/);
-                    //console.log("_padding: " + Math.floor(_padding/2));
-                    var _calpadding = (_tabwidth <= 680 ) ? 5 : Math.floor(_padding/2);
+
+                var predataModel = new model.PredataModel();
+                function init() {
+                    dashboardsViewModle = new model.ViewModel(predataModel);
+                    ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
+                    $('#mainContent').show();
                     
-                    var _rpadding = _calpadding;
-                    /*
-                    if (isDrag === true) _rpadding = _rpadding + 13;
-                    else if (_tabwidth < 1080) {
-                        console.log("tab width: "+_tabwidth);
-                        _rpadding = _rpadding + 12;
-                    }*/
-                    _rpadding = _rpadding + 13;
-                    $("#dhometab").attr({
-                       "style" : "padding-left: "+ _calpadding  + "px;" //"padding-right: "+ _rpadding  + "px;" 
-                    });
-                    
-                    $("#homettbtns").attr({
-                       "style" : "padding-right: "+ _rpadding  + "px;" 
-                    });
-                };
-                setMainAreaPadding();
-                $(window).resize(function() {
-                    setMainAreaPadding(true);
-                });
-                
-//               window.addEventListener('message', childMessageListener, false);
-               window.name = 'dashboardhome'; 
-               
-               if (window.parent && window.parent.updateOnePageHeight)
-                   window.parent.updateOnePageHeight('2000px');
+
+                    //window.addEventListener('message', childMessageListener, false);
+                    //window.name = 'dashboardhome';
+
+                    //if (window.parent && window.parent.updateOnePageHeight)
+                    //    window.parent.updateOnePageHeight('2000px');
+                }
+                predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
+
             });
         }
 );
@@ -188,6 +169,7 @@ require(['dbs/dbsmodel',
  * listener on messages from child page
  * @param {type} builderData
  * @returns {undefined} */
+/*
 function childMessageListener(builderData) {
     //console.log(builderData);
     var _o = JSON.parse(builderData);
@@ -204,12 +186,13 @@ function childMessageListener(builderData) {
 //    }
     
 };
-
+*/
 /**
 *  Callback method to be invokced by child builder page to get dashboard data
 
  * @param {type} dashboardid
  * @returns {dashboarInfoCallBack.Anonym$0} */
+/*
 function dashboarDataCallBack(dashboardid) {
     var dashboard = dashboardsViewModle.getDashboard(dashboardid);
     // TODO: put code to retrieve dashboard data, and update code to add 'real' dashboard/widgets data below
@@ -235,7 +218,7 @@ function dashboarDataCallBack(dashboardid) {
                 {title: "CPU Load"},
                 {title: "Error Reports"}
             ]};
-};
+};*/
 
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
@@ -253,5 +236,17 @@ function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 };
 
-
+function getDateString(isoString) {
+    //console.log(isoString);
+    if (isoString && isoString.length > 0)
+    {
+        var s = isoString.split(/[\-\.\+: TZ]/g);
+        console.log(s);
+        if (s.length > 1)
+        {
+            return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();
+        }
+    }
+    return "";
+};
 

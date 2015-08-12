@@ -135,42 +135,53 @@ define(['require',
                 };
                 
                 // Show widgets data of previous page
-                self.naviPrevious = function() {
+                self.naviPrevious = function(data, event) {
+                    console.log(event);
+                    if(event.type == "click" || (event.type == "keypress" && event.keyCode == 13)) {
                     if (curPage === 1) {
                         self.naviPreBtnEnabled(false);
-                    }
-                    else {
-                        curPage--;
-                    }
-                    if (naviFromSearchResults) {
-                        fetchWidgetsForCurrentPage(searchResultArray);
-                    }
-                    else {
-                        fetchWidgetsForCurrentPage(getAvailableWidgets());
-                    }
+                    }else if (curPage === 2 && event.type == "keypress") {
+                        $("#nextButton").focus();
+                            curPage--;
+                        }
+                        else {
+                            curPage--;
+                        }
+                        if (naviFromSearchResults) {
+                            fetchWidgetsForCurrentPage(searchResultArray);
+                        }
+                        else {
+                            fetchWidgetsForCurrentPage(getAvailableWidgets());
+                        }
 
-                    self.curPageWidgetList(curPageWidgets);
-                    refreshNaviButton();
-                    refreshWidgetAndButtonStatus();
+                        self.curPageWidgetList(curPageWidgets);
+                        refreshNaviButton();
+                        refreshWidgetAndButtonStatus();
+                    }
                 };
                 
                 // Show widget data of next page
-                self.naviNext = function() {
-                    if (curPage === totalPage) {
-                        self.naviNextBtnEnabled(false);
+                self.naviNext = function(data, event) {
+                    if (event.type == "click" || (event.type == "keypress" && event.keyCode == 13)) {
+                        if (curPage === totalPage) {
+                            self.naviNextBtnEnabled(false);
+                        }else if (curPage === (totalPage-1) && event.type == "keypress") {
+                            $("#preButton").focus();
+                            curPage++;
+                        }
+                        else {
+                            curPage++;
+                        }
+                        if (naviFromSearchResults) {
+                            fetchWidgetsForCurrentPage(searchResultArray);
+                        }
+                        else {
+                            fetchWidgetsForCurrentPage(getAvailableWidgets());
+                        }
+                        self.curPageWidgetList(curPageWidgets);
+                        refreshNaviButton();
+                        refreshWidgetAndButtonStatus();
                     }
-                    else {
-                        curPage++;
-                    }
-                    if (naviFromSearchResults) {
-                        fetchWidgetsForCurrentPage(searchResultArray);
-                    }
-                    else {
-                        fetchWidgetsForCurrentPage(getAvailableWidgets());
-                    }
-                    self.curPageWidgetList(curPageWidgets);
-                    refreshNaviButton();
-                    refreshWidgetAndButtonStatus();
                 };
                 
                 // Search widgets by selected widget group and search text(name, description)
@@ -330,6 +341,10 @@ define(['require',
 //                        var widgetgroupsUrl = dfu.buildFullUrl(ssfUrl,'widgetgroups');
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
+                        if (dfu.isDevMode()){
+                            widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                            widgetgroupsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgetgroups");
+                        }
                         dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),

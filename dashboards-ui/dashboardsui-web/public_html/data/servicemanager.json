@@ -1,32 +1,12 @@
 {
-    "ssfVersion":"1.0",
-    "ssfServiceName":"SavedSearch",
-    "registryUrls":"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",
-    "serviceUrls":"http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",
-    "authToken": "Basic d2VibG9naWM6d2VsY29tZTE=",
-    "registryUrl": "http://adc00pos.us.oracle.com:7001/registry/servicemanager/registry/v1/",
-    "quickLinks": [
-        {
-            "name": "Dashboard Home",
-            "href": "https://10.245.29.51:7002/emcpdfui/home.html"
-        },
-        {
-            "name": "Target Visual Analyzer",
-            "href": "https://slc08upg.us.oracle.com:7002/emsaasui/emcta/ta/analytics.html"
-        }
-    ],
-    "visualAnalyzers": [
-        {
-            "name": "Target Visual Analyzer",
-            "href": "https://slc08upg.us.oracle.com:7002/emsaasui/emcta/ta/analytics.html"
-        }
-    ],
-    "adminLinks": [
-        {"name": "Administration 1", "href": "https://10.245.29.51:7002/emcpdfui/home.html"},
-        {"name": "Administration 2", "href": "https://10.245.29.51:7002/emcpdfui/home.html"}
-    ],
-    "dfRestApiEndPoint11": "http://10.240.114.214:7001/emcpdf/api/v1/",
-    "dfRestApiEndPoint": "http://slc06wfs.us.oracle.com:7001/emcpdf/api/v1/",
-    "dfRestApiEndPoint22": "http://sca00brh.us.oracle.com:7001/emcpdf/api/v1/",
-    "ssfRestApiEndPoint": "http://slc06wfs.us.oracle.com:7001/savedsearch/v1/"
+    "_comment_0":"===THIS IS USED FOR DEV PURPOSE ONLY===",
+    "_comment_1":"Change data/url to desired one that matches dev env",
+    "_comment_2":"do *NOT* push this file unless it is required change for dev env",
+    "_comment_9":"=======================================",
+    "tenant":"emaastesttenant1",
+    "user":"emcsadmin",
+    "wlsAuth":"weblogic:welcome1",
+    "dfRestApiEndPoint": "http://slc07hgf.us.oracle.com:7001/emcpdf/api/v1/",
+    "ssfRestApiEndPoint": "http://slc07hgf.us.oracle.com:7001/savedsearch/v1/",
+    "_comment_100":"Please add other data as below required for your dev env"
 }

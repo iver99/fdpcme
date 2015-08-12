@@ -78,7 +78,7 @@ public class TenantSubscriptionsAPI extends APIBase
 
 		// handling normal requests without edition
 		try {
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			String tenantName = TenantContext.getCurrentTenant();
 			List<String> apps = TenantSubscriptionUtil.getTenantSubscribedServices(tenantName);
 			if (apps == null || apps.isEmpty()) {
@@ -100,7 +100,7 @@ public class TenantSubscriptionsAPI extends APIBase
 	private Response getSubscribedApplicationsWithEdition(String tenantIdParam, String userTenant)
 	{
 		try {
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			String tenantName = TenantContext.getCurrentTenant();
 			// normal behavior here
 			Link tenantsLink = RegistryLookupUtil.getServiceInternalLink("TenantService", "1.0+", "collection/tenants", null);

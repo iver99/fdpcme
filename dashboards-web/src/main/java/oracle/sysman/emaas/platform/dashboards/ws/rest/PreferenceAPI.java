@@ -31,6 +31,7 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Preference;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
@@ -50,7 +51,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			pm.removeAllPreferences(tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -73,7 +74,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			pm.removePreference(key, tenantId);
 			return Response.status(Status.NO_CONTENT).build();
 		}
@@ -97,7 +98,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			Preference input = pm.getPreferenceByKey(key, tenantId);
 			return Response.ok(getJsonUtil().toJson(input)).build();
 		}
@@ -119,7 +120,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			List<Preference> ps = pm.listPreferences(tenantId);
 			if (ps != null) {
 				for (Preference p : ps) {
@@ -148,6 +149,10 @@ public class PreferenceAPI extends APIBase
 		Preference input = null;
 		try {
 			input = getJsonUtil().fromJson(inputJson.toString(), Preference.class);
+			if (input != null && input.getValue() != null) {
+				// the preference value should be html escaped.
+				input.setValue(StringEscapeUtils.escapeHtml4(input.getValue()));
+			}
 		}
 		catch (IOException e) {
 			//e.printStackTrace();
@@ -159,7 +164,7 @@ public class PreferenceAPI extends APIBase
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
-			initializeUserContext(userTenant);
+			initializeUserContext(tenantIdParam, userTenant);
 			input.setKey(key);
 
 			pm.savePreference(input, tenantId);

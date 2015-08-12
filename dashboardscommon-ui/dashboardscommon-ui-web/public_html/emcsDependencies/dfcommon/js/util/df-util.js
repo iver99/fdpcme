@@ -4,41 +4,16 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
             
-            //Config requireJS i18n plugin if not configured yet
-            var i18nPluginPath = getFilePath(localrequire,'../resources/i18n.js');
-            i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length-3);
-            var requireConfig = requirejs.s.contexts._;
-            var locale = null;
-            var i18nConfigured = false;
-            var childCfg = requireConfig.config;
-            if (childCfg.config && childCfg.config.ojL10n) {
-                locale =childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
-            }
-            if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
-                i18nConfigured = true;
-            }
-            if (i18nConfigured === false) {
-                requirejs.config({
-                    config: locale ? {i18n: {locale: locale}} : {},
-                    paths: {
-                        'i18n': i18nPluginPath
-                    }
-                });
-            }
-            else {
-                requirejs.config({
-                    config: locale ? {i18n: {locale: locale}} : {}
-                });
-            }
-                
-            self.userName = userName;
-            self.tenantName = tenantName;
-            
-            var isNlsStringsLoaded = false;
-            var nlsStrings = ko.observable();
-            
-            requireNlsBundle();
-            
+            /**
+             * Get URL parameter value according to URL parameter name
+             * @param {String} name
+             * @returns {parameter value}
+             */
+            self.getUrlParam = function(name){
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+                return results === null ? "" : results[1];                
+            };
+
             
             /**
              * Catenate root and path to build full path
@@ -84,6 +59,64 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                     return root+"/"+path;
                 }
             };
+            
+            self.LOOKUP_REST_URL_BASE="/sso.static/dashboards.registry/lookup/";
+            self.SUBSCIBED_APPS_REST_URL="/sso.static/dashboards.subscribedapps";
+            self.SSF_REST_API_BASE="/sso.static/savedsearch.navigation";
+            var devMode = (window.DEV_MODE!==null && typeof window.DEV_MODE ==="object");
+            var devData = window.DEV_MODE;
+            if (window.DEV_MODE!==null && typeof window.DEV_MODE ==="object"){
+                devMode=true;
+                devData.userTenant={"tenant": devData.tenant, "user": devData.user, "tenantUser": devData.tenant+"."+devData.user};
+                self.LOOKUP_REST_URL_BASE=self.buildFullUrl(devData.dfRestApiEndPoint,"registry/lookup/");
+                self.SUBSCIBED_APPS_REST_URL=self.buildFullUrl(devData.dfRestApiEndPoint,"subscribedapps");
+                self.SSF_REST_API_BASE=devData.ssfRestApiEndPoint;                
+                console.log("====>DEV MODE:"+devMode);
+            }
+
+            
+            self.isDevMode = function(){
+                return devMode;
+            }        
+            
+            self.getDevData=function(){
+                return devData;
+            }
+            //Config requireJS i18n plugin if not configured yet
+            var i18nPluginPath = getFilePath(localrequire,'../resources/i18n.js');
+            i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length-3);
+            var requireConfig = requirejs.s.contexts._;
+            var locale = null;
+            var i18nConfigured = false;
+            var childCfg = requireConfig.config;
+            if (childCfg.config && childCfg.config.ojL10n) {
+                locale =childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
+            }
+            if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
+                i18nConfigured = true;
+            }
+            if (i18nConfigured === false) {
+                requirejs.config({
+                    config: locale ? {i18n: {locale: locale}} : {},
+                    paths: {
+                        'i18n': i18nPluginPath
+                    }
+                });
+            }
+            else {
+                requirejs.config({
+                    config: locale ? {i18n: {locale: locale}} : {}
+                });
+            }
+                
+            self.userName = userName;
+            self.tenantName = tenantName;
+            
+            var isNlsStringsLoaded = false;
+            var nlsStrings = ko.observable();
+            
+            requireNlsBundle();
+            
 
             /**
              * 
@@ -104,9 +137,9 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 }
 
                 var result =null;
-                var url ="/emsaasui/emcpdfui/api/registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                var url =self.LOOKUP_REST_URL_BASE+"endpoint?serviceName="+serviceName+"&version="+version; 
                 if (typeof rel==="string"){
-                    url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                    url = self.LOOKUP_REST_URL_BASE+"link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
                 self.ajaxWithRetry(url,{
@@ -159,9 +192,9 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                     return;
                 }
 
-                var url ="/emsaasui/emcpdfui/api/registry/lookup/endpoint?serviceName="+serviceName+"&version="+version; 
+                var url =self.LOOKUP_REST_URL_BASE+"endpoint?serviceName="+serviceName+"&version="+version; 
                 if (typeof rel==="string"){
-                    url = "/emsaasui/emcpdfui/api/registry/lookup/link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                    url = self.LOOKUP_REST_URL_BASE+"link?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 }
 
                 self.ajaxWithRetry(url, {
@@ -212,7 +245,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                     return null;                    
                 }
                 var result =null;
-                var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                var url= self.LOOKUP_REST_URL_BASE+"linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
 
                 self.ajaxWithRetry(url,{
                     type: 'get',
@@ -263,7 +296,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                     return;                    
                 }
                 
-                var url= "/emsaasui/emcpdfui/api/registry/lookup/linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
+                var url= self.LOOKUP_REST_URL_BASE+"linkWithRelPrefix?serviceName="+serviceName+"&version="+version+"&rel="+rel; 
                 self.ajaxWithRetry(url,{
                     type: 'get',
                     dataType: 'json',
@@ -307,7 +340,8 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
-            	return "/emsaasui/emcpdfui/home.html";
+            	var homeUrl = "/emsaasui/emcpdfui/home.html";
+                return homeUrl;
             };    
             
             /**
@@ -319,6 +353,9 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
 //                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
                     "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
                     "X-REMOTE-USER":self.tenantName+'.'+self.userName};
+                if (self.isDevMode()){
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
                 return defHeader;
             };
@@ -349,8 +386,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 }
                 
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps";
-
+                var url = self.SUBSCIBED_APPS_REST_URL;
                 var result = null;
                 self.ajaxWithRetry(url, {
                     type: 'get',
@@ -391,7 +427,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 }
                 
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps?withEdition=true";
+                var url = self.SUBSCIBED_APPS_REST_URL+"?withEdition=true";
 
                 var result = null;
                 $.ajax(url, {
@@ -439,7 +475,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 }
                 
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps?withEdition=true";
+                var url = self.SUBSCIBED_APPS_REST_URL+"?withEdition=true";
 
                 var result = null;
                 $.ajax(url, {
@@ -477,9 +513,9 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                     oj.Logger.error("Specified user name is empty, and the query won't be executed.");
                     return;
                 }
-                
+
                 var header = self.getDefaultHeader();
-                var url = "/sso.static/dashboards.subscribedapps";
+                var url = self.SUBSCIBED_APPS_REST_URL;
 
                 self.ajaxWithRetry(url, {
                     type: 'get',
@@ -511,8 +547,8 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             self.discoverSavedSearchServiceUrl = function() {
 //                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
 //                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-//                return self.discoverUrl('SavedSearch', '1.0+');
-                return '/sso.static/savedsearch.navigation';
+//                return self.discoverUrl('SavedSearch', '1.0');
+                return self.SSF_REST_API_BASE;
             };
             
             /**

@@ -25,9 +25,9 @@ requirejs.config({
         'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/debug',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
@@ -78,7 +78,8 @@ requirejs.config({
               return true;
             }
           }
-    }
+    },
+    waitSeconds: 60
 });
 
 var defaultTileHeight = 220;
@@ -125,6 +126,9 @@ require(['knockout',
 //          var dfRestApi = dfu.discoverDFRestApiUrl();
 //          if (dfRestApi){
               var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
+              if (dfu.isDevMode()){
+                  logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
+              }
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
@@ -143,34 +147,18 @@ require(['knockout',
                     template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
                 });
             }
-            ko.components.register("df-time-selector",{
-                viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
-                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
-            });
+//            ko.components.register("df-time-selector",{
+//                viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
+//                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
+//            });
+	    ko.components.register("df-datetime-picker",{
+         	viewModel: {require: '../emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker'},
+	        template: {require: 'text!../emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html'}
+	    });
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
                 template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
-            });
-            
-            ko.components.register("demo-la-widget",{
-                viewModel:{require:'../emcsDependencies/demo/logAnalyticsWidget/js/demo-log-analytics'},
-                template:{require:'text!../emcsDependencies/demo/logAnalyticsWidget/demo-log-analytics.html'}
-            });  
-            
-            ko.components.register("demo-ta-widget",{
-                viewModel:{require:'../emcsDependencies/demo/targetAnalyticsWidget/js/demo-target-analytics'},
-                template:{require:'text!../emcsDependencies/demo/targetAnalyticsWidget/demo-target-analytics.html'}
-            }); 
-            
-            ko.components.register("DF_V1_WIDGET_IFRAME",{
-                viewModel:{require:'../emcsDependencies/widgets/iFrame/js/widget-iframe'},
-                template:{require:'text!../emcsDependencies/widgets/iFrame/widget-iframe.html'}
-            }); 
- 
-            ko.components.register("DF_V1_WIDGET_ONEPAGE",{
-                viewModel:{require:'../emcsDependencies/widgets/onepage/js/onepageModel'},
-                template:{require:'text!../emcsDependencies/widgets/onepage/onepageTemplate.html'}
-            });             
+            });        
 
             function HeaderViewModel() {
                 var self = this;
@@ -186,7 +174,7 @@ require(['knockout',
             };
             
            
-            var urlChangeView = new dtv.TileUrlEditView();
+//            var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
             var dsbId = dfu.getUrlParam("dashboardId");
@@ -216,7 +204,7 @@ require(['knockout',
                         }
                     }
                     var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
-                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView, urlChangeView);
+                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
 
@@ -252,7 +240,7 @@ require(['knockout',
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
                     ko.applyBindings(tilesViewMode, $('#global-html')[0]);   
-                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
+//                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
 
                     $("#loading").hide();
                     $('#globalBody').show();
@@ -270,7 +258,8 @@ require(['knockout',
                         }
                     });
 
-                    toolBarModel.showAddWidgetTooltip();
+//                    toolBarModel.showAddWidgetTooltip();
+                    toolBarModel.handleAddWidgetTooltip();
                     tilesViewMode.postDocumentShow();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
@@ -300,16 +289,16 @@ function updateOnePageHeight(event) {
     }
 };
 
-function truncateString(str, length) {
-    if (str && length > 0 && str.length > length)
-    {
-        var _tlocation = str.indexOf(' ', length);
-        if ( _tlocation <= 0 )
-            _tlocation = length;
-        return str.substring(0, _tlocation) + "...";
-    }
-    return str;
-};
+//function truncateString(str, length) {
+//    if (str && length > 0 && str.length > length)
+//    {
+//        var _tlocation = str.indexOf(' ', length);
+//        if ( _tlocation <= 0 )
+//            _tlocation = length;
+//        return str.substring(0, _tlocation) + "...";
+//    }
+//    return str;
+//};
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);

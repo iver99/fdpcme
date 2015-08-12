@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="dashboards-ee">
         <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
-        <dependent-module archiveName="registry-lookup-client-0.23.6.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar">
+        <dependent-module archiveName="registry-lookup-client-1.0.0.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.0.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-client-0.23.6.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-0.23.6.jar">
+        <dependent-module archiveName="registry-client-1.0.0.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-1.0.0.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="httpclient-4.3.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/httpclient-4.3.1.jar">
@@ -36,6 +36,9 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="dashboards-db.jar" deploy-path="/lib" handle="module:/resource/dashboards-entities/dashboards-entities">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="commons-lang3-3.1.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/commons-lang3-3.1.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

@@ -11,8 +11,13 @@ import javax.persistence.Persistence;
 import oracle.sysman.emaas.platform.dashboards.core.util.SchemaUtil;
 import oracle.sysman.qatool.uifwk.utils.Utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class PersistenceManager
 {
+	private static final Logger logger = LogManager.getLogger(PersistenceManager.class);
+
 	/**
 	 * For the whole JVM life cycle, IS_TEST_ENV can only be set once
 	 */
@@ -102,6 +107,7 @@ public class PersistenceManager
 	private void initialize()
 	{
 		if (IS_TEST_ENV) {
+			logger.info("Dashboard JPA Persistence Manager is now running in test environment");
 			// testng local properties
 			Properties props = loadProperties(CONNECTION_PROPS_FILE);
 			// lrg env only
@@ -145,8 +151,8 @@ public class PersistenceManager
 			return connectionProps;
 		}
 		catch (Exception ex) {
-			ex.printStackTrace();
-
+			//			ex.printStackTrace();
+			logger.error(ex.getLocalizedMessage(), ex);
 		}
 		return connectionProps;
 
@@ -155,5 +161,6 @@ public class PersistenceManager
 	protected synchronized void createEntityManagerFactory(String puName, Properties props)
 	{
 		emf = Persistence.createEntityManagerFactory(puName, props);
+		logger.debug("EntityManagerFactory has been created with properties {}", props == null ? null : props.toString());
 	}
 }
