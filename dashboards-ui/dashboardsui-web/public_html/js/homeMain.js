@@ -156,8 +156,6 @@ require(['ojs/ojcore',
                         },
                         error: function(xhr, textStatus, errorThrown){
                             oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
-                            self.visualAnalyzers([]);
-                            self.adminLinks([]);
                         },
                         async: true
                     }); 
@@ -275,6 +273,8 @@ require(['ojs/ojcore',
             $(document).ready(function () {
                 ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
                 ko.applyBindings(new landingHomeModel(), document.getElementById("mainContent"));
+                $("#loading").hide();
+                $("#globalBody").show();
             });
         }
 );
