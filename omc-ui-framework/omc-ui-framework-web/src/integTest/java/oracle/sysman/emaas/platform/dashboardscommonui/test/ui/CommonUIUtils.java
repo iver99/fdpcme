@@ -108,8 +108,8 @@ public class CommonUIUtils
 				sPropertyValue = emaasProp.getProperty("COMMON_UI_URL_SUFFIX");
 				if (sPropertyValue == null) {
 					CommonUIUtils
-					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/emcpdfcommonui/home.html'.");
-					sPropertyValue = "/emsaasui/emcpdfcommonui/home.html";
+					.commonUITestLog("The COMMON_UI_URL_SUFFIX property value is null ... set it to a different value -- '/emsaasui/uifwk/test.html'.");
+					sPropertyValue = "/emsaasui/uifwk/test.html";
 				}
 			}
 			else if (sProperty.equals("SAAS_AUTH_TOKEN")) {
