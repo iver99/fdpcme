@@ -200,17 +200,19 @@ require(['knockout',
     //                var dsbWidgets = dashboardModel && dashboardModel.tiles ? dashboardModel.tiles : undefined;
     //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
     //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
-                    if (dashboard.tiles && dashboard.tiles()) {
-                        for (var i = 0; i < dashboard.tiles().length; i++) {
-                            var tile = dashboard.tiles()[i];
-                            dtm.initializeTileAfterLoad(dashboard, tile);
-                        }
-                    }
+    
                     var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
                     var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
-
+                    
+                    if (dashboard.tiles && dashboard.tiles()) {
+                        for (var i = 0; i < dashboard.tiles().length; i++) {
+                            var tile = dashboard.tiles()[i];
+                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewMode.timeSelectorModel, tilesViewMode.targetContext);
+                        }
+                    }                    
+                    
                      ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
                             var list = valueAccessor();
