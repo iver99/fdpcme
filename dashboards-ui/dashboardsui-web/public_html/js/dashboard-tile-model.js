@@ -326,6 +326,9 @@ define(['knockout',
                 console.log("Warning: user name is not found: "+dtm.userTenant);
                 oj.Logger.warn("Warning: user name is not found: "+dtm.userTenant);
             }
+            // testonly
+            headers['X-USER-IDENTITY-DOMAIN-NAME'] = 'emaastesttenant1';
+            headers['X-REMOTE-USER'] = 'emaastesttenant1.emcsadmin';
             return headers;
         }
         

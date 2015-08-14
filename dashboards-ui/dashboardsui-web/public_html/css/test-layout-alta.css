@@ -24,3 +24,14 @@ and open the template in the editor.
     margin-top: 10px;
     color: #F0CAC4;
 }
+
+.builder-dbd-name {
+    font-size: 1.286rem;
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    left: 20px;
+    display: inline;
+    width: 100%;
+}
