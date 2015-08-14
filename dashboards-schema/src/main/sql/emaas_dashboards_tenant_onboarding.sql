@@ -46,6 +46,9 @@ BEGIN
 END;
 /
 @./1.0.0/emaas_dashboards_seed_data.sql &TENANT_ID
+
+@./1.0.15/emaas_dashboards_seed_data.sql &TENANT_ID
+
 COMMIT;
 /
 BEGIN
