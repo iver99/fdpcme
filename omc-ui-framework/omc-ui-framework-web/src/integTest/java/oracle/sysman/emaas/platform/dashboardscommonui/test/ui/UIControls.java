@@ -45,7 +45,7 @@ public class UIControls
 
 	//Begin: Images
 	public static final String sOracleImage = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[1]/img";
-	public static final String sWidgetSelct = "/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/div[1]";
+	public static final String sWidgetSelct = "/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/ul/li[1]/a/div";//"/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/div[1]";
 	//End: Images
 
 	//Begin: Links

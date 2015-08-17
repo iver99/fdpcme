@@ -58,6 +58,7 @@ public class TestOtherPage extends CommonUIUtils
 		//click the compass icon
 		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
+		Thread.sleep(5000);
 		webdriver.takeScreenShot();
 
 		//verify the menus
@@ -142,6 +143,7 @@ public class TestOtherPage extends CommonUIUtils
 		//click the compass icon
 		webdriver.getLogger().info("Click the Application navigator icon");
 		webdriver.click(UIControls.sCompassIcon);
+		Thread.sleep(5000);
 		webdriver.takeScreenShot();
 
 		//verify the menus
