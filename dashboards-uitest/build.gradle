@@ -56,7 +56,7 @@ from sourceSets.test.output
 
 check.dependsOn TestJar
 
-group = 'com.oracle.emaas.emcpdf.Webdriver.uitest'
+group = 'com.oracle.emaas.emcpdf.Webdriver.uitest2'
 
 publishing {
         publications {

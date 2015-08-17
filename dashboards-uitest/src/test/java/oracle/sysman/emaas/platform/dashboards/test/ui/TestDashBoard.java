@@ -222,4 +222,215 @@ public class TestDashBoard extends LoginAndLogout{
 		//webd.click(DashBoardPageId.MenuBtnID);
 		//webd.click(DashBoardPageId.SignOutID);
 	}
+	
+	@Test
+	public void testHomeLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testHomeLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//Home link
+		webd.click(DashBoardPageId.HomeLinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html");
+		
+	}
+	
+	@Test
+	public void testITALink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testITALink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//IT Analytics link,check checkbox
+		webd.click(DashBoardPageId.ITALinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html?filter=ita");
+				
+	}
+	
+	@Test
+	public void testLALink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testLALink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//Log Analytics link
+		webd.click(DashBoardPageId.LALinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emlacore/html/log-analytics-search.html");
+		
+	}
+	
+	@Test
+	public void testAPMLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAPMLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//APM link
+		webd.click(DashBoardPageId.APMLinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"apmUi/index.html");
+		
+	}
+	
+	@Test
+	public void testLogLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testLogLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//Log link
+		webd.click(DashBoardPageId.LOGLinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emlacore/html/log-analytics-search.html");
+		
+	}
+	
+	@Test
+	public void testAWRLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAWRLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//AWR Analytics link		
+		webd.click(DashBoardPageId.AWRALinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
+		
+	}
+	
+	@Test
+	public void testFlexLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testFlexLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//Flex link
+		webd.click(DashBoardPageId.FlexLinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/db-awrviewer-war/html/db-awr-analytics.html");
+		
+	}
+
+	@Test
+	public void testTargetLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testTargetLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//Target link
+		webd.click(DashBoardPageId.TargetLinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcta/ta/analytics.html?q=eyJzIjoiW10iLCJpxIPEhn0%3D&u=eyJzIjoie30iLCJpxINbXX0%3D");
+		
+	}
+	
+	@Test
+	public void testSoftwareLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testSoftwareLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//Customer Software link
+		webd.click(DashBoardPageId.CustomLinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"tenantmgmt/services/customersoftware");
+		
+	}
+	
+	@Test
+	public void testAdminLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testAdminLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//IT Analytics Administration link
+		webd.click(DashBoardPageId.ITA_Admin_LinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/warehouseadmin/html/admin-sources.html");
+		
+	}
+	
+	@Test
+	public void testEMPCDF_812_1() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_812");
+		
+		//check ita box
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
+		//check la box
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
+		//signout menu
+		webd.click(DashBoardPageId.MenuBtnID);
+		webd.click(DashBoardPageId.SignOutID);
+		
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_812");
+		
+		//check ita box
+		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).isSelected());
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
+		//check la box
+		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).isSelected());
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
+		//check ita box
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
+		//check la box
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
+	}
+		
+
 }
