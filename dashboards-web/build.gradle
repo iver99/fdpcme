@@ -214,7 +214,7 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false } 
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
 	
-	providedCompile(group: 'emaas.platform', name:'registry-lookup-client', version:'0.23.6') { transitive = false }
+	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') { transitive = false }
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'

@@ -39,6 +39,32 @@ public class DashboardCRUD
 		tenantid_2 = ct.getTenantid_2();
 		remoteuser = ct.getRemoteUser();
 	}
+	
+	@Test
+	public void dashboard_orderByDefault()
+	{
+		try {
+			System.out.println("------------------------------------------");
+			System.out.println("Sort By Default");
+			System.out.println("Access the sort of system dashboard");
+			Response res1 = RestAssured
+					.given()
+					.contentType(ContentType.JSON)
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("/dashboards?offset=0&limit=240&orderBy=default");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[0]"), "Application Performance Monitoring");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[1]"), "Performance Analytics: Database");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[2]"), "Performance Analytics: Middleware");
+			Assert.assertEquals(res1.jsonPath().get("dashboards.name[3]"), "Resource Analytics: Database");
+		}
+		catch (Exception e) {
+			Assert.fail(e.getLocalizedMessage());
+		}
+	}
 
 	@Test
 	public void dashboard_create_emptyPara()

@@ -683,8 +683,8 @@ public class DashboardManager
 			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
 		}
 		else {
-			//order by last access date
-			sb.append(" order by p.application_Type, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
+			//default order by
+			sb.append(" order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
 		}
 		StringBuilder sbQuery = new StringBuilder(sb);
 		sbQuery.insert(0, "select p.* ");

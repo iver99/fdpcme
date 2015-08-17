@@ -75,9 +75,9 @@ define({
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Could not connect to your cloud service.",
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
-      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 mins",
-      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 mins",
-      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 mins",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 minutes",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 minutes",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 minutes",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS": "Last 4 hours",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS": "Last 6 hours",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY": "Last 1 day",
@@ -101,7 +101,8 @@ define({
       "DATETIME_PICKER_MONTHS_DECEMBER": "December",
       "DATETIME_PICKER_TIME_RANGE": "Time Range",
       "DATETIME_PICKER_ERROR": "Error!",
-      "DATETIME_PICKER_FORMAT_ERROR_MSG": "Invalid data! Enter \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time!"
+      "DATETIME_PICKER_FORMAT_ERROR_MSG": "Invalid data! Enter \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time!",
+      "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "Invalid data! Start time is later than endtime!"
 }
 });
 

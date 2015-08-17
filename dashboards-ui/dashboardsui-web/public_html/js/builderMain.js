@@ -13,8 +13,10 @@ requirejs.config({
     map: {
         'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'},
         '*': {
+              'emcsutl/ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
               'ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
-              'message-util': '../emcsDependencies/dfcommon/js/util/message-util'
+              'message-util': '../emcsDependencies/dfcommon/js/util/message-util',
+              'df-util': '../emcsDependencies/dfcommon/js/util/df-util'
              }        
     },
     // Path mappings for the logical module names
@@ -35,6 +37,7 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
         'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'timeselector':'../emcsDependencies/timeselector/js',
@@ -43,7 +46,8 @@ requirejs.config({
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
         'canvg':'../emcsDependencies/canvg/canvg',
         'd3':'../emcsDependencies/d3/d3.min',
-        'emcta':'../../emcta/ta/js',
+        'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '../emcsDependencies/dfcommon/js/util'
     },
@@ -197,17 +201,19 @@ require(['knockout',
     //                var dsbWidgets = dashboardModel && dashboardModel.tiles ? dashboardModel.tiles : undefined;
     //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
     //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
-                    if (dashboard.tiles && dashboard.tiles()) {
-                        for (var i = 0; i < dashboard.tiles().length; i++) {
-                            var tile = dashboard.tiles()[i];
-                            dtm.initializeTileAfterLoad(dashboard, tile);
-                        }
-                    }
+    
                     var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
                     var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/);
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
                     var headerViewModel = new HeaderViewModel();
-
+                    
+                    if (dashboard.tiles && dashboard.tiles()) {
+                        for (var i = 0; i < dashboard.tiles().length; i++) {
+                            var tile = dashboard.tiles()[i];
+                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewMode.timeSelectorModel, tilesViewMode.targetContext);
+                        }
+                    }                    
+                    
                      ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
                             var list = valueAccessor();

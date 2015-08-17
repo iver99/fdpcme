@@ -7,6 +7,7 @@ define(['knockout',
         'knockout.mapping',
         'timeselector/time-selector-model',
         'dfutil',
+        'df-util',
         'ojs/ojcore',
         'jquery',
         'jqueryui',
@@ -18,7 +19,7 @@ define(['knockout',
         'canvg'
     ],
     
-    function(ko, km, TimeSelectorModel,dfu)
+    function(ko, km, TimeSelectorModel,dfu, dfumodel)
     {
         var dtm = this;
         
@@ -49,6 +50,13 @@ define(['knockout',
             }
         }
         
+        function DashboardTargetContext(target, type, emsite) {
+            var self = this;
+            self.target = target;
+            self.type = type;
+            self.emsite = emsite;
+        }
+        
         /**
          * 
          * @param {String} name: name of custome item
@@ -63,12 +71,16 @@ define(['knockout',
             }
         }
 
-        function DashboardItemChangeEvent(timeRangeChange, customChanges){
+        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges){
             var self = this;
             self.timeRangeChange = null;
+            self.targetContext = null;
             self.customChanges = null;
             if (timeRangeChange instanceof DashboardTimeRangeChange){
                 self.timeRangeChange = timeRangeChange;
+            }
+            if(targetContext instanceof DashboardTargetContext) {
+                self.targetContext = targetContext;
             }
 
             if (customChanges instanceof Array){
@@ -129,7 +141,7 @@ define(['knockout',
         }
          */
         
-        function initializeTileAfterLoad(dashboard, tile) {
+        function initializeTileAfterLoad(dashboard, tile, timeSelectorModel, targetContext) {
             if (!tile)
                 return;
             
@@ -180,6 +192,7 @@ define(['knockout',
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : ' ';
                 return css;
             });
+            tile.dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext);
     
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
@@ -270,7 +283,7 @@ define(['knockout',
          *  @param width width for the tile
          *  @param widget widget from which the tile is to be created
          */
-        function DashboardTile(dashboard,type, title, description, width, widget) {
+        function DashboardTile(dashboard,type, title, description, width, widget, timeSelectorModel, targetContext) {
             var self = this;
             self.dashboard = dashboard;
             self.type = type;
@@ -284,7 +297,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTileAfterLoad(dashboard, self);
+            initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext);
         }
         
         function getBaseUrl() {
@@ -452,7 +465,13 @@ define(['knockout',
             var self = this;
                         
             self.dashboard = dashboard;
-            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+//            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
+            self.target = dfu_model.getUrlParam("target");
+            self.type = dfu_model.getUrlParam("type");
+            self.emsite = dfu_model.getUrlParam("emsite");
+            self.targetContext = new DashboardTargetContext(self.target, self.type, self.emsite);
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
@@ -523,7 +542,7 @@ define(['knockout',
                                     oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
 
-                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget); 
+                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget, self.timeSelectorModel, self.targetContext); 
 //                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
 //                                    var worksheetName = 'WS_4_QDG_WIDGET';
 //                                    var workSheetCreatedBy = 'sysman';
@@ -746,7 +765,7 @@ define(['knockout',
             };
 
             self.refreshThisWidget = function(tile) {
-                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null);
                 self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
             }
             
@@ -786,7 +805,7 @@ define(['knockout',
                         var aTile = self.dashboard.tiles()[i];
                         defArray.push(self.fireDashboardItemChangeEventTo(aTile,dashboardItemChangeEvent));
                     }
-
+                    
                     var combinedPromise = $.when.apply($,defArray);
                     combinedPromise.done(function(){
                         console.log("All Widgets have completed refresh!");
@@ -812,7 +831,7 @@ define(['knockout',
                 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),null);
+                    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
                     self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
