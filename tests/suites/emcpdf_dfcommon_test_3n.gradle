@@ -52,7 +52,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboardscommon-ui-web-integ-tests', version: '1.1') {
+    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'omc-ui-framework-web-integ-tests', version: '1.1') {
 	exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
@@ -87,8 +87,8 @@ task small_deploy_3n_block(type: EMTest) {
 
      task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
 	include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestAnalyzerPage.class"
-	//include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestDashboardPage.class"
-	//include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestOtherPage.class"
+	include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestDashboardPage.class"
+	include "oracle/sysman/emaas/platform/dashboardscommonui/test/ui/TestOtherPage.class"
         useWebdriver = true
 	useRestAssured=true
 }

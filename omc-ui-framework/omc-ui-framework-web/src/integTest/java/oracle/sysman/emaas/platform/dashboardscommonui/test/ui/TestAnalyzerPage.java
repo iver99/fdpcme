@@ -52,7 +52,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 			webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 			Assert.assertEquals(webdriver.getText(UIControls.sPageText),
-					"Sample page for dashboard common ui components testing only");
+					"Sample page for OMC UI Framework components testing only");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 
@@ -178,7 +178,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 	//		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 	//		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
-	//				"Sample page for dashboard common ui components testing only");
+	//				"Sample page for OMC UI Framework components testing only");
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 	//
@@ -291,7 +291,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 	//		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 	//		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
-	//				"Sample page for dashboard common ui components testing only");
+	//				"Sample page for OMC UI Framework components testing only");
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 	//
@@ -404,7 +404,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 	//		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 	//		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
-	//				"Sample page for dashboard common ui components testing only");
+	//				"Sample page for OMC UI Framework components testing only");
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 	//
@@ -517,7 +517,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 	//		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 	//		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
-	//				"Sample page for dashboard common ui components testing only");
+	//				"Sample page for OMC UI Framework components testing only");
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 	//
@@ -630,7 +630,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPageText));
 	//		webdriver.getLogger().info("The page content is:  " + webdriver.getText(UIControls.sPageText));
 	//		Assert.assertEquals(webdriver.getText(UIControls.sPageText),
-	//				"Sample page for dashboard common ui components testing only");
+	//				"Sample page for OMC UI Framework components testing only");
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sCompassIcon));
 	//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sAddWidgetIcon));
 	//
