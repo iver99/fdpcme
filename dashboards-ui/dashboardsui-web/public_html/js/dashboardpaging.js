@@ -256,13 +256,15 @@ DashboardPaging.prototype.remove = function(model, options)
        success: function(result) {
           // Do something with the result
           self.collection.remove(model);
+          self._refreshDataWindow().then(function() { self._processSuccess(options); });
+          /*
           if (self.pageSize <= self.totalSize())
           {
-              self._refreshDataWindow().then(self._processSuccess(options, "remove"));
+              self._refreshDataWindow().then(function() { self._processSuccess(options, "remove"); });
           }
           else {
               self._refreshDataWindow().then(function() { self._processSuccess(options); });
-          }
+          }*/
         },
         error: function(jqXHR, textStatus, errorThrown) {
             self._processError(options, jqXHR, textStatus, errorThrown);
@@ -357,6 +359,10 @@ DashboardPaging.prototype.handleEvent = function(eventType, event)
     DashboardPaging.superclass.handleEvent.call(this, eventType, event);
 };
 
+DashboardPaging.prototype.on = function(eventType, eventHandler)
+{
+    DashboardPaging.superclass.on.call(this, eventType, eventHandler);
+};
 
 DashboardPaging.prototype.hasMore = function()
 {

@@ -27,7 +27,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
-   
+            
     if (dfu.isDevMode()){
        DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
        PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
@@ -194,11 +194,6 @@ function(dsf, oj, ko, $, dfu, pfu)
             return (self.pagingDatasource().getWindowObservable())();
         });
         self.dashboardsTS = ko.observable();
-                //ko.computed(function() {
-        //    var _dbs =  (self.pagingDatasource().getWindowObservable())();
-        //    var _dbTS = new oj.ArrayTableDataSource(_dbs, {idAttribute: 'id'});
-        //    return _dbTS;
-        //});
         self.showPaging = ko.computed(function() {
             var _pds = ko.utils.unwrapObservable(self.pagingDatasource());
             if (_pds instanceof  oj.ArrayPagingDataSource) return false;
@@ -207,11 +202,14 @@ function(dsf, oj, ko, $, dfu, pfu)
         });
         
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
-                                                   filter['types'], filter['appTypes'], filter['owners']);
+                                                   filter['types'], filter['appTypes'], filter['owners'], function(_event) {
+                                                       //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
+                                                       self.dashboardsTS(new oj.ArrayTableDataSource(_event['data'], {idAttribute: 'id'}));
+                                                   });
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].setPage(0, { 
             'success': function() {
-                self.refreshDashboardsView();
+                self.refreshPagingSource();
                 if (self.datasource['pagingDS'].totalSize() <= 0)
                 {
                     if (self.welcomeDialogModel.showWelcome === false)
@@ -225,16 +223,24 @@ function(dsf, oj, ko, $, dfu, pfu)
             }
         } );
         
-        self.refreshDashboardsView = function(createOrRemove) {
-            if (createOrRemove !== true) self.pagingDatasource( self.datasource['pagingDS'] );
-            self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
+        self.refreshPagingSource = function() {
+            self.pagingDatasource( self.datasource['pagingDS'] );
+            //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
         };
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
             //data.dashboard.openDashboard();
-            oj.Logger.info("Dashboard: [id="+data.dashboardModel.get("id")+", name="+data.dashboardModel.get("name")+"] is open from Dashboard Home",true);
-            data.dashboardModel.openDashboardPage();
+            var _dmodel = data['dashboardModel'];
+//            if (data['id'])
+            {
+                _dmodel = self.datasource['pagingDS'].getModelFromWindow(data['id']);
+            }
+            if (_dmodel && _dmodel !== null)
+            {
+                oj.Logger.info("Dashboard: [id="+_dmodel.get("id")+", name="+_dmodel.get("name")+"] is open from Dashboard Home",true);
+                _dmodel.openDashboardPage();
+            }
         };
         
         self.handleShowDashboardPop = function(event, data) {
@@ -294,7 +300,6 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.datasource['pagingDS'].remove(self.selectedDashboard().dashboardModel,
                    {
                         success: function () {
-                            self.refreshDashboardsView(true);
                             self.confirmDialogModel.close();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -370,7 +375,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                         
                         success: function(response) {
                             //console.log( " success ");
-                            self.refreshDashboardsView(true);
+                            //self.refreshPagingSource(true);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
                         },
@@ -484,7 +489,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             //console.log("searchResponse: "+data.content.collection.length);
             self.datasource = data.content;
             //self.pagingDatasource(data.content['pagingDS']);
-            self.refreshDashboardsView();
+            self.refreshPagingSource();
         };
         
         self.forceSearch = function (event, data)

@@ -153,11 +153,7 @@
                                                 </div>
                                             </div>
                                             <!-- Home toolbar end -->
-                                            <!-- paging start -->
-                                            <div id="toolbar3" aria-label="Pagination toolbar">
-                                                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
-                                            </div>
-                                            <!-- paging end -->
+                                            
                                             <!-- tiles panel start -->
                                             <!-- ko if: isTilesView() === 'gridtview' -->
                                             <div id="dtabhomesc" class="dbs-summaries-container">
@@ -193,7 +189,8 @@
                                                    rowTemplate: 'dbstablerow_tmpl'}"></table>
                                             <script type="text/html" id="dbstablerow_tmpl">
                                                 <tr>
-                                                    <td data-bind="text: $data.attributes.name"></td>
+                                                    <td><a data-bind="click: function(data, event){$root.handleDashboardClicked(event, {'id': $data.attributes.id, 'element': $element})}, 
+                                                                      text: $data.attributes.name" /></td>
                                                     <td data-bind="text: $data.attributes.owner"></td>
                                                     <td data-bind="text: getDateString($data.attributes.createdOn)"></td>
                                                     <td>
@@ -205,6 +202,12 @@
                                             </script>
                                             <!-- /ko -->
                                             <!-- dashboards table end -->
+                                            
+                                            <!-- paging start -->
+                                            <div id="toolbar3" aria-label="Pagination toolbar" style="margin-left: 5px;">
+                                                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
+                                            </div>
+                                            <!-- paging end -->
                                     </div>
                                 </div>
                             </div>
@@ -215,10 +218,10 @@
                     <div id="dsbinfopop"  style="display:none; width:260px;" 
                                               data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', autoDismiss: 'focusLoss', initialFocus: 'none', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
                         <div data-bind="with: selectedDashboard">
+                            <!-- ko if: $root.isTilesView() === 'gridtview' -->
                             <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
+                            <!-- /ko -->
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
-                            <!--span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE')"></span><span data-bind="text: (dashboard.systemDashboard == true ? getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_SYS') : getNlsString('DBS_HOME_DSB_PAGE_INFO_TYPE_USER')) "></span><br/-->
-                            <!--span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_ISSYS')"></span><span data-bind="text: dashboard.systemDashboard"></span><br/-->
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
                             <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
