@@ -38,6 +38,29 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.APPLICATION_TYPE exists already, no change is needed');      
   END IF;
+
+  --add new columns 'ROW', 'COLUMN', 'TYPE' for 'EMS_DASHBOARD'
+  --ROW: row of the tile
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='ROW';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "ROW" NUMBER(*,0)';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.ROW exists already, no change is needed');      
+  END IF;
+  --COLUMN: column of the tile
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='COLUMN';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "COLUMN" NUMBER(*,0)';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.COLUMN exists already, no change is needed');      
+  END IF;
+  --TYPE: type of the tile, 0: default tile, 1: whole line text tile
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TYPE';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "TYPE" NUMBER(*,0)';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TYPE exists already, no change is needed');      
+  END IF;
 END;
 /
 
