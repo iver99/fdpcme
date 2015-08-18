@@ -131,5 +131,35 @@
             <!-- /ko -->
         </div>
         <!-- /ko -->
+        <div style="display:none;" 
+            data-bind="ojComponent:{component: 'ojDialog', 
+                initialVisibility: 'hide', title: 'Warning', resizeBehavior: 'none',
+                rootAttributes: { style: 'width: 500px;'}}, attr: {id: 'sessionTimeoutWarnDialog'}">   
+            <div class="oj-dialog-body" style="height: 100px;" >
+                <div class="emaas-warn-msg-table-cell">
+                    <img class="emaas-appheader-logo-img" style="width: 16px;height:16px;" data-bind="attr: {alt: 'Warning', src: '/emsaasui/dfcommon/emcsdependencies/dfcommon/images/stat_warn_16.png'}"/> 
+                </div>
+                <div class="emaas-warn-msg-table-cell" style="padding-left: 10px">
+                    <div>
+                        <span class="emaas-appheader-appname" style="font-weight: bold;" data-bind="text: 'Your current session will expire in 5 minutes.'"></span>
+                    </div>
+                    <div style="padding-top: 10px;">
+                        <span class="emaas-appheader-appname" data-bind="text: 'Click \'OK\' to reload the page and extend your session.'"></span>
+                    </div>
+                    <div>
+                        <span class="emaas-appheader-appname" data-bind="text: 'Click \'Cancel\' and not submitting your changes within 5 minutes will result in the loss of them.'"></span>
+                    </div>
+                    <!--<span class="emaas-appheader-appname" data-bind="text: 'Due to inactivity, your current session will expire in 5 minutes. Do you want to continue your session or log out?'"></span>-->
+                </div>
+            </div>     
+            <div class="oj-dialog-footer" style="padding-right: 18px" > 
+                <button id="session-continue-btn" data-bind="click: '', 
+                    ojComponent: {component: 'ojButton', label: 'OK', disabled: false}" >  
+                </button>
+                <button id="session-logout-btn" data-bind="click: '', 
+                    ojComponent: {component: 'ojButton', label: 'Cancel', disabled: false}" >  
+                </button>
+            </div>  
+        </div>
     </body>
 </html>

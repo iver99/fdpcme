@@ -406,6 +406,10 @@ a:hover {
     .emaas-appheader-message-icon-clear:hover {
         cursor: pointer;
     }
+    .emaas-warn-msg-table-cell {
+        display:table-cell;
+        vertical-align: top;
+    }
 /*    .emaas-appheader-message-icon-error:before{
         content:url("../images/stat_error_16.png")
     }
