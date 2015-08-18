@@ -416,6 +416,31 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     self.hiddenMessagesExpanded(false);
                 };
                 
+                setInterval(extendSession, 5*60*1000);
+                function extendSession() {
+                    dfu.ajaxWithRetry({
+                        url: '/emsaasui/emcpdfui/widgetLoading.html', 
+                        type: 'GET'
+                    });
+                    oj.Logger.info('Your current session is extended!!!!!!');
+                };
+                
+                var timerSessionTimeout = null;
+                //TODO: need to find a way to get server side session timeout value, hard code a value of 2 hours for now
+                var sessionTimeoutValue = 2*60*60*1000;
+                //Give user a warning 5 minustes before the session timeout
+                var maxIdleTimeBeforeTimeoutWarning = 5*1000;//sessionTimeoutValue - 5*60*1000;
+//                timerSessionTimeout = setTimeout(showSessionTimeoutWarningDialog, maxIdleTimeBeforeTimeoutWarning);
+//                window.resetSessionTimeoutTimer = function() {
+//                    if (timerSessionTimeout !== null)
+//                        clearTimeout(timerSessionTimeout);
+//                    timerSessionTimeout = setTimeout(showSessionTimeoutWarningDialog, maxIdleTimeBeforeTimeoutWarning);
+//                };
+                
+                function showSessionTimeoutWarningDialog() {
+                    $('#sessionTimeoutWarnDialog').ojDialog('open');
+                };
+                
                 function receiveMessage(event)
                 {
                     if (event.origin !== window.location.protocol + '//' + window.location.host)
