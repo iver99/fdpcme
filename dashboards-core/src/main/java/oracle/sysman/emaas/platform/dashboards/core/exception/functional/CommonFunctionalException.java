@@ -28,6 +28,7 @@ public class CommonFunctionalException extends DashboardException
 	public static final String DASHBOARD_INVALID_TYPE = "DASHBOARD_INVALID_TYPE";
 	public static final String DASHBOARD_TILE_INVALID_ID = "DASHBOARD_TILE_INVALID_ID";
 	public static final String DASHBOARD_TILE_TITLE_REQUIRED = "DASHBOARD_TILE_TITLE_REQUIRED";
+	public static final String TILE_INVALID_TYPE = "TILE_INVALID_TYPE";
 	public static final String TILE_PARAM_NAME_REQUIRED = "TILE_PARAM_NAME_REQUIRED";
 	public static final String TILE_PARAM_INVALID_TYPE = "TILE_PARAM_INVALID_TYPE";
 	public static final String TILE_PARAM_INVALID_NUMBER_VALUE = "TILE_PARAM_INVALID_NUMBER_VALUE";

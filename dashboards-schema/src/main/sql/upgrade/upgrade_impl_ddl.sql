@@ -39,20 +39,20 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.APPLICATION_TYPE exists already, no change is needed');      
   END IF;
 
-  --add new columns 'ROW', 'COLUMN', 'TYPE' for 'EMS_DASHBOARD'
-  --ROW: row of the tile
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='ROW';
+  --add new columns 'TILE_ROW', 'TILE_COLUMN', 'TYPE' for 'EMS_DASHBOARD'
+  --TILE_ROW: row of the tile
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TILE_ROW';
   IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "ROW" NUMBER(*,0)';
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "TILE_ROW" NUMBER(*,0)';
   ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.ROW exists already, no change is needed');      
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TILE_ROW exists already, no change is needed');      
   END IF;
-  --COLUMN: column of the tile
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='COLUMN';
+  --TILE_COLUMN: column of the tile
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TILE_COLUMN';
   IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "COLUMN" NUMBER(*,0)';
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "TILE_COLUMN" NUMBER(*,0)';
   ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.COLUMN exists already, no change is needed');      
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TILE_COLUMN exists already, no change is needed');      
   END IF;
   --TYPE: type of the tile, 0: default tile, 1: whole line text tile
   SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TYPE';

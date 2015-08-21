@@ -536,7 +536,7 @@ public class DashboardManager
 			sbApps.append(String.valueOf(app.getValue()));
 		}
 
-                //11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
+		//11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
 		StringBuilder sb = new StringBuilder(
 				" from Ems_Dashboard p left join (select lae.dashboard_Id, lae.access_Date from Ems_Dashboard d, Ems_Dashboard_Last_Access lae "
 						+ "where d.dashboard_Id=lae.dashboard_Id and lae.accessed_By=?1 and d.tenant_Id=?2 and lae.tenant_Id=d.tenant_id) le on p.dashboard_Id=le.dashboard_Id "
@@ -579,11 +579,11 @@ public class DashboardManager
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?9 )) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?9 )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?9 )) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?9 )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
 

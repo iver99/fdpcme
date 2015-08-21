@@ -57,7 +57,7 @@ BEGIN
                 TILE_ROW := TILE_ROW + 1;
                 TILE_COLUMN := 0;
             END IF;
-            UPDATE EMS_DASHBOARD_TILE SET "ROW"=TILE_ROW, "COLUMN"=TILE_COLUMN, "TYPE"=0, WIDTH=TILE.WIDTH * 2, HEIGHT=1 WHERE TILE_ID=TILE.TILE_ID;
+            UPDATE EMS_DASHBOARD_TILE SET "TILE_ROW"=TILE_ROW, "TILE_COLUMN"=TILE_COLUMN, "TYPE"=0, WIDTH=TILE.WIDTH * 2, HEIGHT=1 WHERE TILE_ID=TILE.TILE_ID;
             --DBMS_OUTPUT.PUT_LINE('    Handling tile with id=' || TILE.TILE_ID || ' for dashboard with id=' || DSB.DASHBOARD_ID || '. Its width is ' || TILE.WIDTH || '(new width is ' || TILE.WIDTH * 2 || '). Its original position is ' || TILE.POSITION || '. Its new position is (' || TILE_ROW || ',' || TILE_COLUMN || ')');
             TILE_COLUMN := TILE_COLUMN + TILE.WIDTH * 2;
         END LOOP;

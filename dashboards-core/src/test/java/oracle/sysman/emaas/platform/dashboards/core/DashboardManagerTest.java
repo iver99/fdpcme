@@ -159,12 +159,18 @@ public class DashboardManagerTest
 		dbd.setName("dashboard in testCreateUpdateDashboard()" + System.currentTimeMillis());
 
 		Tile tile1 = createTileForDashboard(dbd);
+		tile1.setRow(0);
+		tile1.setColumn(0);
+		tile1.setWidth(8);
 		tile1.setHeight(12);
 		tile1.setIsMaximized(true);
 		TileParam t1p1 = createParameterForTile(tile1);
 		t1p1.setStringValue("tile 1 param 1");
 
 		Tile tile2 = createTileForDashboard(dbd);
+		tile2.setRow(1);
+		tile2.setColumn(0);
+		tile2.setWidth(8);
 		TileParam t2p1 = createParameterForTile(tile2);
 		//		t2p1.setStringValue("tile 2 param 1");
 		t2p1.setIntegerValue(3);
@@ -193,12 +199,17 @@ public class DashboardManagerTest
 		Assert.assertNotNull(queriedTiles);
 		Assert.assertEquals(dbdTiles.size(), queriedTiles.size());
 
-		Tile queriedTile1 = queriedTiles.get(0);
+		Tile queriedTile1 = queriedTiles.get(0);//findTileByTileTitle(tile1, queriedTiles);
+		Assert.assertNotNull(queriedTile1);
 		Assert.assertEquals(queriedTile1.getOwner(), currentUser);
 		Assert.assertNotNull(queriedTile1.getCreationDate());
 		Assert.assertNotNull(queriedTile1.getDashboard());
 		//		Assert.assertEquals(queriedTile1.getPosition(), tile1.getPosition());
 		Assert.assertEquals(queriedTile1.getTitle(), tile1.getTitle());
+		Assert.assertEquals(queriedTile1.getType(), tile1.getType());
+		Assert.assertEquals(queriedTile1.getRow(), tile1.getRow());
+		Assert.assertEquals(queriedTile1.getColumn(), tile1.getColumn());
+		Assert.assertEquals(queriedTile1.getWidth(), tile1.getWidth());
 		Assert.assertEquals(queriedTile1.getHeight(), tile1.getHeight());
 		Assert.assertEquals(queriedTile1.getIsMaximized(), tile1.getIsMaximized());
 		Assert.assertEquals(queriedTile1.getProviderAssetRoot(), tile1.getProviderAssetRoot());
@@ -225,7 +236,8 @@ public class DashboardManagerTest
 		Assert.assertEquals(queriedT1p1.getType(), t1p1.getType());
 		Assert.assertEquals(queriedT1p1.getParamValueTimestamp(), t1p1.getParamValueTimestamp());
 
-		Tile queriedTile2 = queriedTiles.get(1);
+		Tile queriedTile2 = queriedTiles.get(1);//findTileByTileTitle(tile2, queriedTiles);
+		Assert.assertNotNull(queriedTile2);
 		Assert.assertNotNull(queriedTile2.getParameters());
 		TileParam queriedT2p1 = queriedTile2.getParameter(t2p1.getName());
 		Assert.assertNotNull(queriedT2p1);
@@ -243,6 +255,9 @@ public class DashboardManagerTest
 
 		// add new tile3
 		Tile tile3 = createTileForDashboard(dbd);
+		tile3.setRow(2);
+		tile3.setColumn(0);
+		tile3.setWidth(8);
 		/*TileParam t3p1 = */createParameterForTile(tile3);
 
 		// remove existing tile parameter from a tile, and add new parameter to it
@@ -273,20 +288,25 @@ public class DashboardManagerTest
 		Assert.assertEquals(queriedTile1Params3.getType(), t1p3.getType());
 		Assert.assertEquals(queriedTiles.get(1).getTitle(), tile3.getTitle());
 
-		// remove, add, and exchange position for 1st two tiles, and add another new one
+		// remove, add, and change cell row/column for 1st two tiles, and add another new one
+		// ensure that the queried tiles are in order (row then column)
 		dbd = queried;
 		dbd.removeTile(dbd.getTileList().get(0));
 		createTileForDashboard(dbd);
 		tile1 = dbd.getTileList().get(0);
+		tile1.setRow(0);
+		tile1.setColumn(1);
 		tile2 = dbd.getTileList().get(1);
-		dbd.getTileList().set(0, tile2);
-		dbd.getTileList().set(1, tile1);
+		tile2.setRow(1);
+		tile2.setColumn(1);
 		tile3 = createTileForDashboard(dbd);
+		tile3.setRow(2);
+		tile3.setColumn(1);
 		dm.updateDashboard(dbd, tenantId1);
 		queried = dm.getDashboardById(dbd.getDashboardId(), tenantId1);
 		queriedTiles = queried.getTileList();
-		Assert.assertEquals(queriedTiles.get(0).getTitle(), tile2.getTitle());
-		Assert.assertEquals(queriedTiles.get(1).getTitle(), tile1.getTitle());
+		Assert.assertEquals(queriedTiles.get(0).getTitle(), tile1.getTitle());
+		Assert.assertEquals(queriedTiles.get(1).getTitle(), tile2.getTitle());
 		Assert.assertEquals(queriedTiles.get(2).getTitle(), tile3.getTitle());
 
 		// post test
@@ -294,7 +314,8 @@ public class DashboardManagerTest
 	}
 
 	@Test
-	public void testCreateUpdateSystemDashboard() throws DashboardException	{
+	public void testCreateUpdateSystemDashboard() throws DashboardException
+	{
 		DashboardManager dm = DashboardManager.getInstance();
 		Long tenantId1 = 11L;
 		// try to insert system dashboard, and it should work also
@@ -695,6 +716,9 @@ public class DashboardManagerTest
 		dbd11.setIsSystem(true);
 		dbd11.setAppicationType(DashboardApplicationType.APM);
 		Tile tile1 = createTileForDashboard(dbd11);
+		tile1.setRow(0);
+		tile1.setColumn(0);
+		tile1.setWidth(4);
 		tile1.setHeight(12);
 		tile1.setIsMaximized(true);
 		TileParam t1p1 = createParameterForTile(tile1);
@@ -834,6 +858,7 @@ public class DashboardManagerTest
 		Thread.sleep(2);
 		Tile tile = new Tile();
 		tile.setTitle("tile " + System.currentTimeMillis());
+		tile.setType(Tile.TILE_TYPE_DEFAULT);
 		initTileWidget(tile);
 		dbd.addTile(tile);
 		return tile;
