@@ -56,8 +56,8 @@ bash "unbundle_schema_zipe" do
     echo "`date` -- Tenant hydration: always unzip the sql bundle " >> #{node["log_dir"]}/dashboardsOnboarding.log
     tar xzf #{node["sql_bundle"]}#{node["SAAS_version"]}.tgz
 
-    # echo "`date` -- Tenant Hydration: SQL Dir: #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}" >> #{node["log_dir"]}/dashboardsOnboarding.log
-    # cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}
+    # echo "`date` -- Tenant Hydration: SQL Dir: #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql" >> #{node["log_dir"]}/dashboardsOnboarding.log
+    # cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql
 
     # echo "`date` -- Tenant Hydration: db_servicename = #{node["db_service"]}, SAAS_schema_user = #{node["SAAS_schema_user"]}, db_port=#{node["db_port"]} db_host=#{node["db_host"]} home=#{node["dbhome"]}" >> #{node["log_dir"]}/dashboardsOnboarding.log
     # export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
