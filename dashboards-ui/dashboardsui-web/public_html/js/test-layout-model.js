@@ -124,6 +124,13 @@ define(['knockout',
                     }
                 }
             };
+            self.setNullToGridRows = function(rows) {
+                for(var i=0; i<rows; i++) {
+                    for(var j=0; j<defaultCols; j++) {
+                        self.tileGrid[i][j] = null;
+                    }
+                }
+            } 
             
             self.updateTileSize = function(tile, width, height) {
                 if (!tile || width < 0 || width > defaultCols)
@@ -189,7 +196,26 @@ define(['knockout',
                 var width = tile.width();
                 if (width >= defaultCols)
                     return;
-                self.tilesGrid.updateTileSize(tile, ++width, tile.height());
+                self.tilesGrid.setNullToGridRows(self.tilesGrid.size());
+                for(var i=0; i<self.tiles().length; i++) {
+                    var tl= self.tiles()[i];
+                    if(tl !== tile) {
+                        self.tilesGrid.registerTileToGrid(tl);
+                    }else{
+                        break;
+                    }
+                }
+                tile.width(++width);
+                var startRow = tile.row();
+                for(; i<self.tiles().length; i++) {
+                    var tl = self.tiles()[i];
+                    var cell = self.calAvailablePositionForTile(tl, startRow, 0);
+                    tl.row(cell.row);
+                    tl.column(cell.column);
+                    self.tilesGrid.registerTileToGrid(tl);
+                    startRow = tl.row();
+                }
+//                self.tilesGrid.updateTileSize(tile, ++width, tile.height());                
                 self.tilesReorder(tile);
             };
             
@@ -225,10 +251,14 @@ define(['knockout',
                 var startRow = 0, startCol = 0;
                 for (var i = 0; i < self.tiles().length; i++) {
                     var tl = self.tiles()[i];
-                    if (tl === tile)
+                    if(tl===tile){
+                        self.updateTilePosition(tl, tl.row(), tl.column());
+                        startRow = tl.row();
                         continue;
+                    }
                     var cell = self.calAvailablePositionForTile(tl, startRow, startCol);
                     self.updateTilePosition(tl, cell.row, cell.column);
+                    startRow = tl.row();
 //                    cell = self.getAvailableCellAfterTile(tl);
 //                    startRow = cell.row, startCol = cell.column;
                 }
@@ -360,7 +390,8 @@ define(['knockout',
 //                        {row: 2, column: 2, width: 1, height: 1, imageHref: 'https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/img/bubble-sample.png'},
                         {row: 3, column: 0, width: 4, height: 1, content: 'JET has been released for Internal Oracle team development only. It is not a publicly available framework. It remains an Internal Oracle Confidential product and should not be discussed with customers outside of Oracle.JET is a pure client-side framework. You connect to your data via Web Services only'},
                         {row: 4, column: 0, width: 2, height: 2, imageHref: 'https://docs.oracle.com/javafx/2/charts/img/bar-sample.png'},
-                        {row: 4, column: 2, width: 1, height: 1, imageHref: 'https://docs.oracle.com/javafx/2/charts/img/area-sample.png'}
+                        {row: 4, column: 2, width: 1, height: 1, imageHref: 'https://docs.oracle.com/javafx/2/charts/img/area-sample.png'},
+                        {row: 6, column:0, width: 4, height: 1, content: 'test  test  test  test  test  test  test  test  test test test test test'}
                     ]
                 };
                 ko.mapping.fromJS(tiles, {
@@ -460,8 +491,9 @@ define(['knockout',
                     }
                 }
             };
-            
+            var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
+                startTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);
                 self.previousDragCell = new Cell(tile.row(), tile.column());
                 if (!$(ui.helper).hasClass(draggingTileClass)) {
@@ -470,9 +502,15 @@ define(['knockout',
             };
             
             self.handleOnDragging = function(event, ui) {
+                curTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);
-                var cell = self.getCellFromPosition(ui.helper.position());
-                if (!self.previousDragCell || cell.row !== self.previousDragCell.row || cell.column !== self.previousDragCell.column) {
+                var cell = self.getCellFromPosition(ui.helper.position()); 
+                if(tile.content) {
+                    cell.column = 0;
+                }
+                if ((!self.previousDragCell || cell.row !== self.previousDragCell.row || cell.column !== self.previousDragCell.column) 
+                        && ((cell.column+tile.width())<=defaultCols) 
+                        && (curTime-startTime)>300) {
                     self.previousDragCell = cell;
                     self.tiles.updateTilePosition(tile, cell.row, cell.column);
                     self.tiles.tilesReorder(tile);
@@ -483,6 +521,7 @@ define(['knockout',
                         width: ui.helper.width() -20,
                         height: ui.helper.height() - 20
                     }).show();
+                    startTime = curTime;
                 }
             };
             
