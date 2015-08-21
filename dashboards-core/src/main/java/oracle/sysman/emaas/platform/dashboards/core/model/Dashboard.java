@@ -215,7 +215,7 @@ public class Dashboard
 				int i = 0;
 				for (Tile tile : tileList) {
 					EmsDashboardTile edt = tile.getPersistenceEntity(null);
-					edt.setPosition(i++);
+					//					edt.setPosition(i++);
 					ed.addEmsDashboardTile(edt);
 				}
 			}
@@ -396,7 +396,7 @@ public class Dashboard
 				edt = rows.get(tile);
 				tile.getPersistenceEntity(edt);
 			}
-			edt.setPosition(i);
+			//			edt.setPosition(i);
 		}
 	}
 }

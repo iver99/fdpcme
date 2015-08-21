@@ -70,7 +70,9 @@ public class DashboardServiceFacadeTest
 		//		Assert.assertNotNull(emsdashboardtile.getLastModificationDate());
 		//		Assert.assertNotNull(emsdashboardtile.getLastModifiedBy());
 		Assert.assertNotNull(emsdashboardtile.getOwner());
-		Assert.assertNotNull(emsdashboardtile.getPosition());
+		Assert.assertNotNull(emsdashboardtile.getRow());
+		Assert.assertNotNull(emsdashboardtile.getColumn());
+		Assert.assertNotNull(emsdashboardtile.getType());
 		Assert.assertNotNull(emsdashboardtile.getProviderAssetRoot());
 		Assert.assertNotNull(emsdashboardtile.getProviderName());
 		Assert.assertNotNull(emsdashboardtile.getProviderVersion());
@@ -170,7 +172,10 @@ public class DashboardServiceFacadeTest
 		tile.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		tile.setLastModifiedBy("test");
 		tile.setOwner("test");
-		tile.setPosition(1);
+		tile.setRow(0);
+		tile.setColumn(0);
+		tile.setType(1);
+		tile.setPosition(0);
 		tile.setProviderAssetRoot("ssss");
 		tile.setProviderName("sss");
 		tile.setProviderVersion("providerVersion");
