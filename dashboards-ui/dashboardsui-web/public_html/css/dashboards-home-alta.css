@@ -31,7 +31,11 @@
     content: url("images/func_locationinfo_16_dis.png"); }
 
 .icon-gridview-16:before{content:url("images/func_ninesquareboxes_16_ena.png");}
+.oj-button.oj-hover .icon-gridview-16:before, .oj-button.oj-hover.oj-selected .icon-gridview-16:before {
+    content: url("images/func_ninesquareboxes_16_hov.png"); }
 .icon-listview-16:before{content:url("images/func_threehorizontalbars_16_ena.png");}
+.oj-button.oj-hover .icon-listview-16:before, .oj-button.oj-hover.oj-selected .icon-listview-16:before {
+    content: url("images/func_threehorizontalbars_16_hov.png"); }
 
 .dbs-welcome-centeredImage{
     text-align:center;
@@ -359,7 +363,7 @@ a:hover {
     width: 65%; }
 }
 
-@media print and (orientation: landscape), screen and (min-width: 850px) {
+@media print and (orientation: landscape), screen and (min-width: 890px) {
     .dbs-filter-panel-md {
     width: 20%; }
     .dbs-tiles-panel-md {
@@ -376,7 +380,7 @@ a:hover {
     max-width: 850px;}
 }
 
-@media print and (orientation: landscape), screen and (min-width: 1203px) {
+@media print and (orientation: landscape), screen and (min-width: 1240px) {
     .dbs-filter-panel-lg {
     width: 16%; }
     .dbs-tiles-panel-lg {
@@ -393,7 +397,7 @@ a:hover {
     max-width: 1203px;}
 }
 
-@media print and (orientation: landscape), screen and (min-width: 1545px) {
+@media print and (orientation: landscape), screen and (min-width: 1580px) {
     .dbs-filter-panel-xsl {
     width: 13%; }
     .dbs-tiles-panel-xsl {
@@ -410,7 +414,7 @@ a:hover {
     max-width: 1545px;}
 }
 
-@media print and (orientation: landscape), screen and (min-width: 1900px) {
+@media print and (orientation: landscape), screen and (min-width: 1940px) {
     .dbs-filter-panel-xl {
     width: 11%; }
     .dbs-tiles-panel-xl {

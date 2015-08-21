@@ -24,6 +24,7 @@ function(dsf, oj, ko, $, dfu, pfu)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
+            DASHBOARDS_VIEW_PREF_KEY = "Dashboards.dashboardsView",
             DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
@@ -116,6 +117,8 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.showWelcome = showWel;
         if (showWel === undefined)
         {
+            self.showWelcome = true;
+            /*
                     (function () {
                         prefUtil.getPreference(SHOW_WELCOME_PREF_KEY, {
                             async: false,
@@ -133,7 +136,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                                 oj.Logger.info("Preference of Show Welcome Dialog is not set. The defualt value 'true' is applied.");
                             }
                         });
-                    })();
+                    })();*/
         }
         
         self.browseClicked = function() {
@@ -175,7 +178,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.showItaServiceFilter = ko.observable(predata.getShowItaService());
         
         self.showSeachClear = ko.observable(false);
-        self.isTilesView = ko.observable('listview');
+        self.isTilesView = ko.observable(predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
@@ -232,7 +235,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             //console.log(data);
             //data.dashboard.openDashboard();
             var _dmodel = data['dashboardModel'];
-//            if (data['id'])
+            if (data['id'])
             {
                 _dmodel = self.datasource['pagingDS'].getModelFromWindow(data['id']);
             }
@@ -425,6 +428,14 @@ function(dsf, oj, ko, $, dfu, pfu)
             $( "#cDsbDialog" ).ojDialog( "close" );
         };
         
+        self.handleViewChanged = function (event, data) {
+            var _option = data.option, _value = data.value;
+            if ( _option === "checked" )
+            {
+                self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
+            }
+        };
+        
         self.handleSortByChanged = function (context, valueParam) {
             var _preValue = valueParam.previousValue, _value = valueParam.value;
             if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
@@ -605,6 +616,15 @@ function(dsf, oj, ko, $, dfu, pfu)
                 showWelcome = true;
             }
             return showWelcome;
+        };
+        
+        self.getDashboardsViewPref = function () {
+            var _view = self.getPreferenceValue(DASHBOARDS_VIEW_PREF_KEY);
+            if (_view !== "listview") 
+            {
+                _view = "gridtview";
+            }
+            return _view;
         };
         
         self.getPreferenceValue = function(key) {
