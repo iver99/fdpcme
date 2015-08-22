@@ -4,7 +4,7 @@
 # This recipe hydrates the tenant information
 #
 
-tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}"
+tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql"
 tenant_hydration_sql_filename = "emaas_dashboards_tenant_onboarding.sql"
 
 # Couples of assumptions:
