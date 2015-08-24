@@ -212,7 +212,6 @@ public class Dashboard
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
 					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType, appType);
 			if (tileList != null) {
-				int i = 0;
 				for (Tile tile : tileList) {
 					EmsDashboardTile edt = tile.getPersistenceEntity(null);
 					//					edt.setPosition(i++);

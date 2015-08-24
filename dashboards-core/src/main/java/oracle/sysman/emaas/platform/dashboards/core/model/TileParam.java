@@ -54,7 +54,6 @@ public class TileParam
 	@JsonIgnore
 	private Tile tile;
 
-	@SuppressWarnings("unused")
 	@JsonProperty("value")
 	private String value;
 
