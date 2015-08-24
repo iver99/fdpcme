@@ -33,7 +33,7 @@ public class TestDashBoard extends LoginAndLogout{
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testHomePage");	
-		DashBoardUtils.checkBrandingBarLink();
+		//DashBoardUtils.checkBrandingBarLink();
 		DashBoardUtils.waitForMilliSeconds(5000);	
 		
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
@@ -433,5 +433,25 @@ public class TestDashBoard extends LoginAndLogout{
 		
 	}
 	
+	//https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG
+	@Test
+	public void testEMPCDF_832_1() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_832");
+		
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		
+		
+		webd.getWebDriver().navigate().to(url.substring(0,url.indexOf("emsaasui"))+"emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+		webd.click("//*[@id='errorMain']/div[2]/button");
+		
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_812");
+		
+		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
+		
+	}
 
 }
