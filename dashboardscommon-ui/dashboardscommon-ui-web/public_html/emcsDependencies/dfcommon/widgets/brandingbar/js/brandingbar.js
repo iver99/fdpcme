@@ -133,6 +133,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 self.showMoreLinkTitle = ko.observable();
                 self.showFirstNOnlyTxt = ko.observable();
                 self.showFirstNOnlyTitle = ko.observable();
+                self.sessionTimeoutWarnDialogTitle = ko.observable();
+                self.sessionTimeoutMsgSummary = ko.observable();
+                self.sessionTimeoutMsgDetail = ko.observable();
+                self.sessionTimeoutBtnContinue = ko.observable();
+                self.sessionTimeoutBtnSignOut = ko.observable();
+                self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
+                self.sessionTimeoutWarnIcon = warnMessageIcon;
                 
                 self.clearMessage = function(data, event) {
                     removeMessage(data);
@@ -174,6 +181,11 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     self.showMoreLinkTitle(nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_MORE);
                     self.showFirstNOnlyTxt(msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_FIRST, maxMsgDisplayCnt));
                     self.showFirstNOnlyTitle(msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_FIRST, maxMsgDisplayCnt));
+                    self.sessionTimeoutWarnDialogTitle(nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_TILE);
+                    self.sessionTimeoutMsgSummary(nls.BRANDING_BAR_SESSION_TIMEOUT_MSG_SUMMARY);
+                    self.sessionTimeoutMsgDetail(nls.BRANDING_BAR_SESSION_TIMEOUT_MSG_DETAIL);
+                    self.sessionTimeoutBtnContinue(nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_CONTINUE);
+                    self.sessionTimeoutBtnSignOut(nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_SIGN_OUT);
                     
                     oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
@@ -416,30 +428,83 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     self.hiddenMessagesExpanded(false);
                 };
                 
-                setInterval(extendSession, 5*60*1000);
-                function extendSession() {
-                    dfu.ajaxWithRetry({
-                        url: '/emsaasui/emcpdfui/widgetLoading.html', 
-                        type: 'GET'
-                    });
-                    oj.Logger.info('Your current session is extended!!!!!!');
-                };
-                
                 var timerSessionTimeout = null;
+                var timerAutoSignOut = null;
                 //TODO: need to find a way to get server side session timeout value, hard code a value of 2 hours for now
                 var sessionTimeoutValue = 2*60*60*1000;
                 //Give user a warning 5 minustes before the session timeout
                 var maxIdleTimeBeforeTimeoutWarning = 5*1000;//sessionTimeoutValue - 5*60*1000;
-//                timerSessionTimeout = setTimeout(showSessionTimeoutWarningDialog, maxIdleTimeBeforeTimeoutWarning);
-//                window.resetSessionTimeoutTimer = function() {
-//                    if (timerSessionTimeout !== null)
-//                        clearTimeout(timerSessionTimeout);
+//                if (!dfu.isDevMode()) {
 //                    timerSessionTimeout = setTimeout(showSessionTimeoutWarningDialog, maxIdleTimeBeforeTimeoutWarning);
-//                };
+//                    window.resetSessionTimeoutTimer = function() {
+//                        //Clear auto sign-out timer and close warning dialog if it is open
+//                        if (timerAutoSignOut !== null)
+//                            clearTimeout(timerAutoSignOut);
+//                        if ($('#'+self.sessionTimeoutWarnDialogId).is(':visible'))
+//                            $('#'+self.sessionTimeoutWarnDialogId).ojDialog('close');
+//                        if (timerSessionTimeout !== null)
+//                            clearTimeout(timerSessionTimeout);
+//                        timerSessionTimeout = setTimeout(showSessionTimeoutWarningDialog, maxIdleTimeBeforeTimeoutWarning);
+//                    };
+//                }
+
+                var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                if (dfu.isDevMode()){
+                    serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"configurations/registration");
+                }
+                
+                dfu.ajaxWithRetry({
+                    url: serviceUrl,
+                    headers: dfu.getDefaultHeader(), 
+                    contentType:'application/json',
+                    success: function(data, textStatus) {
+                        var sessionExpiry = data.sessionExpiryTime; //'20150825040713';
+                        var now = new Date().getTime();
+                        var sessionExpiryDate = Date.UTC(sessionExpiry.substring(0,4),
+                            sessionExpiry.substring(4,6), sessionExpiry.substring(6,8), 
+                            sessionExpiry.substring(8,10), sessionExpiry.substring(10,12), 
+                            sessionExpiry.substring(12,14));
+                        maxIdleTimeBeforeTimeoutWarning = sessionExpiryDate - now;
+                        timerSessionTimeout = setTimeout(showSessionTimeoutWarningDialog, maxIdleTimeBeforeTimeoutWarning);
+                    },
+                    error: function(xhr, textStatus, errorThrown){
+                        oj.Logger.error('Failed to get session expiry time by URL: '+serviceUrl);
+                    },
+                    async: true
+                });    
+                
+                self.extendCurrentSession = function() {
+                    location.reload(true);
+//                    //Clear auto sign out timer if it exists
+//                    if (timerAutoSignOut !== null)
+//                        clearTimeout(timerAutoSignOut);
+//                    //Extend current user session by sending an ajax request to server side
+//                    dfu.ajaxWithRetry({
+//                        url: '/emsaasui/emcpdfui/widgetLoading.html',
+//                        type: 'GET'
+//                    });
+                    $('#'+self.sessionTimeoutWarnDialogId).ojDialog('close');
+                };
+                
+                self.endCurrentSession = function() {
+                    if (timerSessionTimeout !== null)
+                        clearTimeout(timerSessionTimeout);
+                    //Clear auto sign out timer if it exists
+                    if (timerAutoSignOut !== null)
+                        clearTimeout(timerAutoSignOut);
+                    $('#'+self.sessionTimeoutWarnDialogId).ojDialog('close');
+                    self.handleSignout();
+                };
                 
                 function showSessionTimeoutWarningDialog() {
-                    $('#sessionTimeoutWarnDialog').ojDialog('open');
+                    $('#'+self.sessionTimeoutWarnDialogId).ojDialog('open');
+                    timerAutoSignOut = setTimeout(self.endCurrentSession, 10*1000);
                 };
+                
+//                function autoSignOut() {
+//                    $('#'+self.sessionTimeoutWarnDialogId).ojDialog('close');
+//                    self.handleSignout();
+//                };
                 
                 function receiveMessage(event)
                 {
