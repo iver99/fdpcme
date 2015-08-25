@@ -498,7 +498,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 
                 function showSessionTimeoutWarningDialog() {
                     $('#'+self.sessionTimeoutWarnDialogId).ojDialog('open');
-                    timerAutoSignOut = setTimeout(self.endCurrentSession, 10*1000);
+//                    timerAutoSignOut = setTimeout(self.endCurrentSession, 10*1000);
                 };
                 
 //                function autoSignOut() {
