@@ -458,10 +458,10 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     headers: dfu.getDefaultHeader(), 
                     contentType:'application/json',
                     success: function(data, textStatus) {
-                        var sessionExpiry = data.sessionExpiryTime; //'20150825040713';
+                        var sessionExpiry = data.sessionExpiryTime; //'20150825062212';
                         var now = new Date().getTime();
                         var sessionExpiryDate = Date.UTC(sessionExpiry.substring(0,4),
-                            sessionExpiry.substring(4,6), sessionExpiry.substring(6,8), 
+                            sessionExpiry.substring(4,6) - 1, sessionExpiry.substring(6,8), 
                             sessionExpiry.substring(8,10), sessionExpiry.substring(10,12), 
                             sessionExpiry.substring(12,14));
                         maxIdleTimeBeforeTimeoutWarning = sessionExpiryDate - now;
