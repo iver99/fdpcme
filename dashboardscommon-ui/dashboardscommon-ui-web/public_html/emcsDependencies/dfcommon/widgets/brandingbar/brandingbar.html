@@ -133,31 +133,27 @@
         <!-- /ko -->
         <div style="display:none;" 
             data-bind="ojComponent:{component: 'ojDialog', 
-                initialVisibility: 'hide', title: 'Warning', resizeBehavior: 'none',
-                rootAttributes: { style: 'width: 500px;'}}, attr: {id: 'sessionTimeoutWarnDialog'}">   
-            <div class="oj-dialog-body" style="height: 100px;" >
+                initialVisibility: 'hide', title: sessionTimeoutWarnDialogTitle, resizeBehavior: 'none', cancelBehavior: 'none',
+                rootAttributes: { style: 'width: 550px;'}}, attr: {id: sessionTimeoutWarnDialogId}">   
+            <div class="oj-dialog-body" style="height: 70px;" >
                 <div class="emaas-warn-msg-table-cell">
-                    <img class="emaas-appheader-logo-img" style="width: 16px;height:16px;" data-bind="attr: {alt: 'Warning', src: '/emsaasui/dfcommon/emcsdependencies/dfcommon/images/stat_warn_16.png'}"/> 
+                    <img style="width: 16px;height:16px;" data-bind="attr: {alt: altTextWarn, src: sessionTimeoutWarnIcon}"/> 
                 </div>
                 <div class="emaas-warn-msg-table-cell" style="padding-left: 10px">
                     <div>
-                        <span class="emaas-appheader-appname" style="font-weight: bold;" data-bind="text: 'Your current session will expire in 5 minutes.'"></span>
+                        <span class="emaas-appheader-appname" style="font-weight: bold;" data-bind="text: sessionTimeoutMsgSummary"></span>
                     </div>
                     <div style="padding-top: 10px;">
-                        <span class="emaas-appheader-appname" data-bind="text: 'Click \'OK\' to reload the page and extend your session.'"></span>
+                        <span class="emaas-appheader-appname" data-bind="text: sessionTimeoutMsgDetail"></span>
                     </div>
-                    <div>
-                        <span class="emaas-appheader-appname" data-bind="text: 'Click \'Cancel\' and not submitting your changes within 5 minutes will result in the loss of them.'"></span>
-                    </div>
-                    <!--<span class="emaas-appheader-appname" data-bind="text: 'Due to inactivity, your current session will expire in 5 minutes. Do you want to continue your session or log out?'"></span>-->
                 </div>
             </div>     
             <div class="oj-dialog-footer" style="padding-right: 18px" > 
-                <button id="session-continue-btn" data-bind="click: '', 
-                    ojComponent: {component: 'ojButton', label: 'OK', disabled: false}" >  
+                <button id="session-continue-btn" data-bind="click: extendCurrentSession, 
+                    ojComponent: {component: 'ojButton', label: sessionTimeoutBtnContinue, disabled: false}" >  
                 </button>
-                <button id="session-logout-btn" data-bind="click: '', 
-                    ojComponent: {component: 'ojButton', label: 'Cancel', disabled: false}" >  
+                <button id="session-logout-btn" data-bind="click: endCurrentSession, 
+                    ojComponent: {component: 'ojButton', label: sessionTimeoutBtnSignOut, disabled: false}" >  
                 </button>
             </div>  
         </div>
