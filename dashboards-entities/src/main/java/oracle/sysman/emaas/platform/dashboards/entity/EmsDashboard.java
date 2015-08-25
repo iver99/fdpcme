@@ -74,8 +74,9 @@ public class EmsDashboard implements Serializable
 
 	@Column(nullable = false)
 	private Integer type;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
-	@OrderBy("position")
+	@OrderBy("row, column")
 	private List<EmsDashboardTile> dashboardTileList;
 
 	public EmsDashboard()
