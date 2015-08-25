@@ -14,9 +14,9 @@ requirejs.config({
         'jqueryui-amd': '../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
@@ -44,7 +44,8 @@ requirejs.config({
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
         }
-    }
+    },
+    waitSeconds: 60
 });
 
 
@@ -100,8 +101,15 @@ require(['ojs/ojcore',
             function getNlsString(key, args) {
                 return oj.Translations.getTranslatedString(key, args);
             }
+            
+            function TitleViewModel(){
+               var self = this;
+//               self.homeTitle = getNlsString("DBS_HOME_TITLE");  
+               self.landingHomeTitle = dfu_model.generateWindowTitle(getNlsString("LANDING_HOME_WINDOW_TITLE"), null, null, null);
+           }
 
             var headerViewModel = new HeaderViewModel();
+            var titleViewModel = new TitleViewModel()
 
             function landingHomeModel() {
                 var self = this;
@@ -272,6 +280,7 @@ require(['ojs/ojcore',
 
             $(document).ready(function () {
                 ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
+                ko.applyBindings(titleViewModel, $("title")[0]);
                 ko.applyBindings(new landingHomeModel(), document.getElementById("mainContent"));
                 $("#loading").hide();
                 $("#globalBody").show();

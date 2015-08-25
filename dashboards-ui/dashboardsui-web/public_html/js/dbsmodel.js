@@ -28,6 +28,12 @@ function(dsf, oj, ko, $, dfu, pfu)
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
     
+    if (dfu.isDevMode()){
+       DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
+       PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
+       SUBSCIBED_APPS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"subscribedapps");        
+    }
+    
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -292,7 +298,11 @@ function(dsf, oj, ko, $, dfu, pfu)
             //window.open(ui.item.children("a")[0].value);
             if (ui.item.children("a")[0] && ui.item.children("a")[0].value)
             {
-                window.location = ui.item.children("a")[0].value;
+                if (dfu.isDevMode()){
+                    window.location = dfu.getRelUrlFromFullUrl(ui.item.children("a")[0].value);
+                }else{
+                    window.location = ui.item.children("a")[0].value;
+                }
             }
         };
         
@@ -337,16 +347,17 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.datasource['pagingDS'].create(_addeddb, {
                         'contentType': 'application/json',
                         
-                        success: function(response) {
+                        success: function(_model, _resp, _options) {
                             //console.log( " success ");
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
+                            _model.openDashboardPage();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             //console.log('Error in Create: ' + textStatus);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             self.createDashboardModel.isDisabled(false);
-                            var _m = getNlsString('COMMON_SERVER_ERROR');
+                            var _m = null; //getNlsString('COMMON_SERVER_ERROR');
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorMessage)
                             {
                                  _m = jqXHR[0].responseJSON.errorMessage;
@@ -359,11 +370,20 @@ function(dsf, oj, ko, $, dfu, pfu)
                                 // a server error record
                                  oj.Logger.error("Error when creating dashboard. " + (jqXHR ? jqXHR.responseText : ""));
                             }
-                            _trackObj = new oj.InvalidComponentTracker();
-                            self.tracker(_trackObj);
-                            self.createMessages.push(new oj.Message(_m));
-                            _trackObj.showMessages();
-                            _trackObj.focusOnFirstInvalid();
+                            if (_m !== null)
+                            {
+                                _trackObj = new oj.InvalidComponentTracker();
+                                self.tracker(_trackObj);
+                                self.createMessages.push(new oj.Message(_m));
+                                _trackObj.showMessages();
+                                _trackObj.focusOnFirstInvalid();
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                            }
+                            else
+                            {
+                                $( "#cDsbDialog" ).css("cursor", "default");
+                                $( "#cDsbDialog" ).ojDialog( "close" );
+                            }
                             /*
                             $( "#cDsbDialog" ).ojDialog( "close" );
                             self.confirmDialogModel.show("Error", "Ok", 
@@ -482,11 +502,6 @@ function(dsf, oj, ko, $, dfu, pfu)
             }
         };
         
-        self.getDashboard = function (id)
-        {
-           
-        };
-        
     };
     
     function PredataModel() {
@@ -503,20 +518,6 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.getIsIta = function () {
             return (getUrlParam("filter") === "ita" ? true : false);
         };
-        /*
-        self.checkItaService = function () {
-            if (self.getIsIta() === true)
-            {
-                if (self.sApplications === undefined)
-                {
-                    self.sApplications = {applications:[]};
-                }
-                if ($.inArray("ITAnalytics", self.sApplications['applications']) < 0)
-                {
-                    self.sApplications['applications'].push("ITAnalytics");
-                }
-            }
-        };*/
                     
         self.getShowLaService = function() {
             if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0) return true;
@@ -561,6 +562,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.getDashboardsFilterPref = function () {
             var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
             if (filter === undefined || filter.length === 0) return {};
+            filter = $("<div/>").html(filter).text();
             return JSON.parse(filter);
         };
         

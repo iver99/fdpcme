@@ -114,8 +114,12 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
                             for (var i = 0; i < analyzers.length; i++) {
+                                var aurl = analyzers[i].href;
+                                if (dfu.isDevMode()){
+                                    aurl = dfu.getRelUrlFromFullUrl(aurl);
+                                }
                                 analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
-                                    href: analyzers[i].href});
+                                    href: aurl});
                             }
                             self.visualAnalyzers(analyzerList);
                         }
@@ -126,13 +130,16 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             		var link = data.adminLinks[i];
                             		if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
                             			if (link.href.indexOf('customersoftware') !== -1){
-                            				var protocolIndex = link.href.indexOf('://');
-                                    		var urlNoProtocol = link.href.substring(protocolIndex + 3);
-                                    		var relPathIndex = urlNoProtocol.indexOf('/');
-                                    		link.href = urlNoProtocol.substring(relPathIndex);
-                                    		break;
+                                                    var protocolIndex = link.href.indexOf('://');
+                                                    var urlNoProtocol = link.href.substring(protocolIndex + 3);
+                                                    var relPathIndex = urlNoProtocol.indexOf('/');
+                                                    link.href = urlNoProtocol.substring(relPathIndex);
+                                                    break;
                             			}
                             		}
+                                        if (dfu.isDevMode()){
+                                            link.href = dfu.getRelUrlFromFullUrl(link.href);
+                                        }
                             	}
                                 if (params.app.appId===params.appDashboard.appId){
                                     self.adminLinks(data.adminLinks);//show all avail admin links

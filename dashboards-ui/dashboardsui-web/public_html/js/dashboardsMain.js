@@ -11,6 +11,7 @@
 requirejs.config({
     //Set up module mapping
     map: {
+        '*': {'df-util' : '../emcsDependencies/dfcommon/js/util/df-util'},
         'prefutil': 
             {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
              'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
@@ -22,15 +23,16 @@ requirejs.config({
         'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.0/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
         'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
         'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
         'dbs': '../js',
@@ -59,7 +61,8 @@ requirejs.config({
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
         }
-    }
+    },
+    waitSeconds: 60
 });
 
 var dashboardsViewModle = undefined;
@@ -75,6 +78,7 @@ require(['dbs/dbsmodel',
     'jquery',
     'ojs/ojcore',
     'dfutil',
+    'df-util',
     'loggingutil',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -90,12 +94,15 @@ require(['dbs/dbsmodel',
     'ojs/ojselectcombobox',
     'ojs/ojmenu'
 ],
-        function(model, ko, $, oj, dfu,_emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
 //            var dfRestApi = dfu.discoverDFRestApiUrl();
 //            if (dfRestApi){
-                var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
+            var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
+            if (dfu.isDevMode()){
+                logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
+            }
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
@@ -109,6 +116,8 @@ require(['dbs/dbsmodel',
                     template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
                 });
             }
+            
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             
             function HeaderViewModel() {
                 var self = this;
@@ -125,7 +134,8 @@ require(['dbs/dbsmodel',
            
            function TitleViewModel(){
                var self = this;
-               self.homeTitle = getNlsString("DBS_HOME_TITLE");        
+//               self.homeTitle = getNlsString("DBS_HOME_TITLE");  
+               self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
             //dashboardsViewModle = new model.ViewModel();
             headerViewModel = new HeaderViewModel();

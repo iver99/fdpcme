@@ -220,25 +220,24 @@ DashboardPaging.prototype.create = function(attributes, options)
         }
         _m.save(attributes, {
                         'forceNew': true,
-                        success: function (model, resp, options) {
-                            self._fetch(opts);
-                            model.openDashboardPage();
-                           /*
-                           self.collection.add(model, {at: 0, merge: true}).then(function(val){
-                                self._refreshDataWindow().then(function() {
-                                    //self.handleEvent("add", {index: 0});
-                                    self._processSuccess(opts, "add", {index: 0});
-                                });
-                           });*/
+                        success: function (_model, _resp, _options) {
+                            opts['success'](_model, _resp, _options);
+                            /* //no need for refresh, nav directly
+                            self._fetch( { 
+                                'contentType': 'application/json',
+                                success: function() {
+                                    if ($.isFunction(opts['success']))
+                                    {
+                                        opts['success'](_model, _resp, _options);
+                                    }
+                                }, 
+                                error: opts['error']});*/
+                            //model.openDashboardPage();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             self._processError(opts, jqXHR, textStatus, errorThrown);
                             //console.log('Error in Create: ' + textStatus);
                         }});
-        /*
-        this.collection.add(attributes, {at: 0, merge:true}).then(function(val){
-            self._refreshDataWindow().then(function() {self._processSuccess(opts)});
-        });*/
     }
     catch (e) {
         var _e = e;
@@ -250,7 +249,11 @@ DashboardPaging.prototype.create = function(attributes, options)
 DashboardPaging.prototype.remove = function(model, options)
 {
     var self = this;
-    dfu.ajaxWithRetry('/sso.static/dashboards.service/' + model.get('id'), {
+    var url="/sso.static/dashboards.service/";
+    if (dfu.isDevMode()){
+        url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
+    }
+    dfu.ajaxWithRetry(url + model.get('id'), {
        type: 'DELETE',
        headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {

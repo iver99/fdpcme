@@ -3,7 +3,7 @@
     baseUrl: "js",
     dir: "./build/public_html",
     optimize:"none",
-    optimizeCss: "none",
+    optimizeCss: "standard",
     modules: [
         {
             name: "builderMain"
@@ -28,6 +28,7 @@
         'promise': 'empty:',
         'dashboards': '.',
         'dfutil':'empty:',
+        'df-util':'empty:',
         'loggingutil':'empty:',
         'idfbcutil':'empty:',
         'timeselector':'empty:',

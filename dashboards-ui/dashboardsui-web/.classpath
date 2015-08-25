@@ -14,8 +14,8 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboardsui-ee"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-0.23.6.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-0.23.6.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.0.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
@@ -35,5 +35,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.1.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboardsui-webutils"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-multipart-1.17.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

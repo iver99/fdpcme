@@ -106,8 +106,8 @@ dependencies {
 	               'org.apache.logging.log4j:log4j-api:2.0.1'
 	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
-	prebuild_servicemanager 'emaas.platform:registry-client:0.23.6',
-                                'emaas.platform:registry-lookup-client:0.23.6'
+	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.0.0+',
+                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.jdbc:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
@@ -141,7 +141,7 @@ dependencies {
 			'com.oracle.emaas.emdi:em-qatool-os-webdriver:1.0.7'
 	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
-			'emaas.platform:registry-lookup-client:0.23.6'
+			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 }
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
@@ -159,6 +159,8 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
    into "$afDir"
+   rename(/registry-client-1.0.0-\d+.jar/, 'registry-client-1.0.0.jar')
+   rename(/registry-lookup-client-1.0.0-\d+.jar/, 'registry-lookup-client-1.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile
@@ -189,8 +191,8 @@ project(':dashboards-web'){
 		compile project(':dashboards-core')
 				
 		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
-    		compile(group: 'emaas.platform', name: 'registry-lookup-client', version: '0.23.6') 
-		compile(group: 'emaas.platform', name: 'registry-client', version: '0.23.6') 
+    		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+') 
+		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+') 
 		ftpAntTask('org.apache.ant:ant-commons-net:1.8.4'){
 			module('commons-net:commons-net:1.4.1'){
 				dependencies 'oro:oro:2.0.8:jar'
@@ -218,7 +220,7 @@ buildscript {
 		classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
 
 	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
-
+//		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
 	}  
 }
 

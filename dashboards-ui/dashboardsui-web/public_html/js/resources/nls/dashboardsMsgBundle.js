@@ -6,8 +6,10 @@
 
 define({
   "root": {
-      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
-      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
+//      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
+//      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
+      "DBS_HOME_TITLE_HOME": "Home",
+      "DBS_HOME_TITLE_DASHBOARDS": "Dashboards",
       "COMMON_BTN_OK": "OK",
       "COMMON_BTN_CANCEL": "Cancel",
       "COMMON_BTN_SAVE": "Save",
@@ -206,7 +208,8 @@ define({
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
 	  
-	  "LANDING_HOME_WELCOME_SLOGAN": "Welcome to Oracle Management Cloud",
+      "LANDING_HOME_WINDOW_TITLE": "Landing Home",
+      "LANDING_HOME_WELCOME_SLOGAN": "Welcome to Oracle Management Cloud",
       "LANDING_HOME_APM": "Application Performance Monitoring",
       "LANDING_HOME_APM_DESC": "Rapidly identify, response, and resolve your software roadblocks",
       "LANDING_HOME_LA": "Log Analytics",
