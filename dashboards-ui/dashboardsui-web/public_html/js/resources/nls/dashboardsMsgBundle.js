@@ -139,6 +139,8 @@ define({
       "DBS_BUILDER_TILE_DELETE": "Delete",
       "DBS_BUILDER_TILE_WIDER": "Wider",
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
+      "DBS_BUILDER_TILE_TALLER": "Taller",
+      "DBS_BUILDER_TILE_SHORTER": "Shorter",
       "DBS_BUILDER_TILE_MAXIMIZE": "Maximize",
       "DBS_BUILDER_TILE_RESTORE": "Restore",
       "DBS_BUILDER_TILE_CFG": "Edit",

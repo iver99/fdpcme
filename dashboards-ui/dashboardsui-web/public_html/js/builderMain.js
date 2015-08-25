@@ -200,16 +200,28 @@ require(['knockout',
     //                var dsbWidgets = dashboardModel && dashboardModel.tiles ? dashboardModel.tiles : undefined;
     //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
     //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
-    
+                  
                     var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
-                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/);
-                    var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
+                    var tilesViewModel = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/); 
+                    var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewModel);
                     var headerViewModel = new HeaderViewModel();
+                    
+                    var tilesPosition = [
+                        {row: 0, column: 0, width: 1, height: 2},
+                        {row: 0, column: 1, width: 2, height: 1},
+                        {row: 0, column: 3, width: 1, height: 3},
+                        {row: 1, column: 1, width: 1, height: 2}
+                    ];
                     
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
-                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewMode.timeSelectorModel, tilesViewMode.targetContext);
+                            var tile = dashboard.tiles()[i];
+                            tile.row = ko.observable(tilesPosition[i].row);
+                            tile.column = ko.observable(tilesPosition[i].column);
+                            tile.width = ko.observable(tilesPosition[i].width);
+                            tile.height = ko.observable(tilesPosition[i].height);
+                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext);
                         }
                     }                    
                     
@@ -243,13 +255,16 @@ require(['knockout',
                     ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
 //                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
-                    ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
-                    ko.applyBindings(tilesViewMode, $('#global-html')[0]);   
+                    ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
+                    tilesViewModel.initialize();
+                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);   
 //                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
 
                     $("#loading").hide();
                     $('#globalBody').show();
                     tilesView.enableDraggable();
+                    tilesViewModel.show();
+                    tilesViewModel.enableMovingTransition();
                     var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
                     if (dashboard.enableTimeRange()){
                        timeSliderDisplayView.showOrHideTimeSlider("ON"); 
@@ -265,7 +280,7 @@ require(['knockout',
 
 //                    toolBarModel.showAddWidgetTooltip();
                     toolBarModel.handleAddWidgetTooltip();
-                    tilesViewMode.postDocumentShow();
+                    tilesViewModel.postDocumentShow();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
                     });
