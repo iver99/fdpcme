@@ -34,7 +34,7 @@ public class TestDashBoard extends LoginAndLogout{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testHomePage");	
 		//DashBoardUtils.checkBrandingBarLink();
-		DashBoardUtils.waitForMilliSeconds(5000);	
+		DashBoardUtils.waitForMilliSeconds(9000);	
 		
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
@@ -448,7 +448,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.click("//*[@id='errorMain']/div[2]/button");
 		
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_812");
+		webd.getLogger().info("start to test in testEMPCDF_832");
 		
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		
