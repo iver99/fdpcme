@@ -160,7 +160,7 @@ public class TestDashBoard extends LoginAndLogout{
 	}
 	
 	@Test
-	public void testSpecialDashBoard() throws Exception
+	public void testCreateSpecialDashBoard() throws Exception
 	{
 				
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -191,6 +191,30 @@ public class TestDashBoard extends LoginAndLogout{
 			
 	}
 	
+	@Test
+	public void testRemoveSpecialDashBoard() throws Exception
+	{
+				
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testRemoveDashBoard");	
+		//focus a dashboard
+		DashBoardUtils.waitForMilliSeconds(500);
+		webd.takeScreenShot();
+		//DashBoardUtils.clickToSortByLastAccessed();
+		DashBoardUtils.searchDashBoard("DBA_Name_Modify");
+		DashBoardUtils.waitForMilliSeconds(500);
+		webd.takeScreenShot();
+		
+		webd.click(DashBoardPageId.InfoBtnID);
+		webd.click(DashBoardPageId.RmBtnID);
+		
+		//click delete button
+		DashBoardUtils.clickDeleteButton();
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
+					
+	}
 	@Test
 	public void testUserMenu() throws Exception
 	{
@@ -449,9 +473,10 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");
-		
+		webd.takeScreenShot();
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
-		
+		webd.takeScreenShot();
+		webd.getLogger().info("start to test in testEMPCDF_8322222");
 	}
 
 }
