@@ -89,6 +89,28 @@ public class RegistrationEntity
 		}
 	}
 
+	private String sessionExpirationTime = null;
+
+	//Default constructor
+	public RegistrationEntity()
+	{
+
+	}
+
+	//Constructor with session expiration time
+	public RegistrationEntity(String sessionExpirationTime)
+	{
+		this.sessionExpirationTime = sessionExpirationTime;
+	}
+
+	/**
+	 * @return Administration links discovered from service manager
+	 */
+	public List<LinkEntity> getAdminLinks()
+	{
+		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+	}
+
 	//	private String ssfServiceName;
 	//	private String ssfVersion;
 
@@ -111,14 +133,6 @@ public class RegistrationEntity
 	//	{
 	//		return new String(LookupManager.getInstance().getAuthorizationToken());
 	//	}
-
-	/**
-	 * @return Administration links discovered from service manager
-	 */
-	public List<LinkEntity> getAdminLinks()
-	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
-	}
 
 	public List<LinkEntity> getCloudServices()
 	{
@@ -145,6 +159,11 @@ public class RegistrationEntity
 			}
 		}
 		return list;
+	}
+
+	public String getSessionExpiryTime()
+	{
+		return sessionExpirationTime;
 	}
 
 	/**
