@@ -210,18 +210,18 @@ require(['knockout',
                         {row: 0, column: 0, width: 1, height: 2},
                         {row: 0, column: 1, width: 2, height: 1},
                         {row: 0, column: 3, width: 1, height: 3},
-                        {row: 1, column: 1, width: 1, height: 2}
+                        {row: 1, column: 1, width: 1, height: 2},
+                        {row: 1, column: 2, width: 1, height: 1}
                     ];
                     
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
-                            var tile = dashboard.tiles()[i];
                             tile.row = ko.observable(tilesPosition[i].row);
                             tile.column = ko.observable(tilesPosition[i].column);
                             tile.width = ko.observable(tilesPosition[i].width);
                             tile.height = ko.observable(tilesPosition[i].height);
-                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext);
+                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
                         }
                     }                    
                     

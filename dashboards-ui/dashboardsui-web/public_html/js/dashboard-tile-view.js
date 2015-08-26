@@ -533,7 +533,7 @@ define(['knockout',
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             
             self.addSelectedWidgetToDashboard = function(widget) {
-                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 2, widget);
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 2, 1, widget);
             };
             
             self.addWidgetDialogParams = {
