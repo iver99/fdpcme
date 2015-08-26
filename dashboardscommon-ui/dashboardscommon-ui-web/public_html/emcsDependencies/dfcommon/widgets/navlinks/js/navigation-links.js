@@ -8,6 +8,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var dfu = new dfumodel(userName, tenantName);
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
                 var appMap = params.appMap;
+                var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
@@ -23,6 +24,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 
                 var nlsStringsAvailable = false;
                 var nlsStrings = null;
+                
+                //Fetch links and session expiry time from server side
+                refreshLinks();
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -152,6 +156,20 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             }
 
                         }
+                        var sessionExpiry = data.sessionExpiryTime;
+                        //Get session expiry time and do session timeout handling
+                        if (sessionExpiry && sessionExpiry.length >= 14) {
+                            var now = new Date().getTime();
+                            //Get UTC session expiry time
+                            var utcSessionExpiry = Date.UTC(sessionExpiry.substring(0,4),
+                                sessionExpiry.substring(4,6)-1, sessionExpiry.substring(6,8), 
+                                sessionExpiry.substring(8,10), sessionExpiry.substring(10,12), 
+                                sessionExpiry.substring(12,14));
+                            //Caculate wait time for client timer which will show warning dialog when session expired
+                            var waitTimeBeforeWarning = utcSessionExpiry - now;
+                            //Show warning dialog when session expired
+                            setTimeout(showSessionTimeoutWarningDialog, waitTimeBeforeWarning);
+                        }
                     };                   
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     if (dfu.isDevMode()){
@@ -209,6 +227,10 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         }
                     }
                 }
+                
+                function showSessionTimeoutWarningDialog() {
+                    $('#'+sessionTimeoutWarnDialogId).ojDialog('open');
+                };
             }
             return NavigationLinksViewModel;
         });
