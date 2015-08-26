@@ -612,8 +612,6 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
  
                 (function ajaxCall (retries) {
                     var dfd = $.ajax(retryOptions);
-                    if (window.resetSessionTimeoutTimer && typeof(window.resetSessionTimeoutTimer) === 'function')
-                        window.resetSessionTimeoutTimer();
                     dfd.done(function (data, textStatus, jqXHR) {
                         removeMessage(messageId);
                         ajaxCallDfd.resolve(data, textStatus, jqXHR);
