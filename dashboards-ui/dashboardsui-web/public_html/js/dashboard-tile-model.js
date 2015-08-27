@@ -376,7 +376,7 @@ define(['knockout',
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
-                                if(options.data.type == "TEXT_WIDGET") {
+                                if(options.data.type === "TEXT_WIDGET") {
                                     return new TextTileItem(options.data);
                                 }else {
                                     return new TileItem(options.data);
