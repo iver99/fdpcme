@@ -45,6 +45,7 @@ public class DashboardsCORSFilter implements Filter
 		{
 			super(request);
 			String oamRemoteUser = request.getHeader(OAM_REMOTE_USER_HEADER);
+                        logger.info(OAM_REMOTE_USER_HEADER+"="+oamRemoteUser);
 			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
 			if (oamRemoteUser != null) {
 				int pos = oamRemoteUser.indexOf(".");
@@ -70,7 +71,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 	}
 
-	private final Logger logger = LogManager.getLogger(DashboardsCORSFilter.class);
+	private static final Logger logger = LogManager.getLogger(DashboardsCORSFilter.class);
 
 	@Override
 	public void destroy()
@@ -81,14 +82,15 @@ public class DashboardsCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
-		// Only add CORS headers if the developer mode is enabled to add them
+		HttpServletResponse hRes = (HttpServletResponse) response;
+		HttpServletRequest hReq = (HttpServletRequest) request;
+		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
+                // Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
-			chain.doFilter(request, response);
+			chain.doFilter(oamRequest, response);
 			logger.info("developer mode is NOT enabled on server side");
 			return;
 		}
-		HttpServletResponse hRes = (HttpServletResponse) response;
-		HttpServletRequest hReq = (HttpServletRequest) request;
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		if (hReq.getHeader("Origin") != null) {
 			// allow cookies
@@ -102,7 +104,7 @@ public class DashboardsCORSFilter implements Filter
 		// necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,X-REMOTE-USER,Authorization,x-sso-client");
-		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
+		
 		chain.doFilter(oamRequest, response);
 	}
 
