@@ -12,7 +12,7 @@ apply plugin: 'artifactory-publish'
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
 //jar.archiveName='emcpdf_qa_test.jar'
-//group = 'com.oracle.emaas.emcpdf'
+group = 'com.oracle.emaas.emcpdf'
 //version = '1.0.1'
 //apply plugin: 'gavsetting'
 
