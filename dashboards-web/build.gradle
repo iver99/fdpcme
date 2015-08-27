@@ -14,6 +14,7 @@ ext.restDocOutputDir = "${restDocRootDir}"
 //jar.archiveName='emcpdf_qa_test.jar'
 //group = 'com.oracle.emaas.emcpdf'
 //version = '1.0.1'
+//apply plugin: 'gavsetting'
 
 buildscript {
     repositories {
@@ -23,7 +24,10 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-    }  
+   classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
+
+
+     }  
 }
 
 configurations {

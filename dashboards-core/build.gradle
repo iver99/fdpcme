@@ -47,7 +47,7 @@ task runDEVTestSuite(type: Test){
 publishing {
     publications {
 /*
-        savedsearchWeb(MavenPublication) {
+        savedsearchCore(MavenPublication) {
               from components.java
         }
 */
@@ -92,7 +92,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-		
+classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'	
         
 }  
 }
