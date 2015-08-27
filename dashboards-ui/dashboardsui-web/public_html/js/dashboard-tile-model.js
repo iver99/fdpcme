@@ -359,20 +359,20 @@ define(['knockout',
                 success: function(data) {
 //                    var dsb = ko.mapping.fromJS(data);  
                     //introduce dummy data
-                    var tilesPosition = [
-                        {row: 0, column: 0, width: 2, height: 2},
-                        {row: 0, column: 2, width: 4, height: 1},
-                        {row: 0, column: 6, width: 2, height: 3},
-                        {row: 1, column: 2, width: 2, height: 2},
-                        {row: 1, column: 4, width: 2, height: 1}
-                    ];
-                    for(var i=0; i<data.tiles.length; i++) {
-                        var tile = data.tiles[i];
-                        tile.row = tilesPosition[i].row;
-                        tile.column = tilesPosition[i].column;
-                        tile.width = tilesPosition[i].width;
-                        tile.height = tilesPosition[i].height;
-                    }
+//                    var tilesPosition = [
+//                        {row: 0, column: 0, width: 2, height: 2},
+//                        {row: 0, column: 2, width: 4, height: 1},
+//                        {row: 0, column: 6, width: 2, height: 3},
+//                        {row: 1, column: 2, width: 2, height: 2},
+//                        {row: 1, column: 4, width: 2, height: 1}
+//                    ];
+//                    for(var i=0; i<data.tiles.length; i++) {
+//                        var tile = data.tiles[i];
+//                        tile.row = tilesPosition[i].row;
+//                        tile.column = tilesPosition[i].column;
+//                        tile.width = tilesPosition[i].width;
+//                        tile.height = tilesPosition[i].height;
+//                    }
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
