@@ -112,10 +112,12 @@
                                                 <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
                                                 <select id="sortcb"  data-bind="ojComponent: {component: 'ojSelect', value: sortBy, optionChange: handleSortByChanged, 
                                                    rootAttributes: {style:'width: 11em; max-width:20em'}}"/>
-                                                        <option value="name" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME')"></option>
-		                                        <option value="access_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE')"></option>
-                                                        <option value="creation_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME')"></option>
                                                         <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
+                                                        <option value="name" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME')"></option>
+                                                        <option value="owner" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER')"></option>
+                                                        <option value="creation_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME')"></option>
+                                                        <option value="last_modification_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED')"></option>
+                                                        <option value="access_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE')"></option>
                                                 </select>
                                                 
                                                 <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
@@ -177,26 +179,25 @@
                                             <table id="dbstable" summary="Dashboard List" aria-label="Dashboards Table"
                                                    data-bind="ojComponent: {component: 'ojTable', 
                                                    data: dashboardsTS,
-                                                   horizontalGridVisible: 'none',
                                                    verticalGridVisible: 'none',
-                                                   columnsDefault: { sortable: 'none', headerStyle: 'border-left: none; border-right: none;' },
+                                                   columnsDefault: {  sortable: 'none', headerStyle: 'border-left: none; border-right: none;' },
                                                    rootAttributes: { 'style': 'width: 100%; margin: 5px; border: none; background: #ffffff;' },
-                                                   columns: [{headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 55%; white-space: normal;'},
-                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 15%;'},
-                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATEDATE'),  style: 'width: 12.5%'},
-                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 12.5%'},
-                                                             {headerText: '',  style: 'width: 5%'}],
+                                                   columns: [{headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 55%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 15%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATEDATE'),  style: 'width: 12.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 12.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {headerText: '',  style: 'width: 5%' }],
                                                    rowTemplate: 'dbstablerow_tmpl'}"></table>
                                             <script type="text/html" id="dbstablerow_tmpl">
-                                                <tr>
-                                                    <td><a data-bind="click: function(data, event){$root.handleDashboardClicked(event, {'id': $data.attributes.id, 'element': $element})}, 
-                                                                      text: $data.attributes.name" /></td>
-                                                    <td data-bind="text: $data.attributes.owner"></td>
-                                                    <td data-bind="text: getDateString($data.attributes.createdOn)"></td>
-                                                    <td data-bind="text: getDateString($data.attributes.lastModifiedOn)"></td>
+                                                <tr style="height: 1rem; min-height: 1rem;   ">
+                                                    <td><a data-bind="click: function(data, event){$root.handleDashboardClicked(event, {'id': $data.id, 'element': $element})}, 
+                                                                      text: $data.name" /></td>
+                                                    <td data-bind="text: $data.owner"></td>
+                                                    <td data-bind="text: getDateString($data.createdOn)"></td>
+                                                    <td data-bind="text: getDateString($data.lastModifiedOn)"></td>
                                                     <td>
                                                         <button class="oj-button-half-chrome oj-sm-float-end" 
-                                                                data-bind="click: function(data, event){$root.handleShowDashboardPop(event, {'id': $data.attributes.id, 'element': $element})}, 
+                                                                data-bind="click: function(data, event){$root.handleShowDashboardPop(event, {'id': $data.id, 'element': $element})}, 
                                                                            ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}"></button>
                                                     </td>
                                                 </tr>
@@ -223,8 +224,10 @@
                             <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
                             <!-- /ko -->
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
+                            <!-- ko if: $root.isTilesView() === 'gridtview' -->
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
                             <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
+                            <!-- /ko -->
                             <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
                                 <button class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL'), icons: {start:'oj-fwk-icon icon-trashcan-ena-16'}, disabled: dashboard.systemDashboard}, click: $root.handleDashboardDeleted"></button>
                                 <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $root.handleCloseDashboardPop"></button-->

@@ -33,9 +33,13 @@
 .icon-gridview-16:before{content:url("images/func_ninesquareboxes_16_ena.png");}
 .oj-button.oj-hover .icon-gridview-16:before, .oj-button.oj-hover.oj-selected .icon-gridview-16:before {
     content: url("images/func_ninesquareboxes_16_hov.png"); }
+.oj-button.oj-active .icon-gridview-16:before, .oj-button.oj-selected .icon-gridview-16:before {
+    content: url("images/func_ninesquareboxes_16_onb.png"); }
 .icon-listview-16:before{content:url("images/func_threehorizontalbars_16_ena.png");}
 .oj-button.oj-hover .icon-listview-16:before, .oj-button.oj-hover.oj-selected .icon-listview-16:before {
     content: url("images/func_threehorizontalbars_16_hov.png"); }
+.oj-button.oj-active .icon-listview-16:before, .oj-button.oj-selected .icon-listview-16:before {
+    content: url("images/func_threehorizontalbars_16_onb.png"); }
 
 .dbs-welcome-centeredImage{
     text-align:center;

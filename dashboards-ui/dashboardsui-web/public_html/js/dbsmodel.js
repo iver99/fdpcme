@@ -207,7 +207,20 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
                                                    filter['types'], filter['appTypes'], filter['owners'], function(_event) {
                                                        //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
-                                                       self.dashboardsTS(new oj.ArrayTableDataSource(_event['data'], {idAttribute: 'id'}));
+                                                       var _i = 0, _rawdbs = [];
+                                                       if (_event['data'])
+                                                       {
+                                                           for (_i = 0; _i < _event['data'].length; _i++)
+                                                           {
+                                                               var _datai = _event['data'][_i].attributes;
+                                                               if (!_datai['lastModifiedOn'])
+                                                               {
+                                                                   _datai['lastModifiedOn'] = _datai['createdOn'];
+                                                               }
+                                                               _rawdbs.push(_datai);
+                                                           }
+                                                       }
+                                                       self.dashboardsTS(new oj.ArrayTableDataSource(_rawdbs, {idAttribute: 'id'}));
                                                    });
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].setPage(0, { 
