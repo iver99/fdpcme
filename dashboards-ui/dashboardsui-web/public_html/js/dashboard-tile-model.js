@@ -29,7 +29,7 @@ define(['knockout',
         
         ko.mapping = km;
         
-        var defaultCols = 4;
+        var defaultCols = 8;
         var defaultHeight = 260;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
@@ -293,7 +293,7 @@ define(['knockout',
          *  @param width width for the tile
          *  @param widget widget from which the tile is to be created
          */
-        function DashboardTile(tilesViewModel,type, title, description, tile, widget, timeSelectorModel, targetContext) {
+        function DashboardTile(tilesViewModel,type, title, description, widget, timeSelectorModel, targetContext) {
             var self = this;
             var dashboard = tilesViewModel.dashboard;
             self.dashboard = dashboard;
@@ -302,8 +302,13 @@ define(['knockout',
             self.description = ko.observable(description);
             self.isMaximized = ko.observable(false);            
             
-            var kowidget = ko.mapping.fromJS(widget);
-            ko.mapping.fromJS(tile, {}, self);
+//            var kowidget = ko.mapping.fromJS(widget);
+            var kowidget;
+            if(widget.content) {
+                kowidget = new TextTileItem(widget);
+            }else {
+                kowidget = new TileItem(widget);
+            }
             for (var p in kowidget)
                 self[p] = kowidget[p];
 //            tilesViewModel.tiles.push(self);
@@ -352,7 +357,38 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    var dsb = ko.mapping.fromJS(data);
+//                    var dsb = ko.mapping.fromJS(data);  
+                    //introduce dummy data
+                    var tilesPosition = [
+                        {row: 0, column: 0, width: 2, height: 2},
+                        {row: 0, column: 2, width: 4, height: 1},
+                        {row: 0, column: 6, width: 2, height: 3},
+                        {row: 1, column: 2, width: 2, height: 2},
+                        {row: 1, column: 4, width: 2, height: 1}
+                    ];
+                    for(var i=0; i<data.tiles.length; i++) {
+                        var tile = data.tiles[i];
+                        tile.row = tilesPosition[i].row;
+                        tile.column = tilesPosition[i].column;
+                        tile.width = tilesPosition[i].width;
+                        tile.height = tilesPosition[i].height;
+                    }
+                    var mapping = {
+                       "tiles": {
+                           "create" : function(options) {
+                                if(options.data.content) {
+                                    return new TextTileItem(options.data);
+                                }else {
+                                    return new TileItem(options.data);
+                                }
+                           }
+                       } 
+                    }
+                    var dsb = ko.mapping.fromJS(data, mapping);
+//                    console.log(dsb.tiles())
+//                    var test = ko.mapping.toJS(dsb);
+//                    console.log("***");
+//                    console.log(test);
                     if (succCallBack)
                         succCallBack(dsb);
                 },
@@ -805,6 +841,7 @@ define(['knockout',
             widgetAreaContainer = $('#widget-area');
             
             self.tiles = new TileItemList();
+            self.tiles.tiles = dashboard.tiles;
             widgetAreaWidth = widgetAreaContainer.width();
             
             self.previousDragCell = null;
@@ -825,7 +862,7 @@ define(['knockout',
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
 
             self.isEmpty = function() {
-                return !self.dashboard.tiles() || self.dashboard.tiles().length === 0;
+                return !self.tiles.tiles() || self.tiles.tiles().length === 0;
             };
             
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
@@ -851,8 +888,12 @@ define(['knockout',
                     var provider_version = widget.PROVIDER_VERSION;
                     var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
                     var widget_source = widget.WIDGET_SOURCE;
-                    widget.width = ko.observable(width);
-                    widget.height = ko.observable(height);
+//                    widget.width = ko.observable(width);
+//                    widget.height = ko.observable(height);
+                    widget.width = width;
+                    widget.height = height;
+                    widget.column = null;
+                    widget.row = null;
 //                    if (widget_source === 0) {
 //                        if (koc_name && template && viewmodel){
 //                            if (!ko.components.isRegistered(koc_name)) {
@@ -889,14 +930,19 @@ define(['knockout',
                                     oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
                                 
-                                var tileCell = self.tiles.calAvailablePositionForTile(widget, 0, 0);
-                                var tile = new TileItem({row: tileCell.row, column: tileCell.column, width: width, height: height});
-                                tile.row = ko.observable(tileCell.row);
-                                tile.column = ko.observable(tileCell.column);
-//                                self.tiles.push(tile);
-                                self.tiles.tilesGrid.registerTileToGrid(tile);
+//                                var tileCell = self.tiles.calAvailablePositionForTile(widget, 0, 0);
+//                                var tile = new TileItem({row: tileCell.row, column: tileCell.column, width: width, height: height});
+//                                tile.row = ko.observable(tileCell.row);
+//                                tile.column = ko.observable(tileCell.column);
+////                                self.tiles.push(tile);
+//                                self.tiles.tilesGrid.registerTileToGrid(tile);
 
-                                newTile =new DashboardTile(self,koc_name,name, description, tile, widget, self.timeSelectorModel, self.targetContext); 
+                                newTile =new DashboardTile(self,koc_name,name, description, widget, self.timeSelectorModel, self.targetContext);
+                                var tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
+                                newTile.row(tileCell.row);
+                                newTile.column(tileCell.column);
+//                                self.tiles.push(tile);
+                                self.tiles.tilesGrid.registerTileToGrid(newTile);
 //                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
 //                                    var worksheetName = 'WS_4_QDG_WIDGET';
 //                                    var workSheetCreatedBy = 'sysman';
@@ -1033,17 +1079,17 @@ define(['knockout',
 //                        {row: 6, column:0, width: 4, height: 1, content: 'test  test  test  test  test  test  test  test  test test test test test'}
 //                    ]
 //                };
-                var tiles = {tiles: self.dashboard.tiles()};
-                ko.mapping.fromJS(tiles, {
-                    'tiles': {
-                        create: function(x) {
-                            if (x.data.content)
-                                return new TextTileItem(x.data);
-                            else
-                                return new TileItem(x.data);
-                        }
-                    }
-                }, self.tiles);
+//                var tiles = {tiles: self.dashboard.tiles()};
+//                ko.mapping.fromJS(tiles, {
+//                    'tiles': {
+//                        create: function(x) {
+//                            if (x.data.content)
+//                                return new TextTileItem(x.data);
+//                            else
+//                                return new TileItem(x.data);
+//                        }
+//                    }
+//                }, self.tiles);
                 if(self.tiles.tiles && self.tiles.tiles()) {
                     for(var i=0; i< self.tiles.tiles().length; i++) {
                         var tile = self.tiles.tiles()[i];

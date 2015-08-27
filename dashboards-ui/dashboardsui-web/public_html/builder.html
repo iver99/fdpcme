@@ -355,6 +355,7 @@
                                     <!-- ko if: tileType() === 'Default' -->
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 3px 10px;">
                                         <div class="dbd-tile-header">
+                                            <h2 class="dbd-tile-title" data-bind="text: title"></h2>
                                             <div class="dbd-pull-right">
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
@@ -422,7 +423,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="shorter" data-bind="css: {'oj-disabled': !shorterEnabled()}">
+                                                        <li id="shorter" data-bind="css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
