@@ -88,7 +88,7 @@ public class TestDashBoard extends LoginAndLogout{
 	}
 	
 	
-	@Test
+	@Test(dependsOnMethods = { "testCreateDashBoard" })
 	public void testModifyDashBoard() throws Exception
 	{
 					
@@ -114,7 +114,7 @@ public class TestDashBoard extends LoginAndLogout{
 	
 	
 	
-	@Test
+	@Test(dependsOnMethods = { "testModifyDashBoard" })
 	public void testNavigateWidget() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -134,7 +134,7 @@ public class TestDashBoard extends LoginAndLogout{
 		
 	}
 	
-	@Test
+	@Test(dependsOnMethods = { "testCreateDashBoard","testModifyDashBoard","testNavigateWidget"})
 	public void testRemoveDashBoard() throws Exception
 	{
 				
@@ -191,7 +191,7 @@ public class TestDashBoard extends LoginAndLogout{
 			
 	}
 	
-	@Test
+	@Test(dependsOnMethods = { "testCreateSpecialDashBoard" })
 	public void testRemoveSpecialDashBoard() throws Exception
 	{
 				
@@ -215,7 +215,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 					
 	}
-	@Test
+	@Test(dependsOnMethods = { "testHomepage" })
 	public void testUserMenu() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -467,13 +467,16 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		
-		
+		webd.takeScreenShot();
 		webd.getWebDriver().navigate().to(url.substring(0,url.indexOf("emsaasui"))+"emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
+		DashBoardUtils.waitForMilliSeconds(5000);
 		webd.click("//*[@id='errorMain']/div[2]/button");
-		
+		webd.takeScreenShot();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");
 		webd.takeScreenShot();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		webd.takeScreenShot();
 		webd.getLogger().info("start to test in testEMPCDF_8322222");
