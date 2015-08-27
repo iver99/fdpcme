@@ -408,7 +408,7 @@ define(['knockout',
                 		});
                 		parentNode.appendChild(canvas);
                 	});
-                	html2canvas($('#tiles-row'), {
+                	html2canvas($('#tiles-wrapper'), {
                 		onrendered: function(canvas) {
                 			try {
                 				var resize_canvas = document.createElement('canvas');
