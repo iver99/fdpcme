@@ -137,10 +137,8 @@ dependencies {
 			'com.jayway.restassured:json-path:2.3.1',
 			'com.jayway.restassured:xml-path:2.3.1',
 			'com.jayway.restassured:rest-assured-common:2.3.1',
-			'com.jayway.restassured:rest-assured:2.3.0',
-			'com.oracle.emaas.emdi:em-qatool-os-webdriver:1.0.4',
-			'com.oracle.emaas.emdi:emsaas-qatool-jet-utility:1.0.4'
-
+			'com.jayway.restassured:rest-assured:2.3.1',
+			'com.oracle.emaas.emdi:em-qatool-os-webdriver:1.0.7'
 	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
 			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
