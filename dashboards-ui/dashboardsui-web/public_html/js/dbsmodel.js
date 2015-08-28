@@ -25,9 +25,9 @@ function(dsf, oj, ko, $, dfu, pfu)
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
             DASHBOARDS_VIEW_PREF_KEY = "Dashboards.dashboardsView",
-            DASHBOARDS_REST_URL = "http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/dashboards/"/*"/sso.static/dashboards.service"*/,
-            PREFERENCES_REST_URL = "http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/preferences",/*"/sso.static/dashboards.preferences"*/
-            SUBSCIBED_APPS_REST_URL = "http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/subscribedapps";//"/sso.static/dashboards.subscribedapps";
+            DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
+            PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
+            SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
             
     if (dfu.isDevMode()){
        DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
