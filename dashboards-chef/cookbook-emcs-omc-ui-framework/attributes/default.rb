@@ -18,7 +18,6 @@ default["app_dir"] = "#{node["apps_dir"]}"
 default["jdk_dir"] = "#{node["infra_dir"]}/java"
 default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 
-default["SAAS_version"] = "1.0.0"
 default["myApplicationName"]="emaas-applications-omc-ui-framework"
 default["target"]="#{node["wls_adminserver_name"]}"
 
