@@ -88,6 +88,7 @@ define({
       "DBS_BUILDER_BTN_ADD_WIDGET": "Add Widgets",
       "DBS_BUILDER_BTN_ADD": "Add",
       "DBS_BUILDER_BTN_ADD_TEXT": "Add Text",
+//      "DBS_BUILDER_BTN_ADD_TEXT_TITLE": "Add Text Widget",
 //      "DBS_BUILDER_BTN_ADD_HINT_TITLE": "How do I use this page?",
 //      "DBS_BUILDER_BTN_ADD_HINT_DETAIL": "Click the + button and add new widgets to your dashboard",
       "DBS_BUILDER_BTN_ADD_HINT_TITLE": "Your dashboard has no data to display",

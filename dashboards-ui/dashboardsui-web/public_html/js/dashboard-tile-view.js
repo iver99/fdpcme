@@ -552,6 +552,13 @@ define(['knockout',
 //                ,providerVersion: '1.0'
             };
             
+            self.HandleAddTextWidget = function() {
+                var maximizedTile = tilesViewModel.getMaximizedTile();
+            	if (maximizedTile)
+            		tilesViewModel.restore(maximizedTile);
+                tilesViewModel.AppendTextTile();
+            }
+            
             self.openAddWidgetDialog = function() {
             	var maximizedTile = tilesViewModel.getMaximizedTile();
             	if (maximizedTile)

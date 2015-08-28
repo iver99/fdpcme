@@ -16,7 +16,8 @@ define(['knockout',
         'html2canvas',
         'canvg-rgbcolor',
         'canvg-stackblur',
-        'canvg'
+        'canvg',
+        'ckeditor'
     ],
     
     function(ko, km, TimeSelectorModel,dfu, dfumodel)
@@ -148,6 +149,21 @@ define(['knockout',
         }
          */
         
+        function initializeTextTileAfterLoad(dashboard, tile, callback) {
+            if(!tile) {
+                return;
+            }
+            registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
+            tile.shouldHide = ko.observable(false);
+            tile.editDisabled = ko.computed(function() { //to do
+            	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
+            });
+            tile.params = {
+                callbackAfterDblClick: callback,
+                content: tile.content
+            }
+        }
+        
         function initializeTileAfterLoad(dashboard, tile, timeSelectorModel, targetContext) {
             if (!tile)
                 return;
@@ -173,7 +189,7 @@ define(['knockout',
                 }
             } 
             tile.shouldHide = ko.observable(false);
-            tile.clientGuid = dfu.guid();
+//            tile.clientGuid = dfu.guid();
             tile.editDisabled = ko.computed(function() {
             	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
             });
@@ -282,6 +298,26 @@ define(['knockout',
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
         }
+        
+        function DashboardTextTile(dashboard, widget, callback) {
+            var self = this;
+            self.dashboard = dashboard;
+            self.title = ko.observable("text widget title"); //to do 
+            self.description = ko.observable();
+            self.isMaximized = ko.observable(false);
+            
+            var kowidget;
+            if(widget.type == "TEXT_WIDGET") {
+                kowidget = new TextTileItem(widget);
+            }else {
+                kowidget = new TileItem(widget);
+            }
+            
+            for (var p in kowidget)
+                self[p] = kowidget[p];
+            
+            initializeTextTileAfterLoad(dashboard, self, callback);            
+        }
 
         /**
          *  Object used to represents a dashboard tile created by clicking adding widget
@@ -373,6 +409,17 @@ define(['knockout',
 //                        tile.height = tilesPosition[i].height;
 //                        tile.type = tilesPosition[i].type;
 //                    }
+//                    var texttile = {};
+//                    texttile.WIDGET_KOC_NAME = "df-text-widget";
+//                    texttile.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
+//                    texttile.WIDGET_VIEWMODEL = "../emcsDependencies/widgets/textwidget/js/textwidget";
+//                    texttile.type = "TEXT_WIDGET";
+//                    texttile.width = defaultCols;
+//                    texttile.height = 1;
+//                    texttile.column = 0;
+//                    texttile.row = 3;
+//                    texttile.content = "This is a dummy widget for <strong>text test</strong>";
+//                    data.tiles.push(texttile);
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
@@ -385,10 +432,6 @@ define(['knockout',
                        } 
                     }
                     var dsb = ko.mapping.fromJS(data, mapping);
-//                    console.log(dsb.tiles())
-//                    var test = ko.mapping.toJS(dsb);
-//                    console.log("***");
-//                    console.log(test);
                     if (succCallBack)
                         succCallBack(dsb);
                 },
@@ -551,7 +594,7 @@ define(['knockout',
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: auto;";
             });
             self.displayHeight = function() {
-                return $('#text-' + self.clientGuid).height();
+                return $('#text' + self.clientGuid).height();
             };
         }
         
@@ -877,6 +920,44 @@ define(['knockout',
                 self.tileRemoveCallbacks.push(callbackMethod);
             };
             
+            self.AppendTextTile = function () {
+                var newTextTile;
+                var widget = {};
+                widget.WIDGET_KOC_NAME = "df-text-widget";
+                widget.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
+                widget.WIDGET_VIEWMODEL = "../emcsDependencies/widgets/textwidget/js/textwidget";
+                widget.type = "TEXT_WIDGET";
+                widget.width = defaultCols;
+                widget.height = 1;
+                widget.column = null;
+                widget.row = null;
+                widget.content = null;
+                
+                if (!ko.components.isRegistered(widget.WIDGET_KOC_NAME)){
+                    ko.components.register(widget.WIDGET_KOC_NAME, {
+                            viewModel: {require: widget.WIDGET_VIEWMODEL},
+                            template: {require: 'text!' + widget.WIDGET_TEMPLATE}
+                        });
+                        oj.Logger.log("widget: " + widget.WIDGET_KOC_NAME + " is registered");
+                        oj.Logger.log("widget template: " + widget.WIDGET_TEMPLATE);
+                        oj.Logger.log("widget viewmodel:: "+widget.WIDGET_VIEWMODEL); 
+                    }
+                    
+                    var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show);
+                    var textTileCell;
+                    if (!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
+                        textTileCell = new Cell(0, 0);
+                    } else {
+                        textTileCell = self.tiles.calAvailablePositionForTile(newTextTile, 0, 0);
+                    }
+                    newTextTile.row(textTileCell.row);
+                    newTextTile.column(textTileCell.column);
+//                                self.tiles.push(tile);
+                    self.tiles.tilesGrid.registerTileToGrid(newTextTile);
+                    self.tiles.tiles.push(newTextTile);
+                    self.show();
+            }
+            
             self.appendNewTile = function(name, description, width, height, widget) {
                 var newTile = null;
                 
@@ -940,7 +1021,7 @@ define(['knockout',
 
                                 newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
                                 var tileCell;
-                                if(!(self.tiles.tiles && self.tiles.tiles())) {
+                                if(!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
                                     tileCell = new Cell(0, 0);
                                 }else{
                                     tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
@@ -1512,6 +1593,7 @@ define(['knockout',
             "isDashboardNameExisting": isDashboardNameExisting,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
+            "initializeTextTileAfterLoad" : initializeTextTileAfterLoad,
             "updateDashboard": updateDashboard,
             "registerComponent": registerComponent
         };
