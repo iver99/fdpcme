@@ -40,19 +40,19 @@ public class DashboardsCORSFilter implements Filter
 		private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
 		private static final String X_REMOTE_USER_HEADER = "X-REMOTE-USER";
 		private static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
-		private final String oam_remote_user = null;
+		private String oam_remote_user=null;
 		private String tenant = null;
 
 		public OAMHttpRequestWrapper(HttpServletRequest request)
 		{
 			super(request);
-			String oamRemoteUser = request.getHeader(OAM_REMOTE_USER_HEADER);
-			logger.info(OAM_REMOTE_USER_HEADER + "=" + oamRemoteUser);
+			oam_remote_user = request.getHeader(OAM_REMOTE_USER_HEADER);
+			logger.info(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
 			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
-			if (oamRemoteUser != null) {
-				int pos = oamRemoteUser.indexOf(".");
+			if (oam_remote_user != null) {
+				int pos = oam_remote_user.indexOf(".");
 				if (pos > 0) {
-					tenant = oamRemoteUser.substring(0, pos);
+					tenant = oam_remote_user.substring(0, pos);
 				}
 			}
 		}
@@ -60,15 +60,14 @@ public class DashboardsCORSFilter implements Filter
 		@Override
 		public String getHeader(String name)
 		{
-			HttpServletRequest request = (HttpServletRequest) getRequest();
 			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
-				return oam_remote_user;
+                                return oam_remote_user;
 			}
 			else if (X_USER_IDENTITY_DOMAIN_NAME_HEADER.equals(name) && tenant != null) {
 				return tenant;
 			}
 			else {
-				return request.getHeader(name);
+				return super.getHeader(name);
 			}
 		}
 
@@ -78,9 +77,9 @@ public class DashboardsCORSFilter implements Filter
 			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
 				Vector<String> v = new Vector<String>();
 				v.add(oam_remote_user);
-				return v.elements();
+                                return v.elements();
 			}
-			else if (X_USER_IDENTITY_DOMAIN_NAME_HEADER.equals(name) && tenant != null) {
+                        else if (X_USER_IDENTITY_DOMAIN_NAME_HEADER.equals(name) && tenant != null) {
 				Vector<String> v = new Vector<String>();
 				v.add(tenant);
 				return v.elements();
