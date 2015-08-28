@@ -11,6 +11,8 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -45,7 +47,7 @@ public class DashboardsCORSFilter implements Filter
 		{
 			super(request);
 			String oamRemoteUser = request.getHeader(OAM_REMOTE_USER_HEADER);
-                        logger.info(OAM_REMOTE_USER_HEADER+"="+oamRemoteUser);
+			logger.info(OAM_REMOTE_USER_HEADER + "=" + oamRemoteUser);
 			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
 			if (oamRemoteUser != null) {
 				int pos = oamRemoteUser.indexOf(".");
@@ -69,6 +71,24 @@ public class DashboardsCORSFilter implements Filter
 				return request.getHeader(name);
 			}
 		}
+
+		@Override
+		public Enumeration<String> getHeaders(String name)
+		{
+			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
+				Vector<String> v = new Vector<String>();
+				v.add(oam_remote_user);
+				return v.elements();
+			}
+			else if (X_USER_IDENTITY_DOMAIN_NAME_HEADER.equals(name) && tenant != null) {
+				Vector<String> v = new Vector<String>();
+				v.add(tenant);
+				return v.elements();
+			}
+			else {
+				return super.getHeaders(name);
+			}
+		}
 	}
 
 	private static final Logger logger = LogManager.getLogger(DashboardsCORSFilter.class);
@@ -85,7 +105,7 @@ public class DashboardsCORSFilter implements Filter
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
 		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
-                // Only add CORS headers if the developer mode is enabled to add them
+		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
 			chain.doFilter(oamRequest, response);
 			logger.info("developer mode is NOT enabled on server side");
@@ -104,7 +124,7 @@ public class DashboardsCORSFilter implements Filter
 		// necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,X-REMOTE-USER,Authorization,x-sso-client");
-		
+
 		chain.doFilter(oamRequest, response);
 	}
 
