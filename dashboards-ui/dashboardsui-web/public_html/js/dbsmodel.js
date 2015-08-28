@@ -536,59 +536,6 @@ function(dsf, oj, ko, $, dfu, pfu)
             $("#sinput").dbsTypeAhead("clearInput");
         };
         
-        self.listHeaderReader = function(context)
-        {
-          context.columnHeaderDefaultRenderer(null, function(headerContentDiv)
-          {
-            //var headerTextDiv = $(document.createElement('div'));
-            //headerTextDiv.attr('style', 'display: inline-block;');
-            var _activeClass = "active", _ctagAttr = "aria-ctag";
-            headerContentDiv.text(context.data);
-            var iconDiv = $("<img src='css/images/qual_lock_16_full.png' alt='sorting'>");
-            iconDiv.addClass("oj-sm-float-end")
-                    .addClass("dbs-list-sort-header-icon");
-            switch (context.columnIndex)
-            {
-                case 0 :
-                    iconDiv.attr(_ctagAttr, 'name');
-                    if (self.sortBy() == 'name')
-                    {
-                        iconDiv.addClass(_activeClass);
-                    }
-                    break;
-                case 1 :
-                    iconDiv.attr(_ctagAttr, 'owner');
-                    if (self.sortBy() == 'owner')
-                    {
-                        iconDiv.addClass(_activeClass);
-                    }
-                    break;
-                case 2 :
-                    iconDiv.attr(_ctagAttr, 'creation_Date');
-                    if (self.sortBy() == 'creation_Date')
-                    {
-                        iconDiv.addClass(_activeClass);
-                    }
-                    break;
-                case 3 :
-                    iconDiv.attr(_ctagAttr, 'last_modification_Date');
-                    if (self.sortBy() == 'last_modification_Date')
-                    {
-                        iconDiv.addClass(_activeClass);
-                    }
-                    break;
-                default :
-                    break;
-            
-            }
-            //empIconDiv.attr('style', 'display: inline-block; padding-left: 5px; font-size: 18px; vertical-align: top;');
-            //empIconDiv.attr('role', 'img');
-            //empIconDiv.attr('class', 'oj-component-icon oj-table-column-header-asc-icon');
-            //headerContentDiv.append(headerTextDiv);
-            headerContentDiv.parent().append(iconDiv);
-          });
-        };
-        
         self.updateDashboard = function (dsb)
         {
             var _id = dsb.id;
