@@ -8,7 +8,8 @@ and open the template in the editor.
     Author     : guobaochen
 */
 
-#widget-area.dbd-support-transition .dbd-widget:not(.dbd-tile-in-dragging) {
+#widget-area.dbd-support-transition .dbd-widget:not(.dbd-tile-in-dragging), 
+#widget-area.dbd-support-transition .dbd-widget:not(.dbd-tile-in-dragging) .dbd-tile-element {
     -webkit-transition: top 0.5s,
                         left 0.5s,
                         width 0.5s,
