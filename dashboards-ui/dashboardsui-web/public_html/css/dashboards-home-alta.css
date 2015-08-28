@@ -224,6 +224,13 @@
    padding-bottom: 0px;
 }
 
+.dbs-list-sort-header-icon {
+    display: none;
+}
+
+.dbs-list-sort-header-icon.active {
+    display: inline-block;
+}
 /*
 .dbs-summary-page-description {
    padding-left: 5px;

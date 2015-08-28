@@ -182,9 +182,9 @@
                                                    verticalGridVisible: 'none',
                                                    columnsDefault: {  sortable: 'none', headerStyle: 'border-left: none; border-right: none;' },
                                                    rootAttributes: { 'style': 'width: 100%; margin: 5px; border: none; background: #ffffff;' },
-                                                   columns: [{headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 55%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                   columns: [{headerRenderer: listHeaderReader, headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 55%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
                                                              {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 15%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATEDATE'),  style: 'width: 12.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {headerRenderer: listHeaderReader, headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATEDATE'),  style: 'width: 12.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
                                                              {headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 12.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
                                                              {headerText: '',  style: 'width: 5%' }],
                                                    rowTemplate: 'dbstablerow_tmpl'}"></table>
