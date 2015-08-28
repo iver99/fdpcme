@@ -132,12 +132,12 @@
                         </div>
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
-<!--                        <button id="add-text-button" class="oj-button oj-default oj-button-half-chrome"
-                                data-bind="click: openAddTextDialog, ojComponent: {
+                        <button id="add-text-button" class="oj-button oj-default oj-button-half-chrome"
+                                data-bind="click: HandleAddTextWidget, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD_TEXT'),
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_TEXT')}, visible: editDisabled() !== true">
-                        </button>-->
+                        </button>
                         
                         <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
@@ -209,6 +209,12 @@
                         <button id="okButton" data-bind="click: handleMessageDialogOKClose, 
                                 ojComponent: {component: 'ojButton', label: 'OK'}"> 
                         </button>
+                    </div>
+                </div>-->
+<!--                <div style="display: none;" id="text-widget-dialog" title="Add Text Widget" data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide'}, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_TEXT_TITLE')}">
+                    <div class="oj-dialog-body">
+                        <input id="text-widget-content" type="text" data-bind="ojComponent: 'ojInputText', placeholder: getNlsString('ADD_TEXT_WIDGET_PLACEHOLDER')"/>
+                        <button id="text-widget-ok-button" data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: handleAddTextWidgetOKClicked"></button>
                     </div>
                 </div>-->
                 <div style="display:none;" id="settings-dialog"
@@ -350,9 +356,9 @@
                         <div id="tiles-wrapper" style="width: 100%; float: left; position: relative; height: auto; padding-left: 10px;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
                             <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 10px; margin-right: 10px; height: auto;">
-                            <!--<div id="widget-area" data-bind="foreach: tiles.tiles" class="dbd-tile-element">-->
-                            <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid}, css: tileDisplayClass()">
-                                    <!-- ko if: type() === 'DEFAULT' -->
+                            <!--<div id="widget-area" data-bind="foreach: tiles.tiles" class="dbd-tile-element">-->                                                                
+                                <!-- ko if: type() === 'DEFAULT' -->
+                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid}, css: tileDisplayClass()">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
                                         <div class="dbd-tile-header">
                                             <h2 class="dbd-tile-title" data-bind="text: title"></h2>
@@ -456,13 +462,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /ko -->
-                                    <!-- ko if: type() === 'TEXT_WIDGET' -->
-                                    <div style="width: 100%; height: auto; cursor: move;" data-bind="attr: {id: 'text-'+clientGuid}">
-                                        <span data-bind="text: content"></span>
-                                    </div>
-                                    <!-- /ko -->
                                 </div>
+                                <!-- /ko -->
+                                <!-- ko if: type() === 'TEXT_WIDGET' -->
+                                <div class="dbd-widget" style="height: auto; cursor: move;" data-bind="attr: {style: cssStyle, id: 'text'+clientGuid}">
+                                    <!--<span data-bind="text: content"></span>-->
+                                    <div data-bind="component: {name: 'df-text-widget', params: params}"></div>
+                                </div>
+                                <!-- /ko -->                                
                             </div>
                         </div>
 

@@ -1,0 +1,15 @@
+<div data-bind="attr: {id: 'textWidget_'+randomId}" style="width: 100%; display: block;">
+    <div data-bind="attr: {id: 'textInfo'}, event: {dblclick: showEditor}" style="width:100%;">
+        <!-- ko if: content() -->
+        <p data-bind="html: content"></p>
+        <!-- /ko -->
+        <!--ko if: !content() -->
+        Double click here to edit text.<br/>
+        <!-- /ko -->
+    </div>
+    <div style="display: none; height: 270px; margin: 0 auto;" data-bind="attr: {id: 'textEditorWrapper'}">
+        <textarea data-bind="attr: {id: 'textEditor_'+randomId}"></textarea>
+<!--        <button data-bind="ojComponent: {component: 'ojButton', label: 'Apply'}, click: applyClick"></button>
+        <button data-bind="ojComponent: {component: 'ojButton', label: 'Cancel'}, click: cancelClick"></button>-->
+    </div>
+</div>

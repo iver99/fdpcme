@@ -48,7 +48,8 @@ requirejs.config({
         'd3':'../emcsDependencies/d3/d3.min',
         'emcta':'../../emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '../emcsDependencies/dfcommon/js/util'
+        'emcsutl': '../emcsDependencies/dfcommon/js/util',
+        'ckeditor': '../emcsDependencies/ckeditor/ckeditor',
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -221,7 +222,11 @@ require(['knockout',
 //                            tile.column = ko.observable(tilesPosition[i].column);
 //                            tile.width = ko.observable(tilesPosition[i].width);
 //                            tile.height = ko.observable(tilesPosition[i].height);
-                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
+                            if(tile.type() === "TEXT_WIDGET") {
+                                dtm.initializeTextTileAfterLoad(dashboard, tile, tilesViewModel.show);
+                            }else {
+                                dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
+                            }
                         }
                     }                    
                     
