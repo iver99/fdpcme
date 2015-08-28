@@ -178,7 +178,7 @@ define(['knockout',
             	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
             });
             tile.widerEnabled = ko.computed(function() {
-                return tile.width() < 4;
+                return tile.width() < 8;
             });
             tile.narrowerEnabled = ko.computed(function() {
                 return tile.width() > 1;
@@ -293,18 +293,17 @@ define(['knockout',
          *  @param width width for the tile
          *  @param widget widget from which the tile is to be created
          */
-        function DashboardTile(tilesViewModel,type, title, description, widget, timeSelectorModel, targetContext) {
+        function DashboardTile(dashboard, type, title, description, widget, timeSelectorModel, targetContext) {
             var self = this;
-            var dashboard = tilesViewModel.dashboard;
             self.dashboard = dashboard;
-            self.type = type;
+//            self.type = type;
             self.title = ko.observable(title);
             self.description = ko.observable(description);
             self.isMaximized = ko.observable(false);            
             
 //            var kowidget = ko.mapping.fromJS(widget);
             var kowidget;
-            if(widget.content) {
+            if(widget.type == "TEXT_WIDGET") {
                 kowidget = new TextTileItem(widget);
             }else {
                 kowidget = new TileItem(widget);
@@ -360,11 +359,11 @@ define(['knockout',
 //                    var dsb = ko.mapping.fromJS(data);  
                     //introduce dummy data
 //                    var tilesPosition = [
-//                        {row: 0, column: 0, width: 2, height: 2},
-//                        {row: 0, column: 2, width: 4, height: 1},
-//                        {row: 0, column: 6, width: 2, height: 3},
-//                        {row: 1, column: 2, width: 2, height: 2},
-//                        {row: 1, column: 4, width: 2, height: 1}
+//                        {row: 0, column: 0, width: 2, height: 2, type: "DEFAULT"},
+//                        {row: 0, column: 2, width: 4, height: 1, type: "DEFAULT"},
+//                        {row: 0, column: 6, width: 2, height: 3, type: "DEFAULT"},
+//                        {row: 1, column: 2, width: 2, height: 2, type: "DEFAULT"},
+//                        {row: 1, column: 4, width: 2, height: 1, type: "DEFAULT"}
 //                    ];
 //                    for(var i=0; i<data.tiles.length; i++) {
 //                        var tile = data.tiles[i];
@@ -372,6 +371,7 @@ define(['knockout',
 //                        tile.column = tilesPosition[i].column;
 //                        tile.width = tilesPosition[i].width;
 //                        tile.height = tilesPosition[i].height;
+//                        tile.type = tilesPosition[i].type;
 //                    }
                     var mapping = {
                        "tiles": {
@@ -530,9 +530,9 @@ define(['knockout',
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
             self.widgetCssStyle = ko.computed(function() {
-                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-40) + "px;";
+                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54) + "px;";
             });
-            self.tileType = ko.observable(data.content ? 'Text' : 'Default');
+//            self.tileType = ko.observable(data.content ? 'Text' : 'Default');
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
             self.clientGuid = getGuid();
             self.sectionBreak = false;
@@ -894,6 +894,7 @@ define(['knockout',
                     widget.height = height;
                     widget.column = null;
                     widget.row = null;
+                    widget.type = "DEFAULT";
 //                    if (widget_source === 0) {
 //                        if (koc_name && template && viewmodel){
 //                            if (!ko.components.isRegistered(koc_name)) {
@@ -937,8 +938,13 @@ define(['knockout',
 ////                                self.tiles.push(tile);
 //                                self.tiles.tilesGrid.registerTileToGrid(tile);
 
-                                newTile =new DashboardTile(self,koc_name,name, description, widget, self.timeSelectorModel, self.targetContext);
-                                var tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
+                                newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
+                                var tileCell;
+                                if(!(self.tiles.tiles && self.tiles.tiles())) {
+                                    tileCell = new Cell(0, 0);
+                                }else{
+                                    tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
+                                }
                                 newTile.row(tileCell.row);
                                 newTile.column(tileCell.column);
 //                                self.tiles.push(tile);
@@ -1315,7 +1321,7 @@ define(['knockout',
                     tile.cssHeight(self.getDisplayHeightForTile(tile));
                     tile.left(self.getDisplayLeftForTile(tile));
                     tile.top(self.getDisplayTopForTile(tile));
-                    if (tile.tileType() === 'Text') {
+                    if (tile.type() === 'TEXT_WIDGET') {
                         self.tiles.setRowHeight(tile.row(), tile.displayHeight());
                     }
                     else {
