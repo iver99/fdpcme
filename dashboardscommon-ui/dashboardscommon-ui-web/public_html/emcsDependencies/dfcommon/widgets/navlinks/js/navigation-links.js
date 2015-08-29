@@ -183,8 +183,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function refreshLinks() {
-                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';
-                    dfDashboardsUrl = '/emsaasui/emcpdfui/dashboards.html';//dfu.discoverDFHomeUrl();
+                    dfHomeUrl = '/emsaasui/emcpdfui/welcome.html';
+                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
                     
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 
