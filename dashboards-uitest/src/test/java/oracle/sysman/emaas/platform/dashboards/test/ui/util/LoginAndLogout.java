@@ -22,8 +22,9 @@ public class LoginAndLogout {
 			//url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 			//url = "https://slc07psz.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 			//url = "https://slc00rjx.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
-			url = "https://id0816b.itom.dc1.c9edgga.oraclecorp.com/emsaasui/emcpdfui/home.html";//https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/home.html";//https://id0816b.itom.dc1.c9edgga.oraclecorp.com/emsaasui/emcpdfui/home.html";//";
 			//url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			url = "https://slc09shg.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		}
 		
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
@@ -50,7 +51,7 @@ public class LoginAndLogout {
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");			
 		}catch(Exception e)
 		{
-			tenantID = "id0816b";//emaastesttenant1";//site46tenant1";"emaastesttenant1";
+			tenantID = "site59tenant1";//emaastesttenant1";//site46tenant1";"emaastesttenant1";id0816b";//
 		}
 		
 		try{
@@ -58,7 +59,7 @@ public class LoginAndLogout {
 			
 		}catch(Exception e)
 		{
-			username = "juan.zhang@oracle.com";//emcsadmin";
+			username = "emcsadmin";//juan.zhang@oracle.com";//
 		}
 		
 		login(testName,username, "Welcome1!",tenantID, "home", "Dashboard-UI");
