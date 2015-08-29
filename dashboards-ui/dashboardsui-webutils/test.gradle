@@ -1,6 +1,7 @@
 jar.archiveName='emcpdf_dev_uitest.jar'
 group = 'com.oracle.emaas.emcpdf'
-version = '1.0.1'
+//version = '1.0.1'
+apply plugin: 'gavsetting'
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
