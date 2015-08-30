@@ -337,8 +337,18 @@ public class RegistryLookupUtil
 					}
 
 					try {
-						SanitizedInstanceInfo sanitizedInstance = LookupManager.getInstance().getLookupClient()
-								.getSanitizedInstanceInfo(internalInstance);
+						SanitizedInstanceInfo sanitizedInstance = null;
+						if (!StringUtil.isEmpty(tenantName)) {
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance, tenantName);
+							logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
+									sanitizedInstance, tenantName);
+						}
+						else {
+							logger.warn("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							sanitizedInstance = LookupManager.getInstance().getLookupClient()
+									.getSanitizedInstanceInfo(internalInstance);
+						}
 						if (sanitizedInstance != null) {
 							if (prefixMatch) {
 								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
@@ -359,6 +369,9 @@ public class RegistryLookupUtil
 				}
 
 				if (lk != null) {
+					logger.debug(
+							"[branch 1] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+							lk.getHref(), serviceName, version, rel, tenantName);
 					return lk;
 				}
 
@@ -380,7 +393,7 @@ public class RegistryLookupUtil
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.warn("Failed to retrieve tenant when getting external end point. Using tenant non-specific APIs to get sanitized instance");
+							logger.warn("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
 						}
@@ -400,10 +413,16 @@ public class RegistryLookupUtil
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
+						logger.debug(
+								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
+
 						return lk;
 					}
 				}
 			}
+			logger.debug("[branch 3] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
+					lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
 			return lk;
 		}
 		catch (Exception e) {
