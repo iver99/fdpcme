@@ -410,7 +410,7 @@ define(['knockout',
 //                        tile.type = tilesPosition[i].type;
 //                    }
 //                    var texttile = {};
-//                    texttile.WIDGET_KOC_NAME = "df-text-widget";
+//                    texttile.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
 //                    texttile.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
 //                    texttile.WIDGET_VIEWMODEL = "../emcsDependencies/widgets/textwidget/js/textwidget";
 //                    texttile.type = "TEXT_WIDGET";
@@ -923,7 +923,7 @@ define(['knockout',
             self.AppendTextTile = function () {
                 var newTextTile;
                 var widget = {};
-                widget.WIDGET_KOC_NAME = "df-text-widget";
+                widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
                 widget.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
                 widget.WIDGET_VIEWMODEL = "../emcsDependencies/widgets/textwidget/js/textwidget";
                 widget.type = "TEXT_WIDGET";
@@ -933,29 +933,29 @@ define(['knockout',
                 widget.row = null;
                 widget.content = null;
                 
-                if (!ko.components.isRegistered(widget.WIDGET_KOC_NAME)){
-                    ko.components.register(widget.WIDGET_KOC_NAME, {
-                            viewModel: {require: widget.WIDGET_VIEWMODEL},
-                            template: {require: 'text!' + widget.WIDGET_TEMPLATE}
-                        });
-                        oj.Logger.log("widget: " + widget.WIDGET_KOC_NAME + " is registered");
-                        oj.Logger.log("widget template: " + widget.WIDGET_TEMPLATE);
-                        oj.Logger.log("widget viewmodel:: "+widget.WIDGET_VIEWMODEL); 
-                    }
+//                if (!ko.components.isRegistered(widget.WIDGET_KOC_NAME)){
+//                    ko.components.register(widget.WIDGET_KOC_NAME, {
+//                            viewModel: {require: widget.WIDGET_VIEWMODEL},
+//                            template: {require: 'text!' + widget.WIDGET_TEMPLATE}
+//                        });
+//                        oj.Logger.log("widget: " + widget.WIDGET_KOC_NAME + " is registered");
+//                        oj.Logger.log("widget template: " + widget.WIDGET_TEMPLATE);
+//                        oj.Logger.log("widget viewmodel:: "+widget.WIDGET_VIEWMODEL); 
+//                    }
                     
-                    var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show);
-                    var textTileCell;
-                    if (!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
-                        textTileCell = new Cell(0, 0);
-                    } else {
-                        textTileCell = self.tiles.calAvailablePositionForTile(newTextTile, 0, 0);
-                    }
-                    newTextTile.row(textTileCell.row);
-                    newTextTile.column(textTileCell.column);
+                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show);
+                var textTileCell;
+                if (!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
+                    textTileCell = new Cell(0, 0);
+                } else {
+                    textTileCell = self.tiles.calAvailablePositionForTile(newTextTile, 0, 0);
+                }
+                newTextTile.row(textTileCell.row);
+                newTextTile.column(textTileCell.column);
 //                                self.tiles.push(tile);
-                    self.tiles.tilesGrid.registerTileToGrid(newTextTile);
-                    self.tiles.tiles.push(newTextTile);
-                    self.show();
+                self.tiles.tilesGrid.registerTileToGrid(newTextTile);
+                self.tiles.tiles.push(newTextTile);
+                self.show();
             }
             
             self.appendNewTile = function(name, description, width, height, widget) {
@@ -1403,13 +1403,40 @@ define(['knockout',
                     tile.left(self.getDisplayLeftForTile(tile));
                     tile.top(self.getDisplayTopForTile(tile));
                     if (tile.type() === 'TEXT_WIDGET') {
-                        self.tiles.setRowHeight(tile.row(), tile.displayHeight());
+                        var displayHeight = tile.displayHeight();
+                        if (!displayHeight)
+                            self.detectTextTileRender(tile);
+                        self.tiles.setRowHeight(tile.row(), displayHeight);
                     }
                     else {
                         self.tiles.setRowHeight(tile.row());
                     }
                 }
             };
+            
+            self.detectTextTileRender = function(textTile) {
+                if (!textTile)
+                    return;
+                var $elem = $('#text' + textTile.clientGuid);
+                var lastHeight = $('#text' + textTile.clientGuid).css('height');
+                
+                function checkForChanges() {
+                    console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + $elem.css('height') + '. Last height is ' + lastHeight);
+                    if ($elem.css('height') !== lastHeight) {
+                        self.reRender();
+                        return;
+                    }
+                    setTimeout(checkForChanges, 100);
+                };
+                checkForChanges();
+            };
+            
+            self.reRender = function() {
+                self.disableMovingTransition();
+                self.show();
+                self.enableMovingTransition();
+            };
+            
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
                 startTime = new Date().getTime();

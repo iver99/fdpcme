@@ -162,7 +162,11 @@ require(['knockout',
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
                 template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
-            });        
+            });
+            ko.components.register("DF_V1_WIDGET_TEXT", {
+                viewModel: {require: '../emcsDependencies/widgets/textwidget/js/textwidget'},
+                template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
+            });
 
             function HeaderViewModel() {
                 var self = this;

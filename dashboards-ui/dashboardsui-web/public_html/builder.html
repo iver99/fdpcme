@@ -16,7 +16,6 @@
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/tiles-layout-alta.css" type="text/css"/>
 	<link rel="stylesheet" href="emcsDependencies/dfcommon/widgets/datetime-picker/css/datetime-picker.css"/>
-
         <!-- RequireJS bootstrap file -->
         <script data-main="js/builderMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
 
@@ -467,7 +466,7 @@
                                 <!-- ko if: type() === 'TEXT_WIDGET' -->
                                 <div class="dbd-widget" style="height: auto; cursor: move;" data-bind="attr: {style: cssStyle, id: 'text'+clientGuid}">
                                     <!--<span data-bind="text: content"></span>-->
-                                    <div data-bind="component: {name: 'df-text-widget', params: params}"></div>
+                                    <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
                                 </div>
                                 <!-- /ko -->                                
                             </div>
