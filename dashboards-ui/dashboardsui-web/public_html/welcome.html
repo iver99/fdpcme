@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title data-bind="text: landingHomeTitle"></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/png" href="emcsDependencies/dfcommon/images/o_logo.png" />
+        <!-- This is the main css file for the default Alta theme -->
+        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.1/alta/oj-alta-min.css" type="text/css"/>
+
+        <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
+        <link rel="stylesheet" href="css/landing-home-alta.css" type="text/css"/>
+		       
+        <!-- RequireJS bootstrap file -->
+        <script data-main="js/welcomeMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
+
+    </head>
+    <body>
+        <div class="loadingIndicator" id="loading">Loading</div>
+        <div id="globalBody" style="display:none;">
+            <!-- branding bar -->
+            <header id="headerWrapper" >
+                <div data-bind="component: {
+                        name: 'df-oracle-branding-bar',
+                        params: brandingbarParams
+                    }">
+                </div>
+            </header>
+
+            <div id="mainContent">
+                <div class="welcome-slogan" data-bind="text: welcomeSlogan"></div>
+                <div class="landing-home-box-wrapper">
+                    <ul class="box-list-ul">
+                        <li class="box-list-li box-list-a">
+                            <a data-bind="attr: {href: 'javascript: this.click()'}, click: openAPM">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img APM-box">
+                                        <img class="app-image" src="css/images/AppPerfMonitoring_w_92px.png" data-bind="attr: {alt: APM}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: APM"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: APMDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="box-list-li box-list-a">
+                            <a id="LA_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openLogAnalytics">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img LA-box">
+                                        <img class="app-image" src="css/images/LogAnalytics_w_92px.png" data-bind="attr: {alt: LA}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: LA"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: LADesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="box-list-li box-list-a">
+                            <!--<a data-bind="attr: {href: 'javascript: this.click()'}, click: openITAnalytics">-->
+                            <div id="ITA_wrapper" tabindex="0" aria-label="IT Analytics" data-bind="event: {click: openITAnalytics, keypress: openITAnalytics}">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img ITA-box">
+                                        <img class="app-image" src="css/images/ItAnalytics_w_92px.png" data-bind="attr: {alt: ITA}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: ITA"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: ITADesc"></div>
+                                        <select id="ITA_options" aria-label="IT Analytics" style="float: right; margin-top: 10px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: ITA_Type, optionChange: ITAOptionChosen}">
+                                            <option value="select" data-bind="text: select"></option>
+                                            <option value="DB_perf" data-bind="text: ITA_DB_Performance"></option>
+                                            <option value="mw_perf" data-bind="text: ITA_Middleware_Performance"></option>
+                                            <option value="DB_resource" data-bind="text: ITA_DB_Resource"></option>
+                                            <option value="Analyze" data-bind="text: ITA_Analyze"></option>
+                                            <option value="AWR" data-bind="text: ITA_AWR"></option>
+                                            <option value="Search" data-bind="text: ITA_Search"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            <!--</a>-->
+                        </li>
+                        <li class="box-list-li box-list-a">
+                            <a id="dashboards_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboards">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img dashboards-box">
+                                        <img class="app-image" src="css/images/Dashboards_w_92px.png" data-bind="attr: {alt: dashboards}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: dashboards"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: dashboardsDesc"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="box-list-li box-list-a">
+                            <!--<a id="data_explore_wrapper" href="#">-->
+                            <div id="data_explore_wrapper" tabindex="0" aria-label="Data Explorers">
+                                <div class="service-box-wrapper">
+                                    <div class="landing-home-box-img data-explorers-box">
+                                        <img class="app-image" src="css/images/DataExplorers_w_92px.png" data-bind="attr: {alt: dataExplorers}"/>
+                                    </div>
+                                    <div class="landing-home-box-content">
+                                        <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
+                                        <div class="landing-home-box-content-desc" data-bind="text: dataExplorersDesc"></div>
+                                        <select aria-label="Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
+                                            <option value="select" data-bind="text: select"></option>
+                                            <option value="Analyze" data-bind="text: dataExplorers_analyze"></option>
+                                            <option value="AWR" data-bind="text: dataExplorers_AWR"></option>
+                                            <option value="Search" data-bind="text: dataExplorers_search"></option>
+                                            <option value="LogAnalytics" data-bind="text: dataExplorers_log_analytics"></option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--</a>-->
+                        </li>
+                        <li class="box-list-li">
+                            <div style="width: 276px; height: 296px; border: 2px solid #EBEBEB;">
+                                <div class="landing-home-box-learn-more-head" data-bind="text: learnMore">Learn More</div>
+                                <hr/>
+                                <ul>
+                                    <li class="landing-home-box-learn-more">
+                                        <a data-bind="attr: {href: 'javascript: this.click()'}, click: openGetStarted, text: getStarted"></a>
+                                    </li>
+                                    <li class="landing-home-box-learn-more">
+                                        <a data-bind="attr: {href: 'javascript: this.click()'}, click: openVideos, text: videos"></a>
+                                    </li>
+                                    <li class="landing-home-box-learn-more">
+                                        <a data-bind="attr: {href: 'javascript: this.click()'}, click: openCommunity, text: community"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

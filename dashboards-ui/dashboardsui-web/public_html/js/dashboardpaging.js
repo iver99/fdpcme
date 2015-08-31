@@ -249,23 +249,21 @@ DashboardPaging.prototype.create = function(attributes, options)
 DashboardPaging.prototype.remove = function(model, options)
 {
     var self = this;
-    var url="/sso.static/dashboards.service/";
-    if (dfu.isDevMode()){
-        url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
-    }
-    dfu.ajaxWithRetry(url + model.get('id'), {
+    dfu.ajaxWithRetry( model.get('href') /*'/sso.static/dashboards.service/' + model.get('id')*/, {
        type: 'DELETE',
        headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {
           // Do something with the result
           self.collection.remove(model);
+          self._refreshDataWindow().then(function() { self._processSuccess(options); });
+          /*
           if (self.pageSize <= self.totalSize())
           {
-              self._refreshDataWindow().then(self._processSuccess(options, "remove"));
+              self._refreshDataWindow().then(function() { self._processSuccess(options, "remove"); });
           }
           else {
               self._refreshDataWindow().then(function() { self._processSuccess(options); });
-          }
+          }*/
         },
         error: function(jqXHR, textStatus, errorThrown) {
             self._processError(options, jqXHR, textStatus, errorThrown);
@@ -360,6 +358,10 @@ DashboardPaging.prototype.handleEvent = function(eventType, event)
     DashboardPaging.superclass.handleEvent.call(this, eventType, event);
 };
 
+DashboardPaging.prototype.on = function(eventType, eventHandler)
+{
+    DashboardPaging.superclass.on.call(this, eventType, eventHandler);
+};
 
 DashboardPaging.prototype.hasMore = function()
 {
@@ -428,6 +430,20 @@ DashboardPaging.prototype.totalSize = function()
 DashboardPaging.prototype.getShowPagingObservable = function()
 {
     return this.showPagingObservable;
+};
+
+DashboardPaging.prototype.getModelFromWindow = function(id)
+{
+    var _i= 0, w = this.getWindow();
+    if (w && w !== null)
+    {
+        for (_i= 0 ; _i < w.length; _i++)
+        {
+            if (w[_i].id === id) return w[_i];
+        }
+    }
+        
+    return null;
 };
 
 return {'DashboardPaging': DashboardPaging};

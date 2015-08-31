@@ -122,6 +122,7 @@ $.widget('dbs.dbsDashboardPanel',
             var self = this, _element = self.element;
             this._createComponent();
             this.element.attr("aria-dashboard", this.options['dashboard'].id);
+            this.element.attr("aria-label", self.options['dashboard'].name);
             setTimeout(function() {
                 if(_element.is(":hover")) {
                     
@@ -196,7 +197,7 @@ $.widget('dbs.dbsDashboardPanel',
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);
             
-            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
+            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click.'+_name, function(event) {
                         //prevent event bubble
