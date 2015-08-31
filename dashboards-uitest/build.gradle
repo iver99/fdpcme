@@ -86,8 +86,4 @@ repositories {
       }
     }
 
-artifactoryPublish {
-publications ('TestPublish')
-
-    }
 
