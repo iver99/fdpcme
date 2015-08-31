@@ -249,9 +249,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 //Go to home page
                 self.gotoHomePage = function() {
-                    var homeUrl = dfu.discoverDFHomeUrl();
-                    oj.Logger.info("Go to home page by URL: " + homeUrl, false);
-                    window.location.href = homeUrl;
+                    var welcomeUrl = dfu.discoverWelcomeUrl();
+                    oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
+                    window.location.href = welcomeUrl;
                 };
                 
                 //Open about box
