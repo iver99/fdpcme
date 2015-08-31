@@ -67,6 +67,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, JSONObject dashboard)
 	{
 		try {
+			logkeyHeaders("createDashboard()", userTenant, tenantIdParam);
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
@@ -97,6 +98,7 @@ public class DashboardAPI extends APIBase
 	{
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
+			logkeyHeaders("deleteDashboard()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dsb = manager.getDashboardById(dashboardId, tenantId);
@@ -123,6 +125,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
 	{
 		try {
+			logkeyHeaders("getDashboardBase64ScreenShot()", userTenant, tenantIdParam);
 			DashboardManager manager = DashboardManager.getInstance();
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
@@ -151,6 +154,7 @@ public class DashboardAPI extends APIBase
 	{
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
+			logkeyHeaders("queryDashboardById()", userTenant, tenantIdParam);
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			Dashboard dbd = dm.getDashboardById(dashboardId, tenantId);
@@ -175,6 +179,7 @@ public class DashboardAPI extends APIBase
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
 			@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners)
 	{
+		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
 			qs = queryString == null ? null : java.net.URLDecoder.decode(queryString, "UTF-8");
@@ -215,6 +220,7 @@ public class DashboardAPI extends APIBase
 	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") long dashboardId, JSONObject inputJson)
 	{
+		logkeyHeaders("updateDashboard()", userTenant, tenantIdParam);
 		Dashboard input = null;
 		try {
 			input = getJsonUtil().fromJson(inputJson.toString(), Dashboard.class);
@@ -246,6 +252,11 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+	}
+
+	private void logkeyHeaders(String api, String x_remote_user, String domain_name)
+	{
+		logger.info("Headers of " + api + ": X-REMOTE-USER=" + x_remote_user + ", X-USER-IDENTITY-DOMAIN-NAME=" + domain_name);
 	}
 
 	/*
