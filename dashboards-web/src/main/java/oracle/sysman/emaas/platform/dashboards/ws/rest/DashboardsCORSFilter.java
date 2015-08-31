@@ -47,7 +47,7 @@ public class DashboardsCORSFilter implements Filter
 		{
 			super(request);
 			oam_remote_user = request.getHeader(OAM_REMOTE_USER_HEADER);
-			logger.info(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
+			logger.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
 			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
 			if (oam_remote_user != null) {
 				int pos = oam_remote_user.indexOf(".");
@@ -107,7 +107,7 @@ public class DashboardsCORSFilter implements Filter
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
 			chain.doFilter(oamRequest, response);
-			logger.info("developer mode is NOT enabled on server side");
+			logger.debug("developer mode is NOT enabled on server side");
 			return;
 		}
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
