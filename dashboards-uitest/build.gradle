@@ -77,7 +77,7 @@ publishing {
         }
 repositories {
         maven {
-            url "${artifactory_contextUrl}/emaas-virtual"
+            url "${artifactory_contextUrl}/${artifactory_repoKey}"
             credentials {
                 username = "${artifactory_user}"
                 password =  "${artifactory_password}"
