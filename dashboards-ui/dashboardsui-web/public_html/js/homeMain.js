@@ -92,7 +92,8 @@ require(['dbs/dbsmodel',
     'dbs/dbstypeahead',
     'dbs/dbsdashboardpanel',
     'ojs/ojselectcombobox',
-    'ojs/ojmenu'
+    'ojs/ojmenu',
+    'ojs/ojtable'
 ],
         function(model, ko, $, oj, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
