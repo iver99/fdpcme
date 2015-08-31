@@ -140,9 +140,10 @@ public class DashBoardPageId {
 	//grid view and list view id
 	public static final String GridViewID = "/html/body/div[2]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label/span[1]";
 	public static final String ListViewID = "/html/body/div[2]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label/span[1]";
-	public static final String DashBoardListViewID = "/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[2]/a";
+	public static final String DashBoardListViewDashBoardID = "/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[2]/a";
 	public static final String DashBoardInfoID = "/html/body/div[3]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[6]/button";
 	public static final String DashBoardDeleteID = "/html/body/div[1]/div/div/div[1]/div/div/div/button";
+	public static final String LV_DeleteBtnID_Dialog = "/html/body/div[1]/div[2]/div/div[5]/button[1]";
 	
 	                                                                                     
 

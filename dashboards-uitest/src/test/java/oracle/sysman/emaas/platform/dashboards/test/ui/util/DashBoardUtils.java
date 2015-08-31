@@ -64,6 +64,16 @@ public class DashBoardUtils {
 		driver.click(DashBoardPageId.DashOKButtonID);
 	}
 	
+	public static void clickLVButton() throws Exception
+	{
+		driver.click(DashBoardPageId.ListViewID);
+	}
+	
+	public static void clickGVButton() throws Exception
+	{
+		driver.click(DashBoardPageId.GridViewID);
+	}
+	
 	public static void clickNavigatorLink() throws Exception
 	{
 		driver.click(DashBoardPageId.LinkID);
@@ -84,6 +94,13 @@ public class DashBoardUtils {
 		//add verify if we are into deleting dialog
 		//Assert.assertEquals("//div/p[text()=Do you want to delete the selected dashboard 'test'?", "Do you want to delete the selected dashboard 'test'?","we are not in delete dialog");
 		driver.click(DashBoardPageId.DeleteBtnID_Dialog);
+	}
+	
+	public static void clickLVDeleteButton() throws Exception
+	{
+		//add verify if we are into deleting dialog
+		//Assert.assertEquals("//div/p[text()=Do you want to delete the selected dashboard 'test'?", "Do you want to delete the selected dashboard 'test'?","we are not in delete dialog");
+		driver.click(DashBoardPageId.LV_DeleteBtnID_Dialog);
 	}
 	
 	public static void clickCloseButton() throws Exception
@@ -426,6 +443,11 @@ public class DashBoardUtils {
 	public static void clickDashBoard() throws Exception
 	{
 		driver.click(DashBoardPageId.DashBoardID);
+	}
+	
+	public static void clickLVDashBoard() throws Exception
+	{
+		driver.click(DashBoardPageId.DashBoardListViewDashBoardID);
 	}
 	 
 	public static void clickToSortByLastAccessed() throws Exception

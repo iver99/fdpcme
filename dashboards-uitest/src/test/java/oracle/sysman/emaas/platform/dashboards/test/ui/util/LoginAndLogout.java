@@ -24,7 +24,8 @@ public class LoginAndLogout {
 			//url = "https://slc00rjx.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 			//url = "https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/home.html";//https://id0816b.itom.dc1.c9edgga.oraclecorp.com/emsaasui/emcpdfui/home.html";//";
 			//url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
-			url = "https://slc09shg.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc09shg.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			url = "https://slc08twq.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		}
 		
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
