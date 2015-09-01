@@ -256,10 +256,16 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 //Check notifications
                 checkNotifications();
                 
+                //Discover logout url
+                var logoutUrlDiscovered = null;
+                dfu.discoverLogoutUrlAsync(function(logoutUrl){logoutUrlDiscovered = logoutUrl;});
+                
                 //SSO logout handler
                 self.handleSignout = function() {
                     var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
-                    var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
+                    if (logoutUrlDiscovered === null)
+                        logoutUrlDiscovered = dfu.discoverLogoutUrl();
+                    var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                     window.location.href = logoutUrl;
                     oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
                 };
@@ -431,7 +437,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 //Reload current page which will redirect to sso login page when session has expired
                 self.sessionTimeoutConfirmed = function() {
                     $('#'+self.sessionTimeoutWarnDialogId).ojDialog('close');
-                    location.reload(true);
+                    self.handleSignout();
                 };
                 
                 function receiveMessage(event)
