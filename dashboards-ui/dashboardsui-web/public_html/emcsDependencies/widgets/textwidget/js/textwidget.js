@@ -3,19 +3,29 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
             function textWidgetViewModel(params) {
                 var self = this;
                 var textEditor;
+                var textEditorId;
                 self.randomId = new Date().getTime();
-                self.content = params.content;
-                console.log(self.content());
-                console.log("*******");
-                console.log(!self.content());
-
+                if(params.content && params.content()) {
+                   self.content = params.content;
+                }else{
+                   self.content = ko.observable("Double click here to edit text");
+                }
+                
 
                 self.showEditor = function () {
-//                    $("#textWidget_" + self.randomId + " #textEditorWrapper").css("display", "block");
+                    var flag = false;
                     $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
-                    
-                    if (!textEditor) {
-                        var textEditorId = "textEditor_" + self.randomId;
+                    textEditorId = "textEditor_"+self.randomId;
+                    if(CKEDITOR.instances){
+                        for(var i in CKEDITOR.instances) {
+                            if(i === textEditorId) {
+                                textEditor = CKEDITOR.instances[i];
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(!flag){
                         textEditor = CKEDITOR.replace(textEditorId, {
                             language: 'en',
                             toolbar: [
@@ -24,37 +34,23 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                                 {name: 'colors', items: ['TextColor']},
                                 {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
                                 {name: 'insert', items: ['Image', 'Flash']}
-                            ]
+                            ],
+                            removePlugins: 'resize, elementspath'
                         });
                     }
                     if($("#textWidget_" + self.randomId + " #textEditorWrapper").is(":hidden")) {
-                        var textInfo = textEditor.document.getBody().getHtml();
+                        var textInfo = textEditor.document ? (textEditor.document.getBody().getHtml()?textEditor.document.getBody().getHtml() : "Double click here to edit text"):"";
                         $("#textWidget_" + self.randomId + " #textInfo").html(textInfo); 
+                        console.log(textInfo);
                         self.content(textInfo);
-                    }else {                        
-                        $("#textEditor_"+self.randomId).html($("#textWidget_" + self.randomId + " #textInfo").html());
+                    }else {
+                        $("#textEditor_"+self.randomId).html(self.content());
                     }
                      
                     if(params.callbackAfterDblClick) {
                         params.callbackAfterDblClick();
                     }
                 }
-
-//                self.applyClick = function () {
-//                    var textInfo = textEditor.document.getBody().getHtml();
-////                    console.log(textInfo);
-//                    $("#textWidget_" + self.randomId + " #textInfo").html(textInfo);
-//                    $("#textWidget_" + self.randomId + " #textEditorWrapper").css("display", "none");
-//                    if(params.callbackAfterDblClick) {
-//                        params.callbackAfterDblClick();
-//                    }
-//                }
-//                self.cancelClick = function () {
-//                    $("#textWidget_" + self.randomId + " #textEditorWrapper").css("display", "none");
-//                    if(params.callbackAfterDblClick) {
-//                        params.callbackAfterDblClick();
-//                    }
-//                }
             }
             return textWidgetViewModel;
         });

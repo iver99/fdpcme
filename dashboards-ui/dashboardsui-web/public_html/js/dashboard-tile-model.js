@@ -161,7 +161,12 @@ define(['knockout',
             tile.params = {
                 callbackAfterDblClick: callback,
                 content: tile.content
-            }
+            };
+            
+            tile.tileDisplayClass = ko.computed(function() {
+                var display = tile.shouldHide()?"none":"block";
+                return tile.cssStyle() + "display:" + display;
+            });
         }
         
         function initializeTileAfterLoad(dashboard, tile, timeSelectorModel, targetContext) {
@@ -419,6 +424,7 @@ define(['knockout',
 //                    texttile.column = 0;
 //                    texttile.row = 3;
 //                    texttile.content = "This is a dummy widget for <strong>text test</strong>";
+//                    texttile.isMaximized = false;
 //                    data.tiles.push(texttile);
                     var mapping = {
                        "tiles": {
@@ -943,7 +949,7 @@ define(['knockout',
 //                        oj.Logger.log("widget viewmodel:: "+widget.WIDGET_VIEWMODEL); 
 //                    }
                     
-                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show);
+                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.firstReorderTilesThenShow);
                 var textTileCell;
                 if (!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
                     textTileCell = new Cell(0, 0);
@@ -955,6 +961,7 @@ define(['knockout',
 //                                self.tiles.push(tile);
                 self.tiles.tilesGrid.registerTileToGrid(newTextTile);
                 self.tiles.tiles.push(newTextTile);
+                self.tiles.tilesReorder();
                 self.show();
             }
             
@@ -1239,14 +1246,27 @@ define(['knockout',
                     $('#df_iframe').width((width - 5) + 'px');
                 }
             };
-            self.showMaximizedTile = function(tile) {
+//            self.showMaximizedTile = function(tile) {
+//                if(!tile) {
+//                    return;
+//                }
+//                tile.cssWidth(self.getDisplayWidthForTile(tile));
+//                tile.cssHeight(self.getDisplayHeightForTile(tile));
+//                tile.left(self.getDisplayLeftForTile(tile));
+//                tile.top(self.getDisplayTopForTile(tile));
+//                $(".dbd-widget").draggable("disable");
+//            }
+            self.showMaximizedTile = function(tile, width, height) {
                 if(!tile) {
                     return;
                 }
-                tile.cssWidth(self.getDisplayWidthForTile(tile));
-                tile.cssHeight(self.getDisplayHeightForTile(tile));
-                tile.left(self.getDisplayLeftForTile(tile));
-                tile.top(self.getDisplayTopForTile(tile));
+                var columnWidth = widgetAreaWidth / defaultCols;
+                var baseLeft = widgetAreaContainer.position().left;
+                var top = widgetAreaContainer.position().top;
+                tile.cssWidth(width*columnWidth);
+                tile.cssHeight(height*defaultHeight);
+                tile.left(baseLeft);
+                tile.top(top);
                 $(".dbd-widget").draggable("disable");
             }
             self.maximize = function(tile) {
@@ -1259,7 +1279,7 @@ define(['knockout',
                 tile.isMaximized(true);
 //                self.tilesView.disableSortable();
 //                self.tilesView.disableDraggable();
-                var maximizedTileHeight = Math.round(self.calculateTilesRowHeight()/defaultHeight);
+                var maximizedTileHeight = self.calculateTilesRowHeight()/defaultHeight;
                 if(maximizedTileHeight === 0) {
                     maximizedTileHeight = 1;
                 }
@@ -1267,11 +1287,12 @@ define(['knockout',
                 self.tileOriginalWidth = tile.width();
                 self.tileOriginalColumn = tile.column();
                 self.tileOriginalRow = tile.row();
-                tile.height(maximizedTileHeight);
-                tile.width(defaultCols);
-                tile.row(0);
-                tile.column(0);
-                self.showMaximizedTile(tile);
+//                tile.height(maximizedTileHeight);
+//                tile.width(defaultCols);
+//                tile.row(0);
+//                tile.column(0);
+                $(window).scrollTop(0);
+                self.showMaximizedTile(tile, defaultCols, maximizedTileHeight);
             };
             
             self.getMaximizedTile = function() {
@@ -1332,6 +1353,11 @@ define(['knockout',
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
             };
+            
+            self.firstReorderTilesThenShow = function() {
+                self.tiles.tilesReorder();
+                self.show();
+            }
             
             self.getCellFromPosition = function(position) {
                 var row = 0, height = 0;
@@ -1396,6 +1422,14 @@ define(['knockout',
                 if(!(self.tiles.tiles && self.tiles.tiles())) {
                     return;
                 }
+                for (var i=0; i< self.tiles.tiles().length; i++) {
+                    var tile = self.tiles.tiles()[i];
+                    if(tile.isMaximized()) {
+                        var maximizedTileHeight = self.calculateTilesRowHeight()/defaultHeight; 
+                        self.showMaximizedTile(tile, defaultCols, maximizedTileHeight);
+                        return;
+                    }
+                }
                 for (var i = 0; i < self.tiles.tiles().length; i++) {
                     var tile = self.tiles.tiles()[i];
                     tile.cssWidth(self.getDisplayWidthForTile(tile));
@@ -1413,7 +1447,7 @@ define(['knockout',
                     }
                 }
             };
-            
+
             self.detectTextTileRender = function(textTile) {
                 if (!textTile)
                     return;
@@ -1436,7 +1470,6 @@ define(['knockout',
                 self.show();
                 self.enableMovingTransition();
             };
-            
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
                 startTime = new Date().getTime();
@@ -1446,6 +1479,28 @@ define(['knockout',
                     $(ui.helper).addClass(draggingTileClass);
                 }
             };
+            
+            self.reloadEditors = function() {
+                for(var i in CKEDITOR.instances) {
+                    delete CKEDITOR.instances[i];
+                    $("#cke_"+i).remove();
+                }
+                $("textarea.editor").each(function() {
+                    var targetId = $(this).attr("id");
+//                    CKEDITOR.replace(targetId);
+                    CKEDITOR.replace(targetId, {
+                            language: 'en',
+                            toolbar: [
+                                {name: 'styles', items: ['Font', 'FontSize']},
+                                {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
+                                {name: 'colors', items: ['TextColor']},
+                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
+                                {name: 'insert', items: ['Image', 'Flash']}
+                            ],
+                            removePlugins: 'resize, elementspath'
+                        });
+                });
+            }
             
             self.handleOnDragging = function(event, ui) {
                 curTime = new Date().getTime();
@@ -1486,8 +1541,11 @@ define(['knockout',
                     $(ui.helper).removeClass(draggingTileClass);
                 }
                 self.previousDragCell = null;
+                if(tile.type() == "TEXT_WIDGET") {
+                   self.reloadEditors(); 
+                }            
             };
-            
+                        
             self.enableMovingTransition = function() {
                 if (!$('#widget-area').hasClass('dbd-support-transition'))
                     $('#widget-area').addClass('dbd-support-transition');
