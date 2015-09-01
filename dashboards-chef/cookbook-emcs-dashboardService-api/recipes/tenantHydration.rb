@@ -74,7 +74,7 @@ end
 # Executing the Tenant Hydration SQL file
 execute "run_tenant_hydration_sql" do
     cwd tenant_hydration_schema_script_dir
-    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["internalTenantID"]} >> #{node["log_dir"]}/dashboardsOnboarding.log"}
+    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["internalTenantID"]} #{node["SAAS_schema_sql_root_dir"]} >> #{node["log_dir"]}/dashboardsOnboarding.log"}
 end
 
 
