@@ -182,23 +182,19 @@
                                                    verticalGridVisible: 'none',
                                                    columnsDefault: {  sortable: 'none', headerStyle: 'border-left: none; border-right: none;' },
                                                    rootAttributes: { 'style': 'width: 100%; margin: 5px; border: none; background: #ffffff;' },
-                                                   columns: [{headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 55%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 15%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATEDATE'),  style: 'width: 12.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 12.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                   columns: [{headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 60%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
                                                              {headerText: '',  style: 'width: 5%; padding: 0px;' }],
                                                    rowTemplate: 'dbstablerow_tmpl'}"></table>
                                             <script type="text/html" id="dbstablerow_tmpl">
                                                 <tr style="height: 1rem; min-height: 1rem;   ">
-                                                    <td><div role="img" data-bind="visible: $root.sortBy() == 'name' " style=" display: inline-block" class="oj-component-icon oj-fwk-icon-arrow-n oj-sm-float-end"></div>
-                                                        <a data-bind="click: function(data, event){$root.handleDashboardClicked(event, {'id': $data.id, 'element': $element})}, 
+                                                    <td><a data-bind="click: function(data, event){$root.handleDashboardClicked(event, {'id': $data.id, 'element': $element})}, 
                                                                       text: $data.name" /></td>
-                                                    <td><div role="img" data-bind="visible: $root.sortBy() == 'owner' " style=" display: inline-block" class="oj-component-icon oj-fwk-icon-arrow-n oj-sm-float-end"></div>
-                                                        <div style=" display: inline-block" data-bind="text: $data.owner"></div></td>
-                                                    <td><div role="img" data-bind="visible: $root.sortBy() == 'creation_Date' " style=" display: inline-block" class="oj-component-icon oj-fwk-icon-arrow-s oj-sm-float-end"></div>
-                                                        <div style=" display: inline-block" data-bind="text: getDateString($data.createdOn)"></div></td>
-                                                    <td><div role="img" data-bind="visible: $root.sortBy() == 'last_modification_Date' " style=" display: inline-block" class="oj-component-icon oj-fwk-icon-arrow-s oj-sm-float-end"></div>
-                                                        <div style=" display: inline-block" data-bind="text: getDateString($data.lastModifiedOn)"></td>
+                                                    <td><div style=" display: inline-block" data-bind="text: $data.owner"></div></td>
+                                                    <!--td><div role="img" data-bind="visible: $root.sortBy() == 'creation_Date' " style=" display: inline-block" class="oj-component-icon oj-fwk-icon-arrow-s oj-sm-float-end"></div>
+                                                        <div style=" display: inline-block" data-bind="text: getDateString($data.createdOn)"></div></td-->
+                                                    <td><div style=" display: inline-block" data-bind="text: getDateString($data.lastModifiedOn)"></td>
                                                     <td>
                                                         <button class="oj-button-half-chrome oj-sm-float-end" 
                                                                 data-bind="click: function(data, event){$root.handleShowDashboardPop(event, {'id': $data.id, 'element': $element})}, 
