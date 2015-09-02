@@ -233,6 +233,11 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 }
                 
                 function showSessionTimeoutWarningDialog() {
+                    //Clear interval for extending user session
+                    if (window.intervalToExtendCurrentUserSession)
+                        clearInterval(window.intervalToExtendCurrentUserSession);
+                    window.currentUserSessionExpired = true;
+                    //Open sessin timeout warning dialog
                     $('#'+sessionTimeoutWarnDialogId).ojDialog('open');
                 };
             }

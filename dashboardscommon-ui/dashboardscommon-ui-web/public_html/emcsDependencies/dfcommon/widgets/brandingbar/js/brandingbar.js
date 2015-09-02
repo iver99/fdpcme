@@ -256,17 +256,33 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 //Check notifications
                 checkNotifications();
                 
+                //TODO:need to find a way to get exact idleTimeout settings in OAM and improve the idleTimeout handling
+                //For now, set interval to extend current user session automatically every 10 mins
+                window.intervalToExtendCurrentUserSession = setInterval(function() {
+                    $.ajax("/emsaasui/emcpdfui/widgetLoading.html");
+                }, 10*60*1000);
+                
                 //SSO logout handler
                 self.handleSignout = function() {
+                    //Clear interval for extending user session
+                    if (window.intervalToExtendCurrentUserSession)
+                        clearInterval(window.intervalToExtendCurrentUserSession);
+                    
                     var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
                     var logoutUrlDiscovered = dfu.discoverLogoutUrl();
-                    if (logoutUrlDiscovered !== null) {
+                    //If session timed out, redirect to sso login page and go to home page after re-login.
+                    //TODO: the logic to check session expiry is not 100% acurate, but covers most of the cases.
+                    //The time period between exact timeout happening and SESSION_EXP is very small (serveral seconds)
+                    //and the case of failed to discover logout ur by other reasons rather than session timeout can hardly happen 
+                    //in such a small time period.
+                    if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
+                        window.location.href = ssoLogoutEndUrl;
+                    }
+                    //Else handle normal logout
+                    else {
                         var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                         window.location.href = logoutUrl;
                     }
-                    //If session timed out, redirect to sso login page and go to home page after re-login
-                    else 
-                        window.location.href = ssoLogoutEndUrl;
                 };
                 
                 //Go to home page
