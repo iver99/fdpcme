@@ -363,8 +363,7 @@ define(['knockout',
                 }
                 return summaryData;
             };
-           
-            
+
             self.handleDashboardSave = function() {
             	if (self.isNameUnderEdit()) {
             		try {
@@ -385,7 +384,7 @@ define(['knockout',
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
                 	var nodesToRecover = [];
                 	var nodesToRemove = [];
-                	var elems = $('#tiles-row').find('svg');
+                	var elems = $('#tiles-wrapper').find('svg');
                 	elems.each(function(index, node) {
                 		var parentNode = node.parentNode;
                 		var width = $(node).width();
@@ -457,7 +456,7 @@ define(['knockout',
             };
             
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
-                var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
+                var dbdJs = ko.mapping.toJS(tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
                         'tileParameters', 'name', 'systemParameter', 
@@ -471,6 +470,17 @@ define(['knockout',
                         "setParameter", "shouldHide", "systemParameters", 
                         "tileDisplayClass", "widerEnabled", "widget"]
                 });
+                if (dbdJs.tiles) {
+                    for (var i = 0; i < dbdJs.tiles.length; i++) {
+                        var tile = dbdJs.tiles[i];
+                        if (tile.content && tile.type === "TEXT_WIDGET") {
+                            var decoded = dtm.encodeHtml(tile.content)
+                            tile.content = decoded;
+                        }
+                    }
+                }
+                var dashboardJSON = JSON.stringify(dbdJs);
+                console.log("[Data to save]" + dashboardJSON);
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
                 	succCallback && succCallback();

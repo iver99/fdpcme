@@ -27,6 +27,7 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
+        var TEXT_WIDGET_CONTENT_MAX_LENGTH = 1024;
         
         ko.mapping = km;
         
@@ -344,7 +345,7 @@ define(['knockout',
             
 //            var kowidget = ko.mapping.fromJS(widget);
             var kowidget;
-            if(widget.type == "TEXT_WIDGET") {
+            if(widget.type === "TEXT_WIDGET") {
                 kowidget = new TextTileItem(widget);
             }else {
                 kowidget = new TileItem(widget);
@@ -355,6 +356,25 @@ define(['knockout',
 //            tilesViewModel.show();
             
             initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext);
+        }
+        
+        function encodeHtml(html) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(html));
+            return div.innerHTML;
+        }
+        
+        function isContentLengthValid(content) {
+            if (!content)
+                return false;
+            var encoded = encodeHtml(content);
+            return encoded > 0 && encoded <= TEXT_WIDGET_CONTENT_MAX_LENGTH;
+        }
+        
+        function decodeHtml(html) {
+            var div = document.createElement('div');
+            div.innerHTML = html;
+            return div.innerText || div.textContent;
         }
         
         function getBaseUrl() {
@@ -591,9 +611,9 @@ define(['knockout',
         }
         
         function TextTileItem(data) {
-            this.content = ko.observable(data.content);
             ko.utils.extend(this, new TileItem(data));
             ko.mapping.fromJS(data, {include: ['content']}, this);
+            this.content = ko.observable(decodeHtml(data.content));
             this.sectionBreak = true;
             var self = this;
             this.cssStyle = ko.computed(function() {
@@ -717,6 +737,15 @@ define(['knockout',
                 var height = row[heightProperty];
                 return height || defaultHeight;
             };
+            
+            self.getHeight = function() {
+                for (var i = 0, height = 0; i < self.size(); i++) {
+                    var row = self.getRow(i);
+                    if (row && row[heightProperty])
+                        height += row[heightProperty];
+                }
+                return height;
+            };
         }
         
         function TileItemList() {
@@ -801,9 +830,6 @@ define(['knockout',
                 self.tilesGrid.updateTileSize(tile, tile.width(), height);
                 self.tilesReorder(tile);
             };
-            
-            
-            
             
             self.tilesReorder = function(tile) {
                 self.sortTilesByRowsThenColumns();
@@ -1352,6 +1378,8 @@ define(['knockout',
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
+                var height = self.tiles.tilesGrid.getHeight();
+                $('#tiles-wrapper').height(height);
             };
             
             self.firstReorderTilesThenShow = function() {
@@ -1680,7 +1708,10 @@ define(['knockout',
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "initializeTextTileAfterLoad" : initializeTextTileAfterLoad,
             "updateDashboard": updateDashboard,
-            "registerComponent": registerComponent
+            "registerComponent": registerComponent,
+            "encodeHtml": encodeHtml,
+            "decodeHtml": decodeHtml,
+            "isContentLengthValid": isContentLengthValid
         };
     }
 );
