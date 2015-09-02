@@ -24,10 +24,11 @@ function(dsf, oj, ko, $, dfu, pfu)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
+            DASHBOARDS_VIEW_PREF_KEY = "Dashboards.dashboardsView",
             DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
             PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
             SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
-    
+            
     if (dfu.isDevMode()){
        DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
        PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
@@ -116,6 +117,8 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.showWelcome = showWel;
         if (showWel === undefined)
         {
+            self.showWelcome = true;
+            /*
                     (function () {
                         prefUtil.getPreference(SHOW_WELCOME_PREF_KEY, {
                             async: false,
@@ -133,7 +136,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                                 oj.Logger.info("Preference of Show Welcome Dialog is not set. The defualt value 'true' is applied.");
                             }
                         });
-                    })();
+                    })();*/
         }
         
         self.browseClicked = function() {
@@ -175,6 +178,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.showItaServiceFilter = ko.observable(predata.getShowItaService());
         
         self.showSeachClear = ko.observable(false);
+        self.isTilesView = ko.observable(predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
@@ -192,6 +196,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.dashboards = ko.computed(function() {
             return (self.pagingDatasource().getWindowObservable())();
         });
+        self.dashboardsTS = ko.observable();
         self.showPaging = ko.computed(function() {
             var _pds = ko.utils.unwrapObservable(self.pagingDatasource());
             if (_pds instanceof  oj.ArrayPagingDataSource) return false;
@@ -200,11 +205,27 @@ function(dsf, oj, ko, $, dfu, pfu)
         });
         
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
-                                                   filter['types'], filter['appTypes'], filter['owners']);
+                                                   filter['types'], filter['appTypes'], filter['owners'], function(_event) {
+                                                       //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
+                                                       var _i = 0, _rawdbs = [];
+                                                       if (_event['data'])
+                                                       {
+                                                           for (_i = 0; _i < _event['data'].length; _i++)
+                                                           {
+                                                               var _datai = _event['data'][_i].attributes;
+                                                               if (!_datai['lastModifiedOn'])
+                                                               {
+                                                                   _datai['lastModifiedOn'] = _datai['createdOn'];
+                                                               }
+                                                               _rawdbs.push(_datai);
+                                                           }
+                                                       }
+                                                       self.dashboardsTS(new oj.ArrayTableDataSource(_rawdbs, {idAttribute: 'id'}));
+                                                   });
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].setPage(0, { 
             'success': function() {
-                self.pagingDatasource( self.datasource['pagingDS'] );
+                self.refreshPagingSource();
                 if (self.datasource['pagingDS'].totalSize() <= 0)
                 {
                     if (self.welcomeDialogModel.showWelcome === false)
@@ -217,12 +238,25 @@ function(dsf, oj, ko, $, dfu, pfu)
                 oj.Logger.error("Error when fetching data for paginge data source. " + (jqXHR ? jqXHR.responseText : ""));
             }
         } );
+        
+        self.refreshPagingSource = function() {
+            self.pagingDatasource( self.datasource['pagingDS'] );
+            //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
+        };
                 
         self.handleDashboardClicked = function(event, data) {
             //console.log(data);
             //data.dashboard.openDashboard();
-            oj.Logger.info("Dashboard: [id="+data.dashboardModel.get("id")+", name="+data.dashboardModel.get("name")+"] is open from Dashboard Home",true);
-            data.dashboardModel.openDashboardPage();
+            var _dmodel = data['dashboardModel'];
+            if (data['id'])
+            {
+                _dmodel = self.datasource['pagingDS'].getModelFromWindow(data['id']);
+            }
+            if (_dmodel && _dmodel !== null)
+            {
+                oj.Logger.info("Dashboard: [id="+_dmodel.get("id")+", name="+_dmodel.get("name")+"] is open from Dashboard Home",true);
+                _dmodel.openDashboardPage();
+            }
         };
         
         self.handleShowDashboardPop = function(event, data) {
@@ -232,6 +266,14 @@ function(dsf, oj, ko, $, dfu, pfu)
             if (!isOpen)
             {
                 popup.ojPopup("close");//popup.html("");
+            }
+            if (data['id'])
+            {
+                data['dashboardModel'] = self.datasource['pagingDS'].getModelFromWindow(data['id']);
+                if(  data['dashboardModel'] )
+                {
+                    data['dashboard'] = data['dashboardModel'].attributes;
+                }
             }
             self.selectedDashboard(data);
             if (data.element)
@@ -349,6 +391,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                         
                         success: function(_model, _resp, _options) {
                             //console.log( " success ");
+                            //self.refreshPagingSource(true);
                             $( "#cDsbDialog" ).css("cursor", "default");
                             $( "#cDsbDialog" ).ojDialog( "close" );
                             _model.openDashboardPage();
@@ -396,6 +439,14 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.cancelDashboardCreate = function()
         {
             $( "#cDsbDialog" ).ojDialog( "close" );
+        };
+        
+        self.handleViewChanged = function (event, data) {
+            var _option = data.option, _value = data.value;
+            if ( _option === "checked" )
+            {
+                self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
+            }
         };
         
         self.handleSortByChanged = function (context, valueParam) {
@@ -471,7 +522,8 @@ function(dsf, oj, ko, $, dfu, pfu)
         {
             //console.log("searchResponse: "+data.content.collection.length);
             self.datasource = data.content;
-            self.pagingDatasource(data.content['pagingDS']);
+            //self.pagingDatasource(data.content['pagingDS']);
+            self.refreshPagingSource();
         };
         
         self.forceSearch = function (event, data)
@@ -577,6 +629,15 @@ function(dsf, oj, ko, $, dfu, pfu)
                 showWelcome = true;
             }
             return showWelcome;
+        };
+        
+        self.getDashboardsViewPref = function () {
+            var _view = self.getPreferenceValue(DASHBOARDS_VIEW_PREF_KEY);
+            if (_view !== "listview") 
+            {
+                _view = "gridtview";
+            }
+            return _view;
         };
         
         self.getPreferenceValue = function(key) {

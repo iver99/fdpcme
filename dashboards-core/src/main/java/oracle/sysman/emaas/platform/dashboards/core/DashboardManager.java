@@ -682,6 +682,12 @@ public class DashboardManager
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)) {
 			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
 		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)) {
+			sb.append(" order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END DESC, p.dashboard_Id DESC");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER.equals(orderBy)) {
+			sb.append(" order by lower(p.owner), p.owner, lower(p.name), p.name, p.dashboard_Id DESC");
+		}
 		else {
 			//default order by
 			sb.append(" order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");

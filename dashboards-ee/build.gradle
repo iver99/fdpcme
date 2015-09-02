@@ -109,7 +109,7 @@ task appServerDeploy{
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
 		targets:	'Server-6',
-		name:       "${deployname}-${version}",
+		name:       "DashboardService-API-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
@@ -128,7 +128,7 @@ task appServerUndeploy{
 		println "Undeploying ${appName}-${version} from ${t3URL}" 
 
 		ant.wldeploy(action:'undeploy',  
-		name:       "${deployname}-${version}",  
+		name:       "DashboardService-API-6",  
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 

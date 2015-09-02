@@ -11,6 +11,8 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -19,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +35,62 @@ import org.apache.logging.log4j.Logger;
  */
 public class DashboardsCORSFilter implements Filter
 {
-	private final Logger logger = LogManager.getLogger(DashboardsCORSFilter.class);
+	private static class OAMHttpRequestWrapper extends HttpServletRequestWrapper
+	{
+		private static final String OAM_REMOTE_USER_HEADER = "OAM_REMOTE_USER";
+		private static final String X_REMOTE_USER_HEADER = "X-REMOTE-USER";
+		private static final String X_USER_IDENTITY_DOMAIN_NAME_HEADER = "X-USER-IDENTITY-DOMAIN-NAME";
+		private String oam_remote_user=null;
+		private String tenant = null;
+
+		public OAMHttpRequestWrapper(HttpServletRequest request)
+		{
+			super(request);
+			oam_remote_user = request.getHeader(OAM_REMOTE_USER_HEADER);
+			logger.debug(OAM_REMOTE_USER_HEADER + "=" + oam_remote_user);
+			//oamRemoteUser could be null in dev mode. In dev mode, there is no OHS configured
+			if (oam_remote_user != null) {
+				int pos = oam_remote_user.indexOf(".");
+				if (pos > 0) {
+					tenant = oam_remote_user.substring(0, pos);
+				}
+			}
+		}
+
+		@Override
+		public String getHeader(String name)
+		{
+			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
+                                return oam_remote_user;
+			}
+			else if (X_USER_IDENTITY_DOMAIN_NAME_HEADER.equals(name) && tenant != null) {
+				return tenant;
+			}
+			else {
+				return super.getHeader(name);
+			}
+		}
+
+		@Override
+		public Enumeration<String> getHeaders(String name)
+		{
+			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
+				Vector<String> v = new Vector<String>();
+				v.add(oam_remote_user);
+                                return v.elements();
+			}
+                        else if (X_USER_IDENTITY_DOMAIN_NAME_HEADER.equals(name) && tenant != null) {
+				Vector<String> v = new Vector<String>();
+				v.add(tenant);
+				return v.elements();
+			}
+			else {
+				return super.getHeaders(name);
+			}
+		}
+	}
+
+	private static final Logger logger = LogManager.getLogger(DashboardsCORSFilter.class);
 
 	@Override
 	public void destroy()
@@ -43,13 +101,15 @@ public class DashboardsCORSFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException
 	{
-	        // Only add CORS headers if the developer mode is enabled to add them
-	        if (!(new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists())) {
-		    chain.doFilter(request, response);
-		    return;
-	        }
 		HttpServletResponse hRes = (HttpServletResponse) response;
 		HttpServletRequest hReq = (HttpServletRequest) request;
+		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
+		// Only add CORS headers if the developer mode is enabled to add them
+		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
+			chain.doFilter(oamRequest, response);
+			logger.debug("developer mode is NOT enabled on server side");
+			return;
+		}
 		hRes.addHeader("Access-Control-Allow-Origin", "*");
 		if (hReq.getHeader("Origin") != null) {
 			// allow cookies
@@ -59,11 +119,12 @@ public class DashboardsCORSFilter implements Filter
 			// non-specific origin, cannot support cookies
 		}
 
-		hRes.addHeader("Access-Control-Allow-Methods", "HEAD, OPTIONS, GET, POST, PUT, DELETE"); //add more methods as necessary
+		hRes.addHeader("Access-Control-Allow-Methods", "HEAD, OPTIONS, GET, POST, PUT, DELETE"); // add more methods as
+		// necessary
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,X-REMOTE-USER,Authorization,x-sso-client");
 
-		chain.doFilter(request, response);
+		chain.doFilter(oamRequest, response);
 	}
 
 	@Override

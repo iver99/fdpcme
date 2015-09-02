@@ -53,14 +53,14 @@ javascript.source {
         }
 	internaldfcommon {
 	    js {
-		srcDir stagingDir+'/emcsDependencies/internaldfcommon/js/util'
+		srcDir 'public_html/emcsDependencies/internaldfcommon/js/util'
 		include "**/*.js"
 		exclude "**/*.orig.js"
 	    }
 	}
 	timeselector{
 	    js {
-		srcDir stagingDir+'/emcsDependencies/timeselector/js'
+		srcDir 'public_html/emcsDependencies/timeselector/js'
 		include "**/*.js"
 		exclude "**/*.orig.js"
 	    }
@@ -362,18 +362,19 @@ javascript.source.internaldfcommon.js.files.eachWithIndex { File jsFile, idx ->
 	String fileName = "${jsFile.name}"
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
-	def sourceFile = parentDir+"/"+fileName
-	def destFile = parentDir+"/"+renamedFile
+	def tmpFolder = parentDir.split("internaldfcommon")
+	def sourceFile = stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+renamedFile
 	
 	doFirst{
 		logger.lifecycle("sourceFile:" + sourceFile)
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
 	}
 
-        source = jsFile
-	dest =jsFile
+        source = sourceFile
+	dest =sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(parentDir+'/'+sourceMapFile)
+	sourceMap = file(stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -386,7 +387,7 @@ javascript.source.internaldfcommon.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(parentDir+'/'+sourceMapFile)
+		File mapFile = new File(stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		logger.lifecycle("sourceFile:" + sourceFile)
@@ -403,17 +404,18 @@ javascript.source.timeselector.js.files.eachWithIndex { File jsFile, idx ->
 	String fileName = "${jsFile.name}"
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
-	def sourceFile = parentDir+"/"+fileName
-	def destFile = parentDir+"/"+renamedFile
+	def tmpFolder = parentDir.split("timeselector")
+	def sourceFile = stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+renamedFile
 	
 	doFirst{ 
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
 	}
 
-        source = jsFile
-	dest =jsFile
+        source = sourceFile
+	dest =sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(parentDir+'/'+sourceMapFile)
+	sourceMap = file(stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -426,7 +428,7 @@ javascript.source.timeselector.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(parentDir+'/'+sourceMapFile)
+		File mapFile = new File(stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		logger.lifecycle("absPath:" + Pattern.quote(absPath))

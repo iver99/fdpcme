@@ -336,13 +336,21 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
 
             /**
              * Discover dashboard home URL
-             * @param {String} smUrl
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
             	var homeUrl = "/emsaasui/emcpdfui/home.html";
                 return homeUrl;
             };    
+
+            /**
+             * Discover welcome URL
+             * @returns {String} url
+             */
+            self.discoverWelcomeUrl = function() {
+            	var welcomeUrl = "/emsaasui/emcpdfui/welcome.html";
+                return welcomeUrl;
+            };  
             
             /**
              * Get default request header for ajax call

@@ -1,0 +1,128 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 2015-7-16, 15:13:08
+    Author     : jnan
+*/
+
+#mainContent {
+    font-size: 14px;
+}
+.welcome-slogan {
+    font-size: 36px;
+    color: #252523;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 72px;
+    margin-right: 72px;
+}
+
+.landing-home-box-wrapper {
+    margin-left: 72px;
+    margin-right: 72px;
+}
+
+.box-list-ul {
+    text-align: left;
+    margin: 0px;
+    padding: 0px;
+}
+
+.box-list-li {
+    list-style: none inside none;
+    float: left;
+    margin-right: 30px;
+    margin-bottom: 20px;
+}
+
+.service-box-wrapper {
+    width: 280px;
+}
+
+.landing-home-box-img {
+    width: 100%;
+    height: 180px;
+    text-align: center;    
+}
+
+.app-image {
+    width: 92px;
+    height: 92px;
+    margin-top: 44px;
+}
+
+.landing-home-box-content {
+    width: 100%;
+    height: 120px;
+    background-color: #EBEBEB;
+    position: relative;
+}
+
+.landing-home-box-content-head {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    padding-left: 5px;
+}
+
+.landing-home-box-content-desc {
+    padding-left: 5px;
+    color: black;
+}
+
+/*.service-select {
+    width: 150px;
+    position: absolute;
+    bottom: 5px;
+    right: 10px; 
+}*/
+
+.APM-box {
+    background-color: rgb(232, 93, 136);
+}
+
+.LA-box {
+    background-color: rgb(129, 187, 95);
+}
+
+.ITA-box {
+    background-color: rgb(19, 182, 207);
+}
+
+.dashboards-box {
+    background-color: rgb(223, 225, 84);
+}
+
+.data-explorers-box {
+    background-color: rgb(238, 129, 61);
+}
+
+.box-list-li a {
+    text-decoration: none;
+}
+
+.box-list-a a:active {
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.landing-home-box-learn-more-head {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 20px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.landing-home-box-learn-more {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

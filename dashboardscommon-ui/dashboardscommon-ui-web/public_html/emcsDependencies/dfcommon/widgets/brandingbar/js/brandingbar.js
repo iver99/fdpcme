@@ -68,7 +68,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var dfHomeUrl =dfu.discoverDFHomeUrl();
+                var dfWelcomeUrl =dfu.discoverWelcomeUrl();
                 var subscribedApps = null;//dfu.getSubscribedApplications();
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
@@ -241,7 +241,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 //SSO logout handler
                 self.handleSignout = function() {
-                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
+                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfWelcomeUrl;
                     var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
                     window.location.href = logoutUrl;
                     oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
@@ -249,9 +249,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 //Go to home page
                 self.gotoHomePage = function() {
-                    var homeUrl = dfu.discoverDFHomeUrl();
-                    oj.Logger.info("Go to home page by URL: " + homeUrl, false);
-                    window.location.href = homeUrl;
+                    var welcomeUrl = dfu.discoverWelcomeUrl();
+                    oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
+                    window.location.href = welcomeUrl;
                 };
                 
                 //Open about box
