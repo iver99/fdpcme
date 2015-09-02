@@ -267,6 +267,13 @@ define(['knockout',
             	return dfu.discoverLogoutUrl();
             };
             
+            /**
+             * Discover logout url for current logged in user asynchronously 
+             */
+            self.discoverLogoutUrlAsync = function(callbackFunc) {
+            	return dfu.discoverLogoutUrlAsync(callbackFunc);
+            };
+            
         }
         return new InternalDashboardFrameworkUtility();
     }
