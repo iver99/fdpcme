@@ -256,18 +256,17 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 //Check notifications
                 checkNotifications();
                 
-                //Discover logout url
-                var logoutUrlDiscovered = null;
-                dfu.discoverLogoutUrlAsync(function(logoutUrl){logoutUrlDiscovered = logoutUrl;});
-                
                 //SSO logout handler
                 self.handleSignout = function() {
                     var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
-                    if (logoutUrlDiscovered === null)
-                        logoutUrlDiscovered = dfu.discoverLogoutUrl();
-                    var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
-                    window.location.href = logoutUrl;
-                    oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
+                    var logoutUrlDiscovered = dfu.discoverLogoutUrl();
+                    if (logoutUrlDiscovered !== null) {
+                        var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
+                        window.location.href = logoutUrl;
+                    }
+                    //If session timed out, redirect to sso login page and go to home page after re-login
+                    else 
+                        window.location.href = ssoLogoutEndUrl;
                 };
                 
                 //Go to home page

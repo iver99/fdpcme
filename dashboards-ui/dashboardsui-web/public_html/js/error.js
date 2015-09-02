@@ -92,17 +92,16 @@ function(ko, $, dfu, oj)
         }
         self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
         
-        //Discover logout url
-        var logoutUrlDiscovered = null;
-        dfu.discoverLogoutUrlAsync(function(logoutUrl){logoutUrlDiscovered = logoutUrl;});
-        
         self.signOut = function() {
             var ssoLogoutEndUrl = window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/home.html";
-            if (logoutUrlDiscovered === null)
-                logoutUrlDiscovered = dfu.discoverLogoutUrl();
-            var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
-            window.location.href = logoutUrl;
-            oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
+            var logoutUrlDiscovered = dfu.discoverLogoutUrl();
+            if (logoutUrlDiscovered !== null) {
+                var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
+                window.location.href = logoutUrl;
+            }
+            //If session timed out, redirect to sso login page and go to home page after re-login
+            else 
+                window.location.href = ssoLogoutEndUrl;
         };
     };
     
