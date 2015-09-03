@@ -120,6 +120,10 @@ body, html {
   display: none;
 }
 
+.text-widget-area:not(.editing) .dbd-edit-area {
+  display: none;
+}  
+
 #builder-dbd-description .dbd-edit-area .oj-inputtext {
   width: 700px;
   outline: none;
@@ -187,6 +191,10 @@ body, html {
 
 .editing .dbd-edit-area {
   display: inline;
+}
+
+.editing #text-widget-editor-btn {
+    display: none;
 }
 
 .dbd-display-area-editor-btn {

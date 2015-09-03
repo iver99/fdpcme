@@ -150,7 +150,7 @@ define(['knockout',
         }
          */
         
-        function initializeTextTileAfterLoad(dashboard, tile, callback) {
+        function initializeTextTileAfterLoad(dashboard, tile, callback, isContentLengthValid) {
             if(!tile) {
                 return;
             }
@@ -161,7 +161,9 @@ define(['knockout',
             });
             tile.params = {
                 callbackAfterDblClick: callback,
-                content: tile.content
+                tiles: dashboard.tiles,
+                tile: tile,
+                validator: isContentLengthValid
             };
             
             tile.tileDisplayClass = ko.computed(function() {
@@ -322,7 +324,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTextTileAfterLoad(dashboard, self, callback);            
+            initializeTextTileAfterLoad(dashboard, self, callback, isContentLengthValid);            
         }
 
         /**
@@ -368,7 +370,7 @@ define(['knockout',
             if (!content)
                 return false;
             var encoded = encodeHtml(content);
-            return encoded > 0 && encoded <= TEXT_WIDGET_CONTENT_MAX_LENGTH;
+            return encoded.length > 0 && encoded.length <= TEXT_WIDGET_CONTENT_MAX_LENGTH;
         }
         
         function decodeHtml(html) {
@@ -977,17 +979,11 @@ define(['knockout',
                     
                 var newTextTile = new DashboardTextTile(self.dashboard, widget, self.firstReorderTilesThenShow);
                 var textTileCell;
-                if (!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
-                    textTileCell = new Cell(0, 0);
-                } else {
-                    textTileCell = self.tiles.calAvailablePositionForTile(newTextTile, 0, 0);
-                }
+                textTileCell = new Cell(0, 0);
                 newTextTile.row(textTileCell.row);
                 newTextTile.column(textTileCell.column);
-//                                self.tiles.push(tile);
-                self.tiles.tilesGrid.registerTileToGrid(newTextTile);
-                self.tiles.tiles.push(newTextTile);
-                self.tiles.tilesReorder();
+                self.tiles.tiles.unshift(newTextTile);
+                self.tiles.tilesReorder(newTextTile);
                 self.show();
             }
             
@@ -1293,6 +1289,7 @@ define(['knockout',
                 tile.cssHeight(height*defaultHeight);
                 tile.left(baseLeft);
                 tile.top(top);
+                $(".dbd-widget").draggable();
                 $(".dbd-widget").draggable("disable");
             }
             self.maximize = function(tile) {
@@ -1309,14 +1306,6 @@ define(['knockout',
                 if(maximizedTileHeight === 0) {
                     maximizedTileHeight = 1;
                 }
-                self.tileOriginalHeight = tile.height();
-                self.tileOriginalWidth = tile.width();
-                self.tileOriginalColumn = tile.column();
-                self.tileOriginalRow = tile.row();
-//                tile.height(maximizedTileHeight);
-//                tile.width(defaultCols);
-//                tile.row(0);
-//                tile.column(0);
                 $(window).scrollTop(0);
                 self.showMaximizedTile(tile, defaultCols, maximizedTileHeight);
             };
@@ -1340,20 +1329,7 @@ define(['knockout',
             		self.maximize(maximized);
             };
             
-            self.restore = function(tile) {
-                if(self.tileOriginalHeight) {
-                    tile.height(self.tileOriginalHeight);
-                }
-                if(self.tileOriginalWidth) {
-                    tile.width(self.tileOriginalWidth);
-                }
-                if(self.tileOriginalColumn) {
-                    tile.column(self.tileOriginalColumn);
-                }
-                if(self.tileOriginalRow) {
-                    tile.row(self.tileOriginalRow);
-                }
-                
+            self.restore = function(tile) {                
                 tile.isMaximized(false);
                 for (var i = 0; i < self.tiles.tiles().length; i++) {
                     var eachTile = self.tiles.tiles()[i];
@@ -1361,7 +1337,9 @@ define(['knockout',
                 }
                 $('.dbd-widget').draggable('enable');
                 self.show();
-            
+                
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
+                self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
             
             self.refreshThisWidget = function(tile) {
@@ -1453,8 +1431,7 @@ define(['knockout',
                 for (var i=0; i< self.tiles.tiles().length; i++) {
                     var tile = self.tiles.tiles()[i];
                     if(tile.isMaximized()) {
-                        var maximizedTileHeight = self.calculateTilesRowHeight()/defaultHeight; 
-                        self.showMaximizedTile(tile, defaultCols, maximizedTileHeight);
+                        self.maximize(tile);
                         return;
                     }
                 }
@@ -1522,10 +1499,11 @@ define(['knockout',
                                 {name: 'styles', items: ['Font', 'FontSize']},
                                 {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
                                 {name: 'colors', items: ['TextColor']},
-                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
-                                {name: 'insert', items: ['Image', 'Flash']}
+                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
+//                                {name: 'insert', items: ['Image', 'Flash']}
                             ],
-                            removePlugins: 'resize, elementspath'
+                            removePlugins: 'resize, elementspath',
+                            startupFocus: true
                         });
                 });
             }
