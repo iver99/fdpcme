@@ -43,7 +43,8 @@ requirejs.config({
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
         'canvg':'../emcsDependencies/canvg/canvg',
         'd3':'../emcsDependencies/d3/d3.min',
-        'emcta':'../../emcta/ta/js',
+        'emsaasui':'/emsaasui',
+        'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '../emcsDependencies/dfcommon/js/util'
     },
