@@ -101,7 +101,7 @@ function(ko, $, dfu, oj)
             var logoutUrlDiscovered = dfu.discoverLogoutUrl();
             //If session timed out, redirect to sso login page and go to home page after re-login.
             if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
-                window.location.href = ssoLogoutEndUrl;
+                window.location.replace(ssoLogoutEndUrl);
             }
             //Else handle normal logout
             else {
