@@ -50,7 +50,7 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '../emcsDependencies/dfcommon/js/util',
-        'ckeditor': '../emcsDependencies/ckeditor/ckeditor',
+        'ckeditor': '../emcsDependencies/ckeditor/ckeditor'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
