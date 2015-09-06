@@ -22,7 +22,7 @@
             <pipeline name="COMPONENT"/>
              </pipelines>
      </lrg>
-     <lrg name="emcpdf_dev_ui_test" launcher="tests/suites/emcpdf_dev_ui_test.gradle" description="lrg for DEVTest(webui)">
+     <lrg name="emcpdf_dev_ui_test_3n" launcher="tests/suites/emcpdf_dev_ui_test_3n.gradle" description="lrg for DEVTest(webui)">
              <pipelines>
             <pipeline name="COMPONENT"/>
              </pipelines>
