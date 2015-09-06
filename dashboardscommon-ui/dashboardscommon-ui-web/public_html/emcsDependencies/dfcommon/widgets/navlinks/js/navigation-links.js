@@ -156,23 +156,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             }
 
                         }
+                        //Setup timer to handle session timeout
                         if (!dfu.isDevMode()) {
-                            var sessionExpiry = data.sessionExpiryTime;
-                            //Get session expiry time and do session timeout handling
-                            if (sessionExpiry && sessionExpiry.length >= 14) {
-                                var now = new Date().getTime();
-                                //Get UTC session expiry time
-                                var utcSessionExpiry = Date.UTC(sessionExpiry.substring(0,4),
-                                    sessionExpiry.substring(4,6)-1, sessionExpiry.substring(6,8), 
-                                    sessionExpiry.substring(8,10), sessionExpiry.substring(10,12), 
-                                    sessionExpiry.substring(12,14));
-                                //Caculate wait time for client timer which will show warning dialog when session expired
-                                //Note: the actual session expiry happens about 40 secs - 1 min before the time we get from 
-                                //SESSION_EXP header, so set the timer for session expiry to be 1 min before SESSION_EXP
-                                var waitTimeBeforeWarning = utcSessionExpiry - now - 60*1000;
-                                //Show warning dialog when session expired
-                                setTimeout(showSessionTimeoutWarningDialog, waitTimeBeforeWarning);
-                            }
+                            dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
                         }
                     };                   
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
@@ -232,14 +218,6 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                     }
                 }
                 
-                function showSessionTimeoutWarningDialog() {
-                    //Clear interval for extending user session
-                    if (window.intervalToExtendCurrentUserSession)
-                        clearInterval(window.intervalToExtendCurrentUserSession);
-                    window.currentUserSessionExpired = true;
-                    //Open sessin timeout warning dialog
-                    $('#'+sessionTimeoutWarnDialogId).ojDialog('open');
-                };
             }
             return NavigationLinksViewModel;
         });

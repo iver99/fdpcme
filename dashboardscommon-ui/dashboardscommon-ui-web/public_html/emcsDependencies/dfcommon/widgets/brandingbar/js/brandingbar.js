@@ -455,6 +455,31 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     self.handleSignout();
                 };
                 
+                //Set up timer to handle session timeout
+                //Normally the timer will be setup in links navigator, when links vavigator is not visible (e.g. in common error page),
+                //the session timeout timer need to be set inside here.
+                if (self.navLinksVisible === false) {
+                    setupTimerForSessionTimeout();
+                }
+                
+                function setupTimerForSessionTimeout() {
+                    if (!dfu.isDevMode()){
+                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                        dfu.ajaxWithRetry({
+                            url: serviceUrl,
+                            headers: dfu.getDefaultHeader(), 
+                            contentType:'application/json',
+                            success: function(data, textStatus) {
+                                dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Failed to get session expiry time by URL: '+serviceUrl);
+                            },
+                            async: true
+                        });  
+                    }
+                };
+                
                 function receiveMessage(event)
                 {
                     if (event.origin !== window.location.protocol + '//' + window.location.host)
