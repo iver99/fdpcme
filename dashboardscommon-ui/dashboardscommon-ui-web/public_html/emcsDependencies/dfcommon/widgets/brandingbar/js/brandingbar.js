@@ -282,7 +282,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                         if (logoutUrlDiscovered === null)
                             logoutUrlDiscovered = window.cachedSSOLogoutUrl;
                         var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
-                        window.location.href = logoutUrl;
+                        window.location.replace(logoutUrl);
                     }
                 };
                 

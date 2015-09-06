@@ -108,7 +108,7 @@ function(ko, $, dfu, oj)
                 if (logoutUrlDiscovered === null)
                     logoutUrlDiscovered = window.cachedSSOLogoutUrl;
                 var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
-                window.location.href = logoutUrl;
+                window.location.replace(logoutUrl);
             }
         };
     };
