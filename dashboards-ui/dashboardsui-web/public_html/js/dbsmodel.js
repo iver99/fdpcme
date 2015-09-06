@@ -217,6 +217,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                                                                {
                                                                    _datai['lastModifiedOn'] = _datai['createdOn'];
                                                                }
+                                                               _datai['lastModifiedOnStr'] = getDateString(_datai['lastModifiedOn']);
                                                                _rawdbs.push(_datai);
                                                            }
                                                        }
@@ -534,6 +535,31 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.clearSearch = function (event, data)
         {
             $("#sinput").dbsTypeAhead("clearInput");
+        };
+        
+        self.listNameRender = function (context) 
+        {
+            var _link = $(document.createElement('a'))
+                    .on('click', function(event) {
+                        //prevent event bubble
+                        event.stopPropagation();
+                        self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
+                    });
+            _link.append(context.row.name);
+            $(context.cellContext.parentElement).append(_link);
+        };
+        
+        self.listInfoRender = function (context) 
+        {
+            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
+                    .addClass("oj-button-half-chrome oj-sm-float-end")
+                    .on('click', function(event) {
+                        //prevent event bubble
+                        event.stopPropagation();
+                        self.handleShowDashboardPop(event, {'id': context.row.id, 'element': _info});
+                    });
+            $(context.cellContext.parentElement).append(_info);
+            ko.applyBindings({}, _info[0]); 
         };
         
         self.updateDashboard = function (dsb)
