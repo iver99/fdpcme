@@ -85,7 +85,7 @@ public class LoginAndLogout {
 	{
 		if(webd!=null)
 		{
-			LoginUtils.doLogout(webd);
+			//LoginUtils.doLogout(webd);
 			webd.shutdownBrowser(true);
 		}
 	}
