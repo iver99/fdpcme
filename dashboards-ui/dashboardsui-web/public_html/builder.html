@@ -359,12 +359,12 @@
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid}, css: tileDisplayClass()">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
-                                        <div class="dbd-tile-header">
+                                        <div class="dbd-tile-header tile-drag-handle">
                                             <h2 class="dbd-tile-title" data-bind="text: title"></h2>
                                             <div class="dbd-pull-right">
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
-                                                            data-bind="attr: {'id': 'actionButton' + clientGuid}, 
+                                                            data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                        ojComponent: {component: 'ojButton', 
                                                                      label: '', 
                                                                      menu: '#tileMenu' + clientGuid}">
@@ -372,7 +372,7 @@
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
-                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: 'Action'}, 
+                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
                                                         <li id="configure">
                                                             <a href="#">
@@ -458,8 +458,10 @@
                                 </div>
                                 <!-- /ko -->
                                 <!-- ko if: type() === 'TEXT_WIDGET' -->
-                                <div class="dbd-widget" style="height: auto; cursor: move;" data-bind="attr: {style: tileDisplayClass, id: 'text'+clientGuid}">
-                                    <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
+                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'text'+clientGuid}">
+                                    <div class="tile-drag-handle" style=" cursor: move;">
+                                        <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
+                                    </div>
                                 </div>
                                 <!-- /ko -->                                
                             </div>

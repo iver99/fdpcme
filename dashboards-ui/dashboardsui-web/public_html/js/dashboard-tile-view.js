@@ -52,7 +52,8 @@ define(['knockout',
                 }
                 if (!self.draggableInit) {
                     $(".dbd-widget").draggable({
-                        zIndex: 3
+                        zIndex: 30,
+                        handle: ".tile-drag-handle"
                     });
                     self.draggableInit = true;
                 }
