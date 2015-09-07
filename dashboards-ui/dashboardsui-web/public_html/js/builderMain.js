@@ -184,8 +184,12 @@ require(['knockout',
             var dsbId = dfu.getUrlParam("dashboardId");
             if (dsbId) {
                 dsbId = decodeURIComponent(dsbId);
-            }
-            
+            }    
+            var isInteger = /^([0-9]+)$/.test(dsbId);
+            if (!isInteger){
+               oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
+               location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
+            }            
             dtm.initializeFromCookie();
 
 //            var dashboardModel = function(dashboardId) {

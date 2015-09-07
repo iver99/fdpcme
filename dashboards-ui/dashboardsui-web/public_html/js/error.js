@@ -93,7 +93,7 @@ function(ko, $, dfu, oj)
         self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
         
         self.signOut = function() {
-            var ssoLogoutEndUrl = window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/home.html";
+            var ssoLogoutEndUrl = window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/welcome.html";
             var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
             window.location.href = logoutUrl;
             oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
