@@ -354,7 +354,7 @@
                         <!-- /ko -->
                         <div id="tiles-wrapper" style="width: 100%; float: left; position: relative; height: auto; padding-left: 10px;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
-                            <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 10px; margin-right: 10px; height: auto;">
+                            <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">
                             <!--<div id="widget-area" data-bind="foreach: tiles.tiles" class="dbd-tile-element">-->                                                                
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid}, css: tileDisplayClass()">
@@ -458,7 +458,7 @@
                                 </div>
                                 <!-- /ko -->
                                 <!-- ko if: type() === 'TEXT_WIDGET' -->
-                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'text'+clientGuid}">
+                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'tile'+clientGuid}">
                                     <div class="tile-drag-handle" style=" cursor: move;">
                                         <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
                                     </div>

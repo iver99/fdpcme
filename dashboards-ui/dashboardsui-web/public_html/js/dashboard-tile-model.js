@@ -580,7 +580,7 @@ define(['knockout',
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: auto;";
             });
             self.displayHeight = function() {
-                return $('#text' + self.clientGuid).height();
+                return $('#tile' + self.clientGuid).height();
             };
         }
         
@@ -931,6 +931,7 @@ define(['knockout',
                 newTextTile.column(textTileCell.column);
                 self.tiles.tiles.unshift(newTextTile);
                 self.tiles.tilesReorder(newTextTile);
+                self.tilesView.enableDraggable(newTextTile);
                 self.show();
             };
             
@@ -1395,11 +1396,11 @@ define(['knockout',
             self.detectTextTileRender = function(textTile) {
                 if (!textTile)
                     return;
-                var $elem = $('#text' + textTile.clientGuid);
-                var lastHeight = $('#text' + textTile.clientGuid).css('height');
+                var elem = self.tilesView.getTileElement(textTile);
+                var lastHeight = elem.css('height');
                 
                 function checkForChanges() {
-                    console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + $elem.css('height') + '. Last height is ' + lastHeight);
+                    console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + elem.css('height') + '. Last height is ' + lastHeight);
                     if ($elem.css('height') !== lastHeight) {
                         self.reRender();
                         return;
