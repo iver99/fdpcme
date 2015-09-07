@@ -377,35 +377,6 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-//                    var dsb = ko.mapping.fromJS(data);  
-                    //introduce dummy data
-//                    var tilesPosition = [
-//                        {row: 0, column: 0, width: 2, height: 2, type: "DEFAULT"},
-//                        {row: 0, column: 2, width: 4, height: 1, type: "DEFAULT"},
-//                        {row: 0, column: 6, width: 2, height: 3, type: "DEFAULT"},
-//                        {row: 1, column: 2, width: 2, height: 2, type: "DEFAULT"},
-//                        {row: 1, column: 4, width: 2, height: 1, type: "DEFAULT"}
-//                    ];
-//                    for(var i=0; i<data.tiles.length; i++) {
-//                        var tile = data.tiles[i];
-//                        tile.row = tilesPosition[i].row;
-//                        tile.column = tilesPosition[i].column;
-//                        tile.width = tilesPosition[i].width;
-//                        tile.height = tilesPosition[i].height;
-//                        tile.type = tilesPosition[i].type;
-//                    }
-//                    var texttile = {};
-//                    texttile.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
-//                    texttile.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
-//                    texttile.WIDGET_VIEWMODEL = "../emcsDependencies/widgets/textwidget/js/textwidget";
-//                    texttile.type = "TEXT_WIDGET";
-//                    texttile.width = defaultCols;
-//                    texttile.height = 1;
-//                    texttile.column = 0;
-//                    texttile.row = 3;
-//                    texttile.content = "This is a dummy widget for <strong>text test</strong>";
-//                    texttile.isMaximized = false;
-//                    data.tiles.push(texttile);
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
@@ -1401,7 +1372,7 @@ define(['knockout',
                 
                 function checkForChanges() {
                     console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + elem.css('height') + '. Last height is ' + lastHeight);
-                    if ($elem.css('height') !== lastHeight) {
+                    if (elem.css('height') !== lastHeight) {
                         self.reRender();
                         return;
                     }

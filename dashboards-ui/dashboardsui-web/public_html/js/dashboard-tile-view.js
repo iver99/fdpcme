@@ -43,7 +43,7 @@ define(['knockout',
             self.getTileElement = function(tile) {
                 if (!tile || !tile.clientGuid)
                     return null;
-                return $("#tile" + tile.cliengGuid + ".dbd-widget");
+                return $("#tile" + tile.clientGuid + ".dbd-widget");
             };
             
             self.disableDraggable = function() {
@@ -435,7 +435,6 @@ define(['knockout',
                     }
                 }
                 var dashboardJSON = JSON.stringify(dbdJs);
-                console.log("[Data to save]" + dashboardJSON);
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
                 	succCallback && succCallback();
