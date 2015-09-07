@@ -27,7 +27,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.loadWebDriver(webd);
 	}
 		
-	
+		
 	@Test
 	public void testHomepage() throws Exception
 	{
@@ -53,7 +53,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//sort func
 		DashBoardUtils.clickToSortByLastAccessed();
 		//check box
-		DashBoardUtils.clickCheckBox();
+		//DashBoardUtils.clickCheckBox();
 		
 	}
 	
@@ -261,7 +261,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(2000);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html");
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/welcome.html");
 		
 	}
 	
@@ -476,10 +476,91 @@ public class TestDashBoard extends LoginAndLogout{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");
 		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(5000);
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
+		DashBoardUtils.waitForMilliSeconds(50000);
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
+		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		webd.takeScreenShot();
 		webd.getLogger().info("start to test in testEMPCDF_8322222");
 	}
+	/*
+	@Test
+	public void testCreateLVDashBoard() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_832");
+		
+		DashBoardUtils.clickLVButton();
+		
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+		
+		DashBoardUtils.openDBCreatePage();
+		String dbName="LV_DashBoard";
+		DashBoardUtils.inputDashBoardInfo(dbName);
+		DashBoardUtils.waitForMilliSeconds(5000);
+		//verify input info's existence
+		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
+		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		DashBoardUtils.clickOKButton();		
+		
+		webd.takeScreenShot();
+		String widgetName = "Database Errors Trend";
+		//add widget
+		DashBoardUtils.addWidget(1,parentWindow,widgetName);
+				
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
+	}
+
+	@Test
+	public void testModifyLVDashBoard() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_832");
+		
+		DashBoardUtils.clickLVButton();
+		
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+		//open dashboard	
+		DashBoardUtils.waitForMilliSeconds(500);
+		//DashBoardUtils.clickToSortByLastAccessed();
+		DashBoardUtils.searchDashBoard("LV_DashBoard");
+		DashBoardUtils.waitForMilliSeconds(500);
+		webd.takeScreenShot();
+		DashBoardUtils.clickLVDashBoard();
+		//String parentWindow = webd.getWebDriver().getWindowHandle();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//add a new widget
+		DashBoardUtils.addWidget(0,parentWindow);
+		
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
+	}
+
+	@Test
+	public void testRemoveLVDashBoard() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testRemoveLVDashBoard");
+		
+		DashBoardUtils.clickLVButton();
+		
+		DashBoardUtils.searchDashBoard("LV_DashBoard");
+		DashBoardUtils.waitForMilliSeconds(500);
+		webd.takeScreenShot();
+		
+		webd.click(DashBoardPageId.DashBoardInfoID);
+		webd.click(DashBoardPageId.DashBoardDeleteID);
+		
+		//click delete button
+		DashBoardUtils.clickLVDeleteButton();
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
+	}
+	*/
 
 }
