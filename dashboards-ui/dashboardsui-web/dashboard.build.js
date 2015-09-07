@@ -41,5 +41,6 @@
         'dbs': '../js',
         'require':'empty:',
         'prefutil':'empty:',
+	'ckeditor': 'empty:'
     }
 })

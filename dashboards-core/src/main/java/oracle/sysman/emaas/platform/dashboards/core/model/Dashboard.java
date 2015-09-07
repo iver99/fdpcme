@@ -212,10 +212,9 @@ public class Dashboard
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
 					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType, appType);
 			if (tileList != null) {
-				int i = 0;
 				for (Tile tile : tileList) {
 					EmsDashboardTile edt = tile.getPersistenceEntity(null);
-					edt.setPosition(i++);
+					//					edt.setPosition(i++);
 					ed.addEmsDashboardTile(edt);
 				}
 			}
@@ -396,7 +395,7 @@ public class Dashboard
 				edt = rows.get(tile);
 				tile.getPersistenceEntity(edt);
 			}
-			edt.setPosition(i);
+			//			edt.setPosition(i);
 		}
 	}
 }
