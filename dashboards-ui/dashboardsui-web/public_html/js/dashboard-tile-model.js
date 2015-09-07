@@ -1401,7 +1401,7 @@ define(['knockout',
                 
                 function checkForChanges() {
                     console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + elem.css('height') + '. Last height is ' + lastHeight);
-                    if ($elem.css('height') !== lastHeight) {
+                    if (elem.css('height') !== lastHeight) {
                         self.reRender();
                         return;
                     }
