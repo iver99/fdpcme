@@ -101,14 +101,14 @@ function(ko, $, dfu, oj)
             var logoutUrlDiscovered = dfu.discoverLogoutUrl();
             //If session timed out, redirect to sso login page and go to home page after re-login.
             if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
-                window.location.replace(ssoLogoutEndUrl);
+                window.location.href = ssoLogoutEndUrl;
             }
             //Else handle normal logout
             else {
                 if (logoutUrlDiscovered === null)
                     logoutUrlDiscovered = window.cachedSSOLogoutUrl;
                 var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
-                window.location.replace(logoutUrl);
+                window.location.href = logoutUrl;
             }
         };
     };
