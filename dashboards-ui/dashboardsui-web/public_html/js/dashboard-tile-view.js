@@ -43,12 +43,20 @@ define(['knockout',
             self.getTileElement = function(tile) {
                 if (!tile || !tile.clientGuid)
                     return null;
-                return $("#tile" + tile.cliengGuid + ".dbd-widget");
+                return $("#tile" + tile.clientGuid + ".dbd-widget");
             };
             
-            self.disableDraggable = function() {
-                if (self.draggableInit)
-                    $(".dbd-widget").draggable("disable");
+            self.disableDraggable = function(tile) {
+                if (self.dashboard.systemDashboard()) {
+                    console.log("Draggable not supported for OOB dashboard");
+                    return;
+                }
+                var tiles = tile ? [self.getTileElement(tile)] : $(".dbd-widget");                
+                for (var i = 0; i < tiles.length; i++) {
+                    var target = $(tiles[i]);
+                    if (target.is(".ui-draggable"))
+                        target.draggable("disable");
+                }
             };
             
             self.enableDraggable = function(tile) {

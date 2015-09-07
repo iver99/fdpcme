@@ -236,7 +236,7 @@ body, html {
   height: 280px;
 }
 
-.dbd-widget:not(.dbd-tile-edit-disabled) .dbd-tile-header {
+.dbd-widget:not(.dbd-tile-edit-disabled):not(.ui-draggable-disabled) .dbd-tile-header {
   cursor: move;
 }
 

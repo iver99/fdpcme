@@ -1228,7 +1228,6 @@ define(['knockout',
                 tile.cssHeight(height*defaultHeight);
                 tile.left(baseLeft);
                 tile.top(top);
-                self.tilesView.enableDraggable();
                 self.tilesView.disableDraggable();
             };
             
@@ -1288,7 +1287,7 @@ define(['knockout',
             self.show = function() {
                 widgetAreaWidth = widgetAreaContainer.width();
                 self.showTiles();
-                self.tilesView.enableDraggable();
+//                self.tilesView.enableDraggable();
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
@@ -1391,6 +1390,7 @@ define(['knockout',
                         self.tiles.setRowHeight(tile.row());
                     }
                 }
+                self.tilesView.enableDraggable();
             };
 
             self.detectTextTileRender = function(textTile) {
