@@ -14,9 +14,8 @@
 
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
-        <link rel="stylesheet" href="css/tiles-layout-alta.css" type="text/css"/>
 	<link rel="stylesheet" href="emcsDependencies/dfcommon/widgets/datetime-picker/css/datetime-picker.css"/>
-
+        
         <!-- RequireJS bootstrap file -->
         <script data-main="js/builderMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
 
@@ -375,12 +374,6 @@
                                                     <ul style="display:none"
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: 'Action'}, 
                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
-                                                        <!--                                        <li id="delete" data-bind="css: { 'oj-disabled': editDisabled()}">
-                                                                                                  <a href="#">
-                                                                                                      <span class="oj-menu-item-icon demo-icon-font">
-                                                                                                          <img src="images/func_x_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DELETE')}"/></span>
-                                                                                                      <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DELETE')"></span></a>
-                                                                                                </li>-->
                                                         <li id="configure">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
@@ -405,7 +398,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DELETE')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="wider" data-bind="css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled())}">
+                                                        <li id="wider" data-bind="css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
@@ -413,7 +406,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="narrower" data-bind="css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled()}">
+                                                        <li id="narrower" data-bind="css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
@@ -421,7 +414,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="taller" data-bind="css: {'oj-disabled': !maximizeEnabled()}">
+                                                        <li id="taller" data-bind="css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
@@ -429,7 +422,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="shorter" data-bind="css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled()}">
+                                                        <li id="shorter" data-bind="css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
@@ -437,13 +430,13 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                 </a>
                                                         </li>
-                                                        <li id="maximize" data-bind="css: { 'oj-disabled': !maximizeEnabled()}">
+                                                        <li id="maximize" data-bind="css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')"></span></a>
                                                         </li>
-                                                        <li id="restore" data-bind="css: { 'oj-disabled': !restoreEnabled()}">
+                                                        <li id="restore" data-bind="css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
@@ -466,7 +459,6 @@
                                 <!-- /ko -->
                                 <!-- ko if: type() === 'TEXT_WIDGET' -->
                                 <div class="dbd-widget" style="height: auto; cursor: move;" data-bind="attr: {style: tileDisplayClass, id: 'text'+clientGuid}">
-                                    <!--<span data-bind="text: content"></span>-->
                                     <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
                                 </div>
                                 <!-- /ko -->                                

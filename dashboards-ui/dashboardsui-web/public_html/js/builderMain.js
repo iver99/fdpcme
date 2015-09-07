@@ -263,7 +263,7 @@ require(['knockout',
                     $('#globalBody').show();
                     tilesView.enableDraggable();
                     tilesViewModel.show();
-                    tilesViewModel.enableMovingTransition();
+                    tilesView.enableMovingTransition();
                     var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
                     if (dashboard.enableTimeRange()){
                        timeSliderDisplayView.showOrHideTimeSlider("ON"); 

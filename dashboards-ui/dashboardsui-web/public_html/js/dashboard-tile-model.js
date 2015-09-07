@@ -108,48 +108,6 @@ define(['knockout',
             }
         }
         
-        /* used for iFrame integration
-        function DashboardTile(dashboard,type, title, description, width, url, chartType) {
-            var self = this;
-            self.dashboard = dashboard;
-            self.type = type;
-            self.title = ko.observable(title);
-            self.description = ko.observable(description);
-            self.url = ko.observable(url);
-            self.chartType = ko.observable(chartType);
-            self.maximized = ko.observable(false);
-            
-            self.fullUrl = ko.computed(function() {
-                if (!self.chartType() || self.chartType() === "")
-                    return self.url();
-                return self.url() + "?chartType=" + self.chartType();
-            });
-            
-            self.shouldHide = ko.observable(false);
-            self.tileWidth = ko.observable(width);
-            self.clientGuid = guid();
-            self.widerEnabled = ko.computed(function() {
-                return self.tileWidth() < 4;
-            });
-            self.narrowerEnabled = ko.computed(function() {
-                return self.tileWidth() > 1;
-            });
-            self.maximizeEnabled = ko.computed(function() {
-                return !self.maximized();
-            });
-            self.restoreEnabled = ko.computed(function() {
-                return self.maximized();
-            });
-            self.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(self.tileWidth()*3) + ' oj-sm-'+(self.tileWidth()*3) + ' oj-lg-'+(self.tileWidth()*3);
-                css += self.maximized() ? ' dbd-tile-maximized' : ' ';
-                css += self.shouldHide() ? ' dbd-tile-no-display' : ' ';
-                return css;
-            });
-
-        }
-         */
-        
         function initializeTextTileAfterLoad(dashboard, tile, callback, isContentLengthValid) {
             if(!tile) {
                 return;
@@ -197,12 +155,11 @@ define(['knockout',
                 }
             } 
             tile.shouldHide = ko.observable(false);
-//            tile.clientGuid = dfu.guid();
             tile.editDisabled = ko.computed(function() {
             	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
             });
             tile.widerEnabled = ko.computed(function() {
-                return tile.width() < 8;
+                return tile.width() < defaultCols;
             });
             tile.narrowerEnabled = ko.computed(function() {
                 return tile.width() > 1;
@@ -222,8 +179,9 @@ define(['knockout',
             });
             tile.tileDisplayClass = ko.computed(function() {
                 var css = 'oj-md-'+(tile.width()*3) + ' oj-sm-'+(tile.width()*3) + ' oj-lg-'+(tile.width()*3);
-                css += tile.isMaximized() ? ' dbd-tile-maximized' : ' ';
-                css += tile.shouldHide() ? ' dbd-tile-no-display' : ' ';
+                css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
+                css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
+                css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
                 return css;
             });
             tile.dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext);
@@ -967,25 +925,14 @@ define(['knockout',
                 widget.row = null;
                 widget.content = null;
                 
-//                if (!ko.components.isRegistered(widget.WIDGET_KOC_NAME)){
-//                    ko.components.register(widget.WIDGET_KOC_NAME, {
-//                            viewModel: {require: widget.WIDGET_VIEWMODEL},
-//                            template: {require: 'text!' + widget.WIDGET_TEMPLATE}
-//                        });
-//                        oj.Logger.log("widget: " + widget.WIDGET_KOC_NAME + " is registered");
-//                        oj.Logger.log("widget template: " + widget.WIDGET_TEMPLATE);
-//                        oj.Logger.log("widget viewmodel:: "+widget.WIDGET_VIEWMODEL); 
-//                    }
-                    
                 var newTextTile = new DashboardTextTile(self.dashboard, widget, self.firstReorderTilesThenShow);
-                var textTileCell;
-                textTileCell = new Cell(0, 0);
+                var textTileCell = new Cell(0, 0);
                 newTextTile.row(textTileCell.row);
                 newTextTile.column(textTileCell.column);
                 self.tiles.tiles.unshift(newTextTile);
                 self.tiles.tilesReorder(newTextTile);
                 self.show();
-            }
+            };
             
             self.appendNewTile = function(name, description, width, height, widget) {
                 var newTile = null;
@@ -1125,9 +1072,9 @@ define(['knockout',
             self.initialize = function() {
                 $(window).resize(function() {
                     widgetAreaWidth = widgetAreaContainer.width();
-                    self.disableMovingTransition();
+                    self.tilesView.disableMovingTransition();
                     self.show();
-                    self.enableMovingTransition();
+                    self.tilesView.enableMovingTransition();
                 });
                 self.initializeTiles();
             };
@@ -1229,55 +1176,46 @@ define(['knockout',
                         - (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
             };
             
-            self.maximizeFirst = function() {
-                if (self.isOnePageType && self.tiles.tiles() && self.tiles.tiles().length > 0) {
-                    if (!$('#main-container').hasClass('dbd-one-page')) {
-                        $('#main-container').addClass('dbd-one-page');
-                    }
-                    if (!$('#widget-area').hasClass('dbd-one-page')) {
-                        $('#widget-area').addClass('dbd-one-page');
-                    }
-                    var tile = self.tiles.tiles()[0];
-                    
-                    var tileId = 'tile' + tile.clientGuid;
-                    var iframe = $('#' + tileId + ' div iframe');
-                    globalDom = iframe.context.body;
-                    var height = globalDom.scrollHeight;
-                    var maximizedTileHeight = self.calculateTilesRowHeight();
-                    height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
-                    var width = globalDom.scrollWidth;
-                    console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
-                    oj.Logger.log("Error: could not find tile from the ui data");
-                    // following are investigation code, and now work actually for plugins loaded by requireJS
-//                    $($('#df_iframe').context).ready(function() {
-//                        alert('iframe loaded');
-//                    });
-//                    $("iframe").on("iframeloading iframeready iframeloaded iframebeforeunload iframeunloaded", function(e){
-//                        console.log(e.type);
-//                    });
-//                    requirejs.onResourceLoad = function (context, map, depArray) {
-//                        alert('test');
-//                    };
-//                    iframe.height(height + 'px');
-//                    iframe.width(width + 'px');
-                    onePageTile = $('#' + tileId);
-                    $('#' + tileId).height(height + 'px');
-                    $('#' + tileId).width(width + 'px');
-                    if (!$('#df_iframe').hasClass('dbd-one-page'))
-                        $('#df_iframe').addClass('dbd-one-page');
-                    $('#df_iframe').width((width - 5) + 'px');
-                }
-            };
-//            self.showMaximizedTile = function(tile) {
-//                if(!tile) {
-//                    return;
+//            self.maximizeFirst = function() {
+//                if (self.isOnePageType && self.tiles.tiles() && self.tiles.tiles().length > 0) {
+//                    if (!$('#main-container').hasClass('dbd-one-page')) {
+//                        $('#main-container').addClass('dbd-one-page');
+//                    }
+//                    if (!$('#widget-area').hasClass('dbd-one-page')) {
+//                        $('#widget-area').addClass('dbd-one-page');
+//                    }
+//                    var tile = self.tiles.tiles()[0];
+//                    
+//                    var tileId = 'tile' + tile.clientGuid;
+//                    var iframe = $('#' + tileId + ' div iframe');
+//                    globalDom = iframe.context.body;
+//                    var height = globalDom.scrollHeight;
+//                    var maximizedTileHeight = self.calculateTilesRowHeight();
+//                    height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
+//                    var width = globalDom.scrollWidth;
+//                    console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
+//                    oj.Logger.log("Error: could not find tile from the ui data");
+//                    // following are investigation code, and now work actually for plugins loaded by requireJS
+////                    $($('#df_iframe').context).ready(function() {
+////                        alert('iframe loaded');
+////                    });
+////                    $("iframe").on("iframeloading iframeready iframeloaded iframebeforeunload iframeunloaded", function(e){
+////                        console.log(e.type);
+////                    });
+////                    requirejs.onResourceLoad = function (context, map, depArray) {
+////                        alert('test');
+////                    };
+////                    iframe.height(height + 'px');
+////                    iframe.width(width + 'px');
+//                    onePageTile = $('#' + tileId);
+//                    $('#' + tileId).height(height + 'px');
+//                    $('#' + tileId).width(width + 'px');
+//                    if (!$('#df_iframe').hasClass('dbd-one-page'))
+//                        $('#df_iframe').addClass('dbd-one-page');
+//                    $('#df_iframe').width((width - 5) + 'px');
 //                }
-//                tile.cssWidth(self.getDisplayWidthForTile(tile));
-//                tile.cssHeight(self.getDisplayHeightForTile(tile));
-//                tile.left(self.getDisplayLeftForTile(tile));
-//                tile.top(self.getDisplayTopForTile(tile));
-//                $(".dbd-widget").draggable("disable");
-//            }
+//            };
+            
             self.showMaximizedTile = function(tile, width, height) {
                 if(!tile) {
                     return;
@@ -1289,9 +1227,10 @@ define(['knockout',
                 tile.cssHeight(height*defaultHeight);
                 tile.left(baseLeft);
                 tile.top(top);
-                $(".dbd-widget").draggable();
-                $(".dbd-widget").draggable("disable");
-            }
+                self.tilesView.enableDraggable();
+                self.tilesView.disableDraggable();
+            };
+            
             self.maximize = function(tile) {
                 for (var i = 0; i < self.tiles.tiles().length; i++) {
                     var eachTile = self.tiles.tiles()[i];
@@ -1300,8 +1239,6 @@ define(['knockout',
                 }
                 tile.shouldHide(false);
                 tile.isMaximized(true);
-//                self.tilesView.disableSortable();
-//                self.tilesView.disableDraggable();
                 var maximizedTileHeight = self.calculateTilesRowHeight()/defaultHeight;
                 if(maximizedTileHeight === 0) {
                     maximizedTileHeight = 1;
@@ -1335,7 +1272,7 @@ define(['knockout',
                     var eachTile = self.tiles.tiles()[i];
                     eachTile.shouldHide(false);
                 }
-                $('.dbd-widget').draggable('enable');
+                self.tilesView.enableDraggable();
                 self.show();
                 
                 var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
@@ -1350,9 +1287,7 @@ define(['knockout',
             self.show = function() {
                 widgetAreaWidth = widgetAreaContainer.width();
                 self.showTiles();
-                $('.dbd-widget').draggable({
-                    zIndex: 30
-                });
+                self.tilesView.enableDraggable();
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
@@ -1363,7 +1298,7 @@ define(['knockout',
             self.firstReorderTilesThenShow = function() {
                 self.tiles.tilesReorder();
                 self.show();
-            }
+            };
             
             self.getCellFromPosition = function(position) {
                 var row = 0, height = 0;
@@ -1471,9 +1406,9 @@ define(['knockout',
             };
             
             self.reRender = function() {
-                self.disableMovingTransition();
+                self.tilesView.disableMovingTransition();
                 self.show();
-                self.enableMovingTransition();
+                self.tilesView.enableMovingTransition();
             };
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
@@ -1506,7 +1441,7 @@ define(['knockout',
                             startupFocus: true
                         });
                 });
-            }
+            };
             
             self.handleOnDragging = function(event, ui) {
                 curTime = new Date().getTime();
@@ -1536,9 +1471,6 @@ define(['knockout',
                 var tile = ko.dataFor(ui.helper[0]);
                 if (!self.previousDragCell)
                     return;
-//                var cell = self.getCellFromPosition(ui.helper.position());
-//                self.tiles.updateTilePosition(tile, cell.row, cell.column);
-//                self.tiles.tilesReorder(tile);
                 $(ui.helper).css({left: tile.left(), top: tile.top()});
                 self.tiles.tilesReorder(tile);
                 self.show();
@@ -1547,19 +1479,9 @@ define(['knockout',
                     $(ui.helper).removeClass(draggingTileClass);
                 }
                 self.previousDragCell = null;
-                if(tile.type() == "TEXT_WIDGET") {
+                if(tile.type() === "TEXT_WIDGET") {
                    self.reloadEditors(); 
                 }            
-            };
-                        
-            self.enableMovingTransition = function() {
-                if (!$('#widget-area').hasClass('dbd-support-transition'))
-                    $('#widget-area').addClass('dbd-support-transition');
-            };
-            
-            self.disableMovingTransition = function() {
-                if ($('#widget-area').hasClass('dbd-support-transition'))
-                    $('#widget-area').removeClass('dbd-support-transition');
             };
           
 //            self.changeUrl = function(tile) {
@@ -1612,7 +1534,7 @@ define(['knockout',
             };
             
             self.postDocumentShow = function() {
-                self.maximizeFirst();
+//                self.maximizeFirst();
                 self.initializeMaximization();
             };
 
@@ -1642,7 +1564,7 @@ define(['knockout',
 		self.timeSelectorModel.viewEnd(end);
 		self.timeSelectorModel.timeRangeChange(true);		
 	    }
-	}
+	};
 
 /**
 	self.refreshCallback = function(start, end) {

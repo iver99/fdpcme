@@ -38,91 +38,37 @@ define(['knockout',
         function DashboardTilesView(dashboard, dtm) {
             var self = this;
             self.dtm = dtm;
-            
-            self.disableSortable = function() {
-                $(self.element).sortable("disable");
-            };
-            
-            self.enableSortable = function(element, list) {
-                if (!self.element)
-                    self.element = element;
-                if (!self.list)
-                    self.list = list;
-                if (!self.flag) {
-                    $(element).sortable({
-                        update: function(event, ui) {
-                            if (ui.item.hasClass('dbd-tile')) {
-                                var itemData = ko.dataFor(ui.item[0]);
-                                var position = ko.utils.arrayIndexOf(ui.item.parent().children(), ui.item[0]);
-                                if (position >= 0) {
-                                    list.remove(itemData);
-                                    list.splice(position, 0, itemData);
-                                }
-                            }
-                            else {
-                                var position = ko.utils.arrayIndexOf(ui.item.parent().children(), ui.item[0]);
-                                if (position >= 0) {
-                                    if (self.searchObject !== undefined) {
-                                        var newTile = createNewTileFromSearchObject(dashboard, self.dtm, self.searchObject);
-                                        list.splice(position, 0, newTile);
-                                    }
-                                }
-                            }
-                            ui.item.remove();
-
-                            /*var message = "Model layer sequence is: ";
-                            for (var i = 0; i < list().length; i++) {
-                                if (i !== 0)
-                                    message += ",";
-                                message += list()[i].title();
-                            }
-                            console.log(message);*/
-                        },
-                        dropOnEmpty: true,
-                        forcePlaceholderSize: true,
-                        placeholder: {
-                            element: function(clone, ui) {
-                                var itemWidth = 1;
-                                if (clone.hasClass('dbd-tile')) {
-                                    var itemData = ko.dataFor(clone[0]);
-                                    itemWidth = itemData.width();
-                                }
-                                return getPlaceHolder(itemWidth * 3);
-                            },
-                            update: function() {
-                                return;
-                            }
-                        },
-                        handle: '.dbd-tile-header',
-                        revert: true,
-                        opacity: 0.5,
-                        scroll: true,
-                        tolerance: 'pointer'
-                    });
-                    self.flag = true;
-                }
-                else {
-                    $(self.element).sortable("enable");
-                }
-            };
+            self.dashboard = dashboard;
             
             self.disableDraggable = function() {
-                $(".tile-container .oj-tree-leaf a").draggable("disable");
+                if (self.draggableInit)
+                    $(".dbd-widget").draggable("disable");
             };
             
             self.enableDraggable = function() {
-                if (!self.init) {
-                    $(".tile-container .oj-tree-leaf a").draggable({
-                        helper: "clone",
-                        scroll: false,
-                        containment: '#tiles-row',
-                        connectToSortable: '#tiles-row'
+                if (self.dashboard.systemDashboard()) {
+                    console.log("Draggable not supported for OOB dashboard");
+                    return;
+                }
+                if (!self.draggableInit) {
+                    $(".dbd-widget").draggable({
+                        zIndex: 3
                     });
-                    self.init = true;
+                    self.draggableInit = true;
                 }
                 else {
-                    $(".tile-container .oj-tree-leaf a").draggable("enable");
+                    $(".dbd-widget").draggable("enable");
                 }
+            };
+                        
+            self.enableMovingTransition = function() {
+                if (!$('#widget-area').hasClass('dbd-support-transition'))
+                    $('#widget-area').addClass('dbd-support-transition');
+            };
+            
+            self.disableMovingTransition = function() {
+                if ($('#widget-area').hasClass('dbd-support-transition'))
+                    $('#widget-area').removeClass('dbd-support-transition');
             };
         }
         

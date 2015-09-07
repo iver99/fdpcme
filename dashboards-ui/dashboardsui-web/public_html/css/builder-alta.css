@@ -236,6 +236,10 @@ body, html {
   height: 280px;
 }
 
+.dbd-widget:not(.dbd-tile-edit-disabled) .dbd-tile-header {
+  cursor: move;
+}
+
 .dbd-tile-header {
   color: #333;
   background-color: #fff;
@@ -247,9 +251,37 @@ body, html {
   border-bottom: 0px;
   border-color: #ddd;
   font-size: 14px;
-  cursor: move;
   border-top: 1px solid #D8D6D6 !important;
   height: 32px;
+}
+
+#widget-area.dbd-support-transition .dbd-widget:not(.dbd-tile-in-dragging), 
+#widget-area.dbd-support-transition .dbd-widget:not(.dbd-tile-in-dragging) .dbd-tile-element {
+    -webkit-transition: top 0.5s,
+                        left 0.5s,
+                        width 0.5s,
+                        height 0.5s,
+                        font-size 0.5s,
+                        line-height 0.5s;
+}
+
+.tile-dragging-placeholder {display:none; position: absolute; 
+    background-color: #F0CAC4;
+    border-bottom: 1px solid #F0CAC4;
+    margin-left: 10px;
+    margin-top: 10px;
+    color: #F0CAC4;
+}
+
+.builder-dbd-name {
+    font-size: 1.286rem;
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    left: 20px;
+    display: inline;
+    width: 100%;
 }
 
 .dbd-tile-action span.oj-button-icon:before {
