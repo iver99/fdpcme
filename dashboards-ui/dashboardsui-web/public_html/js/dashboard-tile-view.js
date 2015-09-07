@@ -443,7 +443,6 @@ define(['knockout',
                     }
                 }
                 var dashboardJSON = JSON.stringify(dbdJs);
-                console.log("[Data to save]" + dashboardJSON);
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
                 	succCallback && succCallback();
