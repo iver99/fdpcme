@@ -41,10 +41,10 @@ repositories {
     maven {
         url = "${artifactory_contextUrl}/emaas-virtual"
     }
-
+/*
     maven {
         url = "${artifactory_contextUrl}/repo"
-    }
+    }*/
 }
 //apply plugin: 'em-test-infra'
 apply plugin: 'TestInfraPlugin'

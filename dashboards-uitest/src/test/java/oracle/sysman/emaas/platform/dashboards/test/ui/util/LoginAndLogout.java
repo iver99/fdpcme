@@ -22,10 +22,10 @@ public class LoginAndLogout {
 			//url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 			//url = "https://slc07psz.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 			//url = "https://slc00rjx.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
-			//url = "https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/home.html";//https://id0816b.itom.dc1.c9edgga.oraclecorp.com/emsaasui/emcpdfui/home.html";//";
+			url = "https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/home.html";//https://id0816b.itom.dc1.c9edgga.oraclecorp.com/emsaasui/emcpdfui/home.html";//";
 			//url = "https://slc04lec.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 			//url = "https://slc09shg.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
-			url = "https://slc08twq.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
+			//url = "https://slc08twq.us.oracle.com:4443/emsaasui/emcpdfui/home.html";
 		}
 		
 		String testPropertiesFile = System.getenv("EMAAS_PROPERTIES_FILE");
@@ -52,7 +52,7 @@ public class LoginAndLogout {
 			tenantID = oracle.sysman.emsaas.login.utils.Utils.getProperty("TENANT_ID");			
 		}catch(Exception e)
 		{
-			tenantID = "site59tenant1";//emaastesttenant1";//site46tenant1";"emaastesttenant1";id0816b";//
+			tenantID = "emaastesttenant1";//site59tenant1";//";//site46tenant1";"emaastesttenant1";id0816b";//
 		}
 		
 		try{
@@ -75,6 +75,15 @@ public class LoginAndLogout {
 		{
 			LoginUtils.doLogout(webd);
 			webd.shutdownBrowser(true);
+		}
+	}
+	
+	@AfterMethod
+	public static void logout_method()
+	{
+		if(webd!=null)
+		{
+			LoginUtils.doLogout(webd);
 		}
 	}
 

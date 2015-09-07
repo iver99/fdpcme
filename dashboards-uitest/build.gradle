@@ -19,6 +19,8 @@ buildscript {
         classpath group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '2.2.5'
         classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
         classpath group:"com.oracle.emaas.emdi", name: "TestInfraPlugin", version: '1.1+', transitive: true
+        //classpath group: 'org.bouncycastle',name:'bcprov-jdk15on',version: '1.48'
+
     }
 }
 
@@ -43,7 +45,7 @@ artifactory {
 sourceSets {
         test {
         resources.srcDirs = ["src/test/java"]    
-        compileClasspath = configurations.testConfig + configurations.webdriver + compileClasspath + configurations.testNG
+        compileClasspath = configurations.testConfig + configurations.webdriver + compileClasspath + configurations.testNG 
         }
     }
 
