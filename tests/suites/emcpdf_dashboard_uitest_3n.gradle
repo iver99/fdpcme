@@ -41,13 +41,8 @@ repositories {
     maven {
         url = "${artifactory_contextUrl}/emaas-virtual"
     }
-<<<<<<< HEAD
-/*
-    maven {
-=======
 
 /*    maven {
->>>>>>> 192f798b1da8b8af6dc5927000994a6dc932b941
         url = "${artifactory_contextUrl}/repo"
     }*/
 }
