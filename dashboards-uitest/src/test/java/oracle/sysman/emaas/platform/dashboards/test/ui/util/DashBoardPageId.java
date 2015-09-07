@@ -86,7 +86,7 @@ public class DashBoardPageId {
 	public static final String MDashboardDescID = "/html/body/div[3]/div/div/div/div[2]/div/span/span";
 	
 	//remove dashboard/html/body/div[3]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button
-	public static final String InfoBtnID = "/html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
+	public static final String InfoBtnID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 	public static final String RmBtnID = "/html/body/div/div/div/div/div/div/div[2]/button";
 	
 	//help id and about id
