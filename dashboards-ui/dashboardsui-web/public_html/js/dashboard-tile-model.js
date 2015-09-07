@@ -1351,7 +1351,8 @@ define(['knockout',
                 widgetAreaWidth = widgetAreaContainer.width();
                 self.showTiles();
                 $('.dbd-widget').draggable({
-                    zIndex: 30
+                    zIndex: 30,
+                    handle: ".tile-drag-handle"
                 });
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
@@ -1437,10 +1438,14 @@ define(['knockout',
                 }
                 for (var i = 0; i < self.tiles.tiles().length; i++) {
                     var tile = self.tiles.tiles()[i];
+                    if(tile.type() == "TEXT_WIDGET") {
+                       tile.shouldHide(true);
+                    }                    
                     tile.cssWidth(self.getDisplayWidthForTile(tile));
                     tile.cssHeight(self.getDisplayHeightForTile(tile));
                     tile.left(self.getDisplayLeftForTile(tile));
                     tile.top(self.getDisplayTopForTile(tile));
+                    tile.shouldHide(false);
                     if (tile.type() === 'TEXT_WIDGET') {
                         var displayHeight = tile.displayHeight();
                         if (!displayHeight)
