@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.test.ui.util;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import oracle.sysman.qatool.uifwk.webdriver.*;
@@ -68,15 +69,7 @@ public class LoginAndLogout {
 		
 	}
 	
-	@AfterTest
-	public static void logout()
-	{
-		if(webd!=null)
-		{
-			LoginUtils.doLogout(webd);
-			webd.shutdownBrowser(true);
-		}
-	}
+	
 	
 	@AfterMethod
 	public static void logout_method()
@@ -84,6 +77,16 @@ public class LoginAndLogout {
 		if(webd!=null)
 		{
 			LoginUtils.doLogout(webd);
+		}
+	}
+	
+	@AfterTest
+	public static void logout()
+	{
+		if(webd!=null)
+		{
+			LoginUtils.doLogout(webd);
+			webd.shutdownBrowser(true);
 		}
 	}
 
