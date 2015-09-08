@@ -3,9 +3,6 @@
 # All rights reserved - Do Not Redistribute
 #
 # -----------------------------------------------------------------------------------------------------------------------------
-###Run the existing recipe for legacy code 
-include_recipe 'cookbook-emcs-lcm-rep-manager-service::db_lookup'
+###recipe for schema upgrade
 include_recipe 'cookbook-emcs-lcm-rep-manager-service::lcmrepmgr_framework'
-
-
 
