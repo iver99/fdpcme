@@ -46,6 +46,7 @@ public class Tile
 	public static final String TEXT_WIDGET_PARAM_NAME_CONTENT = "DF_BUILTIN_WIDGET_TEXT_CONTENT";
 	private static final String DF_BUILTIN_WIDGET_LINK_TEXT = "DF_BUILTIN_WIDGET_LINK_TEXT";
 	private static final String DF_BUILTIN_WIDGET_LINK_URL = "DF_BUILTIN_WIDGET_LINK_URL";
+	private static final Integer TEXT_WIDGET_MAX_CONTENT_LEN = 4000;
 
 	public static Tile valueOf(EmsDashboardTile edt)
 	{
@@ -860,7 +861,7 @@ public class Tile
 			to.setWidth(Tile.TEXT_WIDGET_WIDTH);
 			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetCreationTime(String.valueOf(DateUtil.getCurrentUTCTime()));
-			if (StringUtil.isEmpty(content) || content.length() > 1024) {
+			if (StringUtil.isEmpty(content) || content.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_CONTENT_ERROR));
 			}

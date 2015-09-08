@@ -27,7 +27,7 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
-        var TEXT_WIDGET_CONTENT_MAX_LENGTH = 1024;
+        var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
         
         ko.mapping = km;
         
