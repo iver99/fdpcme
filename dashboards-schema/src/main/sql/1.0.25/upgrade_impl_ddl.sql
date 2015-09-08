@@ -61,6 +61,8 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TYPE exists already, no change is needed');      
   END IF;
+  --update dashboard parameter string value column size
+  EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE_PARAMS MODIFY PARAM_VALUE_STR VARCHAR2(4000)';
 END;
 /
 

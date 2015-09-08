@@ -27,7 +27,7 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
-        var TEXT_WIDGET_CONTENT_MAX_LENGTH = 1024;
+        var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
         
         ko.mapping = km;
         
@@ -41,8 +41,8 @@ define(['knockout',
         var dragStartRow = null;
         /**
          * 
-         * @param {ko.observable} startTime: start time of new time range
-         * @param {ko.observable} endTime: end time of new time range
+         * @param {Date} startTime: start time of new time range
+         * @param {Date} endTime: end time of new time range
          * @returns {DashboardTimeRangeChange} instance
          */
         function DashboardTimeRangeChange(startTime, endTime){
@@ -82,7 +82,28 @@ define(['knockout',
             }
         }
 
-        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges){
+        /**
+         * 
+         * @param {String} status: name of status
+         * Event NAME:
+         * PRE_REFRESH: Before refresh starts
+         * POST_DELETE: After tile is deleted
+         * POST_WIDER: After tile is wider
+         * POST_NARROWER: After tile is narrower
+         * POST_TALLER: After tile is taller
+         * POST_SHORTER: After tile is shorter
+         * POST_MAXIMIZE: After tile is maximized
+         * POST_RESTORE: After tile is restored
+         * @returns {undefined}
+         */
+        function TileChange(status){
+            var self = this;
+            if (status){
+                self.status = status.toString();
+            }
+        }
+        
+        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange){
             var self = this;
             self.timeRangeChange = null;
             self.targetContext = null;
@@ -108,6 +129,9 @@ define(['knockout',
                     }
                 }
             }
+            if (tileChange instanceof TileChange){
+                self.tileChange = tileChange;
+            }            
         }
         
         function initializeTextTileAfterLoad(dashboard, tile, funcShow, funcReorder, isContentLengthValid) {
@@ -1091,28 +1115,35 @@ define(['knockout',
                        self.tiles.tilesGrid.unregisterTileInGrid(tile);
                        self.tiles.tilesReorder();
                        self.show();
+                       self.notifyTileChange(tile, new TileChange("POST_DELETE"));
                        break;
                    case "wider":
                        self.tiles.broadenTile(tile);
                        self.show();
+                       self.notifyTileChange(tile, new TileChange("POST_WIDER"));
                        break;
                    case "narrower":
                        self.tiles.narrowTile(tile);
                        self.show();
+                       self.notifyTileChange(tile, new TileChange("POST_NARROWER"));
                        break;
                    case "taller":
                        self.tiles.tallerTile(tile);
                        self.show();
+                       self.notifyTileChange(tile, new TileChange("POST_TALLER"));
                        break;
                    case "shorter":
                        self.tiles.shorterTile(tile);
                        self.show();
+                       self.notifyTileChange(tile, new TileChange("POST_SHORTER"));
                        break;
                    case "maximize":
                        self.maximize(tile);
+                       self.notifyTileChange(tile, new TileChange("POST_MAXIMIZE"));
                        break;
                    case "restore":
                        self.restore(tile);
+                       self.notifyTileChange(tile, new TileChange("POST_RESTORE"));
                        break;
                    
                }
@@ -1240,13 +1271,19 @@ define(['knockout',
                 self.tilesView.enableDraggable();
                 self.show();
                 
-                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
-                self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
             
+            self.notifyTileChange = function(tile, change){
+                var tChange = null;
+                if (change instanceof TileChange){
+                    tChange = change;
+                }
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null,tChange);
+                self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent); 
+            }
+            
             self.refreshThisWidget = function(tile) {
-                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null);
-                self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
+                self.notifyTileChange(tile, new TileChange("PRE_REFRESH"));
             }
             
             self.show = function() {
@@ -1457,18 +1494,18 @@ define(['knockout',
 //                $('#urlChangeDialog').ojDialog('open');
 //            };
             
-            self.fireDashboardItemChangeEventTo = function (widget, dashboardItemChangeEvent) {
+            self.fireDashboardItemChangeEventTo = function (tile, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
                 dfu.ajaxWithRetry({url: 'widgetLoading.html',
-                    widget: widget,
+                    tile: tile,
                     success: function () {
                         /**
                          * A widget needs to define its parent's onDashboardItemChangeEvent() method to resposne to dashboardItemChangeEvent
                          */
-                        if (this.widget.onDashboardItemChangeEvent) {
-                            this.widget.onDashboardItemChangeEvent(dashboardItemChangeEvent);
-                            console.log(widget.title());
-                            oj.Logger.log(widget.title());
+                        if (this.tile.onDashboardItemChangeEvent) {
+                            this.tile.onDashboardItemChangeEvent(dashboardItemChangeEvent);
+                            console.log(this.tile.title());
+                            oj.Logger.log(this.tile.title());
                             deferred.resolve();
                         }
                     },
