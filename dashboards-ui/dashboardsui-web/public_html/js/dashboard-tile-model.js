@@ -16,7 +16,8 @@ define(['knockout',
         'html2canvas',
         'canvg-rgbcolor',
         'canvg-stackblur',
-        'canvg'
+        'canvg',
+        'ckeditor'
     ],
     
     function(ko, km, TimeSelectorModel,dfu, dfumodel)
@@ -26,8 +27,16 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
+        var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
         
         ko.mapping = km;
+        
+        var defaultCols = 8;
+        var defaultHeight = 260;
+        var draggingTileClass = 'dbd-tile-in-dragging';
+        
+        var widgetAreaWidth = 0;
+        var widgetAreaContainer = null;
         /**
          * 
          * @param {ko.observable} startTime: start time of new time range
@@ -99,47 +108,27 @@ define(['knockout',
             }
         }
         
-        /* used for iFrame integration
-        function DashboardTile(dashboard,type, title, description, width, url, chartType) {
-            var self = this;
-            self.dashboard = dashboard;
-            self.type = type;
-            self.title = ko.observable(title);
-            self.description = ko.observable(description);
-            self.url = ko.observable(url);
-            self.chartType = ko.observable(chartType);
-            self.maximized = ko.observable(false);
+        function initializeTextTileAfterLoad(dashboard, tile, callback, isContentLengthValid) {
+            if(!tile) {
+                return;
+            }
+            registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
+            tile.shouldHide = ko.observable(false);
+            tile.editDisabled = ko.computed(function() { //to do
+            	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
+            });
+            tile.params = {
+                callbackAfterDblClick: callback,
+                tiles: dashboard.tiles,
+                tile: tile,
+                validator: isContentLengthValid
+            };
             
-            self.fullUrl = ko.computed(function() {
-                if (!self.chartType() || self.chartType() === "")
-                    return self.url();
-                return self.url() + "?chartType=" + self.chartType();
+            tile.tileDisplayClass = ko.computed(function() {
+                var display = tile.shouldHide()?"none":"block";
+                return tile.cssStyle() + "display:" + display;
             });
-            
-            self.shouldHide = ko.observable(false);
-            self.tileWidth = ko.observable(width);
-            self.clientGuid = guid();
-            self.widerEnabled = ko.computed(function() {
-                return self.tileWidth() < 4;
-            });
-            self.narrowerEnabled = ko.computed(function() {
-                return self.tileWidth() > 1;
-            });
-            self.maximizeEnabled = ko.computed(function() {
-                return !self.maximized();
-            });
-            self.restoreEnabled = ko.computed(function() {
-                return self.maximized();
-            });
-            self.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(self.tileWidth()*3) + ' oj-sm-'+(self.tileWidth()*3) + ' oj-lg-'+(self.tileWidth()*3);
-                css += self.maximized() ? ' dbd-tile-maximized' : ' ';
-                css += self.shouldHide() ? ' dbd-tile-no-display' : ' ';
-                return css;
-            });
-
         }
-         */
         
         function initializeTileAfterLoad(dashboard, tile, timeSelectorModel, targetContext) {
             if (!tile)
@@ -164,17 +153,19 @@ define(['knockout',
                         window.open(visualAnalyzerUrl+"?widgetId="+tile.WIDGET_UNIQUE_ID());
                     }
                 }
-            }
+            } 
             tile.shouldHide = ko.observable(false);
-            tile.clientGuid = dfu.guid();
             tile.editDisabled = ko.computed(function() {
             	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
             });
             tile.widerEnabled = ko.computed(function() {
-                return tile.width() < 4;
+                return tile.width() < defaultCols;
             });
             tile.narrowerEnabled = ko.computed(function() {
                 return tile.width() > 1;
+            });
+            tile.shorterEnabled = ko.computed(function() {
+                return tile.height() > 1;
             });
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
@@ -188,8 +179,9 @@ define(['knockout',
             });
             tile.tileDisplayClass = ko.computed(function() {
                 var css = 'oj-md-'+(tile.width()*3) + ' oj-sm-'+(tile.width()*3) + ' oj-lg-'+(tile.width()*3);
-                css += tile.isMaximized() ? ' dbd-tile-maximized' : ' ';
-                css += tile.shouldHide() ? ' dbd-tile-no-display' : ' ';
+                css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
+                css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
+                css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
                 return css;
             });
             tile.dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext);
@@ -272,6 +264,26 @@ define(['knockout',
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
         }
+        
+        function DashboardTextTile(dashboard, widget, callback) {
+            var self = this;
+            self.dashboard = dashboard;
+            self.title = ko.observable("text widget title"); //to do 
+            self.description = ko.observable();
+            self.isMaximized = ko.observable(false);
+            
+            var kowidget;
+            if(widget.type == "TEXT_WIDGET") {
+                kowidget = new TextTileItem(widget);
+            }else {
+                kowidget = new TileItem(widget);
+            }
+            
+            for (var p in kowidget)
+                self[p] = kowidget[p];
+            
+            initializeTextTileAfterLoad(dashboard, self, callback, isContentLengthValid);            
+        }
 
         /**
          *  Object used to represents a dashboard tile created by clicking adding widget
@@ -283,21 +295,46 @@ define(['knockout',
          *  @param width width for the tile
          *  @param widget widget from which the tile is to be created
          */
-        function DashboardTile(dashboard,type, title, description, width, widget, timeSelectorModel, targetContext) {
+        function DashboardTile(dashboard, type, title, description, widget, timeSelectorModel, targetContext) {
             var self = this;
             self.dashboard = dashboard;
-            self.type = type;
+//            self.type = type;
             self.title = ko.observable(title);
             self.description = ko.observable(description);
-            self.isMaximized = ko.observable(false);
-            self.width = ko.observable(width);
-            self.height = ko.observable(220);
+            self.isMaximized = ko.observable(false);            
             
-            var kowidget = ko.mapping.fromJS(widget);
+//            var kowidget = ko.mapping.fromJS(widget);
+            var kowidget;
+            if(widget.type === "TEXT_WIDGET") {
+                kowidget = new TextTileItem(widget);
+            }else {
+                kowidget = new TileItem(widget);
+            }
             for (var p in kowidget)
                 self[p] = kowidget[p];
+//            tilesViewModel.tiles.push(self);
+//            tilesViewModel.show();
             
             initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext);
+        }
+        
+        function encodeHtml(html) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(html));
+            return div.innerHTML;
+        }
+        
+        function isContentLengthValid(content) {
+            if (!content)
+                return false;
+            var encoded = encodeHtml(content);
+            return encoded.length > 0 && encoded.length <= TEXT_WIDGET_CONTENT_MAX_LENGTH;
+        }
+        
+        function decodeHtml(html) {
+            var div = document.createElement('div');
+            div.innerHTML = html;
+            return div.innerText || div.textContent;
         }
         
         function getBaseUrl() {
@@ -340,7 +377,18 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
-                    var dsb = ko.mapping.fromJS(data);
+                    var mapping = {
+                       "tiles": {
+                           "create" : function(options) {
+                                if(options.data.type === "TEXT_WIDGET") {
+                                    return new TextTileItem(options.data);
+                                }else {
+                                    return new TileItem(options.data);
+                                }
+                           }
+                       } 
+                    }
+                    var dsb = ko.mapping.fromJS(data, mapping);
                     if (succCallBack)
                         succCallBack(dsb);
                 },
@@ -461,8 +509,348 @@ define(['knockout',
             }
         }
         
+        function getGuid() {
+            function S4() {
+               return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+            }
+            return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+        };
+        
+        function TileItem(data) {
+            var self = this;
+            self.column = ko.observable();
+            self.row = ko.observable();
+            self.width = ko.observable();
+            self.height = ko.observable();
+            self.left = ko.observable(0);
+            self.top = ko.observable(0);
+            self.cssWidth = ko.observable(0);
+            self.cssHeight = ko.observable(0);
+            self.cssStyle = ko.computed(function() {
+                return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
+            });
+            self.widgetCssStyle = ko.computed(function() {
+                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54) + "px;";
+            });
+//            self.tileType = ko.observable(data.content ? 'Text' : 'Default');
+            ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
+            self.clientGuid = getGuid();
+            self.sectionBreak = false;
+            self.displayHeight = function() {
+                return self.height * defaultHeight;
+            };
+        }
+        
+        function TextTileItem(data) {
+            ko.utils.extend(this, new TileItem(data));
+            ko.mapping.fromJS(data, {include: ['content']}, this);
+            this.content = ko.observable(decodeHtml(data.content));
+            this.sectionBreak = true;
+            var self = this;
+            this.cssStyle = ko.computed(function() {
+                return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: auto;";
+            });
+            self.displayHeight = function() {
+                return $('#tile' + self.clientGuid).height();
+            };
+        }
+        
+        function Cell(row, column) {
+            var self = this;
+            
+            self.row = row;
+            self.column = column;
+        }
+        
+        function TilesGrid() {
+            var self = this;
+            self.tileGrid = [];
+            
+            var heightProperty = "ROW_HEIGHT";
+            
+            self.initialize = function() {
+                self.tileGrid = [];
+            };
+            
+            self.size = function() {
+                return self.tileGrid.length;
+            };
+            
+            self.getRow = function(rowIndex) {
+                if (!self.tileGrid[rowIndex]) {
+                    self.initializeGridRows(rowIndex + 1);
+                }
+                return self.tileGrid[rowIndex];
+            };
+            
+            self.registerTileToGrid = function(tile) {
+                if (!tile)
+                    return;
+                self.initializeGridRows(tile.row() + tile.height());
+                for (var i = tile.row(); i < tile.row() + tile.height(); i++) {
+                    for (var j = tile.column(); j < tile.column() + tile.width(); j++) {
+                        self.tileGrid[i][j] = tile;
+                    }
+                }
+            };
+            
+            self.unregisterTileInGrid = function(tile) {
+                if (!tile)
+                    return;
+                for (var x = tile.row(); x < tile.row() + tile.height(); x++) {
+                    if (!self.tileGrid[x])
+                        continue;
+                    for (var y = tile.column(); y < tile.column() + tile.width(); y++) {
+                        if (self.tileGrid[x][y] === tile)
+                            self.tileGrid[x][y] = null;
+                    }
+                }
+            };
+            
+            self.initializeGridRows = function(rows) {
+                for (var i = 0; i < rows; i++) {
+                    if (!self.tileGrid[i]) {
+                        var row = [];
+                        for (var j = 0; j < defaultCols; j++)
+                            row.push(null);
+                        self.tileGrid.push(row);
+                    }
+                }
+            };
+            self.setNullToGridRows = function(rows) {
+                for(var i=0; i<rows; i++) {
+                    for(var j=0; j<defaultCols; j++) {
+                        self.tileGrid[i][j] = null;
+                    }
+                }
+            } 
+            
+            self.updateTileSize = function(tile, width, height) {
+                if (!tile || width < 0 || width > defaultCols)
+                    return;
+                if (tile.row !== null && tile.column !== null)
+                    self.unregisterTileInGrid(tile);
+                self.registerTileToGrid(tile);
+                tile.width(width);
+                tile.height(height);
+            };
+            
+            self.isPositionOkForTile = function(tile, row, column) {
+                if (row < 0 || column < 0 || column + tile.width() > defaultCols)
+                    return false;
+                for (var i = row; i < row + tile.height(); i++) {
+                    var gridRow = self.getRow(i);
+                    if (!gridRow)
+                        continue;
+                    for (var j = column; j < column + tile.width(); j++) {
+                        if (gridRow[j] && gridRow[j] !== tile)
+                            return false;
+                    }
+                }
+                return true;
+            };
+            
+            self.setRowHeight = function(rowIndex, height) {
+                var row = self.getRow(rowIndex);
+                if (!row)
+                    return;
+                if (height) {
+                    row[heightProperty] = height;
+                }
+                else
+                    row[heightProperty] = defaultHeight;
+            };
+            
+            self.getRowHeight = function(rowIndex) {
+                var row = self.getRow(rowIndex);
+                if (!row)
+                    return defaultHeight;
+                var height = row[heightProperty];
+                return height || defaultHeight;
+            };
+            
+            self.getHeight = function() {
+                for (var i = 0, height = 0; i < self.size(); i++) {
+                    var row = self.getRow(i);
+                    if (row && row[heightProperty])
+                        height += row[heightProperty];
+                }
+                return height;
+            };
+        }
+        
+        function TileItemList() {
+            var self = this;
+            
+            self.tiles = ko.observableArray([]);
+            self.tilesGrid = new TilesGrid();
+            
+            self.push = function(tile) {
+                tile.clientGuid = getGuid();
+                self.tiles.push(tile);
+            };
+            
+            self.remove = function(tile) {
+                self.tiles.remove(tile);
+            };
+            
+            
+            self.configure = function(tile) {
+                if(tile.configure) {
+                    tile.configure();
+                }
+            }
+            //to be continued...
+            self.removeTile = function(tile, tileRemoveCallbacks) {
+                self.tiles.remove(tile);
+                for (var i = 0; i < self.tiles().length; i++) {
+                    var eachTile = self.tiles()[i];
+                    eachTile.shouldHide(false);
+                }
+                for (var i = 0; i < tileRemoveCallbacks.length; i++) {
+                    tileRemoveCallbacks[i]();
+                }
+            };
+            
+            self.broadenTile = function(tile) {
+                var width = tile.width();
+                if (width >= defaultCols)
+                    return;
+                self.tilesGrid.setNullToGridRows(self.tilesGrid.size());
+                for(var i=0; i<self.tiles().length; i++) {
+                    var tl= self.tiles()[i];
+                    if(tl !== tile) {
+                        self.tilesGrid.registerTileToGrid(tl);
+                    }else{
+                        break;
+                    }
+                }
+                tile.width(++width);
+                var startRow = tile.row();
+                for(; i<self.tiles().length; i++) {
+                    var tl = self.tiles()[i];
+                    var cell = self.calAvailablePositionForTile(tl, startRow, 0);
+                    tl.row(cell.row);
+                    tl.column(cell.column);
+                    self.tilesGrid.registerTileToGrid(tl);
+                    startRow = tl.row();
+                }
+//                self.tilesGrid.updateTileSize(tile, ++width, tile.height());                
+                self.tilesReorder(tile);
+            };
+            
+            self.narrowTile = function(tile) {
+                var width = tile.width();
+                if (tile.width() <= 1)
+                    return;
+                width--;
+                self.tilesGrid.updateTileSize(tile, width, tile.height());
+                self.tilesReorder(tile);
+            };
+            
+            self.tallerTile = function(tile) {
+                self.tilesGrid.updateTileSize(tile, tile.width(), tile.height() + 1);
+                self.tilesReorder(tile);
+            };
+            
+            self.shorterTile = function(tile) {
+                var height = tile.height();
+                if (height <= 1)
+                    return;
+                height--;
+                self.tilesGrid.updateTileSize(tile, tile.width(), height);
+                self.tilesReorder(tile);
+            };
+            
+            self.tilesReorder = function(tile) {
+                self.sortTilesByRowsThenColumns();
+                self.tilesGrid.initialize();
+//                self.tilesGrid.initializeGridRows(self.tilesGrid.size());
+                if (tile) {
+                    self.updateTilePosition(tile, tile.row(), tile.column());
+                }else {
+                    self.tilesGrid.initializeGridRows(1);
+                }
+                var startRow = 0, startCol = 0;
+                for (var i = 0; i < self.tiles().length; i++) {
+                    var tl = self.tiles()[i];
+                    if(tl===tile){
+                        self.updateTilePosition(tl, tl.row(), tl.column());
+                        startRow = tl.row();
+                        continue;
+                    }
+                    var cell = self.calAvailablePositionForTile(tl, startRow, startCol);
+                    self.updateTilePosition(tl, cell.row, cell.column);
+                    startRow = tl.row();
+//                    cell = self.getAvailableCellAfterTile(tl);
+//                    startRow = cell.row, startCol = cell.column;
+                }
+            };
+            
+            self.updateTilePosition = function(tile, row, column) {
+                if (tile.row() !== null && tile.column() !== null)
+                    self.tilesGrid.unregisterTileInGrid(tile);
+                tile.row(row);
+                tile.column(column);
+                self.tilesGrid.registerTileToGrid(tile);
+            };
+            
+            self.getAvailableCellAfterTile = function(tile) {
+                var startRow = 0, startCol = 0;
+                if (tile.column() + tile.width() <= defaultCols) {
+                    startRow = tile.row();
+                    startCol = tile.column() + tile.width();
+                }
+                else {
+                    startRow = tile.row() + 1;
+                    startCol = 0;
+                }
+                return new Cell(startRow, startCol);
+            };
+            
+            self.calAvailablePositionForTile = function(tile, startRow, startCol) {
+                var row, column;
+                for (row = startRow; row < self.tilesGrid.size(); row++) {
+                    var columnStart = row === startRow ? startCol : 0;
+                    for (column = columnStart; column < defaultCols; column++) {
+                        if (self.tilesGrid.isPositionOkForTile(tile, row, column))
+                            return new Cell(row, column);
+                    }
+                }
+                if (column !== undefined && column >= defaultCols)
+                    column = 0;
+                return new Cell(row, column);
+            };
+            
+            self.sortTilesByRowsThenColumns = function() {
+                self.tiles.sort(function(tile1, tile2) {
+                    if (tile1.row() !== tile2.row())
+                        return tile1.row() - tile2.row();
+                    else
+                        return tile1.column() - tile2.column();
+                });
+            };
+            
+            self.setRowHeight = function(rowIndex, height) {
+                self.tilesGrid.setRowHeight(rowIndex, height);
+            };
+            
+            
+            self.getRowHeight = function(rowIndex) {
+                return self.tilesGrid.getRowHeight(rowIndex);
+            };
+        }
+        
         function DashboardTilesViewModel(dashboard, tilesView/*, urlEditView*/) {
             var self = this;
+            
+            widgetAreaContainer = $('#widget-area');
+            
+            self.tiles = new TileItemList();
+            self.tiles.tiles = dashboard.tiles;
+            widgetAreaWidth = widgetAreaContainer.width();
+            
+            self.previousDragCell = null;
                         
             self.dashboard = dashboard;
 //            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
@@ -480,7 +868,7 @@ define(['knockout',
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
 
             self.isEmpty = function() {
-                return !self.dashboard.tiles() || self.dashboard.tiles().length === 0;
+                return !self.tiles.tiles() || self.tiles.tiles().length === 0;
             };
             
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
@@ -495,7 +883,30 @@ define(['knockout',
                 self.tileRemoveCallbacks.push(callbackMethod);
             };
             
-            self.appendNewTile = function(name, description, width, widget) {
+            self.AppendTextTile = function () {
+                var newTextTile;
+                var widget = {};
+                widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
+                widget.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
+                widget.WIDGET_VIEWMODEL = "../emcsDependencies/widgets/textwidget/js/textwidget";
+                widget.type = "TEXT_WIDGET";
+                widget.width = defaultCols;
+                widget.height = 1;
+                widget.column = null;
+                widget.row = null;
+                widget.content = null;
+                
+                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.firstReorderTilesThenShow);
+                var textTileCell = new Cell(0, 0);
+                newTextTile.row(textTileCell.row);
+                newTextTile.column(textTileCell.column);
+                self.tiles.tiles.unshift(newTextTile);
+                self.tiles.tilesReorder(newTextTile);
+                self.tilesView.enableDraggable(newTextTile);
+                self.show();
+            };
+            
+            self.appendNewTile = function(name, description, width, height, widget) {
                 var newTile = null;
                 
                 if (widget) {
@@ -506,6 +917,13 @@ define(['knockout',
                     var provider_version = widget.PROVIDER_VERSION;
                     var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
                     var widget_source = widget.WIDGET_SOURCE;
+//                    widget.width = ko.observable(width);
+//                    widget.height = ko.observable(height);
+                    widget.width = width;
+                    widget.height = height;
+                    widget.column = null;
+                    widget.row = null;
+                    widget.type = "DEFAULT";
 //                    if (widget_source === 0) {
 //                        if (koc_name && template && viewmodel){
 //                            if (!ko.components.isRegistered(koc_name)) {
@@ -541,8 +959,25 @@ define(['knockout',
                                     oj.Logger.log("widget template: "+assetRoot+template);
                                     oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
                                 }
+                                
+//                                var tileCell = self.tiles.calAvailablePositionForTile(widget, 0, 0);
+//                                var tile = new TileItem({row: tileCell.row, column: tileCell.column, width: width, height: height});
+//                                tile.row = ko.observable(tileCell.row);
+//                                tile.column = ko.observable(tileCell.column);
+////                                self.tiles.push(tile);
+//                                self.tiles.tilesGrid.registerTileToGrid(tile);
 
-                                newTile =new DashboardTile(self.dashboard,koc_name,name, description, width, widget, self.timeSelectorModel, self.targetContext); 
+                                newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
+                                var tileCell;
+                                if(!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
+                                    tileCell = new Cell(0, 0);
+                                }else{
+                                    tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
+                                }
+                                newTile.row(tileCell.row);
+                                newTile.column(tileCell.column);
+//                                self.tiles.push(tile);
+                                self.tiles.tilesGrid.registerTileToGrid(newTile);
 //                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
 //                                    var worksheetName = 'WS_4_QDG_WIDGET';
 //                                    var workSheetCreatedBy = 'sysman';
@@ -596,13 +1031,24 @@ define(['knockout',
 //                    } 
                     
                     if (newTile){
-                       self.dashboard.tiles.push(newTile);
+                       self.tiles.tiles.push(newTile);
+                       self.show();
                     }
                 }
                 else {
                     oj.Logger.error("Null widget passed to a tile");
                 }
 
+            };
+            
+            self.initialize = function() {
+                $(window).resize(function() {
+                    widgetAreaWidth = widgetAreaContainer.width();
+                    self.tilesView.disableMovingTransition();
+                    self.show();
+                    self.tilesView.enableMovingTransition();
+                });
+                self.initializeTiles();
             };
             
            self.menuItemSelect = function(event, ui) {
@@ -612,14 +1058,33 @@ define(['knockout',
                    return;
                }
                switch (ui.item.attr("id")) {
+                    case "configure":
+                        self.tiles.configure(tile);
+                        break;
+                    case "refresh-this-widget":
+                        self.refreshThisWidget(tile);
+                        break;
                    case "delete":
-                       self.removeTile(tile);
+                       self.tiles.removeTile(tile, self.tileRemoveCallbacks);
+                       self.tiles.tilesGrid.unregisterTileInGrid(tile);
+                       self.tiles.tilesReorder();
+                       self.show();
                        break;
                    case "wider":
-                       self.broadenTile(tile);
+                       self.tiles.broadenTile(tile);
+                       self.show();
                        break;
                    case "narrower":
-                       self.narrowTile(tile);
+                       self.tiles.narrowTile(tile);
+                       self.show();
+                       break;
+                   case "taller":
+                       self.tiles.tallerTile(tile);
+                       self.show();
+                       break;
+                   case "shorter":
+                       self.tiles.shorterTile(tile);
+                       self.show();
                        break;
                    case "maximize":
                        self.maximize(tile);
@@ -627,45 +1092,55 @@ define(['knockout',
                    case "restore":
                        self.restore(tile);
                        break;
-                   case "configure":
-                       self.configure(tile);
-                       break;
-                   case "refresh-this-widget":
-                       self.refreshThisWidget(tile);
-                       break; 
+                   
                }
            };
            
-            self.removeTile = function(tile) {
-                self.dashboard.tiles.remove(tile);
-                for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                    var eachTile = self.dashboard.tiles()[i];
-                    eachTile.shouldHide(false);
+           self.initializeTiles = function() {
+                // TODO: tiles data should be retrieved from DB
+                // now use dummy data only
+//                var tiles = {
+//                    tiles: [
+//                        {row: 0, column: 0, width: 1, height: 2, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2953-23900/COW+Vol+123+2013-09-06.png'},
+//                        {row: 0, column: 1, width: 2, height: 1, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2628-23521/COW+89+-+Full+sized.png'},
+//                        {row: 0, column: 3, width: 1, height: 3, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2397-23206/COW+Vol+62+2012-07-06+.png'},
+//                        {row: 1, column: 1, width: 1, height: 2, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2121-22545/COTW+Vol+6+2011-06-10+2.png'},
+//                        {row: 1, column: 2, width: 1, height: 1, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2844-23840/463-537/COWClickThroughRateTop5.png'},
+//                        {row: 2, column: 0, width: 1, height: 1, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-3087-23955/Mobile.jpg'},
+////                        {row: 2, column: 2, width: 1, height: 1, imageHref: 'https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/img/bubble-sample.png'},
+//                        {row: 3, column: 0, width: 4, height: 1, content: 'JET has been released for Internal Oracle team development only. It is not a publicly available framework. It remains an Internal Oracle Confidential product and should not be discussed with customers outside of Oracle.JET is a pure client-side framework. You connect to your data via Web Services only'},
+//                        {row: 4, column: 0, width: 2, height: 2, imageHref: 'https://docs.oracle.com/javafx/2/charts/img/bar-sample.png'},
+//                        {row: 4, column: 2, width: 1, height: 1, imageHref: 'https://docs.oracle.com/javafx/2/charts/img/area-sample.png'},
+//                        {row: 6, column:0, width: 4, height: 1, content: 'test  test  test  test  test  test  test  test  test test test test test'}
+//                    ]
+//                };
+//                var tiles = {tiles: self.dashboard.tiles()};
+//                ko.mapping.fromJS(tiles, {
+//                    'tiles': {
+//                        create: function(x) {
+//                            if (x.data.content)
+//                                return new TextTileItem(x.data);
+//                            else
+//                                return new TileItem(x.data);
+//                        }
+//                    }
+//                }, self.tiles);
+                if(self.tiles.tiles && self.tiles.tiles()) {
+                    for(var i=0; i< self.tiles.tiles().length; i++) {
+                        var tile = self.tiles.tiles()[i];
+                        self.tiles.tilesGrid.registerTileToGrid(tile);
+                    }
                 }
-                self.tilesView.enableSortable();
-                self.tilesView.enableDraggable();
-                for (var i = 0; i < self.tileRemoveCallbacks.length; i++) {
-                    self.tileRemoveCallbacks[i]();
-                }
-            };
-            
-            self.broadenTile = function(tile) {
-                if (tile.width() <= 3)
-                    tile.width(tile.width() + 1);
-            };
-            
-            self.narrowTile = function(tile) {
-                if (tile.width() > 1)
-                    tile.width(tile.width() - 1);
+                
             };
             
             self.calculateTilesRowHeight = function() {
-                var tilesRow = $('#tiles-row');
+                var tilesRow = $('#widget-area');
                 var tilesRowSpace = parseInt(tilesRow.css('margin-top'), 0) 
                         + parseInt(tilesRow.css('margin-bottom'), 0) 
                         + parseInt(tilesRow.css('padding-top'), 0) 
                         + parseInt(tilesRow.css('padding-bottom'), 0);
-                var tileSpace = parseInt($('.dbd-tile-maximized .dbd-tile-element').css('margin-bottom'), 0) 
+                var tileSpace = parseInt($('.dbd-tile-maximized').css('margin-bottom'), 0) 
                         + parseInt($('.dbd-tile-maximized').css('padding-bottom'), 0)
                         + parseInt($('.dbd-tile-maximized').css('padding-top'), 0);
                 return $(window).height() - $('#headerWrapper').outerHeight() 
@@ -673,65 +1148,82 @@ define(['knockout',
                         - (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
             };
             
-            // maximize 1st tile only, used for one-page type dashboard
-            self.maximizeFirst = function() {
-                if (self.isOnePageType && self.dashboard.tiles() && self.dashboard.tiles().length > 0) {
-                    if (!$('#main-container').hasClass('dbd-one-page')) {
-                        $('#main-container').addClass('dbd-one-page');
-                    }
-                    if (!$('#tiles-row').hasClass('dbd-one-page')) {
-                        $('#tiles-row').addClass('dbd-one-page');
-                    }
-                    var tile = self.dashboard.tiles()[0];
-                    
-                    var tileId = 'tile' + tile.clientGuid;
-                    var iframe = $('#' + tileId + ' div iframe');
-                    globalDom = iframe.context.body;
-                    var height = globalDom.scrollHeight;
-                    var maximizedTileHeight = self.calculateTilesRowHeight();
-                    height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
-                    var width = globalDom.scrollWidth;
-                    console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
-                    oj.Logger.log("Error: could not find tile from the ui data");
-                    // following are investigation code, and now work actually for plugins loaded by requireJS
-//                    $($('#df_iframe').context).ready(function() {
-//                        alert('iframe loaded');
-//                    });
-//                    $("iframe").on("iframeloading iframeready iframeloaded iframebeforeunload iframeunloaded", function(e){
-//                        console.log(e.type);
-//                    });
-//                    requirejs.onResourceLoad = function (context, map, depArray) {
-//                        alert('test');
-//                    };
-//                    iframe.height(height + 'px');
-//                    iframe.width(width + 'px');
-                    onePageTile = $('#' + tileId);
-                    $('#' + tileId).height(height + 'px');
-                    $('#' + tileId).width(width + 'px');
-                    if (!$('#df_iframe').hasClass('dbd-one-page'))
-                        $('#df_iframe').addClass('dbd-one-page');
-                    $('#df_iframe').width((width - 5) + 'px');
+//            self.maximizeFirst = function() {
+//                if (self.isOnePageType && self.tiles.tiles() && self.tiles.tiles().length > 0) {
+//                    if (!$('#main-container').hasClass('dbd-one-page')) {
+//                        $('#main-container').addClass('dbd-one-page');
+//                    }
+//                    if (!$('#widget-area').hasClass('dbd-one-page')) {
+//                        $('#widget-area').addClass('dbd-one-page');
+//                    }
+//                    var tile = self.tiles.tiles()[0];
+//                    
+//                    var tileId = 'tile' + tile.clientGuid;
+//                    var iframe = $('#' + tileId + ' div iframe');
+//                    globalDom = iframe.context.body;
+//                    var height = globalDom.scrollHeight;
+//                    var maximizedTileHeight = self.calculateTilesRowHeight();
+//                    height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
+//                    var width = globalDom.scrollWidth;
+//                    console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
+//                    oj.Logger.log("Error: could not find tile from the ui data");
+//                    // following are investigation code, and now work actually for plugins loaded by requireJS
+////                    $($('#df_iframe').context).ready(function() {
+////                        alert('iframe loaded');
+////                    });
+////                    $("iframe").on("iframeloading iframeready iframeloaded iframebeforeunload iframeunloaded", function(e){
+////                        console.log(e.type);
+////                    });
+////                    requirejs.onResourceLoad = function (context, map, depArray) {
+////                        alert('test');
+////                    };
+////                    iframe.height(height + 'px');
+////                    iframe.width(width + 'px');
+//                    onePageTile = $('#' + tileId);
+//                    $('#' + tileId).height(height + 'px');
+//                    $('#' + tileId).width(width + 'px');
+//                    if (!$('#df_iframe').hasClass('dbd-one-page'))
+//                        $('#df_iframe').addClass('dbd-one-page');
+//                    $('#df_iframe').width((width - 5) + 'px');
+//                }
+//            };
+            
+            self.showMaximizedTile = function(tile, width, height) {
+                if(!tile) {
+                    return;
                 }
+                var columnWidth = widgetAreaWidth / defaultCols;
+                var baseLeft = widgetAreaContainer.position().left;
+                var top = widgetAreaContainer.position().top;
+                tile.cssWidth(width*columnWidth);
+                tile.cssHeight(height*defaultHeight);
+                tile.left(baseLeft);
+                tile.top(top);
+                self.tilesView.disableDraggable();
             };
             
             self.maximize = function(tile) {
-                for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                    var eachTile = self.dashboard.tiles()[i];
+                for (var i = 0; i < self.tiles.tiles().length; i++) {
+                    var eachTile = self.tiles.tiles()[i];
                     if (eachTile !== tile)
                         eachTile.shouldHide(true);
                 }
                 tile.shouldHide(false);
                 tile.isMaximized(true);
-                self.tilesView.disableSortable();
-                self.tilesView.disableDraggable();
-                var maximizedTileHeight = self.calculateTilesRowHeight();
-                self.tileOriginalHeight = $('.dbd-tile-maximized .dbd-tile-element').height();
-                $('.dbd-tile-maximized .dbd-tile-element').height(maximizedTileHeight);
+                var maximizedTileHeight = self.calculateTilesRowHeight()/defaultHeight;
+                if(maximizedTileHeight === 0) {
+                    maximizedTileHeight = 1;
+                }
+                $(window).scrollTop(0);
+                self.showMaximizedTile(tile, defaultCols, maximizedTileHeight);
             };
             
             self.getMaximizedTile = function() {
-                for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                    var tile = self.dashboard.tiles()[i];
+                if(!(self.tiles.tiles && self.tiles.tiles())) {
+                    return;
+                }
+                for (var i = 0; i < self.tiles.tiles().length; i++) {
+                    var tile = self.tiles.tiles()[i];
                     if (tile && tile.isMaximized && tile.isMaximized()) {
                     	return tile;
                     }
@@ -745,30 +1237,229 @@ define(['knockout',
             		self.maximize(maximized);
             };
             
-            self.restore = function(tile) {
-                if (self.tileOriginalHeight) {
-                    $('.dbd-tile-maximized .dbd-tile-element').height(self.tileOriginalHeight);
-                }
+            self.restore = function(tile) {                
                 tile.isMaximized(false);
-                for (var i = 0; i < self.dashboard.tiles().length; i++) {
-                    var eachTile = self.dashboard.tiles()[i];
+                for (var i = 0; i < self.tiles.tiles().length; i++) {
+                    var eachTile = self.tiles.tiles()[i];
                     eachTile.shouldHide(false);
                 }
-                self.tilesView.enableSortable();
                 self.tilesView.enableDraggable();
+                self.show();
+                
+                var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
+                self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
             
-            self.configure = function(tile){
-                if (tile.configure){
-                    tile.configure();
-                }
-            };
-
             self.refreshThisWidget = function(tile) {
                 var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null);
                 self.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent);
             }
             
+            self.show = function() {
+                widgetAreaWidth = widgetAreaContainer.width();
+                self.showTiles();
+//                self.tilesView.enableDraggable();
+                $('.dbd-widget').on('dragstart', self.handleStartDragging);
+                $('.dbd-widget').on('drag', self.handleOnDragging);
+                $('.dbd-widget').on('dragstop', self.handleStopDragging);
+                var height = self.tiles.tilesGrid.getHeight();
+                $('#tiles-wrapper').height(height);
+            };
+            
+            self.firstReorderTilesThenShow = function() {
+                self.tiles.tilesReorder();
+                self.show();
+            };
+            
+            self.getCellFromPosition = function(position) {
+                var row = 0, height = 0;
+                var grid = self.tiles.tilesGrid;
+                for (; row < grid.size(); row++) {
+                    height += grid.getRowHeight(row);
+                    if (position.top < (height >= defaultHeight / 2 ? height : defaultHeight / 2))
+                        break;
+                }
+                var columnWidth = widgetAreaWidth / defaultCols;
+                var column = Math.round(position.left / columnWidth);
+                column = (column <= 0) ? 0 : (column >= defaultCols ? defaultCols - 1 : column);
+                return new Cell(row, column);
+            };
+            
+            self.isDraggingCellChanged = function(pos) {
+                if (!self.previousDragCell)
+                    return true;
+                return pos.row !== self.previousDragCell.row || pos.column !== self.previousDragCell.column;
+            };
+            
+            self.getDisplayWidthForTile = function(tile) {
+                var columnWidth = widgetAreaWidth / defaultCols;
+                return tile.width() * columnWidth;
+            };
+            
+            self.getDisplayHeightForTile = function(tile) {
+                return tile.height() * defaultHeight;
+            };
+            
+            self.getDisplayLeftForTile = function(tile) {
+                var baseLeft = widgetAreaContainer.position().left;
+                var columnWidth = widgetAreaWidth / defaultCols;
+                return baseLeft + tile.column() * columnWidth;
+            };
+            
+            self.getDisplayTopForTile = function(tile) {
+                var top = widgetAreaContainer.position().top;
+                for (var i = 0; i < tile.row(); i++) {
+                    top += self.tiles.getRowHeight(i);
+                }
+                return top;
+            };
+            
+            self.getDisplaySizeForTiles = function() {
+                for (var i = 0; i < self.tiles.tiles().length; i++) {
+                    var tile = self.tiles.tiles()[i];
+                    tile.cssWidth(self.getDisplayWidthForTile(tile));
+                    tile.cssHeight(self.getDisplayHeightForTile(tile));
+                }
+            };
+            
+            self.getDisplayPositionForTiles = function() {
+                for (var i = 0; i < self.tiles.tiles().length; i++) {
+                    var tile = self.tiles.tiles()[i];
+                    tile.left(self.getDisplayLeftForTile(tile));
+                    tile.top(self.getDisplayTopForTile(tile));
+                }
+            };
+            
+            self.showTiles = function() {
+                if(!(self.tiles.tiles && self.tiles.tiles())) {
+                    return;
+                }
+                for (var i=0; i< self.tiles.tiles().length; i++) {
+                    var tile = self.tiles.tiles()[i];
+                    if(tile.isMaximized()) {
+                        self.maximize(tile);
+                        return;
+                    }
+                }
+                for (var i = 0; i < self.tiles.tiles().length; i++) {
+                    var tile = self.tiles.tiles()[i];
+                    if(tile.type() == "TEXT_WIDGET") {
+                       tile.shouldHide(true);
+                    }                    
+                    tile.cssWidth(self.getDisplayWidthForTile(tile));
+                    tile.cssHeight(self.getDisplayHeightForTile(tile));
+                    tile.left(self.getDisplayLeftForTile(tile));
+                    tile.top(self.getDisplayTopForTile(tile));
+                    tile.shouldHide(false);
+                    if (tile.type() === 'TEXT_WIDGET') {
+                        var displayHeight = tile.displayHeight();
+                        if (!displayHeight)
+                            self.detectTextTileRender(tile);
+                        self.tiles.setRowHeight(tile.row(), displayHeight);
+                    }
+                    else {
+                        self.tiles.setRowHeight(tile.row());
+                    }
+                }
+                self.tilesView.enableDraggable();
+            };
+
+            self.detectTextTileRender = function(textTile) {
+                if (!textTile)
+                    return;
+                var elem = self.tilesView.getTileElement(textTile);
+                var lastHeight = elem.css('height');
+                
+                function checkForChanges() {
+                    console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + elem.css('height') + '. Last height is ' + lastHeight);
+                    if (elem.css('height') !== lastHeight) {
+                        self.reRender();
+                        return;
+                    }
+                    setTimeout(checkForChanges, 100);
+                };
+                checkForChanges();
+            };
+            
+            self.reRender = function() {
+                self.tilesView.disableMovingTransition();
+                self.show();
+                self.tilesView.enableMovingTransition();
+            };
+            var startTime, curTime;
+            self.handleStartDragging = function(event, ui) {
+                startTime = new Date().getTime();
+                var tile = ko.dataFor(ui.helper[0]);
+                self.previousDragCell = new Cell(tile.row(), tile.column());
+                if (!$(ui.helper).hasClass(draggingTileClass)) {
+                    $(ui.helper).addClass(draggingTileClass);
+                }
+            };
+            
+            self.reloadEditors = function() {
+                for(var i in CKEDITOR.instances) {
+                    delete CKEDITOR.instances[i];
+                    $("#cke_"+i).remove();
+                }
+                $("textarea.editor").each(function() {
+                    var targetId = $(this).attr("id");
+//                    CKEDITOR.replace(targetId);
+                    CKEDITOR.replace(targetId, {
+                            language: 'en',
+                            toolbar: [
+                                {name: 'styles', items: ['Font', 'FontSize']},
+                                {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
+                                {name: 'colors', items: ['TextColor']},
+                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
+//                                {name: 'insert', items: ['Image', 'Flash']}
+                            ],
+                            removePlugins: 'resize, elementspath',
+                            startupFocus: true
+                        });
+                });
+            };
+            
+            self.handleOnDragging = function(event, ui) {
+                curTime = new Date().getTime();
+                var tile = ko.dataFor(ui.helper[0]);
+                var cell = self.getCellFromPosition(ui.helper.position()); 
+                if(tile.content) {
+                    cell.column = 0;
+                }
+                if ((!self.previousDragCell || cell.row !== self.previousDragCell.row || cell.column !== self.previousDragCell.column) 
+                        && ((cell.column+tile.width())<=defaultCols) 
+                        && (curTime-startTime)>300) {
+                    self.previousDragCell = cell;
+                    self.tiles.updateTilePosition(tile, cell.row, cell.column);
+                    self.tiles.tilesReorder(tile);
+                    self.show();
+                    $('#tile-dragging-placeholder').css({
+                        left: tile.left(),
+                        top: tile.top(),
+                        width: ui.helper.width() -20,
+                        height: ui.helper.height() - 20
+                    }).show();
+                    startTime = curTime;
+                }
+            };
+            
+            self.handleStopDragging = function(event, ui) {
+                var tile = ko.dataFor(ui.helper[0]);
+                if (!self.previousDragCell)
+                    return;
+                $(ui.helper).css({left: tile.left(), top: tile.top()});
+                self.tiles.tilesReorder(tile);
+                self.show();
+                $('#tile-dragging-placeholder').hide();
+                if ($(ui.helper).hasClass(draggingTileClass)) {
+                    $(ui.helper).removeClass(draggingTileClass);
+                }
+                self.previousDragCell = null;
+                if(tile.type() === "TEXT_WIDGET") {
+                   self.reloadEditors(); 
+                }            
+            };
+          
 //            self.changeUrl = function(tile) {
 //                urlEditView.setEditedTile(tile);
 //                $('#urlChangeDialog').ojDialog('open');
@@ -819,7 +1510,7 @@ define(['knockout',
             };
             
             self.postDocumentShow = function() {
-                self.maximizeFirst();
+//                self.maximizeFirst();
                 self.initializeMaximization();
             };
 
@@ -849,7 +1540,7 @@ define(['knockout',
 		self.timeSelectorModel.viewEnd(end);
 		self.timeSelectorModel.timeRangeChange(true);		
 	    }
-	}
+	};
 
 /**
 	self.refreshCallback = function(start, end) {
@@ -891,8 +1582,12 @@ define(['knockout',
             "isDashboardNameExisting": isDashboardNameExisting,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
+            "initializeTextTileAfterLoad" : initializeTextTileAfterLoad,
             "updateDashboard": updateDashboard,
-            "registerComponent": registerComponent
+            "registerComponent": registerComponent,
+            "encodeHtml": encodeHtml,
+            "decodeHtml": decodeHtml,
+            "isContentLengthValid": isContentLengthValid
         };
     }
 );

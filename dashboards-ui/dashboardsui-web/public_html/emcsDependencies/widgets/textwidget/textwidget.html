@@ -1,0 +1,39 @@
+<div  data-bind="attr: {id: 'textWidget_'+randomId}" style="width: 100%; display: block; left : 10px; margin-top: 10px; margin-bottom: 5px;" class="text-widget-area">
+    <div id="text-widget-display-hover-area" data-bind="attr: {id: 'textInfo'}" style="width:100%;"  class="dbd-display-area">
+            <div class="dbd-display-hover-area" data-bind="event: {mouseover: toggleEditIcons, mouseout: toggleEditIcons}">
+                <p data-bind="html: content, event: {dblclick: showEditor}, enterpress: showEditor, attr: {title: getNlsString('DBS_BUILDER_TEXT_WIDGET_EDIT')}" tabindex="0"></p>
+                <button id="text-widget-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
+                         data-bind="click: showEditor, ojComponent: {component: 'ojButton'}">
+                    <img src="css/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+                </button>
+                <button id="text-widget-edit-cancel" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
+                        data-bind="click: deleteEditor, ojComponent: {
+                                                component:'ojButton'
+                                    }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
+                    <img src="css/images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+                </button>
+            </div>
+    </div>
+    <div id="text-widget-edit-area" class="dbd-edit-area">
+        <p data-bind="html: content, event: {dblclick: showEditor}"></p>
+        <button id="text-widget-edit-ok" class="oj-button oj-default oj-button-half-chrome"
+                data-bind="click: showEditor,ojComponent: {
+                                                component:'ojButton'
+                                    }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
+            <span role="img"
+                  class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
+        </button>
+        <button id="text-widget-edit-cancel" class="oj-button oj-default oj-button-half-chrome"
+                data-bind="click: cancelEdit, ojComponent: {
+                                                component:'ojButton'
+                                    }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
+            <span role="img"
+                  class="oj-fwk-icon-status-error oj-fwk-icon"></span>
+        </button>
+    </div>
+    <div style="display: none; height: 250px; margin: 0 auto;" data-bind="attr: {id: 'textEditorWrapper'}">
+        <textarea class="editor" data-bind="attr: {id: 'textEditor_'+randomId}, value: content"></textarea>        
+        <!--<textarea class="editor"  data-bind="ojComponent: {component: 'ojTextArea', value: content, validators: [{type: 'regExp', options: {pattern: '([.\\n]*)?{1, 100}'}}]}, attr: {id: 'textEditor_'+randomId}, rootAttributes: {'style':' width: 1600px;'}"></textarea>-->
+    </div>
+    <div data-bind="text: getNlsString('TEXT_LENGTH_ERROR_MSG'), style: {'display': showErrorMsg, 'font-size': '16px', 'font-weight': 'bold', 'color': 'red'}"></div>
+</div>
