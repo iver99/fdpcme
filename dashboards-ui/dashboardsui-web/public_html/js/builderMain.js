@@ -221,7 +221,7 @@ require(['knockout',
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
                             if(tile.type() === "TEXT_WIDGET") {
-                                dtm.initializeTextTileAfterLoad(dashboard, tile, tilesViewModel.firstReorderTilesThenShow, dtm.isContentLengthValid);
+                                dtm.initializeTextTileAfterLoad(dashboard, tile, tilesViewModel.show, tilesViewModel.tiles.tilesReorder, dtm.isContentLengthValid);
                             }else {
                                 dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
                             }

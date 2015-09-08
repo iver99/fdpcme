@@ -37,6 +37,8 @@ define(['knockout',
         
         var widgetAreaWidth = 0;
         var widgetAreaContainer = null;
+        
+        var dragStartRow = null;
         /**
          * 
          * @param {ko.observable} startTime: start time of new time range
@@ -108,7 +110,7 @@ define(['knockout',
             }
         }
         
-        function initializeTextTileAfterLoad(dashboard, tile, callback, isContentLengthValid) {
+        function initializeTextTileAfterLoad(dashboard, tile, funcShow, funcReorder, isContentLengthValid) {
             if(!tile) {
                 return;
             }
@@ -118,7 +120,8 @@ define(['knockout',
             	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
             });
             tile.params = {
-                callbackAfterDblClick: callback,
+                show: funcShow,
+                reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
                 validator: isContentLengthValid
@@ -126,7 +129,7 @@ define(['knockout',
             
             tile.tileDisplayClass = ko.computed(function() {
                 var display = tile.shouldHide()?"none":"block";
-                return tile.cssStyle() + "display:" + display;
+                return tile.cssStyle() + "display:" + display + "; left: 20px;";
             });
         }
         
@@ -265,7 +268,7 @@ define(['knockout',
             };
         }
         
-        function DashboardTextTile(dashboard, widget, callback) {
+        function DashboardTextTile(dashboard, widget, funcShow, funcReorder) {
             var self = this;
             self.dashboard = dashboard;
             self.title = ko.observable("text widget title"); //to do 
@@ -282,7 +285,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTextTileAfterLoad(dashboard, self, callback, isContentLengthValid);            
+            initializeTextTileAfterLoad(dashboard, self, funcShow, funcReorder, isContentLengthValid);            
         }
 
         /**
@@ -532,7 +535,7 @@ define(['knockout',
             self.widgetCssStyle = ko.computed(function() {
                 return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54) + "px;";
             });
-//            self.tileType = ko.observable(data.content ? 'Text' : 'Default');
+
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
             self.clientGuid = getGuid();
             self.sectionBreak = false;
@@ -768,6 +771,9 @@ define(['knockout',
 //                self.tilesGrid.initializeGridRows(self.tilesGrid.size());
                 if (tile) {
                     self.updateTilePosition(tile, tile.row(), tile.column());
+                    if(dragStartRow !== null){
+                        var startRowInDragArea = Math.min(dragStartRow, tile.row());
+                    }
                 }else {
                     self.tilesGrid.initializeGridRows(1);
                 }
@@ -779,13 +785,30 @@ define(['knockout',
                         startRow = tl.row();
                         continue;
                     }
-                    var cell = self.calAvailablePositionForTile(tl, startRow, startCol);
+                    if(tile && dragStartRow!==null && self.areTilesOverlapped(tl, tile)) {
+                        var cell =  self.calAvailablePositionForTile(tl, startRowInDragArea, startCol);
+                    }else{
+                        var cell = self.calAvailablePositionForTile(tl, startRow, startCol);
+                    }                    
+                    startRow = cell.row;
                     self.updateTilePosition(tl, cell.row, cell.column);
                     startRow = tl.row();
 //                    cell = self.getAvailableCellAfterTile(tl);
 //                    startRow = cell.row, startCol = cell.column;
                 }
             };
+            
+            self.areTilesOverlapped = function(tile1, tile2) {
+               var minx1 = tile1.row(), maxx1 = tile1.row() + tile1.height();
+               var miny1 = tile1.column(), maxy1 = tile1.column() + tile1.width();
+               var minx2 = tile2.row(), maxx2 = tile2.row() + tile2.height();
+               var miny2 = tile2.column(), maxy2 = tile2.column() + tile2.width(); 
+               var minx = Math.max(minx1, minx2);
+               var miny = Math.max(miny1, miny2);
+               var maxx = Math.min(maxx1, maxx2);
+               var maxy = Math.min(maxy1, maxy2);
+               return (minx<maxx) && (miny<maxy);
+            }
             
             self.updateTilePosition = function(tile, row, column) {
                 if (tile.row() !== null && tile.column() !== null)
@@ -895,8 +918,7 @@ define(['knockout',
                 widget.column = null;
                 widget.row = null;
                 widget.content = null;
-                
-                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.firstReorderTilesThenShow);
+                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show, self.tiles.tilesReorder);
                 var textTileCell = new Cell(0, 0);
                 newTextTile.row(textTileCell.row);
                 newTextTile.column(textTileCell.column);
@@ -1097,34 +1119,6 @@ define(['knockout',
            };
            
            self.initializeTiles = function() {
-                // TODO: tiles data should be retrieved from DB
-                // now use dummy data only
-//                var tiles = {
-//                    tiles: [
-//                        {row: 0, column: 0, width: 1, height: 2, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2953-23900/COW+Vol+123+2013-09-06.png'},
-//                        {row: 0, column: 1, width: 2, height: 1, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2628-23521/COW+89+-+Full+sized.png'},
-//                        {row: 0, column: 3, width: 1, height: 3, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2397-23206/COW+Vol+62+2012-07-06+.png'},
-//                        {row: 1, column: 1, width: 1, height: 2, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2121-22545/COTW+Vol+6+2011-06-10+2.png'},
-//                        {row: 1, column: 2, width: 1, height: 1, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-2844-23840/463-537/COWClickThroughRateTop5.png'},
-//                        {row: 2, column: 0, width: 1, height: 1, imageHref: 'https://community.oracle.com/servlet/JiveServlet/downloadImage/38-3087-23955/Mobile.jpg'},
-////                        {row: 2, column: 2, width: 1, height: 1, imageHref: 'https://docs.oracle.com/javase/8/javafx/user-interface-tutorial/img/bubble-sample.png'},
-//                        {row: 3, column: 0, width: 4, height: 1, content: 'JET has been released for Internal Oracle team development only. It is not a publicly available framework. It remains an Internal Oracle Confidential product and should not be discussed with customers outside of Oracle.JET is a pure client-side framework. You connect to your data via Web Services only'},
-//                        {row: 4, column: 0, width: 2, height: 2, imageHref: 'https://docs.oracle.com/javafx/2/charts/img/bar-sample.png'},
-//                        {row: 4, column: 2, width: 1, height: 1, imageHref: 'https://docs.oracle.com/javafx/2/charts/img/area-sample.png'},
-//                        {row: 6, column:0, width: 4, height: 1, content: 'test  test  test  test  test  test  test  test  test test test test test'}
-//                    ]
-//                };
-//                var tiles = {tiles: self.dashboard.tiles()};
-//                ko.mapping.fromJS(tiles, {
-//                    'tiles': {
-//                        create: function(x) {
-//                            if (x.data.content)
-//                                return new TextTileItem(x.data);
-//                            else
-//                                return new TileItem(x.data);
-//                        }
-//                    }
-//                }, self.tiles);
                 if(self.tiles.tiles && self.tiles.tiles()) {
                     for(var i=0; i< self.tiles.tiles().length; i++) {
                         var tile = self.tiles.tiles()[i];
@@ -1266,10 +1260,6 @@ define(['knockout',
                 $('#tiles-wrapper').height(height);
             };
             
-            self.firstReorderTilesThenShow = function() {
-                self.tiles.tilesReorder();
-                self.show();
-            };
             
             self.getCellFromPosition = function(position) {
                 var row = 0, height = 0;
@@ -1390,6 +1380,7 @@ define(['knockout',
             self.handleStartDragging = function(event, ui) {
                 startTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);
+                dragStartRow = tile.row();
                 self.previousDragCell = new Cell(tile.row(), tile.column());
                 if (!$(ui.helper).hasClass(draggingTileClass)) {
                     $(ui.helper).addClass(draggingTileClass);
@@ -1454,6 +1445,7 @@ define(['knockout',
                 if ($(ui.helper).hasClass(draggingTileClass)) {
                     $(ui.helper).removeClass(draggingTileClass);
                 }
+                dragStartRow = null;
                 self.previousDragCell = null;
                 if(tile.type() === "TEXT_WIDGET") {
                    self.reloadEditors(); 

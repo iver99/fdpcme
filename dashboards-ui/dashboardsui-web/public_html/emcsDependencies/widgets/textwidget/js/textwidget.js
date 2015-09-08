@@ -4,13 +4,16 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 var self = this;
                 var textEditor;
                 var textEditorId;
-                var defaultContent = '<span style="font-size: 16px;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
-                var validator, callbackAfterDblClick;
+                var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
+                var validator, show, reorder;
                 if(params.validator){
                     validator = params.validator;
                 }
-                if(params.callbackAfterDblClick) {
-                    callbackAfterDblClick = params.callbackAfterDblClick;
+                if(params.show) {
+                    show = params.show;
+                }
+                if(params.reorder) {
+                   reorder = params.reorder; 
                 }
                 self.showErrorMsg = ko.observable("none");
                 self.randomId = new Date().getTime();
@@ -58,7 +61,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         textEditor.setData(self.content());
                     }
                      
-                    callbackAfterDblClick();
+                    show();
                 }
                 
                 self.initializeCKEditor = function(id) {
@@ -82,9 +85,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     }
                     
                     self.showErrorMsg("none");
-                    $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
-                    
-                    callbackAfterDblClick();
+                    $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();                    
+                    show();
                 }
                 
                 self.deleteEditor = function() {
@@ -92,11 +94,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if(params.tiles) {
                         params.tiles.remove(params.tile);
                     }
-                    callbackAfterDblClick();
+                    reorder();
+                    show();
                 }
                 
                 self.toggleEditIcons = function() {
-                    callbackAfterDblClick();
+                    show();
                 }
             }
             return textWidgetViewModel;
