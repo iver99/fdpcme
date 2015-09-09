@@ -258,7 +258,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testHomeLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Home link
 		webd.click(DashBoardPageId.HomeLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -275,7 +275,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testITALink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//IT Analytics link,check checkbox
 		webd.click(DashBoardPageId.ITALinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -292,7 +292,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testLALink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Log Analytics link
 		webd.click(DashBoardPageId.LALinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -309,7 +309,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testAPMLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//APM link
 		webd.click(DashBoardPageId.APMLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -326,7 +326,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testLogLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Log link
 		webd.click(DashBoardPageId.LOGLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -343,7 +343,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testAWRLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//AWR Analytics link		
 		webd.click(DashBoardPageId.AWRALinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -360,7 +360,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testFlexLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Flex link
 		webd.click(DashBoardPageId.FlexLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -377,7 +377,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testTargetLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Target link
 		webd.click(DashBoardPageId.TargetLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -394,7 +394,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testSoftwareLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Customer Software link
 		webd.click(DashBoardPageId.CustomLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -411,7 +411,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testAdminLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//IT Analytics Administration link
 		webd.click(DashBoardPageId.ITA_Admin_LinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
