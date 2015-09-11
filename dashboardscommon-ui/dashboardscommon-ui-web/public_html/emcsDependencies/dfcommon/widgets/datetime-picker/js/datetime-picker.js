@@ -35,6 +35,8 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
             function dateTimePickerViewModel(params) {
                 var self = this;
                 var msgUtil = new msgUtilModel();
+                console.log("Initialize date time picker! The params are: ");
+                console.log(params);
                 
                 var start, end;
                 var dateDiff, timeDiff, dateTimeDiff;
@@ -197,7 +199,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                 self.nlsStrings = ko.observable();
                 var nlsString;
                 
-                                //hide specified time periods
+                //hide specified time periods
                 if(params.timePeriodsNotToShow && isArray(params.timePeriodsNotToShow) && params.timePeriodsNotToShow.length>0) {
                     self.timePeriodsNotToShow = params.timePeriodsNotToShow;
                 }
@@ -219,7 +221,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                 }
                 
                 //In custom mode, limit the sise of window, expressed as milliseconds
-                if(params.customWindowLimit) {
+                if(params.customWindowLimit && params.customWindowLimit>60*1000) {
                     self.customWindowLimit = params.customWindowLimit;
                 }
                 
@@ -236,19 +238,19 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     self.maxDate(oj.IntlConverterUtils.dateToLocalIso(maxDate));
                 }
                 
-                //the max timestamp of how far the user can pick the date from
-                if(params.customTimeBack) {
+                //the max timestamp of how far the user can pick the date from, expressed as milliseconds
+                if(params.customTimeBack && params.customTimeBack>0) {
                     self.customTimeBack = params.customTimeBack;
                     self.setMinMaxDate();
                 }
                 
-                if(params.hideMainLabel) {
+                if(params.hideMainLabel && params.hideMainLabel === true) {
                     self.hideMainLabel = "none";
                 }else{
                     self.hideMainLabel = "inline-block";
                 }
                 
-                if(params.hideRangeLabel) {
+                if(params.hideRangeLabel && params.hideRangeLabel === true) {
                     self.hideRangeLabel = "none";
                     self.pickerTopCss = "text-align: center;"
                 }else {
@@ -256,7 +258,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     self.pickerTopCss = "text-align: left;"
                 }
                 
-                if (params.callbackAfterApply) {
+                if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
                     self.callbackAfterApply = params.callbackAfterApply;
                 }
 
@@ -807,6 +809,9 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         self.updateRange(self.startDate(), self.endDate());
 
                         $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId);
+                        //override popup's style
+                        $(self.panelId+"_wrapper"+" .oj-popup-content").css("padding", "0px");
+                        $(self.panelId+"_wrapper"+" .oj-popup").css("border", "0px");
 //                        $("#panel").slideDown();
                         $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', 'emcsDependencies/dfcommon/images/pull-up.jpg');
                     }
@@ -850,20 +855,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
 
                         self.startTime(start.slice(10, 16));
                         self.endTime(end.slice(10, 16));
-                        self.selectByDrawer(true);
- 
-                         
-//                        if(self.customTimeBack) {
-////                            self.minDate(null);
-////                            self.maxDate(null);
-//                            self.beyondTimeBackError(false);
-//                        }
-                    }else {
-//                        if(self.customTimeBack) {
-//                            self.startDate(self.dateConverter2.format(curDate));
-//                            self.endDate(self.dateConverter2.format(curDate));
-//                            self.isCustombeyondTimeBack();
-//                        }
+                        self.selectByDrawer(true); 
                     }
 
                     self.timePeriod(event.target.innerHTML);

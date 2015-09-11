@@ -5,7 +5,7 @@
         <img data-bind="attr: {id: 'panelArrow_'+randomId}" alt="dropdown" src="emcsDependencies/dfcommon/images/drop-down.jpg"/>
     </button>            
 
-    <div class="panel" style="display:none" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
+    <div class="panel" style="display:none" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas, rootAttributes: {style: 'height:387px; width: 630px;'}}, attr: {id: 'panel_'+randomId}"> 
         <!-- left of panel -->
         <div class="drawers" data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
             <a href="#" class="drawer"  data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins"></a>
@@ -27,9 +27,8 @@
             <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">
                 <!-- date and time above the canlendar -->
 
-                <span style="font-weight: bold; display: inline-block; width: 75px;padding-left: 5px;" data-bind="text: timePeriod, style: {display: hideRangeLabel}">                            
+                <span style="font-weight: bold; display: inline-block; width: 90px;padding-left: 5px; text-align:center;" data-bind="text: timePeriod, style: {display: hideRangeLabel}">                            
                 </span>
-                &nbsp;&nbsp;
 
                 <div class="chosenDate">
                     <input data-bind="attr: {id: 'inputStartDate_'+randomId}, ojComponent: {component: 'ojInputText', value: startDate, placeholder: 'mm/dd/yyyy', rootAttributes:{style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 1)}}, click: focusOnStartDate, hasFocus: startDateFocus"/>
@@ -71,13 +70,13 @@
                 </button>
             </div>
 	    <!-- ko if: showErrorMsg -->
-	        <div class="formatErrorMsg" data-bind="text: formatErrorMsg"></div>
+	        <div class="errorMsg" data-bind="text: formatErrorMsg"></div>
 	    <!-- /ko -->
             <!-- ko if: showTimeValidateErrorMsg -->
-                <div class="formatErrorMsg" data-bind="text: timeValidateErrorMsg"></div>
+                <div class="errorMsg" data-bind="text: timeValidateErrorMsg"></div>
             <!-- /ko -->
             <!--ko if: showBeyondWindowLimitError-->
-                <div class="formatErrorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
+                <div class="errorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
             <!-- /ko -->
         </div>
     </div> 
