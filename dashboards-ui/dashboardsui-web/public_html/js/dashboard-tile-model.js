@@ -360,7 +360,8 @@ define(['knockout',
                 success: function(data) {
                     if (data && data.dashboards && data.dashboards.length > 0) {
                         for (var i = 0; i < data.dashboards.length; i++) {
-                            if (name === data.dashboards[i].name) {
+                            var __dname = $("<div/>").html(data.dashboards[i].name).text();
+                            if (name === __dname) {
                                 exists = true;
                                 break;
                             }
