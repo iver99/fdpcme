@@ -109,7 +109,11 @@ define({
       "DATETIME_PICKER_TIME_RANGE": "Time Range",
       "DATETIME_PICKER_ERROR": "Error!",
       "DATETIME_PICKER_FORMAT_ERROR_MSG": "Invalid data! Enter \"mm/dd/yyyy\" for date or \"hh:mm AM/PM\" for time!",
-      "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "Invalid data! Start time is later than endtime!"
+      "DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG": "Invalid data! Start time is later than endtime!",
+      "DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG": "Invalid data! You've set a time range larger than window size: ",
+      "DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS": "{0} day(s) {1} hour(s) {2} minute(s)",
+      "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hour(s) {1} minute(s)",
+      "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s)"
 }
 });
 
