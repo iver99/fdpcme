@@ -416,10 +416,34 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         $(timePeriodId).hide();
                     }
                 }
+                
+                self.setTimePeriodToLastX = function(timePeriod, start, end) {
+                    var eleId = self.panelId + " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
+                    self.timePeriod(timePeriod);
+                    self.selectByDrawer(true);
+                    $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
+                    $(self.panelId + ' .drawer').css('font-weight', 'normal');
+                    $(eleId).css('background-color', '#ffffff');
+                    $(eleId).css('font-weight', 'bold');
+                    
+                    if(self.adjustLastX && start && end) {
+                        var adjustedTime = self.adjustLastX(start, end);
+                        start = adjustedTime.start;
+                        end = adjustedTime.end;
+                    }
+                    
+                    return {
+                        start: start,
+                        end: end
+                    }
+                }
 
                 var curDate = new Date();
 
                 $.when(nlsString()).done(function () {
+                    start = new Date(curDate - 15 * 60 * 1000);
+                    end = new Date();
+                    
                     //hide time period according to params: timePeriodsNotToShow
                     if(self.timePeriodsNotToShow) {
                         self.hideTimePeriods(self.timePeriodsNotToShow);
@@ -432,101 +456,45 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         dateTimeDiff = end - start;
                         var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
                         
-                        if (t_timePeriod && !$.inArray(t_timePeriod, self.timePeroidsNotToShow)) {
-                            self.timePeriod(t_timePeriod);
-                            if(self.adjustLastX) {
-                                var adjustedTime = self.adjustLastX(start, end);
-                                start = adjustedTime.start;
-                                end = adjustedTime.end;
-                            }
-                            self.selectByDrawer(true);
-                            var eleId = self.panelId + " #drawer" + self.timePeriodObject()[t_timePeriod][0] + "_" + self.randomId;
-                            $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
-                            $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                            $(eleId).css('background-color', '#ffffff');
-                            $(eleId).css('font-weight', 'bold');
+                        if (t_timePeriod && $.inArray(t_timePeriod, self.timePeriodsNotToShow)<0) {
+                            var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
+                            start = range.start;
+                            end = range.end;
                         } else {
                             customClick();
                         }
                     } else if (!params.startDatetime && params.endDateTime) {
-                        if(!$.inArray(self.timePeriodLast15mins(), self.timePeroidsNotToShow)) {
-                            
-                            self.timePeriod(self.timePeriodLast15mins());
-                            self.selectByDrawer(true);
-                            $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
-                            $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                            $(self.panelId + ' #drawer0_' + self.randomId).css('background-color', '#ffffff');
-                            $(self.panelId + ' #drawer0_' + self.randomId).css('font-weight', 'bold');
-
-                            start = new Date(curDate - 15 * 60 * 1000);
-                            end = new Date();
-
-                            if(self.adjustLastX) {
-                                var adjustedTime = self.adjustLastX(start, end);
-                                start = adjustedTime.start;
-                                end = adjustedTime.end;
-                            }
+                        if($.inArray(self.timePeriodLast15mins(), self.timePeriodsNotToShow)<0) {
+                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins(), start, end);
+                            start = range.start;
+                            end = range.end;
                         }else {
-                            start = new Date(curDate - 15 * 60 * 1000);
-                            end = new Date();
                             customClick();
                         }
                         //print warning...
                         oj.Logger.warn("The user just input end time");
-
                     } else if (params.startDateTime && !params.endDateTime) {
                         customClick();
                         start = new Date(params.startDateTime);
                         end = new Date();
                     } else {
                         //users input nothing
-
-                        if(!$.inArray(self.timePeriodLast15mins(), self.timePeroidsNotToShow)) {
-                            self.timePeriod(self.timePeriodLast15mins());
-                            self.selectByDrawer(true);
-
-                            $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
-                            $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                            $(self.panelId + ' #drawer0_' + self.randomId).css('background-color', '#ffffff');
-                            $(self.panelId + ' #drawer0_' + self.randomId).css('font-weight', 'bold');
-
-                            start = new Date(curDate - 15 * 60 * 1000);
-                            end = new Date();
-
-                            if(self.adjustLastX) {
-                                var adjustedTime = self.adjustLastX(start, end);
-                                start = adjustedTime.start;
-                                end = adjustedTime.end;
-                            }
+                        if($.inArray(self.timePeriodLast15mins(), self.timePeriodsNotToShow)<0) {
+                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins(), start, end);
+                            start = range.start;
+                            end = range.end;
                         }else{
-                            start = new Date(curDate - 15 * 60 * 1000);
-                            end = new Date();
                             customClick();
                         }
                     }
 
                     if (start.getTime() > end.getTime()) {
-                        if(!$.inArray(self.timePeriodLast15mins(), self.timePeroidsNotToShow)) {
-                            self.timePeriod(self.timePeriodLast15mins());
-                            self.selectByDrawer(true);
-
-                            $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
-                            $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                            $(self.panelId + ' #drawer0_' + self.randomId).css('background-color', '#ffffff');
-                            $(self.panelId + ' #drawer0_' + self.randomId).css('font-weight', 'bold');
-
-                            start = new Date(curDate - 15 * 60 * 1000);
-                            end = new Date();
-
-                            if(self.adjustLastX) {
-                                var adjustedTime = self.adjustLastX(start, end);
-                                start = adjustedTime.start;
-                                end = adjustedTime.end;
-                            }
+                        if($.inArray(self.timePeriodLast15mins(), self.timePeriodsNotToShow)<0) {
+                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins(), start, end);
+                            start = range.start;
+                            end = range.end;
                         }else {
                             customClick();
-                            start = new Date(curDate - 15 * 60 * 1000);
-                            end = new Date();
                         }
                         //print warning...
                         oj.Logger.warn("Start time is larger than end time. Change time range to default time range");
@@ -552,20 +520,6 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
                 });
-
-
-//                self.isCustombeyondTimeBack = function () {
-//                    var today = new Date(new Date().toDateString());
-//                    var minDate = new Date(today - self.customTimeBack);
-//                    var maxDate = today;
-//                    self.minDate(oj.IntlConverterUtils.dateToLocalIso(minDate));
-//                    self.maxDate(oj.IntlConverterUtils.dateToLocalIso(maxDate));
-//                    if(minDate>new Date(self.startDate())  || maxDate<new Date(self.endDate())) {
-//                        self.beyondTimeBackError(true);
-//                    }else{
-//                        self.beyondTimeBackError(false);
-//                    }
-//                }
                 
                 self.isCustomBeyondWindowLimit = function() {
                     var start = self.startDateISO().slice(0, 10) + self.startTime();
@@ -587,25 +541,9 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     $(self.panelId + ' #drawer9_' + self.randomId).css('background-color', '#ffffff');
                     $(self.panelId + ' #drawer9_' + self.randomId).css('font-weight', 'bold');
 
-//                    if(self.customTimeBack) {
-//                        self.isCustombeyondTimeBack();                        
-//                    }
-
                     if(self.customWindowLimit) {
                         self.isCustomBeyondWindowLimit();
-                    }
-                    
-                }
-
-                self.setTimePeriod = function (timePeriod) {
-                    self.timePeriod(timePeriod);
-
-                    $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
-                    $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                    var drawerId = " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
-                    $(self.panelId + drawerId).css('background-color', '#ffffff');
-                    $(self.panelId + drawerId).css('font-weight', 'bold');
-
+                    }                    
                 }
 
                 self.setFocusOnInput = function (idToFocus) {
@@ -685,57 +623,61 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     }
                 }
 
+                self.changeTimeCorrect = function(event, data, whichTime) {
+                    var timeErrorType, eleId;
+                    if(whichTime === 1) {
+                        timeErrorType = self.startTimeError;
+                        eleId = "divStartTime_" + self.randomId;
+                    }else if(whichTime === 2) {
+                        timeErrorType = self.endTimeError;
+                        eleId = "divEndTime_" + self.randomId;
+                    }
+                    
+                    timeErrorType(false);
+                    self.restoreBorderForTime(event.target);
+
+                    if (data.option == "value" && !self.selectByDrawer()) {
+                        self.setFocusOnInput(eleId);
+                        self.lastFocus(0);
+                        customClick();
+                    }
+                    timeValidate();
+                    if (self.panelId) {
+                        $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
+                    }
+                }
+                
+                self.changeTimeError = function (event, data, whichTime) {
+                    var timeErrorType;
+                    if(whichTime === 1) {
+                        timeErrorType = self.startTimeError;
+                    }else if(whichTime === 2) {
+                        timeErrorType = self.endTimeError;
+                    }
+                    
+                    timeErrorType(true);
+                    $(event.target.parentNode.parentNode.parentNode).removeClass("input-focus");
+                    if (data.value === null || data.value.length == 0 || data.value.length == 1) {
+                        self.setErrorBorderForTime(event.target);
+                    }
+                    if (self.panelId) {
+                        $(self.panelId + " #applyButton").ojButton({"disabled": true});
+                    }
+                }
+                
                 self.changeStartTime = function (event, data) {
                     if (typeof data.value === "string") {
-                        
-                        self.startTimeError(false);
-                        self.restoreBorderForTime(event.target);
-
-                        if (data.option == "value" && !self.selectByDrawer()) {
-                            self.setFocusOnInput("divStartTime_" + self.randomId);
-                            self.lastFocus(0);
-                            customClick();
-                        }
-                        timeValidate();
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
-                        }
+                        self.changeTimeCorrect(event, data, 1);
                     } else {
-                        self.startTimeError(true);
-                        $(event.target.parentNode.parentNode.parentNode).removeClass("input-focus");
-                        if (data.value === null || data.value.length == 0 || data.value.length == 1) {
-                            self.setErrorBorderForTime(event.target);
-                        }
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": true});
-                        }
+                        self.changeTimeError(event, data, 1);
                     }
                 }
 
                 self.changeEndTime = function (event, data) {
                     if (typeof data.value === "string") {
-                        
-                        self.endTimeError(false);
-                        self.restoreBorderForTime(event.target);
-
-                        if (data.option == "value" && !self.selectByDrawer()) {
-                            self.setFocusOnInput("divEndTime_" + self.randomId);
-                            self.lastFocus(0);
-                            customClick();
-                        }                        
-                        timeValidate();
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
-                        }
+                        self.changeTimeCorrect(event, data, 2);
                     } else {
-                        self.endTimeError(true);
-                        $(event.target.parentNode.parentNode.parentNode).removeClass("input-focus");
-                        if (data.value === null || data.value.length == 0 || data.value.length == 1) {
-                            self.setErrorBorderForTime(event.target);
-                        }
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": true});
-                        }
+                        self.changeTimeError(event, data, 2);
                     }
                 }
                 
@@ -814,6 +756,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         $(self.panelId+"_wrapper"+" .oj-popup").css("border", "0px");
 //                        $("#panel").slideDown();
                         $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', 'emcsDependencies/dfcommon/images/pull-up.jpg');
+                        self.setLastDatas();
                     }
                 }
 
@@ -822,7 +765,12 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     self.endDate(self.lastEndDate());
                     self.startTime(self.lastStartTime());
                     self.endTime(self.lastEndTime());
-                    self.timePeriod(self.lastTimePeriod());
+//                    self.timePeriod(self.lastTimePeriod());
+                    if(self.lastTimePeriod() !== self.timePeriodCustom()) {
+                        self.setTimePeriodToLastX(self.lastTimePeriod(), null, null);
+                    }else{
+                        customClick();
+                    }
 
                     $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', 'emcsDependencies/dfcommon/images/drop-down.jpg');
                 }
