@@ -699,6 +699,7 @@ update EMS_DASHBOARD set SCREEN_SHOT=apm_screenshot, LAST_MODIFIED_BY=SYS_EXTRAC
 update EMS_DASHBOARD set SCREEN_SHOT=la_dboperations_screenshot, LAST_MODIFIED_BY=SYS_EXTRACT_UTC(SYSTIMESTAMP) where tenant_id='&TENANT_ID' and dashboard_id=15;
 update EMS_DASHBOARD set SCREEN_SHOT=la_hostoperations_screenshot, LAST_MODIFIED_BY=SYS_EXTRACT_UTC(SYSTIMESTAMP) where tenant_id='&TENANT_ID' and dashboard_id=16;
 update EMS_DASHBOARD set SCREEN_SHOT=la_mwoperations_screenshot, LAST_MODIFIED_BY=SYS_EXTRACT_UTC(SYSTIMESTAMP) where tenant_id='&TENANT_ID' and dashboard_id=17;
+update EMS_DASHBOARD set ENABLE_REFRESH=ENABLE_TIME_RANGE;
 
 END;
 /

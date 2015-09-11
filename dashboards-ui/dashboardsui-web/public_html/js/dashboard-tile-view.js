@@ -34,11 +34,98 @@ define(['knockout',
                     searchObject.getAttribute("url"),
                     searchObject.getAttribute("chartType"));
         }
+        
+//        function ContainerResizeEvent() {
+//            var self = this;
+//            
+//            self.handlers = [];
+//            $("#headerWrapper").on("DOMSubtreeModified", function() {
+//                self.triggerResizeEvent();
+//            });
+//            
+//            self.registerHandler = function(handler) {
+//                if (!handler)
+//                    return;
+//                self.handlers.push(handler);
+//            };
+//            
+//            self.triggerResizeEvent = function() {
+//                var containerHeight = $(window).height() - $('#headerWrapper').outerHeight() 
+//                        - $('#head-bar-container').outerHeight();
+//                // console.log("Widow height: " + $(window).height() + ", header wrapper height: " + $('#headerWrapper').outerHeight() + ", heade bar container height: " + $('#head-bar-container').outerHeight() + ", container height: " + containerHeight);
+//                var containerWidth = $('#main-container').width()/* - parseInt($('#main-container').css("marginLeft"), 0)*/;
+//                // console.log("container width: " + $('#main-container').width() + ", container margin left: " + parseInt($('#main-container').css("marginLeft"), 0));
+//                for (var handler in self.handlers) {
+//                    self.handlers[handler](containerWidth, containerHeight);
+//                }
+//            };
+//        }
+        
+        function LeftPanelView(builder) {
+            var self = this;
+            self.builder = builder;
+            self.dashboard = builder.dashboard;
             
-        function DashboardTilesView(dashboard, dtm) {
+            self.initialize = function() {
+                $("#dbd-left-panel-text").draggable({
+                    helper: "clone",
+                    handle: "#dbd-left-panel-text-handle",
+                    start: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_START_DRAGGING, e, t);
+                    },
+                    drag: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_DRAGGING, e, t);
+                    },
+                    stop: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, e, t);
+                    }
+                });
+                self.builder.addBuilderResizeListener(self.resizeEventHandler);
+            };
+            
+            self.resizeEventHandler = function(width, height) {
+                $('#dbd-left-panel').height(height);
+                $('#left-panel-helper').css("width", width - 20);
+            };
+        }
+        
+        function ResizableView(builder) {
+            var self = this;
+            self.builder = builder;
+            
+            self.onResizeFitSize = function(width, height) {
+                self.rebuildElementSet(),
+                self.$list.each(function() {
+                    var elem = $(this)
+                    , siblings = elem.siblings(".fit-size-sibling:visible")
+                    , h = 0;
+                    for (var i = 0; i < siblings.length; i++) {
+                        h += $(siblings[i]).outerHeight();
+                    }
+                    elem.height(height - h);
+                });
+            };
+            
+            self.rebuildElementSet = function() {
+                self.$list = $(".fit-size");
+            };
+            
+            self.initialize = function() {
+                builder.addBuilderResizeListener(self.onResizeFitSize);
+            };
+        }
+            
+        function DashboardTilesView(builder, dtm) {
             var self = this;
             self.dtm = dtm;
-            self.dashboard = dashboard;
+            self.builder = builder;
+            self.dashboard = builder.dashboard;
+            
+            self.resizeEventHandler = function(containerWidth, containerHeight) {
+                $('#tiles-col-container').css("left", 215);
+                $('#tiles-col-container').width(containerWidth - 215);
+                $('#tiles-col-container').height(containerHeight);
+            };
             
             self.getTileElement = function(tile) {
                 if (!tile || !tile.clientGuid)
@@ -87,48 +174,23 @@ define(['knockout',
                 if ($('#widget-area').hasClass('dbd-support-transition'))
                     $('#widget-area').removeClass('dbd-support-transition');
             };
+            
+            self.builder.addBuilderResizeListener(self.resizeEventHandler);
         }
         
-//        function TileUrlEditView() {
+//        function TimeSliderDisplayView() {
 //            var self = this;
-//            self.tileToChange = ko.observable();
-//            self.url = ko.observable();
-//            self.tracker = ko.observable();
+//            self.bindingExists = false;
 //            
-//            self.setEditedTile = function(tile) {
-//                self.tileToChange(tile);
-//                self.originalUrl = tile.url();
-//            };
-//            
-//            self.applyUrlChange = function() {
-//                var trackerObj = ko.utils.unwrapObservable(self.tracker),
-//                    hasInvalidComponents = trackerObj["invalidShown"];
-//                if (hasInvalidComponents) {
-//                    trackerObj.showMessages();
-//                    trackerObj.focusOnFirstInvalid();
-//                } else
-//                    $('#urlChangeDialog').ojDialog('close');
-//            };
-//            
-//            self.cancelUrlChange = function() {
-//                self.tileToChange().url(self.originalUrl);
-//                $('#urlChangeDialog').ojDialog('close');
+//            self.showOrHideTimeSlider = function(show) {
+//               var timeControl = $('#global-time-control');
+//               if (show){
+//                   timeControl.show();
+//               }else{
+//                   timeControl.hide();
+//               }
 //            };
 //        }
-        
-        function TimeSliderDisplayView() {
-            var self = this;
-            self.bindingExists = false;
-            
-            self.showOrHideTimeSlider = function(show) {
-               var timeControl = $('#global-time-control');
-               if (show){
-                   timeControl.show();
-               }else{
-                   timeControl.hide();
-               }
-            };
-        }
         
         function ToolBarModel(dashboard, tilesViewModel) {
             var self = this;
@@ -452,55 +514,6 @@ define(['knockout',
                 });
             };
             
-//            self.isFavorite = ko.observable(false);
-//            self.initializeIsFavorite = function() {
-//                dtm.loadIsFavorite(self.dashboardId, function(isFavorite){
-//                    self.isFavorite(isFavorite);
-//                }, function(e) {
-//                    console.log(e.errorMessage());
-//                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
-//                });
-//            }();  
-            
-//            self.addToFavorites = function() {
-//                dtm.setAsFavorite(self.dashboardId, function() {
-//                    self.isFavorite(true);
-////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-////                    outputData.eventType = "ADD_TO_FAVORITES";
-////                    if (window.opener && window.opener.childMessageListener) {
-////                        var jsonValue = JSON.stringify(outputData);
-////                        console.log(jsonValue);
-////                        window.opener.childMessageListener(jsonValue);
-////                        if (window.opener.navigationsModelCallBack())
-////                        {
-////                            navigationsModel(window.opener.navigationsModelCallBack());
-////                        }
-////                    }
-//                }, function(e) {
-//                    console.log(e.errorMessage());
-//                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
-//                });
-//            };
-//            self.deleteFromFavorites = function() {
-//                dtm.removeFromFavorite(self.dashboardId, function() {
-//                    self.isFavorite(false);
-////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-////                    outputData.eventType = "REMOVE_FROM_FAVORITES";
-////                    if (window.opener && window.opener.childMessageListener) {
-////                        var jsonValue = JSON.stringify(outputData);
-////                        console.log(jsonValue);
-////                        window.opener.childMessageListener(jsonValue);
-////                        if (window.opener.navigationsModelCallBack())
-////                        {
-////                            navigationsModel(window.opener.navigationsModelCallBack());
-////                        }
-////                    }
-//                }, function(e) {
-//                    console.log(e.errorMessage());
-//                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
-//                });
-//            };
-            
             //Add widget dialog
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             
@@ -566,9 +579,79 @@ define(['knockout',
             tilesViewModel.registerTileRemoveCallback(self.handleAddWidgetTooltip);
         }
         
+        function DashboardBuilder(dashboard) {
+            var self = this;
+            self.dashboard = dashboard;
+            
+            self.EVENT_NEW_BUILDER_RESIZE = "EVENT_NEW_BUILDER_RESIZE";
+            
+            self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
+            self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
+            self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
+            
+            function Dispatcher() {
+                var dsp = this;
+                dsp.queue = [];
+                
+                this.registerEventHandler = function(event, handler) {
+                    if (!event || !handler)
+                        return;
+                    if (!dsp.queue[event])
+                        dsp.queue[event] = [];
+                    dsp.queue[event].push(handler);
+                };
+                
+                dsp.triggerEvent = function(event, p1, p2, p3) {
+                    if (!event || !dsp.queue[event])
+                        return;
+                    for (var i = 0; i < dsp.queue[event].length; i++) {
+                        dsp.queue[event][i](p1, p2, p3);
+                    }
+                };
+            }
+            
+            self.dispatcher = new Dispatcher();
+            self.addEventListener = function(event, listener) {
+                self.dispatcher.registerEventHandler(event, listener);
+            };
+            
+            self.triggerEvent = function(event, p1, p2, p3) {
+                self.dispatcher.triggerEvent(event, p1, p2, p3);
+            };
+            
+            self.addNewTextStartDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_TEXT_START_DRAGGING, listener);
+            };
+            
+            self.addNewTextDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_TEXT_DRAGGING, listener);
+            };
+            
+            self.addNewTextStopDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_TEXT_STOP_DRAGGING, listener);
+            };
+            
+            self.triggerBuilderResizeEvent = function() {
+                var height = $(window).height() - $('#headerWrapper').outerHeight() 
+                        - $('#head-bar-container').outerHeight();
+                // console.log("Widow height: " + $(window).height() + ", header wrapper height: " + $('#headerWrapper').outerHeight() + ", heade bar container height: " + $('#head-bar-container').outerHeight() + ", container height: " + containerHeight);
+                var width = $('#main-container').width()/* - parseInt($('#main-container').css("marginLeft"), 0)*/;
+                // console.log("container width: " + $('#main-container').width() + ", container margin left: " + parseInt($('#main-container').css("marginLeft"), 0));
+                self.triggerEvent(self.EVENT_NEW_BUILDER_RESIZE, width, height);
+            };    
+            
+            self.addBuilderResizeListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_BUILDER_RESIZE, listener);
+            };
+        }
+        
         return {"DashboardTilesView": DashboardTilesView, 
 //            "TileUrlEditView": TileUrlEditView, 
-            "TimeSliderDisplayView": TimeSliderDisplayView,
-            "ToolBarModel": ToolBarModel};
+//            "ContainerResizeEvent": ContainerResizeEvent,
+            "LeftPanelView": LeftPanelView,
+            "ResizableView": ResizableView,
+//            "TimeSliderDisplayView": TimeSliderDisplayView,
+            "ToolBarModel": ToolBarModel, 
+            "DashboardBuilder": DashboardBuilder};
     }
 );

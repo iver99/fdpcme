@@ -12,11 +12,13 @@ body, html {
   width: 100%;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+  height: 100%;
 }
 
 .tile-container {
   max-width: none;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .white-background {
@@ -419,183 +421,21 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
   padding: 0;
 }
 
-/*#search_box { 
-    width: 201px; 
-    height: 31px; 
-    background: url(images/func_add-folder_16_ena.png); 
-    border:2px;
-    border-radius: 5px;
-    border-color:lightgray;
-    border-style:solid;
-    width:380px;
-    height: 33px; 
-    margin-bottom: 10px;
-    background-color: #fcfdfe;
-    
-} 
-#search_box #searchTxt { 
-    float: left; 
-    padding: 0; 
-    border:0;
-    width: 340px; 
-    height:33px;
-    background: none; 
-    color:gray;
-    font-size: medium;
-    font-weight: bold;
-    font-size: 14px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    color: #737373;
-    margin-left: 0;
-    margin-top: 0;
-} 
-#searchSelect .oj-select .oj-select-choice {
-    height: 2.4rem;
-}
-#search_box #go { 
-    float: right; 
-} 
-
-#searchSelect {
-    border:2px;
-    border-radius: 5px;
-    border-color:lightgray;
-    border-style:solid;
-    width:370px;
-    height: 33px; 
-    margin-bottom: 10px;
-    background-color: WhiteSmoke;
-}
-.widget-dialog-search-button {
-    margin:0px;
-    height:33px;
+.left-panel-dbd-search-icon:before {
+    height:16px;
+    width:16px;
+    content:url("images/func_search_16_ena.png");
 }
 
-.widget-dialog-selector {
-    height:30px;
-    float:right;
-    alignment-baseline: central;   
-    font-weight: bold;
-    color: gray;
+.left-panel-helper {
+    display: none;
 }
 
-.widget-image {
-    padding-top: 24px;
-    padding-right: 0px; 
-}*/
-
-/*.widget-content-text {
-    font-weight: bold;
-    font-size: large;
-    margin: auto;
+.ui-draggable-dragging .left-panel-helper {
+    display: block;
+    z-index: 40;
 }
 
-.widget-container {
-    width:  239px;  174px; 
-    height: 128px;  80px; 
-    display: inline-block;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 5px;
-    padding-right: 5px;
-    vertical-align: middle;
-    text-align: center;
-    background-color: rgb(234, 237, 239);white; #EAEAEA;
-    border-color: #d6dfe6;
-     line-height:134px; 
-    float:left;
-    border-radius: 5px;
-    
-    font-weight: bold;
-    font-size: large;
-    color:gray;
+.ui-draggable-dragging #dbd-left-panel-text-handle {
+    display: none;
 }
-
-.widget-container:hover {
-    background-color: #6495ED; lightblue;  #e371b2; 
-    color: white;
-}
-
-.widget-summaries-container {
-    background: #ffffff; 
-}
-
-.paging-previous-icon {
-    height:45px;width:45px;
-    content:url("images/navi-pre.png")
-}
-
-.paging-next-icon {
-    height:45px;width:45px;
-    content:url("images/navi-next.png")
-}
-
-.widget-search-icon {
-    height:16px;width:16px;
-    content:url("images/search-icon-24.png")
-}
-
-.widget-icon-button {
-    #e371b2 
-    background-color:  red; /*#EAEAEA; 
-    border: 0;
-    border-color: #EAEAEA;
-    margin:0;
-    padding: 0;
-    height:45px;
-    font-size: 4em;
-    font-weight: 900;
-    background: red;
-    color: white;
-    font-family: "Cooper Black", "Bauhaus 93", "Arial Rounded MT Bold", "HGSGothicE"; 
-}
-
-.widget-icon-button:hover {
-    background-color:  #e371b2; /*#EAEAEA; 
-    border: 0;
-    border-color: #EAEAEA;
-    margin:0;
-    padding: 0;
-     color: white; 
-}*/
-
-/*.widget-dialog-header-title {
-    font-size: x-large;
-    font-weight: bold;
-    color: DimGray;
-}
-
-.widget-dialog-header-close {
-    float:right;
-    color: #4169E1;
-    font-size: xx-small;
-}
-
-.widget-dialog-body {
-    background-color:  #DDDDDD;
-}
-
-.widget-dialog-summary {
-    width:100%;
-    font-weight: bold;
-    color: gray;
-}
-
-.widget-dialog-footer-notes {
-     font-weight: bold; 
-    float:left;
-    margin-left: 5px;
-    color:black;
-    font-weight: bold;
-    color: gray;
-    font-size: small;
-    padding-top: 14px;
-}
-
-.widget-detail-dialog-text {
-    width: 360px;
- }*/

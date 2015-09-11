@@ -15,7 +15,26 @@
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
 	<link rel="stylesheet" href="emcsDependencies/dfcommon/widgets/datetime-picker/css/datetime-picker.css"/>
-     
+        
+<!--        <script>
+        window.DEV_MODE= {
+                "_comment_0":"===THIS IS USED FOR DEV PURPOSE ONLY===",
+                "_comment_1":"Change data/url to desired one that matches dev env",
+                "_comment_2":"do *NOT* push this file unless it is required change for dev env",
+                "_comment_9":"=======================================",
+                "tenant":"emaastesttenant1",
+                "user":"emcsadmin",
+                "wlsAuth":"weblogic:welcome1",
+
+                //default registry will provide default end points if not explicitly defined below
+                "dfRestApiEndPoint": "http://localhost:7001/emcpdf/api/v1/",
+                "ssfRestApiEndPoint": "http://slc05mwm.us.oracle.com:7019/savedsearch/v1/",
+//                "dfRestApiEndPoint": "http://slc07ptf.us.oracle.com:7019/emcpdf/api/v1/",
+//                "ssfRestApiEndPoint": "http://slc07ptf.us.oracle.com:7019/savedsearch/v1/",
+                "_comment_100":"Please add other data as required for your dev env"
+            };
+        
+        </script>-->
         <!-- RequireJS bootstrap file -->
         <script data-main="js/builderMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
 
@@ -280,38 +299,128 @@
                 </div>
             </div>
             <!-- /ko -->
-            <div id="main-container" class="oj-col stretch-height">
-                <div class="oj-row stretch-height tile-container" id="tileContainer">
-                    <!-- ko stopBinding: true -->
-                    <!--<div style="display:none" id="urlChangeDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', 
-                                                 initialVisibility: 'hide',  
-                                                 cancelBehavior: 'none',  
-                                                 rootAttributes: {style: 'width: 500px;'}, 
-                                    title: getNlsString('DBS_BUILDER_CHANGE_URL_TITLE')}">
-                        <form id="form-container" class="oj-form oj-md-odd-cols-3 oj-md-labels-inline" data-bind="with: tileToChange">
+            <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;">
+                <!-- ko stopBinding: true -->
+                <div id="dbd-left-panel"
+                    style="width: 215px; height: 1000px; position: absolute; left: 0; top: 0; border-right: 1px solid #d6dfe6;">
+                    <div id="dbd-left-panel-header" class="fit-size-sibling" style="width: 100%; height: 32px;">
+                        <div class="oj-row">
+                            <div class="oj-col">
+                                <h3 style="padding-right: 50px; float: left; width: 150px; overflow: hidden; margin-right: -50px; display: block;">Dashboard</h3>
+                                <div class="dbd-pull-right" style="margin: 10px;">x</div>
+                            </div>
+                        </div>
+                        <div style="border: 1px;
+                                            border-radius: 2px;
+                                            border-color: #c4ced7;
+                                            border-style: solid;
+                                            height: 32px;
+                                            margin: 0 10px 10px 10px;
+                                            background-color: #fcfdfe;
+                                            float: left;
+                                            box-sizing: border-box; width: 195px;">
+                            <div style="float: left; height: 30px; width: 163px;">
+                                    <input id="sinput" type="text" name="searchInput" style="border: 0; height: 30px;"
+                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
+                                    <button class="oj-button-half-chrome" data-bind="
+                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                                            icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
+                                    </button>
+                            </div>
+                            <div style="">
+                                    <button class="oj-button-half-chrome" data-bind="
+                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
+                                            icons: {start:'left-panel-dbd-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
+                                            height: 30px;
+                                            line-height: 30px;
+                                            vertical-align: middle;
+                                            text-align: center;"> 
+                                    </button> 
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dbd-left-panel-widgets" class="fit-size" style="width: 100%; height: auto; overflow-y: auto; position: relative;">
+                        <div class="oj-col" style="width: 100%;">
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                        </div>
+                    </div>
+                    <div id="dbd-left-panel-footer" class="fit-size-sibling" style="height: 210px;">
+                        <div style="height: 30px; border-top: 1px solid #d6dfe6; padding-top: 10px;">
                             <div class="oj-row">
-                                <div class="oj-col">
-                                    <label for="urlInput">URL</label>
+                                <div id="dbd-left-panel-text" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: pointer;">
+                                    <div id="dbd-left-panel-text-handle">Text</div>
+                                    <div id="left-panel-helper" class="left-panel-helper">
+                                        <p><span style="font-size: 1.2em; font-weight: bold;">Double click here to edit text<span></p>
+                                    </div>
                                 </div>
-                                <div class="oj-col">
-                                    <input id="urlInput" required 
-                                           data-bind="ojComponent: {
-                                                    component: 'ojInputText', 
-                                                    validators: [{type: 'regExp', options: {pattern: '^(http|https)?([0-9a-zA-Z_!~*().;?:@ =+$,%&\#\-/]+)+', 
-                                                            'messageDetail': 'A valid URL (starts with http:\/\/ or https:\/\/) is required'}}],
-                                                    invalidComponentTracker: $parent.tracker,
-                                                    value: url, rootAttributes: {style: 'max-width: 30em;'}}">
+                                <div class="oj-col oj-sm-6 oj-md-6 oj-lg-6">Link</div>
+                            </div>
+                        </div>
+                        <div style="border-top: 1px solid #d6dfe6; padding-top: 10px;">
+                            <div class="oj-row">
+                                <div class="oj-col oj-sm-3 oj-md-3 oj-lg-3" style="margin-top: 10px;">Pages</div>
+                                <div class="oj-col oj-sm-9 oj-md-9 oj-lg-9">
+                                    <input id="spinnercontrol"
+                                            data-bind="ojComponent: {
+                                              component: 'ojInputNumber',
+                                              max:100, min:0, step:10, value:20}"/>
                                 </div>
                             </div>
-                        </form>
-                        <div class="oj-dialog-footer">
-                            <button id="okUrlChangeButton" data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}, click: applyUrlChange"> </button>
-                            <button data-bind="ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL')}, click: cancelUrlChange"> 
-                            </button>
+                            <div class="oj-row" style="margin-top: 10px;">
+                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12">
+                                    <span class="oj-form-control oj-choice-row">
+                                        <input id="show-time-selector" type="checkbox" 
+                                               class="oj-checkbox-nocomp" data-bind="checked: dashboard.enableTimeRange"/>
+                                        <label for="show-time-selector" class="oj-checkbox-label-nocomp">
+                                          Show Time Selector</label>
+                                    </span>
+                                </div>
+                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12">
+                                    <span class="oj-form-control oj-choice-row">
+                                        <input id="show-referesh-control" type="checkbox" 
+                                               class="oj-checkbox-nocomp"  data-bind="checked: dashboard.enableRefresh"/>
+                                        <label for="show-referesh-control" class="oj-checkbox-label-nocomp">
+                                          Show Referesh Control</label>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>-->
-                    <!-- /ko -->
+                    </div>
+                </div>
+                <!-- /ko -->
+                <!--<div class="oj-row stretch-height tile-container" id="tileContainer"  
+                     style="height: 1000px; position: absolute; left: 0; top: 0;">-->
                     <!--div id='show-hide-timeslider-checkbox-container'>
                         <div data-bind="ojComponent: {component: 'ojCheckboxset'}">
                             <span style="display:inline-block; padding-left: 3em; padding-top: 5px;">
@@ -320,8 +429,8 @@
                             </span>
                         </div>
                     </div-->
-                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height">
-                        <div id="global-time-control" class="oj-row" style="padding-left: 20px;padding-top: 6px; padding-bottom: 10px;" >
+                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height" style="overflow-x: hidden; overflow-y: auto;">
+                        <div id="global-time-control" class="oj-row fit-size-sibling" style="padding-left: 20px;padding-top: 6px; padding-bottom: 10px;" >
                             <div class="oj-col oj-sm-6">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',
@@ -329,17 +438,18 @@
                                                                 optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:373px;'}}"-->
                                <!--df-time-selector params="{model:timeSelectorModel}" ></df-time-selector-->
-			       <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}"></div>
+                               <div data-bind="visible: !dashboard.enableTimeRange()">&nbsp;</div>
+                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange"></div>
                             </div>
-                            <div class="oj-col oj-sm-6">
+                            <div class="oj-col oj-sm-6" data-bind="visible: dashboard.enableRefresh">
                                 <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>
-				<!--div data-bind="component: {name: 'df-auto-refresh', params: autoRefreshParams}" style="float:right;padding-right: 10px"></div-->
-				<!--df-auto-refresh params="autoRefreshParams"></df-auto-refresh-->
+                                <!--div data-bind="component: {name: 'df-auto-refresh', params: autoRefreshParams}" style="float:right;padding-right: 10px"></div-->
+                                <!--df-auto-refresh params="autoRefreshParams"></df-auto-refresh-->
                             </div>
                             <!--div class="oj-col oj-sm-4"></div-->
 
                         </div>
-                        
+
                         <!-- ko if:$root.isEmpty() -->
                         <div id="addWidgetToolTip" style="padding-top: 64px; text-align: center">
                             <img src="css/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;"/>
@@ -352,7 +462,7 @@
                             </p>
                         </div>
                         <!-- /ko -->
-                        <div id="tiles-wrapper" style="width: 100%; float: left; position: relative; height: auto; padding-left: 10px;">
+                        <div id="tiles-wrapper" class="fit-size" style="width: 100%; float: left; position: relative; height: auto; padding-left: 10px;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
                             <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">
                             <!--<div id="widget-area" data-bind="foreach: tiles.tiles" class="dbd-tile-element">-->                                                                
@@ -475,13 +585,13 @@
                                         <-- ko foreach: footerLinks --
                                         <li> <a data-bind="text : name, attr : {id: linkId, href : linkTarget}"> </a> </li>
                                 <-- /ko --
-                            </ul>	
-                            <div class="demo-appfooter-text">Copyright &copy; 2014 Oracle and/or its affiliates. All rights reserved. Oracle JET <span data-bind="text: ojVersion"></span></div>
+                                </ul>	
+                                <div class="demo-appfooter-text">Copyright &copy; 2014 Oracle and/or its affiliates. All rights reserved. Oracle JET <span data-bind="text: ojVersion"></span></div>
+                            </div>
                         </div>
-                    </div>
-                </footer-->
-            </div>
-            </div>
+                    </footer-->
+                </div>
+            <!--</div>-->
         </div>
     </body>
 </html>

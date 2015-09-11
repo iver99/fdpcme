@@ -24,6 +24,7 @@ public class Dashboard
 	public static final String DASHBOARD_TYPE_SINGLEPAGE = "SINGLEPAGE";
 	public static final Integer DASHBOARD_TYPE_CODE_SINGLEPAGE = Integer.valueOf(1);
 	public static final boolean DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = Boolean.FALSE;
+	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
 	public static Dashboard valueOf(EmsDashboard ed)
@@ -54,6 +55,7 @@ public class Dashboard
 		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted() > 0);
 		to.setDescription(from.getDescription());
 		to.setEnableTimeRange(DataFormatUtils.integer2Boolean(from.getEnableTimeRange()));
+		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 		to.setLastModificationDate(from.getLastModificationDate());
 		to.setLastModifiedBy(from.getLastModifiedBy());
@@ -90,6 +92,8 @@ public class Dashboard
 
 	private Boolean enableTimeRange;
 
+	private Boolean enableRefresh;
+
 	@JsonProperty("systemDashboard")
 	private Boolean isSystem;
 
@@ -118,6 +122,7 @@ public class Dashboard
 		// defaults for non-null values
 		type = Dashboard.DASHBOARD_TYPE_NORMAL;
 		enableTimeRange = Dashboard.DASHBOARD_ENABLE_TIME_RANGE_DEFAULT;
+		enableRefresh = Dashboard.DASHBOARD_ENABLE_REFRESH_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
 		isSystem = Boolean.FALSE;
 	}
@@ -155,6 +160,14 @@ public class Dashboard
 	public String getDescription()
 	{
 		return description;
+	}
+
+	/**
+	 * @return the enableRefresh
+	 */
+	public Boolean getEnableRefresh()
+	{
+		return enableRefresh;
 	}
 
 	public Boolean getEnableTimeRange()
@@ -205,11 +218,12 @@ public class Dashboard
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_DESCRIPTION_ERROR));
 		}
 		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
+		Integer isEnableRefresh = DataFormatUtils.boolean2Integer(enableRefresh);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
 		if (ed == null) {
-			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
+			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isEnableRefresh, isIsSystem,
 					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType, appType);
 			if (tileList != null) {
 				for (Tile tile : tileList) {
@@ -224,6 +238,7 @@ public class Dashboard
 			ed.setDeleted(deleted ? getDashboardId() : 0);
 			ed.setDescription(description);
 			ed.setEnableTimeRange(isEnableTimeRange);
+			ed.setEnableRefresh(isEnableRefresh);
 			if (ed.getIsSystem() != null && isIsSystem != null && !isIsSystem.equals(ed.getIsSystem())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD));
@@ -292,6 +307,15 @@ public class Dashboard
 	public void setDescription(String description)
 	{
 		this.description = description;
+	}
+
+	/**
+	 * @param enableRefresh
+	 *            the enableRefresh to set
+	 */
+	public void setEnableRefresh(Boolean enableRefresh)
+	{
+		this.enableRefresh = enableRefresh;
 	}
 
 	public void setEnableTimeRange(Boolean enableTimeRange)
