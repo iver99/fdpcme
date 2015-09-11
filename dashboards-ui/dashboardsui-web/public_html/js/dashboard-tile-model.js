@@ -5,7 +5,7 @@
  */
 define(['knockout',
         'knockout.mapping',
-        'timeselector/time-selector-model',
+        'dashboards/time-selector-model',
         'dfutil',
         'df-util',
         'ojs/ojcore',

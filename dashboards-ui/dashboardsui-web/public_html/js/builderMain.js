@@ -40,7 +40,6 @@ requirejs.config({
         'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
         'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
-        'timeselector':'../emcsDependencies/timeselector/js',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
