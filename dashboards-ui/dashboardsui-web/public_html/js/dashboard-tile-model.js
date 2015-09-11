@@ -365,15 +365,11 @@ define(['knockout',
         }
         
         function getBaseUrl() {
-            if (dfu.isDevMode()){
-                return dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
-            }else{
-        	return "/sso.static/dashboards.service";
-            }
+            return dfu.getDashboardsUrl();
         }
         
         function initializeFromCookie() {
-            var userTenant= dfu.getUserTenantFromCookie();
+            var userTenant= dfu.getUserTenant();
             if (userTenant){
                 dtm.tenantName = userTenant.tenant;
                 dtm.userTenant  =  userTenant.tenantUser;      

@@ -129,10 +129,7 @@ require(['knockout',
             var logger = new _emJETCustomLogger()
 //          var dfRestApi = dfu.discoverDFRestApiUrl();
 //          if (dfRestApi){
-              var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
-              if (dfu.isDevMode()){
-                  logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
-              }
+              var logReceiver = dfu.getLogUrl();
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!

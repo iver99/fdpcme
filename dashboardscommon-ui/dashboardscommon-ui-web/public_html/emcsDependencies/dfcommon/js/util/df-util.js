@@ -357,11 +357,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {Object} 
              */
             self.getDefaultHeader = function() {
-                var defHeader = {
-//                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
-                    "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
-                    "X-REMOTE-USER":self.tenantName+'.'+self.userName};
+                var defHeader = {};
                 if (self.isDevMode()){
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
+                    defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
@@ -545,7 +544,13 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {Object} 
              */
             self.getSavedSearchServiceRequestHeader=function() {
-                return self.getDefaultHeader();
+                var defHeader = {};
+                if (self.isDevMode()){
+                    defHeader["OAM_REMOTE_USER"] = self.tenantName+'.'+self.userName;
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
+                oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
+                return defHeader;
             };
             
             /**

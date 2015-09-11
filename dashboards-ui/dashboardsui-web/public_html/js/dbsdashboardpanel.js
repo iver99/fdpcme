@@ -258,7 +258,7 @@ $.widget('dbs.dbsDashboardPanel',
               var url =  _dashboard['screenShotHref'];
               url = dfu.getRelUrlFromFullUrl(url);
               if (dfu.isDevMode()){
-                  url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,'dashboards/'+ self.options['dashboard']['id'] + '/screenshot');
+                  url = dfu.buildFullUrl(dfu.getDashboardsUrl(),'/'+ self.options['dashboard']['id'] + '/screenshot');
               } 
               
                    dfu.ajaxWithRetry({
