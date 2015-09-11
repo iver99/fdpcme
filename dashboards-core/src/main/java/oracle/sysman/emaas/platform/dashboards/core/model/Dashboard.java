@@ -14,6 +14,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -208,9 +209,12 @@ public class Dashboard
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
+                String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
+		String htmlEcodedDesc = description == null ? null : StringEscapeUtils.escapeHtml4(description);
+			
 		if (ed == null) {
-			ed = new EmsDashboard(creationDate, dashboardId, 0L, description, isEnableTimeRange, isIsSystem,
-					lastModificationDate, lastModifiedBy, name, owner, screenShot, dashboardType, appType);
+			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isIsSystem,
+					lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
 			if (tileList != null) {
 				int i = 0;
 				for (Tile tile : tileList) {
@@ -223,7 +227,7 @@ public class Dashboard
 		else {
 			ed.getScreenShot();
 			ed.setDeleted(deleted ? getDashboardId() : 0);
-			ed.setDescription(description);
+			ed.setDescription(htmlEcodedDesc);
 			ed.setEnableTimeRange(isEnableTimeRange);
 			if (ed.getIsSystem() != null && isIsSystem != null && !isIsSystem.equals(ed.getIsSystem())) {
 				throw new CommonResourceException(
@@ -231,7 +235,7 @@ public class Dashboard
 			}
 			ed.setLastModificationDate(lastModificationDate);
 			ed.setLastModifiedBy(lastModifiedBy);
-			ed.setName(name);
+			ed.setName(htmlEcodedName);
 			ed.setScreenShot(screenShot);
 			ed.setApplicationType(appType);
 			if (ed.getType() != null && dashboardType != null && !dashboardType.equals(ed.getType())) {

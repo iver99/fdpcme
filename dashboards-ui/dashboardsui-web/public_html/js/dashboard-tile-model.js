@@ -7,8 +7,8 @@ define(['knockout',
         'knockout.mapping',
         'timeselector/time-selector-model',
         'dfutil',
-        'ojs/ojcore',
         'jquery',
+        'ojs/ojcore',
         'jqueryui',
         'ojs/ojknockout',
         'ojs/ojmenu',
@@ -18,7 +18,7 @@ define(['knockout',
         'canvg'
     ],
     
-    function(ko, km, TimeSelectorModel,dfu)
+    function(ko, km, TimeSelectorModel,dfu, $)
     {
         var dtm = this;
         
@@ -327,6 +327,14 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
+                    if (data && data['name'] && data['name'] !== null)
+                    {
+                        data['name'] = $("<div/>").html(data['name']).text();
+                    }
+                    if (data && data['description'] && data['description'] !== null)
+                    {
+                        data['description'] = $("<div/>").html(data['description']).text();
+                    }
                     var dsb = ko.mapping.fromJS(data);
                     if (succCallBack)
                         succCallBack(dsb);
@@ -375,6 +383,14 @@ define(['knockout',
                 headers: getDefaultHeaders(),
                 data: dashboard,
                 success: function(data) {
+                    if (data && data['name'] && data['name'] !== null)
+                    {
+                        data['name'] = $("<div/>").html(data['name']).text();
+                    }
+                    if (data && data['description'] && data['description'] !== null)
+                    {
+                        data['description'] = $("<div/>").html(data['description']).text();
+                    }
                     if (succCallBack)
                         succCallBack(data);
                 },

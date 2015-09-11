@@ -71,6 +71,17 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
                         return self.__getPromise(function(resolve, reject) {
                             self.collection.at(index, null).then(function(model) {
                                 if (model) array.push(model);
+                                if (model.isDsbAttrsHtmlDecoded !== true)
+                                {
+                                    var __dname = $("<div/>").html(model.get('name')).text();
+                                    model.set('name', __dname, {silent: true});
+                                    if (model.get('description') && model.get('description') !== null)
+                                    {
+                                        var __ddesc =  $("<div/>").html(model.get('description')).text();
+                                        model.set('description', __ddesc, {silent: true});
+                                    }
+                                    model.isDsbAttrsHtmlDecoded = true;
+                                }
                                 resolve(index);
                             });
                         });
