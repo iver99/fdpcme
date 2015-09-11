@@ -39,30 +39,6 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.APPLICATION_TYPE exists already, no change is needed');      
   END IF;
 
-  --add new columns 'TILE_ROW', 'TILE_COLUMN', 'TYPE' for 'EMS_DASHBOARD'
-  --TILE_ROW: row of the tile
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TILE_ROW';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "TILE_ROW" NUMBER(*,0)';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TILE_ROW exists already, no change is needed');      
-  END IF;
-  --TILE_COLUMN: column of the tile
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TILE_COLUMN';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "TILE_COLUMN" NUMBER(*,0)';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TILE_COLUMN exists already, no change is needed');      
-  END IF;
-  --TYPE: type of the tile, 0: default tile, 1: whole line text tile
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='TYPE';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "TYPE" NUMBER(*,0)';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.TYPE exists already, no change is needed');      
-  END IF;
-  --update dashboard parameter string value column size
-  EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE_PARAMS MODIFY PARAM_VALUE_STR VARCHAR2(4000)';
 END;
 /
 
