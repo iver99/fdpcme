@@ -207,6 +207,9 @@ function(dsf, oj, ko, $, dfu, pfu)
                                                            for (_i = 0; _i < _event['data'].length; _i++)
                                                            {
                                                                var _datai = _event['data'][_i].attributes;
+                                                               if (_datai['name']){
+                                                                   _datai['rawName'] = $("<div/>").text(_datai['name']).html();
+                                                               }
                                                                if (!_datai['lastModifiedOn'])
                                                                {
                                                                    _datai['lastModifiedOn'] = _datai['createdOn'];
@@ -539,7 +542,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                         event.stopPropagation();
                         self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
                     });
-            _link.append(context.row.name);
+            _link.append(context.row.rawName);
             $(context.cellContext.parentElement).append(_link);
         };
         
