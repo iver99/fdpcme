@@ -1,6 +1,6 @@
 <div data-bind="attr: {id: 'dateTimePicker_' + randomId}">
-    <label for="dropdown" style="font-weight: bold; font-size: 14px; padding-right: 7px;" data-bind="text: timeRangeMsg"></label>
-    <button class="dropdown" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl">
+    <label for="dropdown" id="dropdownLabel" style="font-weight: bold; font-size: 14px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
+    <button class="dropdown" style="margin-left: 7px;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl">
         <div data-bind="html: dateTimeInfo" style="width: auto; display: inline-block"></div>
         <img data-bind="attr: {id: 'panelArrow_'+randomId}" alt="dropdown" src="emcsDependencies/dfcommon/images/drop-down.jpg"/>
     </button>            
@@ -24,10 +24,10 @@
         <div class="pickerPanel">
 
             <!--date and time info above picker -->
-            <div class="pickerTop">
+            <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">
                 <!-- date and time above the canlendar -->
 
-                <span style="font-weight: bold; display: inline-block; width: 75px;padding-left: 5px;" data-bind="text: timePeriod">                            
+                <span style="font-weight: bold; display: inline-block; width: 75px;padding-left: 5px;" data-bind="text: timePeriod, style: {display: hideRangeLabel}">                            
                 </span>
                 &nbsp;&nbsp;
 
@@ -56,7 +56,7 @@
             <!--date picker -->
             <div class="datePicker" data-bind="attr: {id: 'datePicker_'+randomId}, ojComponent:{component: 'ojInputDate', 
                                                                     datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
-                                                                    value: value,
+                                                                    value: value, min: minDate, max: maxDate
                                                                     }, 
                                                                   event: {mouseup: calendarClicked}
                                                                                                                                    
@@ -75,6 +75,9 @@
 	    <!-- /ko -->
             <!-- ko if: showTimeValidateErrorMsg -->
                 <div class="formatErrorMsg" data-bind="text: timeValidateErrorMsg"></div>
+            <!-- /ko -->
+            <!--ko if: showBeyondWindowLimitError-->
+                <div class="formatErrorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
             <!-- /ko -->
         </div>
     </div> 
