@@ -45,8 +45,11 @@ public class LoginAndLogout {
 			}
 		}
 	}
-	
 	public  void login(String testName)
+        {
+              login(testName,"home");
+        }
+	public  void login(String testName, String rel)
 	{
 		String tenantID=null,username=null;
 		try{
@@ -64,7 +67,7 @@ public class LoginAndLogout {
 			username = "emcsadmin";//juan.zhang@oracle.com";//
 		}
 		
-		login(testName,username, "Welcome1!",tenantID, "home", "Dashboard-UI");
+		login(testName,username, "Welcome1!",tenantID, rel, "Dashboard-UI");
 		//login(testName,"emaasadmin", "Welcome1!","TenantOPC1", "home", "Dashboard-UI");
 		
 	}
