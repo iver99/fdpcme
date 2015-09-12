@@ -478,8 +478,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(5000);
 		//this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		//due to LoginUtils.doLogin()'s limitation, fix to 832 is not really verified. The current endUrl is not reused, but specified by that api 
-                login(Thread.currentThread().getStackTrace()[1].getMethodName(),"sso.welcome");
-                DashBoardUtils.loadWebDriver(webd);
+                login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName(),"sso.welcome");
                 webd.getLogger().info("start to test in testEMPCDF_832");
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(50000);
