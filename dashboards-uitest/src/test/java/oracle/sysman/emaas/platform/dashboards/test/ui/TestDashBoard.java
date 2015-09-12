@@ -480,8 +480,8 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testEMPCDF_832");
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(50000);
-		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
+		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		webd.takeScreenShot();
 		webd.getLogger().info("start to test in testEMPCDF_8322222");
 	}
