@@ -145,7 +145,7 @@ public class DashBoardPageId {
 	public static final String DashBoardDeleteID = "/html/body/div[1]/div/div/div[1]/div/div/div/button";
 	public static final String LV_DeleteBtnID_Dialog = "/html/body/div[1]/div[2]/div/div[5]/button[1]";
 	
-	public static final String WelcomeID = "/html/body/div[2]/div/div[1]";                                                                                     
+	public static final String WelcomeID = "//div[@class='welcome-slogan']";//"/html/body/div[2]/div/div[1]";                                                                                     
 
 	
 }
