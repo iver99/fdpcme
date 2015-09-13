@@ -1577,7 +1577,7 @@ define(['knockout',
 	self.datetimePickerParams = {
 	    startDateTime: initStart,
  	    endDateTime: initEnd,	   
-	    callback: function(start, end) {
+	    callbackAfterApply: function(start, end) {
 		self.timeSelectorModel.viewStart(start);
 		self.timeSelectorModel.viewEnd(end);
 		self.timeSelectorModel.timeRangeChange(true);		
