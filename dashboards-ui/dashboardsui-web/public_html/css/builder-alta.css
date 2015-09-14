@@ -421,6 +421,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
   padding: 0;
 }
 
+.left-panel-dbd-clear-icon:before {
+    height:16px;
+    width:16px;
+    content:url("images/clearEntry_ena.png");
+}
+
 .left-panel-dbd-search-icon:before {
     height:16px;
     width:16px;

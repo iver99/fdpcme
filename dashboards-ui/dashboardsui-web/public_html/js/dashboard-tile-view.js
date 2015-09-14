@@ -60,11 +60,66 @@ define(['knockout',
 //                }
 //            };
 //        }
+
+        function WidgetDataSource() {
+            var self = this;
+            var DEFAULT_WIDGET_PAGE_SIZE = 20;
+            
+            self.loadWidgetData = function(page, keyword, successCallback) {
+                initialize(page);
+                loadWidgets(keyword);
+                successCallback && successCallback(self.page, self.widget, self.totalPages);
+            };
+            
+            function initialize(page) {
+                self.widget = [];
+                self.totalPages = 0;
+                self.page = page;
+            }
+            
+            function loadWidgets(keyword) {
+                var widgetsUrl = '/sso.static/savedsearch.widgets';
+                if (dfu.isDevMode()){
+                    widgetsUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                }
+
+                dfu.ajaxWithRetry({
+                    url: widgetsUrl,
+                    headers: dfu.getDashboardsRequestHeader(),
+                    success: function(data) {
+                        data && data.length > 0 && (filterWidgetsData(data, keyword));
+                    },
+                    error: function(res){
+                        oj.Logger.error('Error when fetching widgets by URL: '+ widgetsUrl + '.');
+                    },
+                    async: false
+                });
+            };
+            
+            function filterWidgetsData(data, keyword){
+                var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;
+                for (var i = 0; i < data.length; i++) {
+                    var widget = null;
+                    lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
+                    !lcKeyword && (widget = data[i]);
+                    widget && self.widget.push(widget);
+                }
+                self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
+                self.page > self.totalPages && (self.page = self.totalPages);
+                self.page < 1 && (self.page = 1);
+                self.widget = self.widget.slice((self.page - 1) * DEFAULT_WIDGET_PAGE_SIZE, self.page * DEFAULT_WIDGET_PAGE_SIZE);
+            }
+        }
         
         function LeftPanelView(builder) {
             var self = this;
             self.builder = builder;
             self.dashboard = builder.dashboard;
+            
+            self.keyword = ko.observable('');
+            self.page = ko.observable(1);
+            self.widgets = ko.observableArray([]);
+            self.totalPages = ko.observable(1);
             
             self.initialize = function() {
                 $("#dbd-left-panel-text").draggable({
@@ -81,11 +136,47 @@ define(['knockout',
                     }
                 });
                 self.builder.addBuilderResizeListener(self.resizeEventHandler);
+                $("#dbd-left-panel-widgets-page-input").keyup(function(event) {
+                    var replacedValue = this.value.replace(/[^0-9\.]/g, '');
+                    if (this.value !== replacedValue) {
+                        this.value = replacedValue;
+                    }
+                });
+                self.loadWidgets();
             };
             
             self.resizeEventHandler = function(width, height) {
                 $('#dbd-left-panel').height(height);
                 $('#left-panel-helper').css("width", width - 20);
+            };
+            
+            self.loadWidgets = function() {
+                new WidgetDataSource().loadWidgetData(self.page(), self.keyword(), function(page, widgets, totalPages) {
+                    self.widgets([]);
+                    if (widgets && widgets.length > 0) {
+                        for (var i = 0; i < widgets.length; i++)
+                            self.widgets.push(ko.mapping.fromJS(widgets[i]));
+                    }
+                    totalPages !== self.totalPages() && self.totalPages(totalPages);
+                });
+            };
+            
+            self.dashboardPageChanged = function(e, d) {
+                if (d.option !== "value" || !d.value)
+                    return;
+                self.loadWidgets();
+            };
+            
+            self.searchWidgetsClicked = function() {
+                self.page(1);
+                self.loadWidgets();
+            };
+            
+            self.clearWidgetSearchInputClicked = function() {
+                if (self.keyword()) {
+                    self.keyword(null);
+                    self.searchWidgetsClicked();
+                }
             };
         }
         
