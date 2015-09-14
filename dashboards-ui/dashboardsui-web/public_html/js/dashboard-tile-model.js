@@ -5,12 +5,12 @@
  */
 define(['knockout',
         'knockout.mapping',
-        'timeselector/time-selector-model',
+        'dashboards/time-selector-model',
         'dfutil',
         'df-util',
-        'ojs/ojcore',
         'jquery',
         'jqueryui',
+        'ojs/ojcore',
         'ojs/ojknockout',
         'ojs/ojmenu',
         'html2canvas',
@@ -20,7 +20,7 @@ define(['knockout',
         'ckeditor'
     ],
     
-    function(ko, km, TimeSelectorModel,dfu, dfumodel)
+    function(ko, km, TimeSelectorModel,dfu, dfumodel,$)
     {
         var dtm = this;
         
@@ -365,15 +365,11 @@ define(['knockout',
         }
         
         function getBaseUrl() {
-            if (dfu.isDevMode()){
-                return dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
-            }else{
-        	return "/sso.static/dashboards.service";
-            }
+            return dfu.getDashboardsUrl();
         }
         
         function initializeFromCookie() {
-            var userTenant= dfu.getUserTenantFromCookie();
+            var userTenant= dfu.getUserTenant();
             if (userTenant){
                 dtm.tenantName = userTenant.tenant;
                 dtm.userTenant  =  userTenant.tenantUser;      
@@ -415,6 +411,14 @@ define(['knockout',
                            }
                        } 
                     }
+                    if (data && data['name'] && data['name'] !== null)
+                    {
+                        data['name'] = $("<div/>").html(data['name']).text();
+                    }
+                    if (data && data['description'] && data['description'] !== null)
+                    {
+                        data['description'] = $("<div/>").html(data['description']).text();
+                    }                    
                     var dsb = ko.mapping.fromJS(data, mapping);
                     if (succCallBack)
                         succCallBack(dsb);
@@ -440,7 +444,8 @@ define(['knockout',
                 success: function(data) {
                     if (data && data.dashboards && data.dashboards.length > 0) {
                         for (var i = 0; i < data.dashboards.length; i++) {
-                            if (name === data.dashboards[i].name) {
+                            var __dname = $("<div/>").html(data.dashboards[i].name).text();
+                            if (name === __dname) {
                                 exists = true;
                                 break;
                             }
@@ -463,6 +468,14 @@ define(['knockout',
                 headers: getDefaultHeaders(),
                 data: dashboard,
                 success: function(data) {
+                    if (data && data['name'] && data['name'] !== null)
+                    {
+                        data['name'] = $("<div/>").html(data['name']).text();
+                    }
+                    if (data && data['description'] && data['description'] !== null)
+                    {
+                        data['description'] = $("<div/>").html(data['description']).text();
+                    }                    
                     if (succCallBack)
                         succCallBack(data);
                 },
@@ -1589,7 +1602,7 @@ define(['knockout',
 	self.datetimePickerParams = {
 	    startDateTime: initStart,
  	    endDateTime: initEnd,	   
-	    callback: function(start, end) {
+	    callbackAfterApply: function(start, end) {
 		self.timeSelectorModel.viewStart(start);
 		self.timeSelectorModel.viewEnd(end);
 		self.timeSelectorModel.timeRangeChange(true);		

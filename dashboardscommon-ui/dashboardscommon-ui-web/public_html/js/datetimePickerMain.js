@@ -68,9 +68,9 @@ require(['ojs/ojcore',
             function MyViewModel() {
                 var self = this;
                 self.timeParams1 = {
-                    startDateTime: new Date() - 24 * 60 * 60 * 1000,
+                    startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
                     endDateTime: new Date(),
-                    callback: function (start, end) {
+                    callbackAfterApply: function (start, end) {
                         console.log(start);
                         console.log(end);
                         self.generateData(start, end);
@@ -161,9 +161,27 @@ require(['ojs/ojcore',
                 };
 
                 self.generateData(self.timeParams1.startDateTime, self.timeParams1.endDateTime);
+                
+                self.adjustTime = function(start, end) {
+                    var adjustedStart, adjustedEnd;
+                    adjustedStart =start - 60*60*1000;
+                    adjustedEnd = end.getTime()+ 60*60*1000;
+                    return {
+                        start: new Date(adjustedStart),
+                        end: new Date(adjustedEnd)
+                    }
+                }
                 self.timeParams2 = {
 //                    startDateTime: "2015-05-17T00:00:00",
 //                    endDateTime: "2015-05-16T13:00:00"
+                      startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
+                      endDateTime: new Date(),
+                      timePeriodsNotToShow: ["Last 90 days", "Last 30 days", "Last 1 day"], //an array of what not to show
+                      customWindowLimit: 4*24*60*60*1000-12*60*60*1000, //in custom mode, limit the size of window
+                      adjustLastX: self.adjustTime, //used to adjust times when user choose "Last X"
+                      customTimeBack: 7*24*60*60*1000, //the max timestamp of how far the user can pick the date from
+                      hideMainLabel: true, //hides the main label "Time Range", defaults to "false"
+                      hideRangeLabel: true //hides the selected time range, like "Last 30 minutes" inside the time selection, defaults to "false"
                 }
             }
             ko.applyBindings(new MyViewModel(), document.getElementById("dateTimePicker"));

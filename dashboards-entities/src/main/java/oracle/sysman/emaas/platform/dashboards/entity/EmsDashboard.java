@@ -43,7 +43,7 @@ public class EmsDashboard implements Serializable
 	private Long dashboardId;
 	@Column(name = "DELETED")
 	private Long deleted;
-	@Column(name = "DESCRIPTION", length = 256)
+	@Column(name = "DESCRIPTION", length = 1280)
 	private String description;
 	@Column(name = "ENABLE_TIME_RANGE", nullable = false)
 	private Integer enableTimeRange;
@@ -63,8 +63,7 @@ public class EmsDashboard implements Serializable
 	private Date lastModificationDate;
 	@Column(name = "LAST_MODIFIED_BY", length = 128)
 	private String lastModifiedBy;
-
-	@Column(nullable = false, length = 64)
+	@Column(nullable = false, length = 320)
 	private String name;
 
 	@Column(nullable = false, length = 128)

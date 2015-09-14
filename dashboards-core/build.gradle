@@ -46,11 +46,11 @@ task runDEVTestSuite(type: Test){
 
 publishing {
     publications {
-/*
-        savedsearchCore(MavenPublication) {
+
+        dashboardCore(MavenPublication) {
               from components.java
         }
-*/
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
@@ -105,6 +105,7 @@ dependencies {
 	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
 	compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
+        compile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5')  { transitive = false }
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')   { transitive = false }
 	compile(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2')  { transitive = false }

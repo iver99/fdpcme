@@ -22,7 +22,12 @@ import org.testng.Assert;
 public class DashBoardUtils {
 
 	private static WebDriver driver;
-	
+
+     	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	{
+		driver = webDriver;
+	}
+
 	public static void loadWebDriver(WebDriver webDriver) throws Exception
 	{
 		driver=webDriver;

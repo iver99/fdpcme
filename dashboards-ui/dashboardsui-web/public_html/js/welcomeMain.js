@@ -70,10 +70,7 @@ require(['ojs/ojcore',
         {
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var logger = new _emJETCustomLogger();
-            var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
-            if (dfu_model.isDevMode()){
-                logReceiver = dfu_model.buildFullUrl(dfu_model.getDevData().dfRestApiEndPoint,"logging/logs");
-            }
+            var logReceiver = dfu.getLogUrl();
            
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
             logger.setLogLevel(oj.Logger.LEVEL_LOG);
@@ -151,10 +148,7 @@ require(['ojs/ojcore',
                 self.data_type = "select";                
                 
                 self.getServiceUrls = function() {
-                    var serviceUrl = "/sso.static/dashboards.configurations/registration";
-                    if (dfu_model.isDevMode()){
-                        serviceUrl = dfu_model.buildFullUrl(dfu_model.getDevData().dfRestApiEndPoint,"configurations/registration");
-                    }
+                    var serviceUrl = dfu.getRegistrationUrl();
                     dfu.ajaxWithRetry({
                         url: serviceUrl,
                         headers: dfu_model.getDefaultHeader(), 
