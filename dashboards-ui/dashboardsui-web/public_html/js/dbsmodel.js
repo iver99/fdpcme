@@ -207,7 +207,21 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
                                                    filter['types'], filter['appTypes'], filter['owners'], function(_event) {
                                                        //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
-                                                       self.dashboardsTS(new oj.ArrayTableDataSource(_event['data'], {idAttribute: 'id'}));
+                                                       var _i = 0, _rawdbs = [];
+                                                       if (_event['data'])
+                                                       {
+                                                           for (_i = 0; _i < _event['data'].length; _i++)
+                                                           {
+                                                               var _datai = _event['data'][_i].attributes;
+                                                               if (!_datai['lastModifiedOn'])
+                                                               {
+                                                                   _datai['lastModifiedOn'] = _datai['createdOn'];
+                                                               }
+                                                               _datai['lastModifiedOnStr'] = getDateString(_datai['lastModifiedOn']);
+                                                               _rawdbs.push(_datai);
+                                                           }
+                                                       }
+                                                       self.dashboardsTS(new oj.ArrayTableDataSource(_rawdbs, {idAttribute: 'id'}));
                                                    });
         self.datasource = self.dsFactory.build("", self.pageSize());
         self.datasource['pagingDS'].setPage(0, { 
@@ -521,6 +535,31 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.clearSearch = function (event, data)
         {
             $("#sinput").dbsTypeAhead("clearInput");
+        };
+        
+        self.listNameRender = function (context) 
+        {
+            var _link = $(document.createElement('a'))
+                    .on('click', function(event) {
+                        //prevent event bubble
+                        event.stopPropagation();
+                        self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
+                    });
+            _link.append(context.row.name);
+            $(context.cellContext.parentElement).append(_link);
+        };
+        
+        self.listInfoRender = function (context) 
+        {
+            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
+                    .addClass("oj-button-half-chrome oj-sm-float-end")
+                    .on('click', function(event) {
+                        //prevent event bubble
+                        event.stopPropagation();
+                        self.handleShowDashboardPop(event, {'id': context.row.id, 'element': _info});
+                    });
+            $(context.cellContext.parentElement).append(_info);
+            ko.applyBindings({}, _info[0]); 
         };
         
         self.updateDashboard = function (dsb)

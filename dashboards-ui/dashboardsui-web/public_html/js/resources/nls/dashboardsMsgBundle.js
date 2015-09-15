@@ -34,6 +34,8 @@ define({
       "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last Accessed",
       "DBS_HOME_SELECT_SORT_NAME": "Name",
       "DBS_HOME_SELECT_SORT_CREATION_TIME": "Creation Date",
+      "DBS_HOME_SELECT_SORT_LAST_MODIFIED": "Last Modified",
+      "DBS_HOME_SELECT_SORT_LAST_OWNER": "Created By",
       "DBS_HOME_SELECT_SORT_DEFAULT": "Default",
       "DBS_HOME_CREATE_BTN_TT_CONTENT": " Click to create a dashboard and add widgets of your choice.",
       "DBS_HOME_EXPLORE_BTN_LABEL": "Explore Data",
