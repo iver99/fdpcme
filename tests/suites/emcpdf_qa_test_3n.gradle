@@ -52,7 +52,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-web-integ-tests', version: '1.0.1') {
+    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-web-integ-tests-sprint39', version: '1.0+') {
 	exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
@@ -83,9 +83,10 @@ task small_deploy_3n_block(type: EMTest) {
     }
     useWebdriver = true
     useRestAssured = true
+
 }
 
-     task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
+task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
@@ -95,9 +96,17 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
+	
+	useRestAssured=true
+	ext.set("testType", "integration")
+}
+
+task DEVTest_ws(type:EMTest,dependsOn: small_deploy_3n_block){ 
 	include "oracle/sysman/emaas/platform/dashboards/ws/*"
 	useRestAssured=true
+	ext.set("testType", "unit")
 }
+
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
     options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
@@ -115,4 +124,6 @@ task small_deploy_3n_cleanup(type: EMTest) {
 }
 
 
-task emcpdf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+task emcpdf_qa_test_3n (dependsOn: [QATest, DEVTest_ws, small_deploy_3n_cleanup])
+
+apply from: "../../codeCoverage/codeCoverage.gradle"

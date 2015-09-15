@@ -3,12 +3,14 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
             function NavigationLinksViewModel(params) {
                 var self = this;
                 var dfHomeUrl = null;
+                var dfDashboardsUrl = null;
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
                 var nlsStrings = params.nlsStrings ? params.nlsStrings : {};
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
                 var appMap = params.appMap;
+                var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
@@ -17,10 +19,14 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 self.administrationLabel = nlsStrings.BRANDING_BAR_NAV_ADMIN_LABEL;
                 self.homeLinkLabel = nlsStrings.BRANDING_BAR_NAV_HOME_LABEL;
                 self.cloudServicesLabel = nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL;
+                self.dashboardLinkLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
                 
                 self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
+
+                //Fetch links and session expiry time from server side
+                refreshLinks();
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -67,11 +73,18 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         window.location.href = data.href;
                     }
                 };
+               
+                self.openHome = function() {
+                    oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
+                    if(dfHomeUrl) {
+                        window.location.href = dfHomeUrl;
+                    }
+                }
                 
                 self.openDashboardHome = function(data, event) {
-                    oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfHomeUrl);
-                    if (dfHomeUrl) {
-                        window.location.href = dfHomeUrl;
+                    oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
+                    if (dfDashboardsUrl) {
+                        window.location.href = dfDashboardsUrl;
                     }
                 };
                 
@@ -147,6 +160,10 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                             }
 
                         }
+                        //Setup timer to handle session timeout
+                        if (!dfu.isDevMode()) {
+                            dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
+                        }
                     };                   
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     if (dfu.isDevMode()){
@@ -169,7 +186,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function refreshLinks() {
-                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';
+                    dfHomeUrl = '/emsaasui/emcpdfui/welcome.html';
+                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
                     
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 

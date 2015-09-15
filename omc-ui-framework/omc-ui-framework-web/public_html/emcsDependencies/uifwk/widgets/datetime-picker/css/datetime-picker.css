@@ -8,7 +8,7 @@
     border-color: #dfe4e7;
     border-radius: 2px;
     padding-left:8px;
-    height: 32px; 
+    height: 34px; 
     width: auto;
     line-height: 32px;
     display: inline-block;
@@ -22,13 +22,15 @@
     border-style: solid;
     border-color: #dfe4e7;
     border-radius: 2px;
-    padding: 10px;
-    height: 391px;
+    /*padding: 10px;*/
+    height: 387px;
     width: 630px;
 }
 .drawers {
-    width: 109px;
+    width: 104px;
     float: left;
+    height: 387px;
+    background-color: #f0f0f0;
 }
 .drawer {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -42,7 +44,7 @@
     padding-left: 8px;
     padding-top: 14px;
     height: 23px;
-    width: 109px;
+    width: 94px;
     display: block;
 }
 
@@ -55,8 +57,10 @@
 
 .pickerPanel {
     width: 510px;
-    height: 391px;
+    height: 387px;
     float: right;
+    padding-top: 10px;
+    padding-right: 10px;
 }
 .chosenDate {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -82,7 +86,7 @@
 .buttons {
     margin: 10px;
 }
-.formatErrorMsg {
+.errorMsg {
     margin: 10px;
     font-size: 14px;
     color: red;
@@ -90,7 +94,8 @@
     width: 510px;
 }
 .datePicker {
-    font-size: 14px;
+    font-size: 15px;
+    padding-top: 10px;
 }
 
 .drawer img {

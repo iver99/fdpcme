@@ -30,7 +30,7 @@ default["oracle_base"] = "#{node["run_dir"]}/oracle"
 default["SAAS_datasourcename"]="emaas_dashboards_ds"
 default["SAAS_jndiname"]="jdbc/emaas_dashboards_ds"
 default["sql_bundle"]="emaas-applications-dashboards-schema-"
-default["sql_dir"]="emaas-applications-dashboards-schema"
+default["sql_dir"]="sql"
 
 #if db connection parameters are to be obtained by db entity lookup, set is_db_lookup to true
 default["is_db_lookup"]="true"

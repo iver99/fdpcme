@@ -311,23 +311,30 @@ define([
 
             /**
              * Discover dashboard home URL
-             * @param {String} smUrl
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
             	return "/emsaasui/emcpdfui/home.html";
             };    
+
+            /**
+             * Discover welcome URL
+             * @returns {String} url
+             */
+            self.discoverWelcomeUrl = function() {
+            	var welcomeUrl = "/emsaasui/emcpdfui/welcome.html";
+                return welcomeUrl;
+            };  
             
             /**
              * Get default request header for ajax call
              * @returns {Object} 
              */
             self.getDefaultHeader = function() {
-                var defHeader = {
-//                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
-                    "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
-                    "X-REMOTE-USER":self.tenantName+'.'+self.userName};
+                var defHeader = {};
                 if (self.isDevMode()){
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
+                    defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
@@ -511,7 +518,13 @@ define([
              * @returns {Object} 
              */
             self.getSavedSearchServiceRequestHeader=function() {
-                return self.getDefaultHeader();
+                var defHeader = {};
+                if (self.isDevMode()){
+                    defHeader["OAM_REMOTE_USER"] = self.tenantName+'.'+self.userName;
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
+                oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
+                return defHeader;
             };
             
             /**
@@ -624,7 +637,7 @@ define([
              */ 
             self.showMessage = function(message) {
                 if (message && typeof(message) === "object") {
-                    message.category = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
+                    message.tag = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
                     window.postMessage(message, window.location.href);
                 }
             };
@@ -690,6 +703,33 @@ define([
                 }
                 title = title + title_suffix;
                 return title;
+            };
+            
+            self.setupSessionLifecycleTimeoutTimer = function(sessionExpiryTime, warningDialogId) {
+                //Get session expiry time and do session timeout handling
+                if (sessionExpiryTime && sessionExpiryTime.length >= 14) {
+                    var now = new Date().getTime();
+                    //Get UTC session expiry time
+                    var utcSessionExpiry = Date.UTC(sessionExpiryTime.substring(0,4),
+                        sessionExpiryTime.substring(4,6)-1, sessionExpiryTime.substring(6,8), 
+                        sessionExpiryTime.substring(8,10), sessionExpiryTime.substring(10,12), 
+                        sessionExpiryTime.substring(12,14));
+                    //Caculate wait time for client timer which will show warning dialog when session expired
+                    //Note: the actual session expiry happens about 40 secs - 1 min before the time we get from 
+                    //SESSION_EXP header, so set the timer for session expiry to be 1 min before SESSION_EXP
+                    var waitTimeBeforeWarning = utcSessionExpiry - now - 60*1000;
+                    //Show warning dialog when session expired
+                    setTimeout(function(){showSessionTimeoutWarningDialog(warningDialogId);}, waitTimeBeforeWarning);
+                }
+            };
+
+            function showSessionTimeoutWarningDialog(warningDialogId) {
+                //Clear interval for extending user session
+                if (window.intervalToExtendCurrentUserSession)
+                    clearInterval(window.intervalToExtendCurrentUserSession);
+                window.currentUserSessionExpired = true;
+                //Open sessin timeout warning dialog
+                $('#'+warningDialogId).ojDialog('open');
             };
             
         }

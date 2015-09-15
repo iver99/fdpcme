@@ -68,7 +68,7 @@ task stageJs(dependsOn: copyJsSource){
 javascript.source {
 	dev {
             js {
-                srcDir stagingDir+'/emcsDependencies/uifwk'
+                srcDir 'public_html/emcsDependencies/uifwk'
                 include "**/*.js"
 		exclude "**/*.orig.js"
             }
@@ -77,39 +77,40 @@ javascript.source {
 
 javascript.source.dev.js.files.eachWithIndex { File jsFile, idx ->
     tasks.add(name: "dominify${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	//String fileName = "${jsFile.name}"
-	//String renamedFile = fileName.replace(".",".orig.")
-	//def parentDir = jsFile.parent
-	//def sourceFile = parentDir+"/"+fileName
-	//def destFile = parentDir+"/"+renamedFile
+	String fileName = "${jsFile.name}"
+	String renamedFile = fileName.replace(".",".orig.")
+	def parentDir = jsFile.parent
+	def tmpFolder= parentDir.split("uifwk")
+	def sourceFile = stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+renamedFile
 	
-	//doFirst{ 
-	//    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
-	//}
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
 
-        source = jsFile
-	dest =jsFile
-	//String sourceMapFile = fileName.replace(".js",".map")
-	//sourceMap = file(parentDir+'/'+sourceMapFile)
+        source = sourceFile
+	dest = sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+	sourceMap = file(stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
 	}
 
-	//doLast {
+	doLast {
 		//update the compiled JS to point to the source map
-	//	File compiledFile = new File(sourceFile)
+		File compiledFile = new File(sourceFile)
 	//	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-	//	compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-	//	File mapFile = new File(parentDir+'/'+sourceMapFile)
-	//	String contents = mapFile.getText('UTF-8')
-	//	String absPath = compiledFile
-	//	logger.lifecycle("absPath:" + Pattern.quote(absPath))
-	//	contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
-	//	mapFile.write(contents, 'UTF-8')
-    	//}	
+		File mapFile = new File(stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+sourceMapFile)
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		//logger.lifecycle("absPath:" + Pattern.quote(absPath))
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}	
     }
 }
 
@@ -217,8 +218,8 @@ war {
 //task buildDFCommonLibZip(type: Zip){
 //	baseName = 'emcs-ui-framework'
 //	appendix = 'common'
-//	from stagingDir+'/emcsDependencies/dfcommon/'
-//	into 'dfcommon'
+//	from stagingDir+'/emcsDependencies/uifwk/'
+//	into 'uifwk'
 //}
 
 publishing {
@@ -264,3 +265,4 @@ dependencies {
 	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
 }
 build.dependsOn integTestJar
+

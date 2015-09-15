@@ -3,7 +3,7 @@
     baseUrl: "js",
     dir: "./build/public_html",
     optimize:"none",
-    optimizeCss: "none",
+    optimizeCss: "standard",
     modules: [
         {
             name: "builderMain"
@@ -40,6 +40,7 @@
         'emcta':'../../emcta/ta/js',
         'dbs': '../js',
         'require':'empty:',
-        'prefutil':'empty:'
+        'prefutil':'empty:',
+	'ckeditor': 'empty:'
     }
 })

@@ -98,6 +98,7 @@ define([
                                     id: messageId, 
                                     action: 'show', 
                                     type: 'warn', 
+                                    category: 'retry_in_progress',
                                     summary: summaryMsg, 
                                     detail: detailMsg};
 
@@ -130,6 +131,7 @@ define([
                                     id: getGuid(), 
                                     action: 'show', 
                                     type: "error", 
+                                    category: 'retry_fail',
                                     summary: errorSummaryMsg,
                                     detail: errorDetailMsg};
 
@@ -311,7 +313,7 @@ define([
             
             function removeMessage(messageId) {
                 if (messageId) {
-                    var messageObj = {id: messageId, category: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove'};
+                    var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove', category: 'retry_in_progress'};
                     window.postMessage(messageObj, window.location.href);
                 }
             };

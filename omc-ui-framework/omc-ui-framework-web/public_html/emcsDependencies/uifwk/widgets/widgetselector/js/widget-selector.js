@@ -362,6 +362,8 @@ define([
                                     }
                                     else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
                                         widget.WIDGET_VISUAL = itaImagePath;
+                                    }else{
+                                        widget.WIDGET_VISUAL = itaImagePath;//default image
                                     }
                                 }
 
@@ -470,5 +472,4 @@ define([
             
             return WidgetSelectorViewModel;
         });
-
 

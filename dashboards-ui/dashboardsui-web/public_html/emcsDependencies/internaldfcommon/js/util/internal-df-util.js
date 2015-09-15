@@ -19,7 +19,7 @@ define(['knockout',
             var ajaxUtil = new ajaxUtilModel();
             var msgUtil = new msgUtilModel();
             
-            self.getUserTenantFromCookie = function() {
+            self.getUserTenant = function() {
                 return userTenantUtil.getUserTenant();
             };
             
@@ -61,7 +61,7 @@ define(['knockout',
             self.registrationInfo = null;
             self.getRegistrationInfo=function(){
                 if (self.registrationInfo===null){
-                    ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationEndPoint(),
+                    ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
                         dataType: 'json',
                         headers: dfu.getDefaultHeader(), 
                         async: false,
@@ -76,7 +76,7 @@ define(['knockout',
                 return self.registrationInfo;
             };
             
-            self.getRegistrationEndPoint=function(){
+            self.getRegistrationUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
                     return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"configurations/registration"); 
@@ -85,6 +85,41 @@ define(['knockout',
                 }
             };
 
+            self.getLogUrl=function(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"logging/logs"); 
+                }else{
+                    return '/sso.static/dashboards.logging/logs';
+                }
+            };   
+            
+            self.getDashboardsUrl=function(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"dashboards"); 
+                }else{
+                    return '/sso.static/dashboards.service';
+                }
+            };   
+            
+            self.getPreferencesUrl=function(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"preferences"); 
+                }else{
+                    return '/sso.static/dashboards.preferences';
+                }
+            }; 
+            
+            self.getSubscribedappsUrl=function(){
+                //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"subscribedapps"); 
+                }else{
+                    return '/sso.static/dashboards.subscribedapps';
+                }
+            };             
             /**
              * Discover available quick links
              * @returns {Array} quickLinks
@@ -162,15 +197,6 @@ define(['knockout',
                 return dfu.buildFullUrl(root, path);
             };
                         
-            
-            /**
-             * Get request header for Saved Search Service API call
-             * @returns {Object} 
-             */
-            self.getSavedSearchServiceRequestHeader=function() {
-                return dfu.getDefaultHeader();
-            };
-            
             self.getDashboardsRequestHeader = function() {
                 return dfu.getDashboardsRequestHeader();
             };

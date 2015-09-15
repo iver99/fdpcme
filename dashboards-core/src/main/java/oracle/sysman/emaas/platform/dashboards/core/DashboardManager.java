@@ -31,6 +31,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -304,7 +305,7 @@ public class DashboardManager
 		}
 		String currentUser = UserContext.getCurrentUser();
 		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
-		Object[] params = new Object[] { name, currentUser, new Integer(0) };
+		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
@@ -642,29 +643,29 @@ public class DashboardManager
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
 				sb.append(" and (p.name LIKE ?" + index++);
-				paramList.add("%" + queryString + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 			}
 			else {
 				sb.append(" and (lower(p.name) LIKE ?" + index++);
-				paramList.add("%" + queryString.toLowerCase(locale) + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 			}
 
 			if (!ic) {
 				sb.append(" or p.description like ?" + index++);
-				paramList.add("%" + queryString + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 			}
 			else {
 				sb.append(" or lower(p.description) like ?" + index++);
-				paramList.add("%" + queryString.toLowerCase(locale) + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?" + index++
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?" + index++
 						+ " )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?"
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
 						+ index++ + " )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
@@ -682,9 +683,15 @@ public class DashboardManager
 		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)) {
 			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
 		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)) {
+			sb.append(" order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END DESC, p.dashboard_Id DESC");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER.equals(orderBy)) {
+			sb.append(" order by lower(p.owner), p.owner, lower(p.name), p.name, p.dashboard_Id DESC");
+		}
 		else {
-			//order by last access date
-			sb.append(" order by p.application_Type, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
+			//default order by
+			sb.append(" order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
 		}
 		StringBuilder sbQuery = new StringBuilder(sb);
 		sbQuery.insert(0, "select p.* ");

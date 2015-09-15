@@ -51,7 +51,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-	testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core-integ-tests', version: '1.0.1'){
+	testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core-integ-tests', version: '1.0+'){
 		exclude('module':'groovy')
 	}
 	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
@@ -111,3 +111,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
 }
 
 task emcpdf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+apply from: "../../codeCoverage/codeCoverage.gradle"

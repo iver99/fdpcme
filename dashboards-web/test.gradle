@@ -1,7 +1,7 @@
 //jar.archiveName='emcpdf_qa_test.jar'
 group = 'com.oracle.emaas.emcpdf'
-version = '1.0.1'
-
+//version = '1.0.1'
+apply plugin: 'gavsetting'
 sourceSets {
     integTest {
         java.srcDir 'src/integTest/java'
@@ -17,7 +17,7 @@ jar {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests'
+    appendix = 'integ-tests-sprint39'
 }
 dependencies {
 
