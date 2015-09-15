@@ -756,7 +756,6 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         $(self.panelId+"_wrapper"+" .oj-popup").css("border", "0px");
 //                        $("#panel").slideDown();
                         $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', 'emcsDependencies/dfcommon/images/pull-up.jpg');
-                        self.setLastDatas();
                     }
                 }
 
