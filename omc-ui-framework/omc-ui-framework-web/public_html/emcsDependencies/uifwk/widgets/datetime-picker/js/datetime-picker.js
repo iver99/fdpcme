@@ -1,35 +1,28 @@
-define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/ojcore"],
-        function (localrequire, ko, $, msgUtilModel, oj) {
+define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/js/resources/nls/uifwkCommonMsgBundle"],
+        function (ko, $, msgUtilModel, oj, nls) {
 
             /**
              * 
-             * @param {String} the string to search
-             * @param {Array or Object} the array in which to search the string
+             * @param {String} string the string to search
+             * @param {Array or Object} array the array in which to search the string
              * @returns {String} if the string exist in array, return it. if not return ""
              */
             function in_array(string, array) {
                 for (var i in array) {
-                    if (array[i][1] == string) {
+                    if (array[i][1] === string) {
                         return i;
                     }
                 }
                 return "";
-            }
-            function getFilePath(requireContext, relPath) {
-                var jsRootMain = requireContext.toUrl("");
-                var path = requireContext.toUrl(relPath);
-                path = path.substring(jsRootMain.length);
-                return path;
-            }
+            };
             
             function isArray(obj) {
                 return Object.prototype.toString.call(obj) === "[object Array]";
-            }
+            };
 
             /**
              * 
-             * @param {Date} if defined, use it to initilize start date/time. The date/time format is ISO 8601 or date object.
-             * @param {Date} if defined, use it to initilize end date/time. The date/time format is ISO 8601 or date object.
+             * @param {Object} params parameters passed in for this knockout component.
              * @returns {undefined}
              */
             function dateTimePickerViewModel(params) {
@@ -39,31 +32,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                 console.log(params);
                 
                 var start, end;
-                var dateDiff, timeDiff, dateTimeDiff;
-
-                //Config requireJS i18n plugin if not configured yet
-                var i18nPluginPath = getFilePath(localrequire, '../../../js/resources/i18n.js');
-                i18nPluginPath = i18nPluginPath.substring(0, i18nPluginPath.length - 3);
-                var requireConfig = requirejs.s.contexts._;
-                var locale = null;
-                var i18nConfigured = false;
-                var childCfg = requireConfig.config;
-                if (childCfg.config && childCfg.config.ojL10n) {
-                    locale = childCfg.config.ojL10n.locale ? childCfg.config.ojL10n.locale : null;
-                }
-                if (childCfg.config.i18n || (childCfg.paths && childCfg.paths.i18n)) {
-                    i18nConfigured = true;
-                }
-                if (i18nConfigured === false) {
-                    requirejs.config({
-                        config: locale ? {i18n: {locale: locale}} : {},
-                        paths: {
-                            'i18n': i18nPluginPath
-                        }
-                    });
-                }
-                var nlsResourceBundle = getFilePath(localrequire, '../../../js/resources/nls/dfCommonMsgBundle.js');
-                nlsResourceBundle = nlsResourceBundle.substring(0, nlsResourceBundle.length - 3);
+                var timeDiff, dateTimeDiff;
 
                 self.randomId = new Date().getTime();
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
@@ -77,18 +46,20 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                 self.dateConverter = oj.Validation.converterFactory("dateTime").createConverter(dateOption);
                 self.dateConverter2 = oj.Validation.converterFactory("dateTime").createConverter(dateOption2);
                 self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter(timeOption);
-
-                self.longMonths = ko.observableArray();
-                self.timePeriodLast15mins = ko.observable();
-                self.timePeriodLast30mins = ko.observable();
-                self.timePeriodLast60mins = ko.observable();
-                self.timePeriodLast4hours = ko.observable();
-                self.timePeriodLast6hours = ko.observable();
-                self.timePeriodLast1day = ko.observable();
-                self.timePeriodLast7days = ko.observable();
-                self.timePeriodLast30days = ko.observable();
-                self.timePeriodLast90days = ko.observable();
-                self.timePeriodCustom = ko.observable();
+                
+                self.longMonths = [nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
+                                    nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
+                                    nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER];
+                self.timePeriodLast15mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS;
+                self.timePeriodLast30mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS;
+                self.timePeriodLast60mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS;
+                self.timePeriodLast4hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS;
+                self.timePeriodLast6hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS;
+                self.timePeriodLast1day = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY;
+                self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS;
+                self.timePeriodLast30days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS;
+                self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
+                self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
                 
                 self.startDateFocus = ko.observable(false);
                 self.endDateFocus = ko.observable(false);
@@ -111,7 +82,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                 }, self);
                                 
                 self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
+                    return !self.showTimeValidateErrorMsg && self.beyondWindowLimitError();
                 }, self);
 
                 self.applyButtonDisable = ko.computed(function() {
@@ -189,15 +160,14 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                 self.maxDate = ko.observable(null);
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
-                self.errorMsg = ko.observable();
-                self.formatErrorMsg = ko.observable();
-                self.timeValidateErrorMsg = ko.observable();
-                self.beyondWindowLimitErrorMsg = ko.observable();
-                self.timeRangeMsg = ko.observable();
-                self.applyButton = ko.observable();
-                self.cancelButton = ko.observable();
-                self.nlsStrings = ko.observable();
-                var nlsString;
+                
+                self.errorMsg = nls.DATETIME_PICKER_ERROR;
+                self.formatErrorMsg = nls.DATETIME_PICKER_FORMAT_ERROR_MSG;
+                self.timeValidateErrorMsg = nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG;
+                self.beyondWindowLimitErrorMsg = nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG;
+                self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
+                self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
+                self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
                 
                 //hide specified time periods
                 if(params.timePeriodsNotToShow && isArray(params.timePeriodsNotToShow) && params.timePeriodsNotToShow.length>0) {
@@ -218,11 +188,14 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         windowSize = msgUtil.formatMessage(nls.DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS, mins);
                     }
                     return windowSize;
-                }
+                };
                 
                 //In custom mode, limit the sise of window, expressed as milliseconds
                 if(params.customWindowLimit && params.customWindowLimit>60*1000) {
                     self.customWindowLimit = params.customWindowLimit;
+                    if(self.customWindowLimit) {                                    
+                        self.beyondWindowLimitErrorMsg = self.beyondWindowLimitErrorMsg + self.convertWindowSizeToDays(nls);
+                    }
                 }
                 
                 //When user choose Last xx, adjust time using function 'adjustLastX'
@@ -236,7 +209,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     var maxDate = today;
                     self.minDate(oj.IntlConverterUtils.dateToLocalIso(minDate));
                     self.maxDate(oj.IntlConverterUtils.dateToLocalIso(maxDate));
-                }
+                };
                 
                 //the max timestamp of how far the user can pick the date from, expressed as milliseconds
                 if(params.customTimeBack && params.customTimeBack>0) {
@@ -252,75 +225,37 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                 
                 if(params.hideRangeLabel && params.hideRangeLabel === true) {
                     self.hideRangeLabel = "none";
-                    self.pickerTopCss = "text-align: center;"
+                    self.pickerTopCss = "text-align: center;";
                 }else {
                     self.hideRangeLabel = "inline-block";
-                    self.pickerTopCss = "text-align: left;"
+                    self.pickerTopCss = "text-align: left;";
                 }
                 
                 if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
                     self.callbackAfterApply = params.callbackAfterApply;
                 }
 
-                var nlsString = function () {
-                    var deferred = $.Deferred();
-                    require(['i18n!' + nlsResourceBundle],
-                            function (nls) {
-                                self.nlsStrings(nls);
-                                self.longMonths([nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
-                                    nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
-                                    nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER]);
-                                self.timePeriodLast15mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS);
-                                self.timePeriodLast30mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS);
-                                self.timePeriodLast60mins(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS);
-                                self.timePeriodLast4hours(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_4_HOURS);
-                                self.timePeriodLast6hours(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS);
-                                self.timePeriodLast1day(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY);
-                                self.timePeriodLast7days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS);
-                                self.timePeriodLast30days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS);
-                                self.timePeriodLast90days(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS);
-                                self.timePeriodCustom(nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM);
-
-                                self.errorMsg(nls.DATETIME_PICKER_ERROR);
-                                self.formatErrorMsg(nls.DATETIME_PICKER_FORMAT_ERROR_MSG);
-                                self.timeValidateErrorMsg(nls.DATETIME_PICKER_TIME_VALIDATE_ERROR_MSG);
-                                self.beyondWindowLimitErrorMsg(nls.DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG);
-                                self.timeRangeMsg(nls.DATETIME_PICKER_TIME_RANGE);
-                                
-                                if(self.customWindowLimit) {                                    
-                                    self.beyondWindowLimitErrorMsg(self.beyondWindowLimitErrorMsg() + self.convertWindowSizeToDays(nls));
-                                }
-
-                                self.applyButton(nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON);
-                                self.cancelButton(nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON);
-
-                                deferred.resolve();
-                            });
-                    return deferred.promise();
-                };
-
-                $.when(nlsString()).done(function () {
-                    self.timePeriodObject = ko.computed(function () {
-                        var tmp = {};
-                        tmp[self.timePeriodLast15mins()] = [0, 15 * 60 * 1000];
-                        tmp[self.timePeriodLast30mins()] = [1, 30 * 60 * 1000];
-                        tmp[self.timePeriodLast60mins()] = [2, 60 * 60 * 1000];
-                        tmp[self.timePeriodLast4hours()] = [3, 4 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast6hours()] = [4, 6 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast1day()] = [5, 24 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast7days()] = [6, 7 * 24 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast30days()] = [7, 30 * 24 * 60 * 60 * 1000];
-                        tmp[self.timePeriodLast90days()] = [8, 90 * 24 * 60 * 60 * 1000];
-                        return tmp;
-                    }, self);
-                    self.monthObject = ko.computed(function () {
-                        var tmp = {};
-                        for (var i = 0; i < 12; i++) {
-                            tmp[self.longMonths()[i]] = i + 1;
-                        }
-                        return tmp;
-                    }, self);
-                });
+                self.timePeriodObject = ko.computed(function () {
+                    var tmp = {};
+                    tmp[self.timePeriodLast15mins] = [0, 15 * 60 * 1000];
+                    tmp[self.timePeriodLast30mins] = [1, 30 * 60 * 1000];
+                    tmp[self.timePeriodLast60mins] = [2, 60 * 60 * 1000];
+                    tmp[self.timePeriodLast4hours] = [3, 4 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast6hours] = [4, 6 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast1day] = [5, 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast7days] = [6, 7 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast30days] = [7, 30 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast90days] = [8, 90 * 24 * 60 * 60 * 1000];
+                    return tmp;
+                }, self);
+                
+                self.monthObject = ko.computed(function () {
+                    var tmp = {};
+                    for (var i = 0; i < 12; i++) {
+                        tmp[self.longMonths[i]] = i + 1;
+                    }
+                    return tmp;
+                }, self);
 
                 self.value = ko.observable(oj.IntlConverterUtils.dateToLocalIso(new Date()));
                 self.lastFocus = ko.observable();
@@ -352,21 +287,21 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     self.updateRange(self.startDate(), self.endDate());
                 });
                 self.valueSubscriber.subscribe(function (value) {
-                    if (self.startDate() == self.dateConverter2.format(self.value())) {
-                        if (self.lastFocus() == 1) {
+                    if (self.startDate() === self.dateConverter2.format(self.value())) {
+                        if (self.lastFocus() === 1) {
                             self.updateRange(self.startDate(), self.endDate());
                             self.endDateFocus(true);
-                        } else if (self.lastFocus() == 2) {
+                        } else if (self.lastFocus() === 2) {
                             self.endDateISO(self.value());
                             self.endDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                         }
-                    } else if (self.endDate() == self.dateConverter2.format(self.value())) {
-                        if (self.lastFocus() == 2) {
+                    } else if (self.endDate() === self.dateConverter2.format(self.value())) {
+                        if (self.lastFocus() === 2) {
                             self.updateRange(self.startDate(), self.endDate());
                             self.endDateFocus(true);
-                        } else if (self.lastFocus() == 1) {
+                        } else if (self.lastFocus() === 1) {
                             self.startDateISO(self.value());
                             self.endDateFocus(true);
                         } else {
@@ -374,10 +309,10 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         }
                     } else {
                         var tmp = self.value();
-                        if (self.lastFocus() == 1) {
+                        if (self.lastFocus() === 1) {
                             self.startDateISO(tmp);
                             self.endDateFocus(true);
-                        } else if (self.lastFocus() == 2) {
+                        } else if (self.lastFocus() === 2) {
                             self.endDateISO(tmp);
                             self.endDateFocus(true);
                         } else {
@@ -415,7 +350,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         var timePeriodId = self.panelId + " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
                         $(timePeriodId).hide();
                     }
-                }
+                };
                 
                 self.setTimePeriodToLastX = function(timePeriod, start, end) {
                     var eleId = self.panelId + " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
@@ -435,91 +370,8 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     return {
                         start: start,
                         end: end
-                    }
-                }
-
-                var curDate = new Date();
-
-                $.when(nlsString()).done(function () {
-                    start = new Date(curDate - 15 * 60 * 1000);
-                    end = new Date();
-                    
-                    //hide time period according to params: timePeriodsNotToShow
-                    if(self.timePeriodsNotToShow) {
-                        self.hideTimePeriods(self.timePeriodsNotToShow);
-                    }
-                    
-                    if (params.startDateTime && params.endDateTime) {
-                        //users input start date and end date
-                        start = new Date(params.startDateTime);
-                        end = new Date(params.endDateTime);
-                        dateTimeDiff = end - start;
-                        var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
-                        
-                        if (t_timePeriod && $.inArray(t_timePeriod, self.timePeriodsNotToShow)<0) {
-                            var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
-                            start = range.start;
-                            end = range.end;
-                        } else {
-                            customClick();
-                        }
-                    } else if (!params.startDatetime && params.endDateTime) {
-                        if($.inArray(self.timePeriodLast15mins(), self.timePeriodsNotToShow)<0) {
-                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins(), start, end);
-                            start = range.start;
-                            end = range.end;
-                        }else {
-                            customClick();
-                        }
-                        //print warning...
-                        oj.Logger.warn("The user just input end time");
-                    } else if (params.startDateTime && !params.endDateTime) {
-                        customClick();
-                        start = new Date(params.startDateTime);
-                        end = new Date();
-                    } else {
-                        //users input nothing
-                        if($.inArray(self.timePeriodLast15mins(), self.timePeriodsNotToShow)<0) {
-                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins(), start, end);
-                            start = range.start;
-                            end = range.end;
-                        }else{
-                            customClick();
-                        }
-                    }
-
-                    if (start.getTime() > end.getTime()) {
-                        if($.inArray(self.timePeriodLast15mins(), self.timePeriodsNotToShow)<0) {
-                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins(), start, end);
-                            start = range.start;
-                            end = range.end;
-                        }else {
-                            customClick();
-                        }
-                        //print warning...
-                        oj.Logger.warn("Start time is larger than end time. Change time range to default time range");
-                    }
-
-                    start = oj.IntlConverterUtils.dateToLocalIso(start);
-                    end = oj.IntlConverterUtils.dateToLocalIso(end);
-
-                    self.dateTimeInfo("<span style='font-weight:bold; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
-                            self.dateTimeConverter.format(start) +
-                            "<span style='font-weight:bold'> - </span>" +
-                            self.dateTimeConverter.format(end));
-
-                    self.startDate(self.dateConverter2.format(start));
-                    self.endDate(self.dateConverter2.format(end));
-
-                    self.startTime(start.slice(10, 16));
-                    self.endTime(end.slice(10, 16));
-
-                    self.lastStartDate(self.startDate());
-                    self.lastEndDate(self.endDate());
-                    self.lastStartTime(self.startTime());
-                    self.lastEndTime(self.endTime());
-                    self.lastTimePeriod(self.timePeriod());
-                });
+                    };
+                };
                 
                 self.isCustomBeyondWindowLimit = function() {
                     var start = self.startDateISO().slice(0, 10) + self.startTime();
@@ -530,10 +382,90 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     }else{
                         self.beyondWindowLimitError(false);
                     }
+                };
+
+                var curDate = new Date();
+                start = new Date(curDate - 15 * 60 * 1000);
+                end = new Date();
+
+                //hide time period according to params: timePeriodsNotToShow
+                if(self.timePeriodsNotToShow) {
+                    self.hideTimePeriods(self.timePeriodsNotToShow);
                 }
+
+                if (params.startDateTime && params.endDateTime) {
+                    //users input start date and end date
+                    start = new Date(params.startDateTime);
+                    end = new Date(params.endDateTime);
+                    dateTimeDiff = end - start;
+                    var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
+
+                    if (t_timePeriod && $.inArray(t_timePeriod, self.timePeriodsNotToShow)<0) {
+                        var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
+                        start = range.start;
+                        end = range.end;
+                    } else {
+                        customClick();
+                    }
+                } else if (!params.startDatetime && params.endDateTime) {
+                    if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                        var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                        start = range.start;
+                        end = range.end;
+                    }else {
+                        customClick();
+                    }
+                    //print warning...
+                    oj.Logger.warn("The user just input end time");
+                } else if (params.startDateTime && !params.endDateTime) {
+                    customClick();
+                    start = new Date(params.startDateTime);
+                    end = new Date();
+                } else {
+                    //users input nothing
+                    if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                        var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                        start = range.start;
+                        end = range.end;
+                    }else{
+                        customClick();
+                    }
+                }
+
+                if (start.getTime() > end.getTime()) {
+                    if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                        var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                        start = range.start;
+                        end = range.end;
+                    }else {
+                        customClick();
+                    }
+                    //print warning...
+                    oj.Logger.warn("Start time is larger than end time. Change time range to default time range");
+                }
+
+                start = oj.IntlConverterUtils.dateToLocalIso(start);
+                end = oj.IntlConverterUtils.dateToLocalIso(end);
+
+                self.dateTimeInfo("<span style='font-weight:bold; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
+                        self.dateTimeConverter.format(start) +
+                        "<span style='font-weight:bold'> - </span>" +
+                        self.dateTimeConverter.format(end));
+
+                self.startDate(self.dateConverter2.format(start));
+                self.endDate(self.dateConverter2.format(end));
+
+                self.startTime(start.slice(10, 16));
+                self.endTime(end.slice(10, 16));
+
+                self.lastStartDate(self.startDate());
+                self.lastEndDate(self.endDate());
+                self.lastStartTime(self.startTime());
+                self.lastEndTime(self.endTime());
+                self.lastTimePeriod(self.timePeriod());
                 
                 function customClick() {
-                    self.timePeriod(self.timePeriodCustom());
+                    self.timePeriod(self.timePeriodCustom);
                     self.selectByDrawer(false);
 
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
@@ -544,7 +476,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     if(self.customWindowLimit) {
                         self.isCustomBeyondWindowLimit();
                     }                    
-                }
+                };
 
                 self.setFocusOnInput = function (idToFocus) {
                     var id;
@@ -559,35 +491,35 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                             $(self.panelId + " #" + idToFocus).addClass("input-focus");
                         }
                     }
-                }
+                };
 
                 self.focusOnStartDate = function (data, event) {
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(1);
-                }
+                };
 
                 self.focusOnEndDate = function (data, event) {
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(2);
-                }
+                };
 
                 self.focusOnStartTime = function (data, event) {
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
                     self.lastFocus(0);
-                }
+                };
                 self.focusOnEndTime = function (data, event) {
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
                     self.lastFocus(0);
-                }
+                };
 
                 self.autoFocus = function (id) {
                     self.selectByDrawer(false);
                     self.setFocusOnInput(id);
-                }
+                };
 
                 self.changeDate = function (event, data, value) {
                     try {
@@ -599,12 +531,10 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         } else if (value === 2) {
                             self.endDateError(false);
                         }
-                        if (data.option == "value" && !self.selectByDrawer()) {
+                        if (data.option === "value" && !self.selectByDrawer()) {
                             customClick();
-                            $.when(nlsString()).done(function () {
-                                self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
-                                self.updateRange(self.startDate(), self.endDate());
-                            });
+                            self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
+                            self.updateRange(self.startDate(), self.endDate());
                         }
                         timeValidate();
                         if (self.panelId) {
@@ -621,7 +551,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                             $(self.panelId + " #applyButton").ojButton({"disabled": true});
                         }
                     }
-                }
+                };
 
                 self.changeTimeCorrect = function(event, data, whichTime) {
                     var timeErrorType, eleId;
@@ -636,7 +566,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     timeErrorType(false);
                     self.restoreBorderForTime(event.target);
 
-                    if (data.option == "value" && !self.selectByDrawer()) {
+                    if (data.option === "value" && !self.selectByDrawer()) {
                         self.setFocusOnInput(eleId);
                         self.lastFocus(0);
                         customClick();
@@ -645,7 +575,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     if (self.panelId) {
                         $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
                     }
-                }
+                };
                 
                 self.changeTimeError = function (event, data, whichTime) {
                     var timeErrorType;
@@ -657,13 +587,13 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     
                     timeErrorType(true);
                     $(event.target.parentNode.parentNode.parentNode).removeClass("input-focus");
-                    if (data.value === null || data.value.length == 0 || data.value.length == 1) {
+                    if (data.value === null || data.value.length === 0 || data.value.length === 1) {
                         self.setErrorBorderForTime(event.target);
                     }
                     if (self.panelId) {
                         $(self.panelId + " #applyButton").ojButton({"disabled": true});
                     }
-                }
+                };
                 
                 self.changeStartTime = function (event, data) {
                     if (typeof data.value === "string") {
@@ -671,7 +601,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     } else {
                         self.changeTimeError(event, data, 1);
                     }
-                }
+                };
 
                 self.changeEndTime = function (event, data) {
                     if (typeof data.value === "string") {
@@ -679,7 +609,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     } else {
                         self.changeTimeError(event, data, 2);
                     }
-                }
+                };
                 
                 function timeValidate() {
                     var start = self.startDateISO().slice(0, 10) + self.startTime();
@@ -689,28 +619,27 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     }else {
                         self.timeValidateError(false);
                     }
-                }
+                };
 
                 self.setErrorBorderForTime = function (target) {
                     $(target).css("border-width", "2px 0px 2px 2px").next().css("border-width", "2px 2px 2px 0px");
                     $(target).css("border-color", "#d66").next().css("border-color", "#d66");
-                }
+                };
                 self.restoreBorderForTime = function(target) {
                     $(target).css("border-width", "1px 0px 1px 1px").next().css("border-width", "1px 1px 1px 0px");
                     $(target).css("border-color", "#dfe4e7").next().css("border-color", "#dfe4e7");
-                }
+                };
 
                 /**
                  * 
-                 * @param {number} 0 represents left calendar, 1 represents right calendar
-                 * @param {Date} start date
-                 * @param {Date} end date
+                 * @param {Date} startRange start date
+                 * @param {Date} endRange end date
                  * @returns {undefined}
                  */
                 self.updateRange = function (startRange, endRange) {
                     self.renderDateRange(startRange, endRange);
 
-                }
+                };
 
                 //switch the calendar view to current time period by simulating "click" on "<" / ">"
                 self.toStartMonth = function (startYear, startMonth) {
@@ -736,7 +665,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                             clickNumber++;
                         }
                     }
-                }
+                };
 
 
                 //contol whether the panel should popup or not
@@ -755,9 +684,9 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                         $(self.panelId+"_wrapper"+" .oj-popup-content").css("padding", "0px");
                         $(self.panelId+"_wrapper"+" .oj-popup").css("border", "0px");
 //                        $("#panel").slideDown();
-                        $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', 'emcsDependencies/dfcommon/images/pull-up.jpg');
+                        $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', '/emsaasui/uifwk/emcsDependencies/uifwk/images/pull-up.jpg');
                     }
-                }
+                };
 
                 self.setLastDatas = function () {
                     self.startDate(self.lastStartDate());
@@ -765,14 +694,14 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     self.startTime(self.lastStartTime());
                     self.endTime(self.lastEndTime());
 //                    self.timePeriod(self.lastTimePeriod());
-                    if(self.lastTimePeriod() !== self.timePeriodCustom()) {
+                    if(self.lastTimePeriod() !== self.timePeriodCustom) {
                         self.setTimePeriodToLastX(self.lastTimePeriod(), null, null);
                     }else{
                         customClick();
                     }
 
-                    $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', 'emcsDependencies/dfcommon/images/drop-down.jpg');
-                }
+                    $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', '/emsaasui/uifwk/emcsDependencies/uifwk/images/drop-down.jpg');
+                };
 
                 //select time period
                 self.chooseTimePeriod = function (data, event) {
@@ -782,7 +711,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                     $(self.panelId + ' .drawer').css('font-weight', 'normal');
 
-                    if ($(event.target).text() != self.timePeriodCustom()) {
+                    if ($(event.target).text() !== self.timePeriodCustom) {
 //                        start = oj.IntlConverterUtils.dateToLocalIso(new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]));
 //                        end = oj.IntlConverterUtils.dateToLocalIso(curDate);
 
@@ -834,20 +763,20 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     if (self.callbackAfterApply) {
                         $.ajax({
                             success: function () {
-                                self.callbackAfterApply(new Date(start), new Date(end))
+                                self.callbackAfterApply(new Date(start), new Date(end));
                             },
                             error: function () {
-                                console.log(self.errorMsg())
+                                console.log(self.errorMsg);
                             }
                         });
                     }
                     return true;
-                }
+                };
 
                 self.cancelClick = function () {
                     $(self.panelId).ojPopup("close");
                     return;
-                }
+                };
 
                 self.renderDateRange = function (startRange, endRange) {
                     if ($(self.panelId + " #datePicker_" + self.randomId).children()[0]) {
@@ -892,7 +821,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                             }
                         }
                     }
-                }
+                };
                 self.setFocusOnInput("inputStartDate_" + self.randomId);
                 self.lastFocus(1);
 
@@ -905,7 +834,7 @@ define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/o
                     } else {
                         self.random(new Date().getTime());
                     }
-                }
+                };
             }
             return dateTimePickerViewModel;
         });

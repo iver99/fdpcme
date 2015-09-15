@@ -23,7 +23,7 @@ define(['knockout',
                 return userTenantUtil.getUserTenant();
             };
             
-            var userTenant = self.getUserTenantFromCookie();
+            var userTenant = self.getUserTenant();
             var userName = getUserName(userTenant);
             var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
             var dfu = new dfumodel(userName, tenantName);
