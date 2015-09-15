@@ -1,7 +1,8 @@
-define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojtoolbar', 'ojs/ojmenu', 'ojs/ojbutton'],
-        function (localrequire, ko, $, dfumodel,oj) {
+define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js/util/message-util', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojtoolbar', 'ojs/ojmenu', 'ojs/ojbutton', 'ojs/ojdialog'],
+        function (localrequire, ko, $, dfumodel, msgUtilModel, oj) {
             function BrandingBarViewModel(params) {
                 var self = this;
+                var msgUtil = new msgUtilModel();
                 
                 //Config requireJS i18n plugin if not configured yet
                 var i18nPluginPath = getFilePath(localrequire,'../../../js/resources/i18n.js');
@@ -54,12 +55,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 var warnMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_warn_16.png'); 
                 var confirmMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_confirm_16.png'); 
                 var infoMessageIcon = getFilePathRelativeToHtml(localrequire, '../../../images/stat_info_16.png'); 
-                var messages = [];
-                
-                self.clearMessage = function(data, event) {
-                    removeMessage(data);
-                    self.messageList(messages);
-                };
+                var hiddenMessages = [];
                 
                 self.nlsStrings = ko.observable();
                 self.navLinksNeedRefresh = ko.observable(false);
@@ -68,7 +64,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var dfHomeUrl =dfu.discoverDFHomeUrl();
+                var dfWelcomeUrl =dfu.discoverWelcomeUrl();
                 var subscribedApps = null;//dfu.getSubscribedApplications();
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
@@ -133,6 +129,20 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 self.serviceName = appProperties['serviceName'];
                 self.serviceVersion = appProperties['version'];
                 
+                self.showMoreLinkTxt = ko.observable();
+                self.showMoreLinkTitle = ko.observable();
+                self.showFirstNOnlyTxt = ko.observable();
+                self.showFirstNOnlyTitle = ko.observable();
+                self.sessionTimeoutWarnDialogTitle = ko.observable();
+                self.sessionTimeoutMsg = ko.observable();
+                self.sessionTimeoutBtnOK = ko.observable();
+                self.sessionTimeoutWarnDialogId = 'sessionTimeoutWarnDialog';
+                self.sessionTimeoutWarnIcon = warnMessageIcon;
+                
+                self.clearMessage = function(data, event) {
+                    removeMessage(data);
+                };
+                
                 var getSubscribedAppsDeferred = null;
                 self.getSubscribedAppsCallback = function(apps) {
                     subscribedApps = apps;
@@ -165,6 +175,13 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     self.altTextConfirm(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CONFIRM);
                     self.altTextInfo(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_INFO);
                     self.altTextClear(nls.BRANDING_BAR_MESSAGE_BOX_ICON_ALT_TEXT_CLEAR);
+                    self.showMoreLinkTxt(nls.BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_MORE);
+                    self.showMoreLinkTitle(nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_MORE);
+                    self.showFirstNOnlyTxt(msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TEXT_SHOW_FIRST, maxMsgDisplayCnt));
+                    self.showFirstNOnlyTitle(msgUtil.formatMessage(nls.BRANDING_BAR_MESSAGE_BOX_TITLE_SHOW_FIRST, maxMsgDisplayCnt));
+                    self.sessionTimeoutWarnDialogTitle(nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_TILE);
+                    self.sessionTimeoutMsg(nls.BRANDING_BAR_SESSION_TIMEOUT_MSG);
+                    self.sessionTimeoutBtnOK(nls.BRANDING_BAR_SESSION_TIMEOUT_DIALOG_BTN_OK);
                     
                     oj.Logger.info("Finished loading resource bundle for branding bar.", false);
                     requireNlsBundleDeferred.resolve();
@@ -239,19 +256,41 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 //Check notifications
                 checkNotifications();
                 
+                //TODO:need to find a way to get exact idleTimeout settings in OAM and improve the idleTimeout handling
+                //For now, set interval to extend current user session automatically every 10 mins
+                window.intervalToExtendCurrentUserSession = setInterval(function() {
+                    dfu.ajaxWithRetry("/emsaasui/emcpdfui/widgetLoading.html");
+                }, 10*60*1000);
+                
+                //Discover logout url, which will be cached and used for session timeout handling
+                dfu.discoverLogoutUrlAsync(function(logoutUrl){window.cachedSSOLogoutUrl = logoutUrl;});
+                
                 //SSO logout handler
                 self.handleSignout = function() {
-                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
-                    var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
-                    window.location.href = logoutUrl;
-                    oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
+                    //Clear interval for extending user session
+                    if (window.intervalToExtendCurrentUserSession)
+                        clearInterval(window.intervalToExtendCurrentUserSession);
+                    
+                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfWelcomeUrl;
+                    var logoutUrlDiscovered = dfu.discoverLogoutUrl();
+                    //If session timed out, redirect to sso login page and go to home page after re-login.
+                    if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
+                        window.location.href = ssoLogoutEndUrl;
+                    }
+                    //Else handle normal logout
+                    else {
+                        if (logoutUrlDiscovered === null)
+                            logoutUrlDiscovered = window.cachedSSOLogoutUrl;
+                        var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
+                        window.location.href = logoutUrl;
+                    }
                 };
                 
                 //Go to home page
                 self.gotoHomePage = function() {
-                    var homeUrl = dfu.discoverDFHomeUrl();
-                    oj.Logger.info("Go to home page by URL: " + homeUrl, false);
-                    window.location.href = homeUrl;
+                    var welcomeUrl = dfu.discoverWelcomeUrl();
+                    oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
+                    window.location.href = welcomeUrl;
                 };
                 
                 //Open about box
@@ -317,7 +356,8 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     appMap: appMap,
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],
-                    appTenantManagement: appMap[appIdTenantManagement]
+                    appTenantManagement: appMap[appIdTenantManagement],
+                    sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
                 };
                 //Register a Knockout component for navigation links
                 if (!ko.components.isRegistered('df-oracle-nav-links') && self.navLinksVisible) {
@@ -365,15 +405,89 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                     $("#links_menu").slideUp('normal');
                 });  
                 
+                var maxMsgDisplayCnt = $.isFunction(params.maxMessageDisplayCount) ? params.maxMessageDisplayCount() : 
+                        (typeof(params.maxMessageDisplayCount) === "number" && params.maxMessageDisplayCount > 0 ?
+                            params.maxMessageDisplayCount : 3);
+                var displayMessages = [];
+                var displayMessageCount = 0; //Count messages displayed except the retry in progress message
+                var retryingMessageIds = [];
+                var currentRetryingMsgId = null;
+                var currentRetryFailMsgId = null;
+                var catRetryInProgress = "retry_in_progress";
+                var catRetryFail = "retry_fail";
+                self.hasHiddenMessages = ko.observable(false);
+                self.hiddenMessagesExpanded = ko.observable(false);
+                
+                //Add listener to receive messages
                 window.addEventListener("message", receiveMessage, false);
-
+                
+                //Expand all messages
+                self.expandAllMessages = function(data, event) {
+                    for (var i = 0; i < hiddenMessages.length; i++) {
+                        displayMessages.push(hiddenMessages[i]);
+                        displayMessageCount++;
+                    }
+                    hiddenMessages = [];
+                    self.messageList(displayMessages);
+                    self.hasHiddenMessages(false);
+                    self.hiddenMessagesExpanded(true);
+                };
+                
+                //Collapse messages and show first N messages only
+                self.collapseMessages = function(data, event) {
+                    displayMessageCount = maxMsgDisplayCnt;
+                    var displayMsgCnt = maxMsgDisplayCnt;
+                    if (currentRetryingMsgId !== null) {
+                        displayMsgCnt++;
+                    }
+                    
+                    for (var i = displayMsgCnt; i < displayMessages.length; i++) {
+                        hiddenMessages.push(displayMessages[i]);
+                    }
+                    displayMessages.splice(displayMsgCnt, displayMessages.length - displayMsgCnt);
+                    self.messageList(displayMessages);
+                    self.hasHiddenMessages(true);
+                    self.hiddenMessagesExpanded(false);
+                };
+                
+                //Reload current page which will redirect to sso login page when session has expired
+                self.sessionTimeoutConfirmed = function() {
+                    $('#'+self.sessionTimeoutWarnDialogId).ojDialog('close');
+                    self.handleSignout();
+                };
+                
+                //Set up timer to handle session timeout
+                //Normally the timer will be setup in links navigator, when links vavigator is not visible (e.g. in common error page),
+                //the session timeout timer need to be set inside here.
+                if (self.navLinksVisible === false) {
+                    setupTimerForSessionTimeout();
+                }
+                
+                function setupTimerForSessionTimeout() {
+                    if (!dfu.isDevMode()){
+                        var serviceUrl = "/sso.static/dashboards.configurations/registration";
+                        dfu.ajaxWithRetry({
+                            url: serviceUrl,
+                            headers: dfu.getDefaultHeader(), 
+                            contentType:'application/json',
+                            success: function(data, textStatus) {
+                                dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, self.sessionTimeoutWarnDialogId);
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Failed to get session expiry time by URL: '+serviceUrl);
+                            },
+                            async: true
+                        });  
+                    }
+                };
+                
                 function receiveMessage(event)
                 {
                     if (event.origin !== window.location.protocol + '//' + window.location.host)
                         return;
                     var data = event.data;
                     //Only handle received message for showing page level messages
-                    if (data && data.category && data.category === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
+                    if (data && data.tag && data.tag === 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE') {
                         if (data.action) {
                             if (data.action.toUpperCase() === 'SHOW') {
                                 showMessage(data);
@@ -391,13 +505,12 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 
                 function showMessage(data) {
                     if (data) {
-                        var size = messages.length;
                         var message = {};
-                        message.index = size;
                         message.id = data.id ? data.id : dfu.getGuid();
                         message.type = data.type;
                         message.summary = data.summary;
                         message.detail = data.detail;
+                        message.category = data.category;
                         if (data.type && data.type.toUpperCase() === 'ERROR') {
                             message.iconAltText = self.altTextError;
                             message.icon = errorMessageIcon;
@@ -415,8 +528,40 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                             message.icon = infoMessageIcon;
                         }
                         
-                        messages.push(message);
-                        self.messageList(messages);
+                        if (message.category === catRetryInProgress) {
+                            if (retryingMessageIds.length === 0) {
+                                displayMessages.splice(0, 0, message);
+                                currentRetryingMsgId = message.id;
+                            }
+                            retryingMessageIds.push(message.id);
+                        }
+                        else if (message.category !== catRetryInProgress) {
+                            var isMsgNeeded = true;
+                            if (message.category === catRetryFail && currentRetryFailMsgId !== null) {
+                                isMsgNeeded = false;
+                            }
+                            else if (message.category === catRetryFail){
+                                currentRetryFailMsgId = message.id;
+                            }
+                            
+                            if (isMsgNeeded === true) {
+                                if (displayMessageCount < maxMsgDisplayCnt || self.hiddenMessagesExpanded()) {
+                                    displayMessages.push(message);
+                                    displayMessageCount++;
+                                }
+                                else {
+                                    hiddenMessages.push(message);
+                                }
+                            }
+                        } 
+                        
+                        self.messageList(displayMessages);
+                        if (hiddenMessages.length > 0) {
+                            self.hasHiddenMessages(true);
+                        }
+                        else {
+                            self.hasHiddenMessages(false);
+                        }
                         
                         //Remove message automatically if remove delay time is set
                         if (data.removeDelayTime && typeof(data.removeDelayTime) === 'number') {
@@ -426,17 +571,56 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'
                 };
                 
                 function removeMessage(data) {
-                    if (data && data.id) {
-                        for (i = 0; i < messages.length; i++) {
-                            if (messages[i].id === data.id) {
-                                messages.splice(i, 1);
-                                break;
+                    if (data.category === catRetryInProgress) {
+                        retryingMessageIds = removeItemByValue(retryingMessageIds, data.id);
+                        if (retryingMessageIds.length === 0 && currentRetryingMsgId !== null) {
+                            displayMessages = removeItemByPropertyValue(displayMessages, 'id', currentRetryingMsgId);
+                            currentRetryingMsgId = null;
+                        }
+                    }
+                    else if (data && data.id) {
+                        var originDispMsgCnt = displayMessages.length;
+                        hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'id', data.id);
+                        displayMessages = removeItemByPropertyValue(displayMessages, 'id', data.id);
+                        if (originDispMsgCnt > displayMessages.length) {
+                            displayMessageCount--;
+                            if (hiddenMessages.length > 0) {
+                                var newMsg = hiddenMessages[0];
+                                displayMessages.push(newMsg);
+                                hiddenMessages = removeItemByPropertyValue(hiddenMessages, 'id', newMsg.id);
+                                displayMessageCount++;
                             }
+                        }
+                        if (data.category === catRetryFail) {
+                            currentRetryFailMsgId = null;
                         }
                     }
                     
-                    self.messageList(messages);
+                    self.messageList(displayMessages);
+                    if (hiddenMessages.length > 0) {
+                        self.hasHiddenMessages(true);
+                        self.hiddenMessagesExpanded(false);
+                    }
+                    else {
+                        self.hasHiddenMessages(false);
+                        if (displayMessageCount <= maxMsgDisplayCnt)
+                            self.hiddenMessagesExpanded(false);
+                    }
                 };
+                
+                function removeItemByValue(obj, value)
+                {
+                    return obj.filter(function (val) {
+                        return val !== value;
+                    });
+                }
+                
+                function removeItemByPropertyValue(obj, prop, value)
+                {
+                    return obj.filter(function (val) {
+                        return val[prop] !== value;
+                    });
+                }
                 
                 function getFilePath(requireContext, relPath) {
                     var jsRootMain = requireContext.toUrl("");

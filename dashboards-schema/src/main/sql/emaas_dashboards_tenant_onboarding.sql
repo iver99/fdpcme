@@ -22,6 +22,8 @@ WHENEVER SQLERROR EXIT ROLLBACK
 SET FEEDBACK ON
 SET SERVEROUTPUT ON
 DEFINE TENANT_ID = '&1'
+DEFINE EMSAAS_SQL_ROOT = '&2'
+
 DECLARE
   oob_dsb_count NUMBER;
   Valid_Input   NUMBER;
@@ -45,7 +47,12 @@ BEGIN
   END IF;
 END;
 /
-@emaas_dashboards_seed_data.sql &TENANT_ID
+@&EMSAAS_SQL_ROOT/1.0.0/emaas_dashboards_seed_data.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.0.25/emaas_dashboards_seed_data.sql &TENANT_ID
+
+@&EMSAAS_SQL_ROOT/1.0.30/emaas_dashboards_seed_data.sql &TENANT_ID
+
 COMMIT;
 /
 BEGIN

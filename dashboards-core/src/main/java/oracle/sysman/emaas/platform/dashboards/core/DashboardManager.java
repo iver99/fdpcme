@@ -31,6 +31,7 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -304,7 +305,7 @@ public class DashboardManager
 		}
 		String currentUser = UserContext.getCurrentUser();
 		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
-		Object[] params = new Object[] { name, currentUser, new Integer(0) };
+		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
@@ -642,29 +643,29 @@ public class DashboardManager
 			Locale locale = AppContext.getInstance().getLocale();
 			if (!ic) {
 				sb.append(" and (p.name LIKE ?" + index++);
-				paramList.add("%" + queryString + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 			}
 			else {
 				sb.append(" and (lower(p.name) LIKE ?" + index++);
-				paramList.add("%" + queryString.toLowerCase(locale) + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 			}
 
 			if (!ic) {
 				sb.append(" or p.description like ?" + index++);
-				paramList.add("%" + queryString + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString) + "%");
 			}
 			else {
 				sb.append(" or lower(p.description) like ?" + index++);
-				paramList.add("%" + queryString.toLowerCase(locale) + "%");
+				paramList.add("%" + StringEscapeUtils.escapeHtml4(queryString.toLowerCase(locale)) + "%");
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.title like ?" + index++
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?" + index++
 						+ " )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where lower(t.title) like ?"
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and lower(t.title) like ?"
 						+ index++ + " )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}

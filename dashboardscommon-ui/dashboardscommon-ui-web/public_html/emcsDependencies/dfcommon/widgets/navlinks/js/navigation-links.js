@@ -3,11 +3,13 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
             function NavigationLinksViewModel(params) {
                 var self = this;
                 var dfHomeUrl = null;
+                var dfDashboardsUrl = null;
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
                 var appMap = params.appMap;
+                var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
@@ -15,6 +17,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 self.visualAnalyzersLabel = ko.observable();
                 self.administrationLabel = ko.observable();
                 self.homeLinkLabel = ko.observable();
+                self.dashboardLinkLabel = ko.observable();
                 self.cloudServicesLabel = ko.observable();
                 
                 self.cloudServices = ko.observableArray();
@@ -23,6 +26,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 
                 var nlsStringsAvailable = false;
                 var nlsStrings = null;
+                
+                //Fetch links and session expiry time from server side
+                refreshLinks();
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -72,11 +78,18 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         window.location.href = data.href;
                     }
                 };
+               
+                self.openHome = function() {
+                    oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
+                    if(dfHomeUrl) {
+                        window.location.href = dfHomeUrl;
+                    }
+                }
                 
                 self.openDashboardHome = function(data, event) {
-                    oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfHomeUrl);
-                    if (dfHomeUrl) {
-                        window.location.href = dfHomeUrl;
+                    oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
+                    if (dfDashboardsUrl) {
+                        window.location.href = dfDashboardsUrl;
                     }
                 };
                 
@@ -152,6 +165,10 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             }
 
                         }
+                        //Setup timer to handle session timeout
+                        if (!dfu.isDevMode()) {
+                            dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
+                        }
                     };                   
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     if (dfu.isDevMode()){
@@ -174,7 +191,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function refreshLinks() {
-                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
+                    dfHomeUrl = '/emsaasui/emcpdfui/welcome.html';
+                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
+                    
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 
                         self.visualAnalyzers().length === 0 || 
@@ -190,6 +209,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         self.visualAnalyzersLabel(nls.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
                         self.administrationLabel(nls.BRANDING_BAR_NAV_ADMIN_LABEL);
                         self.homeLinkLabel(nls.BRANDING_BAR_NAV_HOME_LABEL);
+                        self.dashboardLinkLabel(nls.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
                         self.cloudServicesLabel(nls.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL);
                         
                         var cloudServices = self.cloudServices();
@@ -198,7 +218,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                                 for (var i = 0; i < cloudServices.length; i++) {
                                     if (appMap !== null)
                                         cloudServiceList.push(
-                                            {name: nls[appMap[cloudServices[i].name].appName], 
+                                            {name: appMap[cloudServices[i].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[i].name].serviceDisplayName] : 
+                                                nlsStrings[appMap[cloudServices[i].name].appName], 
                                             href: cloudServices[i].href});
                                     else 
                                         cloudServiceList.push(
@@ -209,6 +230,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         }
                     }
                 }
+                
             }
             return NavigationLinksViewModel;
         });

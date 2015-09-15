@@ -40,7 +40,6 @@ requirejs.config({
         'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
         'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
-        'timeselector':'../emcsDependencies/timeselector/js',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
@@ -49,7 +48,8 @@ requirejs.config({
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '../emcsDependencies/dfcommon/js/util'
+        'emcsutl': '../emcsDependencies/dfcommon/js/util',
+        'ckeditor': '../emcsDependencies/ckeditor/ckeditor'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -129,10 +129,7 @@ require(['knockout',
             var logger = new _emJETCustomLogger()
 //          var dfRestApi = dfu.discoverDFRestApiUrl();
 //          if (dfRestApi){
-              var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
-              if (dfu.isDevMode()){
-                  logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
-              }
+              var logReceiver = dfu.getLogUrl();
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
@@ -162,7 +159,11 @@ require(['knockout',
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
                 template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
-            });        
+            });
+            ko.components.register("DF_V1_WIDGET_TEXT", {
+                viewModel: {require: '../emcsDependencies/widgets/textwidget/js/textwidget'},
+                template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
+            });
 
             function HeaderViewModel() {
                 var self = this;
@@ -184,8 +185,12 @@ require(['knockout',
             var dsbId = dfu.getUrlParam("dashboardId");
             if (dsbId) {
                 dsbId = decodeURIComponent(dsbId);
-            }
-            
+            }    
+            var isInteger = /^([0-9]+)$/.test(dsbId);
+            if (!isInteger){
+               oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
+               location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
+            }            
             dtm.initializeFromCookie();
 
 //            var dashboardModel = function(dashboardId) {
@@ -201,16 +206,21 @@ require(['knockout',
     //                var dsbWidgets = dashboardModel && dashboardModel.tiles ? dashboardModel.tiles : undefined;
     //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
     //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
-    
+                  
                     var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
-                    var tilesViewMode = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/);
-                    var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewMode);
+                    var tilesViewModel = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/); 
+                    var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewModel);
                     var headerViewModel = new HeaderViewModel();
+                    
                     
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
-                            dtm.initializeTileAfterLoad(dashboard, tile, tilesViewMode.timeSelectorModel, tilesViewMode.targetContext);
+                            if(tile.type() === "TEXT_WIDGET") {
+                                dtm.initializeTextTileAfterLoad(dashboard, tile, tilesViewModel.show, tilesViewModel.tiles.tilesReorder, dtm.isContentLengthValid);
+                            }else {
+                                dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
+                            }
                         }
                     }                    
                     
@@ -244,13 +254,16 @@ require(['knockout',
                     ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
 //                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
                     //content
-                    ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);
-                    ko.applyBindings(tilesViewMode, $('#global-html')[0]);   
+                    ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
+                    tilesViewModel.initialize();
+                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);   
 //                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
 
                     $("#loading").hide();
                     $('#globalBody').show();
                     tilesView.enableDraggable();
+                    tilesViewModel.show();
+                    tilesView.enableMovingTransition();
                     var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
                     if (dashboard.enableTimeRange()){
                        timeSliderDisplayView.showOrHideTimeSlider("ON"); 
@@ -266,7 +279,7 @@ require(['knockout',
 
 //                    toolBarModel.showAddWidgetTooltip();
                     toolBarModel.handleAddWidgetTooltip();
-                    tilesViewMode.postDocumentShow();
+//                    tilesViewModel.postDocumentShow();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
                     });

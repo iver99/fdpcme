@@ -100,10 +100,7 @@ require(['dbs/dbsmodel',
             var logger = new _emJETCustomLogger();
 //            var dfRestApi = dfu.discoverDFRestApiUrl();
 //            if (dfRestApi){
-                var logReceiver = "/sso.static/dashboards.logging/logs";//dfu.buildFullUrl(dfRestApi,"logging/logs")
-                if (dfu.isDevMode()){
-                    logReceiver = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"logging/logs");
-                }
+            var logReceiver = dfu.getLogUrl();
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
@@ -135,7 +132,7 @@ require(['dbs/dbsmodel',
            
            function TitleViewModel(){
                var self = this;
-//               self.homeTitle = getNlsString("DBS_HOME_TITLE");
+//               self.homeTitle = getNlsString("DBS_HOME_TITLE");  
                self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
             //dashboardsViewModle = new model.ViewModel();
@@ -248,7 +245,7 @@ function getDateString(isoString) {
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        //console.log(s);
+        console.log(s);
         if (s.length > 1)
         {
             return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();

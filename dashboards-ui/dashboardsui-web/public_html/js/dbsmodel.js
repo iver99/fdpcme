@@ -26,16 +26,10 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
             DASHBOARDS_VIEW_PREF_KEY = "Dashboards.dashboardsView",
-            DASHBOARDS_REST_URL = "/sso.static/dashboards.service",
-            PREFERENCES_REST_URL = "/sso.static/dashboards.preferences",
-            SUBSCIBED_APPS_REST_URL = "/sso.static/dashboards.subscribedapps";
+            DASHBOARDS_REST_URL = dfu.getDashboardsUrl(),
+            PREFERENCES_REST_URL = dfu.getPreferencesUrl(),
+            SUBSCIBED_APPS_REST_URL = dfu.getSubscribedappsUrl();
             
-    if (dfu.isDevMode()){
-       DASHBOARDS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards");
-       PREFERENCES_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"preferences");
-       SUBSCIBED_APPS_REST_URL=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"subscribedapps");        
-    }
-    
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -644,7 +638,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
                         event.stopPropagation();
                         self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
                     });
-            _link.append(context.row.name);
+            _link.append(context.row.rawName);
             $(context.cellContext.parentElement).append(_link);
         };
         
