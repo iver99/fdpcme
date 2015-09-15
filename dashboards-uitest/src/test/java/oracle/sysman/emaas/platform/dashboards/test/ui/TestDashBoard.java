@@ -26,7 +26,7 @@ public class TestDashBoard extends LoginAndLogout{
 		login(this.getClass().getName()+"."+testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
-	/*
+	
 		
 	@Test
 	public void testHomepage() throws Exception
@@ -490,7 +490,7 @@ public class TestDashBoard extends LoginAndLogout{
                 //Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		webd.takeScreenShot();
 		webd.getLogger().info("complete testing in testEMPCDF_832");
-	}*/
+	}
 	
 	@Test
 	public void testCreateLVDashBoard() throws Exception
@@ -524,7 +524,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 	}
 
-	@Test
+	@Test(dependsOnMethods = { "testCreateLVDashBoard" })
 	public void testModifyLVDashBoard() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -550,7 +550,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 	}
 
-	@Test
+	@Test(dependsOnMethods = { "testCreateLVDashBoard","testModifyLVDashBoard" })
 	public void testRemoveLVDashBoard() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
