@@ -46,11 +46,11 @@ task runDEVTestSuite(type: Test){
 
 publishing {
     publications {
-/*
-        savedsearchCore(MavenPublication) {
+
+        dashboardCore(MavenPublication) {
               from components.java
         }
-*/
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath

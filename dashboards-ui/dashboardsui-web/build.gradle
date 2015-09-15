@@ -483,7 +483,46 @@ def generateMD5(String s) {
 }
 
 //minifyJs runs the google closure compiler.  Addtionally the doFirst and doLast will fingerprint and set up HTML 5 source maps for your code
-task minifyBuilderJs(dependsOn: [individualUtilMinify,require], type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+
+task minifyWelcomeJs(dependsOn: [individualUtilMinify,require],type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+        Files.copy(Paths.get(compiledDir+'/js/welcomeMain.js'), Paths.get(compiledDir+'/js/welcomeMain.orig.js'))
+    }
+    source = file(compiledDir+'/js/welcomeMain.js')
+    dest = file(compiledDir+'/js/welcomeMain.js')
+    sourceMap = file(compiledDir+'/js/welcomeMain.map')
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+	//update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+'/js/welcomeMain.js')
+	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=welcomeMain.map", 'UTF-8')
+
+       //generate a fingerprint
+        String md5 = generateMD5(compiledFile.getText('UTF-8'))
+        compiledFile.renameTo(compiledDir+'/js/welcomeMain-'+md5+'.js')
+
+       //update references to point to fingerprinted file
+        File htmlFile = new File(compiledDir+'/welcome.html')
+        String html = htmlFile.getText('UTF-8')
+        html = html.replaceAll(Pattern.quote('js/welcomeMain'), 'js/welcomeMain-'+md5)
+        htmlFile.write(html, 'UTF-8')
+
+        //fix file path in source map file
+        File mapFile = new File(compiledDir+'/js/welcomeMain.map')
+        String contents = mapFile.getText('UTF-8')
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), 'welcomeMain.orig.js')
+        mapFile.write(contents, 'UTF-8')
+    }
+}
+
+task minifyBuilderJs(dependsOn: minifyWelcomeJs,  type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     doFirst {
         //copy the original source which will be used in a source map
 	Files.copy(Paths.get(compiledDir+'/js/builderMain.js'), Paths.get(compiledDir+'/js/builderMain.orig.js'))
