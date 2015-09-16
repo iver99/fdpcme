@@ -178,7 +178,13 @@ require(['knockout',
                 };
             
                 $("#headerWrapper").on("DOMSubtreeModified", function() {
-                    builder.triggerBuilderResizeEvent();
+                    var height = $("#headerWrapper").height();
+                    if (!self.headerHeight)
+                        self.headerHeight = height;
+                    if (self.headerHeight === height)
+                        return;
+                    builder.triggerBuilderResizeEvent('resize builder after header wrapper changed from height ' + self.headerHeight + ' to height ' + height + ' ');
+                    self.headerHeight = height;
                 });
             };
             
