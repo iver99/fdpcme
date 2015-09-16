@@ -186,9 +186,11 @@ define([
                 
                 //TODO:need to find a way to get exact idleTimeout settings in OAM and improve the idleTimeout handling
                 //For now, set interval to extend current user session automatically every 10 mins
-                window.intervalToExtendCurrentUserSession = setInterval(function() {
-                    dfu.ajaxWithRetry("/emsaasui/emcpdfui/widgetLoading.html");
-                }, 10*60*1000);
+                if (!dfu.isDevMode()) {
+                    window.intervalToExtendCurrentUserSession = setInterval(function() {
+                        dfu.ajaxWithRetry("/emsaasui/emcpdfui/widgetLoading.html");
+                    }, 10*60*1000);
+                }
                 
                 //Discover logout url, which will be cached and used for session timeout handling
                 dfu.discoverLogoutUrlAsync(function(logoutUrl){window.cachedSSOLogoutUrl = logoutUrl;});
