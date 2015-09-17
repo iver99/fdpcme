@@ -18,8 +18,7 @@ requirejs.config({
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'dfutil': '../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-//        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
