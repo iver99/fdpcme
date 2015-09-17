@@ -375,9 +375,9 @@ body, html {
   width: 0 !important;
 }
 
-.dbd-tile-maximized .dbd-tile-element {
+/*.dbd-tile-maximized .dbd-tile-element {
   margin-bottom: 5em;
-}
+}*/
 
 .dbd-tile-header-placeholder {
   border: 1px solid #d6dfe6;
@@ -438,4 +438,72 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 .ui-draggable-dragging #dbd-left-panel-text-handle {
     display: none;
+}
+
+.ui-draggable-dragging #dbd-left-panel-link-handle {
+    display: none;
+}
+
+.dbd-tile-link-wrapper {
+    width: 100%;
+    height: 20px;
+    border: 0px;
+    padding-top: 5px;
+    display: block;
+}
+
+.dbd-tile-link {
+    display: none;
+    width: 100%;
+    padding-right: 90px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.0em;
+    margin: 0px;
+    margin-right: -90px;
+}
+
+.dbd-tile-link-wrapper:hover:not(.dbd-tile-link-empty) .dbd-display-area-editor-btn {
+    display: inline;
+}
+
+.dbd-tile-link:not(.dbd-tile-link-empty) {
+    display: inline;
+}
+
+.dbd-tile-link-btns {
+    float: right!important;
+    margin-top: -5px;
+    display: block;
+    position: relative;
+}
+
+.oj-dialog-footer .edit-tile-link-confirm-btn {
+    margin-bottom: 4px; 
+    background-image: none;
+    text-shadow: none;
+    color: #ffffff;
+    font-weight: bold;
+    background-color: #0572ce;
+    border: 1px solid #0476d3;
+    border-radius: 2px;
+    text-align: right;
+    box-shadow:none; 
+}
+
+.oj-dialog-footer .edit-tile-link-confirm-btn:hover {
+    background-color: #3a9aea;
+    border: 1px solid #3a9aea;  
+    background-image: none;
+}
+
+.oj-dialog-footer .edit-tile-link-confirm-btn:disabled {
+    background-color: #f4f6f7;
+    background-image: none;
+    border-color: #e0e6eb;
+    color: #9e9e9e;
+    cursor: default;
 }
