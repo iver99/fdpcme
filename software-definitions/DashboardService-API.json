@@ -52,9 +52,13 @@
                     ]
                 }
 	,
-     	    {
+     	    	{
                      "name": "cookbook-emcs-dashboardService-api::schema_deployment",
                      "operation": "schema_deployment"
+            },
+            {
+                     "name": "cookbook-emcs-dashboardService-api::schema_upgrade",
+                     "operation": "schema_upgrade"
             },
             {
                      "name": "cookbook-emcs-dashboardService-api::schema_on_board",
