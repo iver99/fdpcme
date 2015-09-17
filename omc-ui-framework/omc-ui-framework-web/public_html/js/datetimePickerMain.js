@@ -65,7 +65,6 @@ require(['ojs/ojcore',
     'knockout',
     'jquery',
     'ojs/ojknockout',
-    'ojs/ojdatetimepicker',
     'ojs/ojchart',
 ],
         function (oj, ko, $) // this callback gets executed when all required modules are loaded
@@ -77,16 +76,28 @@ require(['ojs/ojcore',
 
             function MyViewModel() {
                 var self = this;
+                var start = new Date(new Date() - 24 * 60 * 60 * 1000);
+                var end = new Date();
+                var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
+                
+                self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
+                
+                self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
+                self.end = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
                 self.timeParams1 = {
-                    startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
-                    endDateTime: new Date(),
+                    startDateTime: start,
+                    endDateTime: end,
                     callbackAfterApply: function (start, end) {
                         console.log(start);
                         console.log(end);
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        self.start(self.dateTimeConverter1.format(appliedStart));
+                        self.end(self.dateTimeConverter1.format(appliedEnd));
                         self.generateData(start, end);
                     }
                 };
-
+                
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
 
@@ -186,7 +197,7 @@ require(['ojs/ojcore',
 //                    endDateTime: "2015-05-16T13:00:00"
                       startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
                       endDateTime: new Date(),
-                      timePeriodsNotToShow: ["Last 90 days", "Last 30 days", "Last 1 day"], //an array of what not to show
+                      timePeriodsNotToShow: ["Last 90 days", "Last 30 days"], //an array of what not to show
                       customWindowLimit: 4*24*60*60*1000-12*60*60*1000, //in custom mode, limit the size of window
                       adjustLastX: self.adjustTime, //used to adjust times when user choose "Last X"
                       customTimeBack: 7*24*60*60*1000, //the max timestamp of how far the user can pick the date from

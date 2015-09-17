@@ -1,4 +1,4 @@
-define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/js/resources/nls/uifwkCommonMsgBundle"],
+define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/js/resources/nls/uifwkCommonMsgBundle", "ojs/ojdatetimepicker"],
         function (ko, $, msgUtilModel, oj, nls) {
 
             /**
@@ -61,6 +61,72 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
                 self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
                 
+                self.last15minsNotToShow = ko.observable(false);
+                self.last30minsNotToShow = ko.observable(false);
+                self.last60minsNotToShow = ko.observable(false);
+                self.last4hoursNotToShow = ko.observable(false);
+                self.last6hoursNotToShow = ko.observable(false);
+                self.last1dayNotToShow = ko.observable(false);
+                self.last7daysNotToShow = ko.observable(false);
+                self.last30daysNotToShow = ko.observable(false);
+                self.last90daysNotToShow = ko.observable(false);
+                
+                self.last15minsChosen = ko.observable(false);
+                self.last30minsChosen = ko.observable(false);
+                self.last60minsChosen = ko.observable(false);
+                self.last4hoursChosen = ko.observable(false);
+                self.last6hoursChosen = ko.observable(false);
+                self.last1dayChosen = ko.observable(false);
+                self.last7daysChosen = ko.observable(false);
+                self.last30daysChosen = ko.observable(false);
+                self.last90daysChosen = ko.observable(false);
+                
+                self.last15minsCss = ko.computed(function() {
+                    var css = self.last15minsNotToShow() ? "drawerNotToShow": "";
+                    css += self.last15minsChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                self.last30minsCss = ko.computed(function() {
+                    var css = self.last30minsNotToShow() ? "drawerNotToShow": "";
+                    css += self.last30minsChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                self.last60minsCss = ko.computed(function() {
+                    var css = self.last60minsNotToShow() ? "drawerNotToShow": "";
+                    css += self.last60minsChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                self.last4hoursCss = ko.computed(function() {
+                    var css = self.last4hoursNotToShow() ? "drawerNotToShow": "";
+                    css += self.last4hoursChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                self.last6hoursCss = ko.computed(function() {
+                    var css = self.last6hoursNotToShow() ? "drawerNotToShow": "";
+                    css += self.last6hoursChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);                
+                self.last1dayCss = ko.computed(function() {
+                    var css = self.last1dayNotToShow() ? "drawerNotToShow": "";
+                    css += self.last1dayChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                self.last7daysCss = ko.computed(function() {
+                    var css = self.last7daysNotToShow() ? "drawerNotToShow": "";
+                    css += self.last7daysChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                self.last30daysCss = ko.computed(function() {
+                    var css = self.last30daysNotToShow() ? "drawerNotToShow": "";
+                    css += self.last30daysChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                self.last90daysCss = ko.computed(function() {
+                    var css = self.last90daysNotToShow() ? "drawerNotToShow": "";
+                    css += self.last90daysChosen() ? " drawerChosen" : "";
+                    return css;
+                }, self);
+                
                 self.startDateFocus = ko.observable(false);
                 self.endDateFocus = ko.observable(false);
                 self.startTimeFocus = ko.observable(false);
@@ -82,7 +148,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }, self);
                                 
                 self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showTimeValidateErrorMsg && self.beyondWindowLimitError();
+                    return !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
                 }, self);
 
                 self.applyButtonDisable = ko.computed(function() {
@@ -168,6 +234,70 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
                 self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
+                
+                self.setTimePeriodChosen = function(timePeriod) {
+                    switch(timePeriod) {
+                        case "Last 15 minutes":
+                            self.last15minsChosen(true);
+                            break;
+                        case "Last 30 minutes":
+                            self.last30minsChosen(true);
+                            break;
+                        case "Lat 60 minutes":
+                            self.last60minsChosen(true);
+                            break;
+                        case "Last 4 hours":
+                            self.last4hoursChosen(true);
+                            break;
+                        case "Last 6 hours":
+                            self.last6hoursChosen(true);
+                            break;
+                        case "Last 1 day":
+                            self.last1dayChosen(true);
+                            break;
+                        case "Last 7 days":
+                            self.last7daysChosen(true);
+                            break;
+                        case "Last 30 days":
+                            self.last30daysChosen(true);
+                            break;
+                        case "Last 90 days":
+                            self.last90daysChosen(true);
+                            break;
+                    }
+                }
+                
+                self.setTimePeriodNotToShow = function(timePeriod) {
+                    switch(timePeriod) {
+                        case "Last 15 minutes":
+                            self.last15minsNotToShow(true);
+                            break;
+                        case "Last 30 minutes":
+                            self.last30minsNotToShow(true);
+                            break;
+                        case "Lat 60 minutes":
+                            self.last60minsNotToShow(true);
+                            break;
+                        case "Last 4 hours":
+                            self.last4hoursNotToShow(true);
+                            break;
+                        case "Last 6 hours":
+                            self.last6hoursNotToShow(true);
+                            break;
+                        case "Last 1 day":
+                            self.last1dayNotToShow(true);
+                            break;
+                        case "Last 7 days":
+                            self.last7daysNotToShow(true);
+                            break;
+                        case "Last 30 days":
+                            self.last30daysNotToShow(true);
+                            break;
+                        case "Last 90 days":
+                            self.last90daysNotToShow(true);
+                            break;                            
+                    }
+                }
                 
                 //hide specified time periods
                 if(params.timePeriodsNotToShow && isArray(params.timePeriodsNotToShow) && params.timePeriodsNotToShow.length>0) {
@@ -344,22 +474,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     owner: self
                 });
                 
-                self.hideTimePeriods = function(timePeriodsNotToShow) {
-                    for(var i in timePeriodsNotToShow) {
-                        var timePeriod = timePeriodsNotToShow[i];
-                        var timePeriodId = self.panelId + " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
-                        $(timePeriodId).hide();
-                    }
-                };
-                
                 self.setTimePeriodToLastX = function(timePeriod, start, end) {
-                    var eleId = self.panelId + " #drawer" + self.timePeriodObject()[timePeriod][0] + "_" + self.randomId;
                     self.timePeriod(timePeriod);
                     self.selectByDrawer(true);
-                    $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
-                    $(self.panelId + ' .drawer').css('font-weight', 'normal');
-                    $(eleId).css('background-color', '#ffffff');
-                    $(eleId).css('font-weight', 'bold');
                     
                     if(self.adjustLastX && start && end) {
                         var adjustedTime = self.adjustLastX(start, end);
@@ -385,89 +502,97 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 var curDate = new Date();
-                start = new Date(curDate - 15 * 60 * 1000);
-                end = new Date();
-
-                //hide time period according to params: timePeriodsNotToShow
-                if(self.timePeriodsNotToShow) {
-                    self.hideTimePeriods(self.timePeriodsNotToShow);
-                }
-
-                if (params.startDateTime && params.endDateTime) {
-                    //users input start date and end date
-                    start = new Date(params.startDateTime);
-                    end = new Date(params.endDateTime);
-                    dateTimeDiff = end - start;
-                    var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
-
-                    if (t_timePeriod && $.inArray(t_timePeriod, self.timePeriodsNotToShow)<0) {
-                        var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
-                        start = range.start;
-                        end = range.end;
-                    } else {
-                        customClick();
-                    }
-                } else if (!params.startDatetime && params.endDateTime) {
-                    if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
-                        var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
-                        start = range.start;
-                        end = range.end;
-                    }else {
-                        customClick();
-                    }
-                    //print warning...
-                    oj.Logger.warn("The user just input end time");
-                } else if (params.startDateTime && !params.endDateTime) {
-                    customClick();
-                    start = new Date(params.startDateTime);
+                self.initialize = function() {
+                    start = new Date(curDate - 15 * 60 * 1000);
                     end = new Date();
-                } else {
-                    //users input nothing
-                    if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
-                        var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
-                        start = range.start;
-                        end = range.end;
-                    }else{
-                        customClick();
+
+                    //hide time period according to params: timePeriodsNotToShow
+                    if(self.timePeriodsNotToShow) {
+                        for(var i in self.timePeriodsNotToShow){
+                            self.setTimePeriodNotToShow(self.timePeriodsNotToShow[i])
+                        }
                     }
-                }
 
-                if (start.getTime() > end.getTime()) {
-                    if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
-                        var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
-                        start = range.start;
-                        end = range.end;
-                    }else {
+                    if (params.startDateTime && params.endDateTime) {
+                        //users input start date and end date
+                        start = new Date(params.startDateTime);
+                        end = new Date(params.endDateTime);
+                        dateTimeDiff = end - start;
+                        var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
+
+                        if (t_timePeriod && $.inArray(t_timePeriod, self.timePeriodsNotToShow)<0) {
+                            self.setTimePeriodChosen(t_timePeriod);
+                            var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
+                            start = range.start;
+                            end = range.end;
+                        } else {
+                            customClick();
+                        }
+                    } else if (!params.startDatetime && params.endDateTime) {
+                        if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                            self.setTimePeriodChosen(self.timePeriodLast15mins);
+                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                            start = range.start;
+                            end = range.end;
+                        }else {
+                            customClick();
+                        }
+                        //print warning...
+                        oj.Logger.warn("The user just input end time");
+                    } else if (params.startDateTime && !params.endDateTime) {
                         customClick();
+                        start = new Date(params.startDateTime);
+                        end = new Date();
+                    } else {
+                        //users input nothing
+                        if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                            self.setTimePeriodChosen(self.timePeriodLast15mins);
+                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                            start = range.start;
+                            end = range.end;
+                        }else{
+                            customClick();
+                        }
                     }
-                    //print warning...
-                    oj.Logger.warn("Start time is larger than end time. Change time range to default time range");
-                }
 
-                start = oj.IntlConverterUtils.dateToLocalIso(start);
-                end = oj.IntlConverterUtils.dateToLocalIso(end);
+                    if (start.getTime() > end.getTime()) {
+                        if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                            self.setTimePeriodChosen(self.timePeriodLast15mins);
+                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                            start = range.start;
+                            end = range.end;
+                        }else {
+                            customClick();
+                        }
+                        //print warning...
+                        oj.Logger.warn("Start time is larger than end time. Change time range to default time range");
+                    }
 
-                self.dateTimeInfo("<span style='font-weight:bold; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
-                        self.dateTimeConverter.format(start) +
-                        "<span style='font-weight:bold'> - </span>" +
-                        self.dateTimeConverter.format(end));
+                    start = oj.IntlConverterUtils.dateToLocalIso(start);
+                    end = oj.IntlConverterUtils.dateToLocalIso(end);
 
-                self.startDate(self.dateConverter2.format(start));
-                self.endDate(self.dateConverter2.format(end));
+                    self.dateTimeInfo("<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
+                            self.dateTimeConverter.format(start) +
+                            "<span style='font-weight:bold'> - </span>" +
+                            self.dateTimeConverter.format(end));
 
-                self.startTime(start.slice(10, 16));
-                self.endTime(end.slice(10, 16));
+                    self.startDate(self.dateConverter2.format(start));
+                    self.endDate(self.dateConverter2.format(end));
 
-                self.lastStartDate(self.startDate());
-                self.lastEndDate(self.endDate());
-                self.lastStartTime(self.startTime());
-                self.lastEndTime(self.endTime());
-                self.lastTimePeriod(self.timePeriod());
+                    self.startTime(start.slice(10, 16));
+                    self.endTime(end.slice(10, 16));
+
+                    self.lastStartDate(self.startDate());
+                    self.lastEndDate(self.endDate());
+                    self.lastStartTime(self.startTime());
+                    self.lastEndTime(self.endTime());
+                    self.lastTimePeriod(self.timePeriod());
+            }
                 
                 function customClick() {
                     self.timePeriod(self.timePeriodCustom);
                     self.selectByDrawer(false);
-
+                    
                     $(self.panelId + ' .drawer').css('background-color', '#f0f0f0');
                     $(self.panelId + ' .drawer').css('font-weight', 'normal');
                     $(self.panelId + ' #drawer9_' + self.randomId).css('background-color', '#ffffff');
@@ -695,6 +820,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.endTime(self.lastEndTime());
 //                    self.timePeriod(self.lastTimePeriod());
                     if(self.lastTimePeriod() !== self.timePeriodCustom) {
+                        self.setTimePeriodChosen(self.lastTimePeriod());
                         self.setTimePeriodToLastX(self.lastTimePeriod(), null, null);
                     }else{
                         customClick();
@@ -754,8 +880,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                     var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
                     var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
-
-                    self.dateTimeInfo("<span style='font-weight: bold; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
+                    self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
                             + start + "<span style='font-weight: bold'> - </span>"
                             + end);
 
@@ -835,6 +960,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.random(new Date().getTime());
                     }
                 };
+                
+                self.initialize();
             }
             return dateTimePickerViewModel;
         });

@@ -25,23 +25,20 @@
         <link rel="icon" type="image/png" href="emcsDependencies/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
         <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.1/alta/oj-alta-min.css" type="text/css"/>
-
-        <!-- These style classes are for demonstration purposes only. -->
-        <!--link rel="stylesheet" href="css/demo-alta-patterns-min.css"/-->
-
-        <!-- This is where you would add any app specific styling -->
-        <!--link rel="stylesheet" href="css/override.css" type="text/css"/-->
-        <link rel="stylesheet" href="emcsDependencies/uifwk/widgets/datetime-picker/css/datetime-picker.css" type="text/css"/>
-
-
+        
         <!-- RequireJS bootstrap file -->
         <script data-main="js/datetimePickerMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
         <div id="dateTimePicker">
+            <div id="timeRange" style="font-size: 16px; font-weight: bold; padding: 10px;">
+                <span id="start" data-bind="text: start"></span> ~ 
+                <span id="end" data-bind="text: end"></span>
+            </div>
             <div data-bind="component: {name: 'date-time-picker', params: timeParams1}"></div>
-
+            
+                
             <div id="chartContainer">
                 <div id="lineChart" data-bind="ojComponent: {
                     component: 'ojChart', 

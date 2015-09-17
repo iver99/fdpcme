@@ -48,6 +48,15 @@
     display: block;
 }
 
+.drawerChosen {
+    background-color:  #ffffff;
+    font-weight: bold;
+}
+
+.drawerNotToShow {
+    display: none;
+}
+
 .drawers a:visited {
     color: black;
 }
