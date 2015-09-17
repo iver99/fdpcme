@@ -11,12 +11,12 @@
 requirejs.config({
     // Setup module id mapping
     map: {
-        'emcla' : {'emcsutl/df-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util'},
+        'emcla' : {'emcsutl/df-util': 'uifwk/js/util/df-util'},
         '*': {
-              'emcsutl/ajax-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/ajax-util',
-              'ajax-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/ajax-util',
-              'message-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/message-util'
-//              'df-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util'
+              'emcsutl/ajax-util': 'uifwk/js/util/ajax-util',
+              'emcsutl/message-util': 'uifwk/js/util/message-util',
+              'ajax-util': 'uifwk/js/util/ajax-util',
+              'message-util': 'uifwk/js/util/message-util'
              }        
     },
     // Path mappings for the logical module names
@@ -37,7 +37,6 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-//        'df-util':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util',
         'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
@@ -127,7 +126,7 @@ require(['knockout',
 ],
         function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
-            var logger = new _emJETCustomLogger()
+            var logger = new _emJETCustomLogger();
 //          var dfRestApi = dfu.discoverDFRestApiUrl();
 //          if (dfRestApi){
               var logReceiver = dfu.getLogUrl();
