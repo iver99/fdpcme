@@ -23,18 +23,18 @@ SET SERVEROUTPUT ON
 
 DECLARE
     CURSOR DSBS_CUR IS
-        SELECT DASHBOARD_ID FROM EMS_DASHBOARD WHERE DELETED=0;
+        SELECT DASHBOARD_ID FROM EMS_DASHBOARD WHERE DELETED=0 AND TENANT_ID='&TENANT_ID';
     DSB DSBS_CUR%ROWTYPE;
-    CURSOR TILES_CUR(DSB_ID NUMBER) IS SELECT * FROM EMS_DASHBOARD_TILE WHERE DASHBOARD_ID=DSB_ID ORDER BY POSITION ASC;
+    CURSOR TILES_CUR(DSB_ID NUMBER) IS SELECT * FROM EMS_DASHBOARD_TILE WHERE DASHBOARD_ID=DSB_ID AND TENANT_ID='&TENANT_ID'  ORDER BY POSITION ASC;
     TILE TILES_CUR%ROWTYPE;
     TILEROW NUMBER;
     TILECOLUMN NUMBER;
     DEFAULT_COLUMNS NUMBER := 8;
     V_MAX_WIDTH NUMBER;
 BEGIN
-    SELECT MAX(WIDTH) INTO V_MAX_WIDTH FROM EMS_DASHBOARD_TILE;
+    SELECT MAX(WIDTH) INTO V_MAX_WIDTH FROM EMS_DASHBOARD_TILE WHERE TENANT_ID='&TENANT_ID';
     IF (V_MAX_WIDTH=DEFAULT_COLUMNS) THEN
-      DBMS_OUTPUT.PUT_LINE('Data in Schema object: EMS_DASHBOARD_TILE have been updated to support taller widget before, no need to update again'); 
+      DBMS_OUTPUT.PUT_LINE('Data in Schema object: EMS_DASHBOARD_TILE have been updated to support taller widget before for tenant: &TENANT_ID, no need to update again'); 
       RETURN;
     END IF;
     OPEN DSBS_CUR;
@@ -62,11 +62,11 @@ BEGIN
     CLOSE DSBS_CUR;
     
     COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Data in Schema object: EMS_DASHBOARD_TILE have been updated to support taller widget successfully');    
+    DBMS_OUTPUT.PUT_LINE('Data in Schema object: EMS_DASHBOARD_TILE have been updated to support taller widget successfully for tenant: &TENANT_ID');    
 EXCEPTION
   WHEN OTHERS THEN
     ROLLBACK;  
-    DBMS_OUTPUT.PUT_LINE('Failed to update data in Schema object: EMS_DASHBOARD_TILE to support taller widget due to '||SQLERRM); 
+    DBMS_OUTPUT.PUT_LINE('Failed to update data in Schema object: EMS_DASHBOARD_TILE for tenant: &TENANT_ID to support taller widget due to '||SQLERRM); 
     RAISE;
 END;
 /
@@ -75,23 +75,24 @@ REM Update LA OOB and user created WIDGET METADATA in EMS_DASHBOARD_TILE table a
 DECLARE
   V_COUNT NUMBER;
 BEGIN
-  SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE PROVIDER_NAME  ='LoganService'  AND WIDGET_KOC_NAME IN ('LA_WIDGET_BAR','LA_WIDGET_PIE','LA_WIDGET_HISTOGRAM');
+  SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_NAME  ='LoganService'  AND WIDGET_KOC_NAME IN ('LA_WIDGET_BAR','LA_WIDGET_PIE','LA_WIDGET_HISTOGRAM');
   IF (V_COUNT=0) THEN
-    DBMS_OUTPUT.PUT_LINE('LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE has been updated before, no need to update again');  
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE has been updated before for tenant: &TENANT_ID, no need to update again');  
   ELSE
     UPDATE EMS_DASHBOARD_TILE
     SET WIDGET_KOC_NAME  ='emcla-visualization',
       WIDGET_VIEWMODE    ='/js/viewmodel/search/widget/VisualizationWidget.js',
       WIDGET_TEMPLATE    ='/html/search/widgets/visualizationWidget.html'
-    WHERE PROVIDER_NAME  ='LoganService'
+    WHERE PROVIDER_NAME  ='LoganService' 
+    AND TENANT_ID='&TENANT_ID' 
     AND WIDGET_KOC_NAME IN ('LA_WIDGET_BAR','LA_WIDGET_PIE','LA_WIDGET_HISTOGRAM');
     COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE successfully');  
+    DBMS_OUTPUT.PUT_LINE('Update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE successfully for tenant: &TENANT_ID');  
   END IF;
 EXCEPTION
 WHEN OTHERS THEN
   ROLLBACK;
-  DBMS_OUTPUT.PUT_LINE('Failed to update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE due to '||SQLERRM);   
+  DBMS_OUTPUT.PUT_LINE('Failed to update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE for tenant: &TENANT_ID due to '||SQLERRM);   
   RAISE;
 END;
 /
