@@ -8,6 +8,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 var dfu = new dfumodel(userName, tenantName);
                 var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
                 var appMap = params.appMap;
+                var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
                 self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
@@ -23,6 +24,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 
                 var nlsStringsAvailable = false;
                 var nlsStrings = null;
+                
+                //Fetch links and session expiry time from server side
+                refreshLinks();
                 
                 //Refresh admin links if isAdmin is observable and will be updated at a later point
                 if (isAdminObservable) {
@@ -152,6 +156,10 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                             }
 
                         }
+                        //Setup timer to handle session timeout
+                        if (!dfu.isDevMode()) {
+                            dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
+                        }
                     };                   
                     var serviceUrl = "/sso.static/dashboards.configurations/registration";
                     if (dfu.isDevMode()){
@@ -198,7 +206,8 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                                 for (var i = 0; i < cloudServices.length; i++) {
                                     if (appMap !== null)
                                         cloudServiceList.push(
-                                            {name: nls[appMap[cloudServices[i].name].appName], 
+                                            {name: appMap[cloudServices[i].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[i].name].serviceDisplayName] : 
+                                                nlsStrings[appMap[cloudServices[i].name].appName], 
                                             href: cloudServices[i].href});
                                     else 
                                         cloudServiceList.push(
@@ -209,6 +218,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         }
                     }
                 }
+                
             }
             return NavigationLinksViewModel;
         });
