@@ -93,10 +93,23 @@ function(ko, $, dfu, oj)
         self.invalidUrlLabel = oj.Translations.getResource("DBS_ERROR_URL");
         
         self.signOut = function() {
+            //Clear interval for extending user session
+            if (window.intervalToExtendCurrentUserSession)
+                clearInterval(window.intervalToExtendCurrentUserSession);
+            
             var ssoLogoutEndUrl = window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/home.html";
-            var logoutUrl = dfu.discoverLogoutUrl() + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
-            window.location.href = logoutUrl;
-            oj.Logger.info("Logged out. SSO logout URL: " + logoutUrl, true);
+            var logoutUrlDiscovered = dfu.discoverLogoutUrl();
+            //If session timed out, redirect to sso login page and go to home page after re-login.
+            if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
+                window.location.href = ssoLogoutEndUrl;
+            }
+            //Else handle normal logout
+            else {
+                if (logoutUrlDiscovered === null)
+                    logoutUrlDiscovered = window.cachedSSOLogoutUrl;
+                var logoutUrl = logoutUrlDiscovered + "?endUrl=" + encodeURI(ssoLogoutEndUrl);
+                window.location.href = logoutUrl;
+            }
         };
     };
     
