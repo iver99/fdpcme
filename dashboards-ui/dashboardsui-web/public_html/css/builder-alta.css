@@ -429,6 +429,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     width: 30px;
 }
 
+.dbd-no-left-panel {
+    display: none;
+    width: 0;
+}
+
 .left-panel-dbd-widget-goto-icon {
     height: 16px;
     width: 16px;

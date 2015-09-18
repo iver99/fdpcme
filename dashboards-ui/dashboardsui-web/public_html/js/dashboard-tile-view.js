@@ -77,6 +77,7 @@ define(['knockout',
                     lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
                     !lcKeyword && (widget = data[i]);
                     widget && self.widget.push(widget);
+                    widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = 'images/sample-widget-histogram.png');
                 }
                 self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
                 self.page > self.totalPages && (self.page = self.totalPages);
@@ -137,6 +138,13 @@ define(['knockout',
                         builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, 'stop dragging left panel text', e, t);
                     }
                 });
+                $('.dbd-left-panel-img-pop').ojPopup(
+                {
+                    position : 
+                    {
+                        my : "start top+10", at : "start end"
+                    }
+                });
             };
             
             self.resizeEventHandler = function(width, height) {
@@ -189,14 +197,159 @@ define(['knockout',
                 url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
             };
             
-            self.widgetMouseOverHandler = function() {
-                console.log('widgetMouseOverHandler');
+            self.widgetMouseOverHandler = function(widget) {
+                if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
+                   $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-goto-'+widget.WIDGET_UNIQUE_ID()), 
+                   {
+                       my : "start center", at : "end+20 center"
+                   });
+               }
             };
             
-            self.widgetMouseOutHandler = function() {
-                console.log('widgetMouseOutHandler');
+            self.widgetMouseOutHandler = function(widget) {
+                if ($('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
+                    $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
+                }
             };
         }
+        
+//        function TooltipHelper(rootElement, popupDiv)
+//        {
+//           var self = this;
+//           this.initialize(rootElement, popupDiv);
+//
+//           self.initialize = function(rootElement, popupDiv)
+//           {
+//               self._AUTO_TIMEOUT = 3000;
+//               self._OPEN_DELAY = 500;
+//
+//               self._popupDiv = popupDiv;
+//               self._rootElement = rootElement;
+//
+////               var tooltipPopup = $("<div>").uniqueId();
+////               tooltipPopup.css("max-width", "340px");
+//               popupDiv.appendTo(rootElement);
+//
+//               self._tooltipPopupId = "#" + popupDiv.attr("id");
+//               popupDiv.ojPopup();
+//
+//               var callbackClearTimeout = $.proxy(self._handleClearTimeout, self);
+//               var callbackSetTimeout = $.proxy(self._handleSetTimeout, self);
+//
+//               popupDiv.ojPopup(
+//               {
+//                   position : 
+//                   {
+//                       my : "start top+10", at : "start end"
+//                   },
+//                   initialFocus : "none", 
+//                   autoDismiss : "focusLoss", 
+//                   beforeOpen : callbackSetTimeout, 
+//                   beforeClose : callbackClearTimeout, 
+//                   focus : callbackClearTimeout
+//               });
+//
+//               var callbackOpen = self._callbackOpen = $.proxy(self._handleOpen, self);
+//               var callbackClose = self._callbackClose = $.proxy(self._handleClose, self);
+//
+//               rootElement[0].addEventListener("mouseenter", callbackOpen, true);
+//               rootElement[0].addEventListener("mouseleave", callbackClose, true);
+//               rootElement[0].addEventListener("focus", callbackOpen, true);
+//           };
+//
+//           self._handleOpen = function (event)
+//           {
+//               var target = event.target;
+//               event = $.Event(event);
+////               var title = self._getTitle(target);
+//
+//               var tooltipPopupId = self._tooltipPopupId;
+//               var popup = $(tooltipPopupId);
+//
+//               var isOpen = !popup.ojPopup("isOpen");
+//               if (isOpen)
+//               {
+//                   popup.ojPopup("close");
+//               }
+//               else {
+////                   var oldTitle = popup.text();
+////                   if (oldTitle === title)
+////                       return;
+//
+//                   setTimeout(function ()
+//                   {
+////                       popup.html(title);
+//                       popup.ojPopup("open", target);
+//                   },
+//                   self._OPEN_DELAY);
+//               }
+//           };
+//
+//           self._handleSetTimeout = function (event)
+//           {
+//               self._timeoutId = window.setTimeout(self._callbackClose, self._AUTO_TIMEOUT);
+//           };
+//
+//           self._handleClearTimeout = function (event)
+//           {
+//               var timeoutId = self._timeoutId;
+//               delete self._timeoutId;
+//               window.clearTimeout(timeoutId);
+//           };
+//
+//           self._handleClose = function (event)
+//           {
+//               var tooltipPopupId = self._tooltipPopupId;
+//               var popup = $(tooltipPopupId);
+//
+//               var isOpen = !popup.ojPopup("isOpen");
+//               if (!isOpen)
+//               {
+//                   popup.ojPopup("close");
+//               }
+//           };
+//
+////           self._getTitle = function (node)
+////           {
+////               var helpDataAttr = self.popupDiv;
+////               var i = 0;
+////               var MAX_PARENTS = 5;
+////
+////               while ((node != null) && (i++ < MAX_PARENTS))
+////               {
+////                   if (node.nodeType == 1)
+////                   {
+////                       var title = node.getAttribute(helpDataAttr);
+////                       if (title && title.length > 0)
+////                           return title;
+////                   }
+////                   node = node.parentNode;
+////               }
+////               return null;
+////           };
+//
+//           self.destroy = function ()
+//           {
+//               var callbackOpen = self._callbackOpen;
+//               delete self._callbackOpen;
+//
+//               var callbackClose = self._callbackClose;
+//               delete self._callbackClose;
+//
+//               var rootElement = self._rootElement;
+//               delete self._rootElement;
+//
+//               rootElement[0].removeEventListener("mouseenter", callbackOpen, true);
+//               rootElement[0].removeEventListener("focus", callbackOpen, true);
+//               rootElement[0].removeEventListener("mouseleave", callbackClose, true);
+//
+//               var tooltipPopupId = self._tooltipPopupId;
+//               delete self._tooltipPopupId;
+//
+//               var popup = $(tooltipPopupId);
+//               popup.remove();
+//           };
+//       }
         
         function ResizableView(builder) {
             var self = this;

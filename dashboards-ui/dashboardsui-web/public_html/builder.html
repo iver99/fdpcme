@@ -14,26 +14,7 @@
 
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
-        
-<!--        <script>
-        window.DEV_MODE= {
-                "_comment_0":"===THIS IS USED FOR DEV PURPOSE ONLY===",
-                "_comment_1":"Change data/url to desired one that matches dev env",
-                "_comment_2":"do *NOT* push this file unless it is required change for dev env",
-                "_comment_9":"=======================================",
-                "tenant":"emaastesttenant1",
-                "user":"emcsadmin",
-                "wlsAuth":"weblogic:welcome1",
 
-                //default registry will provide default end points if not explicitly defined below
-                "dfRestApiEndPoint": "http://localhost:7001/emcpdf/api/v1/",
-                "ssfRestApiEndPoint": "http://slc05mwm.us.oracle.com:7019/savedsearch/v1/",
-//                "dfRestApiEndPoint": "http://slc07ptf.us.oracle.com:7019/emcpdf/api/v1/",
-//                "ssfRestApiEndPoint": "http://slc07ptf.us.oracle.com:7019/savedsearch/v1/",
-                "_comment_100":"Please add other data as required for your dev env"
-            };
-        
-        </script>-->
         <!-- RequireJS bootstrap file -->
         <script data-main="js/builderMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
 
@@ -300,7 +281,7 @@
             <!-- /ko -->
             <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;">
                 <!-- ko stopBinding: true -->
-                <div id="dbd-left-panel" class="fit-size-horizontal-sibling" data-bind="css: {'dbd-left-panel-show': showPanel(), 'dbd-left-panel-hide': !showPanel()}"
+                <div id="dbd-left-panel" class="fit-size-horizontal-sibling" data-bind="css: {'dbd-no-left-panel': (dashboard.type() == 'SINGLEPAGE' || dashboard.systemDashboard()), 'dbd-left-panel-show': showPanel(), 'dbd-left-panel-hide': !showPanel()}"
                     style="height: 1000px; position: absolute; left: 0; top: 0; border-right: 1px solid #d6dfe6;">
                     <!-- ko if: showPanel() -->
                     <div id="dbd-left-panel-header" class="fit-size-vertical-sibling" style="width: 100%; height: 32px;">
@@ -322,14 +303,14 @@
                                             background-color: #fcfdfe;
                                             float: left;
                                             box-sizing: border-box; width: 195px;">
-                            <div style="float: left; height: 30px;" data-bind="style: {width: keyword() ? '133px' : '163px'}">
+                            <div style="float: left; height: 30px;" data-bind="style: {width: '163px'}">
                                 <input id="sinput" type="text" name="searchInput" style="border: 0; height: 30px;"
                                    data-bind="ojComponent:{component:'ojInputText', value: keyword, 
                                               placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                               ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
                             </div>
                             <div>
-                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
+<!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
                                         ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
                                         icons: {start:'left-panel-dbd-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
                                         height: 30px;
@@ -337,7 +318,7 @@
                                         vertical-align: middle;
                                         text-align: center;
                                         float: left;"> 
-                                </button>
+                                </button>-->
                                 <button class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
                                         ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
                                         icons: {start:'left-panel-dbd-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
@@ -352,15 +333,20 @@
                     <div id="dbd-left-panel-widgets" class="fit-size" style="width: 100%; height: auto; overflow-x: hidden; overflow-y: auto; position: relative;">
                         <div class="oj-col" style="width: 100%;" data-bind="foreach: widgets">
                             <div style="width: 190px; height: 30px;" class="dbd-left-panel-widget"
-                                 data-bind="event: {mouseOver: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
+                                 data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
                                 <div class="dbd-left-panel-widget-text" style="padding-right: 35px; float: left; width: 155px; white-space: nowrap; 
                                             overflow: hidden; text-overflow: ellipsis; display: block; margin-right: -35px; margin-top: 9px; cursor: move;">
                                     <span data-bind="text:WIDGET_NAME, attr: {title: WIDGET_NAME}"></span>
                                 </div>
-                                <button class="oj-button-half-chrome" data-bind="click: $root.widgetGoDataExploreHandler,
+                                <button class="oj-button-half-chrome" data-bind="attr: {id: 'widget-goto-'+WIDGET_UNIQUE_ID()}, click: $root.widgetGoDataExploreHandler,
                                     ojComponent: {component: 'ojButton', label: 'Go To Data Explorer', display: 'icons', 
                                     icons: {start:'left-panel-dbd-widget-goto-icon'}}" style="margin: 0px;"> 
                                 </button>
+                                <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
+                                                ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop" style="display: none;
+                                            height:120px; width: 120px; z-index: 40;">
+                                    <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="width: 100%; height: 100%;"/>
+                                </div>
                             </div>
                         </div>
                     </div>
