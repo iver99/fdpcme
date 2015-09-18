@@ -29,7 +29,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
             DASHBOARDS_REST_URL = dfu.getDashboardsUrl(),
             PREFERENCES_REST_URL = dfu.getPreferencesUrl(),
             SUBSCIBED_APPS_REST_URL = dfu.getSubscribedappsUrl();
-            
+         
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -638,7 +638,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
                         event.stopPropagation();
                         self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
                     });
-            _link.append(context.row.rawName);
+            _link.text(context.row.name);
             $(context.cellContext.parentElement).append(_link);
         };
         
