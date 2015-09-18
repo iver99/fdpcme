@@ -26,7 +26,7 @@ public class TestDashBoard extends LoginAndLogout{
 		login(this.getClass().getName()+"."+testName);
 		DashBoardUtils.loadWebDriver(webd);
 	}
-		
+	
 		
 	@Test
 	public void testHomepage() throws Exception
@@ -79,7 +79,7 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		webd.takeScreenShot();
 		//add widget
-		DashBoardUtils.addWidget(1,parentWindow);
+		DashBoardUtils.addWidget(1,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
 				
 		DashBoardUtils.waitForMilliSeconds(500);
 		
@@ -105,7 +105,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//String parentWindow = webd.getWebDriver().getWindowHandle();
 		DashBoardUtils.waitForMilliSeconds(500);
 		//add a new widget
-		DashBoardUtils.addWidget(0,parentWindow);
+		DashBoardUtils.addWidget(0,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
 		
 		DashBoardUtils.waitForMilliSeconds(500);
 		
@@ -184,7 +184,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 		String widgetName = "Database Errors Trend";
 		//add widget
-		DashBoardUtils.addWidget(1,parentWindow,widgetName);
+		DashBoardUtils.addWidget(1,parentWindow,widgetName,,"DBA_Name_Modify","DBA_DESC_MODIFY");
 				
 		DashBoardUtils.waitForMilliSeconds(500);
 		
@@ -491,13 +491,14 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 	}
-	/*
+	
 	@Test
 	public void testCreateLVDashBoard() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_832");
+		webd.getLogger().info("start to test in testCreateLVDashBoard");
 		
+		DashBoardUtils.waitForMilliSeconds(5000);
 		DashBoardUtils.clickLVButton();
 		
 		String parentWindow = webd.getWebDriver().getWindowHandle();
@@ -509,47 +510,47 @@ public class TestDashBoard extends LoginAndLogout{
 		//verify input info's existence
 		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
 		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		
 		DashBoardUtils.clickOKButton();		
 		
 		webd.takeScreenShot();
 		String widgetName = "Database Errors Trend";
 		//add widget
-		DashBoardUtils.addWidget(1,parentWindow,widgetName);
+		DashBoardUtils.addWidget(1,parentWindow,widgetName,"LV_Name_Modify","LV_Desc_Modify");
 				
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		
 		webd.takeScreenShot();
 	}
 
-	@Test
+	@Test(dependsOnMethods = { "testCreateLVDashBoard" })
 	public void testModifyLVDashBoard() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_832");
+		webd.getLogger().info("start to test in testModifyLVDashBoard");
 		
 		DashBoardUtils.clickLVButton();
 		
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//DashBoardUtils.clickToSortByLastAccessed();
-		DashBoardUtils.searchDashBoard("LV_DashBoard");
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.searchDashBoard("LV_Name_Modify");
+		DashBoardUtils.waitForMilliSeconds(5000);
 		webd.takeScreenShot();
 		DashBoardUtils.clickLVDashBoard();
 		//String parentWindow = webd.getWebDriver().getWindowHandle();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//add a new widget
-		DashBoardUtils.addWidget(0,parentWindow);
+		DashBoardUtils.addWidget(0,parentWindow,"LV_Name_Modify","LV_Desc_Modify");
 		
 		DashBoardUtils.waitForMilliSeconds(500);
 		
 		webd.takeScreenShot();
 	}
 
-	@Test
+	@Test(dependsOnMethods = { "testCreateLVDashBoard","testModifyLVDashBoard" })
 	public void testRemoveLVDashBoard() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -557,8 +558,8 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		DashBoardUtils.clickLVButton();
 		
-		DashBoardUtils.searchDashBoard("LV_DashBoard");
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.searchDashBoard("LV_Name_Modify");
+		DashBoardUtils.waitForMilliSeconds(5000);
 		webd.takeScreenShot();
 		
 		webd.click(DashBoardPageId.DashBoardInfoID);
@@ -570,6 +571,6 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		webd.takeScreenShot();
 	}
-	*/
+	
 
 }

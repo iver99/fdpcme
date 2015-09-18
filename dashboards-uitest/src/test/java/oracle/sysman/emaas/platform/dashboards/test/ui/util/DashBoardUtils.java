@@ -125,7 +125,7 @@ public class DashBoardUtils {
 		driver.click(DashBoardPageId.DashBoardName);
 	}
 	
-	public static  void addWidget(int i,String parentHandle) throws Exception
+	public static  void addWidget(int i,String parentHandle,String dbname,String dbdesc) throws Exception
 	{
 		WidgetAddPage widgetAddPage;
 		String widgetName;
@@ -144,8 +144,8 @@ public class DashBoardUtils {
 			Assert.assertEquals(getText(DashBoardPageId.MDashboardDescID),"AAA_testDashBoard desc");
 		}
 		else*/{
-			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
-			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),dbname);//"AAA_testDashboard");
+			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),dbdesc);//"AAA_testDashBoard desc");
 		}
 		driver.getLogger().info("before clicking add widget button");		
 		driver.takeScreenShot();
@@ -180,7 +180,7 @@ public class DashBoardUtils {
  		 		
 	}
 	
-	public static  void addWidget(int i,String parentHandle,String widgetName) throws Exception
+	public static  void addWidget(int i,String parentHandle,String widgetName,String dbname,String dbdesc) throws Exception
 	{
 		WidgetAddPage widgetAddPage,widgetAddPage2;
 				
@@ -202,8 +202,8 @@ public class DashBoardUtils {
 			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
 		}*/
 		//modify name and desc
-		modifyDashboardInfo();
-				
+		modifyDashboardInfo(dbname,dbdesc);
+		
 		driver.takeScreenShot();
 		driver.click(DashBoardPageId.WidgetAddButtonID);
 		
@@ -273,7 +273,9 @@ public class DashBoardUtils {
 		
 	}
 	
-	public static void modifyDashboardInfo() throws Exception
+	
+	
+	public static void modifyDashboardInfo(String dbname,String dbdesc) throws Exception
 	{
 		
 		WebElement mainelement = driver.getElement(DashBoardPageId.DashboardNameID);
@@ -281,7 +283,7 @@ public class DashBoardUtils {
         Actions builder = new Actions(driver.getWebDriver());
         builder.moveToElement(mainelement).moveToElement(editNamebutton).click().perform();        
         driver.getElement(DashBoardPageId.NameInputID).clear();
-		driver.sendKeys(DashBoardPageId.NameInputID, "DBA_Name_Modify");
+		driver.sendKeys(DashBoardPageId.NameInputID, dbname);//"DBA_Name_Modify");
 		driver.click(DashBoardPageId.NameEditOKID);
 		
 		mainelement = driver.getElement(DashBoardPageId.DashboardDescID);
@@ -289,7 +291,7 @@ public class DashBoardUtils {
         builder = new Actions(driver.getWebDriver());
         builder.moveToElement(mainelement).moveToElement(editDescbutton).click().perform();  
         driver.getElement(DashBoardPageId.DescInputID).clear();
-		driver.sendKeys(DashBoardPageId.DescInputID, "DBA_DESC_MODIFY");
+		driver.sendKeys(DashBoardPageId.DescInputID, dbdesc);//"DBA_DESC_MODIFY");
 		driver.click(DashBoardPageId.DescEditOKID);
 		
 	}
