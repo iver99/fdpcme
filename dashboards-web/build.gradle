@@ -2,30 +2,15 @@ import org.gradle.api.plugins.jetty.internal.Monitor
 
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
-apply plugin: 'artifactory'
 apply plugin: 'artifactory-publish'
 // Directory where the restful API doc is generated
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
-//jar.archiveName='emcpdf_qa_test.jar'
-group = 'com.oracle.emaas.emcpdf'
-//version = '1.0.1'
 
-buildscript {
-    repositories {
-        maven {
-            url = "${artifactory_contextUrl}/emaas-virtual"
-        }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-      classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
-	}  
-}
+
 
 configurations {
 	restDoc
@@ -68,20 +53,19 @@ task runQATestSuite(type: Test){
         	suites file('testngsuite.xml')
         }
 }
-
+project.publishGroup1='com.oracle.emaas.emcpdf.test';
 publishing {
     publications {
-/*
-        savedsearchWeb(MavenPublication) {
-              from components.java
-        }
-*/
+
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
+	    version project.version
+            groupId  project.publishGroup1
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
-                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
                     def dependency = dependencies.appendNode('dependency')
                     dependency.appendNode('groupId', it.moduleGroup)
                     dependency.appendNode('artifactId', it.moduleName)
@@ -108,6 +92,9 @@ publishing {
     }
 }
 
+ artifactoryPublish {
+	publications('integTest')
+}
 
 /*
  * Define repositories from where to pick all the artifacts
@@ -186,10 +173,10 @@ sourceSets {
 
 dependencies {
 	providedCompile project(':dashboards-entities') { transitive = false }
-	providedCompile project(':dashboards-core')  { transitive = false }
+	providedCompile(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+')
         providedCompile project(':dashboards-webutils')  { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
-//	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0') { transitive = false }
+
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17') { transitive = false }
 	providedCompile(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1') { transitive = false }
 

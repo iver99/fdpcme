@@ -1,14 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'TestInfraPlugin'
 apply from:'test.gradle'
-apply plugin: 'artifactory'
 apply plugin: 'artifactory-publish'
-//jar.archiveName='emcpdf_dev_test.jar'
-group = 'com.oracle.emaas.emcpdf'
-//version = '1.0.1'
 
 sourceSets {
  main {
@@ -23,16 +18,6 @@ sourceSets {
  }
 
 
-/*
- * Define repositories from where to pick all the artifacts
- */
-repositories {
-    /* Looks into local maven repository for artifacts */
-    mavenLocal()
-    maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
-    }
-}
 
 
 task runDEVTestSuite(type: Test){
@@ -43,20 +28,17 @@ task runDEVTestSuite(type: Test){
 	//suites '../dashboards-webutils/dashboards_webutils_testng_suite.xml'
         }
 }
-
+project.publishGroup1='com.oracle.emaas.emcpdf.test';
 publishing {
     publications {
-/*
-        savedsearchWeb(MavenPublication) {
-              from components.java
-        }
-*/
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
+            version project.version
+            groupId  project.publishGroup1
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
-                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
+                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
                     def dependency = dependencies.appendNode('dependency')
                     dependency.appendNode('groupId', it.moduleGroup)
                     dependency.appendNode('artifactId', it.moduleName)
@@ -83,20 +65,9 @@ publishing {
     }
 }
 
-
-buildscript {
-    repositories {
-        maven {
-            url = "${artifactory_contextUrl}/emaas-virtual"
-        }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'	
-        
-}  
+artifactoryPublish {
+	 publications('integTest')
 }
-
 
 dependencies {
 	compile project(':dashboards-entities') { transitive = false }
