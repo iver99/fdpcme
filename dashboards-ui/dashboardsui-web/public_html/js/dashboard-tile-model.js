@@ -134,6 +134,16 @@ define(['knockout',
             }            
         }
         
+        function getVisualAnalyzerUrl(pName, pVersion) {
+            var url = dfu.discoverQuickLink(pName, pVersion, "visualAnalyzer");
+            if (url){
+                if (dfu.isDevMode()){
+                    url = dfu.getRelUrlFromFullUrl(url);  
+                }
+            }
+            return url;
+        }
+        
         function initializeTextTileAfterLoad(dashboard, tile, funcShow, funcReorder, isContentLengthValid) {
             if(!tile) {
                 return;
@@ -171,13 +181,10 @@ define(['knockout',
             registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
 
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                var visualAnalyzerUrl = dfu.discoverQuickLink(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),"visualAnalyzer");
-                if (visualAnalyzerUrl){
-                    if (dfu.isDevMode()){
-                        visualAnalyzerUrl = dfu.getRelUrlFromFullUrl(visualAnalyzerUrl);  
-                    }
+                var url = getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
+                if (url){
                     tile.configure = function(){
-                        window.open(visualAnalyzerUrl+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                        window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID());
                     }
                 }
             } 
@@ -285,6 +292,20 @@ define(['knockout',
 //                    
 //                    tile.customParameters[name] = value;
                 }
+            }
+            
+            tile.removeParameter = function(name) {
+                if(!name || !tile.tileParameters) {
+                    return;
+                }
+                for(var i in tile.tileParameters()) {
+                    var tp = tile.tileParameters()[i];
+                    if(tp.name() === name) {
+                        tile.tileParameters().splice(i, 1);
+                        return;
+                    }
+                }
+                    
             }
             
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
@@ -980,24 +1001,26 @@ define(['knockout',
                 self.show();
             };
             
-            self.appendNewTile = function(name, description, width, height, widget) {
+            self.createNewTile = function(name, description, width, height, widget) {
+                if (!widget)
+                    return null;
+                
                 var newTile = null;
                 
-                if (widget) {
-                    var koc_name = widget.WIDGET_KOC_NAME;
-                    var template = widget.WIDGET_TEMPLATE;
-                    var viewmodel = widget.WIDGET_VIEWMODEL;
-                    var provider_name = widget.PROVIDER_NAME;
-                    var provider_version = widget.PROVIDER_VERSION;
-                    var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
-                    var widget_source = widget.WIDGET_SOURCE;
+                var koc_name = widget.WIDGET_KOC_NAME;
+                var template = widget.WIDGET_TEMPLATE;
+                var viewmodel = widget.WIDGET_VIEWMODEL;
+                var provider_name = widget.PROVIDER_NAME;
+                var provider_version = widget.PROVIDER_VERSION;
+                var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
+                var widget_source = widget.WIDGET_SOURCE;
 //                    widget.width = ko.observable(width);
 //                    widget.height = ko.observable(height);
-                    widget.width = width;
-                    widget.height = height;
-                    widget.column = null;
-                    widget.row = null;
-                    widget.type = "DEFAULT";
+                widget.width = width;
+                widget.height = height;
+                widget.column = null;
+                widget.row = null;
+                widget.type = "DEFAULT";
 //                    if (widget_source === 0) {
 //                        if (koc_name && template && viewmodel){
 //                            if (!ko.components.isRegistered(koc_name)) {
@@ -1014,26 +1037,26 @@ define(['knockout',
 //                        }
 //                    } 
 //                    else {                       
-                        if (widget_source===null || widget_source===undefined){
-                            widget_source=1;
-                        }
-                        
-                        if (koc_name && viewmodel && template) {
-                            if (widget_source===1){
-                                 if (!ko.components.isRegistered(koc_name)) {
-                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
-                                    if (assetRoot===null){
-                                        oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
-                                    }
-                                    ko.components.register(koc_name,{
-                                          viewModel:{require:assetRoot+viewmodel},
-                                          template:{require:'text!'+assetRoot+template}
-                                      }); 
-                                    oj.Logger.log("widget: "+koc_name+" is registered");
-                                    oj.Logger.log("widget template: "+assetRoot+template);
-                                    oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                    if (widget_source===null || widget_source===undefined){
+                        widget_source=1;
+                    }
+
+                    if (koc_name && viewmodel && template) {
+                        if (widget_source===1){
+                             if (!ko.components.isRegistered(koc_name)) {
+                                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
+                                if (assetRoot===null){
+                                    oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                 }
-                                
+                                ko.components.register(koc_name,{
+                                      viewModel:{require:assetRoot+viewmodel},
+                                      template:{require:'text!'+assetRoot+template}
+                                  }); 
+                                oj.Logger.log("widget: "+koc_name+" is registered");
+                                oj.Logger.log("widget template: "+assetRoot+template);
+                                oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                            }
+
 //                                var tileCell = self.tiles.calAvailablePositionForTile(widget, 0, 0);
 //                                var tile = new TileItem({row: tileCell.row, column: tileCell.column, width: width, height: height});
 //                                tile.row = ko.observable(tileCell.row);
@@ -1041,17 +1064,17 @@ define(['knockout',
 ////                                self.tiles.push(tile);
 //                                self.tiles.tilesGrid.registerTileToGrid(tile);
 
-                                newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
-                                var tileCell;
-                                if(!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
-                                    tileCell = new Cell(0, 0);
-                                }else{
-                                    tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
-                                }
-                                newTile.row(tileCell.row);
-                                newTile.column(tileCell.column);
+                            newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
+                            var tileCell;
+                            if(!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
+                                tileCell = new Cell(0, 0);
+                            }else{
+                                tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
+                            }
+                            newTile.row(tileCell.row);
+                            newTile.column(tileCell.column);
 //                                self.tiles.push(tile);
-                                self.tiles.tilesGrid.registerTileToGrid(newTile);
+                            self.tiles.tilesGrid.registerTileToGrid(newTile);
 //                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
 //                                    var worksheetName = 'WS_4_QDG_WIDGET';
 //                                    var workSheetCreatedBy = 'sysman';
@@ -1094,16 +1117,21 @@ define(['knockout',
 //                                    newTile.createdBy = workSheetCreatedBy;
 //                                    newTile.qdgId = qdgId;  
 //                                }
-                            } 
-                            else {
-                                oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
-                            }
-                        }
+                        } 
                         else {
-                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                            oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
                         }
+                    }
+                    else {
+                        oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                    }
 //                    } 
-                    
+                return newTile;
+            };
+            
+            self.appendNewTile = function(name, description, width, height, widget) {
+                if (widget) {
+                    var newTile = self.createNewTile(name, description, width, height, widget);
                     if (newTile){
                        self.tiles.tiles.push(newTile);
                        self.show();
@@ -1116,6 +1144,8 @@ define(['knockout',
             };
             
             self.initialize = function() {
+                builder.addNewWidgetDraggingListener(self.onNewWidgetDragging);
+                builder.addNewWidgetStopDraggingListener(self.onNewWidgetStopDragging);
                 builder.addNewTextDraggingListener(self.onNewTextDragging);
                 builder.addNewTextStopDraggingListener(self.onNewTextStopDragging);
                 
@@ -1193,6 +1223,8 @@ define(['knockout',
            self.deleteTileLink = function(tile) {
                tile.linkText(null);
                tile.linkUrl(null);
+               tile.removeParameter("linkText");
+               tile.removeParameter("linkUrl");
            }
            
            self.editTileLinkConfirmed = function() {
@@ -1418,7 +1450,6 @@ define(['knockout',
                 var lastHeight = elem.css('height');
                 
                 function checkForChanges() {
-//                    console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + elem.css('height') + '. Last height is ' + lastHeight);
                     if (elem.css('height') !== lastHeight) {
                         self.reRender();
                         return;
@@ -1486,6 +1517,64 @@ define(['knockout',
                 }            
             };
             
+            self.onNewWidgetDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width())
+                    return;
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var cell = self.getCellFromPosition(pos); 
+                if (!cell) return;
+                var tile = u.helper.tile;
+                if (!tile) {
+                    var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
+                    tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
+                    u.helper.tile = tile;
+                    self.tiles.tiles.push(tile);
+                }
+                self.previousDragCell = cell;
+                self.tiles.updateTilePosition(tile, cell.row, cell.column);
+                self.tiles.tilesReorder(tile);
+                self.show();
+                tile.shouldHide(true);
+                $('#tile-dragging-placeholder').css({
+                    left: tile.left(),
+                    top: tile.top(),
+                    width: tile.cssWidth() -20,
+                    height: tile.cssHeight() - 20
+                }).show();
+                startTime = curTime;
+            };
+            
+            self.onNewWidgetStopDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                var tile = null;
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (u.helper.tile) {
+                        var idx = self.tiles.tiles.indexOf(u.helper.tile);
+                        self.tiles.tiles.splice(idx, 1);
+                    }
+                }
+                else {
+                    var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                    var cell = self.getCellFromPosition(pos); 
+                    if (!cell) return;
+                    tile = u.helper.tile;
+                    if (!tile) {
+                        var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
+                        tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
+                        u.helper.tile = tile;
+                        self.tiles.tiles.push(tile);
+                    }
+                    if (!self.previousDragCell)
+                        return;
+                }
+                self.tiles.tilesReorder(tile);
+                self.show();
+                $('#tile-dragging-placeholder').hide();
+                self.previousDragCell = null;
+                tile && $(u.helper).hide();
+            };
+            
             self.onNewTextDragging = function(e, u) {
                 var tcc = $("#tiles-col-container");
                 if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width())
@@ -1506,8 +1595,8 @@ define(['knockout',
                 $('#tile-dragging-placeholder').css({
                     left: tile.left(),
                     top: tile.top(),
-                    width: u.helper.children("#left-panel-helper").width() - 80,
-                    height: u.helper.children("#left-panel-helper").height()
+                    width: u.helper.children("#left-panel-text-helper").width() - 80,
+                    height: u.helper.children("#left-panel-text-helper").height()
                 }).show();
                 startTime = curTime;
             };
@@ -1713,6 +1802,7 @@ define(['knockout',
             "DashboardTilesViewModel": DashboardTilesViewModel,
             "loadDashboard": loadDashboard,
             "isDashboardNameExisting": isDashboardNameExisting,
+            "getVisualAnalyzerUrl": getVisualAnalyzerUrl,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "initializeTextTileAfterLoad" : initializeTextTileAfterLoad,

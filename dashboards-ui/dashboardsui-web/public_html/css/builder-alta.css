@@ -429,6 +429,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     width: 30px;
 }
 
+.left-panel-dbd-widget-goto-icon {
+    height: 16px;
+    width: 16px;
+    content: url("images/func_arrowbox_16_ena.png");
+}
+
 .left-panel-dbd-hide-region-icon:before {
     height: 16px;
     width: 16px;
@@ -453,13 +459,30 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     content:url("images/func_search_16_ena.png");
 }
 
-.left-panel-helper {
+.dbd-left-panel-widget button {
     display: none;
 }
 
-.ui-draggable-dragging .left-panel-helper {
+.dbd-left-panel-widget:hover button {
     display: block;
-    z-index: 40;
+}
+
+.left-panel-text-helper {
+    display: none;
+}
+
+.ui-draggable-dragging .left-panel-text-helper {
+    display: block;
+    z-index: 80;
+}
+
+.left-panel-link-helper {
+    display: none;
+}
+
+.ui-draggable-dragging .left-panel-link-helper {
+    display: block;
+    z-index: 80;    
 }
 
 .ui-draggable-dragging #dbd-left-panel-text-handle {
