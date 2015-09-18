@@ -359,7 +359,12 @@
                                         <p><span style="font-size: 1.2em; font-weight: bold;">Double click here to edit text<span></p>
                                     </div>
                                 </div>
-                                <div class="oj-col oj-sm-6 oj-md-6 oj-lg-6">Link</div>
+                                <div id="dbd-left-panel-link" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: pointer;">
+                                    <div id="dbd-left-panel-link-handle">Link</div>
+                                    <div id="left-panel-link-helper" class="left-panel-link-helper">
+                                        <p><span>Link to other dashboard<span></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div style="border-top: 1px solid #d6dfe6; padding-top: 10px;">
@@ -412,6 +417,39 @@
                         </div>
                     </div-->
                     <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size" style="overflow-x: hidden; overflow-y: auto;">
+                        <div id="tilesLinkEditorDialogWrapper">
+                            <div style="display: none;" id="tilesLinkEditorDialog"  
+                                 data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide', rootAttributes: {style: 'min-width: 600px;'}}">
+                                <div class="oj-dialog-header oj-helper-clearfix">
+                                    <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_TITLE')"></span>
+                                </div>
+                                <div class="oj-dialog-body">
+                                    <div id="link-name-editor" class="oj-form oj-md-odd-cols-2 oj-md-labels-inline">
+                                        <div class="oj-row">
+                                            <div class="oj-col">
+                                                <label for="linkName" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_NAME_LABEL')"></label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <input id="linkName" data-bind="ojComponent: {component: 'ojInputText', value: linkName, required: true}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="link-url-editor" class="oj-form oj-md-odd-cols-2 oj-md-labels-inline">
+                                        <div class="oj-row">
+                                            <div class="oj-col">
+                                                <label for="linkUrl" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_URL_LABEL')"></label>
+                                            </div>
+                                            <div class="oj-col">
+                                                <input id="linkUrl" data-bind="ojComponent: {component: 'ojInputText', value: linkUrl, required: true}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oj-dialog-footer">
+                                    <button class="edit-tile-link-confirm-btn" data-bind="click: editTileLinkConfirmed, ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"></button>
+                                </div>
+                            </div>
+                        </div> 
                         <div id="global-time-control" class="oj-row fit-size-vertical-sibling" style="max-width: none; padding-left: 20px;padding-top: 6px; padding-bottom: 10px;" >
                             <div class="oj-col oj-sm-6">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
@@ -546,6 +584,23 @@
                                                 <div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>
                                             </div>
                                         </div>
+                                        <div class="dbd-tile-link-wrapper" data-bind="css: linkText()? '': 'dbd-tile-link-empty'">
+                                            <a class="dbd-tile-link" data-bind="text: linkText, attr: {href: linkUrl}, css: linkText()? '': 'dbd-tile-link-empty'"></a>                                           
+                                            <div class="dbd-tile-link-btns">
+                                            <button id="dbd-tile-link-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
+                                                    data-bind="click: function() {$parent.openEditTileLinkDialog($data)},ojComponent: {
+                                                    component:'ojButton'
+                                                    }, attr: {title: getNlsString('COMMON_BTN_EDIT')}">
+                                                <img src="css/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+                                            </button>
+                                            <button id="dbd-tile-link-delete-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
+                                                    data-bind="click: function() {$parent.deleteTileLink($data)}, ojComponent: {
+                                                    component:'ojButton'
+                                                    }, attr: {title: getNlsString('COMMON_BTN_DELETE')}" tabindex="0">
+                                                <img src="css/images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_DELETE')}"/>
+                                            </button>
+                                            </div>  
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- /ko -->
@@ -558,7 +613,7 @@
                                 <!-- /ko -->                                
                             </div>
                         </div>
-
+                        
                         <!-- Footer section which contains dynamic list of items. Template is located in /templates/demoFooterTemaplate.html-->
                         <!--footer id="footerWrapper" role="contentinfo">
                             <div class="demo-appfooter">

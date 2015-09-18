@@ -294,9 +294,30 @@ define(['knockout',
                 }
             }
             
+            tile.removeParameter = function(name) {
+                if(!name || !tile.tileParameters) {
+                    return;
+                }
+                for(var i in tile.tileParameters()) {
+                    var tp = tile.tileParameters()[i];
+                    if(tp.name() === name) {
+                        tile.tileParameters().splice(i, 1);
+                        return;
+                    }
+                }
+                    
+            }
+            
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
+            
+            var linkText = tile.getParameter("linkText") ? ($("<div/>").html(tile.getParameter("linkText").value).html()) : null;
+            var linkUrl = tile.getParameter("linkUrl") ? ($("<div/>").html(tile.getParameter("linkUrl").value).html()) : null;
+            tile.linkText = ko.observable(linkText);
+            tile.linkUrl = ko.observable(linkUrl);
+//            tile.linkText = ko.observable(tile.getParameter("linkText")? tile.getParameter("linkText").value: null);
+//            tile.linkUrl = ko.observable(tile.getParameter("linkUrl")? tile.getParameter("linkUrl").value: null);
         }
         
         function DashboardTextTile(dashboard, widget, funcShow, funcReorder) {
@@ -425,7 +446,7 @@ define(['knockout',
                     if (data && data['description'] && data['description'] !== null)
                     {
                         data['description'] = $("<div/>").html(data['description']).text();
-                    }                    
+                    }
                     var dsb = ko.mapping.fromJS(data, mapping);
                     if (succCallBack)
                         succCallBack(dsb);
@@ -577,7 +598,7 @@ define(['knockout',
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
             self.widgetCssStyle = ko.computed(function() {
-                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54) + "px;";
+                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54-20) + "px;";
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
@@ -808,7 +829,7 @@ define(['knockout',
                 self.tilesGrid.updateTileSize(tile, tile.width(), height);
                 self.tilesReorder(tile);
             };
-            
+                                   
             self.tilesReorder = function(tile) {
                 self.sortTilesByRowsThenColumns();
                 self.tilesGrid.initialize();
@@ -931,6 +952,8 @@ define(['knockout',
             self.tilesView = tilesView;
             self.tileRemoveCallbacks = [];
             self.isOnePageType = (self.dashboard.type() === SINGLEPAGE_TYPE);
+            self.linkName = ko.observable();
+            self.linkUrl = ko.observable();
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
 
@@ -1125,6 +1148,10 @@ define(['knockout',
                 builder.addNewWidgetStopDraggingListener(self.onNewWidgetStopDragging);
                 builder.addNewTextDraggingListener(self.onNewTextDragging);
                 builder.addNewTextStopDraggingListener(self.onNewTextStopDragging);
+                
+                builder.addNewLinkDraggingListener(self.onNewLinkDragging);
+                builder.addNewLinkStopDraggingListener(self.onNewLinkStopDragging);
+
                 builder.addBuilderResizeListener(self.onBuilderResize);
                 self.initializeTiles();
             };
@@ -1187,6 +1214,32 @@ define(['knockout',
                    
                }
            };
+           
+           self.openEditTileLinkDialog = function(tile) { 
+               self.tileToEdit = ko.observable(tile);
+               $("#tilesLinkEditorDialog").ojDialog("open");
+           }
+           
+           self.deleteTileLink = function(tile) {
+               tile.linkText(null);
+               tile.linkUrl(null);
+               tile.removeParameter("linkText");
+               tile.removeParameter("linkUrl");
+           }
+           
+           self.editTileLinkConfirmed = function() {
+               if(self.tileToEdit && self.tileToEdit()) {
+                  var tile = self.tileToEdit();
+                  tile.linkText(self.linkName());
+                  tile.linkUrl(self.linkUrl());
+                  tile.setParameter("linkText", tile.linkText());
+                  tile.setParameter("linkUrl", tile.linkUrl());
+//                  self.tileToEdit(null);
+               }               
+               self.linkName(null);
+               self.linkUrl(null);
+               $("#tilesLinkEditorDialog").ojDialog("close");
+           }
            
            self.initializeTiles = function() {
                 if(self.tiles.tiles && self.tiles.tiles()) {
@@ -1579,6 +1632,40 @@ define(['knockout',
                     self.reloadEditors();
                 }
             };
+            
+            self.onNewLinkDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return;
+                }
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var cell = self.getCellFromPosition(pos); 
+                if (!cell) return;
+                var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
+                var tile = self.getMaximizedTile()? self.getMaximizedTile() : tile;
+                if(!tile || tile.type() === "TEXT_WIDGET") return;
+                var tileId = "tile" + tile.clientGuid;
+                $(".dbd-tile-link-wrapper").css("border", "0px");
+                $("#"+tileId+" .dbd-tile-link-wrapper").css("border", "1px dashed red");
+            }
+            
+            self.onNewLinkStopDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return;
+                }
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var cell = self.getCellFromPosition(pos); 
+                if (!cell) return;
+                var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
+                if(!tile || tile.type() === "TEXT_WIDGET") return;
+                tile.linkText("Link to other dashboard");
+                var tileId = "tile" + tile.clientGuid;
+                $("#"+tileId+" .dbd-tile-link-wrapper").css("border", "0px");
+                $("#"+tileId+" .dbd-tile-link").css("display", "inline-block");
+            }
             
             self.reloadEditors = function() {
                 for(var i in CKEDITOR.instances) {

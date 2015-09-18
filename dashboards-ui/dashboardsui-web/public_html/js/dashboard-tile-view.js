@@ -138,11 +138,17 @@ define(['knockout',
                         builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, 'stop dragging left panel text', e, t);
                     }
                 });
-                $('.dbd-left-panel-img-pop').ojPopup(
-                {
-                    position : 
-                    {
-                        my : "start top+10", at : "start end"
+                $("#dbd-left-panel-link").draggable({
+                    helper: "clone",
+                    handle: "#dbd-left-panel-link-handle",
+                    start: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_START_DRAGGING, 'start dragging left panel link', e, t);
+                    },
+                    drag: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_DRAGGING, null, e, t);
+                    },
+                    stop: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, 'stop dragging left panel link', e, t);
                     }
                 });
             };
@@ -839,6 +845,10 @@ define(['knockout',
             self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
             self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
             
+            self.EVENT_NEW_LINK_START_DRAGGING = "EVENT_NEW_LINK_START_DRAGGING";
+            self.EVENT_NEW_LINK_DRAGGING = "EVENT_NEW_LINK_DRAGGING";
+            self.EVENT_NEW_LINK_STOP_DRAGGING = "EVENT_NEW_LINK_STOP_DRAGGING";
+
             self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
             self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
             self.EVENT_NEW_WIDGET_STOP_DRAGGING = "EVENT_NEW_WIDGET_STOP_DRAGGING";
@@ -888,6 +898,18 @@ define(['knockout',
             self.addNewTextStopDraggingListener = function(listener) {
                 self.addEventListener(self.EVENT_NEW_TEXT_STOP_DRAGGING, listener);
             };
+            
+            self.addNewLinkStartDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_LINK_START_DRAGGING, listener);
+            };
+            
+            self.addNewLinkDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_LINK_DRAGGING, listener);
+            };
+            
+            self.addNewLinkStopDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
+            }
             
             self.addNewWidgetStartDraggingListener = function(listener) {
                 self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);

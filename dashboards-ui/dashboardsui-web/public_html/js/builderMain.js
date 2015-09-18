@@ -232,7 +232,7 @@ require(['knockout',
                                 dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
                             }
                         }
-                    }                    
+                    }
                     
                      ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
@@ -266,7 +266,7 @@ require(['knockout',
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
-                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);   
+                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);
 //                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);       
                     var leftPanelView = new dtv.LeftPanelView(builder);
                     ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
