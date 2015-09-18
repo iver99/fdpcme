@@ -189,7 +189,7 @@ define({
       "LANDING_HOME_APM": "Application Performance Monitoring",
       "LANDING_HOME_APM_DESC": "Rapidly identify, response, and resolve your software roadblocks",
       "LANDING_HOME_LA": "Log Analytics",
-      "LANDING_HOME_LA_DESC": "Next-generation log data management and analysis in cloud",
+      "LANDING_HOME_LA_DESC": "Topology aware log exploration and analytics for modern applications and infrastructure",
       "LANDING_HOME_ITA": "IT Analytics",
       "LANDING_HOME_ITA_DESC": "Operational big data intelligence for modern IT",
       "LANDING_HOME_ITA_DB_PERFORMANCE": "Performance Analytics - Database",

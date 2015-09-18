@@ -47,6 +47,12 @@ task runDEVTestSuite_webuiutil(type: Test){
 
 publishing {
     publications {
+
+dashboarduiWebUtil(MavenPublication) {
+              from components.java
+        }
+
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
