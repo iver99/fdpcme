@@ -301,13 +301,17 @@
             <!-- /ko -->
             <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;">
                 <!-- ko stopBinding: true -->
-                <div id="dbd-left-panel"
-                    style="width: 215px; height: 1000px; position: absolute; left: 0; top: 0; border-right: 1px solid #d6dfe6;">
-                    <div id="dbd-left-panel-header" class="fit-size-sibling" style="width: 100%; height: 32px;">
+                <div id="dbd-left-panel" class="fit-size-horizontal-sibling" data-bind="css: {'dbd-left-panel-show': showPanel(), 'dbd-left-panel-hide': !showPanel()}"
+                    style="height: 1000px; position: absolute; left: 0; top: 0; border-right: 1px solid #d6dfe6;">
+                    <!-- ko if: showPanel() -->
+                    <div id="dbd-left-panel-header" class="fit-size-vertical-sibling" style="width: 100%; height: 32px;">
                         <div class="oj-row">
                             <div class="oj-col">
-                                <h3 style="padding-right: 50px; float: left; width: 150px; overflow: hidden; margin-right: -50px; display: block;">Dashboard</h3>
-                                <div class="dbd-pull-right" style="margin: 10px;">x</div>
+                                <h3 style="padding-right: 50px; float: left; width: 163px; overflow: hidden; margin-right: -50px; display: block;">Dashboard</h3>
+                                <button class="oj-button-half-chrome" data-bind="click: hideLeftPanel,
+                                    ojComponent: {component: 'ojButton', label: 'Hide', display: 'icons', 
+                                    icons: {start:'left-panel-dbd-hide-region-icon'}}" style="margin-top: 5px;"> 
+                                </button>
                             </div>
                         </div>
                         <div style="border: 1px;
@@ -319,63 +323,42 @@
                                             background-color: #fcfdfe;
                                             float: left;
                                             box-sizing: border-box; width: 195px;">
-                            <div style="float: left; height: 30px; width: 163px;">
-                                    <input id="sinput" type="text" name="searchInput" style="border: 0; height: 30px;"
-                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
-                                    <button class="oj-button-half-chrome" data-bind="
-                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
-                                            icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
-                                    </button>
+                            <div style="float: left; height: 30px;" data-bind="style: {width: keyword() ? '133px' : '163px'}">
+                                <input id="sinput" type="text" name="searchInput" style="border: 0; height: 30px;"
+                                   data-bind="ojComponent:{component:'ojInputText', value: keyword, 
+                                              placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                              ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
                             </div>
-                            <div style="">
-                                    <button class="oj-button-half-chrome" data-bind="
-                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
-                                            icons: {start:'left-panel-dbd-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
-                                            height: 30px;
-                                            line-height: 30px;
-                                            vertical-align: middle;
-                                            text-align: center;"> 
-                                    </button> 
+                            <div>
+                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
+                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                                        icons: {start:'left-panel-dbd-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
+                                        height: 30px;
+                                        line-height: 30px;
+                                        vertical-align: middle;
+                                        text-align: center;
+                                        float: left;"> 
+                                </button>
+                                <button class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
+                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
+                                        icons: {start:'left-panel-dbd-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
+                                        height: 30px;
+                                        line-height: 30px;
+                                        vertical-align: middle;
+                                        text-align: center;"> 
+                                </button> 
                             </div>
                         </div>
                     </div>
                     <div id="dbd-left-panel-widgets" class="fit-size" style="width: 100%; height: auto; overflow-y: auto; position: relative;">
-                        <div class="oj-col" style="width: 100%;">
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
-                            <div style="width: 100%; height: 30px;"><a href="#">Widget 1</a></div>
+                        <div class="oj-col" style="width: 100%;" data-bind="foreach: widgets">
+                            <div style="width: 160px; height: 30px;" data-bind="event: {mouseOver: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
+                                <a href="#" data-bind="text: WIDGET_NAME, attr: {title: WIDGET_NAME}" 
+                                   style="float: left; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a>
+                            </div>
                         </div>
                     </div>
-                    <div id="dbd-left-panel-footer" class="fit-size-sibling" style="height: 210px;">
+                    <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling" style="height: 210px;">
                         <div style="height: 30px; border-top: 1px solid #d6dfe6; padding-top: 10px;">
                             <div class="oj-row">
                                 <div id="dbd-left-panel-text" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: pointer;">
@@ -396,10 +379,10 @@
                             <div class="oj-row">
                                 <div class="oj-col oj-sm-3 oj-md-3 oj-lg-3" style="margin-top: 10px;">Pages</div>
                                 <div class="oj-col oj-sm-9 oj-md-9 oj-lg-9">
-                                    <input id="spinnercontrol"
+                                    <input id="dbd-left-panel-widgets-page-input"
                                             data-bind="ojComponent: {
                                               component: 'ojInputNumber',
-                                              max:100, min:0, step:10, value:20}"/>
+                                              max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged}"/>
                                 </div>
                             </div>
                             <div class="oj-row" style="margin-top: 10px;">
@@ -422,6 +405,13 @@
                             </div>
                         </div>
                     </div>
+                    <!-- /ko -->
+                    <!-- ko if: !showPanel() -->
+                    <button class="oj-button-half-chrome" data-bind="click: showLeftPanel,
+                        ojComponent: {component: 'ojButton', label: 'Show', display: 'icons', 
+                        icons: {start:'left-panel-dbd-show-region-icon'}}" style="margin-top: 5px;"> 
+                    </button>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
                 <!--<div class="oj-row stretch-height tile-container" id="tileContainer"  
@@ -434,7 +424,7 @@
                             </span>
                         </div>
                     </div-->
-                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height" style="overflow-x: hidden; overflow-y: auto;">
+                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size" style="overflow-x: hidden; overflow-y: auto;">
                         <div id="tilesLinkEditorDialogWrapper">
                             <div style="display: none;" id="tilesLinkEditorDialog"  
                                  data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide', rootAttributes: {style: 'min-width: 600px;'}}">
@@ -467,8 +457,8 @@
                                     <button class="edit-tile-link-confirm-btn" data-bind="click: editTileLinkConfirmed, ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"></button>
                                 </div>
                             </div>
-                        </div>
-                        <div id="global-time-control" class="oj-row fit-size-sibling" style="padding-left: 20px;padding-top: 6px; padding-bottom: 10px;" >
+                        </div> 
+                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling" style="max-width: none; padding-left: 20px;padding-top: 6px; padding-bottom: 10px;" >
                             <div class="oj-col oj-sm-6">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',

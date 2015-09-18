@@ -1112,18 +1112,21 @@ define(['knockout',
             };
             
             self.initialize = function() {
-                $(window).resize(function() {
-                    widgetAreaWidth = widgetAreaContainer.width();
-                    self.tilesView.disableMovingTransition();
-                    self.show();
-                    self.tilesView.enableMovingTransition();
-                });
                 builder.addNewTextDraggingListener(self.onNewTextDragging);
                 builder.addNewTextStopDraggingListener(self.onNewTextStopDragging);
                 
                 builder.addNewLinkDraggingListener(self.onNewLinkDragging);
                 builder.addNewLinkStopDraggingListener(self.onNewLinkStopDragging);
+
+                builder.addBuilderResizeListener(self.onBuilderResize);
                 self.initializeTiles();
+            };
+            
+            self.onBuilderResize = function() {
+                widgetAreaWidth = widgetAreaContainer.width();
+                self.tilesView.disableMovingTransition();
+                self.show();
+                self.tilesView.enableMovingTransition();
             };
             
            self.menuItemSelect = function(event, ui) {
@@ -1640,10 +1643,10 @@ define(['knockout',
             
             self.postDocumentShow = function() {
 //                self.maximizeFirst();
-                builder.triggerBuilderResizeEvent();
+                builder.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
                 $(window).resize(function() {
-                    builder.triggerBuilderResizeEvent();
+                    builder.triggerBuilderResizeEvent('resize builder after window resized');
                 });
             };
 

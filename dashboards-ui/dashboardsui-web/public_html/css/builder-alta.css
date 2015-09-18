@@ -421,6 +421,32 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
   padding: 0;
 }
 
+.dbd-left-panel-show {
+    width: 215px;
+}
+
+.dbd-left-panel-hide {
+    width: 30px;
+}
+
+.left-panel-dbd-hide-region-icon:before {
+    height: 16px;
+    width: 16px;
+    content: url("images/region-hide.png");
+}
+
+.left-panel-dbd-show-region-icon:before {
+    height: 16px;
+    width: 16px;
+    content: url("images/region-show.png");
+}
+
+.left-panel-dbd-clear-icon:before {
+    height:16px;
+    width:16px;
+    content:url("images/clearEntry_ena.png");
+}
+
 .left-panel-dbd-search-icon:before {
     height:16px;
     width:16px;

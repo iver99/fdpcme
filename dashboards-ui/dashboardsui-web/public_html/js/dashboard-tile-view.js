@@ -34,50 +34,93 @@ define(['knockout',
                     searchObject.getAttribute("url"),
                     searchObject.getAttribute("chartType"));
         }
-        
-//        function ContainerResizeEvent() {
-//            var self = this;
-//            
-//            self.handlers = [];
-//            $("#headerWrapper").on("DOMSubtreeModified", function() {
-//                self.triggerResizeEvent();
-//            });
-//            
-//            self.registerHandler = function(handler) {
-//                if (!handler)
-//                    return;
-//                self.handlers.push(handler);
-//            };
-//            
-//            self.triggerResizeEvent = function() {
-//                var containerHeight = $(window).height() - $('#headerWrapper').outerHeight() 
-//                        - $('#head-bar-container').outerHeight();
-//                // console.log("Widow height: " + $(window).height() + ", header wrapper height: " + $('#headerWrapper').outerHeight() + ", heade bar container height: " + $('#head-bar-container').outerHeight() + ", container height: " + containerHeight);
-//                var containerWidth = $('#main-container').width()/* - parseInt($('#main-container').css("marginLeft"), 0)*/;
-//                // console.log("container width: " + $('#main-container').width() + ", container margin left: " + parseInt($('#main-container').css("marginLeft"), 0));
-//                for (var handler in self.handlers) {
-//                    self.handlers[handler](containerWidth, containerHeight);
-//                }
-//            };
-//        }
+
+        function WidgetDataSource() {
+            var self = this;
+            var DEFAULT_WIDGET_PAGE_SIZE = 20;
+            
+            self.loadWidgetData = function(page, keyword, successCallback) {
+                initialize(page);
+                loadWidgets(keyword);
+                successCallback && successCallback(self.page, self.widget, self.totalPages);
+            };
+            
+            function initialize(page) {
+                self.widget = [];
+                self.totalPages = 1;
+                self.page = page;
+            }
+            
+            function loadWidgets(keyword) {
+                var widgetsUrl = '/sso.static/savedsearch.widgets';
+                if (dfu.isDevMode()){
+                    widgetsUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                }
+
+                dfu.ajaxWithRetry({
+                    url: widgetsUrl,
+                    headers: dfu.getDashboardsRequestHeader(),
+                    success: function(data) {
+                        data && data.length > 0 && (filterWidgetsData(data, keyword));
+                    },
+                    error: function(res){
+                        oj.Logger.error('Error when fetching widgets by URL: '+ widgetsUrl + '.');
+                    },
+                    async: false
+                });
+            };
+            
+            function filterWidgetsData(data, keyword){
+                var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;
+                for (var i = 0; i < data.length; i++) {
+                    var widget = null;
+                    lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
+                    !lcKeyword && (widget = data[i]);
+                    widget && self.widget.push(widget);
+                }
+                self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
+                self.page > self.totalPages && (self.page = self.totalPages);
+                self.page < 1 && (self.page = 1);
+                self.widget = self.widget.slice((self.page - 1) * DEFAULT_WIDGET_PAGE_SIZE, self.page * DEFAULT_WIDGET_PAGE_SIZE);
+            }
+        }
         
         function LeftPanelView(builder) {
             var self = this;
             self.builder = builder;
             self.dashboard = builder.dashboard;
             
+            self.keyword = ko.observable('');
+            self.page = ko.observable(1);
+            self.widgets = ko.observableArray([]);
+            self.totalPages = ko.observable(1);
+            
+            self.showPanel = ko.observable(true);
+            
             self.initialize = function() {
+                self.initDraggable();
+                self.builder.addBuilderResizeListener(self.resizeEventHandler);
+                $("#dbd-left-panel-widgets-page-input").keyup(function(event) {
+                    var replacedValue = this.value.replace(/[^0-9\.]/g, '');
+                    if (this.value !== replacedValue) {
+                        this.value = replacedValue;
+                    }
+                });
+                self.loadWidgets();
+            };
+            
+            self.initDraggable = function() {
                 $("#dbd-left-panel-text").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-text-handle",
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_START_DRAGGING, e, t);
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_START_DRAGGING, 'start dragging left panel text', e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_DRAGGING, e, t);
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, e, t);
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, 'stop dragging left panel text', e, t);
                     }
                 });
                 $("#dbd-left-panel-link").draggable({
@@ -93,12 +136,59 @@ define(['knockout',
                         builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, e, t);
                     }
                 });
-                self.builder.addBuilderResizeListener(self.resizeEventHandler);
             };
             
             self.resizeEventHandler = function(width, height) {
                 $('#dbd-left-panel').height(height);
                 $('#left-panel-helper').css("width", width - 20);
+            };
+            
+            self.loadWidgets = function() {
+                new WidgetDataSource().loadWidgetData(self.page(), self.keyword(), function(page, widgets, totalPages) {
+                    self.widgets([]);
+                    if (widgets && widgets.length > 0) {
+                        for (var i = 0; i < widgets.length; i++)
+                            self.widgets.push(ko.mapping.fromJS(widgets[i]));
+                    }
+                    totalPages !== self.totalPages() && self.totalPages(totalPages);
+                });
+            };
+            
+            self.dashboardPageChanged = function(e, d) {
+                if (d.option !== "value" || !d.value)
+                    return;
+                self.loadWidgets();
+            };
+            
+            self.searchWidgetsClicked = function() {
+                self.page(1);
+                self.loadWidgets();
+            };
+            
+            self.clearWidgetSearchInputClicked = function() {
+                if (self.keyword()) {
+                    self.keyword(null);
+                    self.searchWidgetsClicked();
+                }
+            };
+            
+            self.showLeftPanel = function() {
+                self.showPanel(true);
+                self.initDraggable();
+                builder.triggerBuilderResizeEvent('show left panel');
+            };
+            
+            self.hideLeftPanel = function() {
+                self.showPanel(false);
+                builder.triggerBuilderResizeEvent('resize builder after hide left panel');
+            };
+            
+            self.widgetMouseOverHandler = function() {
+                console.log('widgetMouseOverHandler');
+            };
+            
+            self.widgetMouseOutHandler = function() {
+                console.log('widgetMouseOutHandler');
             };
         }
         
@@ -110,12 +200,14 @@ define(['knockout',
                 self.rebuildElementSet(),
                 self.$list.each(function() {
                     var elem = $(this)
-                    , siblings = elem.siblings(".fit-size-sibling:visible")
+                    , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
                     , h = 0;
-                    for (var i = 0; i < siblings.length; i++) {
-                        h += $(siblings[i]).outerHeight();
+                    if (v_siblings && v_siblings.length > 0) {
+                        for (var i = 0; i < v_siblings.length; i++) {
+                            h += $(v_siblings[i]).outerHeight();
+                        }
+                        elem.height(height - h);
                     }
-                    elem.height(height - h);
                 });
             };
             
@@ -134,10 +226,10 @@ define(['knockout',
             self.builder = builder;
             self.dashboard = builder.dashboard;
             
-            self.resizeEventHandler = function(containerWidth, containerHeight) {
-                $('#tiles-col-container').css("left", 215);
-                $('#tiles-col-container').width(containerWidth - 215);
-                $('#tiles-col-container').height(containerHeight);
+            self.resizeEventHandler = function(width, height, leftWidth) {
+                $('#tiles-col-container').css("left", leftWidth);
+                $('#tiles-col-container').width(width - leftWidth);
+                $('#tiles-col-container').height(height);
             };
             
             self.getTileElement = function(tile) {
@@ -190,20 +282,6 @@ define(['knockout',
             
             self.builder.addBuilderResizeListener(self.resizeEventHandler);
         }
-        
-//        function TimeSliderDisplayView() {
-//            var self = this;
-//            self.bindingExists = false;
-//            
-//            self.showOrHideTimeSlider = function(show) {
-//               var timeControl = $('#global-time-control');
-//               if (show){
-//                   timeControl.show();
-//               }else{
-//                   timeControl.hide();
-//               }
-//            };
-//        }
         
         function ToolBarModel(dashboard, tilesViewModel) {
             var self = this;
@@ -596,7 +674,7 @@ define(['knockout',
             var self = this;
             self.dashboard = dashboard;
             
-            self.EVENT_NEW_BUILDER_RESIZE = "EVENT_NEW_BUILDER_RESIZE";
+            self.EVENT_BUILDER_RESIZE = "EVENT_BUILDER_RESIZE";
             
             self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
             self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
@@ -615,7 +693,10 @@ define(['knockout',
                         return;
                     if (!dsp.queue[event])
                         dsp.queue[event] = [];
+                    if (dsp.queue[event].indexOf(handler) !== -1)
+                        return;
                     dsp.queue[event].push(handler);
+                    //console.log('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
                 };
                 
                 dsp.triggerEvent = function(event, p1, p2, p3) {
@@ -632,7 +713,8 @@ define(['knockout',
                 self.dispatcher.registerEventHandler(event, listener);
             };
             
-            self.triggerEvent = function(event, p1, p2, p3) {
+            self.triggerEvent = function(event, message, p1, p2, p3) {
+//                console.log('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
                 self.dispatcher.triggerEvent(event, p1, p2, p3);
             };
             
@@ -660,26 +742,22 @@ define(['knockout',
                 self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
             };
             
-            self.triggerBuilderResizeEvent = function() {
+            self.triggerBuilderResizeEvent = function(message) {
                 var height = $(window).height() - $('#headerWrapper').outerHeight() 
                         - $('#head-bar-container').outerHeight();
-                // console.log("Widow height: " + $(window).height() + ", header wrapper height: " + $('#headerWrapper').outerHeight() + ", heade bar container height: " + $('#head-bar-container').outerHeight() + ", container height: " + containerHeight);
                 var width = $('#main-container').width()/* - parseInt($('#main-container').css("marginLeft"), 0)*/;
-                // console.log("container width: " + $('#main-container').width() + ", container margin left: " + parseInt($('#main-container').css("marginLeft"), 0));
-                self.triggerEvent(self.EVENT_NEW_BUILDER_RESIZE, width, height);
+                var leftWidth = $('#dbd-left-panel').width();
+                self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth);
             };    
             
             self.addBuilderResizeListener = function(listener) {
-                self.addEventListener(self.EVENT_NEW_BUILDER_RESIZE, listener);
+                self.addEventListener(self.EVENT_BUILDER_RESIZE, listener);
             };
         }
         
         return {"DashboardTilesView": DashboardTilesView, 
-//            "TileUrlEditView": TileUrlEditView, 
-//            "ContainerResizeEvent": ContainerResizeEvent,
             "LeftPanelView": LeftPanelView,
             "ResizableView": ResizableView,
-//            "TimeSliderDisplayView": TimeSliderDisplayView,
             "ToolBarModel": ToolBarModel, 
             "DashboardBuilder": DashboardBuilder};
     }
