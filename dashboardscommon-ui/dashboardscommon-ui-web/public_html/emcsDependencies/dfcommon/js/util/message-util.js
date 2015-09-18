@@ -18,7 +18,7 @@ define(['knockout', 'jquery'],
              */ 
             self.showMessage = function(message) {
                 if (message && typeof(message) === "object") {
-                    message.category = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
+                    message.tag = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
                     window.postMessage(message, window.location.href);
                 }
             };

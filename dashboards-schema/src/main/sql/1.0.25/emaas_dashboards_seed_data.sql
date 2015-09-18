@@ -19,6 +19,8 @@ Rem
 
 
 DEFINE TENANT_ID = '&1'
+SET SERVEROUTPUT ON
+SET FEEDBACK ON
 
 DECLARE
   apm_screenshot CLOB:='data:image/png;base64,'||
@@ -702,5 +704,32 @@ update EMS_DASHBOARD set SCREEN_SHOT=la_mwoperations_screenshot, LAST_MODIFIED_B
 
 commit;
 
+END;
+/
+
+
+REM Update LA OOB and user created WIDGET METADATA in EMS_DASHBOARD_TILE table according to latest LA side change
+DECLARE
+  V_COUNT NUMBER;
+BEGIN
+  SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_NAME  ='LoganService'  AND WIDGET_KOC_NAME IN ('LA_WIDGET_BAR','LA_WIDGET_PIE','LA_WIDGET_HISTOGRAM');
+  IF (V_COUNT=0) THEN
+    DBMS_OUTPUT.PUT_LINE('LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE has been updated before for tenant: &TENANT_ID, no need to update again');  
+  ELSE
+    UPDATE EMS_DASHBOARD_TILE
+    SET WIDGET_KOC_NAME  ='emcla-visualization',
+      WIDGET_VIEWMODE    ='/js/viewmodel/search/widget/VisualizationWidget.js',
+      WIDGET_TEMPLATE    ='/html/search/widgets/visualizationWidget.html'
+    WHERE PROVIDER_NAME  ='LoganService' 
+    AND TENANT_ID='&TENANT_ID' 
+    AND WIDGET_KOC_NAME IN ('LA_WIDGET_BAR','LA_WIDGET_PIE','LA_WIDGET_HISTOGRAM');
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE successfully for tenant: &TENANT_ID');  
+  END IF;
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Failed to update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE for tenant: &TENANT_ID due to '||SQLERRM);   
+  RAISE;
 END;
 /
