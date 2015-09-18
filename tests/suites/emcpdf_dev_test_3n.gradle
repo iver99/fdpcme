@@ -54,7 +54,7 @@ repositories {
             url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
 dependencies {
-	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: '${REPO_BID}'){
+	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}"){
 		exclude('module':'groovy')
 	}
 	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
