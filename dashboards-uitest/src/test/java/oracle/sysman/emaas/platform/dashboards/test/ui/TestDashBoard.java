@@ -27,7 +27,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.loadWebDriver(webd);
 	}
 		
-	
+		
 	@Test
 	public void testHomepage() throws Exception
 	{
@@ -53,7 +53,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//sort func
 		DashBoardUtils.clickToSortByLastAccessed();
 		//check box
-		DashBoardUtils.clickCheckBox();
+		//DashBoardUtils.clickCheckBox();
 		
 	}
 	
@@ -135,6 +135,7 @@ public class TestDashBoard extends LoginAndLogout{
 	}
 	
 	@Test(dependsOnMethods = { "testCreateDashBoard","testModifyDashBoard","testNavigateWidget"})
+	//@Test
 	public void testRemoveDashBoard() throws Exception
 	{
 				
@@ -192,6 +193,7 @@ public class TestDashBoard extends LoginAndLogout{
 	}
 	
 	@Test(dependsOnMethods = { "testCreateSpecialDashBoard" })
+	//@Test
 	public void testRemoveSpecialDashBoard() throws Exception
 	{
 				
@@ -215,6 +217,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 					
 	}
+	
 	@Test(dependsOnMethods = { "testHomepage" })
 	public void testUserMenu() throws Exception
 	{
@@ -255,13 +258,13 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testHomeLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Home link
 		webd.click(DashBoardPageId.HomeLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html");
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/welcome.html");
 		
 	}
 	
@@ -272,7 +275,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testITALink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//IT Analytics link,check checkbox
 		webd.click(DashBoardPageId.ITALinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -289,7 +292,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testLALink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Log Analytics link
 		webd.click(DashBoardPageId.LALinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -306,7 +309,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testAPMLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//APM link
 		webd.click(DashBoardPageId.APMLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -323,7 +326,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testLogLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Log link
 		webd.click(DashBoardPageId.LOGLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -340,7 +343,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testAWRLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//AWR Analytics link		
 		webd.click(DashBoardPageId.AWRALinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -357,7 +360,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testFlexLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Flex link
 		webd.click(DashBoardPageId.FlexLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -374,7 +377,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testTargetLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Target link
 		webd.click(DashBoardPageId.TargetLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -391,7 +394,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testSoftwareLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//Customer Software link
 		webd.click(DashBoardPageId.CustomLinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -408,7 +411,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testAdminLink");
 		
 		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//IT Analytics Administration link
 		webd.click(DashBoardPageId.ITA_Admin_LinkID);
 		DashBoardUtils.waitForMilliSeconds(2000);
@@ -465,21 +468,108 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testEMPCDF_832");
 		
 		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
+		webd.getLogger().info("current url = "+url);
 		
 		webd.takeScreenShot();
 		webd.getWebDriver().navigate().to(url.substring(0,url.indexOf("emsaasui"))+"emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		DashBoardUtils.waitForMilliSeconds(5000);
+                webd.takeScreenShot();
 		webd.click("//*[@id='errorMain']/div[2]/button");
+                webd.getLogger().info("ok button is clicked");
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(5000);
+		//this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		//due to LoginUtils.doLogin()'s limitation, fix to 832 is not really verified. The current endUrl is not reused, but specified by that api 
+                login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName()+"-relogin","sso.welcome");
+                DashBoardUtils.loadWebDriverOnly(webd);
+                webd.getLogger().info("welcome page is being loaded, going to to verify...");
+		webd.takeScreenShot();
+		DashBoardUtils.waitForMilliSeconds(10000);
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
+		webd.getLogger().info("welcome page is verified successfully");
+                //Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
+		webd.takeScreenShot();
+		webd.getLogger().info("complete testing in testEMPCDF_832");
+	}
+	/*
+	@Test
+	public void testCreateLVDashBoard() throws Exception
+	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testEMPCDF_832");
-		webd.takeScreenShot();
+		
+		DashBoardUtils.clickLVButton();
+		
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+		
+		DashBoardUtils.openDBCreatePage();
+		String dbName="LV_DashBoard";
+		DashBoardUtils.inputDashBoardInfo(dbName);
 		DashBoardUtils.waitForMilliSeconds(5000);
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
+		//verify input info's existence
+		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
+		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		DashBoardUtils.clickOKButton();		
+		
 		webd.takeScreenShot();
-		webd.getLogger().info("start to test in testEMPCDF_8322222");
+		String widgetName = "Database Errors Trend";
+		//add widget
+		DashBoardUtils.addWidget(1,parentWindow,widgetName);
+				
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
 	}
+
+	@Test
+	public void testModifyLVDashBoard() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testEMPCDF_832");
+		
+		DashBoardUtils.clickLVButton();
+		
+		String parentWindow = webd.getWebDriver().getWindowHandle();
+		//open dashboard	
+		DashBoardUtils.waitForMilliSeconds(500);
+		//DashBoardUtils.clickToSortByLastAccessed();
+		DashBoardUtils.searchDashBoard("LV_DashBoard");
+		DashBoardUtils.waitForMilliSeconds(500);
+		webd.takeScreenShot();
+		DashBoardUtils.clickLVDashBoard();
+		//String parentWindow = webd.getWebDriver().getWindowHandle();
+		DashBoardUtils.waitForMilliSeconds(500);
+		//add a new widget
+		DashBoardUtils.addWidget(0,parentWindow);
+		
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
+	}
+
+	@Test
+	public void testRemoveLVDashBoard() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testRemoveLVDashBoard");
+		
+		DashBoardUtils.clickLVButton();
+		
+		DashBoardUtils.searchDashBoard("LV_DashBoard");
+		DashBoardUtils.waitForMilliSeconds(500);
+		webd.takeScreenShot();
+		
+		webd.click(DashBoardPageId.DashBoardInfoID);
+		webd.click(DashBoardPageId.DashBoardDeleteID);
+		
+		//click delete button
+		DashBoardUtils.clickLVDeleteButton();
+		DashBoardUtils.waitForMilliSeconds(500);
+		
+		webd.takeScreenShot();
+	}
+	*/
 
 }

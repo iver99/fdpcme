@@ -102,15 +102,15 @@ public class ConfigurationAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDiscoveryConfigurations(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
 		if (responseError != null) {
 			return responseError; //need redeployment to remove error with fix
 		}
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			Response resp = Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity()))
-					.build();
+			Response resp = Response.status(Status.OK)
+					.entity(JsonUtil.buildNormalMapper().toJson(new RegistrationEntity(sessionExpiryTime))).build();
 			return resp;
 
 		}

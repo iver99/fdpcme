@@ -37,14 +37,17 @@ buildscript {
 }
 repositories {
     /* To check if the jar is available in local maven repository */
-    mavenLocal()
+   // mavenLocal()
+    maven {
+        url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+    }
     maven {
         url = "${artifactory_contextUrl}/emaas-virtual"
     }
 
-    maven {
+/*    maven {
         url = "${artifactory_contextUrl}/repo"
-    }
+    }*/
 }
 //apply plugin: 'em-test-infra'
 apply plugin: 'TestInfraPlugin'
@@ -57,7 +60,7 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
 //Update the lrgConfig configuration to specify where the test jar is.
  dependencies{
-testConfig (group: 'com.oracle.emaas.emcpdf.Webdriver.uitest2', name: 'dashboards-uitest', version: '1.0+')
+testConfig (group: 'com.oracle.emaas.emcpdf.Webdriver.uitest3', name: 'dashboards-uitest', version: '1.0+')
 {
 exclude('module':'groovy')
 }

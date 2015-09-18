@@ -4,7 +4,7 @@
 # This recipe hydrates the tenant information
 #
 
-tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}"
+tenant_hydration_schema_script_dir = "#{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql"
 tenant_hydration_sql_filename = "emaas_dashboards_tenant_onboarding.sql"
 
 # Couples of assumptions:
@@ -56,8 +56,8 @@ bash "unbundle_schema_zipe" do
     echo "`date` -- Tenant hydration: always unzip the sql bundle " >> #{node["log_dir"]}/dashboardsOnboarding.log
     tar xzf #{node["sql_bundle"]}#{node["SAAS_version"]}.tgz
 
-    # echo "`date` -- Tenant Hydration: SQL Dir: #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}" >> #{node["log_dir"]}/dashboardsOnboarding.log
-    # cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/#{node["sql_dir"]}
+    # echo "`date` -- Tenant Hydration: SQL Dir: #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql" >> #{node["log_dir"]}/dashboardsOnboarding.log
+    # cd #{node["apps_dir"]}/#{node["SAAS_servicename"]}/#{node["SAAS_version"]}/sql
 
     # echo "`date` -- Tenant Hydration: db_servicename = #{node["db_service"]}, SAAS_schema_user = #{node["SAAS_schema_user"]}, db_port=#{node["db_port"]} db_host=#{node["db_host"]} home=#{node["dbhome"]}" >> #{node["log_dir"]}/dashboardsOnboarding.log
     # export LD_LIBRARY_PATH=#{node["dbhome"]}/lib
@@ -74,7 +74,7 @@ end
 # Executing the Tenant Hydration SQL file
 execute "run_tenant_hydration_sql" do
     cwd tenant_hydration_schema_script_dir
-    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["internalTenantID"]} >> #{node["log_dir"]}/dashboardsOnboarding.log"}
+    command lazy {"#{node["dbhome"]}/bin/sqlplus #{node["db_url"]} @#{tenant_hydration_sql_filename} #{node["internalTenantID"]} #{node["SAAS_schema_sql_root_dir"]} >> #{node["log_dir"]}/dashboardsOnboarding.log"}
 end
 
 

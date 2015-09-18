@@ -6,10 +6,13 @@
     optimizeCss: "standard",
     modules: [
         {
-            name: "builderMain"
+                name: "builderMain"
         },
         {
         	name: "homeMain"
+        },
+	{
+        	name: "welcomeMain"
         }
     ],
     paths: {
@@ -41,5 +44,6 @@
         'dbs': '../js',
         'require':'empty:',
         'prefutil':'empty:',
+	'ckeditor': 'empty:'
     }
 })

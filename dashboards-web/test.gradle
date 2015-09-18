@@ -17,12 +17,12 @@ jar {
 
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
-    appendix = 'integ-tests-sprint39'
+    appendix = 'integ-tests'
 }
 dependencies {
 
 	lrgConfig project(':dashboards-entities') { transitive = false }
-	lrgConfig project(':dashboards-core')   { transitive = false }
+	lrgConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+')   { transitive = false }
 	lrgConfig project(':dashboards-web')   { transitive = false }
 	lrgConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
 //	lrgConfig(group: 'javax', name: 'ejb', version: '3.2.0')

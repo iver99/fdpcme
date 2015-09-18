@@ -357,11 +357,10 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {Object} 
              */
             self.getDefaultHeader = function() {
-                var defHeader = {
-//                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
-                    "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
-                    "X-REMOTE-USER":self.tenantName+'.'+self.userName};
+                var defHeader = {};
                 if (self.isDevMode()){
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
+                    defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
@@ -545,7 +544,13 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {Object} 
              */
             self.getSavedSearchServiceRequestHeader=function() {
-                return self.getDefaultHeader();
+                var defHeader = {};
+                if (self.isDevMode()){
+                    defHeader["OAM_REMOTE_USER"] = self.tenantName+'.'+self.userName;
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
+                oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
+                return defHeader;
             };
             
             /**
@@ -654,12 +659,13 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                                 var detailMsg = null;
                                 //Show retrying message detail
                                 detailMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL : 
-                                        'Retrying to connect to your cloud service. Retry count: {0}.';
-                                detailMsg = self.formatMessage(detailMsg, retryCount);
+                                        'Retrying to connect to your cloud service now...';
+//                                detailMsg = self.formatMessage(detailMsg, retryCount);
                                 messageObj = {
                                     id: messageId, 
                                     action: 'show', 
                                     type: 'warn', 
+                                    category: 'retry_in_progress',
                                     summary: summaryMsg, 
                                     detail: detailMsg};
 
@@ -684,21 +690,22 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
 
                                 //Set failure message to be shown on UI after retries
                                 var errorSummaryMsg = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY : 
-                                            'Attempts to connect to your cloud service failed after {0} tries.';
-                                errorSummaryMsg = self.formatMessage(errorSummaryMsg, retryLimit);
+                                            'Cloud services is not reachable at this time.';
+//                                errorSummaryMsg = self.formatMessage(errorSummaryMsg, retryLimit);
                                     
                                 var errorDetailMsg = null;
                                 if (showMessages === 'all') {
                                     var responseErrorMsg = getMessageFromXhrResponse(jqXHR);
                                     errorDetailMsg = responseErrorMsg !== null ? responseErrorMsg : 
                                             (isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL : 
-                                            'Could not connect to your cloud service.');
-                                    errorDetailMsg = self.formatMessage(errorDetailMsg);
+                                            'Try again later or contact Oracle Support Services if it persists.');
+//                                    errorDetailMsg = self.formatMessage(errorDetailMsg);
                                 }
                                 messageObj = {
                                     id: self.getGuid(), 
                                     action: 'show', 
                                     type: "error", 
+                                    category: 'retry_fail',
                                     summary: errorSummaryMsg,
                                     detail: errorDetailMsg};
 
@@ -796,8 +803,8 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns 
              */ 
             self.showMessage = function(message) {
-                if (message) {
-                    message.category = 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE';
+                if (message && typeof(message) === "object") {
+                    message.tag = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
                     window.postMessage(message, window.location.href);
                 }
             };
@@ -864,6 +871,33 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
                 title = title + title_suffix;
                 return title;
             }
+            
+            self.setupSessionLifecycleTimeoutTimer = function(sessionExpiryTime, warningDialogId) {
+                //Get session expiry time and do session timeout handling
+                if (sessionExpiryTime && sessionExpiryTime.length >= 14) {
+                    var now = new Date().getTime();
+                    //Get UTC session expiry time
+                    var utcSessionExpiry = Date.UTC(sessionExpiryTime.substring(0,4),
+                        sessionExpiryTime.substring(4,6)-1, sessionExpiryTime.substring(6,8), 
+                        sessionExpiryTime.substring(8,10), sessionExpiryTime.substring(10,12), 
+                        sessionExpiryTime.substring(12,14));
+                    //Caculate wait time for client timer which will show warning dialog when session expired
+                    //Note: the actual session expiry happens about 40 secs - 1 min before the time we get from 
+                    //SESSION_EXP header, so set the timer for session expiry to be 1 min before SESSION_EXP
+                    var waitTimeBeforeWarning = utcSessionExpiry - now - 60*1000;
+                    //Show warning dialog when session expired
+                    setTimeout(function(){showSessionTimeoutWarningDialog(warningDialogId);}, waitTimeBeforeWarning);
+                }
+            };
+
+            function showSessionTimeoutWarningDialog(warningDialogId) {
+                //Clear interval for extending user session
+                if (window.intervalToExtendCurrentUserSession)
+                    clearInterval(window.intervalToExtendCurrentUserSession);
+                window.currentUserSessionExpired = true;
+                //Open sessin timeout warning dialog
+                $('#'+warningDialogId).ojDialog('open');
+            };
             
             function isValidShowMessageOption(messageOption) {
                 return messageOption === "none" || messageOption === "summary" || 
@@ -970,7 +1004,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             
             function removeMessage(messageId) {
                 if (messageId) {
-                    var messageObj = {id: messageId, category: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove'};
+                    var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove', category: 'retry_in_progress'};
                     window.postMessage(messageObj, window.location.href);
                 }
             };
@@ -1032,4 +1066,6 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
         return DashboardFrameworkUtility;
     }
 );
+
+
 
