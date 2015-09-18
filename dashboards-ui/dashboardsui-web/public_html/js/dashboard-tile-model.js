@@ -291,8 +291,12 @@ define(['knockout',
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
             
-            tile.linkText = ko.observable(tile.getParameter("linkText")? tile.getParameter("linkText").value: null);
-            tile.linkUrl = ko.observable(tile.getParameter("linkUrl")? tile.getParameter("linkUrl").value: null);
+            var linkText = tile.getParameter("linkText") ? ($("<div/>").html(tile.getParameter("linkText").value).html()) : null;
+            var linkUrl = tile.getParameter("linkUrl") ? ($("<div/>").html(tile.getParameter("linkUrl").value).html()) : null;
+            tile.linkText = ko.observable(linkText);
+            tile.linkUrl = ko.observable(linkUrl);
+//            tile.linkText = ko.observable(tile.getParameter("linkText")? tile.getParameter("linkText").value: null);
+//            tile.linkUrl = ko.observable(tile.getParameter("linkUrl")? tile.getParameter("linkUrl").value: null);
         }
         
         function DashboardTextTile(dashboard, widget, funcShow, funcReorder) {
@@ -421,7 +425,7 @@ define(['knockout',
                     if (data && data['description'] && data['description'] !== null)
                     {
                         data['description'] = $("<div/>").html(data['description']).text();
-                    }                    
+                    }
                     var dsb = ko.mapping.fromJS(data, mapping);
                     if (succCallBack)
                         succCallBack(dsb);
@@ -1568,7 +1572,7 @@ define(['knockout',
                 if (!cell) return;
                 var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
                 if(!tile || tile.type() === "TEXT_WIDGET") return;
-                tile.linkText("link to dashboard");
+                tile.linkText("Link to other dashboard");
                 var tileId = "tile" + tile.clientGuid;
                 $("#"+tileId+" .dbd-tile-link-wrapper").css("border", "0px");
                 $("#"+tileId+" .dbd-tile-link").css("display", "inline-block");

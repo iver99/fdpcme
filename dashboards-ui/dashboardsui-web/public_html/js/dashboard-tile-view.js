@@ -127,13 +127,13 @@ define(['knockout',
                     helper: "clone",
                     handle: "#dbd-left-panel-link-handle",
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_START_DRAGGING, e, t);
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_START_DRAGGING, 'start dragging left panel link', e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_DRAGGING, e, t);
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, e, t);
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, 'stop dragging left panel link', e, t);
                     }
                 });
             };
