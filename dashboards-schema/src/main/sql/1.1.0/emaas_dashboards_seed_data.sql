@@ -53,7 +53,7 @@ BEGIN
                 TILEROW := TILEROW + 1;
                 TILECOLUMN := 0;
             END IF;
-            UPDATE EMS_DASHBOARD_TILE SET TILE_ROW=TILEROW, TILE_COLUMN=TILECOLUMN, "TYPE"=0, WIDTH=TILE.WIDTH * 2, HEIGHT=1 WHERE TILE_ID=TILE.TILE_ID;
+            UPDATE EMS_DASHBOARD_TILE SET TILE_ROW=TILEROW, TILE_COLUMN=TILECOLUMN, "TYPE"=0, WIDTH=TILE.WIDTH * 2, HEIGHT=1 WHERE TILE_ID=TILE.TILE_ID AND TENANT_ID='&TENANT_ID';
             --DBMS_OUTPUT.PUT_LINE('    Handling tile with id=' || TILE.TILE_ID || ' for dashboard with id=' || DSB.DASHBOARD_ID || '. Its width is ' || TILE.WIDTH || '(new width is ' || TILE.WIDTH * 2 || '). Its original position is ' || TILE.POSITION || '. Its new position is (' || TILEROW || ',' || TILECOLUMN || ')');
             TILECOLUMN := TILECOLUMN + TILE.WIDTH * 2;
         END LOOP;
@@ -70,33 +70,6 @@ EXCEPTION
     RAISE;
 END;
 /
-
-REM Update LA OOB and user created WIDGET METADATA in EMS_DASHBOARD_TILE table according to latest LA side change
-DECLARE
-  V_COUNT NUMBER;
-BEGIN
-  SELECT COUNT(1) INTO V_COUNT FROM EMS_DASHBOARD_TILE WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_NAME  ='LoganService'  AND WIDGET_KOC_NAME IN ('LA_WIDGET_BAR','LA_WIDGET_PIE','LA_WIDGET_HISTOGRAM');
-  IF (V_COUNT=0) THEN
-    DBMS_OUTPUT.PUT_LINE('LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE has been updated before for tenant: &TENANT_ID, no need to update again');  
-  ELSE
-    UPDATE EMS_DASHBOARD_TILE
-    SET WIDGET_KOC_NAME  ='emcla-visualization',
-      WIDGET_VIEWMODE    ='/js/viewmodel/search/widget/VisualizationWidget.js',
-      WIDGET_TEMPLATE    ='/html/search/widgets/visualizationWidget.html'
-    WHERE PROVIDER_NAME  ='LoganService' 
-    AND TENANT_ID='&TENANT_ID' 
-    AND WIDGET_KOC_NAME IN ('LA_WIDGET_BAR','LA_WIDGET_PIE','LA_WIDGET_HISTOGRAM');
-    COMMIT;
-    DBMS_OUTPUT.PUT_LINE('Update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE successfully for tenant: &TENANT_ID');  
-  END IF;
-EXCEPTION
-WHEN OTHERS THEN
-  ROLLBACK;
-  DBMS_OUTPUT.PUT_LINE('Failed to update LA WIDGET META DATA in Schema object: EMS_DASHBOARD_TILE for tenant: &TENANT_ID due to '||SQLERRM);   
-  RAISE;
-END;
-/
-
 
 
 
