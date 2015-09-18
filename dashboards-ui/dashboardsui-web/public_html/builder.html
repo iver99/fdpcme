@@ -350,20 +350,27 @@
                             </div>
                         </div>
                     </div>
-                    <div id="dbd-left-panel-widgets" class="fit-size" style="width: 100%; height: auto; overflow-y: auto; position: relative;">
+                    <div id="dbd-left-panel-widgets" class="fit-size" style="width: 100%; height: auto; overflow-x: hidden; overflow-y: auto; position: relative;">
                         <div class="oj-col" style="width: 100%;" data-bind="foreach: widgets">
-                            <div style="width: 160px; height: 30px;" data-bind="event: {mouseOver: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                <a href="#" data-bind="text: WIDGET_NAME, attr: {title: WIDGET_NAME}" 
-                                   style="float: left; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></a>
+                            <div style="width: 190px; height: 30px;" class="dbd-left-panel-widget"
+                                 data-bind="event: {mouseOver: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
+                                <div class="dbd-left-panel-widget-text" style="padding-right: 35px; float: left; width: 155px; white-space: nowrap; 
+                                            overflow: hidden; text-overflow: ellipsis; display: block; margin-right: -35px; margin-top: 9px; cursor: move;">
+                                    <span data-bind="text:WIDGET_NAME, attr: {title: WIDGET_NAME}"></span>
+                                </div>
+                                <button class="oj-button-half-chrome" data-bind="click: $root.widgetGoDataExploreHandler,
+                                    ojComponent: {component: 'ojButton', label: 'Go To Data Explorer', display: 'icons', 
+                                    icons: {start:'left-panel-dbd-widget-goto-icon'}}" style="margin: 0px;"> 
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling" style="height: 210px;">
                         <div style="height: 30px; border-top: 1px solid #d6dfe6; padding-top: 10px;">
                             <div class="oj-row">
-                                <div id="dbd-left-panel-text" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: pointer;">
+                                <div id="dbd-left-panel-text" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: move;">
                                     <div id="dbd-left-panel-text-handle">Text</div>
-                                    <div id="left-panel-helper" class="left-panel-helper">
+                                    <div id="left-panel-text-helper" class="left-panel-text-helper">
                                         <p><span style="font-size: 1.2em; font-weight: bold;">Double click here to edit text<span></p>
                                     </div>
                                 </div>
@@ -477,7 +484,7 @@
                                                         <li id="configure">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/qual_gear_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_CFG')}"/>
+                                                                    <img src="css/images/func_arrowbox_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_CFG')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_CFG')"></span>
                                                             </a>

@@ -98,18 +98,32 @@ define(['knockout',
             self.showPanel = ko.observable(true);
             
             self.initialize = function() {
-                self.initDraggable();
                 self.builder.addBuilderResizeListener(self.resizeEventHandler);
-                $("#dbd-left-panel-widgets-page-input").keyup(function(event) {
+                self.loadWidgets();
+                self.initDraggable();
+                $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
                     var replacedValue = this.value.replace(/[^0-9\.]/g, '');
                     if (this.value !== replacedValue) {
                         this.value = replacedValue;
                     }
                 });
-                self.loadWidgets();
             };
             
             self.initDraggable = function() {
+                $(".dbd-left-panel-widget-text").draggable({
+                    helper: "clone",
+//                    handle: "span",
+                    scroll: false,
+                    start: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'start dragging left panel widget', e, t);
+                    },
+                    drag: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                    },
+                    stop: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'stop dragging left panel widget', e, t);
+                    }
+                });
                 $("#dbd-left-panel-text").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-text-handle",
@@ -127,7 +141,7 @@ define(['knockout',
             
             self.resizeEventHandler = function(width, height) {
                 $('#dbd-left-panel').height(height);
-                $('#left-panel-helper').css("width", width - 20);
+                $('#left-panel-text-helper').css("width", width - 20);
             };
             
             self.loadWidgets = function() {
@@ -168,6 +182,11 @@ define(['knockout',
             self.hideLeftPanel = function() {
                 self.showPanel(false);
                 builder.triggerBuilderResizeEvent('resize builder after hide left panel');
+            };
+            
+            self.widgetGoDataExploreHandler = function(widget) {
+                var url = dtm.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
+                url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
             };
             
             self.widgetMouseOverHandler = function() {
@@ -667,6 +686,10 @@ define(['knockout',
             self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
             self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
             
+            self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
+            self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
+            self.EVENT_NEW_WIDGET_STOP_DRAGGING = "EVENT_NEW_WIDGET_STOP_DRAGGING";
+            
             function Dispatcher() {
                 var dsp = this;
                 dsp.queue = [];
@@ -711,6 +734,18 @@ define(['knockout',
             
             self.addNewTextStopDraggingListener = function(listener) {
                 self.addEventListener(self.EVENT_NEW_TEXT_STOP_DRAGGING, listener);
+            };
+            
+            self.addNewWidgetStartDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);
+            };
+            
+            self.addNewWidgetDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_WIDGET_DRAGGING, listener);
+            };
+            
+            self.addNewWidgetStopDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_WIDGET_STOP_DRAGGING, listener);
             };
             
             self.triggerBuilderResizeEvent = function(message) {
