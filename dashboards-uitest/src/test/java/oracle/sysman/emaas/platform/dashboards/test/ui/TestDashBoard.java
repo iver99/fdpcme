@@ -184,7 +184,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 		String widgetName = "Database Errors Trend";
 		//add widget
-		DashBoardUtils.addWidget(1,parentWindow,widgetName,,"DBA_Name_Modify","DBA_DESC_MODIFY");
+		DashBoardUtils.addWidget(1,parentWindow,widgetName,"DBA_Name_Modify","DBA_DESC_MODIFY");
 				
 		DashBoardUtils.waitForMilliSeconds(500);
 		
