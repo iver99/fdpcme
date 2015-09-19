@@ -27,10 +27,8 @@ bash "checkTenantID" do
   not_if { node['internalTenantID'] }
 end
 
-# Step 1: get the datasource information so we could connect
-#   to the database. If for any reason, this failed, most likely
-#   is caused by bad parameters
-include_recipe 'cookbook-emcs-emsaas-weblogic::datasource_dependency'
+#Use lcm db lookup
+include_recipe 'cookbook-emcs-lcm-rep-manager-service::db_lookup'
 
 # Set the ORACLE_HOME and LD library so we can run SQLPLUS
 ruby_block "set_OracleHome" do
