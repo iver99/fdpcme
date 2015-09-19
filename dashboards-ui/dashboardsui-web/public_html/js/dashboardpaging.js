@@ -157,13 +157,18 @@ DashboardPaging.prototype.setPage = function(v, opts)
   this._page = value;
   if (this._page >= 0 && this._page === previousPage) 
   {
+      var _event = {data: self.dataWindow, startIndex: self.startIndex()};
+      if (options['silent'] !== true)
+      {
+          this.handleEvent("sync", _event);
+      }
       return Promise.resolve(null);
   }
   this._startIndex = value * this.pageSize;
   
   return new Promise(function(resolve, reject)
   {
-    self.fetch({'startIndex': self._startIndex, 
+    self.fetch({'startIndex': self._startIndex, 'silent': options['silent'],
             'success': function() {
                 DashboardPaging.superclass.handleEvent.call(self, oj.PagingModel.EventType['PAGE'], {'page' : self._page, 'previousPage' : previousPage});
                 if ($.isFunction(_successCallback))
@@ -342,7 +347,10 @@ DashboardPaging.prototype._fetch = function(options)
 DashboardPaging.prototype._processError = function(opts, jqXHR, textStatus, errorThrown) {
     var self = this, options = opts || {}, _event = null;
     _event = {data: self.dataWindow, startIndex: self.startIndex()};
-    this.handleEvent("sync", _event);
+    if (options['silent'] !== true)
+    {
+        this.handleEvent("sync", _event);
+    }
     if (options['error']) {
         options['error'](jqXHR, textStatus, errorThrown);
     }
@@ -354,7 +362,10 @@ DashboardPaging.prototype._processSuccess = function(opts, eventType, event) {
     {
         _event = {data: self.dataWindow, startIndex: self.startIndex()};
     }
-    this.handleEvent(eventType || "sync", _event);
+    if (options['silent'] !== true)
+    {
+        this.handleEvent(eventType || "sync", _event);
+    }
     
     if (options['success']) {
         options['success']();

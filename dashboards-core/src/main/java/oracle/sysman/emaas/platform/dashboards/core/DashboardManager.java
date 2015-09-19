@@ -674,20 +674,40 @@ public class DashboardManager
 			//			sb.append(" and p.deleted = 0 ");
 		}
 
-		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)) {
+		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
 			sb.append(" order by lower(p.name), p.name, p.dashboard_Id DESC");
 		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME.equals(orderBy)) {
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(orderBy)) {
+			sb.append(" order by lower(p.name) DESC, p.name DESC, p.dashboard_Id DESC");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(orderBy)) {
 			sb.append(" order by CASE WHEN p.creation_Date IS NULL THEN 0 ELSE 1 END DESC, p.creation_Date DESC, p.dashboard_Id DESC");
 		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)) {
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(orderBy)) {
+			sb.append(" order by CASE WHEN p.creation_Date IS NULL THEN 0 ELSE 1 END, p.creation_Date, p.dashboard_Id");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(orderBy)) {
 			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
 		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)) {
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(orderBy)) {
+			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END, le.access_Date, p.dashboard_Id");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(orderBy)) {
 			sb.append(" order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END DESC, p.dashboard_Id DESC");
 		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER.equals(orderBy)) {
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(orderBy)) {
+			sb.append(" order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END, p.dashboard_Id");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(orderBy)) {
 			sb.append(" order by lower(p.owner), p.owner, lower(p.name), p.name, p.dashboard_Id DESC");
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(orderBy)) {
+			sb.append(" order by lower(p.owner) DESC, p.owner DESC, lower(p.name), p.name, p.dashboard_Id DESC");
 		}
 		else {
 			//default order by
