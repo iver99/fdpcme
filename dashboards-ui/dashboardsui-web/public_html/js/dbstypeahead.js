@@ -39,7 +39,7 @@ $.widget( "dbs.dbsTypeAhead", {
 		// event handlders
 		response: null,
                 acceptInput: undefined,
-                selfSearchStart: undefined,
+                selfSearchStart: undefined
 	},
 
 	requestIndex: 0,
