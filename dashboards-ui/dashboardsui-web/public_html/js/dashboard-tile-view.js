@@ -34,11 +34,368 @@ define(['knockout',
                     searchObject.getAttribute("url"),
                     searchObject.getAttribute("chartType"));
         }
+
+        function WidgetDataSource() {
+            var self = this;
+            var DEFAULT_WIDGET_PAGE_SIZE = 20;
             
-        function DashboardTilesView(dashboard, dtm) {
+            self.loadWidgetData = function(page, keyword, successCallback) {
+                initialize(page);
+                loadWidgets(keyword);
+                successCallback && successCallback(self.page, self.widget, self.totalPages);
+            };
+            
+            function initialize(page) {
+                self.widget = [];
+                self.totalPages = 1;
+                self.page = page;
+            }
+            
+            function loadWidgets(keyword) {
+                var widgetsUrl = '/sso.static/savedsearch.widgets';
+                if (dfu.isDevMode()){
+                    widgetsUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                }
+
+                dfu.ajaxWithRetry({
+                    url: widgetsUrl,
+                    headers: dfu.getDashboardsRequestHeader(),
+                    success: function(data) {
+                        data && data.length > 0 && (filterWidgetsData(data, keyword));
+                    },
+                    error: function(res){
+                        oj.Logger.error('Error when fetching widgets by URL: '+ widgetsUrl + '.');
+                    },
+                    async: false
+                });
+            };
+            
+            function filterWidgetsData(data, keyword){
+                var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;
+                for (var i = 0; i < data.length; i++) {
+                    var widget = null;
+                    lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
+                    !lcKeyword && (widget = data[i]);
+                    widget && self.widget.push(widget);
+                    widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = 'images/sample-widget-histogram.png');
+                }
+                self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
+                self.page > self.totalPages && (self.page = self.totalPages);
+                self.page < 1 && (self.page = 1);
+                self.widget = self.widget.slice((self.page - 1) * DEFAULT_WIDGET_PAGE_SIZE, self.page * DEFAULT_WIDGET_PAGE_SIZE);
+            }
+        }
+        
+        function LeftPanelView(builder) {
+            var self = this;
+            self.builder = builder;
+            self.dashboard = builder.dashboard;
+            
+            self.keyword = ko.observable('');
+            self.page = ko.observable(1);
+            self.widgets = ko.observableArray([]);
+            self.totalPages = ko.observable(1);
+            
+            self.showPanel = ko.observable(true);
+            
+            self.initialize = function() {
+                self.builder.addBuilderResizeListener(self.resizeEventHandler);
+                self.loadWidgets();
+                self.initDraggable();
+                $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
+                    var replacedValue = this.value.replace(/[^0-9\.]/g, '');
+                    if (this.value !== replacedValue) {
+                        this.value = replacedValue;
+                    }
+                });
+            };
+            
+            self.initDraggable = function() {
+                $(".dbd-left-panel-widget-text").draggable({
+                    helper: "clone",
+//                    handle: "span",
+                    scroll: false,
+                    start: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'start dragging left panel widget', e, t);
+                    },
+                    drag: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                    },
+                    stop: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'stop dragging left panel widget', e, t);
+                    }
+                });
+                $("#dbd-left-panel-text").draggable({
+                    helper: "clone",
+                    handle: "#dbd-left-panel-text-handle",
+                    start: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_START_DRAGGING, 'start dragging left panel text', e, t);
+                    },
+                    drag: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_DRAGGING, null, e, t);
+                    },
+                    stop: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, 'stop dragging left panel text', e, t);
+                    }
+                });
+                $("#dbd-left-panel-link").draggable({
+                    helper: "clone",
+                    handle: "#dbd-left-panel-link-handle",
+                    start: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_START_DRAGGING, 'start dragging left panel link', e, t);
+                    },
+                    drag: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_DRAGGING, null, e, t);
+                    },
+                    stop: function(e, t) {
+                        builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, 'stop dragging left panel link', e, t);
+                    }
+                });
+            };
+            
+            self.resizeEventHandler = function(width, height) {
+                $('#dbd-left-panel').height(height);
+                $('#left-panel-text-helper').css("width", width - 20);
+            };
+            
+            self.loadWidgets = function() {
+                new WidgetDataSource().loadWidgetData(self.page(), self.keyword(), function(page, widgets, totalPages) {
+                    self.widgets([]);
+                    if (widgets && widgets.length > 0) {
+                        for (var i = 0; i < widgets.length; i++)
+                            self.widgets.push(ko.mapping.fromJS(widgets[i]));
+                    }
+                    totalPages !== self.totalPages() && self.totalPages(totalPages);
+                });
+            };
+            
+            self.dashboardPageChanged = function(e, d) {
+                if (d.option !== "value" || !d.value)
+                    return;
+                self.loadWidgets();
+            };
+            
+            self.searchWidgetsClicked = function() {
+                self.page(1);
+                self.loadWidgets();
+            };
+            
+            self.clearWidgetSearchInputClicked = function() {
+                if (self.keyword()) {
+                    self.keyword(null);
+                    self.searchWidgetsClicked();
+                }
+            };
+            
+            self.showLeftPanel = function() {
+                self.showPanel(true);
+                self.initDraggable();
+                builder.triggerBuilderResizeEvent('show left panel');
+            };
+            
+            self.hideLeftPanel = function() {
+                self.showPanel(false);
+                builder.triggerBuilderResizeEvent('resize builder after hide left panel');
+            };
+            
+            self.widgetGoDataExploreHandler = function(widget) {
+                var url = dtm.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
+                url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
+            };
+            
+            self.widgetMouseOverHandler = function(widget) {
+                if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
+                   $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-goto-'+widget.WIDGET_UNIQUE_ID()), 
+                   {
+                       my : "start center", at : "end+20 center"
+                   });
+               }
+            };
+            
+            self.widgetMouseOutHandler = function(widget) {
+                if ($('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
+                    $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
+                }
+            };
+        }
+        
+//        function TooltipHelper(rootElement, popupDiv)
+//        {
+//           var self = this;
+//           this.initialize(rootElement, popupDiv);
+//
+//           self.initialize = function(rootElement, popupDiv)
+//           {
+//               self._AUTO_TIMEOUT = 3000;
+//               self._OPEN_DELAY = 500;
+//
+//               self._popupDiv = popupDiv;
+//               self._rootElement = rootElement;
+//
+////               var tooltipPopup = $("<div>").uniqueId();
+////               tooltipPopup.css("max-width", "340px");
+//               popupDiv.appendTo(rootElement);
+//
+//               self._tooltipPopupId = "#" + popupDiv.attr("id");
+//               popupDiv.ojPopup();
+//
+//               var callbackClearTimeout = $.proxy(self._handleClearTimeout, self);
+//               var callbackSetTimeout = $.proxy(self._handleSetTimeout, self);
+//
+//               popupDiv.ojPopup(
+//               {
+//                   position : 
+//                   {
+//                       my : "start top+10", at : "start end"
+//                   },
+//                   initialFocus : "none", 
+//                   autoDismiss : "focusLoss", 
+//                   beforeOpen : callbackSetTimeout, 
+//                   beforeClose : callbackClearTimeout, 
+//                   focus : callbackClearTimeout
+//               });
+//
+//               var callbackOpen = self._callbackOpen = $.proxy(self._handleOpen, self);
+//               var callbackClose = self._callbackClose = $.proxy(self._handleClose, self);
+//
+//               rootElement[0].addEventListener("mouseenter", callbackOpen, true);
+//               rootElement[0].addEventListener("mouseleave", callbackClose, true);
+//               rootElement[0].addEventListener("focus", callbackOpen, true);
+//           };
+//
+//           self._handleOpen = function (event)
+//           {
+//               var target = event.target;
+//               event = $.Event(event);
+////               var title = self._getTitle(target);
+//
+//               var tooltipPopupId = self._tooltipPopupId;
+//               var popup = $(tooltipPopupId);
+//
+//               var isOpen = !popup.ojPopup("isOpen");
+//               if (isOpen)
+//               {
+//                   popup.ojPopup("close");
+//               }
+//               else {
+////                   var oldTitle = popup.text();
+////                   if (oldTitle === title)
+////                       return;
+//
+//                   setTimeout(function ()
+//                   {
+////                       popup.html(title);
+//                       popup.ojPopup("open", target);
+//                   },
+//                   self._OPEN_DELAY);
+//               }
+//           };
+//
+//           self._handleSetTimeout = function (event)
+//           {
+//               self._timeoutId = window.setTimeout(self._callbackClose, self._AUTO_TIMEOUT);
+//           };
+//
+//           self._handleClearTimeout = function (event)
+//           {
+//               var timeoutId = self._timeoutId;
+//               delete self._timeoutId;
+//               window.clearTimeout(timeoutId);
+//           };
+//
+//           self._handleClose = function (event)
+//           {
+//               var tooltipPopupId = self._tooltipPopupId;
+//               var popup = $(tooltipPopupId);
+//
+//               var isOpen = !popup.ojPopup("isOpen");
+//               if (!isOpen)
+//               {
+//                   popup.ojPopup("close");
+//               }
+//           };
+//
+////           self._getTitle = function (node)
+////           {
+////               var helpDataAttr = self.popupDiv;
+////               var i = 0;
+////               var MAX_PARENTS = 5;
+////
+////               while ((node != null) && (i++ < MAX_PARENTS))
+////               {
+////                   if (node.nodeType == 1)
+////                   {
+////                       var title = node.getAttribute(helpDataAttr);
+////                       if (title && title.length > 0)
+////                           return title;
+////                   }
+////                   node = node.parentNode;
+////               }
+////               return null;
+////           };
+//
+//           self.destroy = function ()
+//           {
+//               var callbackOpen = self._callbackOpen;
+//               delete self._callbackOpen;
+//
+//               var callbackClose = self._callbackClose;
+//               delete self._callbackClose;
+//
+//               var rootElement = self._rootElement;
+//               delete self._rootElement;
+//
+//               rootElement[0].removeEventListener("mouseenter", callbackOpen, true);
+//               rootElement[0].removeEventListener("focus", callbackOpen, true);
+//               rootElement[0].removeEventListener("mouseleave", callbackClose, true);
+//
+//               var tooltipPopupId = self._tooltipPopupId;
+//               delete self._tooltipPopupId;
+//
+//               var popup = $(tooltipPopupId);
+//               popup.remove();
+//           };
+//       }
+        
+        function ResizableView(builder) {
+            var self = this;
+            self.builder = builder;
+            
+            self.onResizeFitSize = function(width, height) {
+                self.rebuildElementSet(),
+                self.$list.each(function() {
+                    var elem = $(this)
+                    , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
+                    , h = 0;
+                    if (v_siblings && v_siblings.length > 0) {
+                        for (var i = 0; i < v_siblings.length; i++) {
+                            h += $(v_siblings[i]).outerHeight();
+                        }
+                        elem.height(height - h);
+                    }
+                });
+            };
+            
+            self.rebuildElementSet = function() {
+                self.$list = $(".fit-size");
+            };
+            
+            self.initialize = function() {
+                builder.addBuilderResizeListener(self.onResizeFitSize);
+            };
+        }
+            
+        function DashboardTilesView(builder, dtm) {
             var self = this;
             self.dtm = dtm;
-            self.dashboard = dashboard;
+            self.builder = builder;
+            self.dashboard = builder.dashboard;
+            
+            self.resizeEventHandler = function(width, height, leftWidth) {
+                $('#tiles-col-container').css("left", leftWidth);
+                $('#tiles-col-container').width(width - leftWidth);
+                $('#tiles-col-container').height(height);
+            };
             
             self.getTileElement = function(tile) {
                 if (!tile || !tile.clientGuid)
@@ -87,47 +444,8 @@ define(['knockout',
                 if ($('#widget-area').hasClass('dbd-support-transition'))
                     $('#widget-area').removeClass('dbd-support-transition');
             };
-        }
-        
-//        function TileUrlEditView() {
-//            var self = this;
-//            self.tileToChange = ko.observable();
-//            self.url = ko.observable();
-//            self.tracker = ko.observable();
-//            
-//            self.setEditedTile = function(tile) {
-//                self.tileToChange(tile);
-//                self.originalUrl = tile.url();
-//            };
-//            
-//            self.applyUrlChange = function() {
-//                var trackerObj = ko.utils.unwrapObservable(self.tracker),
-//                    hasInvalidComponents = trackerObj["invalidShown"];
-//                if (hasInvalidComponents) {
-//                    trackerObj.showMessages();
-//                    trackerObj.focusOnFirstInvalid();
-//                } else
-//                    $('#urlChangeDialog').ojDialog('close');
-//            };
-//            
-//            self.cancelUrlChange = function() {
-//                self.tileToChange().url(self.originalUrl);
-//                $('#urlChangeDialog').ojDialog('close');
-//            };
-//        }
-        
-        function TimeSliderDisplayView() {
-            var self = this;
-            self.bindingExists = false;
             
-            self.showOrHideTimeSlider = function(show) {
-               var timeControl = $('#global-time-control');
-               if (show){
-                   timeControl.show();
-               }else{
-                   timeControl.hide();
-               }
-            };
+            self.builder.addBuilderResizeListener(self.resizeEventHandler);
         }
         
         function ToolBarModel(dashboard, tilesViewModel) {
@@ -452,55 +770,6 @@ define(['knockout',
                 });
             };
             
-//            self.isFavorite = ko.observable(false);
-//            self.initializeIsFavorite = function() {
-//                dtm.loadIsFavorite(self.dashboardId, function(isFavorite){
-//                    self.isFavorite(isFavorite);
-//                }, function(e) {
-//                    console.log(e.errorMessage());
-//                    oj.Logger.log("Error to initialize is favorite: " + e.errorMessage());
-//                });
-//            }();  
-            
-//            self.addToFavorites = function() {
-//                dtm.setAsFavorite(self.dashboardId, function() {
-//                    self.isFavorite(true);
-////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-////                    outputData.eventType = "ADD_TO_FAVORITES";
-////                    if (window.opener && window.opener.childMessageListener) {
-////                        var jsonValue = JSON.stringify(outputData);
-////                        console.log(jsonValue);
-////                        window.opener.childMessageListener(jsonValue);
-////                        if (window.opener.navigationsModelCallBack())
-////                        {
-////                            navigationsModel(window.opener.navigationsModelCallBack());
-////                        }
-////                    }
-//                }, function(e) {
-//                    console.log(e.errorMessage());
-//                    oj.Logger.log("Error to add to favorite: " + e.errorMessage());
-//                });
-//            };
-//            self.deleteFromFavorites = function() {
-//                dtm.removeFromFavorite(self.dashboardId, function() {
-//                    self.isFavorite(false);
-////                    var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
-////                    outputData.eventType = "REMOVE_FROM_FAVORITES";
-////                    if (window.opener && window.opener.childMessageListener) {
-////                        var jsonValue = JSON.stringify(outputData);
-////                        console.log(jsonValue);
-////                        window.opener.childMessageListener(jsonValue);
-////                        if (window.opener.navigationsModelCallBack())
-////                        {
-////                            navigationsModel(window.opener.navigationsModelCallBack());
-////                        }
-////                    }
-//                }, function(e) {
-//                    console.log(e.errorMessage());
-//                    oj.Logger.log("Error to delete from favorite: " + e.errorMessage());
-//                });
-//            };
-            
             //Add widget dialog
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             
@@ -566,9 +835,111 @@ define(['knockout',
             tilesViewModel.registerTileRemoveCallback(self.handleAddWidgetTooltip);
         }
         
+        function DashboardBuilder(dashboard) {
+            var self = this;
+            self.dashboard = dashboard;
+            
+            self.EVENT_BUILDER_RESIZE = "EVENT_BUILDER_RESIZE";
+            
+            self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
+            self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
+            self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
+            
+            self.EVENT_NEW_LINK_START_DRAGGING = "EVENT_NEW_LINK_START_DRAGGING";
+            self.EVENT_NEW_LINK_DRAGGING = "EVENT_NEW_LINK_DRAGGING";
+            self.EVENT_NEW_LINK_STOP_DRAGGING = "EVENT_NEW_LINK_STOP_DRAGGING";
+
+            self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
+            self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
+            self.EVENT_NEW_WIDGET_STOP_DRAGGING = "EVENT_NEW_WIDGET_STOP_DRAGGING";
+            
+            function Dispatcher() {
+                var dsp = this;
+                dsp.queue = [];
+                
+                this.registerEventHandler = function(event, handler) {
+                    if (!event || !handler)
+                        return;
+                    if (!dsp.queue[event])
+                        dsp.queue[event] = [];
+                    if (dsp.queue[event].indexOf(handler) !== -1)
+                        return;
+                    dsp.queue[event].push(handler);
+                    //console.log('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
+                };
+                
+                dsp.triggerEvent = function(event, p1, p2, p3) {
+                    if (!event || !dsp.queue[event])
+                        return;
+                    for (var i = 0; i < dsp.queue[event].length; i++) {
+                        dsp.queue[event][i](p1, p2, p3);
+                    }
+                };
+            }
+            
+            self.dispatcher = new Dispatcher();
+            self.addEventListener = function(event, listener) {
+                self.dispatcher.registerEventHandler(event, listener);
+            };
+            
+            self.triggerEvent = function(event, message, p1, p2, p3) {
+//                console.log('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
+                self.dispatcher.triggerEvent(event, p1, p2, p3);
+            };
+            
+            self.addNewTextStartDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_TEXT_START_DRAGGING, listener);
+            };
+            
+            self.addNewTextDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_TEXT_DRAGGING, listener);
+            };
+            
+            self.addNewTextStopDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_TEXT_STOP_DRAGGING, listener);
+            };
+            
+            self.addNewLinkStartDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_LINK_START_DRAGGING, listener);
+            };
+            
+            self.addNewLinkDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_LINK_DRAGGING, listener);
+            };
+            
+            self.addNewLinkStopDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
+            }
+            
+            self.addNewWidgetStartDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);
+            };
+            
+            self.addNewWidgetDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_WIDGET_DRAGGING, listener);
+            };
+            
+            self.addNewWidgetStopDraggingListener = function(listener) {
+                self.addEventListener(self.EVENT_NEW_WIDGET_STOP_DRAGGING, listener);
+            };
+            
+            self.triggerBuilderResizeEvent = function(message) {
+                var height = $(window).height() - $('#headerWrapper').outerHeight() 
+                        - $('#head-bar-container').outerHeight();
+                var width = $('#main-container').width()/* - parseInt($('#main-container').css("marginLeft"), 0)*/;
+                var leftWidth = $('#dbd-left-panel').width();
+                self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth);
+            };    
+            
+            self.addBuilderResizeListener = function(listener) {
+                self.addEventListener(self.EVENT_BUILDER_RESIZE, listener);
+            };
+        }
+        
         return {"DashboardTilesView": DashboardTilesView, 
-//            "TileUrlEditView": TileUrlEditView, 
-            "TimeSliderDisplayView": TimeSliderDisplayView,
-            "ToolBarModel": ToolBarModel};
+            "LeftPanelView": LeftPanelView,
+            "ResizableView": ResizableView,
+            "ToolBarModel": ToolBarModel, 
+            "DashboardBuilder": DashboardBuilder};
     }
 );

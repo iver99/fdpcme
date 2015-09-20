@@ -216,9 +216,12 @@ define({
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",
       "LANDING_HOME_VIDEOS_LINK": "Videos",
-      "LANDING_HOME_COMMUNITY_LINK": "Management Cloud Community"
+      "LANDING_HOME_COMMUNITY_LINK": "Management Cloud Community",
       
-
+      "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_TITLE": "Edit widget link",
+      "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_NAME_LABEL": "Name",
+      "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_URL_LABEL": "Url"
+      
 }
 });
 
