@@ -279,7 +279,6 @@ require(['knockout',
                     $('#globalBody').show();
                     tilesView.enableDraggable();
                     tilesViewModel.show();
-                    tilesView.enableMovingTransition();
 //                    var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
 //                    if (dashboard.enableTimeRange()){
 //                       timeSliderDisplayView.showOrHideTimeSlider("ON"); 
@@ -296,6 +295,7 @@ require(['knockout',
 //                    toolBarModel.showAddWidgetTooltip();
                     toolBarModel.handleAddWidgetTooltip();
                     tilesViewModel.postDocumentShow();
+                    tilesView.enableMovingTransition();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
                     });
@@ -323,17 +323,6 @@ function updateOnePageHeight(event) {
         oj.Logger.log('one page tile height is set to ' + event.data.height);
     }
 };
-
-//function truncateString(str, length) {
-//    if (str && length > 0 && str.length > length)
-//    {
-//        var _tlocation = str.indexOf(' ', length);
-//        if ( _tlocation <= 0 )
-//            _tlocation = length;
-//        return str.substring(0, _tlocation) + "...";
-//    }
-//    return str;
-//};
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);

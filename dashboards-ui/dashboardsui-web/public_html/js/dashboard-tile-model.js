@@ -602,6 +602,9 @@ define(['knockout',
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
+            data.title && (self.title = ko.observable(decodeHtml(data.title)));
+            data.linkText && (self.linkText = ko.observable(decodeHtml(data.linkText)));
+            data.linkUrl && (self.linkUrl = ko.observable(decodeHtml(data.linkUrl)));
             self.clientGuid = getGuid();
             self.sectionBreak = false;
             self.displayHeight = function() {
@@ -1157,10 +1160,11 @@ define(['knockout',
             };
             
             self.onBuilderResize = function() {
-                widgetAreaWidth = widgetAreaContainer.width();
-                self.tilesView.disableMovingTransition();
+                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
+//                console.debug('widget area width is ' + widgetAreaWidth);
+//                self.tilesView.disableMovingTransition();
                 self.show();
-                self.tilesView.enableMovingTransition();
+//                self.tilesView.enableMovingTransition();
             };
             
            self.menuItemSelect = function(event, ui) {
@@ -1182,6 +1186,7 @@ define(['knockout',
                        self.tiles.tilesReorder();
                        self.show();
                        self.notifyTileChange(tile, new TileChange("POST_DELETE"));
+                       builder.triggerEvent(builder.EVENT_TILE_RESTORED, tile);
                        break;
                    case "wider":
                        self.tiles.broadenTile(tile);
@@ -1206,10 +1211,12 @@ define(['knockout',
                    case "maximize":
                        self.maximize(tile);
                        self.notifyTileChange(tile, new TileChange("POST_MAXIMIZE"));
+                       builder.triggerEvent(builder.EVENT_TILE_MAXIMIZED, tile);
                        break;
                    case "restore":
                        self.restore(tile);
                        self.notifyTileChange(tile, new TileChange("POST_RESTORE"));
+                       builder.triggerEvent(builder.EVENT_TILE_RESTORED, tile);
                        break;
                    
                }
@@ -1310,8 +1317,10 @@ define(['knockout',
             
             self.initializeMaximization = function() {
             	var maximized = self.getMaximizedTile();
-            	if (maximized)
+            	if (maximized) {
                     self.maximize(maximized);
+                    builder.triggerEvent(builder.EVENT_TILE_MAXIMIZED, maximized);
+                }
             };
             
             self.restore = function(tile) {                
@@ -1322,7 +1331,6 @@ define(['knockout',
                 }
                 self.tilesView.enableDraggable();
                 self.show();
-                
             };
             
             self.notifyTileChange = function(tile, change){
@@ -1339,7 +1347,7 @@ define(['knockout',
             };
             
             self.show = function() {
-                widgetAreaWidth = widgetAreaContainer.width();
+//                widgetAreaWidth = widgetAreaContainer.width();
                 self.showTiles();
 //                self.tilesView.enableDraggable();
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
@@ -1462,7 +1470,7 @@ define(['knockout',
             self.reRender = function() {
                 self.tilesView.disableMovingTransition();
                 self.show();
-                self.tilesView.enableMovingTransition();
+//                self.tilesView.enableMovingTransition();
             };
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
