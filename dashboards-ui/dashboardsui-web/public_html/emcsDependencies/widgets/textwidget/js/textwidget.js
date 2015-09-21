@@ -2,6 +2,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
         function (localrequire, ko, $, oj) {
             function textWidgetViewModel(params) {
                 var self = this;
+                var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
                 var textEditor;
                 var textEditorId;
                 var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
@@ -43,7 +44,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if($("#textWidget_" + self.randomId + " #textEditorWrapper").is(":visible")) {                        
                         var textInfo = textEditor.document ? (textEditor.document.getBody().getHtml()?textEditor.document.getBody().getHtml() : defaultContent):"";
 //                        console.log(textInfo);
-                        if(!validator(textInfo)) {
+                        if(!validator(textInfo, TEXT_WIDGET_CONTENT_MAX_LENGTH)) {
                             self.showErrorMsg("block");                            
                         }else{                            
                             $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
