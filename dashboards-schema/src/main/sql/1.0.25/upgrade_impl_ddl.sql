@@ -38,7 +38,6 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.APPLICATION_TYPE exists already, no change is needed');      
   END IF;
-
 END;
 /
 

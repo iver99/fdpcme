@@ -47,22 +47,25 @@ public class EmsDashboard implements Serializable
 	private String description;
 	@Column(name = "ENABLE_TIME_RANGE", nullable = false)
 	private Integer enableTimeRange;
+	@Column(name = "ENABLE_REFRESH", nullable = false)
+	private Integer enableRefresh;
 	@Column(name = "IS_SYSTEM", nullable = false)
 	private Integer isSystem;
+
 	@Column(name = "APPLICATION_TYPE")
 	private Integer applicationType;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", nullable = false)
 	private Date creationDate;
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFICATION_DATE")
 	private Date lastModificationDate;
-
 	@Column(name = "LAST_MODIFIED_BY", length = 128)
 	private String lastModifiedBy;
 	@Column(nullable = false, length = 320)
 	private String name;
+
 	@Column(nullable = false, length = 128)
 	private String owner;
 	@Lob
@@ -71,10 +74,8 @@ public class EmsDashboard implements Serializable
 	private String screenShot;
 	@Column(name = "TENANT_ID", nullable = false, length = 32, insertable = false, updatable = false)
 	private Long tenantId;
-
 	@Column(nullable = false)
 	private Integer type;
-
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
 	@OrderBy("row, column")
 	private List<EmsDashboardTile> dashboardTileList;
@@ -84,14 +85,15 @@ public class EmsDashboard implements Serializable
 	}
 
 	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
-			Integer isSystem, Date lastModificationDate, String lastModifiedBy, String name, String owner, String screenShot,
-			Integer type, Integer applicationType)
+			Integer enableRefresh, Integer isSystem, Date lastModificationDate, String lastModifiedBy, String name, String owner,
+			String screenShot, Integer type, Integer applicationType)
 	{
 		this.creationDate = creationDate;
 		this.dashboardId = dashboardId;
 		this.deleted = deleted;
 		this.description = description;
 		this.enableTimeRange = enableTimeRange;
+		this.enableRefresh = enableRefresh;
 		this.isSystem = isSystem;
 		this.lastModificationDate = lastModificationDate;
 		this.lastModifiedBy = lastModifiedBy;
@@ -140,6 +142,14 @@ public class EmsDashboard implements Serializable
 	public String getDescription()
 	{
 		return description;
+	}
+
+	/**
+	 * @return the enableRefresh
+	 */
+	public Integer getEnableRefresh()
+	{
+		return enableRefresh;
 	}
 
 	public Integer getEnableTimeRange()
@@ -217,6 +227,15 @@ public class EmsDashboard implements Serializable
 	public void setDescription(String description)
 	{
 		this.description = description;
+	}
+
+	/**
+	 * @param enableRefresh
+	 *            the enableRefresh to set
+	 */
+	public void setEnableRefresh(Integer enableRefresh)
+	{
+		this.enableRefresh = enableRefresh;
 	}
 
 	public void setEnableTimeRange(Integer enableTimeRange)
