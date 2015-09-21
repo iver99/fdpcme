@@ -11,6 +11,7 @@
 
 define([
     'dbs/datasourcefactory',
+    'dbs/dbstablesource',
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
@@ -20,7 +21,7 @@ define([
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, oj, ko, $, dfu, pfu)
+function(dsf, dts, oj, ko, $, dfu, pfu)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -28,7 +29,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             DASHBOARDS_REST_URL = dfu.getDashboardsUrl(),
             PREFERENCES_REST_URL = dfu.getPreferencesUrl(),
             SUBSCIBED_APPS_REST_URL = dfu.getSubscribedappsUrl();
-            
+         
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
@@ -112,25 +113,6 @@ function(dsf, oj, ko, $, dfu, pfu)
         if (showWel === undefined)
         {
             self.showWelcome = true;
-            /*
-                    (function () {
-                        prefUtil.getPreference(SHOW_WELCOME_PREF_KEY, {
-                            async: false,
-                            success: function (res) {
-                                if (res['value'] === "true")
-                                {
-                                    self.showWelcome = true;
-                                }
-                                if (res['value'] === "false")
-                                {
-                                    self.showWelcome = false;
-                                }
-                            },
-                            error: function () {
-                                oj.Logger.info("Preference of Show Welcome Dialog is not set. The defualt value 'true' is applied.");
-                            }
-                        });
-                    })();*/
         }
         
         self.browseClicked = function() {
@@ -176,7 +158,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
-        self.sortBy = ko.observable('default');
+        self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
         self.comingsoonDialogModel = new comingsoonDialogModel();
@@ -190,7 +172,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         self.dashboards = ko.computed(function() {
             return (self.pagingDatasource().getWindowObservable())();
         });
-        self.dashboardsTS = ko.observable();
+        self.dashboardsTS = ko.observable(new dts.DashboardArrayTableSource([], {idAttribute: 'id'}));
         self.showPaging = ko.computed(function() {
             var _pds = ko.utils.unwrapObservable(self.pagingDatasource());
             if (_pds instanceof  oj.ArrayPagingDataSource) return false;
@@ -199,29 +181,38 @@ function(dsf, oj, ko, $, dfu, pfu)
         });
         
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
-                                                   filter['types'], filter['appTypes'], filter['owners'], function(_event) {
-                                                       //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
-                                                       var _i = 0, _rawdbs = [];
-                                                       if (_event['data'])
-                                                       {
-                                                           for (_i = 0; _i < _event['data'].length; _i++)
-                                                           {
-                                                               var _datai = _event['data'][_i].attributes;
-                                                               if (_datai['name']){
-                                                                   _datai['rawName'] = $("<div/>").text(_datai['name']).html();
-                                                               }
-                                                               if (!_datai['lastModifiedOn'])
-                                                               {
-                                                                   _datai['lastModifiedOn'] = _datai['createdOn'];
-                                                               }
-                                                               _datai['lastModifiedOnStr'] = getDateString(_datai['lastModifiedOn']);
-                                                               _rawdbs.push(_datai);
-                                                           }
-                                                       }
-                                                       self.dashboardsTS(new oj.ArrayTableDataSource(_rawdbs, {idAttribute: 'id'}));
-                                                   });
+                                                   filter['types'], filter['appTypes'], filter['owners']);
+        self.datasourceCallback = function (_event) {
+                    var _i = 0, _rawdbs = [];
+                    if (_event['data'])
+                    {
+                        for (_i = 0; _i < _event['data'].length; _i++)
+                        {
+                            var _datai = _event['data'][_i].attributes;
+                            if (!_datai['lastModifiedOn'])
+                            {
+                                _datai['lastModifiedOn'] = _datai['createdOn'];
+                            }
+                            _datai['lastModifiedOnStr'] = getDateString(_datai['lastModifiedOn']);
+                            _rawdbs.push(_datai);
+                        }
+                    }
+                    //self.dashboardsTS(new oj.ArrayTableDataSource(_rawdbs, {idAttribute: 'id'}));
+                    //var _event = _event = {data: _rawdbs, startIndex: 0};
+                    if (self.dashboardsTS() && self.dashboardsTS() !== null)
+                    {
+                        //self.dashboardsTS().handleEvent(oj.TableDataSource.EventType['SYNC'], _event);
+                        self.dashboardsTS().reset(_rawdbs);
+                    }
+                    else
+                    {
+                        self.dashboardsTS(new dts.DashboardArrayTableSource(_rawdbs, {idAttribute: 'id'}));
+                    }
+                };
         self.datasource = self.dsFactory.build("", self.pageSize());
+        
         self.datasource['pagingDS'].setPage(0, { 
+            'silent': true,
             'success': function() {
                 self.refreshPagingSource();
                 if (self.datasource['pagingDS'].totalSize() <= 0)
@@ -238,6 +229,7 @@ function(dsf, oj, ko, $, dfu, pfu)
         } );
         
         self.refreshPagingSource = function() {
+            self.datasource['pagingDS'].on("sync", self.datasourceCallback);
             self.pagingDatasource( self.datasource['pagingDS'] );
             //self.dashboardsTS(new oj.ArrayTableDataSource(self.datasource['pagingDS'].getWindow(), {idAttribute: 'id'}));
         };
@@ -370,7 +362,8 @@ function(dsf, oj, ko, $, dfu, pfu)
             
             var _addeddb = {"name": self.createDashboardModel.name(), 
                             "description": self.createDashboardModel.description(),
-                            "enableTimeRange": self.createDashboardModel.isEnableTimeRange() };
+                            "enableTimeRange": self.createDashboardModel.isEnableTimeRange(),
+                            "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
             
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
@@ -444,16 +437,98 @@ function(dsf, oj, ko, $, dfu, pfu)
             if ( _option === "checked" )
             {
                 self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
+                if (data.value == 'listview')
+                {
+                    var __sortui = self._getListTableSortUi(self.sortBy()),  _ts = self.dashboardsTS();
+                    if ( _ts && _ts !== null && __sortui !== null )
+                    {
+                        _ts.handleEvent(oj.TableDataSource.EventType['SORT'], __sortui);
+                    }
+                }
+                
+            }
+        };
+        
+        self.handleListColumnSort = function( event, ui ) {
+            if (ui)
+            {
+                var _option = ui.header + (ui.direction == 'descending' ? '_dsc' : '_asc');
+                self.sortBy([_option]);
             }
         };
         
         self.handleSortByChanged = function (context, valueParam) {
-            var _preValue = valueParam.previousValue, _value = valueParam.value;
+            var _preValue = valueParam.previousValue, _value = valueParam.value, _ts = self.dashboardsTS();
             if ( valueParam.option === "value" && _value[0] !== _preValue[0] )
             {
                 self.dsFactory.sortBy = _value[0];
-                $("#sinput").dbsTypeAhead("forceSearch");
+                if (valueParam.optionMetadata.writeback == 'shouldNotWrite')
+                {
+                    // change by set self.sortBy triggered by list table sort
+                    $("#sinput").dbsTypeAhead("forceSearch");                 
+                }
+                else
+                {
+                    // selected by user
+                    if (_ts && _ts !== null)
+                    {
+                            var __sortui = self._getListTableSortUi(_value[0]);
+                            if (__sortui === null)
+                            {
+                                //sort column not in table, clear the table header sorting icon
+                                var _headercolumns = $("#dbstable").find('.oj-table-column-header-cell');
+                                _headercolumns.data('sorted', null);
+                                var headerColumnAscLink =  $("#dbstable").find('.oj-table-column-header-asc-link.oj-enabled');
+                                headerColumnAscLink.addClass('oj-disabled');
+                                headerColumnAscLink.removeClass('oj-enabled');
+                                var headerColumnDscLink =  $("#dbstable").find('.oj-table-column-header-dsc-link.oj-enabled');
+                                headerColumnDscLink.addClass('oj-disabled');
+                                headerColumnDscLink.removeClass('oj-enabled');
+                            }
+                            else
+                            {
+                                _ts.handleEvent(oj.TableDataSource.EventType['SORT'], __sortui);
+                            }
+                        //_ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
+                    }
+                    setTimeout(function() { self._forceSearch();}, 0);
+                }
             }
+        };
+        
+        self._getListTableSortUi = function(sortOption)
+        {
+            if (sortOption == 'name_asc')
+            {
+                return {'header': 'name', 'direction': 'ascending'}; 
+            }
+            
+            if (sortOption == 'name_dsc')
+            {
+                return {'header': 'name', 'direction': 'descending'}; 
+            }
+            
+            if (sortOption == 'owner_asc')
+            {
+                return {'header': 'owner', 'direction': 'ascending'}; 
+            }
+            
+            if (sortOption == 'owner_dsc')
+            {
+                return {'header': 'owner', 'direction': 'descending'}; 
+            }
+            
+            if (sortOption == 'last_modification_date_asc')
+            {
+                return {'header': 'last_modification_date', 'direction': 'ascending'}; 
+            }
+            
+            if (sortOption == 'last_modification_date_dsc')
+            {
+                return {'header': 'last_modification_date', 'direction': 'descending'}; 
+            }
+            
+            return null;
         };
         
         self.handleTypeFilterChanged = function (event, data) {
@@ -461,7 +536,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             if ( _option === "value" )
             {
                 self.dsFactory.types = _value;
-                $("#sinput").dbsTypeAhead("forceSearch");
+                self._forceSearch();
                 self.saveDashbordsFilter(_value, self.serviceFilter(), self.creatorFilter());
             }
         };
@@ -471,7 +546,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             if ( _option === "value" )
             {
                 self.dsFactory.appTypes = _value;
-                $("#sinput").dbsTypeAhead("forceSearch");
+                self._forceSearch();
                 self.saveDashbordsFilter(self.typeFilter(), _value, self.creatorFilter());
             }
         };
@@ -481,7 +556,7 @@ function(dsf, oj, ko, $, dfu, pfu)
             if ( _option === "value" )
             {
                 self.dsFactory.owners = _value;
-                $("#sinput").dbsTypeAhead("forceSearch");
+                self._forceSearch();
                 self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), _value);
             }
         };
@@ -504,6 +579,15 @@ function(dsf, oj, ko, $, dfu, pfu)
             self.prefUtil.setPreference(DASHBOARDS_FILTER_PREF_KEY, JSON.stringify(_filter));
         };
         
+        self.typeaheadSearchStart = function (event, data)
+        {
+            var  _ts = self.dashboardsTS();
+            if ( _ts && _ts !== null )
+            {
+                _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
+            }
+        };
+        
         self.acceptInput = function (event, data)
         {
             if (data && data.length > 0)
@@ -520,13 +604,26 @@ function(dsf, oj, ko, $, dfu, pfu)
         {
             //console.log("searchResponse: "+data.content.collection.length);
             self.datasource = data.content;
-            //self.pagingDatasource(data.content['pagingDS']);
+            //self.datasourceCallback({'data': self.datasource['pagingDS'].getWindow()});
             self.refreshPagingSource();
         };
         
         self.forceSearch = function (event, data)
         {
-            $("#sinput").dbsTypeAhead("forceSearch");
+            self._forceSearch();
+        };
+        
+        self._forceSearch = function (silent, endcallback)
+        {
+            var  _ts = self.dashboardsTS();
+            if (silent !== true)
+            {
+                if ( _ts && _ts !== null )
+                {
+                    _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
+                }
+            }
+            $("#sinput").dbsTypeAhead("forceSearch", endcallback);
         };
         
         self.clearSearch = function (event, data)
@@ -542,7 +639,7 @@ function(dsf, oj, ko, $, dfu, pfu)
                         event.stopPropagation();
                         self.handleDashboardClicked(event, {'id': context.row.id, 'element': _link});
                     });
-            _link.append(context.row.rawName);
+            _link.text(context.row.name);
             $(context.cellContext.parentElement).append(_link);
         };
         

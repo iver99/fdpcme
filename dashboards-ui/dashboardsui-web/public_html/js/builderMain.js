@@ -16,7 +16,8 @@ requirejs.config({
               'emcsutl/ajax-util': 'uifwk/js/util/ajax-util',
               'emcsutl/message-util': 'uifwk/js/util/message-util',
               'ajax-util': 'uifwk/js/util/ajax-util',
-              'message-util': 'uifwk/js/util/message-util'
+              'message-util': 'uifwk/js/util/message-util',
+              'df-util': 'uifwk/js/util/df-util'
              }        
     },
     // Path mappings for the logical module names
@@ -165,7 +166,7 @@ require(['knockout',
                 template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
             });
 
-            function HeaderViewModel() {
+            function HeaderViewModel(builder) {
                 var self = this;
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
@@ -176,6 +177,16 @@ require(['knockout',
                     appId: self.appId,
                     isAdmin:true
                 };
+            
+                $("#headerWrapper").on("DOMSubtreeModified", function() {
+                    var height = $("#headerWrapper").height();
+                    if (!self.headerHeight)
+                        self.headerHeight = height;
+                    if (self.headerHeight === height)
+                        return;
+                    builder.triggerBuilderResizeEvent('resize builder after header wrapper changed from height ' + self.headerHeight + ' to height ' + height + ' ');
+                    self.headerHeight = height;
+                });
             };
             
            
@@ -207,11 +218,11 @@ require(['knockout',
     //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
     //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
                   
-                    var tilesView = new dtv.DashboardTilesView(dashboard, dtm);
-                    var tilesViewModel = new dtm.DashboardTilesViewModel(dashboard, tilesView/*, urlChangeView*/); 
+                    var builder = new dtv.DashboardBuilder(dashboard);
+                    var tilesView = new dtv.DashboardTilesView(builder, dtm);
+                    var tilesViewModel = new dtm.DashboardTilesViewModel(builder, tilesView/*, urlChangeView*/); 
                     var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewModel);
-                    var headerViewModel = new HeaderViewModel();
-                    
+                    var headerViewModel = new HeaderViewModel(builder);
                     
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
@@ -222,7 +233,7 @@ require(['knockout',
                                 dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
                             }
                         }
-                    }                    
+                    }
                     
                      ko.bindingHandlers.sortableList = {
                         init: function(element, valueAccessor) {
@@ -256,30 +267,35 @@ require(['knockout',
                     //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
-                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);   
-//                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);           
+                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);
+//                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);       
+                    var leftPanelView = new dtv.LeftPanelView(builder);
+                    ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
+                    leftPanelView.initialize();
+                    var resizable = new dtv.ResizableView(builder);
+                    resizable.initialize();
 
                     $("#loading").hide();
                     $('#globalBody').show();
                     tilesView.enableDraggable();
                     tilesViewModel.show();
                     tilesView.enableMovingTransition();
-                    var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
-                    if (dashboard.enableTimeRange()){
-                       timeSliderDisplayView.showOrHideTimeSlider("ON"); 
-                    }else{
-                       timeSliderDisplayView.showOrHideTimeSlider(null);  
-                    }
-
-                    $("#ckbxTimeRangeFilter").on({
-                        'ojoptionchange': function (event, data) {
-                            timeSliderDisplayView.showOrHideTimeSlider(data['value']);
-                        }
-                    });
+//                    var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
+//                    if (dashboard.enableTimeRange()){
+//                       timeSliderDisplayView.showOrHideTimeSlider("ON"); 
+//                    }else{
+//                       timeSliderDisplayView.showOrHideTimeSlider(null);  
+//                    }
+//
+//                    $("#ckbxTimeRangeFilter").on({
+//                        'ojoptionchange': function (event, data) {
+//                            timeSliderDisplayView.showOrHideTimeSlider(data['value']);
+//                        }
+//                    });
 
 //                    toolBarModel.showAddWidgetTooltip();
                     toolBarModel.handleAddWidgetTooltip();
-//                    tilesViewModel.postDocumentShow();
+                    tilesViewModel.postDocumentShow();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
                     });

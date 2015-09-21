@@ -31,11 +31,16 @@ define({
       "DBS_HOME_CREATE_BTN_LABEL": "Create Dashboard",
       "DBS_HOME_CREATE_BTN_TT_TITLE": "How do I use this page?",
       "DBS_HOME_SELECT_SORT_BY_LABEL": "Sort by",
-      "DBS_HOME_SELECT_SORT_ACCESS_DATE": "Last Accessed",
-      "DBS_HOME_SELECT_SORT_NAME": "Name",
-      "DBS_HOME_SELECT_SORT_CREATION_TIME": "Creation Date",
-      "DBS_HOME_SELECT_SORT_LAST_MODIFIED": "Last Modified",
-      "DBS_HOME_SELECT_SORT_LAST_OWNER": "Created By",
+      "DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC": "Last Accessed Ascending",
+      "DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC": "Last Accessed Descending",
+      "DBS_HOME_SELECT_SORT_NAME_ASC": "Name Ascending",
+      "DBS_HOME_SELECT_SORT_NAME_DSC": "Name Descending",
+      "DBS_HOME_SELECT_SORT_CREATION_TIME_ASC": "Creation Date Ascending",
+      "DBS_HOME_SELECT_SORT_CREATION_TIME_DSC": "Creation Date Descending",
+      "DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC": "Last Modified Ascending",
+      "DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC": "Last Modified Descending",
+      "DBS_HOME_SELECT_SORT_LAST_OWNER_ASC": "Created By Ascending",
+      "DBS_HOME_SELECT_SORT_LAST_OWNER_DSC": "Created By Descending",
       "DBS_HOME_SELECT_SORT_DEFAULT": "Default",
       "DBS_HOME_CREATE_BTN_TT_CONTENT": " Click to create a dashboard and add widgets of your choice.",
       "DBS_HOME_EXPLORE_BTN_LABEL": "Explore Data",
@@ -189,7 +194,7 @@ define({
       "LANDING_HOME_APM": "Application Performance Monitoring",
       "LANDING_HOME_APM_DESC": "Rapidly identify, response, and resolve your software roadblocks",
       "LANDING_HOME_LA": "Log Analytics",
-      "LANDING_HOME_LA_DESC": "Next-generation log data management and analysis in cloud",
+      "LANDING_HOME_LA_DESC": "Topology aware log exploration and analytics for modern applications and infrastructure",
       "LANDING_HOME_ITA": "IT Analytics",
       "LANDING_HOME_ITA_DESC": "Operational big data intelligence for modern IT",
       "LANDING_HOME_ITA_DB_PERFORMANCE": "Performance Analytics - Database",
@@ -211,9 +216,12 @@ define({
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",
       "LANDING_HOME_VIDEOS_LINK": "Videos",
-      "LANDING_HOME_COMMUNITY_LINK": "Management Cloud Community"
+      "LANDING_HOME_COMMUNITY_LINK": "Management Cloud Community",
       
-
+      "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_TITLE": "Edit widget link",
+      "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_NAME_LABEL": "Name",
+      "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_URL_LABEL": "Url"
+      
 }
 });
 
