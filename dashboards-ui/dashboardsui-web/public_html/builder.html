@@ -330,10 +330,10 @@
                                                  data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT_HELPER')"><span></p>
                                     </div>
                                 </div>
-                                <div id="dbd-left-panel-link" class="oj-col oj-sm-6 oj-md-6 oj-lg-6">
-                                    <div id="dbd-left-panel-link-handle" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_LINK')"></div>
+                                <div id="dbd-left-panel-link" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: move;">
+                                    <div id="dbd-left-panel-link-handle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK')"></div>
                                     <div id="left-panel-link-helper" class="left-panel-link-helper">
-                                        <p><span data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_LINK_HELPER')"><span></p>
+                                        <p><span data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DESC')"><span></p>
                                     </div>
                                 </div>
                             </div>
@@ -402,7 +402,10 @@
                                                 <label for="linkName" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_NAME_LABEL')"></label>
                                             </div>
                                             <div class="oj-col">
-                                                <input id="linkName" data-bind="ojComponent: {component: 'ojInputText', value: linkName, required: true}"/>
+                                                <input id="linkName" 
+                                                       data-bind="valueUpdate: 'afterkeydown', 
+                                                                    ojComponent: {component: 'ojInputText', value: linkName, required: true, validators: [linkNameValidator],
+                                                                                placeholder: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_NAME_REQUIRED')}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -412,7 +415,10 @@
                                                 <label for="linkUrl" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_URL_LABEL')"></label>
                                             </div>
                                             <div class="oj-col">
-                                                <input id="linkUrl" data-bind="ojComponent: {component: 'ojInputText', value: linkUrl, required: true}"/>
+                                                <input id="linkUrl" 
+                                                       data-bind="valueUpdate: 'afterkeydown', 
+                                                                    ojComponent: {component: 'ojInputText', value: linkUrl, required: true, validators: [linkURLValidator],
+                                                                                placeholder: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_URL_REQUIRED')}"/>
                                             </div>
                                         </div>
                                     </div>
