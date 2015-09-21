@@ -28,7 +28,7 @@ define(['knockout',
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
         var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
-        var LINK_NAME_MAX_LENGTH = 64;
+        var LINK_NAME_MAX_LENGTH = 4000;
         var LINK_URL_MAX_LENGTH = 4000;
         
         ko.mapping = km;
@@ -311,30 +311,10 @@ define(['knockout',
                 }
             }
             
-            tile.removeParameter = function(name) {
-                if(!name || !tile.tileParameters) {
-                    return;
-                }
-                for(var i in tile.tileParameters()) {
-                    var tp = tile.tileParameters()[i];
-                    if(tp.name() === name) {
-                        tile.tileParameters().splice(i, 1);
-                        return;
-                    }
-                }
-                    
-            }
-            
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
             
-            var linkText = tile.getParameter("linkText") ? ($("<div/>").html(tile.getParameter("linkText").value).html()) : null;
-            var linkUrl = tile.getParameter("linkUrl") ? ($("<div/>").html(tile.getParameter("linkUrl").value).html()) : null;
-            tile.linkText = ko.observable(linkText);
-            tile.linkUrl = ko.observable(linkUrl);
-//            tile.linkText = ko.observable(tile.getParameter("linkText")? tile.getParameter("linkText").value: null);
-//            tile.linkUrl = ko.observable(tile.getParameter("linkUrl")? tile.getParameter("linkUrl").value: null);
         }
         
         function DashboardTextTile(dashboard, widget, funcShow, funcReorder) {
@@ -384,8 +364,6 @@ define(['knockout',
             }
             for (var p in kowidget)
                 self[p] = kowidget[p];
-//            tilesViewModel.tiles.push(self);
-//            tilesViewModel.show();
             
             initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext);
         }
@@ -611,6 +589,8 @@ define(['knockout',
             self.top = ko.observable(0);
             self.cssWidth = ko.observable(0);
             self.cssHeight = ko.observable(0);
+            self.linkText = ko.observable();
+            self.linkUrl = ko.observable();
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
@@ -620,8 +600,8 @@ define(['knockout',
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
             data.title && (self.title = ko.observable(decodeHtml(data.title)));
-            data.linkText && (self.linkText = ko.observable(decodeHtml(data.linkText)));
-            data.linkUrl && (self.linkUrl = ko.observable(decodeHtml(data.linkUrl)));
+            data.linkText && (self.linkText($("<div/>").html(data.linkText).html()));
+            data.linkUrl && (self.linkUrl($("<div/>").html(data.linkUrl).html()));
             self.clientGuid = getGuid();
             self.sectionBreak = false;
             self.displayHeight = function() {
@@ -981,6 +961,15 @@ define(['knockout',
                 return !self.tiles.tiles() || self.tiles.tiles().length === 0;
             };
             
+            self.isDefaultTileExist = function() {
+                for(var i in self.dashboard.tiles()){
+                    if(self.dashboard.tiles()[i].type() === "DEFAULT") {
+                        return true;
+                    }
+                }
+                return false;
+            }            
+                        
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             self.openAddWidgetDialog = function() {
             	var maximizedTile = self.getMaximizedTile();
@@ -1154,6 +1143,9 @@ define(['knockout',
                     var newTile = self.createNewTile(name, description, width, height, widget);
                     if (newTile){
                        self.tiles.tiles.push(newTile);
+                       if($("#dbd-left-panel-link").is(".ui-draggable-disabled")) {
+                            $("#dbd-left-panel-link").draggable("enable");                           
+                        }
                        self.show();
                     }
                 }
@@ -1246,11 +1238,19 @@ define(['knockout',
                $("#tilesLinkEditorDialog").ojDialog("open");
            }
            
+           self.closeEditTileLinkDialog = function() {
+               if(self.tileToEdit && self.tileToEdit()) {
+                   var tile = self.tileToEdit();
+                   if(!tile.linkText() || !tile.linkUrl()) {
+                       tile.linkText(null);
+                       tile.linkUrl(null);
+                   }
+               }
+           }
+           
            self.deleteTileLink = function(tile) {
                tile.linkText(null);
                tile.linkUrl(null);
-               tile.removeParameter("linkText");
-               tile.removeParameter("linkUrl");
            }
            
            self.linkNameValidated = true;
@@ -1292,9 +1292,6 @@ define(['knockout',
                   var tile = self.tileToEdit();
                   tile.linkText(self.linkName());
                   tile.linkUrl(self.linkUrl());
-                  tile.setParameter("linkText", tile.linkText());
-                  tile.setParameter("linkUrl", tile.linkUrl());
-//                  self.tileToEdit(null);
                }               
                self.linkName(null);
                self.linkUrl(null);
@@ -1591,6 +1588,9 @@ define(['knockout',
                     tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
                     u.helper.tile = tile;
                     self.tiles.tiles.push(tile);
+                    if($("#dbd-left-panel-link").is(".ui-draggable-disabled")) {
+                        $("#dbd-left-panel-link").draggable("enable");                           
+                    }
                 }
                 self.previousDragCell = cell;
                 self.tiles.updateTilePosition(tile, cell.row, cell.column);
@@ -1625,6 +1625,9 @@ define(['knockout',
                         tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
                         u.helper.tile = tile;
                         self.tiles.tiles.push(tile);
+                        if($("#dbd-left-panel-link").is(".ui-draggable-disabled")) {
+                            $("#dbd-left-panel-link").draggable("enable");                           
+                        }
                     }
                     if (!self.previousDragCell)
                         return;
@@ -1726,6 +1729,7 @@ define(['knockout',
                 var tileId = "tile" + tile.clientGuid;
                 $("#"+tileId+" .dbd-tile-link-wrapper").css("border", "0px");
                 $("#"+tileId+" .dbd-tile-link").css("display", "inline-block");
+                self.openEditTileLinkDialog(tile);
             }
             
             self.reloadEditors = function() {

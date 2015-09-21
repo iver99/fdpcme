@@ -239,8 +239,8 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_URL_LABEL": "Url",
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_REQUIRED": "Name is required",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_REQUIRED": "URL is required",
-      "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 64 characters.",
-      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length shoud be less than 1024 characters.",
+      "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
+      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length shoud be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
       
 }

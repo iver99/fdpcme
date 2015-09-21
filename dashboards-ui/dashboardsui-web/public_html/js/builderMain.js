@@ -272,6 +272,9 @@ require(['knockout',
                     var leftPanelView = new dtv.LeftPanelView(builder);
                     ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
                     leftPanelView.initialize();
+                    if(!tilesViewModel.isDefaultTileExist()) {
+                        $("#dbd-left-panel-link").draggable("disable");
+                    }
                     var resizable = new dtv.ResizableView(builder);
                     resizable.initialize();
 

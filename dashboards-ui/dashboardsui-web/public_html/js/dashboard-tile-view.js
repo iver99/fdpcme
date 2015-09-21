@@ -160,7 +160,7 @@ define(['knockout',
                     stop: function(e, t) {
                         builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, 'stop dragging left panel link', e, t);
                     }
-                });
+                });                
             };
             
             self.resizeEventHandler = function(width, height) {
@@ -356,7 +356,7 @@ define(['knockout',
                     }
                 }
             });
-            
+                        
             if (dashboard.id && dashboard.id())
                 self.dashboardId = dashboard.id();
             else
@@ -716,6 +716,9 @@ define(['knockout',
                     $("#addWidgetToolTip").css("display", "block");
                 }else {
                     $("#addWidgetToolTip").css("display", "none");
+                }                
+                if(!tilesViewModel.isDefaultTileExist()) {
+                    $("#dbd-left-panel-link").draggable("disable");
                 }
             }
             
