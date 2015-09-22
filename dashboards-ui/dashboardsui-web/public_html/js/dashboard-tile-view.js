@@ -86,10 +86,9 @@ define(['knockout',
             }
         }
         
-        function LeftPanelView(builder) {
+        function LeftPanelView($b) {
             var self = this;
-            self.builder = builder;
-            self.dashboard = builder.dashboard;
+            self.dashboard = $b.dashboard;
             
             self.keyword = ko.observable('');
             self.page = ko.observable(1);
@@ -102,11 +101,12 @@ define(['knockout',
             self.initialize = function() {
                 if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
                     self.completelyHidden(true);
-                    builder.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
                 }
                 self.initEventHandlers();
                 self.loadWidgets();
                 self.initDraggable();
+                self.checkAndDisableLinkDraggable();
                 $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
                     var replacedValue = this.value.replace(/[^0-9\.]/g, '');
                     if (this.value !== replacedValue) {
@@ -116,9 +116,11 @@ define(['knockout',
             };
             
             self.initEventHandlers = function() {
-                self.builder.addBuilderResizeListener(self.resizeEventHandler);
-                self.builder.addEventListener(self.builder.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
-                self.builder.addEventListener(self.builder.EVENT_TILE_RESTORED, self.tileRestoredHandler);
+                $b.addBuilderResizeListener(self.resizeEventHandler);
+                $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
+                $b.addEventListener($b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
+                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
+                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
             };
             
             self.initDraggable = function() {
@@ -126,39 +128,39 @@ define(['knockout',
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'start dragging left panel widget', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'stop dragging left panel widget', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                     }
                 });
                 $("#dbd-left-panel-text").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-text-handle",
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_START_DRAGGING, 'start dragging left panel text', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_TEXT_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_DRAGGING, null, e, t);
+                        $b.triggerEvent($b.EVENT_NEW_TEXT_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, 'stop dragging left panel text', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_TEXT_STOP_DRAGGING, null, e, t);
                     }
                 });
                 $("#dbd-left-panel-link").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-link-handle",
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_START_DRAGGING, 'start dragging left panel link', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_LINK_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_DRAGGING, null, e, t);
+                        $b.triggerEvent($b.EVENT_NEW_LINK_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, 'stop dragging left panel link', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_LINK_STOP_DRAGGING, null, e, t);
                     }
                 });                
             };
@@ -170,14 +172,24 @@ define(['knockout',
             
             self.tileMaximizedHandler = function() {
                 self.completelyHidden(true);
-                builder.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
+                $b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
             
             self.tileRestoredHandler = function() {
                 if (self.dashboard.type() !== 'SINGLEPAGE' && !self.dashboard.systemDashboard()) {
                     self.completelyHidden(false);
-                    builder.triggerBuilderResizeEvent('tile restored and show left panel');
+                    $b.triggerBuilderResizeEvent('tile restored and show left panel');
                 }
+            };
+            
+            self.tileAddedHandler = function(tile) {
+                tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
+            };
+            
+            self.tileDeletedHandler = function(tile) {
+                if (!tile || tile.type() !== "DEFAULT")
+                    return;
+                self.checkAndDisableLinkDraggable();
             };
             
             self.loadWidgets = function() {
@@ -212,12 +224,12 @@ define(['knockout',
             self.showLeftPanel = function() {
                 self.showPanel(true);
                 self.initDraggable();
-                builder.triggerBuilderResizeEvent('show left panel');
+                $b.triggerBuilderResizeEvent('show left panel');
             };
             
             self.hideLeftPanel = function() {
                 self.showPanel(false);
-                builder.triggerBuilderResizeEvent('resize builder after hide left panel');
+                $b.triggerBuilderResizeEvent('hide left panel');
             };
             
             self.widgetGoDataExploreHandler = function(widget) {
@@ -241,11 +253,20 @@ define(['knockout',
                     $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
                 }
             };
+            
+            self.checkAndDisableLinkDraggable = function() {
+                if(!self.dashboard.isDefaultTileExist()) {
+                    $("#dbd-left-panel-link").draggable("disable");
+                }
+            };
         }
         
-        function ResizableView(builder) {
+        function ResizableView($b) {
             var self = this;
-            self.builder = builder;
+            
+            self.initialize = function() {
+                $b.addBuilderResizeListener(self.onResizeFitSize);
+            };
             
             self.onResizeFitSize = function(width, height) {
                 self.rebuildElementSet(),
@@ -266,16 +287,13 @@ define(['knockout',
                 self.$list = $(".fit-size");
             };
             
-            self.initialize = function() {
-                builder.addBuilderResizeListener(self.onResizeFitSize);
-            };
+            self.initialize();
         }
             
-        function DashboardTilesView(builder, dtm) {
+        function DashboardTilesView($b, dtm) {
             var self = this;
             self.dtm = dtm;
-            self.builder = builder;
-            self.dashboard = builder.dashboard;
+            self.dashboard = $b.dashboard;
             
             self.resizeEventHandler = function(width, height, leftWidth) {
                 $('#tiles-col-container').css("left", leftWidth);
@@ -332,16 +350,36 @@ define(['knockout',
                     $('#widget-area').removeClass('dbd-support-transition');
             };
             
-            self.builder.addBuilderResizeListener(self.resizeEventHandler);
+            $b.addBuilderResizeListener(self.resizeEventHandler);
         }
         
-        function ToolBarModel(dashboard, tilesViewModel) {
+        function ToolBarModel($b, tilesViewModel) {
             var self = this;
+            self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            
+            if (self.dashboard.id && self.dashboard.id())
+                self.dashboardId = self.dashboard.id();
+            else
+                self.dashboardId = 9999; // id is expected to be available always
+
+            if(self.dashboard.name && self.dashboard.name()){
+                self.dashboardName = ko.observable(self.dashboard.name());
+            }else{
+                self.dashboardName = ko.observable("Sample Dashboard");
+            }
+            self.dashboardNameEditing = ko.observable(self.dashboardName());
+            if(self.dashboard.description && self.dashboard.description()){
+                self.dashboardDescription = ko.observable(self.dashboard.description());
+            }else{
+                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
+            }
+            self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
+            self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard());
             
             self.includeTimeRangeFilter = ko.pureComputed({
                 read: function() {
-                    if (dashboard.enableTimeRange()) {
+                    if (self.dashboard.enableTimeRange()) {
                         return ["ON"];
                     }else{
                         return ["OFF"];
@@ -349,32 +387,30 @@ define(['knockout',
                 },
                 write: function(value) {
                     if (value && value.indexOf("ON") >= 0) {
-                        dashboard.enableTimeRange(true);
+                        self.dashboard.enableTimeRange(true);
                     }
                     else {
-                        dashboard.enableTimeRange(false);
+                        self.dashboard.enableTimeRange(false);
                     }
                 }
-            });
-                        
-            if (dashboard.id && dashboard.id())
-                self.dashboardId = dashboard.id();
-            else
-                self.dashboardId = 9999; // id is expected to be available always
-                    
-            if(dashboard.name && dashboard.name()){
-                self.dashboardName = ko.observable(dashboard.name());
-            }else{
-                self.dashboardName = ko.observable("Sample Dashboard");
-            }
-            self.dashboardNameEditing = ko.observable(self.dashboardName());
-            if(dashboard.description && dashboard.description()){
-                self.dashboardDescription = ko.observable(dashboard.description());
-            }else{
-                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
-            }
-            self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
-            self.editDisabled = ko.observable(dashboard.type() === SINGLEPAGE_TYPE || dashboard.systemDashboard());
+            });    
+            
+            self.initialize = function() {
+                self.initEventHandlers();
+                $('#builder-dbd-name-input').on('blur', function(evt) {
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
+                        self.cancelChangeDashboardName();
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
+                        self.okChangeDashboardName();
+                });
+                $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
+                    self.handleAddWidgetTooltip();
+                });
+            };
+            
+            self.initEventHandlers = function() {
+                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
+            };
             
             self.rightButtonsAreaClasses = ko.computed(function() {
                 var css = "dbd-pull-right " + (self.editDisabled() ? "dbd-gray" : "");
@@ -415,8 +451,8 @@ define(['knockout',
             };
             
             self.handleDashboardNameInputKeyPressed = function(vm, evt) {
-            	if (evt.keyCode == 13) {
-            		self.okChangeDashboardName();
+            	if (evt.keyCode === 13) {
+                    self.okChangeDashboardName();
             	}
             	return true;
             };
@@ -434,16 +470,9 @@ define(['knockout',
                 if ($('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-name').removeClass('editing');
                 }
-                dashboard.name(self.dashboardName());
+                self.dashboard.name(self.dashboardName());
                 return true;
             };
-            
-            $('#builder-dbd-name-input').on('blur', function(evt) {
-                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
-                    self.cancelChangeDashboardName();
-                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
-                    self.okChangeDashboardName();
-            });
             
             self.cancelChangeDashboardName = function() {
                 var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
@@ -462,8 +491,8 @@ define(['knockout',
             };
             
             self.handleDashboardDescriptionInputKeyPressed = function(vm, evt) {
-            	if (evt.keyCode == 13) {
-            		self.okChangeDashboardDescription();
+            	if (evt.keyCode === 13) {
+                    self.okChangeDashboardDescription();
             	}
             	return true;
             };
@@ -477,10 +506,10 @@ define(['knockout',
                 if ($('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-description').removeClass('editing');
                 }
-                if (!dashboard.description)
-                    dashboard.description = ko.observable(self.dashboardDescription());
+                if (!self.dashboard.description)
+                    self.dashboard.description = ko.observable(self.dashboardDescription());
                 else
-                    dashboard.description(self.dashboardDescription());
+                    self.dashboard.description(self.dashboardDescription());
             };
             
             self.cancelChangeDashboardDescription = function() {
@@ -638,15 +667,6 @@ define(['knockout',
                         "setParameter", "shouldHide", "systemParameters", 
                         "tileDisplayClass", "widerEnabled", "widget"]
                 });
-//                if (dbdJs.tiles) {
-//                    for (var i = 0; i < dbdJs.tiles.length; i++) {
-//                        var tile = dbdJs.tiles[i];
-//                        if (tile.content && tile.type === "TEXT_WIDGET") {
-//                            var decoded = dtm.encodeHtml(tile.content)
-//                            tile.content = decoded;
-//                        }
-//                    }
-//                }
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
@@ -683,7 +703,7 @@ define(['knockout',
             self.HandleAddTextWidget = function() {
                 var maximizedTile = tilesViewModel.getMaximizedTile();
             	if (maximizedTile)
-            		tilesViewModel.restore(maximizedTile);
+                    tilesViewModel.restore(maximizedTile);
                 tilesViewModel.AppendTextTile();
             }
             
@@ -706,23 +726,16 @@ define(['knockout',
                         
             // code to be executed at the end after function defined
 //            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
-                        
-            $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
-                self.handleAddWidgetTooltip();
-            });
-            
+
             self.handleAddWidgetTooltip = function() {
-                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
+                if (tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
                     $("#addWidgetToolTip").css("display", "block");
                 }else {
                     $("#addWidgetToolTip").css("display", "none");
-                }                
-                if(!tilesViewModel.isDefaultTileExist()) {
-                    $("#dbd-left-panel-link").draggable("disable");
-                }
-            }
+                }  
+            };
             
-            tilesViewModel.registerTileRemoveCallback(self.handleAddWidgetTooltip);
+            self.initialize();
         }
         
         function DashboardBuilder(dashboard) {
@@ -745,6 +758,9 @@ define(['knockout',
             
             self.EVENT_TILE_MAXIMIZED = "EVENT_TILE_MAXIMIZED";
             self.EVENT_TILE_RESTORED = "EVENT_TILE_RESTORED";
+            
+            self.EVENT_TILE_ADDED = "EVENT_TILE_ADDED";
+            self.EVENT_TILE_DELETED = "EVENT_TILE_DELETED";
             
             function Dispatcher() {
                 var dsp = this;
