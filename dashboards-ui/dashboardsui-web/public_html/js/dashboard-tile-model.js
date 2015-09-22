@@ -382,7 +382,7 @@ define(['knockout',
         }
         
         function decodeHtml(data) {
-            return data && $("<div/>").html(data).html();
+            return data && $("<div/>").html(data).text();
         }
         
         function getBaseUrl() {
