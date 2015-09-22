@@ -96,10 +96,15 @@ define(['knockout',
             self.widgets = ko.observableArray([]);
             self.totalPages = ko.observable(1);
             
+            self.completelyHidden = ko.observable(false);
             self.showPanel = ko.observable(true);
             
             self.initialize = function() {
-                self.builder.addBuilderResizeListener(self.resizeEventHandler);
+                if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
+                    self.completelyHidden(true);
+                    builder.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                }
+                self.initEventHandlers();
                 self.loadWidgets();
                 self.initDraggable();
                 $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
@@ -110,10 +115,15 @@ define(['knockout',
                 });
             };
             
+            self.initEventHandlers = function() {
+                self.builder.addBuilderResizeListener(self.resizeEventHandler);
+                self.builder.addEventListener(self.builder.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
+                self.builder.addEventListener(self.builder.EVENT_TILE_RESTORED, self.tileRestoredHandler);
+            };
+            
             self.initDraggable = function() {
                 $(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
-//                    handle: "span",
                     scroll: false,
                     start: function(e, t) {
                         builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'start dragging left panel widget', e, t);
@@ -150,12 +160,24 @@ define(['knockout',
                     stop: function(e, t) {
                         builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, 'stop dragging left panel link', e, t);
                     }
-                });
+                });                
             };
             
             self.resizeEventHandler = function(width, height) {
                 $('#dbd-left-panel').height(height);
                 $('#left-panel-text-helper').css("width", width - 20);
+            };
+            
+            self.tileMaximizedHandler = function() {
+                self.completelyHidden(true);
+                builder.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
+            };
+            
+            self.tileRestoredHandler = function() {
+                if (self.dashboard.type() !== 'SINGLEPAGE' && !self.dashboard.systemDashboard()) {
+                    self.completelyHidden(false);
+                    builder.triggerBuilderResizeEvent('tile restored and show left panel');
+                }
             };
             
             self.loadWidgets = function() {
@@ -204,6 +226,8 @@ define(['knockout',
             };
             
             self.widgetMouseOverHandler = function(widget) {
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                    return;
                 if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
                    $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-goto-'+widget.WIDGET_UNIQUE_ID()), 
                    {
@@ -218,144 +242,6 @@ define(['knockout',
                 }
             };
         }
-        
-//        function TooltipHelper(rootElement, popupDiv)
-//        {
-//           var self = this;
-//           this.initialize(rootElement, popupDiv);
-//
-//           self.initialize = function(rootElement, popupDiv)
-//           {
-//               self._AUTO_TIMEOUT = 3000;
-//               self._OPEN_DELAY = 500;
-//
-//               self._popupDiv = popupDiv;
-//               self._rootElement = rootElement;
-//
-////               var tooltipPopup = $("<div>").uniqueId();
-////               tooltipPopup.css("max-width", "340px");
-//               popupDiv.appendTo(rootElement);
-//
-//               self._tooltipPopupId = "#" + popupDiv.attr("id");
-//               popupDiv.ojPopup();
-//
-//               var callbackClearTimeout = $.proxy(self._handleClearTimeout, self);
-//               var callbackSetTimeout = $.proxy(self._handleSetTimeout, self);
-//
-//               popupDiv.ojPopup(
-//               {
-//                   position : 
-//                   {
-//                       my : "start top+10", at : "start end"
-//                   },
-//                   initialFocus : "none", 
-//                   autoDismiss : "focusLoss", 
-//                   beforeOpen : callbackSetTimeout, 
-//                   beforeClose : callbackClearTimeout, 
-//                   focus : callbackClearTimeout
-//               });
-//
-//               var callbackOpen = self._callbackOpen = $.proxy(self._handleOpen, self);
-//               var callbackClose = self._callbackClose = $.proxy(self._handleClose, self);
-//
-//               rootElement[0].addEventListener("mouseenter", callbackOpen, true);
-//               rootElement[0].addEventListener("mouseleave", callbackClose, true);
-//               rootElement[0].addEventListener("focus", callbackOpen, true);
-//           };
-//
-//           self._handleOpen = function (event)
-//           {
-//               var target = event.target;
-//               event = $.Event(event);
-////               var title = self._getTitle(target);
-//
-//               var tooltipPopupId = self._tooltipPopupId;
-//               var popup = $(tooltipPopupId);
-//
-//               var isOpen = !popup.ojPopup("isOpen");
-//               if (isOpen)
-//               {
-//                   popup.ojPopup("close");
-//               }
-//               else {
-////                   var oldTitle = popup.text();
-////                   if (oldTitle === title)
-////                       return;
-//
-//                   setTimeout(function ()
-//                   {
-////                       popup.html(title);
-//                       popup.ojPopup("open", target);
-//                   },
-//                   self._OPEN_DELAY);
-//               }
-//           };
-//
-//           self._handleSetTimeout = function (event)
-//           {
-//               self._timeoutId = window.setTimeout(self._callbackClose, self._AUTO_TIMEOUT);
-//           };
-//
-//           self._handleClearTimeout = function (event)
-//           {
-//               var timeoutId = self._timeoutId;
-//               delete self._timeoutId;
-//               window.clearTimeout(timeoutId);
-//           };
-//
-//           self._handleClose = function (event)
-//           {
-//               var tooltipPopupId = self._tooltipPopupId;
-//               var popup = $(tooltipPopupId);
-//
-//               var isOpen = !popup.ojPopup("isOpen");
-//               if (!isOpen)
-//               {
-//                   popup.ojPopup("close");
-//               }
-//           };
-//
-////           self._getTitle = function (node)
-////           {
-////               var helpDataAttr = self.popupDiv;
-////               var i = 0;
-////               var MAX_PARENTS = 5;
-////
-////               while ((node != null) && (i++ < MAX_PARENTS))
-////               {
-////                   if (node.nodeType == 1)
-////                   {
-////                       var title = node.getAttribute(helpDataAttr);
-////                       if (title && title.length > 0)
-////                           return title;
-////                   }
-////                   node = node.parentNode;
-////               }
-////               return null;
-////           };
-//
-//           self.destroy = function ()
-//           {
-//               var callbackOpen = self._callbackOpen;
-//               delete self._callbackOpen;
-//
-//               var callbackClose = self._callbackClose;
-//               delete self._callbackClose;
-//
-//               var rootElement = self._rootElement;
-//               delete self._rootElement;
-//
-//               rootElement[0].removeEventListener("mouseenter", callbackOpen, true);
-//               rootElement[0].removeEventListener("focus", callbackOpen, true);
-//               rootElement[0].removeEventListener("mouseleave", callbackClose, true);
-//
-//               var tooltipPopupId = self._tooltipPopupId;
-//               delete self._tooltipPopupId;
-//
-//               var popup = $(tooltipPopupId);
-//               popup.remove();
-//           };
-//       }
         
         function ResizableView(builder) {
             var self = this;
@@ -395,6 +281,7 @@ define(['knockout',
                 $('#tiles-col-container').css("left", leftWidth);
                 $('#tiles-col-container').width(width - leftWidth);
                 $('#tiles-col-container').height(height);
+//                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + height);
             };
             
             self.getTileElement = function(tile) {
@@ -469,7 +356,7 @@ define(['knockout',
                     }
                 }
             });
-            
+                        
             if (dashboard.id && dashboard.id())
                 self.dashboardId = dashboard.id();
             else
@@ -751,15 +638,15 @@ define(['knockout',
                         "setParameter", "shouldHide", "systemParameters", 
                         "tileDisplayClass", "widerEnabled", "widget"]
                 });
-                if (dbdJs.tiles) {
-                    for (var i = 0; i < dbdJs.tiles.length; i++) {
-                        var tile = dbdJs.tiles[i];
-                        if (tile.content && tile.type === "TEXT_WIDGET") {
-                            var decoded = dtm.encodeHtml(tile.content)
-                            tile.content = decoded;
-                        }
-                    }
-                }
+//                if (dbdJs.tiles) {
+//                    for (var i = 0; i < dbdJs.tiles.length; i++) {
+//                        var tile = dbdJs.tiles[i];
+//                        if (tile.content && tile.type === "TEXT_WIDGET") {
+//                            var decoded = dtm.encodeHtml(tile.content)
+//                            tile.content = decoded;
+//                        }
+//                    }
+//                }
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
@@ -829,6 +716,9 @@ define(['knockout',
                     $("#addWidgetToolTip").css("display", "block");
                 }else {
                     $("#addWidgetToolTip").css("display", "none");
+                }                
+                if(!tilesViewModel.isDefaultTileExist()) {
+                    $("#dbd-left-panel-link").draggable("disable");
                 }
             }
             
@@ -852,6 +742,9 @@ define(['knockout',
             self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
             self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
             self.EVENT_NEW_WIDGET_STOP_DRAGGING = "EVENT_NEW_WIDGET_STOP_DRAGGING";
+            
+            self.EVENT_TILE_MAXIMIZED = "EVENT_TILE_MAXIMIZED";
+            self.EVENT_TILE_RESTORED = "EVENT_TILE_RESTORED";
             
             function Dispatcher() {
                 var dsp = this;
@@ -883,7 +776,7 @@ define(['knockout',
             };
             
             self.triggerEvent = function(event, message, p1, p2, p3) {
-//                console.log('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
+//                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
                 self.dispatcher.triggerEvent(event, p1, p2, p3);
             };
             
@@ -909,7 +802,7 @@ define(['knockout',
             
             self.addNewLinkStopDraggingListener = function(listener) {
                 self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
-            }
+            };
             
             self.addNewWidgetStartDraggingListener = function(listener) {
                 self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);
