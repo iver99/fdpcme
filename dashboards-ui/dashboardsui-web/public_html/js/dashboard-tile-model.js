@@ -1277,6 +1277,7 @@ define(['knockout',
            
            self.editTileLinkConfirmed = function() {
                if(!self.linkName() || !self.linkUrl() || !self.linkNameValidated || !self.linkURLValidated) {
+                   $("#tilesLinkEditorDialog").ojDialog("close");
                    return false;
                }
                if(self.tileToEdit && self.tileToEdit()) {
@@ -1577,6 +1578,7 @@ define(['knockout',
                     tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
                     u.helper.tile = tile;
                     self.tiles.tiles.push(tile);
+                    $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
                 }
                 self.previousDragCell = cell;
                 self.tiles.updateTilePosition(tile, cell.row, cell.column);
@@ -1689,9 +1691,11 @@ define(['knockout',
                 }
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                 var cell = self.getCellFromPosition(pos); 
-                if (!cell) return;
+                if (!cell || !self.tiles.tilesGrid.tileGrid[cell.row] || !self.tiles.tilesGrid.tileGrid[cell.row][cell.column]) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return;
+                };
                 var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
-                var tile = self.getMaximizedTile()? self.getMaximizedTile() : tile;
                 if(!tile || tile.type() === "TEXT_WIDGET") return;
                 var tileId = "tile" + tile.clientGuid;
                 $(".dbd-tile-link-wrapper").css("border", "0px");
@@ -1706,7 +1710,10 @@ define(['knockout',
                 }
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                 var cell = self.getCellFromPosition(pos); 
-                if (!cell) return;
+                if (!cell || !self.tiles.tilesGrid.tileGrid[cell.row] || !self.tiles.tilesGrid.tileGrid[cell.row][cell.column]) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return
+                };
                 var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
                 if(!tile || tile.type() === "TEXT_WIDGET") return;
                 tile.linkText(getNlsString("DBS_BUILDER_EDIT_WIDGET_LINK_DESC"));
