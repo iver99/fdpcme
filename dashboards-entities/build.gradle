@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
-group = 'com.oracle.emaas.emcpdf'
+group = 'com.oracle.emaas.emcpdf42'
 version = '1.0.1'
 jar {
 	from('src/main/java/META-INF')
