@@ -264,6 +264,10 @@ define(['knockout',
         function ResizableView($b) {
             var self = this;
             
+            self.initialize = function() {
+                $b.addBuilderResizeListener(self.onResizeFitSize);
+            };
+            
             self.onResizeFitSize = function(width, height) {
                 self.rebuildElementSet(),
                 self.$list.each(function() {
@@ -283,9 +287,7 @@ define(['knockout',
                 self.$list = $(".fit-size");
             };
             
-            self.initialize = function() {
-                $b.addBuilderResizeListener(self.onResizeFitSize);
-            };
+            self.initialize();
         }
             
         function DashboardTilesView($b, dtm) {

@@ -87,15 +87,8 @@ requirejs.config({
     waitSeconds: 60
 });
 
-var defaultTileHeight = 220;
-var defaultTileRowHeight = defaultTileHeight + 10;
-var defaultColumnsNumber = 4;
-
 /**
  * A top-level require call executed by the Application.
- * Although 'ojcore' and 'knockout' would be loaded in any case (they are specified as dependencies
- * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
- * objects in the callback
  */
 require(['knockout',
     'jquery',
@@ -128,14 +121,11 @@ require(['knockout',
         function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger()
-//          var dfRestApi = dfu.discoverDFRestApiUrl();
-//          if (dfRestApi){
-              var logReceiver = dfu.getLogUrl();
-                logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
-                // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
-                // If you comment the line below, our current log calls will not be output!
-                logger.setLogLevel(oj.Logger.LEVEL_LOG);
-//            }
+            var logReceiver = dfu.getLogUrl();
+            logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+            // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+            // If you comment the line below, our current log calls will not be output!
+            logger.setLogLevel(oj.Logger.LEVEL_LOG);
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
@@ -184,7 +174,7 @@ require(['knockout',
                         self.headerHeight = height;
                     if (self.headerHeight === height)
                         return;
-                    $b.triggerBuilderResizeEvent('resize builder after header wrapper changed from height ' + self.headerHeight + ' to height ' + height + ' ');
+                    $b.triggerBuilderResizeEvent('header wrapper bar height changed');
                     self.headerHeight = height;
                 });
             };
@@ -254,19 +244,14 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
 
-                    //header
                     ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
-//                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
-                    //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
-                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);
-//                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);       
+                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
                     var leftPanelView = new dtv.LeftPanelView($b);
                     ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
                     leftPanelView.initialize();
-                    var resizable = new dtv.ResizableView($b);
-                    resizable.initialize();
+                    new dtv.ResizableView($b);
 
                     $("#loading").hide();
                     $('#globalBody').show();
