@@ -16,6 +16,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -46,7 +47,12 @@ public class Tile
 	public static final String TEXT_WIDGET_PARAM_NAME_CONTENT = "DF_BUILTIN_WIDGET_TEXT_CONTENT";
 	private static final String DF_BUILTIN_WIDGET_LINK_TEXT = "DF_BUILTIN_WIDGET_LINK_TEXT";
 	private static final String DF_BUILTIN_WIDGET_LINK_URL = "DF_BUILTIN_WIDGET_LINK_URL";
-	private static final Integer TEXT_WIDGET_MAX_CONTENT_LEN = 4000;
+
+	private static final Integer TILE_TITLE_MAX_LEN = 64;
+	private static final Integer TILE_PARAM_STR_VALUE_MAX_LEN = 4000;
+	private static final Integer TEXT_WIDGET_MAX_CONTENT_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
+	private static final Integer TEXT_WIDGET_MAX_LINK_TEXT_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
+	private static final Integer TEXT_WIDGET_MAX_LINK_URL_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
 
 	public static Tile valueOf(EmsDashboardTile edt)
 	{
@@ -637,6 +643,11 @@ public class Tile
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_TILE_TITLE_REQUIRED));
 		}
+		String encodedTitle = StringEscapeUtils.escapeHtml4(title);
+		if (encodedTitle.length() > TILE_TITLE_MAX_LEN) {
+			throw new CommonFunctionalException(
+					MessageUtils.getDefaultBundleString(CommonFunctionalException.TILE_INVALID_TITLE_EXCEED_MAX_LEN));
+		}
 		if (row == null) {
 			row = TILE_DEFAULT_ROW;
 		}
@@ -861,23 +872,34 @@ public class Tile
 			to.setWidth(Tile.TEXT_WIDGET_WIDTH);
 			to.setWidgetUniqueId(Tile.TEXT_WIDGET_NAME);
 			to.setWidgetCreationTime(String.valueOf(DateUtil.getCurrentUTCTime()));
-			if (StringUtil.isEmpty(content) || content.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
+			String encodedContent = StringEscapeUtils.escapeHtml4(getContent());
+			if (StringUtil.isEmpty(encodedContent) || encodedContent.length() > TEXT_WIDGET_MAX_CONTENT_LEN) {
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_CONTENT_ERROR));
 			}
 			EmsDashboardTileParams edtp = new EmsDashboardTileParams(1, Tile.TEXT_WIDGET_PARAM_NAME_CONTENT,
-					TileParam.PARAM_TYPE_CODE_STRING, null, getContent(), null, to);
+					TileParam.PARAM_TYPE_CODE_STRING, null, encodedContent, null, to);
 			to.addEmsDashboardTileParams(edtp);
 		}
 		else {
 			if (!StringUtil.isEmpty(getLinkText())) {
+				String encodedLinkText = StringEscapeUtils.escapeHtml4(getLinkText());
+				if (encodedLinkText != null && encodedLinkText.length() > TEXT_WIDGET_MAX_LINK_TEXT_LEN) {
+					throw new CommonFunctionalException(
+							MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_LINK_TEXT_ERROR));
+				}
 				EmsDashboardTileParams edtp = new EmsDashboardTileParams(0, Tile.DF_BUILTIN_WIDGET_LINK_TEXT,
-						TileParam.PARAM_TYPE_CODE_STRING, null, getLinkText(), null, to);
+						TileParam.PARAM_TYPE_CODE_STRING, null, encodedLinkText, null, to);
 				to.addEmsDashboardTileParams(edtp);
 			}
 			if (!StringUtil.isEmpty(getLinkUrl())) {
+				String encodedLinkUrl = StringEscapeUtils.escapeHtml4(getLinkUrl());
+				if (encodedLinkUrl != null && encodedLinkUrl.length() > TEXT_WIDGET_MAX_LINK_URL_LEN) {
+					throw new CommonFunctionalException(
+							MessageUtils.getDefaultBundleString(CommonFunctionalException.TEXT_WIDGET_INVALID_LINK_URL_ERROR));
+				}
 				EmsDashboardTileParams edtp = new EmsDashboardTileParams(0, Tile.DF_BUILTIN_WIDGET_LINK_URL,
-						TileParam.PARAM_TYPE_CODE_STRING, null, getLinkUrl(), null, to);
+						TileParam.PARAM_TYPE_CODE_STRING, null, encodedLinkUrl, null, to);
 				to.addEmsDashboardTileParams(edtp);
 			}
 		}

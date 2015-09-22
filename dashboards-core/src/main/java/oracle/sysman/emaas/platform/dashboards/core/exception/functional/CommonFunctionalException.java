@@ -49,7 +49,10 @@ public class CommonFunctionalException extends DashboardException
 	public static final String PROVIDER_NAME_REQUIRED = "PROVIDER_NAME_REQUIRED";
 	public static final String PROVIDER_VERSION_REQUIRED = "PROVIDER_VERSION_REQUIRED";
 	public static final String PROVIDER_ASSET_ROOT_REQUIRED = "PROVIDER_ASSET_ROOT_REQUIRED";
+	public static final String TILE_INVALID_TITLE_EXCEED_MAX_LEN = "TILE_INVALID_TITLE_EXCEED_MAX_LEN";
 	public static final String TEXT_WIDGET_INVALID_CONTENT_ERROR = "TEXT_WIDGET_INVALID_CONTENT_ERROR";
+	public static final String TEXT_WIDGET_INVALID_LINK_TEXT_ERROR = "TEXT_WIDGET_INVALID_LINK_TEXT_ERROR";
+	public static final String TEXT_WIDGET_INVALID_LINK_URL_ERROR = "TEXT_WIDGET_INVALID_LINK_URL_ERROR";
 
 	// preference messages
 	public static final String PREFERENCE_INVALID_KEY = "PREFERENCE_INVALID_KEY";
