@@ -39,6 +39,7 @@ public class Tile
 	// specific for text widget
 	private static final Integer TEXT_WIDGET_WIDTH = 8;
 	private static final String TEXT_WIDGET_NAME = "DF_BUILTIN_TEXT";
+	private static final String TEXT_WIDGET_TITLE = "BUILT_IN_TEXT";
 	private static final String TEXT_WIDGET_DESCRIPTION = TEXT_WIDGET_NAME;
 	private static final String TEXT_WIDGET_OWNER = "ORACLE";
 	private static final String TEXT_WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
@@ -771,6 +772,8 @@ public class Tile
 		width = 8;
 		height = 1;
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
+		// whatever the input title is, text tile use the default title
+		title = TEXT_WIDGET_TITLE;
 		if (to == null) { // newly created tile
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, 0, lastModificationDate, lastModifiedBy,
 					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime,
