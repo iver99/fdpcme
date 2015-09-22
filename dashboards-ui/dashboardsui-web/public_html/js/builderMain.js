@@ -166,7 +166,7 @@ require(['knockout',
                 template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
             });
 
-            function HeaderViewModel(builder) {
+            function HeaderViewModel($b) {
                 var self = this;
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
@@ -184,12 +184,11 @@ require(['knockout',
                         self.headerHeight = height;
                     if (self.headerHeight === height)
                         return;
-                    builder.triggerBuilderResizeEvent('resize builder after header wrapper changed from height ' + self.headerHeight + ' to height ' + height + ' ');
+                    $b.triggerBuilderResizeEvent('resize builder after header wrapper changed from height ' + self.headerHeight + ' to height ' + height + ' ');
                     self.headerHeight = height;
                 });
             };
-            
-           
+
 //            var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
@@ -212,17 +211,11 @@ require(['knockout',
 //            }(dsbId);
             $(document).ready(function() {
                 dtm.loadDashboard(dsbId, function(dashboard) {
-    //                var dsbName = dashboardModel && dashboardModel.name ? dashboardModel.name : "";
-    //                var dsbDesc = dashboardModel && dashboardModel.description ? dashboardModel.description : "";
-    //                var dsbWidgets = dashboardModel && dashboardModel.tiles ? dashboardModel.tiles : undefined;
-    //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
-    //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
-                  
-                    var builder = new dtv.DashboardBuilder(dashboard);
-                    var tilesView = new dtv.DashboardTilesView(builder, dtm);
-                    var tilesViewModel = new dtm.DashboardTilesViewModel(builder, tilesView/*, urlChangeView*/); 
-                    var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewModel);
-                    var headerViewModel = new HeaderViewModel(builder);
+                    var $b = new dtv.DashboardBuilder(dashboard);
+                    var tilesView = new dtv.DashboardTilesView($b, dtm);
+                    var tilesViewModel = new dtm.DashboardTilesViewModel($b, tilesView/*, urlChangeView*/); 
+                    var toolBarModel = new dtv.ToolBarModel($b, tilesViewModel);
+                    var headerViewModel = new HeaderViewModel($b);
                     
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
@@ -269,13 +262,10 @@ require(['knockout',
                     tilesViewModel.initialize();
                     ko.applyBindings(tilesViewModel, $('#global-html')[0]);
 //                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);       
-                    var leftPanelView = new dtv.LeftPanelView(builder);
+                    var leftPanelView = new dtv.LeftPanelView($b);
                     ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
                     leftPanelView.initialize();
-                    if(!tilesViewModel.isDefaultTileExist()) {
-                        $("#dbd-left-panel-link").draggable("disable");
-                    }
-                    var resizable = new dtv.ResizableView(builder);
+                    var resizable = new dtv.ResizableView($b);
                     resizable.initialize();
 
                     $("#loading").hide();
