@@ -720,9 +720,9 @@ public class Tile
 			}
 
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, intIsMaximized, lastModificationDate,
-					lastModifiedBy, owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime,
-					widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner,
-					widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, width);
+					lastModifiedBy, owner, providerAssetRoot, providerName, providerVersion, tileId, encodedTitle,
+					widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName,
+					widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, width);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
@@ -739,7 +739,7 @@ public class Tile
 			to.setProviderAssetRoot(providerAssetRoot);
 			to.setProviderName(providerName);
 			to.setProviderVersion(providerVersion);
-			to.setTitle(title);
+			to.setTitle(encodedTitle);
 			if (to.getType() != null && tileType != null && !tileType.equals(to.getType())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
