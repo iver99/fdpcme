@@ -52,14 +52,11 @@ define(['knockout',
             }
             
             function loadWidgets(keyword) {
-                var widgetsUrl = '/sso.static/savedsearch.widgets';
-                if (dfu.isDevMode()){
-                    widgetsUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
-                }
+                var widgetsUrl = dfu.getWidgetsUrl();
 
                 dfu.ajaxWithRetry({
                     url: widgetsUrl,
-                    headers: dfu.getDashboardsRequestHeader(),
+                    headers: dfu.getSavedSearchRequestHeader(),
                     success: function(data) {
                         data && data.length > 0 && (filterWidgetsData(data, keyword));
                     },
