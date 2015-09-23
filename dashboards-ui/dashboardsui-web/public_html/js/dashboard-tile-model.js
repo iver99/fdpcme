@@ -1510,7 +1510,7 @@ define(['knockout',
             self.reRender = function() {
                 self.tilesView.disableMovingTransition();
                 self.show();
-//                self.tilesView.enableMovingTransition();
+                self.tilesView.enableMovingTransition();
             };
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {

@@ -121,11 +121,17 @@ define(['knockout',
             };
             
             self.initDraggable = function() {
+                self.initWidgetDraggable();
+                self.initTextWidgetDraggable();
+                self.initWidgetLinkDraggable();
+            };
+            
+            self.initWidgetDraggable = function() {
                 $(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
                         $b.triggerEvent($b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
@@ -134,6 +140,9 @@ define(['knockout',
                         $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                     }
                 });
+            };
+            
+            self.initTextWidgetDraggable = function() {
                 $("#dbd-left-panel-text").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-text-handle",
@@ -147,6 +156,9 @@ define(['knockout',
                         $b.triggerEvent($b.EVENT_NEW_TEXT_STOP_DRAGGING, null, e, t);
                     }
                 });
+            };
+            
+            self.initWidgetLinkDraggable = function() {
                 $("#dbd-left-panel-link").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-link-handle",
@@ -159,7 +171,7 @@ define(['knockout',
                     stop: function(e, t) {
                         $b.triggerEvent($b.EVENT_NEW_LINK_STOP_DRAGGING, null, e, t);
                     }
-                });                
+                });       
             };
             
             self.resizeEventHandler = function(width, height) {
@@ -197,6 +209,7 @@ define(['knockout',
                             self.widgets.push(ko.mapping.fromJS(widgets[i]));
                     }
                     totalPages !== self.totalPages() && self.totalPages(totalPages);
+                    self.initWidgetDraggable();
                 });
             };
             
