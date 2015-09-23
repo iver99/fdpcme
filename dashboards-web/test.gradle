@@ -1,5 +1,5 @@
 //jar.archiveName='emcpdf_qa_test.jar'
-group = 'com.oracle.emaas.emcpdf'
+group = 'com.oracle.emaas.emcpdf42'
 //version = '1.0.1'
 apply plugin: 'gavsetting'
 sourceSets {
@@ -22,7 +22,7 @@ task integTestJar (type:Jar) {
 dependencies {
 
 	lrgConfig project(':dashboards-entities') { transitive = false }
-	lrgConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+')   { transitive = false }
+	lrgConfig (group: 'com.oracle.emaas.emcpdf42', name: 'dashboards-core', version: '1.0.0+')   { transitive = false }
 	lrgConfig project(':dashboards-web')   { transitive = false }
 	lrgConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
 //	lrgConfig(group: 'javax', name: 'ejb', version: '3.2.0')

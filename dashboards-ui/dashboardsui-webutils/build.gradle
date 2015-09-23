@@ -6,7 +6,7 @@ apply plugin: 'TestInfraPlugin'
 apply from:'test.gradle'
 apply plugin: 'artifactory'
 apply plugin: 'artifactory-publish'
-group = 'com.oracle.emaas.emcpdf'
+group = 'com.oracle.emaas.emcpdf42'
 //version = '1.0.1'
 
 sourceSets {

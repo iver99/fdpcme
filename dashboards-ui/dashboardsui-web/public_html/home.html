@@ -95,7 +95,7 @@
                                                 <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
                                                     <input id="sinput" type="text" name="searchInput"
                                                        data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                                                  ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
+                                                                  ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
                                                                   ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
                                                     <button class="oj-button-half-chrome" data-bind="click: clearSearch, visible: showSeachClear,
                                                             ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
@@ -109,14 +109,19 @@
                                                 
                                                 <span id="homettbtns" class="oj-md-float-end dbs-rbtns-panel-md dbs-rbtns-panel-lg dbs-rbtns-panel-xsl dbs-rbtns-panel-xl">
                                                 <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
-                                                <select id="sortcb"  data-bind="ojComponent: {component: 'ojSelect', value: sortBy, optionChange: handleSortByChanged, 
-                                                   rootAttributes: {style:'width: 11em; max-width:20em'}}"/>
+                                                <select id="sortcb"  data-bind="ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: handleSortByChanged, 
+                                                   rootAttributes: {style:'width: 14em; max-width:20em'}}"/>
                                                         <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
-                                                        <option value="name" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME')"></option>
-                                                        <option value="owner" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER')"></option>
-                                                        <option value="creation_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME')"></option>
-                                                        <option value="last_modification_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED')"></option>
-                                                        <option value="access_Date" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE')"></option>
+                                                        <option value="name_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
+                                                        <option value="name_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
+                                                        <option value="owner_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_ASC')"></option>
+                                                        <option value="owner_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_DSC')"></option>
+                                                        <option value="creation_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_ASC')"></option>
+                                                        <option value="creation_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_DSC')"></option>
+                                                        <option value="last_modification_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC')"></option>
+                                                        <option value="last_modification_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC')"></option>
+                                                        <option value="access_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC')"></option>
+                                                        <option value="access_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC')"></option>
                                                 </select>
                                                 
                                                 <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
@@ -178,13 +183,14 @@
                                             <table id="dbstable" summary="Dashboard List" aria-label="Dashboards Table"
                                                    data-bind="ojComponent: {component: 'ojTable', 
                                                    data: dashboardsTS,
+                                                   sort: handleListColumnSort,
                                                    verticalGridVisible: 'none',
-                                                   columnsDefault: {  sortable: 'none', headerStyle: 'border-left: none; border-right: none;' },
+                                                   columnsDefault: {  headerStyle: 'border-left: none; border-right: none;' },
                                                    rootAttributes: { 'style': 'width: 100%; margin: 5px; border: none; background: #ffffff;' },
-                                                   columns: [{renderer: listNameRender, headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 60%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {field: 'owner', headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {field: 'lastModifiedOnStr', headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {renderer: listInfoRender, headerText: '',  style: 'width: 5%; padding: 0px;' }] 
+                                                   columns: [{sortProperty: 'name', renderer: listNameRender, headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 60%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {sortProperty: 'owner', field: 'owner', headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {sortProperty: 'last_modification_date', field: 'lastModifiedOnStr', headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {renderer: listInfoRender, headerText: '',  style: 'width: 5%; padding: 0px;', sortable: 'none' }] 
                                                      }"></table>
                                             <!--script type="text/html" id="dbstablerow_tmpl">
                                                 <tr style="height: 1rem; min-height: 1rem;   ">

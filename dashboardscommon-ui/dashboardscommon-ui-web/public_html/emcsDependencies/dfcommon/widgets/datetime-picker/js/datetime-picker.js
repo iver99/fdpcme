@@ -1,4 +1,4 @@
-define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/ojcore"],
+define(["require", "knockout", "jquery", "../../../js/util/message-util", "ojs/ojcore", "ojs/ojdatetimepicker"],
         function (localrequire, ko, $, msgUtilModel, oj) {
 
             /**
