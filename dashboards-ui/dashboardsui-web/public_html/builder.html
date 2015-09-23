@@ -346,7 +346,8 @@
                                     <input id="dbd-left-panel-widgets-page-input"
                                             data-bind="ojComponent: {
                                               component: 'ojInputNumber',
-                                              max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged}"/>
+                                              max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
+                                              displayOptions: {converterHint: 'none', validatorHint: 'notewindow', title: 'none', messages: 'notewindow'}}"/>
                                 </div>
                             </div>
                             <div class="oj-row" style="margin-top: 10px;">
