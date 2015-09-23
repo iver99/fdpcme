@@ -124,6 +124,7 @@ define(['knockout',
             };
             
             self.initDraggable = function() {
+                self.initWidgetDraggable();
                 $(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
                     scroll: false,
@@ -165,6 +166,22 @@ define(['knockout',
                 });                
             };
             
+            self.initWidgetDraggable = function() {
+                $(".dbd-left-panel-widget-text").draggable({
+                    helper: "clone",
+                    scroll: false,
+                    start: function(e, t) {
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
+                    },
+                    drag: function(e, t) {
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                    },
+                    stop: function(e, t) {
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
+                    }
+                });
+            };
+            
             self.resizeEventHandler = function(width, height) {
                 $('#dbd-left-panel').height(height);
                 $('#left-panel-text-helper').css("width", width - 20);
@@ -200,6 +217,7 @@ define(['knockout',
                             self.widgets.push(ko.mapping.fromJS(widgets[i]));
                     }
                     totalPages !== self.totalPages() && self.totalPages(totalPages);
+                    self.initWidgetDraggable();
                 });
             };
             
