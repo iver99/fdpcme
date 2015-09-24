@@ -66,7 +66,8 @@ a:hover {
 
 @font-face {
   font-family: 'FaFont';
-  src: url("font-awesome/fonts/fontawesome-webfont.woff");
+  src: url("font-awesome/fonts/fontawesome-webfont.woff2") format('woff2'),
+       url("font-awesome/fonts/fontawesome-webfont.woff") format('woff');
   font-weight: normal;
   font-style: normal; 
 }

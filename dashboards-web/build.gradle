@@ -12,8 +12,9 @@ apply plugin: 'artifactory-publish'
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
 //jar.archiveName='emcpdf_qa_test.jar'
-//group = 'com.oracle.emaas.emcpdf'
+group = 'com.oracle.emaas.emcpdf'
 //version = '1.0.1'
+//apply plugin: 'gavsetting'
 
 buildscript {
     repositories {
@@ -23,7 +24,10 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-    }  
+   classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
+
+
+     }  
 }
 
 configurations {
@@ -70,11 +74,11 @@ task runQATestSuite(type: Test){
 
 publishing {
     publications {
-/*
-        savedsearchWeb(MavenPublication) {
+
+        dashboardWeb(MavenPublication) {
               from components.java
         }
-*/
+
         integTest(MavenPublication) {
             setArtifactId(project.name + '-' + integTestJar.appendix)
             artifact integTestJar.archivePath
@@ -185,7 +189,7 @@ sourceSets {
 
 dependencies {
 	providedCompile project(':dashboards-entities') { transitive = false }
-	providedCompile project(':dashboards-core')  { transitive = false }
+	providedCompile (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+')  { transitive = false }
         providedCompile project(':dashboards-webutils')  { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
 //	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0') { transitive = false }

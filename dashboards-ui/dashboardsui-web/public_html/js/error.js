@@ -97,7 +97,7 @@ function(ko, $, dfu, oj)
             if (window.intervalToExtendCurrentUserSession)
                 clearInterval(window.intervalToExtendCurrentUserSession);
             
-            var ssoLogoutEndUrl = window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/home.html";
+            var ssoLogoutEndUrl = window.location.protocol + "//" + window.location.host + "/emsaasui/emcpdfui/welcome.html";
             var logoutUrlDiscovered = dfu.discoverLogoutUrl();
             //If session timed out, redirect to sso login page and go to home page after re-login.
             if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
