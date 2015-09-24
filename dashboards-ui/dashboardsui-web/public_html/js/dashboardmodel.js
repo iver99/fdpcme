@@ -66,24 +66,24 @@ function(dfu, oj, ko, $)
                 var providerName = tiles[0]["PROVIDER_NAME"];
                 var version = tiles[0]["PROVIDER_VERSION"];
                 var assetRoot = tiles[0]["PROVIDER_ASSET_ROOT"];
-                var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot, false);
-                if (dfu.isDevMode()){
-                    url = dfu.getRelUrlFromFullUrl(url);
-                }
+                var url = "https://slc09bep.us.oracle.com:4443/emsaasui/emcitas/flex-analyzer/html/displaying/new-chart-config.html";//dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot, false);
+//                if (dfu.isDevMode()){
+//                    url = dfu.getRelUrlFromFullUrl(url);
+//                }
                 this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
-                   console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
-                   if ("EmcitasApplications"===providerName && "0.1"===version && "ita-dashboard"===assetRoot){
+                   //console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
+                   if ("EmcitasApplications"===providerName && "0.1"===version && "flex-analyzer"===assetRoot){
                        var dsbName = this.get('name');
-                        url=url+"?name="+encodeURI(dsbName)+"&createdBy=Oracle";
+                        url=url+"?name="+encodeURI(dsbName)+"&createdBy=oracle";
                     }
                    return url;
                 }else{
-                   console.log("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
+                   oj.Logger.error("Single Page Dashboard URL is not found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
                    return null;
                 }
             }else{
-                console.log("Invalid tiles: "+JSON.stringify(tiles));
+                oj.Logger.error("Invalid tiles: "+JSON.stringify(tiles));
             }
         }else{
             return document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/builder.html?dashboardId=' + _id;
