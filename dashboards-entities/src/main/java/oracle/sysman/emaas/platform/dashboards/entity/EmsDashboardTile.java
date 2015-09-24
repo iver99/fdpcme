@@ -43,17 +43,25 @@ public class EmsDashboardTile implements Serializable
 	private Long tileId;
 	@Column(nullable = false, length = 64)
 	private String title;
+	@Column(name = "TILE_ROW")
+	private Integer row;
+	@Column(name = "TILE_COLUMN")
+	private Integer column;
 	@Column
 	private Integer height;
 	@Column
 	private Integer width;
+	@Column(name = "TYPE")
+	private Integer type;
 	@Column(name = "POSITION", nullable = false)
 	private Integer position;
 	@Column(name = "IS_MAXIMIZED", nullable = false)
 	private Integer isMaximized;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", nullable = false)
 	private Date creationDate;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFICATION_DATE")
 	private Date lastModificationDate;
@@ -69,14 +77,14 @@ public class EmsDashboardTile implements Serializable
 	private String providerVersion;
 	@Column(name = "WIDGET_CREATION_TIME", nullable = false, length = 32)
 	private String widgetCreationTime;
-
 	@Column(name = "WIDGET_DESCRIPTION", length = 256)
 	private String widgetDescription;
-
 	@Column(name = "WIDGET_GROUP_NAME", length = 64)
 	private String widgetGroupName;
+
 	@Column(name = "WIDGET_HISTOGRAM", length = 1024)
 	private String widgetHistogram;
+
 	@Column(name = "WIDGET_ICON", length = 1024)
 	private String widgetIcon;
 	@Column(name = "WIDGET_KOC_NAME", nullable = false, length = 256)
@@ -104,21 +112,24 @@ public class EmsDashboardTile implements Serializable
 	{
 	}
 
-	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer height, Integer isMaximized,
-			Date lastModificationDate, String lastModifiedBy, String owner, Integer position, String providerAssetRoot,
-			String providerName, String providerVersion, Long tileId, String title, String widgetCreationTime,
-			String widgetDescription, String widgetGroupName, String widgetHistogram, String widgetIcon, String widgetKocName,
-			String widgetName, String widgetOwner, Integer widgetSource, String widgetTemplate, String widgetUniqueId,
-			String widgetViewmode, Integer width)
+	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer type, Integer row, Integer column,
+			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy, String owner, /*Integer position, */
+			String providerAssetRoot, String providerName, String providerVersion, Long tileId, String title,
+			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
+			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
+			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer width)
 	{
 		this.creationDate = creationDate;
 		dashboard = emsDashboard1;
+		this.type = type;
+		this.row = row;
+		this.column = column;
 		this.height = height;
 		this.isMaximized = isMaximized;
 		this.lastModificationDate = lastModificationDate;
 		this.lastModifiedBy = lastModifiedBy;
 		this.owner = owner;
-		this.position = position;
+		position = 0;
 		this.providerAssetRoot = providerAssetRoot;
 		this.providerName = providerName;
 		this.providerVersion = providerVersion;
@@ -147,6 +158,14 @@ public class EmsDashboardTile implements Serializable
 		dashboardTileParamsList.add(emsDashboardTileParams);
 		emsDashboardTileParams.setDashboardTile(this);
 		return emsDashboardTileParams;
+	}
+
+	/**
+	 * @return the column
+	 */
+	public Integer getColumn()
+	{
+		return column;
 	}
 
 	public Date getCreationDate()
@@ -209,6 +228,14 @@ public class EmsDashboardTile implements Serializable
 		return providerVersion;
 	}
 
+	/**
+	 * @return the row
+	 */
+	public Integer getRow()
+	{
+		return row;
+	}
+
 	public Long getTileId()
 	{
 		return tileId;
@@ -217,6 +244,14 @@ public class EmsDashboardTile implements Serializable
 	public String getTitle()
 	{
 		return title;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public Integer getType()
+	{
+		return type;
 	}
 
 	public String getWidgetCreationTime()
@@ -291,6 +326,15 @@ public class EmsDashboardTile implements Serializable
 		return emsDashboardTileParams;
 	}
 
+	/**
+	 * @param column
+	 *            the column to set
+	 */
+	public void setColumn(Integer column)
+	{
+		this.column = column;
+	}
+
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
@@ -333,7 +377,8 @@ public class EmsDashboardTile implements Serializable
 
 	public void setPosition(Integer position)
 	{
-		this.position = position;
+		//			this.position = position;
+		this.position = 0;
 	}
 
 	public void setProviderAssetRoot(String providerAssetRoot)
@@ -351,9 +396,27 @@ public class EmsDashboardTile implements Serializable
 		this.providerVersion = providerVersion;
 	}
 
+	/**
+	 * @param row
+	 *            the row to set
+	 */
+	public void setRow(Integer row)
+	{
+		this.row = row;
+	}
+
 	public void setTitle(String title)
 	{
 		this.title = title;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(Integer type)
+	{
+		this.type = type;
 	}
 
 	public void setWidgetCreationTime(String widgetCreationTime)

@@ -336,24 +336,31 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
 
             /**
              * Discover dashboard home URL
-             * @param {String} smUrl
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
             	var homeUrl = "/emsaasui/emcpdfui/home.html";
                 return homeUrl;
             };    
+
+            /**
+             * Discover welcome URL
+             * @returns {String} url
+             */
+            self.discoverWelcomeUrl = function() {
+            	var welcomeUrl = "/emsaasui/emcpdfui/welcome.html";
+                return welcomeUrl;
+            };  
             
             /**
              * Get default request header for ajax call
              * @returns {Object} 
              */
             self.getDefaultHeader = function() {
-                var defHeader = {
-//                    'Authorization': 'Basic d2VibG9naWM6d2VsY29tZTE=',
-                    "X-USER-IDENTITY-DOMAIN-NAME":self.tenantName,
-                    "X-REMOTE-USER":self.tenantName+'.'+self.userName};
+                var defHeader = {};
                 if (self.isDevMode()){
+                    defHeader["X-USER-IDENTITY-DOMAIN-NAME"] = self.tenantName;
+                    defHeader["X-REMOTE-USER"] = self.tenantName+'.'+self.userName;
                     defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
                 }
                 oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
@@ -537,7 +544,13 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {Object} 
              */
             self.getSavedSearchServiceRequestHeader=function() {
-                return self.getDefaultHeader();
+                var defHeader = {};
+                if (self.isDevMode()){
+                    defHeader["OAM_REMOTE_USER"] = self.tenantName+'.'+self.userName;
+                    defHeader.Authorization="Basic "+btoa(self.getDevData().wlsAuth);
+                }
+                oj.Logger.info("Sent Header: "+JSON.stringify(defHeader));
+                return defHeader;
             };
             
             /**
@@ -827,6 +840,38 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
             	return urlNoProtocol.substring(relPathIndex);
             };
             
+            /**
+             * Generate the window title according to given params.
+             * 
+             * @param {type} pageName 
+             * @param {type} contextName
+             * @param {type} targetType
+             * @param {type} serviceName
+             * @returns {String} 
+             */
+            self.generateWindowTitle = function(pageName, contextName, targetType, serviceName) {
+                var title = "";
+                var title_suffix = isNlsStringsLoaded ? nlsStrings().BRANDING_BAR_ABOUT_DIALOG_SUB_TITLE : 'Oracle Management Cloud';
+                if(pageName) {
+                    title = title + pageName;
+                }
+                if(contextName) {
+                    title = pageName ? (title + ": ") : title;
+                    title = title + contextName;
+                    if(targetType) {
+                        title = title + " (" + targetType + ")";                   
+                    }
+                }
+                if(pageName || contextName) {
+                    title = title + " - ";
+                }
+                if(serviceName) {
+                    title = title + serviceName + " - ";
+                }
+                title = title + title_suffix;
+                return title;
+            }
+            
             self.setupSessionLifecycleTimeoutTimer = function(sessionExpiryTime, warningDialogId) {
                 //Get session expiry time and do session timeout handling
                 if (sessionExpiryTime && sessionExpiryTime.length >= 14) {
@@ -1021,4 +1066,6 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
         return DashboardFrameworkUtility;
     }
 );
+
+
 

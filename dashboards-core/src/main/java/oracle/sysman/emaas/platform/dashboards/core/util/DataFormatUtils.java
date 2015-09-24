@@ -6,6 +6,7 @@ import java.util.Date;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
 import oracle.sysman.emaas.platform.dashboards.core.model.TileParam;
 
 public class DataFormatUtils
@@ -118,6 +119,32 @@ public class DataFormatUtils
 		}
 		else {
 			return TileParam.PARAM_TYPE_CODE_STRING;
+		}
+	}
+
+	public static String tileTypeInteger2String(Integer type)
+	{
+		if (Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(type)) {
+			return Tile.TILE_TYPE_TEXT_WIDGET;
+		}
+		else {
+			return Tile.TILE_TYPE_DEFAULT;
+		}
+	}
+
+	public static Integer tileTypeString2Integer(String type) throws CommonFunctionalException
+	{
+		if (type == null) { // default
+			return Tile.TILE_TYPE_CODE_DEFAULT;
+		}
+		if (!Tile.TILE_TYPE_DEFAULT.equals(type) && !Tile.TILE_TYPE_TEXT_WIDGET.equals(type)) {
+			throw new CommonFunctionalException(MessageUtils.getDefaultBundleString(CommonFunctionalException.TILE_INVALID_TYPE));
+		}
+		if (Tile.TILE_TYPE_DEFAULT.equals(type)) {
+			return Tile.TILE_TYPE_CODE_DEFAULT;
+		}
+		else {
+			return Tile.TILE_TYPE_CODE_TEXT_WIDGET;
 		}
 	}
 

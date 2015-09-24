@@ -66,6 +66,18 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 
 		/**
+		 * @param characteristics
+		 * @return ServiceConfigBuilder
+		 */
+		public ServiceConfigBuilder characteristics(String characteristics)
+		{
+			if (characteristics != null) {
+				serviceConfigMap.put("characteristics", characteristics);
+			}
+			return this;
+		}
+
+		/**
 		 * @param controlledDataTypes
 		 *            example "LogFile, Target Delta"
 		 * @return ServiceConfigBuilder
@@ -174,37 +186,11 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			serviceConfigMap.put("virtualEndpoints", virtualEndpoints);
 			return this;
 		}
-
-                /**
-                 * @param characteristics
-                 * @return ServiceConfigBuilder
-                 */
-                public ServiceConfigBuilder characteristics(String characteristics)
-                {
-                       if (characteristics != null) serviceConfigMap.put("characteristics", characteristics);
-                       return this;
-                }
 	}
 
 	enum UrlType
 	{
 		HTTP, HTTPS
-	}
-
-	private static final String NAV_BASE = "/emsaasui/emcpdfui";
-
-	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
-	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
-	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
-
-	static {
-		try {
-			WLS_RUNTIME_SERVICE_NAME = ObjectName
-					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
-		}
-		catch (Exception e) {
-			throw new Error("Well-known JMX names are corrupt - code bug", e);
-		}
 	}
 
 	private static String getApplicationUrl(UrlType urlType) throws Exception
@@ -226,6 +212,23 @@ public class RegistryServiceManager implements ApplicationServiceManager
 		}
 		finally {
 			ctx.close();
+		}
+	}
+
+	private static final String NAV_BASE = "/emsaasui/emcpdfui";
+	private static final String NAV_WELCOME = "/emsaasui/emcpdfui/welcome.html";
+	private static final String NAV_BASE_HOME = "/emsaasui/emcpdfui/home.html";
+	private static final String NAV_QUICK_LINK = "/emsaasui/emcpdfui/home.html";
+
+	public static final ObjectName WLS_RUNTIME_SERVICE_NAME;
+
+	static {
+		try {
+			WLS_RUNTIME_SERVICE_NAME = ObjectName
+					.getInstance("com.bea:Name=RuntimeService,Type=weblogic.management.mbeanservers.runtime.RuntimeServiceMBean");
+		}
+		catch (Exception e) {
+			throw new Error("Well-known JMX names are corrupt - code bug", e);
 		}
 	}
 
@@ -313,7 +316,8 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			}
 
 			ServiceConfigBuilder builder = new ServiceConfigBuilder();
-			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version")).characteristics(serviceProps.getProperty("characteristics"));
+			builder.serviceName(serviceProps.getProperty("serviceName")).version(serviceProps.getProperty("version"))
+					.characteristics(serviceProps.getProperty("characteristics"));
 			StringBuilder virtualEndPoints = new StringBuilder();
 			StringBuilder canonicalEndPoints = new StringBuilder();
 			if (applicationUrlHttp != null) {
@@ -338,12 +342,14 @@ public class RegistryServiceManager implements ApplicationServiceManager
 
 			List<Link> links = new ArrayList<Link>();
 			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("welcome").withHref(applicationUrlHttp + NAV_WELCOME));
 				links.add(new Link().withRel("home").withHref(applicationUrlHttp + NAV_BASE_HOME));
 				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttp + NAV_QUICK_LINK));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations").withHref(applicationUrlHttp + NAV_STATIC_CONF));
 				//				links.add(new Link().withRel("static/dashboardsui.registry").withHref(applicationUrlHttp + NAV_STATIC_REGISTRY));
 			}
 			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("welcome").withHref(applicationUrlHttps + NAV_WELCOME));
 				links.add(new Link().withRel("home").withHref(applicationUrlHttps + NAV_BASE_HOME));
 				links.add(new Link().withRel("quickLink/Dashboard Home").withHref(applicationUrlHttps + NAV_QUICK_LINK));
 				//				links.add(new Link().withRel("static/dashboardsui.configurations")

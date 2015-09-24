@@ -8,7 +8,7 @@ configurations {
 //version = '1.0.0'
 version = project.ext.getServiceVersion("DashboardService-API")
 group = 'emaas/applications/dashboards-framework'
-
+deployname=artifactPrefix+'dashboards-api'
 def artifactId = appName 
 def groupId = group 
 def versionNumber = version
@@ -29,7 +29,7 @@ dependencies
 {
 	deploy (project(path:':dashboards-web', configuration:'archives')) {transitive = false}
 
-	earlib (project(':dashboards-core')){transitive = false}
+	earlib (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+'){transitive = false}
 	earlib (project(':dashboards-entities')){transitive = false}
 	earlib (project(':dashboards-webutils')){transitive = false} 
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1') {transitive=false }
@@ -108,7 +108,8 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "${appName}-${version}",
+		targets:	'Server-6',
+		name:       "DashboardService-API-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
@@ -127,7 +128,7 @@ task appServerUndeploy{
 		println "Undeploying ${appName}-${version} from ${t3URL}" 
 
 		ant.wldeploy(action:'undeploy',  
-		name:       "${appName}-${version}",  
+		name:       "DashboardService-API-6",  
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 

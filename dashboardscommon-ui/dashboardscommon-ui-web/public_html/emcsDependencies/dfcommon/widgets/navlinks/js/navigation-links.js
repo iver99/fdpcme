@@ -3,6 +3,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
             function NavigationLinksViewModel(params) {
                 var self = this;
                 var dfHomeUrl = null;
+                var dfDashboardsUrl = null;
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
@@ -16,6 +17,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 self.visualAnalyzersLabel = ko.observable();
                 self.administrationLabel = ko.observable();
                 self.homeLinkLabel = ko.observable();
+                self.dashboardLinkLabel = ko.observable();
                 self.cloudServicesLabel = ko.observable();
                 
                 self.cloudServices = ko.observableArray();
@@ -76,11 +78,18 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         window.location.href = data.href;
                     }
                 };
+               
+                self.openHome = function() {
+                    oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
+                    if(dfHomeUrl) {
+                        window.location.href = dfHomeUrl;
+                    }
+                }
                 
                 self.openDashboardHome = function(data, event) {
-                    oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfHomeUrl);
-                    if (dfHomeUrl) {
-                        window.location.href = dfHomeUrl;
+                    oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
+                    if (dfDashboardsUrl) {
+                        window.location.href = dfDashboardsUrl;
                     }
                 };
                 
@@ -182,7 +191,9 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function refreshLinks() {
-                    dfHomeUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
+                    dfHomeUrl = '/emsaasui/emcpdfui/welcome.html';
+                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
+                    
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 
                         self.visualAnalyzers().length === 0 || 
@@ -198,6 +209,7 @@ define(['knockout', 'jquery', '../../../js/util/df-util', 'ojs/ojcore'],
                         self.visualAnalyzersLabel(nls.BRANDING_BAR_NAV_EXPLORE_DATA_LABEL);
                         self.administrationLabel(nls.BRANDING_BAR_NAV_ADMIN_LABEL);
                         self.homeLinkLabel(nls.BRANDING_BAR_NAV_HOME_LABEL);
+                        self.dashboardLinkLabel(nls.BRANDING_BAR_NAV_DASHBOARDS_LABEL);
                         self.cloudServicesLabel(nls.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL);
                         
                         var cloudServices = self.cloudServices();
