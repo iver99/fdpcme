@@ -66,10 +66,10 @@ function(dfu, oj, ko, $)
                 var providerName = tiles[0]["PROVIDER_NAME"];
                 var version = tiles[0]["PROVIDER_VERSION"];
                 var assetRoot = tiles[0]["PROVIDER_ASSET_ROOT"];
-                var url = "https://slc09bep.us.oracle.com:4443/emsaasui/emcitas/flex-analyzer/html/displaying/new-chart-config.html";//dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot, false);
-//                if (dfu.isDevMode()){
-//                    url = dfu.getRelUrlFromFullUrl(url);
-//                }
+                var url = dfu.df_util_widget_lookup_assetRootUrl(providerName,version, assetRoot, false);
+                if (dfu.isDevMode()){
+                    url = dfu.getRelUrlFromFullUrl(url);
+                }
                 this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
                    //console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
