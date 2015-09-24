@@ -3,6 +3,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
+            self.SERVICE_VERSION=encodeURIComponent('1.0+');
             
             /**
              * Get URL parameter value according to URL parameter name
@@ -322,7 +323,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {String}
              */
             self.discoverLogoutUrl = function() {
-                return self.discoverUrl('SecurityService', '1.0+', 'sso.logout');
+                return self.discoverUrl('SecurityService', self.SERVICE_VERSION, 'sso.logout');
             };
             
             /**
@@ -331,7 +332,7 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns 
              */
             self.discoverLogoutUrlAsync = function(callbackFunc) {
-                return self.discoverUrlAsync('SecurityService', '1.0+', 'sso.logout', callbackFunc);
+                return self.discoverUrlAsync('SecurityService', self.SERVICE_VERSION, 'sso.logout', callbackFunc);
             };
 
             /**
@@ -558,9 +559,6 @@ define(['require', 'knockout', 'jquery', 'ojs/ojcore'],
              * @returns {String} url
              */            
             self.discoverSavedSearchServiceUrl = function() {
-//                return 'http://slc08upg.us.oracle.com:7001/savedsearch/v1/';
-//                return 'http://slc06wfs.us.oracle.com:7001/savedsearch/v1/';
-//                return self.discoverUrl('SavedSearch', '1.0');
                 return self.SSF_REST_API_BASE;
             };
             
