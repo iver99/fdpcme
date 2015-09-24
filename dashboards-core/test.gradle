@@ -1,6 +1,6 @@
 
 //jar.archiveName='emcpdf_dev_test.jar'
-group = 'com.oracle.emaas.emcpdf'
+group = 'com.oracle.emaas.emcpdf.upgrade'
 //version = '1.0.1'
 apply plugin: 'gavsetting'
 sourceSets {

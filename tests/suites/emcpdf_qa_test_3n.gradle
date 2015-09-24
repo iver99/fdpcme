@@ -52,7 +52,7 @@ repositories {
             url = "${artifactory_contextUrl}/emaas-virtual" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-web-integ-tests', version: '1.0.0+') {
+    testConfig (group: 'com.oracle.emaas.emcpdf.upgrade', name: 'dashboards-web-integ-tests', version: '1.0.0+') {
 	exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
