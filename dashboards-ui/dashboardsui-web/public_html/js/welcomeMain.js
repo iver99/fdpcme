@@ -166,7 +166,7 @@ require(['ojs/ojcore',
                 //get urls of databases and middleware
                 self.getITAVerticalAppUrl = function(rel) {
                     var serviceName = "EmcitasApplications";
-                    var version = "0.1"; //TODO version upgrade to 1.0                   
+                    var version = "1.0";                   
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
                 }
