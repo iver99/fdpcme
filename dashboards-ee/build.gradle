@@ -29,7 +29,7 @@ dependencies
 {
 	deploy (project(path:':dashboards-web', configuration:'archives')) {transitive = false}
 
-	earlib (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+'){transitive = false}
+	earlib (group: 'com.oracle.emaas.emcpdf.wjz', name: 'dashboards-core', version: '1.0.0+'){transitive = false}
 	earlib (project(':dashboards-entities')){transitive = false}
 	earlib (project(':dashboards-webutils')){transitive = false} 
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1') {transitive=false }

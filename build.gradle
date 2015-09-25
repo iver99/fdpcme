@@ -188,7 +188,7 @@ project(':dashboards-web'){
 	
 	dependencies{			
 		compile project(':dashboards-entities')
-		compile (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+')
+		compile (group: 'com.oracle.emaas.emcpdf.wjz', name: 'dashboards-core', version: '1.0.0+')
 				
 		compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0')
     		compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+') 
