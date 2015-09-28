@@ -358,7 +358,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.pickerTopCss = "text-align: center;";
                 }else {
                     self.hideRangeLabel = "inline-block";
-                    self.pickerTopCss = "text-align: left;";
+                    self.pickerTopCss = "text-align: left; padding-bottom: 15px;";
                 }
                 
                 if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
@@ -648,7 +648,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.changeDate = function (event, data, value) {
                     try {
-                        self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
+                        var convertedDate = self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
+                        if(convertedDate !== data.value) throw true;
                         
                         $(event.target).removeClass("input-error");
                         if (value === 1) {

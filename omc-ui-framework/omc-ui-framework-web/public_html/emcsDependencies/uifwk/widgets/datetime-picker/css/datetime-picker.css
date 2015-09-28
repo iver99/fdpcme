@@ -104,7 +104,11 @@
 }
 .datePicker {
     font-size: 15px;
-    padding-top: 10px;
+    /*padding-top: 10px;*/
+}
+
+.datePicker .oj-datepicker-content {
+    padding: 0px;
 }
 
 .drawer img {
