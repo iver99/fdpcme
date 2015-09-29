@@ -34,7 +34,7 @@ define([
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
                         
-                self.widgetGroupFilterVisible = ko.observable(true);
+                self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
                 self.clearButtonVisible = ko.computed(function(){return self.searchText() && '' !== self.searchText() ? true : false;});
                 
@@ -56,6 +56,8 @@ define([
                 var totalPage = 0;
                 var naviFromSearchResults = false;
                 var widgetIndex = 0;
+                var queryWidgetsForAllSubscribedApps = false;
+                var availableWidgetGroups = [];
                 self.widgetList = ko.observableArray(widgetArray);
                 self.curPageWidgetList = ko.observableArray(curPageWidgets);
                 self.naviPreBtnEnabled=ko.observable(curPage === 1 ? false : true);
@@ -71,17 +73,28 @@ define([
                 // Widget group selector value change handler
                 self.optionChangedHandler = function(data, event) {
                     if (event.option === "value") {
-                        self.searchWidgets();
+                        var preValue = event.previousValue;
+                        var value = event.value;
+                        if (preValue !== null && $.isArray(preValue)) {
+                            preValue = preValue[0];
+                        }
+                        if (value !== null && $.isArray(value)) {
+                            value = value[0];
+                        }
+                        
+                        if (preValue !== value) {
+                            self.searchWidgets();
+                        }
                     }
                 };
                 
                 // Show widgets data of previous page
                 self.naviPrevious = function(data, event) {
                     console.log(event);
-                    if(event.type == "click" || (event.type == "keypress" && event.keyCode == 13)) {
+                    if(event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
                     if (curPage === 1) {
                         self.naviPreBtnEnabled(false);
-                    }else if (curPage === 2 && event.type == "keypress") {
+                    }else if (curPage === 2 && event.type === "keypress") {
                         $("#nextButton").focus();
                             curPage--;
                         }
@@ -103,10 +116,10 @@ define([
                 
                 // Show widget data of next page
                 self.naviNext = function(data, event) {
-                    if (event.type == "click" || (event.type == "keypress" && event.keyCode == 13)) {
+                    if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
                         if (curPage === totalPage) {
                             self.naviNextBtnEnabled(false);
-                        }else if (curPage === (totalPage-1) && event.type == "keypress") {
+                        }else if (curPage === (totalPage-1) && event.type === "keypress") {
                             $("#preButton").focus();
                             curPage++;
                         }
@@ -171,6 +184,7 @@ define([
                 function fetchWidgetsForCurrentPage(allWidgets) {
                     curPageWidgets=[];
                     for (var i=(curPage-1)*pageSize;i < curPage*pageSize && i < allWidgets.length;i++) {
+                        loadWidgetScreenshot(allWidgets[i]);
                         curPageWidgets.push(allWidgets[i]);
                     }
                 };
@@ -264,16 +278,18 @@ define([
                         oj.Logger.warn('No widget handler is available to call back!');
                     }
                 };
-                
+                                
                 function getWidgets() {
                     var widgetsUrl = '/sso.static/savedsearch.widgets';
                     if (dfu.isDevMode()){
                         widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
                     }
-                    return dfu.ajaxWithRetry({
+                    
+                    if (queryWidgetsForAllSubscribedApps) {
+                        return dfu.ajaxWithRetry({
                             url: widgetsUrl,
                             headers: dfu.getSavedSearchServiceRequestHeader(),
-                            success: function(data, textStatus) {
+                            success: function(data, textStatus, jqXHR) {
                                 loadWidgets(data);
                             },
                             error: function(xhr, textStatus, errorThrown){
@@ -281,6 +297,36 @@ define([
                             },
                             async: true
                         });  
+                    }
+                    else {
+                        var ajaxCallDfd = $.Deferred();
+                        var loadedCnt = 0;
+                        for (var i = 0; i < availableWidgetGroups.length; i++) {
+                            //Get widgets by widget group id
+                            widgetsUrl = widgetsUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
+                            dfu.ajaxWithRetry({
+                                url: widgetsUrl,
+                                headers: dfu.getSavedSearchServiceRequestHeader(),
+                                success: function(data, textStatus, jqXHR) {
+                                    loadWidgets(data);
+                                    loadedCnt++;
+                                    if (loadedCnt === availableWidgetGroups.length) {
+                                        ajaxCallDfd.resolve(data, textStatus, jqXHR);
+                                    }
+                                },
+                                error: function(jqXHR, textStatus, errorThrown){
+                                    loadedCnt++;
+                                    if (loadedCnt === availableWidgetGroups.length) {
+                                        ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
+                                    }
+                                    oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
+                                },
+                                async: true
+                            });  
+                        }
+
+                        return ajaxCallDfd;
+                    }
                 };
                 
                 function getWidgetGroups() {
@@ -295,6 +341,12 @@ define([
                                 widgetGroupList = loadWidgetGroups(data);
                                 if (widgetProviderName && widgetProviderVersion && widgetGroupList.length <= 2) {
                                     self.widgetGroupFilterVisible(false);
+                                }
+                                else {
+                                    self.widgetGroupFilterVisible(true);
+                                }
+                                if ($.isArray(data) && availableWidgetGroups.length === data.length) {
+                                    queryWidgetsForAllSubscribedApps = true;
                                 }
                             },
                             error: function(xhr, textStatus, errorThrown){
@@ -327,63 +379,93 @@ define([
                     index=0;
                     widgetIndex = 0;
                     widgetGroupList = [];
+                    availableWidgetGroups = [];
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
                     refreshPageData();
                     
-                    $.when(getWidgetGroups(), getWidgets()).then(function(){
-                        oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
-                        refreshPageData();
+                    getWidgetGroups().done(function(data, textStatus, jqXHR){
+                        oj.Logger.info("Finished loading widget groups. Start to load widgets.");
+                        getWidgets().done(function(data, textStatus, jqXHR){
+                            oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
+                            refreshPageData();
+                        })
+                        .fail(function(xhr, textStatus, errorThrown){
+                            oj.Logger.error("Failed to fetch widgets.");
+                        });
                     })
                     .fail(function(xhr, textStatus, errorThrown){
-                        oj.Logger.error("Failed to fetch widget groups and widgets.");
+                        oj.Logger.error("Failed to fetch widget groups.");
                     });
                 };
                 
                 // Load widgets from ajax call result data
                 function loadWidgets(data) {
-                    var targetWidgetArray = [];
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
                             if ((!widgetProviderName && !widgetProviderVersion) || 
                                     (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
-                                
-                                if (!widget.WIDGET_VISUAL || widget.WIDGET_VISUAL === '') {
-                                    var laImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
-                                    var taImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
-                                    var itaImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
-                                    if ('LoganService' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_VISUAL = laImagePath;
-                                    }
-                                    else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_VISUAL = taImagePath;
-                                    }
-                                    else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
-                                        widget.WIDGET_VISUAL = itaImagePath;
-                                    }else{
-                                        widget.WIDGET_VISUAL = itaImagePath;//default image
-                                    }
-                                }
+                                widget.WIDGET_VISUAL = ko.observable();
 
                                 if (!widget.WIDGET_DESCRIPTION)
                                     widget.WIDGET_DESCRIPTION = "";
                                 widget.isSelected = ko.observable(false);
                                 widget.isScreenShotPageDisplayed = ko.observable(true);
+                                widget.isScreenshotLoaded = false;
                                 widget.modificationDateString = getLastModificationTimeString(widget.WIDGET_CREATION_TIME);
-                                targetWidgetArray.push(widget);
-                                widgetArray.push(widget);
                                 if (index < pageSize) {
+                                    loadWidgetScreenshot(widget);
                                     curPageWidgets.push(widget);
                                     index++;
                                 }
-
+                                widgetArray.push(widget);
                                 widgetIndex++;
                             }
                         }
                     }
-                    return targetWidgetArray;
+                };
+                
+                function loadWidgetScreenshot(widget) {
+                    if (!widget.isScreenshotLoaded) {
+                        var widgetsUrl = '/sso.static/savedsearch.widgets';
+                        if (dfu.isDevMode()){
+                            widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                        }
+                        var widgetScreenshotUrl = widgetsUrl + "/" + widget.WIDGET_UNIQUE_ID + "/screenshot";
+                        dfu.ajaxWithRetry({
+                            url: widgetScreenshotUrl,
+                            headers: dfu.getSavedSearchServiceRequestHeader(),
+                            success: function(data, textStatus) {
+                                if (data && data.screenShot)
+                                    widget.WIDGET_VISUAL(data.screenShot);
+                                else {
+                                    var laImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
+                                    var taImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
+                                    var itaImagePath = "/emsaasui/uifwk/emcsDependencies/uifwk/images/sample-widget-histogram.png";
+                                    if ('LoganService' === widget.PROVIDER_NAME) {
+                                        widget.WIDGET_VISUAL(laImagePath);
+                                    }
+                                    else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
+                                        widget.WIDGET_VISUAL(taImagePath);
+                                    }
+                                    else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
+                                        widget.WIDGET_VISUAL(itaImagePath);
+                                    }else{
+                                        widget.WIDGET_VISUAL(itaImagePath); //default image
+                                    }
+                                }
+                                widgetArray[widget.index].WIDGET_VISUAL(widget.WIDGET_VISUAL());
+                                widget.isScreenshotLoaded = true;
+                                widgetArray[widget.index].isScreenshotLoaded = true;
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Error when fetching widget screen shot by URL: '+widgetScreenshotUrl+'.');
+                            },
+                            async: true
+                        });  
+                    }
                 };
                 
                 // Load widget groups from ajax call result data
@@ -402,13 +484,12 @@ define([
                             gname = data[i].WIDGET_GROUP_NAME;
                             if ((!widgetProviderName && !widgetProviderVersion) || 
                                     widgetProviderName === pname && widgetProviderVersion === pversion) {
-                                //Since there is no ITA widget in v1.0, we need to hide "IT Analytics" always from widget group dropdown list in "Add Widgets" dialog. 
-                                //We don't remove any ITA related data in SSF and only hide "IT Analytics" in "Add Widgets" dialog. 
-                                //We will enable it again post 1.0 once ITA widgets are ready.
-                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
+                                //Enable ITA widget group since ITA widgets are enabled now.
+//                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
                                     targetWidgetGroupArray.push(widgetGroup);
-                                }
+                                    availableWidgetGroups.push(data[i]);
+//                                }
                             }
                         }
                     }
