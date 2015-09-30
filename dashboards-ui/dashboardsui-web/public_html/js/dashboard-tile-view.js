@@ -386,6 +386,7 @@ define(['knockout',
             }
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard());
+            self.disableSave = ko.observable(false);
             
             self.includeTimeRangeFilter = ko.pureComputed({
                 read: function() {
@@ -420,6 +421,8 @@ define(['knockout',
             
             self.initEventHandlers = function() {
                 $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
+                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleSaveEnable);
+                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleSaveEnable);
             };
             
             self.rightButtonsAreaClasses = ko.computed(function() {
@@ -551,6 +554,21 @@ define(['knockout',
                 $("#parent-message-dialog").ojDialog("open");
             };
             
+            self.editors = 0;
+            self.handleSaveEnable = function(edit_type) {
+                if(edit_type === 'START_EDITING') {
+                    self.editors = self.editors + 1;
+                    self.disableSave(true);
+                }else {
+                    self.editors = self.editors - 1;
+                    if(self.editors>0) {
+                       self.disableSave(true); 
+                    }else{
+                       self.disableSave(false);
+                    }
+                }
+            } 
+            
             self.getSummary = function(dashboardId, name, description, tilesViewModel) {
                 function dashboardSummary(name, description) {
                     var self = this;
@@ -571,6 +589,19 @@ define(['knockout',
                 return summaryData;
             };
 
+            self.setAncestorsOverflowVisible = function() {
+                $("#tiles-col-container").css("overflow", "visible");
+                $("body").css("overflow", "visible");
+                $("html").css("overflow", "visible");
+            }
+            
+            self.resetAncestorsOverflow = function() {
+                $("#tiles-col-container").css("overflow-x", "hidden");
+                $("#tiles-col-container").css("overflow-y", "auto");
+                $("body").css("overflow", "hidden");
+                $("html").css("overflow", "hidden");
+            }
+            
             self.handleDashboardSave = function() {
             	if (self.isNameUnderEdit()) {
             		try {
@@ -614,10 +645,12 @@ define(['knockout',
                 		});
                 		parentNode.appendChild(canvas);
                 	});
+                        self.setAncestorsOverflowVisible();
                 	html2canvas($('#tiles-wrapper'), {
+                                background: "#fff",
                 		onrendered: function(canvas) {
                 			try {
-                				var resize_canvas = document.createElement('canvas');
+                                                var resize_canvas = document.createElement('canvas');
                 				resize_canvas.width = 320;
                 				resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;
                 				var resize_ctx = resize_canvas.getContext('2d');
@@ -633,10 +666,11 @@ define(['knockout',
                 				tilesViewModel.dashboard.screenShot = ko.observable(data);
                 			} catch (e) {
                 				oj.Logger.error(e);
-                			}
+                			}                                        
+                                        self.resetAncestorsOverflow();
                 			self.handleSaveUpdateDashboard(outputData);
                 		}  		
-                	});
+                	});                       
             	}
                 else {
                 	tilesViewModel.dashboard.screenShot = ko.observable(null);
@@ -771,6 +805,9 @@ define(['knockout',
             
             self.EVENT_TILE_ADDED = "EVENT_TILE_ADDED";
             self.EVENT_TILE_DELETED = "EVENT_TILE_DELETED";
+            
+            self.EVENT_TEXT_START_EDITING = "EVENT_TEXT_START_EDITING";
+            self.EVENT_TEXT_STOP_EDITING = "EVENT_TEXT_STOP_EDITING";
             
             function Dispatcher() {
                 var dsp = this;

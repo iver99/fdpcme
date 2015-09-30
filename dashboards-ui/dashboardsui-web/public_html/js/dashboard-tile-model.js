@@ -161,10 +161,11 @@ define(['knockout',
             return url;
         }
         
-        function initializeTextTileAfterLoad(dashboard, tile, funcShow, funcReorder, isContentLengthValid) {
+        function initializeTextTileAfterLoad($b, tile, funcShow, funcReorder, isContentLengthValid) {
             if(!tile) {
                 return;
             }
+            var dashboard = $b.dashboard;
             registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
             tile.shouldHide = ko.observable(false);
             tile.editDisabled = ko.computed(function() { //to do
@@ -175,12 +176,13 @@ define(['knockout',
                 reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
-                validator: isContentLengthValid
+                validator: isContentLengthValid,
+                builder: $b
             };
             
             tile.tileDisplayClass = ko.computed(function() {
                 var display = tile.shouldHide()?"none":"block";
-                return tile.cssStyle() + "display:" + display + "; left: 20px;";
+                return tile.cssStyle() + "display:" + display + "; left: 10px;";
             });
         }
         
@@ -317,9 +319,9 @@ define(['knockout',
             
         }
         
-        function DashboardTextTile(dashboard, widget, funcShow, funcReorder) {
+        function DashboardTextTile($b, widget, funcShow, funcReorder) {
             var self = this;
-            self.dashboard = dashboard;
+            self.dashboard = $b.dashboard;
             self.title = ko.observable("text widget title"); //to do 
             self.description = ko.observable();
             self.isMaximized = ko.observable(false);
@@ -334,7 +336,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTextTileAfterLoad(dashboard, self, funcShow, funcReorder, isContentLengthValid);            
+            initializeTextTileAfterLoad($b, self, funcShow, funcReorder, isContentLengthValid);            
         }
 
         /**
@@ -997,7 +999,7 @@ define(['knockout',
                 var newTextTile;
                 var widget = self.createTextWidget();
                 
-                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show, self.tiles.tilesReorder);
+                var newTextTile = new DashboardTextTile($b, widget, self.show, self.tiles.tilesReorder);
                 var textTileCell = new Cell(0, 0);
                 newTextTile.row(textTileCell.row);
                 newTextTile.column(textTileCell.column);
@@ -1634,7 +1636,7 @@ define(['knockout',
                 if (!cell) return;
                 var tile = u.helper.tile;
                 if (!tile) {
-                    tile = new DashboardTextTile(self.dashboard, self.createTextWidget(), self.show, self.tiles.tilesReorder);
+                    tile = new DashboardTextTile($b, self.createTextWidget(), self.show, self.tiles.tilesReorder);
                     u.helper.tile = tile;
                     self.tiles.tiles.push(tile);
                 }
@@ -1666,7 +1668,7 @@ define(['knockout',
                     if (!cell) return;
                     tile = u.helper.tile;
                     if (!u.helper.tile) {
-                        tile = new DashboardTextTile(self.dashboard, self.createTextWidget(), self.show, self.tiles.tilesReorder);
+                        tile = new DashboardTextTile($b, self.createTextWidget(), self.show, self.tiles.tilesReorder);
                         u.helper.tile = tile;
                         self.tiles.tiles.push(tile);
                     }

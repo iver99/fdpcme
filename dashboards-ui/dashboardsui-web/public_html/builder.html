@@ -129,7 +129,7 @@
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: handleDashboardSave, ojComponent: {
-                                        component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'),
+                                        component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true">
                         </button>
@@ -429,7 +429,7 @@
                                 </div>
                             </div>
                         </div> 
-                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling" style="max-width: none; padding-left: 20px;padding-top: 6px; padding-bottom: 10px;" >
+                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling" style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px;" >
                             <div class="oj-col oj-sm-6">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',
@@ -461,7 +461,8 @@
                             </p>
                         </div>
                         <!-- /ko -->
-                        <div id="tiles-wrapper" class="fit-size" style="width: 100%; float: left; position: relative; height: auto; padding-left: 10px;">
+                        <div style="padding-left: 10px;">
+                        <div id="tiles-wrapper" class="fit-size" style="width: 100%; float: left; position: relative; height: auto;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
                             <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
@@ -525,7 +526,7 @@
                                                         <li id="taller" data-bind="css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
+                                                                    <img src="images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                             </a>
@@ -533,7 +534,7 @@
                                                         <li id="shorter" data-bind="css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
+                                                                    <img src="images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                 </a>
@@ -590,6 +591,7 @@
                                 </div>
                                 <!-- /ko -->                                
                             </div>
+                        </div>
                         </div>
                 </div>
             <!--</div>-->
