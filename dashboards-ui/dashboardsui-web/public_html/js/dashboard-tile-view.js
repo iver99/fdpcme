@@ -589,6 +589,19 @@ define(['knockout',
                 return summaryData;
             };
 
+            self.setAncestorsOverflowVisible = function() {
+                $("#tiles-col-container").css("overflow", "visible");
+                $("body").css("overflow", "visible");
+                $("html").css("overflow", "visible");
+            }
+            
+            self.resetAncestorsOverflow = function() {
+                $("#tiles-col-container").css("overflow-x", "hidden");
+                $("#tiles-col-container").css("overflow-y", "auto");
+                $("body").css("overflow", "hidden");
+                $("html").css("overflow", "hidden");
+            }
+            
             self.handleDashboardSave = function() {
             	if (self.isNameUnderEdit()) {
             		try {
@@ -632,7 +645,9 @@ define(['knockout',
                 		});
                 		parentNode.appendChild(canvas);
                 	});
+                        self.setAncestorsOverflowVisible();
                 	html2canvas($('#tiles-wrapper'), {
+                                background: "#fff",
                 		onrendered: function(canvas) {
                 			try {
                                                 var resize_canvas = document.createElement('canvas');
@@ -651,10 +666,11 @@ define(['knockout',
                 				tilesViewModel.dashboard.screenShot = ko.observable(data);
                 			} catch (e) {
                 				oj.Logger.error(e);
-                			}
+                			}                                        
+                                        self.resetAncestorsOverflow();
                 			self.handleSaveUpdateDashboard(outputData);
                 		}  		
-                	});
+                	});                       
             	}
                 else {
                 	tilesViewModel.dashboard.screenShot = ko.observable(null);
