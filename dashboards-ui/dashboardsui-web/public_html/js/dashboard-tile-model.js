@@ -1799,6 +1799,8 @@ define(['knockout',
                 $(window).resize(function() {
                     $b.triggerBuilderResizeEvent('resize builder after window resized');
                 });
+                //avoid brandingbar disappear when set font-size of text
+                $("#globalBody").addClass("globalBody");
             };
 
             var timeSelectorChangelistener = ko.computed(function(){
