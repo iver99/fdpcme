@@ -7,7 +7,7 @@ apply from:'test.gradle'
 apply plugin: 'artifactory'
 apply plugin: 'artifactory-publish'
 //jar.archiveName='emcpdf_dev_test.jar'
-group = 'com.oracle.emaas.emcpdf.wjz'
+group = 'com.oracle.emaas.emcpdf'
 //version = '1.0.1'
 
 sourceSets {
