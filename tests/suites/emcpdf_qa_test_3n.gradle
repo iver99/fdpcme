@@ -73,7 +73,6 @@ task small_deploy_3n_block(type: EMTest) {
                         'include' ('name': 'setupEmaasSmallDeploy')
                     }
                 }
-        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
             }
         }
     }
@@ -85,7 +84,6 @@ task small_deploy_3n_block(type: EMTest) {
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
-	//include "oracle/sysman/emaas/platform/dashboards/test/favoritedashboards/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/Configuration/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
@@ -112,4 +110,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
 
 
 task emcpdf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
-//apply from: "../../codeCoverage/codeCoverage.gradle"
+

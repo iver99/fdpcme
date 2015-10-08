@@ -1,11 +1,6 @@
-apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'TestInfraPlugin'
 apply from:'test.gradle'
-apply plugin: 'artifactory-publish'
-group = 'com.oracle.emaas.emcpdf'
-//version = '1.0.1'
+
 
 sourceSets {
     main {
@@ -33,43 +28,24 @@ task runDEVTestSuite_webuiutil(type: Test){
         suites file('dashboardsui_webutils_testng_suite.xml')
         }
 }
-project.publishGroup1='com.oracle.emaas.emcpdf.test';
-publishing {
-    publications {
-        integTest(MavenPublication) {
-            setArtifactId(project.name + '-' + integTestJar.appendix)
-            artifact integTestJar.archivePath
-	    version project.version
-	    groupId  project.publishGroup1
-	
-            pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
-                    def dependency = dependencies.appendNode('dependency')
-                    dependency.appendNode('groupId', it.moduleGroup)
-                    dependency.appendNode('artifactId', it.moduleName)
-		    if (it.moduleVersion != 'unspecified') {
-                        println "VERSION for ${it.moduleName} = ${it.moduleVersion}"
-                        dependency.appendNode('version', it.moduleVersion)
-                    }
-		    else {
-                        dependency.appendNode('version', '')
-
-	            }
-                }
-            }
-        }
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpdf.test')
+                        artifact integTestJar.archivePath
     }
-   repositories {
-        maven {
-            url "${artifactory_contextUrl}/${artifactory_repoKey}"
-            credentials {
-                username = "${artifactory_user}"
-                password =  "${artifactory_password}"
-            }
-        }
+    thisJarPublication(MavenPublication) {
+                        from project.components.java
+                        setGroupId('com.oracle.emaas.emcpdf.test')
     }
 }
+
+artifactoryPublish {
+        publications('integTest')
+        publications('thisJarPublication')
+}
+
+
 
  
 dependencies { 

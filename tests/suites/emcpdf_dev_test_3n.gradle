@@ -78,7 +78,6 @@ task small_deploy_3n_block(type: EMTest) {
                         'include' ('name': 'setupEmaasSmallDeploy')
                     }
                 }
-        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
             }
         }
     }
@@ -87,7 +86,7 @@ task small_deploy_3n_block(type: EMTest) {
 }
 
 task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
-  	//include "oaracle/sysman/emaas/platform/dashboards/core/<CLASS>.class"
+
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"

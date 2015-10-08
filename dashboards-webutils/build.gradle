@@ -18,7 +18,7 @@ task runDEVTestSuite_webutil(type: Test){
 }
  
 dependencies { 
-        compile(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+'){ transitive = false }
+        compile project(':dashboards-core')
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }

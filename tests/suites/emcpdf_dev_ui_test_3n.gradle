@@ -73,7 +73,6 @@ task small_deploy_3n_block(type: EMTest) {
                         'include' ('name': 'setupEmaasSmallDeploy')
                     }
                 }
-        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
             }
         }
     }

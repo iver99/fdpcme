@@ -1,11 +1,9 @@
 import org.gradle.api.plugins.jetty.internal.Monitor
 
 apply plugin: 'war'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'maven-publish'
-apply plugin: 'TestInfraPlugin'
+
 apply from: 'test.gradle'
-apply plugin: 'artifactory-publish'
+
 // Directory where the restful API doc is generated
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
@@ -43,6 +41,9 @@ sourceSets{
 		}
 		resources.srcDirs = ['src/test/java']
 	}
+ main {
+	 java.srcDir 'src/main/java'
+	}
 }
 
 task runQATestSuite(type: Test){
@@ -53,59 +54,39 @@ task runQATestSuite(type: Test){
         	suites file('testngsuite.xml')
         }
 }
-project.publishGroup1='com.oracle.emaas.emcpdf.test';
-publishing {
-    publications {
 
 
+publishing.publications {
         integTest(MavenPublication) {
-            setArtifactId(project.name + '-' + integTestJar.appendix)
-            artifact integTestJar.archivePath
-	    version project.version
-            groupId  project.publishGroup1
-            pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
-                    def dependency = dependencies.appendNode('dependency')
-                    dependency.appendNode('groupId', it.moduleGroup)
-                    dependency.appendNode('artifactId', it.moduleName)
-		    if (it.moduleVersion != 'unspecified') {
-                        println "VERSION for ${it.moduleName} = ${it.moduleVersion}"
-                        dependency.appendNode('version', it.moduleVersion)
-                    }
-		    else {
-                        dependency.appendNode('version', '')
-
-	            }
-                }
-            }
+                setArtifactId(project.name + '-' + integTestJar.appendix)
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact integTestJar.archivePath
         }
-    }
-   repositories {
-        maven {
-            url "${artifactory_contextUrl}/${artifactory_repoKey}"
-            credentials {
-                username = "${artifactory_user}"
-                password =  "${artifactory_password}"
-            }
+
+        thisJarPublication(MavenPublication) {
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact jar
         }
-    }
 }
 
- artifactoryPublish {
-	publications('integTest')
+artifactoryPublish {
+        publications('integTest')
+        publications('thisJarPublication')
 }
 
-/*
- * Define repositories from where to pick all the artifacts
- */
-repositories {
-    /* Looks into local maven repository for artifacts */
-    mavenLocal()
-    maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
-    }
+task jarMe(type: Jar) {
+        from sourceSets.main.output
+        baseName = "${project.archivesBaseName}"
 }
+
+
+
+
+
+
+
+
+
 
 /**
  * Generates documentation for the REST service API
@@ -173,7 +154,7 @@ sourceSets {
 
 dependencies {
 	providedCompile project(':dashboards-entities') { transitive = false }
-	providedCompile(group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+')
+	providedCompile project(':dashboards-core') { transitive = false }
         providedCompile project(':dashboards-webutils')  { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
 
@@ -224,3 +205,4 @@ dependencies {
  }
 
 build.dependsOn integTestJar
+build.dependsOn jarMe
