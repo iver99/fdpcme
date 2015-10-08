@@ -114,7 +114,7 @@ public class PersistenceManager
 			if (System.getenv("T_WORK") != null) {
 
 				String url = "jdbc:oracle:thin:@" + Utils.getProperty("ODS_HOSTNAME") + ":" + Utils.getProperty("ODS_PORT") + ":"
-						+ Utils.getProperty("ODS_SERVICE");
+						+ Utils.getProperty("ODS_SID");
 				props.put("javax.persistence.jdbc.url", url);
 				SchemaUtil rct = new SchemaUtil();
 				String data = Utils.getProperty(SERVICE_MANAGER_URL) + DEPLOY_URL;
