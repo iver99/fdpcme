@@ -8,27 +8,21 @@ sourceSets {
 clean{
   delete 'build'
 }
-task TestJar(type:Jar) {
+task integTestJar(type:Jar) {
 from sourceSets.test.output
+ appendix = 'integ-tests'
 }
 
-check.dependsOn TestJar
+check.dependsOn integTestJar
 
 publishing.publications {
     integTest(MavenPublication) {
                         setArtifactId(project.name + '-' + integTestJar.appendix)
-                        setGroupId('com.oracle.emaas.emcpssf.test')
+                        setGroupId('com.oracle.emaas.emcpdf.test')
                         artifact integTestJar.archivePath
     }
     
 }
-
-artifactoryPublish {
-        publications('integTest')
-        publications('thisJarPublication')
-}
-
-
 
 
 
