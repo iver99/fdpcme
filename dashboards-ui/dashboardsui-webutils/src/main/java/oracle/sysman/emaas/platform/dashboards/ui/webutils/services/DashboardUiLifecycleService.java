@@ -20,6 +20,7 @@ public class DashboardUiLifecycleService extends AbstractApplicationLifecycleSer
 		addApplicationServiceManager(rsm);
 		addApplicationServiceManager(new LoggingServiceManager());
 		addApplicationServiceManager(new AvailabilityServiceManager(rsm));
+		addApplicationServiceManager(new EMTargetInitializer());
 	}
 
 }

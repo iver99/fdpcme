@@ -8,12 +8,12 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.targetmodel;
+package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
 /**
  * @author vinjoshi
  */
 public class EMTargetConstants
 {
-	public static final String m_target_type = "oracle_emaas_dashboard_ui";
+	public static final String m_target_type = "oracle_emaas_dashboard";
 }

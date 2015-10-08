@@ -13,7 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services;
 /**
  * @author vinjoshi
  */
-public interface DashboardUIStatusBean
+public interface DashboardUIStatusMBean
 {
 	public String getStatus();
 

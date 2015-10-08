@@ -10,11 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services;
 
-import  oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.DashboardUIStatusBean;
 /**
  * @author vinjoshi
  */
-public class DashboardUIStatus implements DashboardUIStatusBean
+public class DashboardUIStatus implements DashboardUIStatusMBean
 {
 	@Override
 	public String getStatus()
@@ -38,14 +37,14 @@ public class DashboardUIStatus implements DashboardUIStatusBean
 	{
 
 		if (!GlobalStatus.isDashboardUIUp()) {
-			return "SavedSearch is being stopped.";
+			return "Dashboard-UI is being stopped.";
 		}
 
 		else if (GlobalStatus.isDashboardUIUp()) {
-			return "SavedSearch is up running.";
+			return "Dashboard-UI is up and running.";
 		}
 		else {
-			return "SavedSearch is out of service.";
+			return "Dashboard-UI is out of service.";
 		}
 
 	}

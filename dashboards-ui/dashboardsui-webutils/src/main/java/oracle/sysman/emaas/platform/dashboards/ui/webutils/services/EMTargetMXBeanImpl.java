@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.targetmodel;
+package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
 
 /**

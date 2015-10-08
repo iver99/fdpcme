@@ -8,14 +8,14 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.targetmodel;
+package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
 /**
  * @author vinjoshi
  */
+
 public interface EMTargetMXBean
 {
-
 	/**
 	 * Gets the EM target type.
 	 * 
@@ -31,4 +31,5 @@ public interface EMTargetMXBean
 	 *                if the operation fails
 	 */
 	public String getName() throws Exception;
+
 }

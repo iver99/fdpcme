@@ -18,6 +18,7 @@ package oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services;
 import java.lang.management.ManagementFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
@@ -57,22 +58,22 @@ public class JMXUtil
 			NotCompliantMBeanException
 	{
 		server = ManagementFactory.getPlatformMBeanServer();
-		ObjectName savedSearchStatusObjectName = new ObjectName(DASHBOARDUI_STATUS);
-		if (!server.isRegistered(savedSearchStatusObjectName)) {
+		ObjectName statusObjectName = new ObjectName(DASHBOARDUI_STATUS);
+		if (!server.isRegistered(statusObjectName)) {
 			DashboardUIStatus savedSearchStatus = new DashboardUIStatus();
-			server.registerMBean(savedSearchStatus, savedSearchStatusObjectName);
+			server.registerMBean(savedSearchStatus, statusObjectName);
 		}
 
-		_logger.info("start MBeans!");
+		_logger.info("start Dashboard UI MBeans!");
 	}
 
 	public void unregisterMBeans() throws MalformedObjectNameException, MBeanRegistrationException, InstanceNotFoundException
 	{
-		ObjectName savedSearchStatusObjectName = new ObjectName(DASHBOARDUI_STATUS);
-		if (server.isRegistered(savedSearchStatusObjectName)) {
-			server.unregisterMBean(savedSearchStatusObjectName);
+		ObjectName statusObjectName = new ObjectName(DASHBOARDUI_STATUS);
+		if (server.isRegistered(statusObjectName)) {
+			server.unregisterMBean(statusObjectName);
 		}
-		_logger.info("stop MBeans!");
+		_logger.info("stop Dashboard UI MBeans!");
 	}
 
 }
