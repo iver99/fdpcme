@@ -122,6 +122,7 @@ $.widget('dbs.dbsDashboardPanel',
             var self = this, _element = self.element;
             this._createComponent();
             this.element.attr("aria-dashboard", this.options['dashboard'].id);
+            this.element.attr("aria-label", self.options['dashboard'].name);
             setTimeout(function() {
                 if(_element.is(":hover")) {
                     
@@ -179,24 +180,29 @@ $.widget('dbs.dbsDashboardPanel',
         
         _createHeader: function() {
             var self = this, _element = self.element, _name = self.name; 
-            var _title = (self.options['dashboard']) ? self._truncateString(self.options['dashboard'].name, TITLE_MAX_LENGTH) : '';
-            
+//            var _title = (self.options['dashboard']) ? self._truncateString(self.options['dashboard'].name, TITLE_MAX_LENGTH) : '';
+            var _rawTitle = self.options['dashboard'].rawName;//e.g. &lt;script&gt;alert(1234567890ABCDEFGHIJKLMN)&lt;/script&gt;
+            var _textRawTitle = self.options['dashboard'].name;//e.g. <script>alert(1234567890ABCDEFGHIJKLMN)</script>
+            var _title = (self.options['dashboard']) ? self._truncateString(_textRawTitle, TITLE_MAX_LENGTH) : '';//e.g. <script>alert(1234567890ABCDEFGHIJKL...
             self.headerElement = $("<div></div>").addClass(self.classNames['headerContainer']);
-            
+            _title = $("<div/>").text(_title).html(); //e.g. &lt;script&gt;alert(1234567890ABCDEFGHIJKL...
             // add title
             self.titleElement = $("<div>" + _title + "</div>")
                                   .addClass(self.classNames['headerTitle']);
             self.headerElement.append(self.titleElement); 
-            if (self.options['dashboard'].name &&  self.options['dashboard'].name.length > TITLE_MAX_LENGTH)
-            {
+//            var _name = self.options['dashboard'].name;
+//            if ( _name &&  _name.length > TITLE_MAX_LENGTH)
+//            {
+            if (_textRawTitle && _textRawTitle.length > TITLE_MAX_LENGTH)
+            {  
                 //self.headerElement.attr("dbstooltip", self.options['dashboard'].name);
-                self.headerElement.attr("title", self.options['dashboard'].name);
+                self.headerElement.attr("title", $("<div/>").html(_rawTitle).text());
             }
             
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);
             
-            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
+            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click.'+_name, function(event) {
                         //prevent event bubble
@@ -255,10 +261,11 @@ $.widget('dbs.dbsDashboardPanel',
                 {
                    
               var url =  _dashboard['screenShotHref'];
-              if (dfu.isDevMode()){
-                  url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,'dashboards/'+ self.options['dashboard']['id'] + '/screenshot');
-              } 
               url = dfu.getRelUrlFromFullUrl(url);
+              if (dfu.isDevMode()){
+                  url = dfu.buildFullUrl(dfu.getDashboardsUrl(),'/'+ self.options['dashboard']['id'] + '/screenshot');
+              } 
+              
                    dfu.ajaxWithRetry({
                             //This will be a page which will return the base64 encoded string
                         //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 

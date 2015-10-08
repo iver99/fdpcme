@@ -38,91 +38,54 @@ define(['knockout',
         function DashboardTilesView(dashboard, dtm) {
             var self = this;
             self.dtm = dtm;
+            self.dashboard = dashboard;
             
-            self.disableSortable = function() {
-                $(self.element).sortable("disable");
+            self.getTileElement = function(tile) {
+                if (!tile || !tile.clientGuid)
+                    return null;
+                return $("#tile" + tile.clientGuid + ".dbd-widget");
             };
             
-            self.enableSortable = function(element, list) {
-                if (!self.element)
-                    self.element = element;
-                if (!self.list)
-                    self.list = list;
-                if (!self.flag) {
-                    $(element).sortable({
-                        update: function(event, ui) {
-                            if (ui.item.hasClass('dbd-tile')) {
-                                var itemData = ko.dataFor(ui.item[0]);
-                                var position = ko.utils.arrayIndexOf(ui.item.parent().children(), ui.item[0]);
-                                if (position >= 0) {
-                                    list.remove(itemData);
-                                    list.splice(position, 0, itemData);
-                                }
-                            }
-                            else {
-                                var position = ko.utils.arrayIndexOf(ui.item.parent().children(), ui.item[0]);
-                                if (position >= 0) {
-                                    if (self.searchObject !== undefined) {
-                                        var newTile = createNewTileFromSearchObject(dashboard, self.dtm, self.searchObject);
-                                        list.splice(position, 0, newTile);
-                                    }
-                                }
-                            }
-                            ui.item.remove();
-
-                            /*var message = "Model layer sequence is: ";
-                            for (var i = 0; i < list().length; i++) {
-                                if (i !== 0)
-                                    message += ",";
-                                message += list()[i].title();
-                            }
-                            console.log(message);*/
-                        },
-                        dropOnEmpty: true,
-                        forcePlaceholderSize: true,
-                        placeholder: {
-                            element: function(clone, ui) {
-                                var itemWidth = 1;
-                                if (clone.hasClass('dbd-tile')) {
-                                    var itemData = ko.dataFor(clone[0]);
-                                    itemWidth = itemData.width();
-                                }
-                                return getPlaceHolder(itemWidth * 3);
-                            },
-                            update: function() {
-                                return;
-                            }
-                        },
-                        handle: '.dbd-tile-header',
-                        revert: true,
-                        opacity: 0.5,
-                        scroll: true,
-                        tolerance: 'pointer'
-                    });
-                    self.flag = true;
+            self.disableDraggable = function(tile) {
+                if (self.dashboard.systemDashboard()) {
+                    console.log("Draggable not supported for OOB dashboard");
+                    return;
                 }
-                else {
-                    $(self.element).sortable("enable");
+                var tiles = tile ? [self.getTileElement(tile)] : $(".dbd-widget");                
+                for (var i = 0; i < tiles.length; i++) {
+                    var target = $(tiles[i]);
+                    if (target.is(".ui-draggable"))
+                        target.draggable("disable");
                 }
             };
             
-            self.disableDraggable = function() {
-                $(".tile-container .oj-tree-leaf a").draggable("disable");
+            self.enableDraggable = function(tile) {
+                if (self.dashboard.systemDashboard()) {
+                    console.log("Draggable not supported for OOB dashboard");
+                    return;
+                }
+                var tiles = tile ? [self.getTileElement(tile)] : $(".dbd-widget");                
+                for (var i = 0; i < tiles.length; i++) {
+                    var target = $(tiles[i]);
+                    if (!target.is(".ui-draggable")) {
+                        target.draggable({
+                            zIndex: 30,
+                            handle: ".tile-drag-handle"
+                        });
+                    }
+                    else
+                        target.draggable("enable");
+                }
+            };
+                        
+            self.enableMovingTransition = function() {
+                if (!$('#widget-area').hasClass('dbd-support-transition'))
+                    $('#widget-area').addClass('dbd-support-transition');
             };
             
-            self.enableDraggable = function() {
-                if (!self.init) {
-                    $(".tile-container .oj-tree-leaf a").draggable({
-                        helper: "clone",
-                        scroll: false,
-                        containment: '#tiles-row',
-                        connectToSortable: '#tiles-row'
-                    });
-                    self.init = true;
-                }
-                else {
-                    $(".tile-container .oj-tree-leaf a").draggable("enable");
-                }
+            self.disableMovingTransition = function() {
+                if ($('#widget-area').hasClass('dbd-support-transition'))
+                    $('#widget-area').removeClass('dbd-support-transition');
             };
         }
         
@@ -363,8 +326,7 @@ define(['knockout',
                 }
                 return summaryData;
             };
-           
-            
+
             self.handleDashboardSave = function() {
             	if (self.isNameUnderEdit()) {
             		try {
@@ -385,7 +347,7 @@ define(['knockout',
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
                 	var nodesToRecover = [];
                 	var nodesToRemove = [];
-                	var elems = $('#tiles-row').find('svg');
+                	var elems = $('#tiles-wrapper').find('svg');
                 	elems.each(function(index, node) {
                 		var parentNode = node.parentNode;
                 		var width = $(node).width();
@@ -408,7 +370,7 @@ define(['knockout',
                 		});
                 		parentNode.appendChild(canvas);
                 	});
-                	html2canvas($('#tiles-row'), {
+                	html2canvas($('#tiles-wrapper'), {
                 		onrendered: function(canvas) {
                 			try {
                 				var resize_canvas = document.createElement('canvas');
@@ -457,11 +419,11 @@ define(['knockout',
             };
             
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
-                var dashboardJSON = ko.mapping.toJSON(tilesViewModel.dashboard, {
+                var dbdJs = ko.mapping.toJS(tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
                         'tileParameters', 'name', 'systemParameter', 
-                        'tileId', 'value'],
+                        'tileId', 'value', 'content', 'linkText', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", 
                         "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard", 
@@ -471,6 +433,16 @@ define(['knockout',
                         "setParameter", "shouldHide", "systemParameters", 
                         "tileDisplayClass", "widerEnabled", "widget"]
                 });
+                if (dbdJs.tiles) {
+                    for (var i = 0; i < dbdJs.tiles.length; i++) {
+                        var tile = dbdJs.tiles[i];
+                        if (tile.content && tile.type === "TEXT_WIDGET") {
+                            var decoded = dtm.encodeHtml(tile.content)
+                            tile.content = decoded;
+                        }
+                    }
+                }
+                var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
                 	succCallback && succCallback();
@@ -533,7 +505,7 @@ define(['knockout',
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             
             self.addSelectedWidgetToDashboard = function(widget) {
-                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 2, widget);
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 4, 1, widget);
             };
             
             self.addWidgetDialogParams = {
@@ -551,6 +523,13 @@ define(['knockout',
 //                ,providerName: 'DashboardFramework' 
 //                ,providerVersion: '1.0'
             };
+            
+            self.HandleAddTextWidget = function() {
+                var maximizedTile = tilesViewModel.getMaximizedTile();
+            	if (maximizedTile)
+            		tilesViewModel.restore(maximizedTile);
+                tilesViewModel.AppendTextTile();
+            }
             
             self.openAddWidgetDialog = function() {
             	var maximizedTile = tilesViewModel.getMaximizedTile();

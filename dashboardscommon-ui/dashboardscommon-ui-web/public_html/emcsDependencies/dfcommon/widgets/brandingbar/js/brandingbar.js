@@ -64,7 +64,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
-                var dfHomeUrl =dfu.discoverDFHomeUrl();
+                var dfWelcomeUrl =dfu.discoverWelcomeUrl();
                 var subscribedApps = null;//dfu.getSubscribedApplications();
                 var appIdAPM = "APM";
                 var appIdITAnalytics = "ITAnalytics";
@@ -271,7 +271,7 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                     if (window.intervalToExtendCurrentUserSession)
                         clearInterval(window.intervalToExtendCurrentUserSession);
                     
-                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfHomeUrl;
+                    var ssoLogoutEndUrl = window.location.protocol + '//' + window.location.host + dfWelcomeUrl;
                     var logoutUrlDiscovered = dfu.discoverLogoutUrl();
                     //If session timed out, redirect to sso login page and go to home page after re-login.
                     if (window.currentUserSessionExpired === true && logoutUrlDiscovered === null) {
@@ -288,9 +288,9 @@ define(['require','knockout', 'jquery', '../../../js/util/df-util', '../../../js
                 
                 //Go to home page
                 self.gotoHomePage = function() {
-                    var homeUrl = dfu.discoverDFHomeUrl();
-                    oj.Logger.info("Go to home page by URL: " + homeUrl, false);
-                    window.location.href = homeUrl;
+                    var welcomeUrl = dfu.discoverWelcomeUrl();
+                    oj.Logger.info("Go to welcome page by URL: " + welcomeUrl, false);
+                    window.location.href = welcomeUrl;
                 };
                 
                 //Open about box

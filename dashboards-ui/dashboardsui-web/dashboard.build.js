@@ -3,13 +3,16 @@
     baseUrl: "js",
     dir: "./build/public_html",
     optimize:"none",
-    optimizeCss: "none",
+    optimizeCss: "standard",
     modules: [
         {
-            name: "builderMain"
+                name: "builderMain"
         },
         {
         	name: "homeMain"
+        },
+	{
+        	name: "welcomeMain"
         }
     ],
     paths: {
@@ -28,6 +31,7 @@
         'promise': 'empty:',
         'dashboards': '.',
         'dfutil':'empty:',
+        'df-util':'empty:',
         'loggingutil':'empty:',
         'idfbcutil':'empty:',
         'timeselector':'empty:',
@@ -40,5 +44,6 @@
         'dbs': '../js',
         'require':'empty:',
         'prefutil':'empty:',
+	'ckeditor': 'empty:'
     }
 })

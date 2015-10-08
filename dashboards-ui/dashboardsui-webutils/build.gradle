@@ -4,6 +4,8 @@ apply plugin: 'maven-publish'
 apply plugin: 'TestInfraPlugin'
 apply from:'test.gradle'
 apply plugin: 'artifactory-publish'
+group = 'com.oracle.emaas.emcpdf'
+//version = '1.0.1'
 
 sourceSets {
     main {

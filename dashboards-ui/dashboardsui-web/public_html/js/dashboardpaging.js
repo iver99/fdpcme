@@ -71,6 +71,17 @@ DashboardPaging.prototype.IterativeAt = function (start, end) {
                         return self.__getPromise(function(resolve, reject) {
                             self.collection.at(index, null).then(function(model) {
                                 if (model) array.push(model);
+                                if (model.isDsbAttrsHtmlDecoded !== true)
+                                {
+                                    var __dname = $("<div/>").html(model.get('name')).text();
+                                    model.set('name', __dname, {silent: true});
+                                    if (model.get('description') && model.get('description') !== null)
+                                    {
+                                        var __ddesc =  $("<div/>").html(model.get('description')).text();
+                                        model.set('description', __ddesc, {silent: true});
+                                    }
+                                    model.isDsbAttrsHtmlDecoded = true;
+                                }
                                 resolve(index);
                             });
                         });
@@ -220,25 +231,24 @@ DashboardPaging.prototype.create = function(attributes, options)
         }
         _m.save(attributes, {
                         'forceNew': true,
-                        success: function (model, resp, options) {
-                            self._fetch(opts);
-                            model.openDashboardPage();
-                           /*
-                           self.collection.add(model, {at: 0, merge: true}).then(function(val){
-                                self._refreshDataWindow().then(function() {
-                                    //self.handleEvent("add", {index: 0});
-                                    self._processSuccess(opts, "add", {index: 0});
-                                });
-                           });*/
+                        success: function (_model, _resp, _options) {
+                            opts['success'](_model, _resp, _options);
+                            /* //no need for refresh, nav directly
+                            self._fetch( { 
+                                'contentType': 'application/json',
+                                success: function() {
+                                    if ($.isFunction(opts['success']))
+                                    {
+                                        opts['success'](_model, _resp, _options);
+                                    }
+                                }, 
+                                error: opts['error']});*/
+                            //model.openDashboardPage();
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             self._processError(opts, jqXHR, textStatus, errorThrown);
                             //console.log('Error in Create: ' + textStatus);
                         }});
-        /*
-        this.collection.add(attributes, {at: 0, merge:true}).then(function(val){
-            self._refreshDataWindow().then(function() {self._processSuccess(opts)});
-        });*/
     }
     catch (e) {
         var _e = e;
@@ -260,13 +270,15 @@ DashboardPaging.prototype.remove = function(model, options)
        success: function(result) {
           // Do something with the result
           self.collection.remove(model);
+          self._refreshDataWindow().then(function() { self._processSuccess(options); });
+          /*
           if (self.pageSize <= self.totalSize())
           {
-              self._refreshDataWindow().then(self._processSuccess(options, "remove"));
+              self._refreshDataWindow().then(function() { self._processSuccess(options, "remove"); });
           }
           else {
               self._refreshDataWindow().then(function() { self._processSuccess(options); });
-          }
+          }*/
         },
         error: function(jqXHR, textStatus, errorThrown) {
             self._processError(options, jqXHR, textStatus, errorThrown);
@@ -361,6 +373,10 @@ DashboardPaging.prototype.handleEvent = function(eventType, event)
     DashboardPaging.superclass.handleEvent.call(this, eventType, event);
 };
 
+DashboardPaging.prototype.on = function(eventType, eventHandler)
+{
+    DashboardPaging.superclass.on.call(this, eventType, eventHandler);
+};
 
 DashboardPaging.prototype.hasMore = function()
 {
@@ -429,6 +445,20 @@ DashboardPaging.prototype.totalSize = function()
 DashboardPaging.prototype.getShowPagingObservable = function()
 {
     return this.showPagingObservable;
+};
+
+DashboardPaging.prototype.getModelFromWindow = function(id)
+{
+    var _i= 0, w = this.getWindow();
+    if (w && w !== null)
+    {
+        for (_i= 0 ; _i < w.length; _i++)
+        {
+            if (w[_i].id === id) return w[_i];
+        }
+    }
+        
+    return null;
 };
 
 return {'DashboardPaging': DashboardPaging};
