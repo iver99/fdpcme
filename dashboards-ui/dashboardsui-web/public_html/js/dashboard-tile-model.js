@@ -161,10 +161,11 @@ define(['knockout',
             return url;
         }
         
-        function initializeTextTileAfterLoad(dashboard, tile, funcShow, funcReorder, isContentLengthValid) {
+        function initializeTextTileAfterLoad($b, tile, funcShow, funcReorder, isContentLengthValid) {
             if(!tile) {
                 return;
             }
+            var dashboard = $b.dashboard;
             registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
             tile.shouldHide = ko.observable(false);
             tile.editDisabled = ko.computed(function() { //to do
@@ -175,12 +176,13 @@ define(['knockout',
                 reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
-                validator: isContentLengthValid
+                validator: isContentLengthValid,
+                builder: $b
             };
             
             tile.tileDisplayClass = ko.computed(function() {
                 var display = tile.shouldHide()?"none":"block";
-                return tile.cssStyle() + "display:" + display + "; left: 20px;";
+                return tile.cssStyle() + "display:" + display + "; left: 10px;";
             });
         }
         
@@ -317,9 +319,9 @@ define(['knockout',
             
         }
         
-        function DashboardTextTile(dashboard, widget, funcShow, funcReorder) {
+        function DashboardTextTile($b, widget, funcShow, funcReorder) {
             var self = this;
-            self.dashboard = dashboard;
+            self.dashboard = $b.dashboard;
             self.title = ko.observable("text widget title"); //to do 
             self.description = ko.observable();
             self.isMaximized = ko.observable(false);
@@ -334,7 +336,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTextTileAfterLoad(dashboard, self, funcShow, funcReorder, isContentLengthValid);            
+            initializeTextTileAfterLoad($b, self, funcShow, funcReorder, isContentLengthValid);            
         }
 
         /**
@@ -381,10 +383,8 @@ define(['knockout',
             return encoded.length > 0 && encoded.length <= maxLength;
         }
         
-        function decodeHtml(html) {
-            var div = document.createElement('div');
-            div.innerHTML = html;
-            return div.innerText || div.textContent;
+        function decodeHtml(data) {
+            return data && $("<div/>").html(data).text();
         }
         
         function getBaseUrl() {
@@ -443,6 +443,14 @@ define(['knockout',
                         data['description'] = $("<div/>").html(data['description']).text();
                     }
                     var dsb = ko.mapping.fromJS(data, mapping);
+                    dsb.isDefaultTileExist = function() {
+                        for(var i in dsb.tiles()){
+                            if(dsb.tiles()[i].type() === "DEFAULT") {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
                     if (succCallBack)
                         succCallBack(dsb);
                 },
@@ -589,8 +597,8 @@ define(['knockout',
             self.top = ko.observable(0);
             self.cssWidth = ko.observable(0);
             self.cssHeight = ko.observable(0);
-            self.linkText = ko.observable();
-            self.linkUrl = ko.observable();
+            self.linkText = ko.observable('');
+            self.linkUrl = ko.observable('');
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
@@ -600,8 +608,8 @@ define(['knockout',
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
             data.title && (self.title = ko.observable(decodeHtml(data.title)));
-            data.linkText && (self.linkText($("<div/>").html(data.linkText).html()));
-            data.linkUrl && (self.linkUrl($("<div/>").html(data.linkUrl).html()));
+            data.linkText && (self.linkText(decodeHtml(data.linkText)));
+            data.linkUrl && (self.linkUrl(decodeHtml(data.linkUrl)));
             self.clientGuid = getGuid();
             self.sectionBreak = false;
             self.displayHeight = function() {
@@ -767,16 +775,13 @@ define(['knockout',
                 if(tile.configure) {
                     tile.configure();
                 }
-            }
-            //to be continued...
-            self.removeTile = function(tile, tileRemoveCallbacks) {
+            };
+            
+            self.removeTile = function(tile) {
                 self.tiles.remove(tile);
                 for (var i = 0; i < self.tiles().length; i++) {
                     var eachTile = self.tiles()[i];
                     eachTile.shouldHide(false);
-                }
-                for (var i = 0; i < tileRemoveCallbacks.length; i++) {
-                    tileRemoveCallbacks[i]();
                 }
             };
             
@@ -929,19 +934,18 @@ define(['knockout',
             };
         }
         
-        function DashboardTilesViewModel(builder, tilesView/*, urlEditView*/) {
+        function DashboardTilesViewModel($b, tilesView) {
             var self = this;
             
             widgetAreaContainer = $('#widget-area');
             
             self.tiles = new TileItemList();
-            self.tiles.tiles = builder.dashboard.tiles;
+            self.tiles.tiles = $b.dashboard.tiles;
             widgetAreaWidth = widgetAreaContainer.width();
             
             self.previousDragCell = null;
                         
-            self.dashboard = builder.dashboard;
-//            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+            self.dashboard = $b.dashboard;
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             self.builderTitle = dfu_model.generateWindowTitle(self.dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.target = dfu_model.getUrlParam("target");
@@ -950,7 +954,6 @@ define(['knockout',
             self.targetContext = new DashboardTargetContext(self.target, self.type, self.emsite);
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
-            self.tileRemoveCallbacks = [];
             self.isOnePageType = (self.dashboard.type() === SINGLEPAGE_TYPE);
             self.linkName = ko.observable();
             self.linkUrl = ko.observable();
@@ -978,10 +981,6 @@ define(['knockout',
                 $('#'+addWidgetDialogId).ojDialog('open');
             };
             
-            self.registerTileRemoveCallback = function(callbackMethod) {
-                self.tileRemoveCallbacks.push(callbackMethod);
-            };
-            
             self.createTextWidget = function() {
                 var widget = {};
                 widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
@@ -1000,7 +999,7 @@ define(['knockout',
                 var newTextTile;
                 var widget = self.createTextWidget();
                 
-                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show, self.tiles.tilesReorder);
+                var newTextTile = new DashboardTextTile($b, widget, self.show, self.tiles.tilesReorder);
                 var textTileCell = new Cell(0, 0);
                 newTextTile.row(textTileCell.row);
                 newTextTile.column(textTileCell.column);
@@ -1023,8 +1022,6 @@ define(['knockout',
                 var provider_version = widget.PROVIDER_VERSION;
                 var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
                 var widget_source = widget.WIDGET_SOURCE;
-//                    widget.width = ko.observable(width);
-//                    widget.height = ko.observable(height);
                 widget.width = width;
                 widget.height = height;
                 widget.column = null;
@@ -1143,10 +1140,8 @@ define(['knockout',
                     var newTile = self.createNewTile(name, description, width, height, widget);
                     if (newTile){
                        self.tiles.tiles.push(newTile);
-                       if($("#dbd-left-panel-link").is(".ui-draggable-disabled")) {
-                            $("#dbd-left-panel-link").draggable("enable");                           
-                        }
                        self.show();
+                       $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
                     }
                 }
                 else {
@@ -1156,24 +1151,22 @@ define(['knockout',
             };
             
             self.initialize = function() {
-                builder.addNewWidgetDraggingListener(self.onNewWidgetDragging);
-                builder.addNewWidgetStopDraggingListener(self.onNewWidgetStopDragging);
-                builder.addNewTextDraggingListener(self.onNewTextDragging);
-                builder.addNewTextStopDraggingListener(self.onNewTextStopDragging);
+                $b.addNewWidgetDraggingListener(self.onNewWidgetDragging);
+                $b.addNewWidgetStopDraggingListener(self.onNewWidgetStopDragging);
+                $b.addNewTextDraggingListener(self.onNewTextDragging);
+                $b.addNewTextStopDraggingListener(self.onNewTextStopDragging);
                 
-                builder.addNewLinkDraggingListener(self.onNewLinkDragging);
-                builder.addNewLinkStopDraggingListener(self.onNewLinkStopDragging);
+                $b.addNewLinkDraggingListener(self.onNewLinkDragging);
+                $b.addNewLinkStopDraggingListener(self.onNewLinkStopDragging);
 
-                builder.addBuilderResizeListener(self.onBuilderResize);
+                $b.addBuilderResizeListener(self.onBuilderResize);
                 self.initializeTiles();
             };
             
             self.onBuilderResize = function() {
                 widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
 //                console.debug('widget area width is ' + widgetAreaWidth);
-//                self.tilesView.disableMovingTransition();
                 self.show();
-//                self.tilesView.enableMovingTransition();
             };
             
            self.menuItemSelect = function(event, ui) {
@@ -1190,12 +1183,13 @@ define(['knockout',
                         self.refreshThisWidget(tile);
                         break;
                    case "delete":
-                       self.tiles.removeTile(tile, self.tileRemoveCallbacks);
+                       self.tiles.removeTile(tile);
                        self.tiles.tilesGrid.unregisterTileInGrid(tile);
                        self.tiles.tilesReorder();
                        self.show();
                        self.notifyTileChange(tile, new TileChange("POST_DELETE"));
-                       builder.triggerEvent(builder.EVENT_TILE_RESTORED, tile);
+                       $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
+                       $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
                        break;
                    case "wider":
                        self.tiles.broadenTile(tile);
@@ -1220,14 +1214,13 @@ define(['knockout',
                    case "maximize":
                        self.maximize(tile);
                        self.notifyTileChange(tile, new TileChange("POST_MAXIMIZE"));
-                       builder.triggerEvent(builder.EVENT_TILE_MAXIMIZED, tile);
+                       $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
                        break;
                    case "restore":
                        self.restore(tile);
                        self.notifyTileChange(tile, new TileChange("POST_RESTORE"));
-                       builder.triggerEvent(builder.EVENT_TILE_RESTORED, tile);
+                       $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
                        break;
-                   
                }
            };
            
@@ -1286,6 +1279,7 @@ define(['knockout',
            
            self.editTileLinkConfirmed = function() {
                if(!self.linkName() || !self.linkUrl() || !self.linkNameValidated || !self.linkURLValidated) {
+                   $("#tilesLinkEditorDialog").ojDialog("close");
                    return false;
                }
                if(self.tileToEdit && self.tileToEdit()) {
@@ -1369,7 +1363,7 @@ define(['knockout',
             	var maximized = self.getMaximizedTile();
             	if (maximized) {
                     self.maximize(maximized);
-                    builder.triggerEvent(builder.EVENT_TILE_MAXIMIZED, maximized);
+                    $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, maximized);
                 }
             };
             
@@ -1399,14 +1393,12 @@ define(['knockout',
             self.show = function() {
 //                widgetAreaWidth = widgetAreaContainer.width();
                 self.showTiles();
-//                self.tilesView.enableDraggable();
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
                 var height = self.tiles.tilesGrid.getHeight();
                 $('#tiles-wrapper').height(height);
             };
-            
             
             self.getCellFromPosition = function(position) {
                 var row = 0, height = 0;
@@ -1520,7 +1512,7 @@ define(['knockout',
             self.reRender = function() {
                 self.tilesView.disableMovingTransition();
                 self.show();
-//                self.tilesView.enableMovingTransition();
+                self.tilesView.enableMovingTransition();
             };
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
@@ -1588,9 +1580,7 @@ define(['knockout',
                     tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
                     u.helper.tile = tile;
                     self.tiles.tiles.push(tile);
-                    if($("#dbd-left-panel-link").is(".ui-draggable-disabled")) {
-                        $("#dbd-left-panel-link").draggable("enable");                           
-                    }
+                    $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
                 }
                 self.previousDragCell = cell;
                 self.tiles.updateTilePosition(tile, cell.row, cell.column);
@@ -1625,9 +1615,7 @@ define(['knockout',
                         tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
                         u.helper.tile = tile;
                         self.tiles.tiles.push(tile);
-                        if($("#dbd-left-panel-link").is(".ui-draggable-disabled")) {
-                            $("#dbd-left-panel-link").draggable("enable");                           
-                        }
+                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
                     }
                     if (!self.previousDragCell)
                         return;
@@ -1648,7 +1636,7 @@ define(['knockout',
                 if (!cell) return;
                 var tile = u.helper.tile;
                 if (!tile) {
-                    tile = new DashboardTextTile(self.dashboard, self.createTextWidget(), self.show, self.tiles.tilesReorder);
+                    tile = new DashboardTextTile($b, self.createTextWidget(), self.show, self.tiles.tilesReorder);
                     u.helper.tile = tile;
                     self.tiles.tiles.push(tile);
                 }
@@ -1680,7 +1668,7 @@ define(['knockout',
                     if (!cell) return;
                     tile = u.helper.tile;
                     if (!u.helper.tile) {
-                        tile = new DashboardTextTile(self.dashboard, self.createTextWidget(), self.show, self.tiles.tilesReorder);
+                        tile = new DashboardTextTile($b, self.createTextWidget(), self.show, self.tiles.tilesReorder);
                         u.helper.tile = tile;
                         self.tiles.tiles.push(tile);
                     }
@@ -1705,9 +1693,11 @@ define(['knockout',
                 }
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                 var cell = self.getCellFromPosition(pos); 
-                if (!cell) return;
+                if (!cell || !self.tiles.tilesGrid.tileGrid[cell.row] || !self.tiles.tilesGrid.tileGrid[cell.row][cell.column]) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return;
+                };
                 var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
-                var tile = self.getMaximizedTile()? self.getMaximizedTile() : tile;
                 if(!tile || tile.type() === "TEXT_WIDGET") return;
                 var tileId = "tile" + tile.clientGuid;
                 $(".dbd-tile-link-wrapper").css("border", "0px");
@@ -1722,7 +1712,10 @@ define(['knockout',
                 }
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                 var cell = self.getCellFromPosition(pos); 
-                if (!cell) return;
+                if (!cell || !self.tiles.tilesGrid.tileGrid[cell.row] || !self.tiles.tilesGrid.tileGrid[cell.row][cell.column]) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return
+                };
                 var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
                 if(!tile || tile.type() === "TEXT_WIDGET") return;
                 tile.linkText(getNlsString("DBS_BUILDER_EDIT_WIDGET_LINK_DESC"));
@@ -1801,11 +1794,13 @@ define(['knockout',
             
             self.postDocumentShow = function() {
 //                self.maximizeFirst();
-                builder.triggerBuilderResizeEvent('resize builder after document show');
+                $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
                 $(window).resize(function() {
-                    builder.triggerBuilderResizeEvent('resize builder after window resized');
+                    $b.triggerBuilderResizeEvent('resize builder after window resized');
                 });
+                //avoid brandingbar disappear when set font-size of text
+                $("#globalBody").addClass("globalBody");
             };
 
             var timeSelectorChangelistener = ko.computed(function(){
@@ -1822,46 +1817,20 @@ define(['knockout',
                 }
             });
 
-	var initStart = new Date(new Date() - 24*60*60*1000);
-        var initEnd = new Date();
- 	self.timeSelectorModel.viewStart(initStart);
-        self.timeSelectorModel.viewEnd(initEnd);
-	self.datetimePickerParams = {
-	    startDateTime: initStart,
- 	    endDateTime: initEnd,	   
-	    callbackAfterApply: function(start, end) {
-		self.timeSelectorModel.viewStart(start);
-		self.timeSelectorModel.viewEnd(end);
-		self.timeSelectorModel.timeRangeChange(true);		
-	    }
-	};
-
-/**
-	self.refreshCallback = function(start, end) {
-	    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(start,end),null);
-            self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
-	}
-	self.timeRangeStart = ko.observable(new Date(new Date() - 24*60*60*1000));
-        self.timeRangeEnd = ko.observable(new Date());
-	self.datetimePickerParams = {
-	    startDateTime: new Date() - 24*60*60*1000,
- 	    endDateTime: new Date(),
-	    callback: function(start, end) {
-		self.timeRangeStart(start);
-		self.timeRangeEnd(end);
-		self.refreshCallback(start, end);
-	    }
-	}
-	self.autoRefreshParams = ko.computed(function() {
-    	    return {
-	        timeRangeStart: self.timeRangeStart(),
-        	timeRangeEnd: self.timeRangeEnd(),
-	    	refreshCallback: self.refreshCallback
-	    }
-	}, self);
-**/
-
-    }
+            var initStart = new Date(new Date() - 24*60*60*1000);
+            var initEnd = new Date();
+            self.timeSelectorModel.viewStart(initStart);
+            self.timeSelectorModel.viewEnd(initEnd);
+            self.datetimePickerParams = {
+                startDateTime: initStart,
+                endDateTime: initEnd,	   
+                callbackAfterApply: function(start, end) {
+                    self.timeSelectorModel.viewStart(start);
+                    self.timeSelectorModel.viewEnd(end);
+                    self.timeSelectorModel.timeRangeChange(true);		
+                }
+            };
+        }
         
         return {"DashboardTile": DashboardTile, 
             "DashboardTilesViewModel": DashboardTilesViewModel,

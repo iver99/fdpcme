@@ -279,9 +279,9 @@ else {
     afterEvaluate {
       // some tasks apply only to projects with java plugin applied.
       if (project.plugins.hasPlugin('java')) {
-        project.jacoco {
+     /*   project.jacoco {
           toolVersion = "0.7.2.201409121644"
-        }
+        }*/
 
         jacocoTestReport {
           executionData = fileTree(dir: "${buildDir}/jacoco", include: '**/*.exec')
