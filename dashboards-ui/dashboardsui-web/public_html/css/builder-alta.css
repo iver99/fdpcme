@@ -16,6 +16,16 @@ body, html {
   height: 100%;
 }
 
+.globalBody {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.stretch-width {
+  width: 100%;
+}
+
 .tile-container {
   max-width: none;
   /* width: 100%; */
@@ -421,6 +431,14 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
   padding: 0;
 }
 
+#dbd-left-panel {
+    height: 1000px; 
+    position: absolute; 
+    left: 0; 
+    top: 0; 
+    border-right: 1px solid #d6dfe6;
+}
+
 .dbd-left-panel-show {
     width: 215px;
 }
@@ -432,6 +450,65 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-no-left-panel {
     display: none;
     width: 0;
+}
+
+#dbd-left-panel-show-btn {
+    margin-top: 5px;
+    border-bottom: 1px solid #d6dfe6;
+}
+
+#dbd-left-panel-header {
+    width: 100%; 
+    height: 32px;
+}
+
+.dbd-left-panel-header-title {
+    padding-right: 50px; 
+    float: left; 
+    width: 163px; 
+    overflow: hidden; 
+    margin-right: -50px; 
+    display: block;
+}
+
+.dbd-left-panel-header-search {
+    border: 1px;
+    border-radius: 2px;
+    border-color: #c4ced7;
+    border-style: solid;
+    height: 32px;
+    margin: 0 10px 10px 10px;
+    background-color: #fcfdfe;
+    float: left;
+    box-sizing: border-box; width: 195px;
+}
+
+.dbd-left-panel-header-search-input {
+    float: left; 
+    height: 30px;
+    width: 163px;
+}
+
+.dbd-left-panel-header-search-input input {
+    border: 0; 
+    height: 30px;
+}
+
+#dbd-left-panel-header-search-btn {
+    margin: 0px;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+#dbd-left-panel-widgets {
+    width: 100%; 
+    height: auto; 
+    overflow-x: hidden; 
+    overflow-y: auto; 
+    position: relative;
 }
 
 .left-panel-dbd-widget-goto-icon {
@@ -464,12 +541,57 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     content:url("images/func_search_16_ena.png");
 }
 
+.dbd-left-panel-widget {
+    width: 190px; 
+    height: 30px;
+}
+
+.dbd-left-panel-widget-text {
+    padding-right: 35px; 
+    float: left; 
+    width: 155px; 
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    display: block; 
+    margin-right: -35px; 
+    margin-top: 9px; 
+    cursor: move;
+}
+
 .dbd-left-panel-widget button {
     display: none;
+    margin: 0px;
 }
 
 .dbd-left-panel-widget:hover button {
     display: block;
+}
+
+.dbd-left-panel-img-pop {
+    display: none;
+    height:120px; 
+    width: 120px; 
+    z-index: 40;
+}
+
+.dbd-left-panel-img-pop img {
+    width: 100%; 
+    height: 100%;
+}
+
+#dbd-left-panel-footer {
+    height: 210px;
+}
+
+#dbd-left-panel-footer-text {
+    height: 30px; 
+    border-top: 1px solid #d6dfe6; 
+    padding-top: 10px;
+}
+
+#dbd-left-panel-text {
+    cursor: move;
 }
 
 .left-panel-text-helper {
@@ -479,6 +601,15 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .ui-draggable-dragging .left-panel-text-helper {
     display: block;
     z-index: 80;
+}
+
+#left-panel-text-helper-content {
+    font-size: 1.2em; 
+    font-weight: bold;
+}
+
+#dbd-left-panel-link {
+    cursor: move;
 }
 
 .left-panel-link-helper {
@@ -496,6 +627,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 .ui-draggable-dragging #dbd-left-panel-link-handle {
     display: none;
+}
+
+.ui-draggable-disabled #dbd-left-panel-link-handle {
+    color: #9e9e9e;
+    cursor: pointer;
 }
 
 .dbd-tile-link-wrapper {
@@ -516,6 +652,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 1.0em;
+    float: left;
     margin: 0px;
     margin-right: -90px;
 }
@@ -560,4 +697,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-color: #e0e6eb;
     color: #9e9e9e;
     cursor: default;
+}
+
+#dbd-left-panel-footer-btns {
+    border-top: 1px solid #d6dfe6; 
+    padding-top: 10px;
+}
+
+#dbd-left-panel-footer-pages {
+    margin-top: 10px;
 }
