@@ -114,7 +114,7 @@ public class TestDashboardPage extends CommonUIUtils
 
 			webdriver.getLogger().info("Click the Add Widgets icon");
 			webdriver.click(UIControls.sAddWidgetIcon);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 
 			webdriver.getLogger().info("Verify the Add Widgets window is opened");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
@@ -133,7 +133,7 @@ public class TestDashboardPage extends CommonUIUtils
 			webdriver.getLogger().info("Select a widget and add it to the main page");
 			webdriver.getLogger().info("Select a widget");
 			webdriver.click(UIControls.sWidgetSelct);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Click Add button");
 			webdriver.click(UIControls.sAddWidgetBtn);
 			webdriver.takeScreenShot();
@@ -141,7 +141,7 @@ public class TestDashboardPage extends CommonUIUtils
 			webdriver.getLogger().info("Close the Add Widget window");
 			webdriver.click(UIControls.sCloseWidget);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 
 			webdriver.getLogger().info("Verify the widget has been added to main page");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
@@ -165,7 +165,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			//login
 			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=Dashboard&isAdmin=true");
-	
+			Thread.sleep(10000);
 			webdriver.getLogger().info("Assert that common UI login was successfuly");
 			Assert.assertTrue(bLoginSuccessful);
 	
@@ -238,7 +238,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			webdriver.getLogger().info("Click the Add Widgets icon");
 			webdriver.click(UIControls.sAddWidgetIcon);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the Add Widgets window is opened");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
@@ -250,20 +250,20 @@ public class TestDashboardPage extends CommonUIUtils
 			Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Add");
 			webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
 			Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
-	
+			Thread.sleep(10000);
 			//Add a widget
 			webdriver.getLogger().info("Select a widget and add it to the main page");
 			webdriver.getLogger().info("Select a widget");
 			webdriver.click(UIControls.sWidgetSelct);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Click Add button");
 			webdriver.click(UIControls.sAddWidgetBtn);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Close the Add Widget window");
 			webdriver.click(UIControls.sCloseWidget);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the widget has been added to main page");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
@@ -283,7 +283,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			//login
 			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=Dashboard&isAdmin=false");
-	
+			Thread.sleep(10000);
 			webdriver.getLogger().info("Assert that common UI login was successfuly");
 			Assert.assertTrue(bLoginSuccessful);
 	
@@ -357,7 +357,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			webdriver.getLogger().info("Click the Add Widgets icon");
 			webdriver.click(UIControls.sAddWidgetIcon);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the Add Widgets window is opened");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
@@ -369,20 +369,20 @@ public class TestDashboardPage extends CommonUIUtils
 			Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Add");
 			webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
 			Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
-	
+			Thread.sleep(10000);
 			//Add a widget
 			webdriver.getLogger().info("Select a widget and add it to the main page");
 			webdriver.getLogger().info("Select a widget");
 			webdriver.click(UIControls.sWidgetSelct);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Click Add button");
 			webdriver.click(UIControls.sAddWidgetBtn);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Close the Add Widget window");
 			webdriver.click(UIControls.sCloseWidget);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the widget has been added to main page");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
@@ -402,7 +402,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			//login
 			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?isAdmin=true");
-	
+			Thread.sleep(10000);
 			webdriver.getLogger().info("Assert that common UI login was successfuly");
 			Assert.assertTrue(bLoginSuccessful);
 	
@@ -475,7 +475,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			webdriver.getLogger().info("Click the Add Widgets icon");
 			webdriver.click(UIControls.sAddWidgetIcon);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the Add Widgets window is opened");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
@@ -487,20 +487,20 @@ public class TestDashboardPage extends CommonUIUtils
 			Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Add");
 			webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
 			Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
-	
+			Thread.sleep(10000);
 			//Add a widget
 			webdriver.getLogger().info("Select a widget and add it to the main page");
 			webdriver.getLogger().info("Select a widget");
 			webdriver.click(UIControls.sWidgetSelct);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Click Add button");
 			webdriver.click(UIControls.sAddWidgetBtn);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Close the Add Widget window");
 			webdriver.click(UIControls.sCloseWidget);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the widget has been added to main page");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));
@@ -520,7 +520,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			//login
 			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?isAdmin=false");
-	
+			Thread.sleep(10000);
 			webdriver.getLogger().info("Assert that common UI login was successfuly");
 			Assert.assertTrue(bLoginSuccessful);
 	
@@ -593,7 +593,7 @@ public class TestDashboardPage extends CommonUIUtils
 	
 			webdriver.getLogger().info("Click the Add Widgets icon");
 			webdriver.click(UIControls.sAddWidgetIcon);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the Add Widgets window is opened");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
@@ -605,20 +605,20 @@ public class TestDashboardPage extends CommonUIUtils
 			Assert.assertEquals(webdriver.getText(UIControls.sAddWidgetBtn), "Add");
 			webdriver.getLogger().info("The button has been:  " + webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
 			Assert.assertNotNull(webdriver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
-	
+			Thread.sleep(10000);
 			//Add a widget
 			webdriver.getLogger().info("Select a widget and add it to the main page");
 			webdriver.getLogger().info("Select a widget");
 			webdriver.click(UIControls.sWidgetSelct);
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Click Add button");
 			webdriver.click(UIControls.sAddWidgetBtn);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 			webdriver.getLogger().info("Close the Add Widget window");
 			webdriver.click(UIControls.sCloseWidget);
 			webdriver.takeScreenShot();
-			Thread.sleep(5000);
+			Thread.sleep(15000);
 	
 			webdriver.getLogger().info("Verify the widget has been added to main page");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidget));

@@ -31,6 +31,7 @@ public class TestOtherPage extends CommonUIUtils
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=APM&isAdmin=true");
 
+		Thread.sleep(10000);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
 
@@ -115,6 +116,8 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=APM&isAdmin=false");
+		
+		Thread.sleep(10000);
 
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
@@ -200,7 +203,7 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=APM");
-
+		Thread.sleep(10000);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
 
@@ -285,7 +288,7 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=Error&isAdmin=true");
-
+		Thread.sleep(10000);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
 
@@ -331,7 +334,7 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=Error&isAdmin=false");
-
+		Thread.sleep(10000);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
 
@@ -377,7 +380,7 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=TenantManagement&isAdmin=true");
-
+		Thread.sleep(10000);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
 
@@ -461,7 +464,7 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=TenantManagement&isAdmin=false");
-
+		Thread.sleep(10000);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
 
@@ -546,7 +549,7 @@ public class TestOtherPage extends CommonUIUtils
 
 		//login
 		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver, "?appId=TenantManagement");
-
+		Thread.sleep(10000);
 		webdriver.getLogger().info("Assert that common UI login was successfuly");
 		Assert.assertTrue(bLoginSuccessful);
 

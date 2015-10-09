@@ -26,7 +26,7 @@ public class UIControls
 	public static final String sAdminLabel = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[4]/div[2]/div[1]";
 	public static final String sWidgetName = "/html/body/div[3]/div/div[2]/div/div[1]";
 	public static final String sWidgetDesc = "/html/body/div[3]/div/div[2]/div/div[2]";
-	public static final String sWidgetWindowTitle = "//*[@id='ui-id-2']";
+	public static final String sWidgetWindowTitle = "//*[@id='ui-id-4']";
 	//End: Text
 
 	//Begin: Button

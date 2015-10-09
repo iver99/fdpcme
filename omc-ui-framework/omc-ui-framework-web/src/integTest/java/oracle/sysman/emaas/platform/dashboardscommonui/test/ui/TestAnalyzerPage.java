@@ -105,7 +105,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 
 			webdriver.getLogger().info("Click the Open icon");
 			webdriver.click(UIControls.sAddWidgetIcon);
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 
 			webdriver.getLogger().info("Verify the Open Widgets window is opened");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sWidgetWindowTitle));
