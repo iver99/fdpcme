@@ -128,7 +128,7 @@ public class DashBoardPageId {
 	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
 	
 	//time picker /html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button
-	public static final String TimePickerID = "/html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";
+	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";
 	public static final String ApplyBtnID = "applyButton";
 	public static final String CancelBtnID = "cancelButton";
 	public static final String DateID1 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/table/tbody/tr[4]/td[2]/a";
