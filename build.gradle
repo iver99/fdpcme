@@ -156,7 +156,7 @@ buildscript {
 	repositories {  
 		mavenLocal()  
 		maven {  
-			 url = "${artifactory_contextUrl}/${artifactory_resolveRepoName}"
+			 url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
 			credentials {  
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
