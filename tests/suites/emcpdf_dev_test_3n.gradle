@@ -31,13 +31,7 @@ buildscript {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
-repositories {
-    /* To check if the jar is available in local maven repository */
-    maven {
-        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-	
-    }
-}
+
 apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************

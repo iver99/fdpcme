@@ -34,26 +34,9 @@ war {
 
 }
 
-sourceSets{
-	test {
-		java {
-			srcDirs = ['src/test/java']
-		}
-		resources.srcDirs = ['src/test/java']
-	}
- main {
-	 java.srcDir 'src/main/java'
-	}
-}
 
-task runQATestSuite(type: Test){
-        useTestNG(){
-        	dependsOn ':dashboards-ee:ear'
-        	useDefaultListeners = true
-        	outputDirectory = file("$buildDir/testngoutput")
-        	suites file('testngsuite.xml')
-        }
-}
+
+
 
 
 publishing.publications {
@@ -78,14 +61,6 @@ task jarMe(type: Jar) {
         from sourceSets.main.output
         baseName = "${project.archivesBaseName}"
 }
-
-
-
-
-
-
-
-
 
 
 /**
@@ -143,14 +118,7 @@ task ftpRestDoc << {
 		}
 	}
 
-sourceSets {
-	test{
-		java {
-			srcDirs = ['src/test/java']
-		}
-		resources.srcDirs = ['src/test/java']
-	}
-}
+
 
 dependencies {
 	providedCompile project(':dashboards-entities') { transitive = false }
@@ -175,13 +143,9 @@ dependencies {
 	providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
 	providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
 	
-	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1') { transitive = false }
 	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1') { transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1') { transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false } 
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
+	
 	
 	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') { transitive = false }
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }

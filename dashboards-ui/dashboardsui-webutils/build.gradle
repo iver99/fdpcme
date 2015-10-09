@@ -2,16 +2,6 @@ apply plugin: 'eclipse'
 apply from:'test.gradle'
 
 
-sourceSets {
-    main {
-     java {
-         srcDir 'src/main/java'
-		}
-     resources {
-          srcDir 'src/main/java'
-    		}
-  	}
-}
 
 jar {
         from('src/main/java') {
@@ -21,13 +11,7 @@ jar {
 
 
 
-task runDEVTestSuite_webuiutil(type: Test){
-        useTestNG(){
-       useDefaultListeners = true
-       outputDirectory = file("$buildDir/testngoutput")
-        suites file('dashboardsui_webutils_testng_suite.xml')
-        }
-}
+
 publishing.publications {
     integTest(MavenPublication) {
                         setArtifactId(project.name + '-' + integTestJar.appendix)
@@ -59,7 +43,7 @@ dependencies {
         compile(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.12'){ transitive = false }
         compile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
-	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
+	
 } 
 
 build.dependsOn integTestJar

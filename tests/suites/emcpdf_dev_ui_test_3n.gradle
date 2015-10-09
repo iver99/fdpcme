@@ -32,12 +32,7 @@ buildscript {
     }
 }
 
-repositories {
 
-    maven {
-        url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}"
-    }
-}
 apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************

@@ -1,33 +1,9 @@
-apply plugin: 'java'
+
 apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'TestInfraPlugin'
+
 apply from:'test.gradle'
-apply plugin: 'artifactory-publish'
 
 
-sourceSets {
- main {
-     java {
-         srcDir 'src/main/java'
-		}
-     resources {
-          srcDir 'src/main/java'
-    		}
-  	}
- 
- }
-
-
-
-
-task runDEVTestSuite(type: Test){
-        useTestNG(){
-       useDefaultListeners = true
-       outputDirectory = file("$buildDir/testngoutput")
-        suites file('dashboards_testng_suite.xml')
-        }
-}
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -54,7 +30,7 @@ dependencies {
 	compile project(':dashboards-entities') { transitive = false }
 
 	testRuntime(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
-	testCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
+	
 	compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1')  { transitive = false }
 	compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1')  { transitive = false }
         compile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }

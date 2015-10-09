@@ -1,7 +1,5 @@
-apply plugin: 'java' 
+
 apply plugin: 'eclipse' 
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
 
 jar {
         from('src/main/java') {
@@ -9,13 +7,6 @@ jar {
         }
 }
 
-task runDEVTestSuite_webutil(type: Test){
-        useTestNG(){
-       useDefaultListeners = true
-       outputDirectory = file("$buildDir/testngoutput")
-        suites file('dashboards_webutils_testng_suite.xml')
-        }
-}
  
 dependencies { 
         compile project(':dashboards-core')
