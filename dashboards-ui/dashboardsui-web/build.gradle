@@ -199,36 +199,36 @@ project.task("cleanJSLib") << {
 
 project.task("unpackDFCommonFromArtifactory") << {
     
-    def File buildDFCommonUnzipDir = new File(buildDir.absolutePath, 'dfcommon')
+   // def File buildDFCommonUnzipDir = new File(buildDir.absolutePath, 'dfcommon')
     //first time or if custom cleans removes it
-    sourceDFCommonDestDir.mkdirs()
+   // sourceDFCommonDestDir.mkdirs()
 
-    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-        if (artifact.name.equals('emcs-ui-framework-common-dev') && files(sourceDFCommonDestDir.listFiles()).isEmpty()) {
-            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-            buildDFCommonUnzipDir.mkdirs()
-            project.copy {
-                from project.zipTree(artifact.file.absolutePath)
-                into buildDFCommonUnzipDir.absolutePath
-            }
+   // configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+   //     if (artifact.name.equals('emcs-ui-framework-common-dev') && files(sourceDFCommonDestDir.listFiles()).isEmpty()) {
+   //         logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+   //         buildDFCommonUnzipDir.mkdirs()
+   //         project.copy {
+   //             from project.zipTree(artifact.file.absolutePath)
+   //             into buildDFCommonUnzipDir.absolutePath
+   //         }
             // Copy each of the unzipped jet directories to
             // the appropriate source directories
             // 1. build/dfcommon/ >> public_html/emcsDependencies/dfcommon/
-            project.copy {
-                from  buildDFCommonUnzipDir.absolutePath+'/dfcommon'
-                into sourceDFCommonDestDir.absolutePath
-            }
+   //         project.copy {
+   //             from  buildDFCommonUnzipDir.absolutePath+'/dfcommon'
+   //             into sourceDFCommonDestDir.absolutePath
+   //         }
             
             //finally delete the build/dfcommon directory
-            project.delete(buildDFCommonUnzipDir)
-        }
-    }
+   //         project.delete(buildDFCommonUnzipDir)
+   //     }
+   // }
 }
 
 project.task("cleanDFCommon") << {
-    println 'Cleaning up dfcommon directories ...'
-    println 'dfcommon dir: ' + sourceDFCommonDestDir.absolutePath
-    sourceDFCommonDestDir.deleteDir()
+    //println 'Cleaning up dfcommon directories ...'
+    //println 'dfcommon dir: ' + sourceDFCommonDestDir.absolutePath
+    //sourceDFCommonDestDir.deleteDir()
 }
 
 //unpack the integ common libs from artifactory
@@ -653,7 +653,7 @@ dependencies {
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.1-18149', ext: 'war'){ transitive = false }
 	compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
 	compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
-	compile(group: 'emcs-ui-framework', name: 'emcs-ui-framework-common-dev', version: '1.2.5', ext: 'zip'){transitive = false}
+	//compile(group: 'emcs-ui-framework', name: 'emcs-ui-framework-common-dev', version: '1.3.1', ext: 'zip'){transitive = false}
 	compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
 
 	if(war_number.toInteger()>0){

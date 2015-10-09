@@ -146,7 +146,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 		//DashBoardUtils.clickToSortByLastAccessed();
 		DashBoardUtils.searchDashBoard("AAA_testDashboard");
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		webd.takeScreenShot();
 		
 		webd.click(DashBoardPageId.InfoBtnID);
@@ -204,7 +204,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 		//DashBoardUtils.clickToSortByLastAccessed();
 		DashBoardUtils.searchDashBoard("DBA_Name_Modify");
-		DashBoardUtils.waitForMilliSeconds(500);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		webd.takeScreenShot();
 		
 		webd.click(DashBoardPageId.InfoBtnID);

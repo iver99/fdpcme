@@ -11,13 +11,13 @@
 requirejs.config({
     // Setup module id mapping
     map: {
-        'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'},
+        'emcla' : {'emcsutl/df-util': 'uifwk/js/util/df-util'},
         '*': {
-              'emcsutl/ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
-              'ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
-              'message-util': '../emcsDependencies/dfcommon/js/util/message-util',
-              'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-              'emcsutl/message-util': '../emcsDependencies/dfcommon/js/util/message-util'
+              'emcsutl/ajax-util': 'uifwk/js/util/ajax-util',
+              'emcsutl/message-util': 'uifwk/js/util/message-util',
+              'ajax-util': 'uifwk/js/util/ajax-util',
+              'message-util': 'uifwk/js/util/message-util',
+              'df-util': 'uifwk/js/util/df-util'
              }        
     },
     // Path mappings for the logical module names
@@ -38,8 +38,7 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
@@ -49,8 +48,9 @@ requirejs.config({
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '../emcsDependencies/dfcommon/js/util',
-        'ckeditor': '../emcsDependencies/ckeditor/ckeditor'
+        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
+        'ckeditor': '../emcsDependencies/ckeditor/ckeditor',
+        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -87,15 +87,8 @@ requirejs.config({
     waitSeconds: 60
 });
 
-var defaultTileHeight = 220;
-var defaultTileRowHeight = defaultTileHeight + 10;
-var defaultColumnsNumber = 4;
-
 /**
  * A top-level require call executed by the Application.
- * Although 'ojcore' and 'knockout' would be loaded in any case (they are specified as dependencies
- * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
- * objects in the callback
  */
 require(['knockout',
     'jquery',
@@ -128,25 +121,22 @@ require(['knockout',
         function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger()
-//          var dfRestApi = dfu.discoverDFRestApiUrl();
-//          if (dfRestApi){
-              var logReceiver = dfu.getLogUrl();
-                logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
-                // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
-                // If you comment the line below, our current log calls will not be output!
-                logger.setLogLevel(oj.Logger.LEVEL_LOG);
-//            }
+            var logReceiver = dfu.getLogUrl();
+            logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+            // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+            // If you comment the line below, our current log calls will not be output!
+            logger.setLogLevel(oj.Logger.LEVEL_LOG);
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
+                    template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
                 });
             }
             if (!ko.components.isRegistered('df-widget-selector')) {
                 ko.components.register("df-widget-selector",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/widgetselector/js/widget-selector'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
+                    viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/widgetselector/js/widget-selector.js'},
+                    template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/widgetselector/widget-selector.html'}
                 });
             }
 //            ko.components.register("df-time-selector",{
@@ -154,8 +144,8 @@ require(['knockout',
 //                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
 //            });
 	    ko.components.register("df-datetime-picker",{
-         	viewModel: {require: '../emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker'},
-	        template: {require: 'text!../emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html'}
+         	viewModel: {require: '/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/js/datetime-picker.js'},
+	        template: {require: 'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/datetime-picker.html'}
 	    });
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
@@ -166,7 +156,7 @@ require(['knockout',
                 template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
             });
 
-            function HeaderViewModel(builder) {
+            function HeaderViewModel($b) {
                 var self = this;
                 self.userName = dfu.getUserName();
                 self.tenantName = dfu.getTenantName();
@@ -184,12 +174,11 @@ require(['knockout',
                         self.headerHeight = height;
                     if (self.headerHeight === height)
                         return;
-                    builder.triggerBuilderResizeEvent('resize builder after header wrapper changed from height ' + self.headerHeight + ' to height ' + height + ' ');
+                    $b.triggerBuilderResizeEvent('header wrapper bar height changed');
                     self.headerHeight = height;
                 });
             };
-            
-           
+
 //            var urlChangeView = new dtv.TileUrlEditView();
 //            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
 //            includeTimeRangeFilter ="true";//TODO remove
@@ -212,23 +201,17 @@ require(['knockout',
 //            }(dsbId);
             $(document).ready(function() {
                 dtm.loadDashboard(dsbId, function(dashboard) {
-    //                var dsbName = dashboardModel && dashboardModel.name ? dashboardModel.name : "";
-    //                var dsbDesc = dashboardModel && dashboardModel.description ? dashboardModel.description : "";
-    //                var dsbWidgets = dashboardModel && dashboardModel.tiles ? dashboardModel.tiles : undefined;
-    //                var dsbType = dashboardModel && dashboardModel.type === "PLAIN" ? "normal": "onePage";
-    //                var includeTimeRangeFilter = (dsbType !== "onePage" && dashboardModel && dashboardModel.enableTimeRange);
-                  
-                    var builder = new dtv.DashboardBuilder(dashboard);
-                    var tilesView = new dtv.DashboardTilesView(builder, dtm);
-                    var tilesViewModel = new dtm.DashboardTilesViewModel(builder, tilesView/*, urlChangeView*/); 
-                    var toolBarModel = new dtv.ToolBarModel(dashboard, tilesViewModel);
-                    var headerViewModel = new HeaderViewModel(builder);
+                    var $b = new dtv.DashboardBuilder(dashboard);
+                    var tilesView = new dtv.DashboardTilesView($b, dtm);
+                    var tilesViewModel = new dtm.DashboardTilesViewModel($b, tilesView/*, urlChangeView*/); 
+                    var toolBarModel = new dtv.ToolBarModel($b, tilesViewModel);
+                    var headerViewModel = new HeaderViewModel($b);
                     
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
                             if(tile.type() === "TEXT_WIDGET") {
-                                dtm.initializeTextTileAfterLoad(dashboard, tile, tilesViewModel.show, tilesViewModel.tiles.tilesReorder, dtm.isContentLengthValid);
+                                dtm.initializeTextTileAfterLoad($b, tile, tilesViewModel.show, tilesViewModel.tiles.tilesReorder, dtm.isContentLengthValid);
                             }else {
                                 dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
                             }
@@ -261,25 +244,19 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
 
-                    //header
                     ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
-//                    ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, $('#links_menu')[0]);
-                    //content
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
-                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);
-//                    ko.applyBindings(urlChangeView, $('#urlChangeDialog')[0]);       
-                    var leftPanelView = new dtv.LeftPanelView(builder);
+                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
+                    var leftPanelView = new dtv.LeftPanelView($b);
                     ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
                     leftPanelView.initialize();
-                    var resizable = new dtv.ResizableView(builder);
-                    resizable.initialize();
+                    new dtv.ResizableView($b);
 
                     $("#loading").hide();
                     $('#globalBody').show();
                     tilesView.enableDraggable();
                     tilesViewModel.show();
-                    tilesView.enableMovingTransition();
 //                    var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
 //                    if (dashboard.enableTimeRange()){
 //                       timeSliderDisplayView.showOrHideTimeSlider("ON"); 
@@ -296,6 +273,7 @@ require(['knockout',
 //                    toolBarModel.showAddWidgetTooltip();
                     toolBarModel.handleAddWidgetTooltip();
                     tilesViewModel.postDocumentShow();
+                    tilesView.enableMovingTransition();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
                     });
@@ -323,17 +301,6 @@ function updateOnePageHeight(event) {
         oj.Logger.log('one page tile height is set to ' + event.data.height);
     }
 };
-
-//function truncateString(str, length) {
-//    if (str && length > 0 && str.length > length)
-//    {
-//        var _tlocation = str.indexOf(' ', length);
-//        if ( _tlocation <= 0 )
-//            _tlocation = length;
-//        return str.substring(0, _tlocation) + "...";
-//    }
-//    return str;
-//};
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);

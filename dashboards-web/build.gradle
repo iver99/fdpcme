@@ -12,7 +12,7 @@ apply plugin: 'artifactory-publish'
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
 //jar.archiveName='emcpdf_qa_test.jar'
-group = 'com.oracle.emaas.emcpdf'
+group = 'com.oracle.emaas.emcpdf42'
 //version = '1.0.1'
 //apply plugin: 'gavsetting'
 
@@ -189,7 +189,7 @@ sourceSets {
 
 dependencies {
 	providedCompile project(':dashboards-entities') { transitive = false }
-	providedCompile (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+')  { transitive = false }
+	providedCompile (group: 'com.oracle.emaas.emcpdf42', name: 'dashboards-core', version: '1.0.0+')  { transitive = false }
         providedCompile project(':dashboards-webutils')  { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
 //	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0') { transitive = false }

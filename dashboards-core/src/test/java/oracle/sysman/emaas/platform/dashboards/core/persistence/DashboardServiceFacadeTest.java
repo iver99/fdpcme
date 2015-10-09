@@ -129,6 +129,7 @@ public class DashboardServiceFacadeTest
 		d.setDeleted(0L);
 		d.setDescription("test");
 		d.setEnableTimeRange(1);
+		d.setEnableRefresh(1);
 		d.setIsSystem(1);
 		d.setLastModificationDate(DateUtil.getCurrentUTCTime());
 		d.setOwner("test");
