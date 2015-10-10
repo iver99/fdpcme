@@ -7,6 +7,17 @@ jar {
 		into('META-INF') 
 	}
 }
+publishing.publications {
+
+        thisJarPublication(MavenPublication) {
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact jar
+        }
+}
+
+artifactoryPublish {
+        publications('thisJarPublication')
+}
 
 dependencies {
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
