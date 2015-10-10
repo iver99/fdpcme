@@ -11,13 +11,13 @@
 requirejs.config({
     // Setup module id mapping
     map: {
-        'emcla' : {'emcsutl/df-util': '../emcsDependencies/dfcommon/js/util/df-util'},
+        'emcla' : {'emcsutl/df-util': 'uifwk/js/util/df-util'},
         '*': {
-              'emcsutl/ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
-              'ajax-util': '../emcsDependencies/dfcommon/js/util/ajax-util',
-              'message-util': '../emcsDependencies/dfcommon/js/util/message-util',
-              'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-              'emcsutl/message-util': '../emcsDependencies/dfcommon/js/util/message-util'
+              'emcsutl/ajax-util': 'uifwk/js/util/ajax-util',
+              'emcsutl/message-util': 'uifwk/js/util/message-util',
+              'ajax-util': 'uifwk/js/util/ajax-util',
+              'message-util': 'uifwk/js/util/message-util',
+              'df-util': 'uifwk/js/util/df-util'
              }        
     },
     // Path mappings for the logical module names
@@ -38,8 +38,7 @@ requirejs.config({
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+        'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
@@ -49,8 +48,9 @@ requirejs.config({
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '../emcsDependencies/dfcommon/js/util',
-        'ckeditor': '../emcsDependencies/ckeditor/ckeditor'
+        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
+        'ckeditor': '../emcsDependencies/ckeditor/ckeditor',
+        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -129,14 +129,14 @@ require(['knockout',
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
+                    template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
                 });
             }
             if (!ko.components.isRegistered('df-widget-selector')) {
                 ko.components.register("df-widget-selector",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/widgetselector/js/widget-selector'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/widgetselector/widget-selector.html'}
+                    viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/widgetselector/js/widget-selector.js'},
+                    template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/widgetselector/widget-selector.html'}
                 });
             }
 //            ko.components.register("df-time-selector",{
@@ -144,8 +144,8 @@ require(['knockout',
 //                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
 //            });
 	    ko.components.register("df-datetime-picker",{
-         	viewModel: {require: '../emcsDependencies/dfcommon/widgets/datetime-picker/js/datetime-picker'},
-	        template: {require: 'text!../emcsDependencies/dfcommon/widgets/datetime-picker/datetime-picker.html'}
+         	viewModel: {require: '/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/js/datetime-picker.js'},
+	        template: {require: 'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/datetime-picker.html'}
 	    });
             ko.components.register("df-auto-refresh",{
                 viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+KO Component template of AboutBox
+-->
+<div style="display:none" 
+     data-bind="attr:{id: id, title: dialogTitle},
+                ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                            resizeBehavior :'none',
+                            rootAttributes: { style: 'width: 550px;'}
+                        }">
+    <style>
+        .em-about-box
+        {
+            background-color: #38A0D9; 
+            border-color: #38A0D9;
+            background-image: none;
+        }
+        .em-about-dialog-body 
+        {
+            padding-top: 0px; 
+            padding-left: 0px; 
+            padding-right: 0px; 
+            background-color: white
+        }
+        .em-about-dialog-content
+        {
+            display:table; 
+            background-repeat: repeat-x;
+            width:100%;
+        }
+        .em-about-box .oj-dialog-close-icon
+        {
+            color: #FFFFFF;
+        }
+    </style>
+    <div class="oj-dialog-header oj-helper-clearfix em-about-box" aria-labelledby="dialogTitleId">
+    </div>
+    <div class="oj-dialog-body em-about-dialog-body">
+        <div class="em-about-dialog-content" style="background-image: url(/emsaasui/uifwk/emcsDependencies/uifwk/images/about_icon_background.png);">
+            <div style="display:table-row;">
+                <div style="display:table-cell;">
+                    <img src="/emsaasui/uifwk/emcsDependencies/uifwk/images/about_graphic.png" 
+                         data-bind="attr:{alt: aboutIconAltTxt}" width="160" height="160"/>
+                </div>
+                <div style="display:table-cell;font-size:1.3em;vertical-align: top; padding-top: 25px;">
+                    <span style="color:white" data-bind="text: dialogTitle"></span><br/>
+                        <span id='dialogTitleId'><b data-bind="text: dialogSubTitle"></b></span>
+                </div>
+            </div>
+        </div>
+        <div style="padding-left: 1em;">
+            <p data-bind="text: copyRight"></p>
+            <p data-bind="text: copyRightWarning"></p>
+        </div>
+    </div>
+    <div class="oj-dialog-footer" style="background-color: white;">
+        <button id="okButton" data-bind="ojComponent: {component: 'ojButton', label: closeBtnLabel},
+                                    click: okButtonHandle"> 
+        </button>
+    </div>
+</div>

@@ -12,8 +12,8 @@ requirejs.config({
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
         'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/ojL10n',
         'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/resources',
-        'text': '../emcsDependencies/oraclejet/js/libs/require/text'
-        
+        'text': '../emcsDependencies/oraclejet/js/libs/require/text',
+        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -55,8 +55,8 @@ function(ko, $, dfu, oj)
 {
     if (!ko.components.isRegistered('df-oracle-branding-bar')) {
         ko.components.register("df-oracle-branding-bar",{
-            viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-            template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+            viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
+            template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
         });
     }
     

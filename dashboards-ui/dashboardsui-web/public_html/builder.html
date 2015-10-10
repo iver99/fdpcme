@@ -4,7 +4,7 @@
         <title data-bind="text:builderTitle"></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="emcsDependencies/dfcommon/images/o_logo.png" />
+        <link rel="icon" type="image/png" href="/emsaasui/uifwk/emcsDependencies/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
         <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
@@ -564,7 +564,7 @@
                                             </div>
                                         </div>
                                         <div class="dbd-tile-link-wrapper" data-bind="css: linkText()? '': 'dbd-tile-link-empty'">
-                                            <a class="dbd-tile-link" data-bind="text: linkText, attr: {href: linkUrl}, css: linkText()? '': 'dbd-tile-link-empty'"></a>                                           
+                                            <a class="dbd-tile-link" data-bind="text: linkText, attr: {href: linkUrl, target: '_blank'}, css: linkText()? '': 'dbd-tile-link-empty'"></a>                                           
                                             <div class="dbd-tile-link-btns">
                                             <button id="dbd-tile-link-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
                                                     data-bind="click: function() {$parent.openEditTileLinkDialog($data)},ojComponent: {

@@ -269,6 +269,23 @@ public class TestDashBoard extends LoginAndLogout{
 	}
 	
 	@Test
+	public void testDashBoardHomeLink() throws Exception
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testDashBoardHomeLink");
+		
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		//dashboardHome link
+		webd.click(DashBoardPageId.DashBoardHomeLinkID);
+		DashBoardUtils.waitForMilliSeconds(2000);
+		String url = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("url = "+url);
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html");
+		
+	}
+	
+	@Test
 	public void testITALink() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -479,10 +496,10 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(5000);
 		//this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		//due to LoginUtils.doLogin()'s limitation, fix to 832 is not really verified. The current endUrl is not reused, but specified by that api 
-                login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName()+"-relogin","sso.welcome");
-                DashBoardUtils.loadWebDriverOnly(webd);
-                webd.getLogger().info("welcome page is being loaded, going to to verify...");
+		
+        login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName()+"-relogin","sso.welcome");
+        DashBoardUtils.loadWebDriverOnly(webd);
+        webd.getLogger().info("welcome page is being loaded, going to to verify...");
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(10000);
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
