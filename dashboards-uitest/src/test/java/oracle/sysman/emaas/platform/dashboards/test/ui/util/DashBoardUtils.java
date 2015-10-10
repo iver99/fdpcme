@@ -379,7 +379,8 @@ public class DashBoardUtils {
 			}
 			driver.getLogger().info("after right btn");
 			Assert.assertFalse(rightButton.isEnabled());
-			Assert.assertTrue(leftButton.isEnabled());
+			DashBoardUtils.waitForMilliSeconds(500);
+			//Assert.assertTrue(leftButton.isEnabled());
 			driver.getLogger().info("after enabled 1");
 			//navigate to left
 			while(leftButton.isEnabled()){
@@ -387,6 +388,7 @@ public class DashBoardUtils {
 			}
 			driver.getLogger().info("after left btn");		
 			Assert.assertFalse(leftButton.isEnabled());
+			DashBoardUtils.waitForMilliSeconds(500);
 			Assert.assertTrue(rightButton.isEnabled());
 			driver.getLogger().info("after enabled 2");
 			clickCloseButton();
