@@ -132,9 +132,9 @@ body, html {
   display: none;
 }
 
-.text-widget-area:not(.editing) .dbd-edit-area {
+/*.text-widget-area:not(.editing) .dbd-edit-area {
   display: none;
-}  
+}  */
 
 #builder-dbd-description .dbd-edit-area .oj-inputtext {
   width: 700px;
@@ -205,9 +205,9 @@ body, html {
   display: inline;
 }
 
-.editing #text-widget-editor-btn {
+/*.editing #text-widget-editor-btn {
     display: none;
-}
+}*/
 
 .dbd-display-area-editor-btn {
   display: none;
@@ -706,4 +706,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 #dbd-left-panel-footer-pages {
     margin-top: 10px;
+}
+
+.text-widget-hover-area:hover .dbd-display-area-editor-btn {
+    display: inline;
+}
+
+.text-widget-hover-area div p {
+    display: inline;
 }
