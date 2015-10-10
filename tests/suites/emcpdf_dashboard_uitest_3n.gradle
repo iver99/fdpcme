@@ -62,7 +62,7 @@ maven {
 
 //Update the lrgConfig configuration to specify where the test jar is.
  dependencies{
-testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-test', version: "${REPO_BID}")
+testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-integ-tests', version: "${REPO_BID}")
 {
 exclude('module':'groovy')
 }

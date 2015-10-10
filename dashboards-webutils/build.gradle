@@ -6,6 +6,17 @@ jar {
                 include '**/*.xml'
         }
 }
+publishing.publications {
+
+        thisJarPublication(MavenPublication) {
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact jar
+        }
+}
+
+artifactoryPublish {
+        publications('thisJarPublication')
+}
 
  
 dependencies { 
