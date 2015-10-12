@@ -1,0 +1,57 @@
+        {
+        "name": "OMC-UI-Framework",
+         "serviceName": "OMC-UI-Framework",
+         "version": "SERVICEVERSION",
+         "ephemeral": true,
+         "chefRunlistItems":
+         [
+                  {
+                  "name": "cookbook-emcs-omc-ui-framework",
+          "operation": "deploy"
+         },
+                 {
+                  "name": "cookbook-emcs-emsaas-weblogic::managedServer_undeployApp",
+                  "operation": "undeploy",
+                  "configurations":
+                   [
+                            {
+                              "name": "applicationName",
+                               "defaultValue": "emaas-applications-omc-ui-framework"
+                             }
+                   ]
+                   },
+		   {
+                    "name": "cookbook-emcs-emsaas-weblogic::managedServer_startApp",
+                    "operation": "start",
+                    "configurations":
+                    [
+                          {
+                                "name": "applicationName",
+                                "defaultValue": "emaas-applications-omc-ui-framework"
+                            }
+                    ]
+                  },
+                  {
+                   "name": "cookbook-emcs-emsaas-weblogic::managedServer_stopApp",
+                   "operation": "stop",
+                    "configurations":
+                    [
+                           {
+                                 "name": "applicationName",
+                                 "defaultValue": "emaas-applications-omc-ui-framework"
+                            }
+                     ]
+                  }
+         ],
+         "chefCookbook":
+         {
+                  "href": "<cookbook>",
+        "rel": "link/gzip"
+         },
+         "softwareImage":
+         {
+                  "rel": "link/gzip",
+                  "href": "<software>"
+         }
+
+        }

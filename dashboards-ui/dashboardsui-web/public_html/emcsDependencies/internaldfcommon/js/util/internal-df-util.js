@@ -5,15 +5,28 @@
  */
 define(['knockout',
         'jquery',
-        '../emcsDependencies/dfcommon/js/util/df-util',
-        '../emcsDependencies/dfcommon/js/util/usertenant-util'
+        'uifwk/js/util/df-util',
+        'uifwk/js/util/usertenant-util',
+        'uifwk/js/util/ajax-util',
+        'uifwk/js/util/message-util'
     ],
     
-    function(ko, $, dfumodel, userTenantUtil)
+    function(ko, $, dfumodel, userTenantUtilModel, ajaxUtilModel, msgUtilModel)
     {
         function InternalDashboardFrameworkUtility() {
             var self = this;
-            var dfu = new dfumodel();
+            var userTenantUtil = new userTenantUtilModel();
+            var ajaxUtil = new ajaxUtilModel();
+            var msgUtil = new msgUtilModel();
+            
+            self.getUserTenant = function() {
+                return userTenantUtil.getUserTenant();
+            };
+            
+            var userTenant = self.getUserTenant();
+            var userName = getUserName(userTenant);
+            var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
+            var dfu = new dfumodel(userName, tenantName);
             var isDevMode=dfu.isDevMode(); 
             var devData = dfu.getDevData();  
             if (isDevMode){
@@ -24,15 +37,6 @@ define(['knockout',
             self.isDevMode = function(){
                 return isDevMode;
             }
-            
-            self.getUserTenant = function() {
-                return userTenantUtil.getUserTenant();
-            };
-            
-            var userTenant = self.getUserTenant();
-            var userName = getUserName(userTenant);
-            var tenantName = userTenant && userTenant.tenant ? userTenant.tenant : null;
-            var dfu = new dfumodel(userName, tenantName);
             
             self.getUserName = function() {
                 return userName;
@@ -57,7 +61,7 @@ define(['knockout',
             self.registrationInfo = null;
             self.getRegistrationInfo=function(){
                 if (self.registrationInfo===null){
-                    dfu.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
+                    ajaxUtil.ajaxWithRetry({type: 'GET', contentType:'application/json',url: self.getRegistrationUrl(),
                         dataType: 'json',
                         headers: dfu.getDefaultHeader(), 
                         async: false,
@@ -288,23 +292,15 @@ define(['knockout',
              */ 
             self.ajaxWithRetry = function() {
 		var args = arguments;
-		if(args.length === 1) {
-		     return dfu.ajaxWithRetry(args[0]);
-		}else if(args.length === 2) {
-		     return dfu.ajaxWithRetry(args[0], args[1]);
-		}else if(args.length === 3) {
-		     return dfu.ajaxWithRetry(args[0], args[1], args[2]);
-		}else {
-	             console.log("Arguments number is wrong.");
-		}
-                
+		var options = ajaxUtil.getAjaxOptions(args);
+                return ajaxUtil.ajaxWithRetry(options);
             };
             
             /**
              * Display message
              */
             self.showMessage = function(messageObj) {
-            	dfu.showMessage(messageObj);
+            	msgUtil.showMessage(messageObj);
             };
             
             /**

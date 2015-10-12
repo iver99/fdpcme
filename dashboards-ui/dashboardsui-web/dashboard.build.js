@@ -31,7 +31,7 @@
         'promise': 'empty:',
         'dashboards': '.',
         'dfutil':'empty:',
-        'df-util':'empty:',
+        'uifwk/js/util/df-util':'empty:',
         'loggingutil':'empty:',
         'idfbcutil':'empty:',
         'timeselector':'empty:',
