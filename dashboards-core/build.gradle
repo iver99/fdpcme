@@ -17,11 +17,22 @@ publishing.publications {
     }
 }
  
-jar {
- from('src/main/java') {
-include '**/*.xml'
+
+   sourceSets {	
+  main {	
+     java {	
+        srcDir 'src/main/java'	
+               }	
+    resources {	
+         srcDir 'src/main/java'	
+                }	
+         }	
+  	
  }
-}
+
+
+
+
 artifactoryPublish {
 	 publications('integTest')
 	 publications('thisJarPublication')
