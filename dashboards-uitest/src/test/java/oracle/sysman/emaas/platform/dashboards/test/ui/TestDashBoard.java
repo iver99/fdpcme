@@ -36,6 +36,9 @@ public class TestDashBoard extends LoginAndLogout{
 		//DashBoardUtils.checkBrandingBarLink();
 		DashBoardUtils.waitForMilliSeconds(9000);	
 		
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Resource_Planning_ID));
@@ -94,6 +97,10 @@ public class TestDashBoard extends LoginAndLogout{
 					
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testModifyDashBoard");
+		
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(5000);;
+		
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
 		DashBoardUtils.waitForMilliSeconds(500);
@@ -119,6 +126,10 @@ public class TestDashBoard extends LoginAndLogout{
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testNavigateDashBoard");
+		
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
 		DashBoardUtils.waitForMilliSeconds(500);
@@ -144,6 +155,9 @@ public class TestDashBoard extends LoginAndLogout{
 		//focus a dashboard
 		DashBoardUtils.waitForMilliSeconds(500);
 		webd.takeScreenShot();
+		
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		//DashBoardUtils.clickToSortByLastAccessed();
 		DashBoardUtils.searchDashBoard("AAA_testDashboard");
 		DashBoardUtils.waitForMilliSeconds(5000);
@@ -199,6 +213,10 @@ public class TestDashBoard extends LoginAndLogout{
 				
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testRemoveDashBoard");	
+		
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(5000);
+		
 		//focus a dashboard
 		DashBoardUtils.waitForMilliSeconds(500);
 		webd.takeScreenShot();
@@ -250,7 +268,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//webd.click(DashBoardPageId.MenuBtnID);
 		//webd.click(DashBoardPageId.SignOutID);
 	}
-	
+	/*
 	@Test
 	public void testHomeLink() throws Exception
 	{
@@ -437,7 +455,7 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/warehouseadmin/html/admin-sources.html");
 		
 	}
-	
+	*/
 	@Test
 	public void testEMPCDF_812_1() throws Exception
 	{
@@ -548,6 +566,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testModifyLVDashBoard");
 		
 		DashBoardUtils.clickLVButton();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		
 		String parentWindow = webd.getWebDriver().getWindowHandle();
 		//open dashboard	
@@ -574,6 +593,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("start to test in testRemoveLVDashBoard");
 		
 		DashBoardUtils.clickLVButton();
+		DashBoardUtils.waitForMilliSeconds(5000);
 		
 		DashBoardUtils.searchDashBoard("LV_Name_Modify");
 		DashBoardUtils.waitForMilliSeconds(5000);
