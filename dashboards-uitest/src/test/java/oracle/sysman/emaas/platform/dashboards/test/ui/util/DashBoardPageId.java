@@ -52,6 +52,8 @@ public class DashBoardPageId {
 	
 	//link/html/body/div[3]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a
 	public static final String HomeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a";
+	//dashboard home link
+	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
 	//IT Analytics link
 	public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
 	//Log Analytics link/html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a /html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a
@@ -116,7 +118,7 @@ public class DashBoardPageId {
 	public static final String AutoRefreshBy_15_Mins_ID = "/html/body/div[1]/div/div/ul/li[5]/div";//oj-listbox-result-label-5";
 	
 	//tile operation
-	public static final String ConfigTileID = "/html/body/div[3]/div[2]/div/div/div[2]/div[2]/div/div/div[1]/div/div/button";///html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
+	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div/button";///html/body/div[*]/div[2]/div[2]/div[3]/div/div[2]/div[3]/div/div[1]/div/div/button";//";///html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
 	public static final String EditTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
 	public static final String RefreshTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
 	public static final String DeleteTileID = "/html/body/div[1]/div/ul/li[3]/a/span[2]";
@@ -126,7 +128,7 @@ public class DashBoardPageId {
 	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
 	
 	//time picker /html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button
-	public static final String TimePickerID = "/html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";
+	public static final String TimePickerID = "/html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";///html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"
 	public static final String ApplyBtnID = "applyButton";
 	public static final String CancelBtnID = "cancelButton";
 	public static final String DateID1 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/table/tbody/tr[4]/td[2]/a";
@@ -145,7 +147,7 @@ public class DashBoardPageId {
 	public static final String DashBoardDeleteID = "/html/body/div[1]/div/div/div[1]/div/div/div/button";
 	public static final String LV_DeleteBtnID_Dialog = "/html/body/div[1]/div[2]/div/div[5]/button[1]";
 	
-	public static final String WelcomeID = "//div[@class='welcome-slogan']";//"/html/body/div[2]/div/div[1]";                                                                                     
+	public static final String WelcomeID = "/html/body/div[2]/div/div[1]";//div[@class='welcome-slogan']";//"";                                                                                     
 
 	
 }

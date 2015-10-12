@@ -64,16 +64,16 @@ define(['knockout',
         }
         
         function isURL(str_url) {
-                var strRegex = "^((https|http|ftp|rtsp|mms)?://)"
-                        + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?"
-                        + "(([0-9]{1,3}\.){3}[0-9]{1,3}"
-                        + "|"
-                        + "([0-9a-z_!~*'()-]+\.)*"
-                        + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
-                        + "[a-z]{2,6})"
-                        + "(:[0-9]{1,4})?"
-                        + "((/?)|"
-                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+                var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
+//                        + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?"
+//                        + "(([0-9]{1,3}\.){3}[0-9]{1,3}"
+//                        + "|"
+//                        + "([0-9a-z_!~*'()-]+\.)*"
+//                        + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
+//                        + "[a-z]{2,6})"
+//                        + "(:[0-9]{1,4})?"
+//                        + "((/?)|"
+//                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
                 var re = new RegExp(strRegex);
                 return re.test(str_url);
             }
@@ -1563,7 +1563,7 @@ define(['knockout',
                 dragStartRow = null;
                 self.previousDragCell = null;
                 if(tile.type() === "TEXT_WIDGET") {
-                   self.reloadEditors(); 
+//                   self.reloadEditors(); 
                 }            
             };
             
@@ -1681,7 +1681,7 @@ define(['knockout',
                 self.previousDragCell = null;
                 if (tile) {
                     $(u.helper).css({left: tile.left(), top: tile.top()});
-                    self.reloadEditors();
+//                    self.reloadEditors();
                 }
             };
             
@@ -1725,28 +1725,28 @@ define(['knockout',
                 self.openEditTileLinkDialog(tile);
             }
             
-            self.reloadEditors = function() {
-                for(var i in CKEDITOR.instances) {
-                    delete CKEDITOR.instances[i];
-                    $("#cke_"+i).remove();
-                }
-                $("textarea.editor").each(function() {
-                    var targetId = $(this).attr("id");
-//                    CKEDITOR.replace(targetId);
-                    CKEDITOR.replace(targetId, {
-                            language: 'en',
-                            toolbar: [
-                                {name: 'styles', items: ['Font', 'FontSize']},
-                                {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
-                                {name: 'colors', items: ['TextColor']},
-                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
-//                                {name: 'insert', items: ['Image', 'Flash']}
-                            ],
-                            removePlugins: 'resize, elementspath',
-                            startupFocus: true
-                        });
-                });
-            };
+//            self.reloadEditors = function() {
+//                for(var i in CKEDITOR.instances) {
+//                    delete CKEDITOR.instances[i];
+//                    $("#cke_"+i).remove();
+//                }
+//                $("textarea.editor").each(function() {
+//                    var targetId = $(this).attr("id");
+////                    CKEDITOR.replace(targetId);
+//                    CKEDITOR.replace(targetId, {
+//                            language: 'en',
+//                            toolbar: [
+//                                {name: 'styles', items: ['Font', 'FontSize']},
+//                                {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
+//                                {name: 'colors', items: ['TextColor']},
+//                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
+////                                {name: 'insert', items: ['Image', 'Flash']}
+//                            ],
+//                            removePlugins: 'resize, elementspath',
+//                            startupFocus: true
+//                        });
+//                });
+//            };
             
             self.fireDashboardItemChangeEventTo = function (tile, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();

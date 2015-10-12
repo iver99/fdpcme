@@ -421,8 +421,10 @@ define(['knockout',
             
             self.initEventHandlers = function() {
                 $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
-                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleSaveEnable);
-                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleSaveEnable);
+//                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleSaveEnable);
+//                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleSaveEnable);
+                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
+                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
             
             self.rightButtonsAreaClasses = ko.computed(function() {
@@ -554,21 +556,35 @@ define(['knockout',
                 $("#parent-message-dialog").ojDialog("open");
             };
             
-            self.editors = 0;
-            self.handleSaveEnable = function(edit_type) {
-                if(edit_type === 'START_EDITING') {
-                    self.editors = self.editors + 1;
-                    self.disableSave(true);
-                }else {
-                    self.editors = self.editors - 1;
-                    if(self.editors>0) {
-                       self.disableSave(true); 
-                    }else{
-                       self.disableSave(false);
-                    }
-                }
-            } 
+//            self.editors = 0;
+//            self.handleSaveEnable = function(edit_type) {
+//                if(edit_type === 'START_EDITING') {
+//                    self.editors = self.editors + 1;
+//                    self.disableSave(true);
+//                }else {
+//                    self.editors = self.editors - 1;
+//                    if(self.editors>0) {
+//                       self.disableSave(true); 
+//                    }else{
+//                       self.disableSave(false);
+//                    }
+//                }
+//            } 
             
+            self.handleStartEditText = function () {
+                self.disableSave(true);
+                self.tilesViewModel.tilesView.disableDraggable();
+            }
+            
+            self.handleStopEditText = function (showErrorMsg) {
+                if (showErrorMsg) {
+                    self.disableSave(true);
+                } else {
+                    self.disableSave(false);
+                }
+                self.tilesViewModel.tilesView.enableDraggable();
+            }
+                
             self.getSummary = function(dashboardId, name, description, tilesViewModel) {
                 function dashboardSummary(name, description) {
                     var self = this;

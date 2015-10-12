@@ -85,7 +85,7 @@ task appServerInit << {
 
 	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
 	
-	ant.propertyfile(file: "../omc-ui-framework/testenv.properties") 
+	ant.propertyfile(file: "../testenv.properties") 
 	{
 		entry( key:"hostname",  value: "${serverHost}" )
 		entry( key: "port", value: "${appServerconfig.port}")
@@ -103,7 +103,8 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		name:       "${appName_commonui}-${version}",
+		targets:	'Server-6',
+		name:       "OMC-UI-Framework-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
@@ -115,14 +116,14 @@ task appServerDeploy{
 
 
 task appServerUndeploy{
-	dependsOn 'uiappServerInit' 
+	dependsOn 'appServerInit' 
 
 	doLast 
 	{ 
 		println "Undeploying ${appName_commonui}-${version} from ${t3URL}" 
 
 		ant.wldeploy(action:'undeploy',  
-		name:       "${appName_commonui}-${version}",  
+		name:       "OMC-UI-Framework-6",  
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 
