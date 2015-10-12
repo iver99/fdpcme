@@ -110,4 +110,4 @@ task small_deploy_3n_cleanup(type: EMTest) {
 }
 
 
-task emcpdf_dfcommon_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+task emcpdf_uifwk_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
