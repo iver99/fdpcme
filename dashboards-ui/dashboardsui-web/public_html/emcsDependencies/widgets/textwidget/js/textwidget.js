@@ -59,7 +59,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 //                                {name: 'insert', items: ['Image', 'Flash']}
                     ],
                     removePlugins: 'resize, elementspath',
-                    startupFocus: false
+                    startupFocus: false,
+                    uiColor: "#FFFFFF"
                 }
 
                 self.showTextEditor = function () {
@@ -78,6 +79,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         this.setData(self.content());                        
                         $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
                         $("#textEditorWrapper_" + self.randomId).hide();
+                        self.show && self.show();
                     });
 
                     editor.on("blur", function () {

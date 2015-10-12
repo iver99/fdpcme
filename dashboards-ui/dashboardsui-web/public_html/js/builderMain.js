@@ -244,7 +244,11 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
 
-                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
+                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
+                    
+                    //reset branding bar css after applying ckeditor
+                    $("#headerWrapper .emaas-appheader").css("margin-bottom", "0px");
+                    
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
                     ko.applyBindings(tilesViewModel, $('#global-html')[0]);      

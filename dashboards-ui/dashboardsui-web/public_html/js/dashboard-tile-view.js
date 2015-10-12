@@ -174,9 +174,11 @@ define(['knockout',
                 });       
             };
             
-            self.resizeEventHandler = function(width, height) {
-                $('#dbd-left-panel').height(height);
-                $('#left-panel-text-helper').css("width", width - 20);
+            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
+                $('#dbd-left-panel').height(height - topHeight);
+                $('#dbd-left-panel').css("top", topHeight);
+                $('#dbd-left-panel').css("z-index", 100);
+                $('#left-panel-text-helper').css("width", width - leftWidth - 20);
             };
             
             self.tileMaximizedHandler = function() {
@@ -278,7 +280,7 @@ define(['knockout',
                 $b.addBuilderResizeListener(self.onResizeFitSize);
             };
             
-            self.onResizeFitSize = function(width, height) {
+            self.onResizeFitSize = function(width, height, leftWidth, topHeight) {
                 self.rebuildElementSet(),
                 self.$list.each(function() {
                     var elem = $(this)
@@ -288,7 +290,7 @@ define(['knockout',
                         for (var i = 0; i < v_siblings.length; i++) {
                             h += $(v_siblings[i]).outerHeight();
                         }
-                        elem.height(height - h);
+                        elem.height(height - topHeight - h);
                     }
                 });
             };
@@ -305,11 +307,19 @@ define(['knockout',
             self.dtm = dtm;
             self.dashboard = $b.dashboard;
             
-            self.resizeEventHandler = function(width, height, leftWidth) {
-                $('#tiles-col-container').css("left", leftWidth);
+            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
+//                $('#main-container').css("margin-top", topHeight);
+//                $('#tiles-col-container').css("left", leftWidth);
+                $('#tiles-col-container').css("top", 0);
                 $('#tiles-col-container').width(width - leftWidth);
-                $('#tiles-col-container').height(height);
+                $('#tiles-col-container').height(height + topHeight * 2);
+//                $('#tiles-col-container').scrollTop(topHeight);
+                $('#tiles-col-container').css("padding-left", leftWidth);
+                $('#tiles-col-container').css("padding-top", topHeight);
+                $('#tiles-col-container').css("z-index", 0);
 //                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + height);
+                $('#global-time-control').width(width - leftWidth - 10);
+                $('#addWidgetToolTip').width(width - leftWidth);
             };
             
             self.getTileElement = function(tile) {
@@ -840,11 +850,11 @@ define(['knockout',
                     //console.log('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
                 };
                 
-                dsp.triggerEvent = function(event, p1, p2, p3) {
+                dsp.triggerEvent = function(event, p1, p2, p3, p4) {
                     if (!event || !dsp.queue[event])
                         return;
                     for (var i = 0; i < dsp.queue[event].length; i++) {
-                        dsp.queue[event][i](p1, p2, p3);
+                        dsp.queue[event][i](p1, p2, p3, p4);
                     }
                 };
             }
@@ -854,9 +864,9 @@ define(['knockout',
                 self.dispatcher.registerEventHandler(event, listener);
             };
             
-            self.triggerEvent = function(event, message, p1, p2, p3) {
-//                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
-                self.dispatcher.triggerEvent(event, p1, p2, p3);
+            self.triggerEvent = function(event, message, p1, p2, p3, p4) {
+                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
+                self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
             };
             
             self.addNewTextStartDraggingListener = function(listener) {
@@ -896,11 +906,12 @@ define(['knockout',
             };
             
             self.triggerBuilderResizeEvent = function(message) {
-                var height = $(window).height() - $('#headerWrapper').outerHeight() 
-                        - $('#head-bar-container').outerHeight();
-                var width = $('#main-container').width()/* - parseInt($('#main-container').css("marginLeft"), 0)*/;
+                var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
+                        - $('#head-bar-container').outerHeight()*/;
+                var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
                 var leftWidth = $('#dbd-left-panel').width();
-                self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth);
+                var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
+                self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             };    
             
             self.addBuilderResizeListener = function(listener) {

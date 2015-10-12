@@ -1163,8 +1163,8 @@ define(['knockout',
                 self.initializeTiles();
             };
             
-            self.onBuilderResize = function() {
-                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
+            self.onBuilderResize = function(width, height, leftWidth, topHeight) {
+                widgetAreaWidth = Math.min(widgetAreaContainer.width(), width - leftWidth -25);
 //                console.debug('widget area width is ' + widgetAreaWidth);
                 self.show();
             };
@@ -1811,6 +1811,13 @@ define(['knockout',
                 });
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
+                $("body").on("DOMSubtreeModified", function(e) {
+                    if (e.currentTarget && e.currentTarget.nodeName !== "BODY")
+                        return;
+                    if ($(e.currentTarget.lastChild).hasClass('cke_chrome')) {
+                        $(e.currentTarget.lastChild).prependTo('#tiles-col-container');
+                    }
+                });
             };
 
             var timeSelectorChangelistener = ko.computed(function(){
