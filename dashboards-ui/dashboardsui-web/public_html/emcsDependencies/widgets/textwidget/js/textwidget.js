@@ -2,18 +2,21 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
         function (localrequire, ko, $, oj) {
             function textWidgetViewModel(params) {
                 var self = this;
+                var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
                 var textEditor;
                 var textEditorId;
                 var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
-                var validator, show, reorder;
                 if(params.validator){
-                    validator = params.validator;
+                    self.validator = params.validator;
                 }
                 if(params.show) {
-                    show = params.show;
+                    self.show = params.show;
                 }
                 if(params.reorder) {
-                   reorder = params.reorder; 
+                   self.reorder = params.reorder; 
+                }
+                if(params.builder) {
+                    self.builder = params.builder;
                 }
                 self.showErrorMsg = ko.observable("none");
                 self.randomId = new Date().getTime();
@@ -43,10 +46,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if($("#textWidget_" + self.randomId + " #textEditorWrapper").is(":visible")) {                        
                         var textInfo = textEditor.document ? (textEditor.document.getBody().getHtml()?textEditor.document.getBody().getHtml() : defaultContent):"";
 //                        console.log(textInfo);
-                        if(!validator(textInfo)) {
+                        if(self.validator && !self.validator(textInfo, TEXT_WIDGET_CONTENT_MAX_LENGTH)) {
                             self.showErrorMsg("block");                            
                         }else{                            
                             $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
+                            self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, 'STOP_EDITING');
+                            textEditor.destroy(true);
                             if($("#textWidget_"+self.randomId).hasClass("editing")) {
                                 $("#textWidget_"+self.randomId).removeClass("editing");
                             }
@@ -56,12 +61,13 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         }
                     }else {                        
                         $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
+                        if(self.builder) self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, 'START_EDITING');
                         $("#textWidget_"+self.randomId).addClass("editing");
                         $("#textEditor_"+self.randomId).html(self.content());
                         textEditor.setData(self.content());
                     }
                      
-                    show();
+                    self.show && self.show();
                 }
                 
                 self.initializeCKEditor = function(id) {
@@ -85,8 +91,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     }
                     
                     self.showErrorMsg("none");
-                    $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();                    
-                    show();
+                    $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
+                    self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, 'STOP_EDITING');
+                    textEditor.destroy(true);
+                    self.show && self.show();
                 }
                 
                 self.deleteEditor = function() {
@@ -94,12 +102,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     if(params.tiles) {
                         params.tiles.remove(params.tile);
                     }
-                    reorder();
-                    show();
+                    self.reorder && self.reorder();
+                    self.show && self.show();
                 }
                 
                 self.toggleEditIcons = function() {
-                    show();
+                    self.show && self.show();
                 }
             }
             return textWidgetViewModel;

@@ -135,50 +135,31 @@ define([
                 
                 var urlNotificationCheck = null;
                 var urlNotificationShow = null;
-                
-                self.notificationShowCallback = function(url) {
-                    urlNotificationShow = url;
-                    if (urlNotificationShow) {
-                        oj.Logger.info("Get notifications page link successfully: " + urlNotificationShow, false);
-                        self.notificationDisabled(false);
-                        self.notificationPageUrl = urlNotificationShow;
-                    }
-                    else {
-                        oj.Logger.info("Failed to get notifications page link.", false);
-                    }
-                };
-                   
+                                   
                 self.checkNotificationAvailability = function() {
                     oj.Logger.info("Start to check available notifications by URL:" + urlNotificationCheck, false);
                     dfu.ajaxWithRetry(urlNotificationCheck, {
                         success:function(data, textStatus, jqXHR) {
-                            oj.Logger.info("Found available notifications. Trying to get notifications page link...", false);
-                            if (urlNotificationShow === null)
-                                dfu.discoverUrlAsync(self.serviceName, self.serviceVersion, self.relNotificationShow, self.notificationShowCallback);
+                            oj.Logger.info("The count of available notifications is: " + data, false);
+                            if (data && parseInt(data) > 0) {
+                                if (self.relNotificationShow.indexOf("/") === 0) {
+                                    urlNotificationShow = self.relNotificationShow;
+                                }
+                                if (urlNotificationShow) {
+                                    self.notificationDisabled(false);
+                                    self.notificationPageUrl = urlNotificationShow;
+                                }
+                                else {
+                                    oj.Logger.warn("The notifications page URL (relNotificationShow) provided by current application is invalid: " + self.relNotificationShow, false);
+                                    self.notificationDisabled(true);
+                                }
+                            }
                         },
                         error:function(xhr, textStatus, errorThrown){
-                            oj.Logger.info('No available notifications found by URL: ' + urlNotificationCheck);
+                            oj.Logger.error('There were errors while checking available notifications by URL: ' + urlNotificationCheck);
                             self.notificationDisabled(true);
-                        },
-                        showMessages: 'none'
+                        }
                     });
-                };
-                
-                self.notificationCheckCallback = function(url) {
-                    urlNotificationCheck = dfu.getRelUrlFromFullUrl(url);
-                    if (urlNotificationCheck) {
-                        self.notificationVisible(true);
-                        self.checkNotificationAvailability();
-                        //Check notifications every 5 minutes
-                        oj.Logger.info("Set timer to check notifications every 5 minutes.", false);
-                        var interval = 5*60*1000;  
-                        setInterval(self.checkNotificationAvailability, interval);
-                    }
-                    else {
-                        oj.Logger.info("Notifications is not provided by current application.", false);
-                        self.notificationVisible(false);
-                        self.notificationDisabled(true);
-                    }
                 };
                 
                 //Check notifications
@@ -375,7 +356,7 @@ define([
                 };
                 
                 //Set up timer to handle session timeout
-                //Normally the timer will be setup in links navigator, when links vavigator is not visible (e.g. in common error page),
+                //Normally the timer will be setup in links navigator, when links navigator is not visible (e.g. in common error page),
                 //the session timeout timer need to be set inside here.
                 if (self.navLinksVisible === false) {
                     setupTimerForSessionTimeout();
@@ -544,8 +525,27 @@ define([
                     oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
                             self.relNotificationCheck+", relNotificationShow: "+self.relNotificationShow, false);
                     if (self.relNotificationCheck && self.relNotificationShow) {
-                        if (urlNotificationCheck === null) 
-                            dfu.discoverUrlAsync(self.serviceName, self.serviceVersion, self.relNotificationCheck, self.notificationCheckCallback);
+                        self.notificationVisible(true);
+                        if (urlNotificationCheck === null) {
+                            if (self.relNotificationCheck.indexOf("/") === 0)
+                                urlNotificationCheck = self.relNotificationCheck;
+                            else if (self.relNotificationCheck.indexOf("sso.static/") === 0)
+                                urlNotificationCheck = "/" + self.relNotificationCheck;
+                            else if (self.relNotificationCheck.indexOf("static/") === 0)
+                                urlNotificationCheck = "/sso." + self.relNotificationCheck;
+                            
+                            if (urlNotificationCheck) {
+                                self.checkNotificationAvailability();
+                                //Check notifications every 5 minutes
+                                oj.Logger.info("Set timer to check notifications every 5 minutes.", false);
+                                var interval = 5*60*1000;  
+                                setInterval(self.checkNotificationAvailability, interval);
+                            }
+                            else {
+                                oj.Logger.warn("The notification check URL (relNotificationCheck) provided by current application is invalid: " + self.relNotificationCheck, false);
+                                self.notificationDisabled(true);
+                            }
+                        }
                     }
                 };
                 

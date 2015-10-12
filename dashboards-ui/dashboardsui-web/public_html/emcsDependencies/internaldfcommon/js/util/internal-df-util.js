@@ -103,6 +103,13 @@ define(['knockout',
                 }
             };   
             
+            self.getWidgetsUrl = function(){
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().ssfRestApiEndPoint,"/widgets");
+                }else{
+                    return '/sso.static/savedsearch.widgets';
+                }
+            }
             self.getPreferencesUrl=function(){
                 //change value to 'data/servicemanager.json' for local debugging, otherwise you need to deploy app as ear
                 if (self.isDevMode()){
@@ -200,7 +207,21 @@ define(['knockout',
             self.getDashboardsRequestHeader = function() {
                 return dfu.getDashboardsRequestHeader();
             };
-                        
+
+            self.getSavedSearchRequestHeader = function() {
+                var header = self.getDashboardsRequestHeader();
+                if (self.isDevMode()){
+                    header["OAM_REMOTE_USER"]=header["X-REMOTE-USER"];
+                    if (header["X-REMOTE-USER"]){
+                        delete header["X-REMOTE-USER"];
+                    }
+                    if (header["X-USER-IDENTITY-DOMAIN-NAME"]){
+                        delete header["X-USER-IDENTITY-DOMAIN-NAME"];
+                    } 
+                }
+                return header;
+            };
+            
             self.getUserTenant = function() {
                 return userTenant;
             };

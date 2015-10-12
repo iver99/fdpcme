@@ -52,14 +52,11 @@ define(['knockout',
             }
             
             function loadWidgets(keyword) {
-                var widgetsUrl = '/sso.static/savedsearch.widgets';
-                if (dfu.isDevMode()){
-                    widgetsUrl = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
-                }
+                var widgetsUrl = dfu.getWidgetsUrl();
 
                 dfu.ajaxWithRetry({
                     url: widgetsUrl,
-                    headers: dfu.getDashboardsRequestHeader(),
+                    headers: dfu.getSavedSearchRequestHeader(),
                     success: function(data) {
                         data && data.length > 0 && (filterWidgetsData(data, keyword));
                     },
@@ -86,22 +83,27 @@ define(['knockout',
             }
         }
         
-        function LeftPanelView(builder) {
+        function LeftPanelView($b) {
             var self = this;
-            self.builder = builder;
-            self.dashboard = builder.dashboard;
+            self.dashboard = $b.dashboard;
             
             self.keyword = ko.observable('');
             self.page = ko.observable(1);
             self.widgets = ko.observableArray([]);
             self.totalPages = ko.observable(1);
             
+            self.completelyHidden = ko.observable(false);
             self.showPanel = ko.observable(true);
             
             self.initialize = function() {
-                self.builder.addBuilderResizeListener(self.resizeEventHandler);
+                if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
+                    self.completelyHidden(true);
+                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                }
+                self.initEventHandlers();
                 self.loadWidgets();
                 self.initDraggable();
+                self.checkAndDisableLinkDraggable();
                 $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
                     var replacedValue = this.value.replace(/[^0-9\.]/g, '');
                     if (this.value !== replacedValue) {
@@ -110,52 +112,93 @@ define(['knockout',
                 });
             };
             
+            self.initEventHandlers = function() {
+                $b.addBuilderResizeListener(self.resizeEventHandler);
+                $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
+                $b.addEventListener($b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
+                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
+                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
+            };
+            
             self.initDraggable = function() {
+                self.initWidgetDraggable();
+                self.initTextWidgetDraggable();
+                self.initWidgetLinkDraggable();
+            };
+            
+            self.initWidgetDraggable = function() {
                 $(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
-//                    handle: "span",
                     scroll: false,
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'start dragging left panel widget', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_WIDGET_STOP_DRAGGING, 'stop dragging left panel widget', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_WIDGET_STOP_DRAGGING, null, e, t);
                     }
                 });
+            };
+            
+            self.initTextWidgetDraggable = function() {
                 $("#dbd-left-panel-text").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-text-handle",
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_START_DRAGGING, 'start dragging left panel text', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_TEXT_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_DRAGGING, null, e, t);
+                        $b.triggerEvent($b.EVENT_NEW_TEXT_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_TEXT_STOP_DRAGGING, 'stop dragging left panel text', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_TEXT_STOP_DRAGGING, null, e, t);
                     }
                 });
+            };
+            
+            self.initWidgetLinkDraggable = function() {
                 $("#dbd-left-panel-link").draggable({
                     helper: "clone",
                     handle: "#dbd-left-panel-link-handle",
                     start: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_START_DRAGGING, 'start dragging left panel link', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_LINK_START_DRAGGING, null, e, t);
                     },
                     drag: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_DRAGGING, null, e, t);
+                        $b.triggerEvent($b.EVENT_NEW_LINK_DRAGGING, null, e, t);
                     },
                     stop: function(e, t) {
-                        builder.triggerEvent(builder.EVENT_NEW_LINK_STOP_DRAGGING, 'stop dragging left panel link', e, t);
+                        $b.triggerEvent($b.EVENT_NEW_LINK_STOP_DRAGGING, null, e, t);
                     }
-                });
+                });       
             };
             
             self.resizeEventHandler = function(width, height) {
                 $('#dbd-left-panel').height(height);
                 $('#left-panel-text-helper').css("width", width - 20);
+            };
+            
+            self.tileMaximizedHandler = function() {
+                self.completelyHidden(true);
+                $b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
+            };
+            
+            self.tileRestoredHandler = function() {
+                if (self.dashboard.type() !== 'SINGLEPAGE' && !self.dashboard.systemDashboard()) {
+                    self.completelyHidden(false);
+                    $b.triggerBuilderResizeEvent('tile restored and show left panel');
+                }
+            };
+            
+            self.tileAddedHandler = function(tile) {
+                tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
+            };
+            
+            self.tileDeletedHandler = function(tile) {
+                if (!tile || tile.type() !== "DEFAULT")
+                    return;
+                self.checkAndDisableLinkDraggable();
             };
             
             self.loadWidgets = function() {
@@ -166,6 +209,7 @@ define(['knockout',
                             self.widgets.push(ko.mapping.fromJS(widgets[i]));
                     }
                     totalPages !== self.totalPages() && self.totalPages(totalPages);
+                    self.initWidgetDraggable();
                 });
             };
             
@@ -190,12 +234,12 @@ define(['knockout',
             self.showLeftPanel = function() {
                 self.showPanel(true);
                 self.initDraggable();
-                builder.triggerBuilderResizeEvent('show left panel');
+                $b.triggerBuilderResizeEvent('show left panel');
             };
             
             self.hideLeftPanel = function() {
                 self.showPanel(false);
-                builder.triggerBuilderResizeEvent('resize builder after hide left panel');
+                $b.triggerBuilderResizeEvent('hide left panel');
             };
             
             self.widgetGoDataExploreHandler = function(widget) {
@@ -204,6 +248,8 @@ define(['knockout',
             };
             
             self.widgetMouseOverHandler = function(widget) {
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                    return;
                 if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
                    $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-goto-'+widget.WIDGET_UNIQUE_ID()), 
                    {
@@ -217,149 +263,20 @@ define(['knockout',
                     $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
                 }
             };
+            
+            self.checkAndDisableLinkDraggable = function() {
+                if(!self.dashboard.isDefaultTileExist()) {
+                    $("#dbd-left-panel-link").draggable("disable");
+                }
+            };
         }
         
-//        function TooltipHelper(rootElement, popupDiv)
-//        {
-//           var self = this;
-//           this.initialize(rootElement, popupDiv);
-//
-//           self.initialize = function(rootElement, popupDiv)
-//           {
-//               self._AUTO_TIMEOUT = 3000;
-//               self._OPEN_DELAY = 500;
-//
-//               self._popupDiv = popupDiv;
-//               self._rootElement = rootElement;
-//
-////               var tooltipPopup = $("<div>").uniqueId();
-////               tooltipPopup.css("max-width", "340px");
-//               popupDiv.appendTo(rootElement);
-//
-//               self._tooltipPopupId = "#" + popupDiv.attr("id");
-//               popupDiv.ojPopup();
-//
-//               var callbackClearTimeout = $.proxy(self._handleClearTimeout, self);
-//               var callbackSetTimeout = $.proxy(self._handleSetTimeout, self);
-//
-//               popupDiv.ojPopup(
-//               {
-//                   position : 
-//                   {
-//                       my : "start top+10", at : "start end"
-//                   },
-//                   initialFocus : "none", 
-//                   autoDismiss : "focusLoss", 
-//                   beforeOpen : callbackSetTimeout, 
-//                   beforeClose : callbackClearTimeout, 
-//                   focus : callbackClearTimeout
-//               });
-//
-//               var callbackOpen = self._callbackOpen = $.proxy(self._handleOpen, self);
-//               var callbackClose = self._callbackClose = $.proxy(self._handleClose, self);
-//
-//               rootElement[0].addEventListener("mouseenter", callbackOpen, true);
-//               rootElement[0].addEventListener("mouseleave", callbackClose, true);
-//               rootElement[0].addEventListener("focus", callbackOpen, true);
-//           };
-//
-//           self._handleOpen = function (event)
-//           {
-//               var target = event.target;
-//               event = $.Event(event);
-////               var title = self._getTitle(target);
-//
-//               var tooltipPopupId = self._tooltipPopupId;
-//               var popup = $(tooltipPopupId);
-//
-//               var isOpen = !popup.ojPopup("isOpen");
-//               if (isOpen)
-//               {
-//                   popup.ojPopup("close");
-//               }
-//               else {
-////                   var oldTitle = popup.text();
-////                   if (oldTitle === title)
-////                       return;
-//
-//                   setTimeout(function ()
-//                   {
-////                       popup.html(title);
-//                       popup.ojPopup("open", target);
-//                   },
-//                   self._OPEN_DELAY);
-//               }
-//           };
-//
-//           self._handleSetTimeout = function (event)
-//           {
-//               self._timeoutId = window.setTimeout(self._callbackClose, self._AUTO_TIMEOUT);
-//           };
-//
-//           self._handleClearTimeout = function (event)
-//           {
-//               var timeoutId = self._timeoutId;
-//               delete self._timeoutId;
-//               window.clearTimeout(timeoutId);
-//           };
-//
-//           self._handleClose = function (event)
-//           {
-//               var tooltipPopupId = self._tooltipPopupId;
-//               var popup = $(tooltipPopupId);
-//
-//               var isOpen = !popup.ojPopup("isOpen");
-//               if (!isOpen)
-//               {
-//                   popup.ojPopup("close");
-//               }
-//           };
-//
-////           self._getTitle = function (node)
-////           {
-////               var helpDataAttr = self.popupDiv;
-////               var i = 0;
-////               var MAX_PARENTS = 5;
-////
-////               while ((node != null) && (i++ < MAX_PARENTS))
-////               {
-////                   if (node.nodeType == 1)
-////                   {
-////                       var title = node.getAttribute(helpDataAttr);
-////                       if (title && title.length > 0)
-////                           return title;
-////                   }
-////                   node = node.parentNode;
-////               }
-////               return null;
-////           };
-//
-//           self.destroy = function ()
-//           {
-//               var callbackOpen = self._callbackOpen;
-//               delete self._callbackOpen;
-//
-//               var callbackClose = self._callbackClose;
-//               delete self._callbackClose;
-//
-//               var rootElement = self._rootElement;
-//               delete self._rootElement;
-//
-//               rootElement[0].removeEventListener("mouseenter", callbackOpen, true);
-//               rootElement[0].removeEventListener("focus", callbackOpen, true);
-//               rootElement[0].removeEventListener("mouseleave", callbackClose, true);
-//
-//               var tooltipPopupId = self._tooltipPopupId;
-//               delete self._tooltipPopupId;
-//
-//               var popup = $(tooltipPopupId);
-//               popup.remove();
-//           };
-//       }
-        
-        function ResizableView(builder) {
+        function ResizableView($b) {
             var self = this;
-            self.builder = builder;
+            
+            self.initialize = function() {
+                $b.addBuilderResizeListener(self.onResizeFitSize);
+            };
             
             self.onResizeFitSize = function(width, height) {
                 self.rebuildElementSet(),
@@ -380,21 +297,19 @@ define(['knockout',
                 self.$list = $(".fit-size");
             };
             
-            self.initialize = function() {
-                builder.addBuilderResizeListener(self.onResizeFitSize);
-            };
+            self.initialize();
         }
             
-        function DashboardTilesView(builder, dtm) {
+        function DashboardTilesView($b, dtm) {
             var self = this;
             self.dtm = dtm;
-            self.builder = builder;
-            self.dashboard = builder.dashboard;
+            self.dashboard = $b.dashboard;
             
             self.resizeEventHandler = function(width, height, leftWidth) {
                 $('#tiles-col-container').css("left", leftWidth);
                 $('#tiles-col-container').width(width - leftWidth);
                 $('#tiles-col-container').height(height);
+//                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + height);
             };
             
             self.getTileElement = function(tile) {
@@ -445,16 +360,37 @@ define(['knockout',
                     $('#widget-area').removeClass('dbd-support-transition');
             };
             
-            self.builder.addBuilderResizeListener(self.resizeEventHandler);
+            $b.addBuilderResizeListener(self.resizeEventHandler);
         }
         
-        function ToolBarModel(dashboard, tilesViewModel) {
+        function ToolBarModel($b, tilesViewModel) {
             var self = this;
+            self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            
+            if (self.dashboard.id && self.dashboard.id())
+                self.dashboardId = self.dashboard.id();
+            else
+                self.dashboardId = 9999; // id is expected to be available always
+
+            if(self.dashboard.name && self.dashboard.name()){
+                self.dashboardName = ko.observable(self.dashboard.name());
+            }else{
+                self.dashboardName = ko.observable("Sample Dashboard");
+            }
+            self.dashboardNameEditing = ko.observable(self.dashboardName());
+            if(self.dashboard.description && self.dashboard.description()){
+                self.dashboardDescription = ko.observable(self.dashboard.description());
+            }else{
+                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
+            }
+            self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
+            self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard());
+            self.disableSave = ko.observable(false);
             
             self.includeTimeRangeFilter = ko.pureComputed({
                 read: function() {
-                    if (dashboard.enableTimeRange()) {
+                    if (self.dashboard.enableTimeRange()) {
                         return ["ON"];
                     }else{
                         return ["OFF"];
@@ -462,32 +398,32 @@ define(['knockout',
                 },
                 write: function(value) {
                     if (value && value.indexOf("ON") >= 0) {
-                        dashboard.enableTimeRange(true);
+                        self.dashboard.enableTimeRange(true);
                     }
                     else {
-                        dashboard.enableTimeRange(false);
+                        self.dashboard.enableTimeRange(false);
                     }
                 }
-            });
+            });    
             
-            if (dashboard.id && dashboard.id())
-                self.dashboardId = dashboard.id();
-            else
-                self.dashboardId = 9999; // id is expected to be available always
-                    
-            if(dashboard.name && dashboard.name()){
-                self.dashboardName = ko.observable(dashboard.name());
-            }else{
-                self.dashboardName = ko.observable("Sample Dashboard");
-            }
-            self.dashboardNameEditing = ko.observable(self.dashboardName());
-            if(dashboard.description && dashboard.description()){
-                self.dashboardDescription = ko.observable(dashboard.description());
-            }else{
-                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
-            }
-            self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
-            self.editDisabled = ko.observable(dashboard.type() === SINGLEPAGE_TYPE || dashboard.systemDashboard());
+            self.initialize = function() {
+                self.initEventHandlers();
+                $('#builder-dbd-name-input').on('blur', function(evt) {
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
+                        self.cancelChangeDashboardName();
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
+                        self.okChangeDashboardName();
+                });
+                $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
+                    self.handleAddWidgetTooltip();
+                });
+            };
+            
+            self.initEventHandlers = function() {
+                $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
+                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleSaveEnable);
+                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleSaveEnable);
+            };
             
             self.rightButtonsAreaClasses = ko.computed(function() {
                 var css = "dbd-pull-right " + (self.editDisabled() ? "dbd-gray" : "");
@@ -528,8 +464,8 @@ define(['knockout',
             };
             
             self.handleDashboardNameInputKeyPressed = function(vm, evt) {
-            	if (evt.keyCode == 13) {
-            		self.okChangeDashboardName();
+            	if (evt.keyCode === 13) {
+                    self.okChangeDashboardName();
             	}
             	return true;
             };
@@ -547,16 +483,9 @@ define(['knockout',
                 if ($('#builder-dbd-name').hasClass('editing')) {
                     $('#builder-dbd-name').removeClass('editing');
                 }
-                dashboard.name(self.dashboardName());
+                self.dashboard.name(self.dashboardName());
                 return true;
             };
-            
-            $('#builder-dbd-name-input').on('blur', function(evt) {
-                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
-                    self.cancelChangeDashboardName();
-                if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
-                    self.okChangeDashboardName();
-            });
             
             self.cancelChangeDashboardName = function() {
                 var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
@@ -575,8 +504,8 @@ define(['knockout',
             };
             
             self.handleDashboardDescriptionInputKeyPressed = function(vm, evt) {
-            	if (evt.keyCode == 13) {
-            		self.okChangeDashboardDescription();
+            	if (evt.keyCode === 13) {
+                    self.okChangeDashboardDescription();
             	}
             	return true;
             };
@@ -590,10 +519,10 @@ define(['knockout',
                 if ($('#builder-dbd-description').hasClass('editing')) {
                     $('#builder-dbd-description').removeClass('editing');
                 }
-                if (!dashboard.description)
-                    dashboard.description = ko.observable(self.dashboardDescription());
+                if (!self.dashboard.description)
+                    self.dashboard.description = ko.observable(self.dashboardDescription());
                 else
-                    dashboard.description(self.dashboardDescription());
+                    self.dashboard.description(self.dashboardDescription());
             };
             
             self.cancelChangeDashboardDescription = function() {
@@ -625,6 +554,21 @@ define(['knockout',
                 $("#parent-message-dialog").ojDialog("open");
             };
             
+            self.editors = 0;
+            self.handleSaveEnable = function(edit_type) {
+                if(edit_type === 'START_EDITING') {
+                    self.editors = self.editors + 1;
+                    self.disableSave(true);
+                }else {
+                    self.editors = self.editors - 1;
+                    if(self.editors>0) {
+                       self.disableSave(true); 
+                    }else{
+                       self.disableSave(false);
+                    }
+                }
+            } 
+            
             self.getSummary = function(dashboardId, name, description, tilesViewModel) {
                 function dashboardSummary(name, description) {
                     var self = this;
@@ -645,6 +589,19 @@ define(['knockout',
                 return summaryData;
             };
 
+            self.setAncestorsOverflowVisible = function() {
+                $("#tiles-col-container").css("overflow", "visible");
+                $("body").css("overflow", "visible");
+                $("html").css("overflow", "visible");
+            }
+            
+            self.resetAncestorsOverflow = function() {
+                $("#tiles-col-container").css("overflow-x", "hidden");
+                $("#tiles-col-container").css("overflow-y", "auto");
+                $("body").css("overflow", "hidden");
+                $("html").css("overflow", "hidden");
+            }
+            
             self.handleDashboardSave = function() {
             	if (self.isNameUnderEdit()) {
             		try {
@@ -688,10 +645,12 @@ define(['knockout',
                 		});
                 		parentNode.appendChild(canvas);
                 	});
+                        self.setAncestorsOverflowVisible();
                 	html2canvas($('#tiles-wrapper'), {
+                                background: "#fff",
                 		onrendered: function(canvas) {
                 			try {
-                				var resize_canvas = document.createElement('canvas');
+                                                var resize_canvas = document.createElement('canvas');
                 				resize_canvas.width = 320;
                 				resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;
                 				var resize_ctx = resize_canvas.getContext('2d');
@@ -707,10 +666,11 @@ define(['knockout',
                 				tilesViewModel.dashboard.screenShot = ko.observable(data);
                 			} catch (e) {
                 				oj.Logger.error(e);
-                			}
+                			}                                        
+                                        self.resetAncestorsOverflow();
                 			self.handleSaveUpdateDashboard(outputData);
                 		}  		
-                	});
+                	});                       
             	}
                 else {
                 	tilesViewModel.dashboard.screenShot = ko.observable(null);
@@ -751,15 +711,6 @@ define(['knockout',
                         "setParameter", "shouldHide", "systemParameters", 
                         "tileDisplayClass", "widerEnabled", "widget"]
                 });
-                if (dbdJs.tiles) {
-                    for (var i = 0; i < dbdJs.tiles.length; i++) {
-                        var tile = dbdJs.tiles[i];
-                        if (tile.content && tile.type === "TEXT_WIDGET") {
-                            var decoded = dtm.encodeHtml(tile.content)
-                            tile.content = decoded;
-                        }
-                    }
-                }
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
                 dtm.updateDashboard(dashboardId, dashboardJSON, function() {
@@ -796,7 +747,7 @@ define(['knockout',
             self.HandleAddTextWidget = function() {
                 var maximizedTile = tilesViewModel.getMaximizedTile();
             	if (maximizedTile)
-            		tilesViewModel.restore(maximizedTile);
+                    tilesViewModel.restore(maximizedTile);
                 tilesViewModel.AppendTextTile();
             }
             
@@ -819,20 +770,16 @@ define(['knockout',
                         
             // code to be executed at the end after function defined
 //            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
-                        
-            $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
-                self.handleAddWidgetTooltip();
-            });
-            
+
             self.handleAddWidgetTooltip = function() {
-                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
+                if (tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
                     $("#addWidgetToolTip").css("display", "block");
                 }else {
                     $("#addWidgetToolTip").css("display", "none");
-                }
-            }
+                }  
+            };
             
-            tilesViewModel.registerTileRemoveCallback(self.handleAddWidgetTooltip);
+            self.initialize();
         }
         
         function DashboardBuilder(dashboard) {
@@ -852,6 +799,15 @@ define(['knockout',
             self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
             self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
             self.EVENT_NEW_WIDGET_STOP_DRAGGING = "EVENT_NEW_WIDGET_STOP_DRAGGING";
+            
+            self.EVENT_TILE_MAXIMIZED = "EVENT_TILE_MAXIMIZED";
+            self.EVENT_TILE_RESTORED = "EVENT_TILE_RESTORED";
+            
+            self.EVENT_TILE_ADDED = "EVENT_TILE_ADDED";
+            self.EVENT_TILE_DELETED = "EVENT_TILE_DELETED";
+            
+            self.EVENT_TEXT_START_EDITING = "EVENT_TEXT_START_EDITING";
+            self.EVENT_TEXT_STOP_EDITING = "EVENT_TEXT_STOP_EDITING";
             
             function Dispatcher() {
                 var dsp = this;
@@ -883,7 +839,7 @@ define(['knockout',
             };
             
             self.triggerEvent = function(event, message, p1, p2, p3) {
-//                console.log('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
+//                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
                 self.dispatcher.triggerEvent(event, p1, p2, p3);
             };
             
@@ -909,7 +865,7 @@ define(['knockout',
             
             self.addNewLinkStopDraggingListener = function(listener) {
                 self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
-            }
+            };
             
             self.addNewWidgetStartDraggingListener = function(listener) {
                 self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);
