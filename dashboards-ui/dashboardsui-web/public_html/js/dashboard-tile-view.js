@@ -74,7 +74,6 @@ define(['knockout',
                     lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
                     !lcKeyword && (widget = data[i]);
                     widget && self.widget.push(widget);
-                    widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = 'images/sample-widget-histogram.png');
                 }
                 self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
                 self.page > self.totalPages && (self.page = self.totalPages);
@@ -205,11 +204,35 @@ define(['knockout',
                 new WidgetDataSource().loadWidgetData(self.page(), self.keyword(), function(page, widgets, totalPages) {
                     self.widgets([]);
                     if (widgets && widgets.length > 0) {
-                        for (var i = 0; i < widgets.length; i++)
-                            self.widgets.push(ko.mapping.fromJS(widgets[i]));
+                        for (var i = 0; i < widgets.length; i++) {
+                            var wgt = ko.mapping.fromJS(widgets[i]);
+                            self.getWidgetScreenshot(wgt);
+                            self.widgets.push(wgt);
+                        }
                     }
                     totalPages !== self.totalPages() && self.totalPages(totalPages);
                     self.initWidgetDraggable();
+                });
+            };
+            
+            
+            self.getWidgetScreenshot = function(wgt) {
+                var url = '/sso.static/savedsearch.widgets';
+                dfu.isDevMode() && (url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets'));
+                url += '/'+wgt.WIDGET_UNIQUE_ID()+'/screenshot';
+                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                dfu.ajaxWithRetry({
+                    url: url,
+                    headers: dfu.getSavedSearchRequestHeader(),
+                    success: function(data) {
+                        data && (wgt.WIDGET_VISUAL(data.screenShot));
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('images/sample-widget-histogram.png'));
+                    },
+                    error: function() {
+                        oj.Logger.error('Error to get widget screen shot for widget with unique id: ' + wgt.WIDGET_UNIQUE_ID);
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('images/sample-widget-histogram.png'));
+                    },
+                    async: true
                 });
             };
             
