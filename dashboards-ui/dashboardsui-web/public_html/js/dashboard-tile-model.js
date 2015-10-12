@@ -1516,6 +1516,10 @@ define(['knockout',
             };
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
+                if(!ui) {
+                    console.log(ui);
+                    return;
+                }
                 startTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);
                 dragStartRow = tile.row();
@@ -1526,6 +1530,9 @@ define(['knockout',
             };
             
             self.handleOnDragging = function(event, ui) {
+                if(!ui) {
+                    return;
+                }
                 curTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);
                 var cell = self.getCellFromPosition(ui.helper.position()); 
@@ -1550,6 +1557,9 @@ define(['knockout',
             };
             
             self.handleStopDragging = function(event, ui) {
+                if(!ui) {
+                    return;
+                }
                 var tile = ko.dataFor(ui.helper[0]);
                 if (!self.previousDragCell)
                     return;
