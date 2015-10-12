@@ -17,10 +17,11 @@ publishing.publications {
     }
 }
  
-
-
-
-
+jar {
+ from('src/main/java') {
+include '**/*.xml'
+ }
+}
 artifactoryPublish {
 	 publications('integTest')
 	 publications('thisJarPublication')
