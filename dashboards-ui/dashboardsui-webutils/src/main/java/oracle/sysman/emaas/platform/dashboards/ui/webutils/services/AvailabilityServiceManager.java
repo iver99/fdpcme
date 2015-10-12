@@ -117,21 +117,19 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 			return;
 		}
 
-		if (false) {// disable until common ui service is delivered
-			// check if dashboard common UI service availability
-			boolean isCommonUIAvailable = true;
-			try {
-				isCommonUIAvailable = isCommonUIAvailable();
-			}
-			catch (Exception e) {
-				isCommonUIAvailable = false;
-				logger.error(e.getLocalizedMessage(), e);
-			}
-			if (!isCommonUIAvailable) {
-				rsm.markOutOfService();
-				logger.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
-				return;
-			}
+		// check if dashboard common UI service availability
+		boolean isCommonUIAvailable = true;
+		try {
+			isCommonUIAvailable = isCommonUIAvailable();
+		}
+		catch (Exception e) {
+			isCommonUIAvailable = false;
+			logger.error(e.getLocalizedMessage(), e);
+		}
+		if (!isCommonUIAvailable) {
+			rsm.markOutOfService();
+			logger.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
+			return;
 		}
 
 		// now all checking is OK
