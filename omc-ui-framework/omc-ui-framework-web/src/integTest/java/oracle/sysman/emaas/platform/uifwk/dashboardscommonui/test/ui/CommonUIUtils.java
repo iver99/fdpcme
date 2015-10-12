@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboardscommonui.test.ui;
+package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
