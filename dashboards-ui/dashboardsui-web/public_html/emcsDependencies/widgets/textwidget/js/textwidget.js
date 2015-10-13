@@ -81,6 +81,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
                         $("#textEditorWrapper_" + self.randomId).hide();
                         self.show && self.show();
+                        self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, self.showErrorMsg());
                     });
 
                     editor.on("blur", function () {
