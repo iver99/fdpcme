@@ -148,12 +148,12 @@ require(['knockout',
 	        template: {require: 'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/datetime-picker.html'}
 	    });
             ko.components.register("df-auto-refresh",{
-                viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
-                template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
+                viewModel:{require:'../js/widgets/autorefresh/js/auto-refresh'},
+                template:{require:'text!../js/widgets/autorefresh/auto-refresh.html'}
             });
             ko.components.register("DF_V1_WIDGET_TEXT", {
-                viewModel: {require: '../emcsDependencies/widgets/textwidget/js/textwidget'},
-                template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
+                viewModel: {require: '../js/widgets/textwidget/js/textwidget'},
+                template: {require: 'text!../js/widgets/textwidget/textwidget.html'}
             });
 
             function HeaderViewModel($b) {

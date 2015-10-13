@@ -984,8 +984,8 @@ define(['knockout',
             self.createTextWidget = function() {
                 var widget = {};
                 widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
-                widget.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
-                widget.WIDGET_VIEWMODEL = "../emcsDependencies/widgets/textwidget/js/textwidget";
+                widget.WIDGET_TEMPLATE = "../js/widgets/textwidget/textwidget.html";
+                widget.WIDGET_VIEWMODEL = "../js/widgets/textwidget/js/textwidget";
                 widget.type = "TEXT_WIDGET";
                 widget.width = defaultCols;
                 widget.height = 1;
