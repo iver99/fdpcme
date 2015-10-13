@@ -74,7 +74,6 @@ define(['knockout',
                     lcKeyword && (data[i].WIDGET_NAME.toLowerCase().indexOf(lcKeyword) !== -1 || data[i].WIDGET_DESCRIPTION && data[i].WIDGET_DESCRIPTION.toLowerCase().indexOf(lcKeyword) !== -1) && (widget = data[i]);
                     !lcKeyword && (widget = data[i]);
                     widget && self.widget.push(widget);
-                    widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = 'images/sample-widget-histogram.png');
                 }
                 self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
                 self.page > self.totalPages && (self.page = self.totalPages);
@@ -174,9 +173,11 @@ define(['knockout',
                 });       
             };
             
-            self.resizeEventHandler = function(width, height) {
-                $('#dbd-left-panel').height(height);
-                $('#left-panel-text-helper').css("width", width - 20);
+            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
+                $('#dbd-left-panel').height(height - topHeight);
+                $('#dbd-left-panel').css("top", topHeight);
+                $('#dbd-left-panel').css("z-index", 100);
+                $('#left-panel-text-helper').css("width", width - leftWidth - 20);
             };
             
             self.tileMaximizedHandler = function() {
@@ -205,11 +206,35 @@ define(['knockout',
                 new WidgetDataSource().loadWidgetData(self.page(), self.keyword(), function(page, widgets, totalPages) {
                     self.widgets([]);
                     if (widgets && widgets.length > 0) {
-                        for (var i = 0; i < widgets.length; i++)
-                            self.widgets.push(ko.mapping.fromJS(widgets[i]));
+                        for (var i = 0; i < widgets.length; i++) {
+                            var wgt = ko.mapping.fromJS(widgets[i]);
+                            self.getWidgetScreenshot(wgt);
+                            self.widgets.push(wgt);
+                        }
                     }
                     totalPages !== self.totalPages() && self.totalPages(totalPages);
                     self.initWidgetDraggable();
+                });
+            };
+            
+            
+            self.getWidgetScreenshot = function(wgt) {
+                var url = '/sso.static/savedsearch.widgets';
+                dfu.isDevMode() && (url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets'));
+                url += '/'+wgt.WIDGET_UNIQUE_ID()+'/screenshot';
+                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                dfu.ajaxWithRetry({
+                    url: url,
+                    headers: dfu.getSavedSearchRequestHeader(),
+                    success: function(data) {
+                        data && (wgt.WIDGET_VISUAL(data.screenShot));
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('images/sample-widget-histogram.png'));
+                    },
+                    error: function() {
+                        oj.Logger.error('Error to get widget screen shot for widget with unique id: ' + wgt.WIDGET_UNIQUE_ID);
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('images/sample-widget-histogram.png'));
+                    },
+                    async: true
                 });
             };
             
@@ -278,7 +303,7 @@ define(['knockout',
                 $b.addBuilderResizeListener(self.onResizeFitSize);
             };
             
-            self.onResizeFitSize = function(width, height) {
+            self.onResizeFitSize = function(width, height, leftWidth, topHeight) {
                 self.rebuildElementSet(),
                 self.$list.each(function() {
                     var elem = $(this)
@@ -288,7 +313,7 @@ define(['knockout',
                         for (var i = 0; i < v_siblings.length; i++) {
                             h += $(v_siblings[i]).outerHeight();
                         }
-                        elem.height(height - h);
+                        elem.height(height - topHeight - h);
                     }
                 });
             };
@@ -305,11 +330,19 @@ define(['knockout',
             self.dtm = dtm;
             self.dashboard = $b.dashboard;
             
-            self.resizeEventHandler = function(width, height, leftWidth) {
-                $('#tiles-col-container').css("left", leftWidth);
+            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
+//                $('#main-container').css("margin-top", topHeight);
+//                $('#tiles-col-container').css("left", leftWidth);
+                $('#tiles-col-container').css("top", 0);
                 $('#tiles-col-container').width(width - leftWidth);
-                $('#tiles-col-container').height(height);
+                $('#tiles-col-container').height(height + topHeight * 2);
+//                $('#tiles-col-container').scrollTop(topHeight);
+                $('#tiles-col-container').css("padding-left", leftWidth);
+                $('#tiles-col-container').css("padding-top", topHeight);
+                $('#tiles-col-container').css("z-index", 0);
 //                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + height);
+                $('#global-time-control').width(width - leftWidth - 10);
+                $('#addWidgetToolTip').width(width - leftWidth);
             };
             
             self.getTileElement = function(tile) {
@@ -421,8 +454,10 @@ define(['knockout',
             
             self.initEventHandlers = function() {
                 $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
-                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleSaveEnable);
-                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleSaveEnable);
+//                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleSaveEnable);
+//                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleSaveEnable);
+                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
+                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
             
             self.rightButtonsAreaClasses = ko.computed(function() {
@@ -554,21 +589,35 @@ define(['knockout',
                 $("#parent-message-dialog").ojDialog("open");
             };
             
-            self.editors = 0;
-            self.handleSaveEnable = function(edit_type) {
-                if(edit_type === 'START_EDITING') {
-                    self.editors = self.editors + 1;
-                    self.disableSave(true);
-                }else {
-                    self.editors = self.editors - 1;
-                    if(self.editors>0) {
-                       self.disableSave(true); 
-                    }else{
-                       self.disableSave(false);
-                    }
-                }
-            } 
+//            self.editors = 0;
+//            self.handleSaveEnable = function(edit_type) {
+//                if(edit_type === 'START_EDITING') {
+//                    self.editors = self.editors + 1;
+//                    self.disableSave(true);
+//                }else {
+//                    self.editors = self.editors - 1;
+//                    if(self.editors>0) {
+//                       self.disableSave(true); 
+//                    }else{
+//                       self.disableSave(false);
+//                    }
+//                }
+//            } 
             
+            self.handleStartEditText = function () {
+                self.disableSave(true);
+                self.tilesViewModel.tilesView.disableDraggable();
+            }
+            
+            self.handleStopEditText = function (showErrorMsg) {
+                if (showErrorMsg) {
+                    self.disableSave(true);
+                } else {
+                    self.disableSave(false);
+                }
+                self.tilesViewModel.tilesView.enableDraggable();
+            }
+                
             self.getSummary = function(dashboardId, name, description, tilesViewModel) {
                 function dashboardSummary(name, description) {
                     var self = this;
@@ -824,11 +873,11 @@ define(['knockout',
                     //console.log('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
                 };
                 
-                dsp.triggerEvent = function(event, p1, p2, p3) {
+                dsp.triggerEvent = function(event, p1, p2, p3, p4) {
                     if (!event || !dsp.queue[event])
                         return;
                     for (var i = 0; i < dsp.queue[event].length; i++) {
-                        dsp.queue[event][i](p1, p2, p3);
+                        dsp.queue[event][i](p1, p2, p3, p4);
                     }
                 };
             }
@@ -838,9 +887,9 @@ define(['knockout',
                 self.dispatcher.registerEventHandler(event, listener);
             };
             
-            self.triggerEvent = function(event, message, p1, p2, p3) {
-//                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')):""));
-                self.dispatcher.triggerEvent(event, p1, p2, p3);
+            self.triggerEvent = function(event, message, p1, p2, p3, p4) {
+                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
+                self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
             };
             
             self.addNewTextStartDraggingListener = function(listener) {
@@ -880,11 +929,12 @@ define(['knockout',
             };
             
             self.triggerBuilderResizeEvent = function(message) {
-                var height = $(window).height() - $('#headerWrapper').outerHeight() 
-                        - $('#head-bar-container').outerHeight();
-                var width = $('#main-container').width()/* - parseInt($('#main-container').css("marginLeft"), 0)*/;
+                var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
+                        - $('#head-bar-container').outerHeight()*/;
+                var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
                 var leftWidth = $('#dbd-left-panel').width();
-                self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth);
+                var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
+                self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             };    
             
             self.addBuilderResizeListener = function(listener) {

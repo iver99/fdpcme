@@ -1,114 +1,125 @@
 define(["require", "knockout", "jquery", "ojs/ojcore"],
         function (localrequire, ko, $, oj) {
+            function getGuid() {
+                function S4() {
+                    return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+                }
+                return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+            }
+
             function textWidgetViewModel(params) {
                 var self = this;
                 var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
-                var textEditor;
-                var textEditorId;
+                var editor;
                 var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
-                if(params.validator){
+                var preHeight;
+                
+                self.showErrorMsg = ko.observable(false);
+                self.errorMsgCss = ko.observable("none");
+                self.showErrorMsg.subscribe(function (val) {
+                    self.errorMsgCss(val ? "block" : "none");
+                    self.show && self.show();
+                }, self);
+
+                if (params.validator) {
                     self.validator = params.validator;
                 }
-                if(params.show) {
+                if (params.show) {
                     self.show = params.show;
+                }
+                if(params.tiles) {
+                    self.tiles = params.tiles;
+                }
+                if(params.tile) {
+                    self.tile = params.tile;
                 }
                 if(params.reorder) {
                    self.reorder = params.reorder; 
                 }
-                if(params.builder) {
+                if (params.builder) {
                     self.builder = params.builder;
                 }
-                self.showErrorMsg = ko.observable("none");
-                self.randomId = new Date().getTime();
-                if(params.tile.content) {
-                   self.content = params.tile.content;
+                self.randomId = getGuid();
+                if (params.tile.content) {
+                    self.content = params.tile.content;
                 }
-                if(!self.content()){
+                if (!self.content()) {
                     self.content = ko.observable(defaultContent);
                     params.tile.content(self.content());
                 }
-                
-                self.showEditor = function () {
-                    var flag = false;
-                    textEditorId = "textEditor_"+self.randomId;
-                    if(CKEDITOR.instances){
-                        for(var i in CKEDITOR.instances) {
-                            if(i === textEditorId) {
-                                textEditor = CKEDITOR.instances[i];
-                                flag = true;
-                                break;
-                            }
-                        }
-                    }
-                    if(!flag){
-                        self.initializeCKEditor(textEditorId);
-                    }
-                    if($("#textWidget_" + self.randomId + " #textEditorWrapper").is(":visible")) {                        
-                        var textInfo = textEditor.document ? (textEditor.document.getBody().getHtml()?textEditor.document.getBody().getHtml() : defaultContent):"";
-//                        console.log(textInfo);
-                        if(self.validator && !self.validator(textInfo, TEXT_WIDGET_CONTENT_MAX_LENGTH)) {
-                            self.showErrorMsg("block");                            
-                        }else{                            
-                            $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
-                            self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, 'STOP_EDITING');
-                            textEditor.destroy(true);
-                            if($("#textWidget_"+self.randomId).hasClass("editing")) {
-                                $("#textWidget_"+self.randomId).removeClass("editing");
-                            }
-                            self.content(textInfo);
-                            params.tile.content(self.content());
-                            self.showErrorMsg("none");
-                        }
-                    }else {                        
-                        $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
-                        if(self.builder) self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, 'START_EDITING');
-                        $("#textWidget_"+self.randomId).addClass("editing");
-                        $("#textEditor_"+self.randomId).html(self.content());
-                        textEditor.setData(self.content());
-                    }
-                     
-                    self.show && self.show();
-                }
-                
-                self.initializeCKEditor = function(id) {
-                    textEditor = CKEDITOR.replace(id, {
-                            language: 'en',
-                            toolbar: [
-                                {name: 'styles', items: ['Font', 'FontSize']},
-                                {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
-                                {name: 'colors', items: ['TextColor']},
-                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
+
+                var configOptions = {
+                    language: 'en',
+                    toolbar: [
+                        {name: 'styles', items: ['Font', 'FontSize']},
+                        {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
+                        {name: 'colors', items: ['TextColor']},
+                        {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
+                        {name: 'links', items: ['Link']}
 //                                {name: 'insert', items: ['Image', 'Flash']}
-                            ],
-                            removePlugins: 'resize, elementspath',
-                            startupFocus: true
-                        });
+                    ],
+                    removePlugins: 'resize, elementspath',
+                    startupFocus: false,
+                    uiColor: "#FFFFFF"
                 }
-                
-                self.cancelEdit = function() {
-                    if($("#textWidget_"+self.randomId).hasClass("editing")) {
-                        $("#textWidget_"+self.randomId).removeClass("editing");
-                    }
-                    
-                    self.showErrorMsg("none");
-                    $("#textWidget_" + self.randomId + " #textEditorWrapper").toggle();
-                    self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, 'STOP_EDITING');
-                    textEditor.destroy(true);
-                    self.show && self.show();
+
+                self.showTextEditor = function () {
+                    $("#textContentWrapper_" + self.randomId).hide();
+                    $("#textEditorWrapper_" + self.randomId).show();
+                    $("#textEditor_" + self.randomId).focus();
+                }
+
+                self.loadEditor = function (data, event) {
+                    $("#textEditor").attr("id", "textEditor_" + self.randomId);
+                    $("#textEditor_" + self.randomId).attr("contenteditable", "true");
+
+                    editor = CKEDITOR.inline("textEditor_" + self.randomId, configOptions);
+
+                    editor.on("instanceReady", function () {
+                        this.setData(self.content());                        
+                        $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
+                        $("#textEditorWrapper_" + self.randomId).hide();
+                        self.show && self.show();
+                    });
+
+                    editor.on("blur", function () {
+                        if (self.validator && !self.validator(this.getData(), TEXT_WIDGET_CONTENT_MAX_LENGTH)) {
+                            self.showErrorMsg(true);
+                        } else {
+                            self.showErrorMsg(false);
+                        }
+                        self.content(this.getData());
+                        params.tile.content(self.content());
+                        $("#textEditorWrapper_" + self.randomId).hide();
+                        $("#textContentWrapper_" + self.randomId).show();
+                        self.show && self.show();
+                        self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, self.showErrorMsg());
+                    });
+
+                    editor.on("focus", function () {
+                        self.show && self.show();
+                        self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
+                        preHeight = $("#textEditorWrapper_"+self.randomId).height();
+                    });
+                                       
+                    editor.on("change", function() {
+                        var curHeight = $("#textEditorWrapper_"+self.randomId).height();
+                        if(curHeight !== preHeight) {
+                            console.log("editing area height changed!");
+                            preHeight = curHeight;
+                            self.show && self.show();
+                        }
+                    });
                 }
                 
                 self.deleteEditor = function() {
                     $("#textWidget_"+self.randomId).remove();
-                    if(params.tiles) {
-                        params.tiles.remove(params.tile);
-                    }
+                    self.tiles && self.tiles.remove(self.tile);
                     self.reorder && self.reorder();
                     self.show && self.show();
                 }
                 
-                self.toggleEditIcons = function() {
-                    self.show && self.show();
-                }
+                self.loadEditor();
             }
             return textWidgetViewModel;
         });

@@ -28,9 +28,9 @@ requirejs.config({
         'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
@@ -244,7 +244,11 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
 
-                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]); 
+                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
+                    
+                    //reset branding bar css after applying ckeditor
+                    $("#headerWrapper .emaas-appheader").css("margin-bottom", "0px");
+                    
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
                     ko.applyBindings(tilesViewModel, $('#global-html')[0]);      

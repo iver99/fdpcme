@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/emcsDependencies/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.1/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
 
@@ -17,7 +17,7 @@
         <div class="loadingIndicator" id="loading">Loading</div>
         <div id="globalBody" style="display: none;">
             <!-- ko stopBinding: true -->
-            <header id="headerWrapper" role="banner">
+            <header id="headerWrapper" role="banner" style="position: relative; z-index: 30;">
                 <div data-bind="component: {
                         name: 'df-oracle-branding-bar',
                         params: brandingbarParams
@@ -25,7 +25,8 @@
                 </div>
             </header>
                     
-            <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
+            <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" 
+                 style="padding-left: 30px; z-index: 10; opacity: 1;background-color: #f5f5f5;">
                 <div id="builder-toolbar" aria-label="Builder toolbar" 
                        class="oj-component oj-component-initnode">
                     <div id="builder-toolbar-left" class="dbd-pull-left">
@@ -262,7 +263,7 @@
                 </div>
             </div>
             <!-- /ko -->
-            <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;">
+            <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0; position: absolute; left: 0px; top: 0px;">
                 <!-- ko stopBinding: true -->
                 <div id="dbd-left-panel" class="fit-size-horizontal-sibling" 
                      data-bind="css: {'dbd-no-left-panel': completelyHidden(), 'dbd-left-panel-show': showPanel(), 'dbd-left-panel-hide': !showPanel()}">
@@ -389,7 +390,8 @@
                             </span>
                         </div>
                     </div-->
-                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size" style="overflow-x: hidden; overflow-y: auto;">
+                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size" 
+                         style="overflow-x: hidden; overflow-y: auto; position: absolute; left: 0px; right: 0px;">
                         <div id="tilesLinkEditorDialogWrapper">
                             <div style="display: none;" id="tilesLinkEditorDialog"  
                                  data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide', rootAttributes: {style: 'min-width: 600px;'}, close: closeEditTileLinkDialog}">
@@ -429,7 +431,8 @@
                                 </div>
                             </div>
                         </div> 
-                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling" style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px;" >
+                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling" 
+                             style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; margin-left: 0;" >
                             <div class="oj-col oj-sm-6">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',

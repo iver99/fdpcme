@@ -841,7 +841,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if ($(event.target).text() !== self.timePeriodCustom) {
 //                        start = oj.IntlConverterUtils.dateToLocalIso(new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]));
 //                        end = oj.IntlConverterUtils.dateToLocalIso(curDate);
-
+                        curDate = new Date();
                         start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
                         end = curDate;
                         if(self.adjustLastX) {

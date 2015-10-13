@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboardscommonui.test.ui;
+package oracle.sysman.emaas.platform.uifwk.dashboardscommonui.test.ui;
 
 /**
  * @author shangwan
@@ -17,7 +17,6 @@ public class UIControls
 {
 	//Begin: Text
 	public static final String sProductText = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[2]/span[1]";
-	//public static final String sAppText = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[2]/span[2]";
 	public static final String sAppText = "/html/body/div[2]/header/div/div[1]/div[1]/div[1]/div[3]/span";
 	public static final String sPageText = "//*[@id='toolbar-left']";
 	public static final String sHomeLabel = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]";
