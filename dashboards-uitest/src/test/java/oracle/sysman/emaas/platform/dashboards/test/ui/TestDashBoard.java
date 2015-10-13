@@ -57,7 +57,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.clickToSortByLastAccessed();
 		//check box
 		//DashBoardUtils.clickCheckBox();
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -88,7 +88,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		
 		webd.takeScreenShot();
-			
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 	}
 	
 	
@@ -115,7 +115,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//add a new widget
 		DashBoardUtils.addWidget(0,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
 		
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		webd.takeScreenShot();
 	}
@@ -140,10 +140,10 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 		DashBoardUtils.clickDashBoard();
 		
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		DashBoardUtils.navigateWidget(parentWindow);
-		
+		DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test(dependsOnMethods = { "testCreateDashBoard","testModifyDashBoard","testNavigateWidget"})
@@ -169,7 +169,7 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		webd.takeScreenShot();
 					
@@ -202,7 +202,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//add widget
 		DashBoardUtils.addWidget(1,parentWindow,widgetName,"DBA_Name_Modify","DBA_DESC_MODIFY");
 				
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		webd.takeScreenShot();
 			
@@ -232,7 +232,7 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		webd.takeScreenShot();
 					
@@ -269,6 +269,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//signout menu
 		//webd.click(DashBoardPageId.MenuBtnID);
 		//webd.click(DashBoardPageId.SignOutID);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -285,7 +286,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/welcome.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -302,7 +303,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -319,7 +320,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html?filter=ita");
-				
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);		
 	}
 	
 	@Test
@@ -336,7 +337,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emlacore/html/log-analytics-search.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -353,7 +354,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"apmUi/index.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -370,9 +371,9 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emlacore/html/log-analytics-search.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-	/*
+	
 	@Test
 	public void testAWRLink() throws Exception
 	{
@@ -387,9 +388,9 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-	*/
+	
 	
 	@Test
 	public void testFlexLink() throws Exception
@@ -405,7 +406,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/db-awrviewer-war/html/db-awr-analytics.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 
 	@Test
@@ -423,7 +424,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.getLogger().info("url = "+url);
 		String sub_str = url.substring(url.indexOf("emsaasui")+9);
 		Assert.assertEquals(sub_str.substring(0,23),"emcta/ta/analytics.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -440,7 +441,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"tenantmgmt/services/customersoftware");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -457,7 +458,7 @@ public class TestDashBoard extends LoginAndLogout{
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/warehouseadmin/html/admin-sources.html");
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
 	@Test
@@ -530,6 +531,7 @@ public class TestDashBoard extends LoginAndLogout{
                 Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		webd.takeScreenShot();
 		webd.getLogger().info("complete testing in testEMPCDF_832");
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 	}
 	
 	@Test
@@ -589,7 +591,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//add a new widget
 		DashBoardUtils.addWidget(0,parentWindow,"LV_DashBoard","LV_DashBoard Desc");
 		
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		webd.takeScreenShot();
 	}
@@ -612,7 +614,7 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		//click delete button
 		DashBoardUtils.clickLVDeleteButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		webd.takeScreenShot();
 	}

@@ -251,7 +251,7 @@ public class DashBoardUtils {
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//add time selector
 		clickTimePicker();
-		/*
+		
 		TileManager tg = new TileManager(driver);
 		
 	    tg.tileOpen();
@@ -268,7 +268,7 @@ public class DashBoardUtils {
 		tg.tileNarrower();
 		tg.tileOpen();
 		tg.tileRefresh();
-		*/
+		
 	}
 	
 	
@@ -390,7 +390,7 @@ public class DashBoardUtils {
 			Assert.assertTrue(rightButton.isEnabled());
 			driver.getLogger().info("after enabled 2");
 			clickCloseButton();
-			
+			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
 	}
 		
 		
