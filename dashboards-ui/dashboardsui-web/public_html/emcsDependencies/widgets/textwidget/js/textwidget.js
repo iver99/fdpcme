@@ -110,7 +110,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     editor.on("change", function() {
                         var curHeight = $("#textEditorWrapper_"+self.randomId).height();
                         if(curHeight !== preHeight) {
-                            console.log("editing area height changed!");
+//                            console.log("editing area height changed!");
                             preHeight = curHeight;
                             self.show && self.show();
                         }
@@ -131,10 +131,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         var rowWidth = $(this).width();
                         textMaxWidth = Math.max(textMaxWidth, rowWidth);
                     });
-                    if($("#widget-area") && (textMaxWidth+88)>widgetContainerWidth) {
-                        textMaxWidth = widgetContainerWidth-88;
+                    if($("#widget-area") && (textMaxWidth+78)>widgetContainerWidth) {
+                        textMaxWidth = widgetContainerWidth-78;
                     }
-                    $("#textContentWrapper_"+self.randomId+" #textWidgetEditBtns").css("left", textMaxWidth);
+                    $("#textContentWrapper_"+self.randomId+" #textWidgetEditBtns_"+self.randomId).css("left", textMaxWidth);
                 }
                 
                 self.loadEditor();
