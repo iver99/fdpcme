@@ -69,7 +69,7 @@ task copyDependencies(type: Copy) {
 }
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_qa_test_3n') {
+    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_uifwk_test_3n') {
         test('name': 'emaas_setup_small_deploy') {
             classes([:]) {
                 'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {

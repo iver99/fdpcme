@@ -59,9 +59,16 @@ javascript.source {
 		exclude "**/*.orig.js"
 	    }
 	}
-	timeselector{
+	autorefresh {
 	    js {
-		srcDir 'public_html/emcsDependencies/timeselector/js'
+		srcDir 'public_html/emcsDependencies/autorefresh/js'
+		include "**/*.js"
+		exclude "**/*.orig.js"
+	    }
+	}
+	widgets {
+	    js {
+		srcDir 'public_html/emcsDependencies/widgets/textwidget/js'
 		include "**/*.js"
 		exclude "**/*.orig.js"
 	    }
@@ -197,98 +204,12 @@ project.task("cleanJSLib") << {
     sourceCKeditorDesDir.deleteDir()
 }
 
-project.task("unpackDFCommonFromArtifactory") << {
-    
-   // def File buildDFCommonUnzipDir = new File(buildDir.absolutePath, 'dfcommon')
-    //first time or if custom cleans removes it
-   // sourceDFCommonDestDir.mkdirs()
-
-   // configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-   //     if (artifact.name.equals('emcs-ui-framework-common-dev') && files(sourceDFCommonDestDir.listFiles()).isEmpty()) {
-   //         logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-   //         buildDFCommonUnzipDir.mkdirs()
-   //         project.copy {
-   //             from project.zipTree(artifact.file.absolutePath)
-   //             into buildDFCommonUnzipDir.absolutePath
-   //         }
-            // Copy each of the unzipped jet directories to
-            // the appropriate source directories
-            // 1. build/dfcommon/ >> public_html/emcsDependencies/dfcommon/
-   //         project.copy {
-   //             from  buildDFCommonUnzipDir.absolutePath+'/dfcommon'
-   //             into sourceDFCommonDestDir.absolutePath
-   //         }
-            
-            //finally delete the build/dfcommon directory
-   //         project.delete(buildDFCommonUnzipDir)
-   //     }
-   // }
-}
-
-project.task("cleanDFCommon") << {
-    //println 'Cleaning up dfcommon directories ...'
-    //println 'dfcommon dir: ' + sourceDFCommonDestDir.absolutePath
-    //sourceDFCommonDestDir.deleteDir()
-}
-
-//unpack the integ common libs from artifactory
-def war_number = "${download_number}"
-def download_group = "${download_group}".split(",")
-def download_artifacts = "${download_artifacts}".split(",")
-def download_version = "${download_version}".split(",")
-def download_foldername = "${download_foldername}".split(",")
-
-project.task("unpackZipFromArtifactory") << {
-    
-    for (i in 0..<war_number.toInteger()){
-	    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
-		if (artifact.name.contains(download_artifacts[i])) {
-		    logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-		    def File buildWarUnzipDir = new File(buildDir.absolutePath, "intgwar"+i)
-		    buildWarUnzipDir.mkdirs()
-		    project.copy {
-		        from project.file(artifact.file.absolutePath)
-		        into buildWarUnzipDir.absolutePath
-		    }
-		    ant.unzip(src: buildWarUnzipDir.absolutePath+"/"+download_artifacts[i]+"-"+download_version[i]+".zip", dest:buildWarUnzipDir.absolutePath)
-		    
-		    project.copy {
-		        //from  buildWarUnzipDir.absolutePath+"/emcsDependencies/"
-			from buildWarUnzipDir.absolutePath
-			exclude "*.zip"
-		        into sourceWebappDir.absolutePath+"/emcsDependencies/"
-		    }
-		    
-		    project.delete(buildWarUnzipDir)
-		}
-	    }
-    }
-}
-
-project.task("cleanZip") << {
-    def File warDestDir = new File(sourceWebappDir.absolutePath,"/emcsDependencies")
-    def File tmpdir = warDestDir
-    println 'Cleaning up war directories ...'
-
-    download_foldername.each { folder ->
-        tmpdir = new File(warDestDir.absolutePath,"/"+folder)
-	println 'war dir: ' + tmpdir
-	tmpdir.deleteDir()
-	}
-}
-
-clean.dependsOn cleanJet,cleanZip,cleanDFCommon,cleanJSLib, cleanJs
+clean.dependsOn cleanJet,cleanJSLib, cleanJs
 
 task stageJs(dependsOn: copyJsSource){
 }
 
-if(war_number.toInteger()>0){
-	copyJsSource.dependsOn unpackJETFromArtifactory, unpackDFCommonFromArtifactory,unpackJSLibFromArtifactory, unpackZipFromArtifactory
-}
-else
-{
-	copyJsSource.dependsOn unpackJETFromArtifactory, unpackDFCommonFromArtifactory,unpackJSLibFromArtifactory
-}
+copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory
 
 task runQAUITestSuite(type: Test){
         useTestNG(){
@@ -425,14 +346,14 @@ javascript.source.internaldfcommon.js.files.eachWithIndex { File jsFile, idx ->
     }
 }
 
-javascript.source.timeselector.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.add(name: "dominifytimeselector${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+javascript.source.autorefresh.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifyautorefresh${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 	String fileName = "${jsFile.name}"
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
-	def tmpFolder = parentDir.split("timeselector")
-	def sourceFile = stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+renamedFile
+	def tmpFolder = parentDir.split("autorefresh")
+	def sourceFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+renamedFile
 	
 	doFirst{ 
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
@@ -441,7 +362,7 @@ javascript.source.timeselector.js.files.eachWithIndex { File jsFile, idx ->
         source = sourceFile
 	dest =sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+sourceMapFile)
+	sourceMap = file(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -454,7 +375,46 @@ javascript.source.timeselector.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+sourceMapFile)
+		File mapFile = new File(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		logger.lifecycle("absPath:" + Pattern.quote(absPath))
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}	
+    }
+}
+
+javascript.source.widgets.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifywidgets${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "${jsFile.name}"
+	String renamedFile = fileName.replace(".",".orig.")
+	def parentDir = jsFile.parent
+	def tmpFolder = parentDir.split("textwidget")
+	def sourceFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+renamedFile
+	
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+
+        source = sourceFile
+	dest =sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+	sourceMap = file(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+		File mapFile = new File(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		logger.lifecycle("absPath:" + Pattern.quote(absPath))
@@ -655,11 +615,6 @@ dependencies {
 	compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
 	//compile(group: 'emcs-ui-framework', name: 'emcs-ui-framework-common-dev', version: '1.3.1', ext: 'zip'){transitive = false}
 	compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
-
-	if(war_number.toInteger()>0){
-	    for (i in 0..<war_number.toInteger())
-		compile (group: download_group[i], name: download_artifacts[i], version: download_version[i], ext: 'zip', changing: true)
-	}
 
 	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
 	restDoc(
