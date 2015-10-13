@@ -113,6 +113,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 //                            console.log("editing area height changed!");
                             preHeight = curHeight;
                             self.show && self.show();
+                            self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
                         }
                     });
                 }
@@ -127,9 +128,17 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.showEditIcons = function() {
                     var textMaxWidth = 0;
                     var widgetContainerWidth = $('#textContentWrapper_'+self.randomId).width();
-                    $("#textContentWrapper_"+self.randomId+" p > span").each(function() {
-                        var rowWidth = $(this).width();
-                        textMaxWidth = Math.max(textMaxWidth, rowWidth);
+                    $("#textContentWrapper_"+self.randomId+" p").each(function() {
+                        var rowWidth = 0;
+                        var children = $(this).children();
+                        if(children.length === 0) {
+                            $(this).html("<span>"+$(this).html()+"</span>");
+                            children = $(this).children();
+                        }
+                        for(var i=0; i<children.length; i++) {
+                            rowWidth = ($(children[children.length-1]).position()).left+$(children[children.length-1]).width();
+                            textMaxWidth = Math.max(textMaxWidth, rowWidth);
+                        }                        
                     });
                     if($("#widget-area") && (textMaxWidth+78)>widgetContainerWidth) {
                         textMaxWidth = widgetContainerWidth-78;
