@@ -66,6 +66,20 @@ javascript.source {
 		exclude "**/*.orig.js"
 	    }
 	}
+	autorefresh {
+	    js {
+		srcDir 'public_html/emcsDependencies/autorefresh/js'
+		include "**/*.js"
+		exclude "**/*.orig.js"
+	    }
+	}
+	widgets {
+	    js {
+		srcDir 'public_html/emcsDependencies/widgets/textwidget/js'
+		include "**/*.js"
+		exclude "**/*.orig.js"
+	    }
+	}
  }
 
 project.task("unpackJETFromArtifactory") << {
@@ -455,6 +469,84 @@ javascript.source.timeselector.js.files.eachWithIndex { File jsFile, idx ->
 
 		//fix file path in source map file
 		File mapFile = new File(stagingDir+"/emcsDependencies/timeselector"+tmpFolder[1]+"/"+sourceMapFile)
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		logger.lifecycle("absPath:" + Pattern.quote(absPath))
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}	
+    }
+}
+
+javascript.source.autorefresh.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifyautorefresh${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "${jsFile.name}"
+	String renamedFile = fileName.replace(".",".orig.")
+	def parentDir = jsFile.parent
+	def tmpFolder = parentDir.split("autorefresh")
+	def sourceFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+renamedFile
+	
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+
+        source = sourceFile
+	dest =sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+	sourceMap = file(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+		File mapFile = new File(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		logger.lifecycle("absPath:" + Pattern.quote(absPath))
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}	
+    }
+}
+
+javascript.source.widgets.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifywidgets${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "${jsFile.name}"
+	String renamedFile = fileName.replace(".",".orig.")
+	def parentDir = jsFile.parent
+	def tmpFolder = parentDir.split("textwidget")
+	def sourceFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+renamedFile
+	
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+
+        source = sourceFile
+	dest =sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+	sourceMap = file(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+		File mapFile = new File(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		logger.lifecycle("absPath:" + Pattern.quote(absPath))
