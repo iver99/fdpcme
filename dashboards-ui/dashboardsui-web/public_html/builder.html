@@ -343,7 +343,7 @@
                                 <div id="dbd-left-panel-footer-pages" class="oj-col oj-sm-3 oj-md-3 oj-lg-3" 
                                      data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES')"></div>
                                 <div class="oj-col oj-sm-9 oj-md-9 oj-lg-9">
-                                    <input id="dbd-left-panel-widgets-page-input"
+                                    <input id="dbd-left-panel-widgets-page-input" aria-label="page"
                                             data-bind="ojComponent: {
                                               component: 'ojInputNumber',
                                               max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
@@ -566,16 +566,16 @@
                                         <div class="dbd-tile-link-wrapper" data-bind="css: linkText()? '': 'dbd-tile-link-empty'">
                                             <a class="dbd-tile-link" data-bind="text: linkText, attr: {href: linkUrl, target: '_blank'}, css: linkText()? '': 'dbd-tile-link-empty'"></a>                                           
                                             <div class="dbd-tile-link-btns">
-                                            <button id="dbd-tile-link-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
+                                            <button class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
                                                     data-bind="click: function() {$parent.openEditTileLinkDialog($data)},ojComponent: {
                                                     component:'ojButton'
-                                                    }, attr: {title: getNlsString('COMMON_BTN_EDIT')}">
+                                                    }, attr: {title: getNlsString('COMMON_BTN_EDIT'), id: 'dbd-tile-link-editor-btn_'+clientGuid}">
                                                 <img src="css/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                             </button>
-                                            <button id="dbd-tile-link-delete-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
+                                            <button class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
                                                     data-bind="click: function() {$parent.deleteTileLink($data)}, ojComponent: {
                                                     component:'ojButton'
-                                                    }, attr: {title: getNlsString('COMMON_BTN_DELETE')}" tabindex="0">
+                                                    }, attr: {title: getNlsString('COMMON_BTN_DELETE'), id: 'dbd-tile-link-delete-btn_'+clientGuid}" tabindex="0">
                                                 <img src="css/images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_DELETE')}"/>
                                             </button>
                                             </div>  

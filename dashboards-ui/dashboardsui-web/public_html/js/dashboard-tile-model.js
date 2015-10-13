@@ -624,7 +624,7 @@ define(['knockout',
             this.sectionBreak = true;
             var self = this;
             this.cssStyle = ko.computed(function() {
-                return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + (self.cssWidth()-22) + "px; height: auto;";
+                return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: auto;";
             });
             self.displayHeight = function() {
                 return $('#tile' + self.clientGuid).height();
