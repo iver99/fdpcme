@@ -12,7 +12,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
                 var editor;
                 var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
-
+                var preHeight;
+                
                 self.showErrorMsg = ko.observable(false);
                 self.errorMsgCss = ko.observable("none");
                 self.showErrorMsg.subscribe(function (val) {
@@ -53,11 +54,13 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         {name: 'styles', items: ['Font', 'FontSize']},
                         {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
                         {name: 'colors', items: ['TextColor']},
-                        {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
+                        {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']},
+                        {name: 'links', items: ['Link']}
 //                                {name: 'insert', items: ['Image', 'Flash']}
                     ],
                     removePlugins: 'resize, elementspath',
-                    startupFocus: false
+                    startupFocus: false,
+                    uiColor: "#FFFFFF"
                 }
 
                 self.showTextEditor = function () {
@@ -73,8 +76,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     editor = CKEDITOR.inline("textEditor_" + self.randomId, configOptions);
 
                     editor.on("instanceReady", function () {
-                        this.setData(self.content());
+                        this.setData(self.content());                        
+                        $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
                         $("#textEditorWrapper_" + self.randomId).hide();
+                        self.show && self.show();
                     });
 
                     editor.on("blur", function () {
@@ -92,7 +97,18 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     });
 
                     editor.on("focus", function () {
+                        self.show && self.show();
                         self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
+                        preHeight = $("#textEditorWrapper_"+self.randomId).height();
+                    });
+                                       
+                    editor.on("change", function() {
+                        var curHeight = $("#textEditorWrapper_"+self.randomId).height();
+                        if(curHeight !== preHeight) {
+                            console.log("editing area height changed!");
+                            preHeight = curHeight;
+                            self.show && self.show();
+                        }
                     });
                 }
                 
