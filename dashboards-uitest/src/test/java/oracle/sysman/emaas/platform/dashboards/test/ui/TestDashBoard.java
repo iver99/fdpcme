@@ -398,11 +398,11 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(5000);
 		//Customer Software link
 		webd.click(DashBoardPageId.CustomLinkID);
-		DashBoardUtils.waitForMilliSeconds(2000);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"tenantmgmt/services/customersoftware");
-		
+		DashBoardUtils.waitForMilliSeconds(5000);
 	}
 	
 	@Test
