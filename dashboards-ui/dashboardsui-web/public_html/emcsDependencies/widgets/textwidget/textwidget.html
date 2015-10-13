@@ -2,18 +2,22 @@
     <div id="textWidget" data-bind="click: loadEditor"></div>
 </div>-->
 <div data-bind="attr: {id: 'textWidget_'+randomId}"  style="margin-top: 10px; margin-bottom: 5px;">
-    <div data-bind="attr: {id: 'textContentWrapper_'+randomId}" class="text-widget-hover-area">
-        <div data-bind="html: content, event: {dblclick: showTextEditor, enterpress: showTextEditor}" style="display: inline;"></div>
-        <button id="text-widget-editor-edit" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
-                data-bind="click: showTextEditor, ojComponent: {component: 'ojButton'}">
-            <img src="css/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
-        </button>
-        <button id="text-widget-editor-delete" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
-                data-bind="click: deleteEditor, ojComponent: {
-                                                component:'ojButton'
-                                    }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
-            <img src="css/images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
-        </button>
+    <div data-bind="attr: {id: 'textContentWrapper_'+randomId}, event: {mouseover: showEditIcons}" class="text-widget-hover-area">
+        <div data-bind="html: content, event: {dblclick: showTextEditor, enterpress: showTextEditor}"></div>
+        <div id="textWidgetEditBtns" style="background-color: #f5f5f5; position: absolute; top: 5px;" class='dbd-display-area-editor-btn'>
+            <button id="text-widget-editor-edit" class="oj-button oj-default oj-button-half-chrome"
+                    data-bind="click: showTextEditor, ojComponent: {component: 'ojButton'}"
+                    >
+                <img src="css/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+            </button>
+            <button id="text-widget-editor-delete" class="oj-button oj-default oj-button-half-chrome"
+                    data-bind="click: deleteEditor, ojComponent: {
+                                                    component:'ojButton'
+                                        }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0"
+                    >
+                <img src="css/images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+            </button>
+        </div>
     </div>
     <div data-bind="attr: {id: 'textEditorWrapper_'+randomId}">
         <div id="textEditor"></div>

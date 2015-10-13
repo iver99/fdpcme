@@ -11,7 +11,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 var self = this;
                 var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
                 var editor;
-                var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
+//                var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
+                var defaultContent = '<p><span style="font-size: 18px"><strong>' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '</strong></span></p>';
                 var preHeight;
                 
                 self.showErrorMsg = ko.observable(false);
@@ -83,11 +84,15 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     });
 
                     editor.on("blur", function () {
+                        if(!this.getData()) {
+                            this.setData(defaultContent);
+                        }
                         if (self.validator && !self.validator(this.getData(), TEXT_WIDGET_CONTENT_MAX_LENGTH)) {
                             self.showErrorMsg(true);
                         } else {
                             self.showErrorMsg(false);
                         }
+//                        console.log(this.getData());
                         self.content(this.getData());
                         params.tile.content(self.content());
                         $("#textEditorWrapper_" + self.randomId).hide();
@@ -117,6 +122,19 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     self.tiles && self.tiles.remove(self.tile);
                     self.reorder && self.reorder();
                     self.show && self.show();
+                }
+                
+                self.showEditIcons = function() {
+                    var textMaxWidth = 0;
+                    var widgetContainerWidth = $('#textContentWrapper_'+self.randomId).width();
+                    $("#textContentWrapper_"+self.randomId+" p > span").each(function() {
+                        var rowWidth = $(this).width();
+                        textMaxWidth = Math.max(textMaxWidth, rowWidth);
+                    });
+                    if($("#widget-area") && (textMaxWidth+88)>widgetContainerWidth) {
+                        textMaxWidth = widgetContainerWidth-88;
+                    }
+                    $("#textContentWrapper_"+self.randomId+" #textWidgetEditBtns").css("left", textMaxWidth);
                 }
                 
                 self.loadEditor();
