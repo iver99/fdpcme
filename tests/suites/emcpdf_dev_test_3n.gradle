@@ -52,6 +52,20 @@ dependencies {
 		exclude('module':'groovy')
 	}
 	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+  testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
+        testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
+        testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
+        testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
+       testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
+       testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
+       testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
+ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
+         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
+
+
 	configurations{
 		restAssured.exclude module:'groovy'
 	}
