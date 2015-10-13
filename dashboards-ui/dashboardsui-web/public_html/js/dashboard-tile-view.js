@@ -332,7 +332,7 @@ define(['knockout',
                 $('#tiles-col-container').css("left", leftWidth);
                 $('#tiles-col-container').width(width - leftWidth);
                 $('#tiles-col-container').height(height - topHeight);               
-                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
+//                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
             
             self.getTileElement = function(tile) {
