@@ -624,7 +624,7 @@ define(['knockout',
             this.sectionBreak = true;
             var self = this;
             this.cssStyle = ko.computed(function() {
-                return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + (self.cssWidth()-22) + "px; height: auto;";
+                return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: auto;";
             });
             self.displayHeight = function() {
                 return $('#tile' + self.clientGuid).height();
@@ -1160,11 +1160,12 @@ define(['knockout',
                 $b.addNewLinkStopDraggingListener(self.onNewLinkStopDragging);
 
                 $b.addBuilderResizeListener(self.onBuilderResize);
+                $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
                 self.initializeTiles();
             };
             
             self.onBuilderResize = function(width, height, leftWidth, topHeight) {
-                widgetAreaWidth = Math.min(widgetAreaContainer.width(), width - leftWidth -25);
+                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
 //                console.debug('widget area width is ' + widgetAreaWidth);
                 self.show();
             };
@@ -1733,30 +1734,7 @@ define(['knockout',
                 $("#"+tileId+" .dbd-tile-link-wrapper").css("border", "0px");
                 $("#"+tileId+" .dbd-tile-link").css("display", "inline-block");
                 self.openEditTileLinkDialog(tile);
-            }
-            
-//            self.reloadEditors = function() {
-//                for(var i in CKEDITOR.instances) {
-//                    delete CKEDITOR.instances[i];
-//                    $("#cke_"+i).remove();
-//                }
-//                $("textarea.editor").each(function() {
-//                    var targetId = $(this).attr("id");
-////                    CKEDITOR.replace(targetId);
-//                    CKEDITOR.replace(targetId, {
-//                            language: 'en',
-//                            toolbar: [
-//                                {name: 'styles', items: ['Font', 'FontSize']},
-//                                {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
-//                                {name: 'colors', items: ['TextColor']},
-//                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
-////                                {name: 'insert', items: ['Image', 'Flash']}
-//                            ],
-//                            removePlugins: 'resize, elementspath',
-//                            startupFocus: true
-//                        });
-//                });
-//            };
+            };
             
             self.fireDashboardItemChangeEventTo = function (tile, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
@@ -1811,13 +1789,6 @@ define(['knockout',
                 });
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
-                $("body").on("DOMSubtreeModified", function(e) {
-                    if (e.currentTarget && e.currentTarget.nodeName !== "BODY")
-                        return;
-                    if ($(e.currentTarget.lastChild).hasClass('cke_chrome')) {
-                        $(e.currentTarget.lastChild).prependTo('#tiles-col-container');
-                    }
-                });
             };
 
             var timeSelectorChangelistener = ko.computed(function(){

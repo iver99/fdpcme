@@ -244,11 +244,7 @@ require(['knockout',
                     };
                     ko.virtualElements.allowedBindings.stopBinding = true;
 
-                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
-                    
-                    //reset branding bar css after applying ckeditor
-                    $("#headerWrapper .emaas-appheader").css("margin-bottom", "0px");
-                    
+                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
                     ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
@@ -276,7 +272,7 @@ require(['knockout',
 
 //                    toolBarModel.showAddWidgetTooltip();
                     toolBarModel.handleAddWidgetTooltip();
-                    tilesViewModel.postDocumentShow();
+                    $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
                     tilesView.enableMovingTransition();
                     idfbcutil.hookupBrowserCloseEvent(function(){
                        oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 

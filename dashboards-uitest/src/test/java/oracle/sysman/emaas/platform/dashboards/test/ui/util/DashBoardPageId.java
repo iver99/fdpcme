@@ -10,6 +10,8 @@ public class DashBoardPageId {
 	 *
 	 *
 	 * */
+	public static final int Delaytime_long = 5000;
+	public static final int Delaytime_short = 500;
 	public static final String CreateDSButtonID="cbtn";
 	public static final String CreateDSOfDialogID="createDsb";
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
@@ -118,7 +120,7 @@ public class DashBoardPageId {
 	public static final String AutoRefreshBy_15_Mins_ID = "/html/body/div[1]/div/div/ul/li[5]/div";//oj-listbox-result-label-5";
 	
 	//tile operation
-	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div/button";///html/body/div[*]/div[2]/div[2]/div[3]/div/div[2]/div[3]/div/div[1]/div/div/button";//";///html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
+	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div/button";///html/body/div[*]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div/button";//";///html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
 	public static final String EditTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
 	public static final String RefreshTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
 	public static final String DeleteTileID = "/html/body/div[1]/div/ul/li[3]/a/span[2]";
@@ -128,7 +130,7 @@ public class DashBoardPageId {
 	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
 	
 	//time picker /html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button
-	public static final String TimePickerID = "/html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";///html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"
+	public static final String TimePickerID = "/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
 	public static final String ApplyBtnID = "applyButton";
 	public static final String CancelBtnID = "cancelButton";
 	public static final String DateID1 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/table/tbody/tr[4]/td[2]/a";
@@ -142,6 +144,7 @@ public class DashBoardPageId {
 	//grid view and list view id             /html/body/div[2]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label/span[1]
 	public static final String GridViewID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label";
 	public static final String ListViewID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label";
+	
 	public static final String DashBoardListViewDashBoardID = "/html/body/div[2]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[2]/a";
 	public static final String DashBoardInfoID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/table/tbody/tr/td[5]/button";
 	public static final String DashBoardDeleteID = "/html/body/div[1]/div/div/div[1]/div/div/div/button";

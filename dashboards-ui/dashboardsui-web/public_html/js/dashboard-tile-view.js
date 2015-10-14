@@ -175,9 +175,7 @@ define(['knockout',
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
                 $('#dbd-left-panel').height(height - topHeight);
-                $('#dbd-left-panel').css("top", topHeight);
-                $('#dbd-left-panel').css("z-index", 100);
-                $('#left-panel-text-helper').css("width", width - leftWidth - 20);
+-                $('#left-panel-text-helper').css("width", width - 20);
             };
             
             self.tileMaximizedHandler = function() {
@@ -331,18 +329,10 @@ define(['knockout',
             self.dashboard = $b.dashboard;
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
-//                $('#main-container').css("margin-top", topHeight);
-//                $('#tiles-col-container').css("left", leftWidth);
-                $('#tiles-col-container').css("top", 0);
+                $('#tiles-col-container').css("left", leftWidth);
                 $('#tiles-col-container').width(width - leftWidth);
-                $('#tiles-col-container').height(height + topHeight * 2);
-//                $('#tiles-col-container').scrollTop(topHeight);
-                $('#tiles-col-container').css("padding-left", leftWidth);
-                $('#tiles-col-container').css("padding-top", topHeight);
-                $('#tiles-col-container').css("z-index", 0);
-//                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + height);
-                $('#global-time-control').width(width - leftWidth - 10);
-                $('#addWidgetToolTip').width(width - leftWidth);
+                $('#tiles-col-container').height(height - topHeight);               
+//                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
             
             self.getTileElement = function(tile) {
@@ -393,7 +383,36 @@ define(['knockout',
                     $('#widget-area').removeClass('dbd-support-transition');
             };
             
+            self.postDocumentShow = function() {
+                $("body").on("DOMSubtreeModified", function(e) {
+                    if (e.currentTarget && e.currentTarget.nodeName !== "BODY")
+                        return;
+                    if ($(e.currentTarget.lastChild).hasClass('cke_chrome')) {
+                        var mo = new MutationObserver(self.onTargetAttributesChange);
+                        mo.observe(e.currentTarget.lastChild, {'attributes': true, attributeOldValue: true});
+                        $(e.currentTarget.lastChild).prependTo('#tiles-col-container');
+                    }
+                });
+            };
+            
+            self.onTargetAttributesChange = function(records) {
+                if (records[0].attributeName === "style") {
+                    var elem = records[0].target, target = $(elem);
+                    if (!elem || elem.cacheLeft && elem.cacheLeft === target.css("left"))
+                        return;
+                    var top = parseInt(target.css("top")), left = parseInt(target.css("left"));
+                    if (!isNaN(top) && !isNaN(left) && target.position() && target.position().left !== 0 && target.position().top !== 0) {
+//                        console.debug("old target position: top-" + target.css("top") + ", left-" + target.css("left"));
+                        target.css("top", top - $('#headerWrapper').outerHeight() - $('#head-bar-container').outerHeight() + $("#tiles-col-container").scrollTop());
+                        target.css("left", left - $("#dbd-left-panel").width());
+                        elem.cacheLeft = target.css("left");
+//                        console.debug("new target position: top-" + target.css("top") + ", left-" + target.css("left"));
+                    }
+                }
+            };
+            
             $b.addBuilderResizeListener(self.resizeEventHandler);
+            $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
         }
         
         function ToolBarModel($b, tilesViewModel) {
@@ -835,6 +854,7 @@ define(['knockout',
             var self = this;
             self.dashboard = dashboard;
             
+            self.EVENT_POST_DOCUMENT_SHOW = "EVENT_POST_DOCUMENT_SHOW";
             self.EVENT_BUILDER_RESIZE = "EVENT_BUILDER_RESIZE";
             
             self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
@@ -888,7 +908,7 @@ define(['knockout',
             };
             
             self.triggerEvent = function(event, message, p1, p2, p3, p4) {
-                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
+//                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
                 self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
             };
             
