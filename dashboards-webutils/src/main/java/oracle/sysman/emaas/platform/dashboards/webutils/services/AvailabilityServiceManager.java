@@ -21,13 +21,13 @@ import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
-
+import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
-
+import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
 /**
  * @author guobaochen
  */
@@ -88,6 +88,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isDBAvailable) {
 			rsm.markOutOfService();
+			GlobalStatus.setDashboardDownStatus();
 			logger.info("Dashboards service is out of service because database is unavailable");
 			return;
 		}
@@ -103,6 +104,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isEntityNamingAvailable) {
 			rsm.markOutOfService();
+			GlobalStatus.setDashboardDownStatus();
 			logger.info("Dashboards service is out of service because entity naming service is unavailable");
 			return;
 		}
@@ -110,6 +112,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
+			GlobalStatus.setDashboardUpStatus();	
 			logger.debug("Dashboards service is up");
 		}
 		catch (Exception e) {
