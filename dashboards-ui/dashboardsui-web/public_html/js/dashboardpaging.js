@@ -260,7 +260,11 @@ DashboardPaging.prototype.create = function(attributes, options)
 DashboardPaging.prototype.remove = function(model, options)
 {
     var self = this;
-    dfu.ajaxWithRetry( model.get('href') /*'/sso.static/dashboards.service/' + model.get('id')*/, {
+    var url="/sso.static/dashboards.service/";
+    if (dfu.isDevMode()){
+        url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
+    }
+    dfu.ajaxWithRetry(url + model.get('id'), {
        type: 'DELETE',
        headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
        success: function(result) {
