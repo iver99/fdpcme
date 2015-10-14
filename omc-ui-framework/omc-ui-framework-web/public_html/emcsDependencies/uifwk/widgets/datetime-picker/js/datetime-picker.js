@@ -81,6 +81,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last30daysChosen = ko.observable(false);
                 self.last90daysChosen = ko.observable(false);
                 
+                self.hideTimeSelection = ko.observable(false);
+                
                 self.last15minsCss = ko.computed(function() {
                     var css = self.last15minsNotToShow() ? "drawerNotToShow": "";
                     css += self.last15minsChosen() ? " drawerChosen" : "";
@@ -361,6 +363,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.pickerTopCss = "text-align: left; padding-bottom: 15px;";
                 }
                 
+                if(params.hideTimeSelection && params.hideTimeSelection === true) {
+                    self.hideTimeSelection(true);
+                }
+                
                 if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
                     self.callbackAfterApply = params.callbackAfterApply;
                 }
@@ -571,17 +577,25 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     start = oj.IntlConverterUtils.dateToLocalIso(start);
                     end = oj.IntlConverterUtils.dateToLocalIso(end);
 
-                    self.dateTimeInfo("<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
-                            self.dateTimeConverter.format(start) +
-                            "<span style='font-weight:bold'> - </span>" +
-                            self.dateTimeConverter.format(end));
-
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
 
                     self.startTime(start.slice(10, 16));
                     self.endTime(end.slice(10, 16));
 
+                    if(self.hideTimeSelection() === true) {
+                        start = self.dateConverter.format(start);
+                        end = self.dateConverter.format(end)
+                    }else {
+                        start = self.dateTimeConverter.format(start);
+                        end = self.dateTimeConverter.format(end)
+                    }
+                    
+                    self.dateTimeInfo("<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
+                            start +
+                            "<span style='font-weight:bold'> - </span>" +
+                            end);
+                    
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
                     self.lastStartTime(self.startTime());
@@ -879,8 +893,13 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
 
-                    var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
-                    var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
+                    if(self.hideTimeSelection() === true) {
+                        var start = self.dateConverter.format(self.startDateISO().slice(0, 10));
+                        var end = self.dateConverter.format(self.endDateISO().slice(0, 10));
+                    }else {
+                        var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
+                        var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
+                    }
                     self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
                             + start + "<span style='font-weight: bold'> - </span>"
                             + end);
