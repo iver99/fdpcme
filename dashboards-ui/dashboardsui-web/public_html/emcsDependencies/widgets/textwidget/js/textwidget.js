@@ -137,7 +137,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             children = $(this).children();
                         }
                         for(var i=0; i<children.length; i++) {
-                            rowWidth = ($(children[children.length-1]).position()).left+$(children[children.length-1]).width();
+                            var thisChildLeft = ($(children[i]).position()).left + $(children[i]).width();
+                            rowWidth = Math.max(rowWidth, thisChildLeft);
                             textMaxWidth = Math.max(textMaxWidth, rowWidth);
                         }                        
                     });
