@@ -1,9 +1,0 @@
-
-{ "files": [
-        {
-            "file": "build/distribution/lrgmetadata.zip",
-            "source": "local",
-            "group": "com.oracle.emaas.emcpdf.test"
-        },
-    ]
-}
