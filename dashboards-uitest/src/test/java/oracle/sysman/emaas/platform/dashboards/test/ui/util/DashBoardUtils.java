@@ -134,7 +134,7 @@ public class DashBoardUtils {
 		
 		driver.getLogger().info("add widget button is found");
 		driver.takeScreenShot();
-		waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+		waitForMilliSeconds(3*DashBoardPageId.Delaytime_long);
 		//verify title and desc of dashboard
 		/*if( getText(DashBoardPageId.DashboardNameID) == null)
 		{
