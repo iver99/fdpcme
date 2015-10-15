@@ -193,6 +193,7 @@ task buildDFCommonLibZip(type: Zip){
 	baseName = 'emcs-ui-framework'
 	appendix = 'common-dev'
 	from stagingDir+'/emcsDependencies/dfcommon/'
+	exclude '**/*.orig.js','**/*.map'
 	into 'dfcommon'
 }
 
