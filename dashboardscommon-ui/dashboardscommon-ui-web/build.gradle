@@ -191,7 +191,7 @@ war {
 
 task buildDFCommonLibZip(type: Zip){
 	baseName = 'emcs-ui-framework'
-	appendix = 'common'
+	appendix = 'common-dev'
 	from stagingDir+'/emcsDependencies/dfcommon/'
 	into 'dfcommon'
 }
