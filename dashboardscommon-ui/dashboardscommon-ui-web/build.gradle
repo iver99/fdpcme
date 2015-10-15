@@ -177,6 +177,7 @@ war.dependsOn individualMinify
 war {
 	from(stagingDir) {
 	       include '**/*'
+	       exclude '**/*.orig.js','**/*.map'
 	        into('/')
 	}
 
