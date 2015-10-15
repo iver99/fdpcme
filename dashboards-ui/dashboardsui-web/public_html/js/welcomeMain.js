@@ -17,7 +17,7 @@ requirejs.config({
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
-        'dfutil': '../emcsDependencies/internaldfcommon/js/util/internal-df-util',
+        'dfutil': '../js/internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
