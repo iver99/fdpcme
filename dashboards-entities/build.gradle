@@ -1,13 +1,22 @@
-apply plugin: 'java'
 apply plugin: 'eclipse'
-group = 'com.oracle.emaas.emcpdf'
-version = '1.0.1'
+
 jar {
 	from('src/main/java/META-INF')
 	{ 
 		include '*.xml'
 		into('META-INF') 
 	}
+}
+publishing.publications {
+
+        thisJarPublication(MavenPublication) {
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact jar
+        }
+}
+
+artifactoryPublish {
+        publications('thisJarPublication')
 }
 
 dependencies {

@@ -5,7 +5,6 @@ configurations {
     appServer     
 }
 
-//version = '1.0.0'
 version = project.ext.getServiceVersion("DashboardService-API")
 group = 'emaas/applications/dashboards-framework'
 deployname=artifactPrefix+'dashboards-api'
@@ -28,8 +27,7 @@ ear
 dependencies 
 {
 	deploy (project(path:':dashboards-web', configuration:'archives')) {transitive = false}
-
-	earlib (group: 'com.oracle.emaas.emcpdf', name: 'dashboards-core', version: '1.0.0+'){transitive = false}
+	earlib (project(':dashboards-core')){transitive = false}
 	earlib (project(':dashboards-entities')){transitive = false}
 	earlib (project(':dashboards-webutils')){transitive = false} 
 	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1') {transitive=false }
@@ -39,8 +37,6 @@ dependencies
 	earlib (group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') {transitive=false}
 	earlib (group: 'com.oracle.emaas.emcpsm', name:'registry-client', version: '1.0.0+') {transitive=false }
 	earlib (group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') {transitive=false}
-//	earlib (group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.1') {transitive=false}
-//	earlib (group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.1') {transitive=false}
 	earlib (group: 'commons-logging', name:'commons-logging', version:'1.1.1') {transitive=false}
         earlib (group: 'org.apache.zookeeper', name:'zookeeper', version: '3.4.6') {transitive=false }
         earlib (group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }

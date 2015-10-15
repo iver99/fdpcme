@@ -5,6 +5,11 @@
             <pipeline name="COMPONENT"/>
          </pipelines>
      </lrg>
+ <lrg name="emcpdf_web_unit_test" launcher="tests/suites/emcpdf_web_unit_test.gradle" description="lrg for QAUnitTest">
+         <pipelines>
+            <pipeline name="COMPONENT"/>
+         </pipelines>
+     </lrg>
 
 
      <lrg name="emcpdf_dev_test_3n" launcher="tests/suites/emcpdf_dev_test_3n.gradle" description="lrg for DEVTest">
