@@ -112,7 +112,9 @@ define({
       "DATETIME_PICKER_BEYOND_WINDOW_LIMIT_ERROR_MSG": "Invalid data! You've set a time range larger than window size: ",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS": "{0} day(s) {1} hour(s) {2} minute(s)",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hour(s) {1} minute(s)",
-      "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s)"
+      "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s)",
+      "DATETIME_PICKER_SHOW_TODAY": "Today",
+      "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday"
 }
 });
 
