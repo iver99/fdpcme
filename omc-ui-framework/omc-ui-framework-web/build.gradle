@@ -3,8 +3,7 @@ import java.security.MessageDigest
 import java.util.regex.Pattern
 
 apply plugin: 'war'
-apply plugin: 'maven-publish'
-apply plugin: 'artifactory-publish'
+
 
 apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'

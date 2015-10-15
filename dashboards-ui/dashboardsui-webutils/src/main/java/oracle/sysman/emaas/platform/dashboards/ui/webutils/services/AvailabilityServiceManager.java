@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
-
+import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
 /**
  * @author guobaochen
  */
@@ -98,6 +98,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isSSFAvailable) {
 			rsm.markOutOfService();
+			GlobalStatus.setDashboardUIDownStatus();
 			logger.info("Dashboards UI service is out of service because Saved Search API service is unavailable");
 			return;
 		}
@@ -113,6 +114,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isDFApiAvailable) {
 			rsm.markOutOfService();
+			GlobalStatus.setDashboardUIDownStatus();
 			logger.info("Dashboards UI service is out of service because Dashboard API service is unavailable");
 			return;
 		}
@@ -135,6 +137,8 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
+			GlobalStatus.setDashboardUIUpStatus();
+
 			logger.debug("Dashboards UI service is up");
 		}
 		catch (Exception e) {

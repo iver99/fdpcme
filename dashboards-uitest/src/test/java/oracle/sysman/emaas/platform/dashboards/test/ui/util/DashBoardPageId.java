@@ -10,7 +10,7 @@ public class DashBoardPageId {
 	 *
 	 *
 	 * */
-	public static final int Delaytime_long = 5000;
+	public static final int Delaytime_long = 8000;
 	public static final int Delaytime_short = 500;
 	public static final String CreateDSButtonID="cbtn";
 	public static final String CreateDSOfDialogID="createDsb";
