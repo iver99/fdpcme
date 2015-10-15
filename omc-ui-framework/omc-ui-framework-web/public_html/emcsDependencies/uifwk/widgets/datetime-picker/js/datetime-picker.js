@@ -34,7 +34,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var start, end;
                 var timeDiff, dateTimeDiff;
 
-                self.randomId = new Date().getTime();
+                if(params.appId) {
+                    self.randomId = params.appId;
+                }else {
+                    self.randomId = new Date().getTime(); 
+                }                
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
                 self.panelId = "#panel_" + self.randomId;
 
