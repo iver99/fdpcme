@@ -1,34 +1,14 @@
 import org.gradle.api.plugins.jetty.internal.Monitor
 
 apply plugin: 'war'
-apply plugin: 'eclipse-wtp'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: 'TestInfraPlugin'
+
 apply from: 'test.gradle'
-apply plugin: 'artifactory'
-apply plugin: 'artifactory-publish'
+
 // Directory where the restful API doc is generated
 ext.restDocRootDir = "${buildDir}/restdoc" 
 ext.restDocOutputDir = "${restDocRootDir}"
-//jar.archiveName='emcpdf_qa_test.jar'
-group = 'com.oracle.emaas.emcpdf.upgrade'
-//version = '1.0.1'
-//apply plugin: 'gavsetting'
-
-buildscript {
-    repositories {
-        maven {
-            url = "${artifactory_contextUrl}/emaas-virtual"
-        }
-    }
-    dependencies {
-        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-   classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
 
 
-     }  
-}
 
 configurations {
 	restDoc
@@ -54,74 +34,34 @@ war {
 
 }
 
-sourceSets{
-	test {
-		java {
-			srcDirs = ['src/test/java']
-		}
-		resources.srcDirs = ['src/test/java']
-	}
-}
 
-task runQATestSuite(type: Test){
-        useTestNG(){
-        	dependsOn ':dashboards-ee:ear'
-        	useDefaultListeners = true
-        	outputDirectory = file("$buildDir/testngoutput")
-        	suites file('testngsuite.xml')
-        }
-}
 
-publishing {
-    publications {
 
-        dashboardWeb(MavenPublication) {
-              from components.java
-        }
 
+
+publishing.publications {
         integTest(MavenPublication) {
-            setArtifactId(project.name + '-' + integTestJar.appendix)
-            artifact integTestJar.archivePath
-            pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.lrgConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
-                    def dependency = dependencies.appendNode('dependency')
-                    dependency.appendNode('groupId', it.moduleGroup)
-                    dependency.appendNode('artifactId', it.moduleName)
-		    if (it.moduleVersion != 'unspecified') {
-                        println "VERSION for ${it.moduleName} = ${it.moduleVersion}"
-                        dependency.appendNode('version', it.moduleVersion)
-                    }
-		    else {
-                        dependency.appendNode('version', '')
+                setArtifactId(project.name + '-' + integTestJar.appendix)
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact integTestJar.archivePath
+        }
 
-	            }
-                }
-            }
+        thisJarPublication(MavenPublication) {
+                setGroupId('com.oracle.emaas.emcpdf.test')
+                artifact jar
         }
-    }
-   repositories {
-        maven {
-            url "${artifactory_contextUrl}/${artifactory_repoKey}"
-            credentials {
-                username = "${artifactory_user}"
-                password =  "${artifactory_password}"
-            }
-        }
-    }
 }
 
-
-/*
- * Define repositories from where to pick all the artifacts
- */
-repositories {
-    /* Looks into local maven repository for artifacts */
-    mavenLocal()
-    maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
-    }
+artifactoryPublish {
+        publications('integTest')
+        publications('thisJarPublication')
 }
+
+task jarMe(type: Jar) {
+        from sourceSets.main.output
+        baseName = "${project.archivesBaseName}"
+}
+
 
 /**
  * Generates documentation for the REST service API
@@ -178,21 +118,14 @@ task ftpRestDoc << {
 		}
 	}
 
-sourceSets {
-	test{
-		java {
-			srcDirs = ['src/test/java']
-		}
-		resources.srcDirs = ['src/test/java']
-	}
-}
+
 
 dependencies {
 	providedCompile project(':dashboards-entities') { transitive = false }
-	providedCompile (group: 'com.oracle.emaas.emcpdf.upgrade', name: 'dashboards-core', version: '1.0.0+')  { transitive = false }
+	providedCompile project(':dashboards-core') { transitive = false }
         providedCompile project(':dashboards-webutils')  { transitive = false }
 	providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5') { transitive = false }
-//	providedCompile(group: 'javax', name: 'ejb', version: '3.2.0') { transitive = false }
+
 	providedCompile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17') { transitive = false }
 	providedCompile(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1') { transitive = false }
 
@@ -210,13 +143,9 @@ dependencies {
 	providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
 	providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
 	
-	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
 	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1') { transitive = false }
 	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1') { transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1') { transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false } 
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
+	
 	
 	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') { transitive = false }
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
@@ -240,3 +169,4 @@ dependencies {
  }
 
 build.dependsOn integTestJar
+build.dependsOn jarMe

@@ -380,10 +380,11 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(5000);
 		//Target link
 		webd.click(DashBoardPageId.TargetLinkID);
-		DashBoardUtils.waitForMilliSeconds(2000);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcta/ta/analytics.html?q=eyJzIjoiW10iLCJpxIPEhn0%3D&u=eyJzIjoie30iLCJpxINbXX0%3D");
+		String sub_str = url.substring(url.indexOf("emsaasui")+9);
+		Assert.assertEquals(sub_str.substring(0,23),"emcta/ta/analytics.html");
 		
 	}
 	
@@ -397,11 +398,11 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(5000);
 		//Customer Software link
 		webd.click(DashBoardPageId.CustomLinkID);
-		DashBoardUtils.waitForMilliSeconds(2000);
+		DashBoardUtils.waitForMilliSeconds(5000);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"tenantmgmt/services/customersoftware");
-		
+		DashBoardUtils.waitForMilliSeconds(5000);
 	}
 	
 	@Test
