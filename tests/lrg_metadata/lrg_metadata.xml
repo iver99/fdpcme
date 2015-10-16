@@ -34,4 +34,9 @@
              <pipeline name="COMPONENT" />
          </pipelines>
      </lrg>
+     <lrg name="emcpdf_uifwk_dev_test_3n" launcher="tests/suites/emcpdf_uifwk_dev_test_3n.gradle" description="lrg for DEVTest of uifwk">
+         <pipelines>
+             <pipeline name="COMPONENT" />
+         </pipelines>
+     </lrg>
  </lrg-metadata>
