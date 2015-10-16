@@ -9,6 +9,17 @@ ext.serviceName = "${artifactPrefix}dashboards"
 ext.serviceInstallPath = "/opt/ORCLemaas/Applications/${serviceName}/${projectVersion}" 
 ext.serviceDistDir = "${distDir}${serviceInstallPath}" 
 
+ext.failedTestCount=0
+
+// Disable running the build tests with this env var
+def disBuildTests = System.getenv("DISABLE_BUILD_TESTS")
+ext.disableBuildTests = (disBuildTests == null ? false : disBuildTests.toBoolean())
+if (ext.disableBuildTests)
+{
+    logger.info "S1 & S2 Tests skipped:  DISABLE_BUILD_TESTS = ${disBuildTests}"
+}
+
+
 allprojects { 
 	apply plugin: "java" 
 	apply plugin: 'artifactory-publish'	
@@ -52,6 +63,49 @@ allprojects {
             logger.debug "Configuration $it.name state is $it.state so exclusion is not viable"
         }
 	}
+	def commonTestConfig = {
+        testLogging {
+             showStandardStreams = false
+        }
+        ignoreFailures = false
+        enableAssertions = true
+	}
+// Run s1 test group - the first stage unit test group
+    // Tests in this group should be fast and just make sure no basic functionality was broken
+    // (no DB and no long wait for test result)
+    task s1tests(type: Test) {
+	        useTestNG() {
+	            ignoreFailures = false
+	            includeGroups 's1'
+	        }
+                configure commonTestConfig
+	        afterSuite { TestDescriptor desc, TestResult testResult ->
+	            logger.debug "Suite Name: ${desc.name}"
+	            logger.debug "Parent: ${desc.parent}"
+	            if (desc.parent == null)
+	            {
+	                // When at the suite completion for a task, add in failures
+	                project.rootProject.failedTestCount += testResult.failedCount
+	            }
+	            logger.debug "Failures: ${testResult.failedCount} / ${project.rootProject.failedTestCount}"
+	        }
+	
+    
+}
+    s1tests.enabled = !project.rootProject.disableBuildTests
+
+// Run s2 test group - the second stage unit test group
+    // Tests in this group are more complex and may take a longer time to run
+    task s2tests(type: Test) {
+
+	        useTestNG() {
+	            ignoreFailures = true
+	            includeGroups 's2'
+	        }
+	        configure commonTestConfig
+	
+    }
+    s2tests.enabled = !project.rootProject.disableBuildTests
 }
 
 artifactory {
@@ -129,6 +183,33 @@ dependencies {
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
 			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 }
+
+task runS1Tests(dependsOn: allprojects.s1tests) {
+    doLast {
+ 
+        logger.debug "Overall Failure Count: ${project.failedTestCount}"
+        if (project.failedTestCount != 0)
+        {
+            def err = "S1 tests had errors.  Build Aborted"
+        }
+    
+}
+}
+runS1Tests.enabled = !project.disableBuildTests
+
+task runS2Tests(dependsOn: allprojects.s2tests) {
+    doLast {
+
+        logger.debug "Overall Failure Count: ${project.failedTestCount}"
+        if (project.failedTestCount != 0)
+        {
+            def err = "S2 tests had errors.  Build Aborted"
+        }
+    
+}
+}
+runS2Tests.enabled = !project.disableBuildTests
+runS2Tests.mustRunAfter runS1Tests
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
 // that we are using those jars from as of now.
