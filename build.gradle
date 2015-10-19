@@ -29,9 +29,6 @@ allprojects {
 	apply plugin: 'JSPlugin'
 	apply plugin: 'gavsetting'
 	ext.dependenciesDir = new File(rootDir, 'common') 
-	ext.artifactory_publish_repoKey= hasProperty("ArtRepo") && ArtRepo != '' ? ArtRepo : 'emaas-sandbox-local'
-
-	ext.dependenciesDir = new File(rootDir, 'common') 
 	repositories {  
 		mavenLocal()  
 		maven {  
