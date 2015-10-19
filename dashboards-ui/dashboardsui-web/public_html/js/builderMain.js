@@ -37,9 +37,9 @@ requirejs.config({
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
-        'dfutil':'../js/internaldfcommon/js/util/internal-df-util',
+        'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
-        'idfbcutil':'../js/internaldfcommon/js/util/internal-df-browser-close-util',
+        'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
@@ -148,12 +148,12 @@ require(['knockout',
 	        template: {require: 'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/datetime-picker.html'}
 	    });
             ko.components.register("df-auto-refresh",{
-                viewModel:{require:'../js/widgets/autorefresh/js/auto-refresh'},
-                template:{require:'text!../js/widgets/autorefresh/auto-refresh.html'}
+                viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
+                template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
             });
             ko.components.register("DF_V1_WIDGET_TEXT", {
-                viewModel: {require: '../js/widgets/textwidget/js/textwidget'},
-                template: {require: 'text!../js/widgets/textwidget/textwidget.html'}
+                viewModel: {require: '../emcsDependencies/widgets/textwidget/js/textwidget'},
+                template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
             });
 
             function HeaderViewModel($b) {
