@@ -87,6 +87,7 @@ require(['ojs/ojcore',
                 self.timeParams1 = {
                     startDateTime: start,
                     endDateTime: end,
+//                    appId: "APM",
 //                    hideTimeSelection: true,
                     callbackAfterApply: function (start, end) {
                         console.log(start);

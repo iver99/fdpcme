@@ -280,7 +280,7 @@
                         <div class="dbd-left-panel-header-search">
                             <div  class="dbd-left-panel-header-search-input">
                                 <input id="sinput" type="text" name="searchInput"
-                                   data-bind="ojComponent:{component:'ojInputText', value: keyword, 
+                                   data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
                                               placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                               ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
                             </div>

@@ -99,7 +99,7 @@
     margin: 10px;
     font-size: 14px;
     color: red;
-    font-weight: bold;
+    /*font-weight: bold;*/
     width: 510px;
 }
 .datePicker {
