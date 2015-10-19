@@ -49,14 +49,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     params.tile.content(self.content());
                 }
 
-                var lang;
-                try {
-                    lang = requirejs.s.contexts._.config.config.i18n.locale;
-                }catch(err) {
-                    lang = $("html").attr("lang") ? $("html").attr("lang") : navigator.language;
-                }
                 var configOptions = {
-                    language: lang,
+                    language: 'en',
                     toolbar: [
                         {name: 'styles', items: ['Font', 'FontSize']},
                         {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
