@@ -121,7 +121,7 @@ public class TestDashBoard extends LoginAndLogout{
 	}
 	
 	
-	
+	/*
 	@Test(dependsOnMethods = { "testModifyDashBoard" })
 	public void testNavigateWidget() throws Exception
 	{
@@ -143,10 +143,12 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		DashBoardUtils.navigateWidget(parentWindow);
-		DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+		//DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
 	}
+	*/
 	
-	@Test(dependsOnMethods = { "testCreateDashBoard","testModifyDashBoard","testNavigateWidget"})
+	//@Test(dependsOnMethods = { "testCreateDashBoard","testModifyDashBoard","testNavigateWidget"})
+	@Test(dependsOnMethods = { "testCreateDashBoard","testModifyDashBoard"})
 	//@Test
 	public void testRemoveDashBoard() throws Exception
 	{
