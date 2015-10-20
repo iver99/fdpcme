@@ -22,7 +22,7 @@ public class AppLoggingManageMXBeanTest
 		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
 	}
 
-	@Test
+	@Test 
 	public void testGetLogLevels()
 	{
 		AppLoggingManageMXBean almmxb = new AppLoggingManageMXBean();
@@ -30,7 +30,7 @@ public class AppLoggingManageMXBeanTest
 		Assert.assertTrue(levels.contains("\"oracle.sysman.emaas.platform.dashboards.ui\":\"INFO\""));
 	}
 
-	@Test
+	@Test 
 	public void testSetLogLevels()
 	{
 		AppLoggingManageMXBean almmxb = new AppLoggingManageMXBean();

@@ -1,17 +1,21 @@
 sourceSets {
-        test {
-        resources.srcDirs = ["src/test/java"]    
-        compileClasspath = configurations.testConfig + configurations.webdriver + compileClasspath + configurations.testNG
+integTest {
+        java.srcDir 'src/integTest/java'
+
+    
+        compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
         }
     }
 
 clean{
   delete 'build'
 }
-task integTestJar(type:Jar) {
-from sourceSets.test.output
- appendix = 'integ-tests'
+
+task integTestJar (type:Jar) {
+    from sourceSets.integTest.output
+    appendix = 'integ-tests'
 }
+
 
 check.dependsOn integTestJar
 
