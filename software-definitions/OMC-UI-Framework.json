@@ -16,7 +16,7 @@
                    [
                             {
                               "name": "applicationName",
-                               "defaultValue": "emaas-applications-omc-ui-framework"
+                               "defaultValue": "OMC-UI-Framework"
                              }
                    ]
                    },
@@ -27,7 +27,7 @@
                     [
                           {
                                 "name": "applicationName",
-                                "defaultValue": "emaas-applications-omc-ui-framework"
+                                "defaultValue": "OMC-UI-Framework"
                             }
                     ]
                   },
@@ -38,7 +38,7 @@
                     [
                            {
                                  "name": "applicationName",
-                                 "defaultValue": "emaas-applications-omc-ui-framework"
+                                 "defaultValue": "OMC-UI-Framework"
                             }
                      ]
                   }
