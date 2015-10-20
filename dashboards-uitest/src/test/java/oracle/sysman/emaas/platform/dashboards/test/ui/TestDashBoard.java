@@ -1242,6 +1242,20 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		webd.takeScreenShot();
 	}
+	/*
+	@Test
+	public void testWelcomepage() throws Excepition
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testWelcomepage");
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		//Home link
+		webd.click(DashBoardPageId.HomeLinkID);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		
+		
+	}*/
 	
 
 }
