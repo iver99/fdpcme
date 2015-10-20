@@ -53,5 +53,5 @@
                   "rel": "link/gzip",
                   "href": "<software>"
          }
-
+	"microServices":["OMC-UI-Framework"]
         }
