@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
+package oracle.sysman.emaas.platform.uifwk.ui.webutils.util;
 
 import java.util.Map;
 
@@ -50,21 +50,22 @@ public class LogUtil
 	public static final String INTERACTION_LOG_PROP_SERVICE_INVOKED = "serviceInvoked";
 	public static final String INTERACTION_LOG_PROP_DIRECTION = "direction";
 
-	private static final String INTERACTION_LOG_NAME = "oracle.sysman.emaas.platform.dashboards.ui.interaction.log";
+	private static final String INTERACTION_LOG_NAME = "oracle.sysman.emaas.platform.uifwk.ui.interaction.log";
 
-	private static final String LOGGER_PROP_UPDATE_TIME = "DF_UPDATE_TIME";
+	private static final String LOGGER_PROP_UPDATE_TIME = "OMC_UI_UPDATE_TIME";
 
 	/**
-	 * Clear the dashboard interaction log context
+	 * Clear the omc ui interaction log context
 	 */
 	public static void clearInteractionLogContext()
 	{
+		ThreadContext.remove(INTERACTION_LOG_PROP_TENANTID);
 		ThreadContext.remove(INTERACTION_LOG_PROP_SERVICE_INVOKED);
 		ThreadContext.remove(INTERACTION_LOG_PROP_DIRECTION);
 	}
 
 	/**
-	 * Returns the DashboardService-API interaction log
+	 * Returns the omc ui interaction log
 	 *
 	 * @return
 	 */
@@ -94,12 +95,12 @@ public class LogUtil
 	}
 
 	/**
-	 * Initialize dashboard interaction log context
+	 * Initialize omc ui interaction log context
 	 *
 	 * @param serviceInvoked
 	 * @param direction
 	 */
-	public static void initializeInteractionLogContext(String tenantId, String serviceInvoked, InteractionLogDirection direction)
+	public static void setInteractionLogThreadContext(String tenantId, String serviceInvoked, InteractionLogDirection direction)
 	{
 		if (StringUtil.isEmpty(tenantId)) {
 			logger.debug("Initialize interaction log context: tenantId is null or empty");
