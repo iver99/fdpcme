@@ -3,10 +3,6 @@ import java.security.MessageDigest
 import java.util.regex.Pattern
 
 apply plugin: 'war'
-apply plugin: 'maven-publish'
-apply plugin: 'artifactory-publish'
-
-apply plugin: 'TestInfraPlugin'
 apply from: 'test.gradle'
 
 // source 'webapp' directory
@@ -22,31 +18,6 @@ def compiledDir = buildDir.absolutePath+'/public_html'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-group = 'com.oracle.emaas.emcpdf'
-version = '1.1'
-
-
-repositories {
-    /* Looks into local maven repository for artifacts */
-    mavenLocal()
-    maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
-    }
-}
-
-
-
-
-//buildscript {
-//    repositories {
-//        maven {
-//            url = "${artifactory_contextUrl}/emaas-virtual"
-//        }
-//    }
-//    dependencies {
-       // classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true        
-//	}  
-//}
 
 //define the JS source locations
 
@@ -222,47 +193,29 @@ war {
 //	into 'uifwk'
 //}
 
-publishing {
-    publications {
-	//maven(MavenPublication) {
-	//    version "${publish_version}"
-	//    groupId "${publish_group}"
-	//    artifact(buildDFCommonLibZip)
-	//    artifactId 'emcs-ui-framework-common'
-	//}
-        integTest(MavenPublication) {
-            setArtifactId(project.name + '-' + integTestJar.appendix)
-            artifact integTestJar.archivePath
-            pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.testConfig.getResolvedConfiguration().getFirstLevelModuleDependencies().each {
-                    def dependency = dependencies.appendNode('dependency')
-                    dependency.appendNode('groupId', it.moduleGroup)
-                    dependency.appendNode('artifactId', it.moduleName)
-                    dependency.appendNode('version', it.moduleVersion)
-                }
-            }
-        }
-	//    artifactId 'emcs-ui-framework-common-dev'
-	//}
-    }
-    repositories {
-        maven {
-            url "${artifactory_contextUrl}"+'/'+"${publish_repo_key}"
-            credentials {
-                username = "${artifactory_user}"
-                password = "${artifactory_password}"
-            }
-        }
-    }
-}
+
 
 dependencies {
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.2-19410', ext: 'war'){ transitive = false }	
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
 	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'1.8.1') { transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.0'){ transitive = false }
 }
-build.dependsOn integTestJar
+check.dependsOn integTestJar
+
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpdf.test')
+                        artifact integTestJar.archivePath
+    }
+
+}
+
+
+
+artifactoryPublish {
+publications ('integTest')
+
+    }
+
 

@@ -34,7 +34,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var start, end;
                 var timeDiff, dateTimeDiff;
 
-                self.randomId = new Date().getTime();
+                if(params.appId) {
+                    self.randomId = params.appId;
+                }else {
+                    self.randomId = new Date().getTime(); 
+                }                
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
                 self.panelId = "#panel_" + self.randomId;
 
@@ -60,6 +64,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriodLast30days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS;
                 self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
                 self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
+                self.today = nls.DATETIME_PICKER_SHOW_TODAY;
+                self.yesterday = nls.DATETIME_PICKER_SHOW_YESTERDAY;
                 
                 self.last15minsNotToShow = ko.observable(false);
                 self.last30minsNotToShow = ko.observable(false);
@@ -80,6 +86,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last7daysChosen = ko.observable(false);
                 self.last30daysChosen = ko.observable(false);
                 self.last90daysChosen = ko.observable(false);
+                
+                self.hideTimeSelection = ko.observable(false);
                 
                 self.last15minsCss = ko.computed(function() {
                     var css = self.last15minsNotToShow() ? "drawerNotToShow": "";
@@ -148,7 +156,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }, self);
                                 
                 self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
+                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
                 }, self);
 
                 self.applyButtonDisable = ko.computed(function() {
@@ -315,7 +323,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }else if(hours > 0) {
                         windowSize = msgUtil.formatMessage(nls.DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS, hours, mins);
                     }else{
-                        windowSize = msgUtil.formatMessage(nls.DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS, mins);
+                        windowSize = msgUtil.formatMessage(nls.DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES, mins);
                     }
                     return windowSize;
                 };
@@ -359,6 +367,15 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }else {
                     self.hideRangeLabel = "inline-block";
                     self.pickerTopCss = "text-align: left; padding-bottom: 15px;";
+                }
+                
+                if(params.hideTimeSelection && params.hideTimeSelection === true) {
+                    self.last15minsNotToShow(true);
+                    self.last30minsNotToShow(true);
+                    self.last60minsNotToShow(true);
+                    self.last4hoursNotToShow(true);
+                    self.last6hoursNotToShow(true);
+                    self.hideTimeSelection(true);
                 }
                 
                 if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
@@ -500,6 +517,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.beyondWindowLimitError(false);
                     }
                 };
+                
+                self.adjustDateMoreFriendly = function(date) {
+                    var today = oj.IntlConverterUtils.dateToLocalIso(new Date()).slice(0, 10);
+                    var yesterday = oj.IntlConverterUtils.dateToLocalIso(new Date(new Date()-24*60*60*1000)).slice(0, 10);
+                    if(today === date) {
+                        return self.today;
+                    }else if(yesterday === date) {
+                        return self.yesterday;
+                    }else {
+                        return self.dateConverter.format(date);
+                    }
+                }
 
                 var curDate = new Date();
                 self.initialize = function() {
@@ -571,17 +600,31 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     start = oj.IntlConverterUtils.dateToLocalIso(start);
                     end = oj.IntlConverterUtils.dateToLocalIso(end);
 
-                    self.dateTimeInfo("<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
-                            self.dateTimeConverter.format(start) +
-                            "<span style='font-weight:bold'> - </span>" +
-                            self.dateTimeConverter.format(end));
-
                     self.startDate(self.dateConverter2.format(start));
                     self.endDate(self.dateConverter2.format(end));
 
                     self.startTime(start.slice(10, 16));
                     self.endTime(end.slice(10, 16));
 
+                    var hyphenDisplay = "display: inline;";
+                    start = self.adjustDateMoreFriendly(start.slice(0, 10));
+                    end = self.adjustDateMoreFriendly(end.slice(0, 10));
+                    if(start === end) {
+                        end = "";
+                    }
+                    
+                    if(self.hideTimeSelection() === false) {
+                        start = start + " " + self.timeConverter.format(self.startTime());
+                        end = end + " " + self.timeConverter.format(self.endTime());
+                    }else {
+                        hyphenDisplay = end ? hyphenDisplay : "display: none;"
+                    }
+                    
+                    self.dateTimeInfo("<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
+                            start +
+                            "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" +
+                            end);
+                    
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
                     self.lastStartTime(self.startTime());
@@ -878,12 +921,28 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastStartTime(self.startTime());
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
-
-                    var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
-                    var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
+                   
+                    var hyphenDisplay = "display: inline;";
+                    var startToShow = self.adjustDateMoreFriendly(self.startDateISO().slice(0, 10));
+                    var endToShow = self.adjustDateMoreFriendly(self.endDateISO().slice(0, 10));
+                    //show "Today/Yesterday" only once
+                    if(startToShow === endToShow) {
+                        endToShow = "";
+                    }
+                    if(self.hideTimeSelection() === true) {
+                        var start = self.dateConverter.format(self.startDateISO().slice(0, 10));
+                        var end = self.dateConverter.format(self.endDateISO().slice(0, 10));
+                        //hide hyphen when time range is "Today-Today"/"Yesterday-Yesterday"
+                        hyphenDisplay = endToShow ? "display: inline;" : "display: none;"
+                    }else {
+                        var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
+                        var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
+                        startToShow = startToShow + " " + self.timeConverter.format(self.startTime());
+                        endToShow = endToShow + " " + self.timeConverter.format(self.endTime());
+                    }
                     self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
-                            + start + "<span style='font-weight: bold'> - </span>"
-                            + end);
+                            + startToShow + "<span style='font-weight: bold;" + hyphenDisplay + "'> - </span>"
+                            + endToShow);
 
                     $(self.panelId).ojPopup("close");
                     if (self.callbackAfterApply) {

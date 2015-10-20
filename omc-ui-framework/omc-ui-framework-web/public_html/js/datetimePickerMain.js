@@ -87,6 +87,8 @@ require(['ojs/ojcore',
                 self.timeParams1 = {
                     startDateTime: start,
                     endDateTime: end,
+//                    appId: "APM",
+//                    hideTimeSelection: true,
                     callbackAfterApply: function (start, end) {
                         console.log(start);
                         console.log(end);
@@ -203,6 +205,7 @@ require(['ojs/ojcore',
                       customTimeBack: 7*24*60*60*1000, //the max timestamp of how far the user can pick the date from
                       hideMainLabel: true, //hides the main label "Time Range", defaults to "false"
                       hideRangeLabel: true //hides the selected time range, like "Last 30 minutes" inside the time selection, defaults to "false"
+//                      hideTimeSelection: true //hides time selection
                 }
             }
             ko.applyBindings(new MyViewModel(), document.getElementById("dateTimePicker"));

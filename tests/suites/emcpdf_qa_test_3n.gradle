@@ -25,19 +25,13 @@
 buildscript {
     repositories {
         maven {
-            url = "${artifactory_contextUrl}/emaas-virtual" }
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
-repositories {
-    /* To check if the jar is available in local maven repository */
-    mavenLocal()
-    maven {
-        url = "${artifactory_contextUrl}/emaas-virtual"
-    }
-}
+
 apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
@@ -47,15 +41,36 @@ import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
  
 /* Your lrg specific code would come here */
 repositories {
-	mavenLocal()
+	maven {
+          url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+       }
         maven {
-            url = "${artifactory_contextUrl}/emaas-virtual" }
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpdf42', name: 'dashboards-web-integ-tests', version: '1.0.0+') {
+    testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+
+ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
+         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
+
+testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transitive = false }
+        testConfig(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17'){ transitive = false }
+        testConfig(group: 'com.sun.jersey.contribs', name: 'jersey-multipart', version: '1.17.1'){ transitive = false }
+        testConfig(group: 'org.codehaus.jettison', name: 'jettison', version: '1.3.4'){ transitive = false }
+        testConfig(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
+
+        testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13'){ transitive = false }
+        testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){ transitive = false }
+        testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
+        testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
+        testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+'){ transitive = false }
+        testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 
 
 configurations {
@@ -63,10 +78,6 @@ restAssured.exclude module: 'groovy'
 }
 }
 
-task copyDependencies(type: Copy) {
-    from configurations.lrgConfig
-    into System.env.T_WORK
-}
 task small_deploy_3n_block(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
     options.suiteXmlBuilder().suite('name': 'lrgemcpdf_qa_test_3n') {
@@ -77,36 +88,25 @@ task small_deploy_3n_block(type: EMTest) {
                         'include' ('name': 'setupEmaasSmallDeploy')
                     }
                 }
-        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
             }
         }
     }
     useWebdriver = true
     useRestAssured = true
-
 }
 
-task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
+     task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
-	//include "oracle/sysman/emaas/platform/dashboards/test/favoritedashboards/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/Configuration/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/RegistryLookup/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/preference/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/screenshot/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/TenantSubscriptions/*" 
-	
 	useRestAssured=true
 	ext.set("testType", "integration")
 }
-
-task DEVTest_ws(type:EMTest,dependsOn: small_deploy_3n_block){ 
-	include "oracle/sysman/emaas/platform/dashboards/ws/*"
-	useRestAssured=true
-	ext.set("testType", "unit")
-}
-
 task small_deploy_3n_cleanup(type: EMTest) {
     onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
     options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
@@ -124,6 +124,5 @@ task small_deploy_3n_cleanup(type: EMTest) {
 }
 
 
-task emcpdf_qa_test_3n (dependsOn: [QATest, DEVTest_ws, small_deploy_3n_cleanup])
+task emcpdf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
 
-apply from: "../../codeCoverage/codeCoverage.gradle"

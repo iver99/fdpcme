@@ -49,8 +49,14 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     params.tile.content(self.content());
                 }
 
+                var lang;
+                try {
+                    lang = requirejs.s.contexts._.config.config.i18n.locale;
+                }catch(err) {
+                    lang = $("html").attr("lang") ? $("html").attr("lang") : navigator.language;
+                }
                 var configOptions = {
-                    language: 'en',
+                    language: lang,
                     toolbar: [
                         {name: 'styles', items: ['Font', 'FontSize']},
                         {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
@@ -137,7 +143,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             children = $(this).children();
                         }
                         for(var i=0; i<children.length; i++) {
-                            rowWidth = ($(children[children.length-1]).position()).left+$(children[children.length-1]).width();
+                            var thisChildLeft = ($(children[i]).position()).left + $(children[i]).width();
+                            rowWidth = Math.max(rowWidth, thisChildLeft);
                             textMaxWidth = Math.max(textMaxWidth, rowWidth);
                         }                        
                     });

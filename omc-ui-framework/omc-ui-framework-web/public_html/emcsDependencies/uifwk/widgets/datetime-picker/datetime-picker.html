@@ -40,7 +40,7 @@
                             <input data-bind="attr: {id: 'inputStartDate_'+randomId}, ojComponent: {component: 'ojInputText', value: startDate, placeholder: 'mm/dd/yyyy', rootAttributes:{style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 1)}}, click: focusOnStartDate, hasFocus: startDateFocus"/>
                         </div>
 
-                        <div class="chosenTime" data-bind="attr: {id: 'divStartTime_'+randomId}, click: focusOnStartTime">
+                        <div class="chosenTime" data-bind="attr: {id: 'divStartTime_'+randomId}, click: focusOnStartTime, visible: !hideTimeSelection()">
                             <input data-bind="attr:{id: 'inputStartTime_'+randomId}, ojComponent:{component: 'ojInputTime', value: startTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeStartTime, displayOptions: {'messages': 'none'}}, hasFocus: startTimeFocus"/>
                         </div>
 
@@ -52,7 +52,7 @@
                             <input data-bind="attr: {id: 'inputEndDate_'+randomId}, ojComponent: {component: 'ojInputText', value: endDate, placeholder: 'mm/dd/yyyy', rootAttributes: {style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 2)}}, click: focusOnEndDate, hasFocus: endDateFocus"/>
                         </div>
 
-                        <div class="chosenTime" data-bind="attr: {id: 'divEndTime_'+randomId}, click: focusOnEndTime">
+                        <div class="chosenTime" data-bind="attr: {id: 'divEndTime_'+randomId}, click: focusOnEndTime, visible: !hideTimeSelection()">
                             <input data-bind="attr:{id: 'inputEndTime_'+randomId}, ojComponent:{component: 'ojInputTime', value: endTime, timePicker:{timeIncrement: '00:10:00:00'}, optionChange: changeEndTime, displayOptions: {'messages': 'none'}}, hasFocus: endTimeFocus"/>
                         </div>
 

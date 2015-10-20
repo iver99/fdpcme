@@ -203,7 +203,9 @@ define(['knockout',
                 var url = getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
                 if (url){
                     tile.configure = function(){
-                        window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                        var start = timeSelectorModel.viewStart().getTime();
+                        var end = timeSelectorModel.viewEnd().getTime();
+                        window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
                     }
                 }
             } 
