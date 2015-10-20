@@ -1,19 +1,26 @@
 import java.nio.file.*
 import java.security.MessageDigest
 import java.util.regex.Pattern
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
 
+//apply plugin: 'groovy'
 apply plugin: 'war'
 apply from: 'test.gradle'
+
+def versionPathElement = version + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet files are copied
-def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
+def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 // sourc directories where font files are copied
-def File sourceFontDestDir = new File(sourceWebappDir, 'emcsDependencies/uifwk/css/font-awesome')
+def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
+def webRootSourceDir = 'public_html'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -26,11 +33,43 @@ task cleanJs(type:Delete) {
         delete fileTree(dir: compiledDir)
 }
 
+task prepareRequireJsConfig(type:Copy) {
+    from ('.') {    
+	include "dashboard.build.js"
+	        //replace @version@ with versionPathElement
+	        filter(ReplaceTokens, tokens: [version: versionPathElement, staging_dir:'../'+stagingDir+'/', compiled_dir:'../'+compiledDir+'/'])
+    }
+    into buildDir
+}
+
 task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
     from ('public_html') {
 	include "**/*"
     }
+    //logger.lifecycle("versionPathElement:" + versionPathElement)
+    //from (webRootSourceDir) {
+    //    include "**/*"
+    //        eachFile {
+    //            fileCopyDetails ->
+    //            fileCopyDetails.path = fileCopyDetails.path.replaceAll(/(.*\/|.*)@version@\/(.*)/, '$1/'+versionPathElement+'/$2')
+    //            fileCopyDetails.name = fileCopyDetails.name.replaceAll(/(.*)@version@(.*)/, '$1'+versionPathElement+'$2')
+    //        }
+            //replace @version@ with versionPathElement
+    //        filesMatching("**/*.js") {
+               // logger.lifecycle("filter: "+filter(ReplaceTokens, tokens: ['@version@': versionPathElement]).toString())
+		//filter(ReplaceTokens, tokens: ['knockout': versionPathElement])
+     //       }
+     //       filesMatching("**/*.html") {
+                //filter(ReplaceTokens, tokens: [version: versionPathElement])
+     //       }
+    //}
     into stagingDir
+
+    doLast {
+       //this is here because of gradle bug, the old @version@ directory remains
+        //delete stagingDir+'/@version@'
+	//delete stagingDir+'/libs/@version@'
+    }
 }
 
 task stageJs(dependsOn: copyJsSource){
