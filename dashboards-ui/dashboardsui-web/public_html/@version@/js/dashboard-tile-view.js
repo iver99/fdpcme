@@ -226,11 +226,11 @@ define(['knockout',
                     headers: dfu.getSavedSearchRequestHeader(),
                     success: function(data) {
                         data && (wgt.WIDGET_VISUAL(data.screenShot));
-                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('images/sample-widget-histogram.png'));
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
                     },
                     error: function() {
                         oj.Logger.error('Error to get widget screen shot for widget with unique id: ' + wgt.WIDGET_UNIQUE_ID);
-                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('images/sample-widget-histogram.png'));
+                        !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
                     },
                     async: true
                 });
