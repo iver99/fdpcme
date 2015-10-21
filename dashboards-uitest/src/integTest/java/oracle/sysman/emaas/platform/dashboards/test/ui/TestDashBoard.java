@@ -525,10 +525,10 @@ public class TestDashBoard extends LoginAndLogout{
         webd.getLogger().info("welcome page is being loaded, going to to verify...");
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		DashBoardUtils.clickGVButton();
-		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
+		//DashBoardUtils.clickGVButton();
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
 		webd.getLogger().info("welcome page is verified successfully");
-                Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
+                //Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
 		webd.takeScreenShot();
 		webd.getLogger().info("complete testing in testEMPCDF_832");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
