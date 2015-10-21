@@ -8,8 +8,8 @@ import java.util.Date
 apply plugin: 'war'
 apply from: 'test.gradle'
 
-version = project.ext.getServiceVersion('OMC-UI-Framework')
-def versionPathElement = version + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
@@ -30,20 +30,7 @@ task cleanJs(type:Delete) {
         delete fileTree(dir: compiledDir)
 }
 
-task prepareRequireJsConfig(type:Copy) {
-    from ('.') {    
-	include "dashboard.build.js"
-	        //replace @version@ with versionPathElement
-	        filter(ReplaceTokens, tokens: [version: versionPathElement, staging_dir:'../'+stagingDir+'/', compiled_dir:'../'+compiledDir+'/'])
-    }
-    into buildDir
-}
-
 task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
-    //from ('public_html') {
-	//include "**/*"
-    //}
-
     from (webRootSourceDir) {
         include "**/*"
             eachFile {
@@ -115,14 +102,12 @@ javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
 	doLast {
 		//update the compiled JS to point to the source map
 		File compiledFile = new File(sourceFile)
-	//	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
 		File mapFile = new File(stagingDir+"/js"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
-		//logger.lifecycle("absPath:" + Pattern.quote(absPath))
 		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
 		mapFile.write(contents, 'UTF-8')
     	}	
@@ -134,33 +119,23 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
 	String fileName = "${jsFile.name}"
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
-	logger.lifecycle("jsFile: "+fileName)
-	logger.lifecycle("parentDir:" + parentDir)
 	def tmpFolder= parentDir.split("js") as String[]
-	//assert tmpFolder instanceof String[]
-	logger.lifecycle("tmpFolder:" + tmpFolder.length)
 	def sourceFile = "";
 	def destFile = "";
 	if ( tmpFolder.length > 1 )
 	{
-	    logger.lifecycle("sourceFile1:" + stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+fileName)
     	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+fileName
 	    destFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+renamedFile
 	}
 	else
 	{
-		logger.lifecycle("sourceFile2:" + stagingDir+"/"+versionPathElement+"/js"+"/"+fileName)
-		logger.lifecycle("destFile2:" + stagingDir+"/"+versionPathElement+"/js"+"/"+renamedFile)
 	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+"/"+fileName
 	    destFile = stagingDir+"/"+versionPathElement+"/js"+"/"+renamedFile
 	}
 	
 	doFirst{ 
-		logger.lifecycle("sourceFile3:" + sourceFile)
-		logger.lifecycle("destFile3:" + destFile)
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
 	}
-	
 
         source = sourceFile
 	dest = sourceFile
@@ -181,10 +156,10 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
 	doLast {
 		//update the compiled JS to point to the source map
 		File compiledFile = new File(sourceFile)
-		//logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
-		File mapFile = compiledFile
+
 		//fix file path in source map file
+		File mapFile = compiledFile
 		if ( tmpFolder.length > 1 )
 		{
 	    	     mapFile = new File(stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+sourceMapFile)
@@ -196,7 +171,6 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
 		
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
-		//logger.lifecycle("absPath:" + Pattern.quote(absPath))
 		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
 		mapFile.write(contents, 'UTF-8')
     	}	
