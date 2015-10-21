@@ -44,7 +44,7 @@ requirejs.config({
         'canvg-rgbcolor':'../../emcsDependencies/canvg/rgbcolor',
         'canvg-stackblur':'../../emcsDependencies/canvg/StackBlur',
         'canvg':'../../emcsDependencies/canvg/canvg',
-        'd3':'../../emcsDependencies/d3/d3.min',
+        'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
