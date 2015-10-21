@@ -49,7 +49,7 @@ repositories {
 
     }
 dependencies {
-    testConfig (group: 'com.oracle.emaas.emcpdf', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
+    testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
 }
  testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
