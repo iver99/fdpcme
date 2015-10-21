@@ -5,10 +5,10 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
 
-//apply plugin: 'groovy'
 apply plugin: 'war'
 apply from: 'test.gradle'
 
+version = project.ext.getServiceVersion('OMC-UI-Framework')
 def versionPathElement = version + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 // source 'webapp' directory
@@ -25,9 +25,6 @@ def webRootSourceDir = 'public_html'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-
-//define the JS source locations
-
 task cleanJs(type:Delete) {
 	delete fileTree(dir: stagingDir)
         delete fileTree(dir: compiledDir)
@@ -43,56 +40,64 @@ task prepareRequireJsConfig(type:Copy) {
 }
 
 task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
-    from ('public_html') {
-	include "**/*"
-    }
-    //logger.lifecycle("versionPathElement:" + versionPathElement)
-    //from (webRootSourceDir) {
-    //    include "**/*"
-    //        eachFile {
-    //            fileCopyDetails ->
-    //            fileCopyDetails.path = fileCopyDetails.path.replaceAll(/(.*\/|.*)@version@\/(.*)/, '$1/'+versionPathElement+'/$2')
-    //            fileCopyDetails.name = fileCopyDetails.name.replaceAll(/(.*)@version@(.*)/, '$1'+versionPathElement+'$2')
-    //        }
-            //replace @version@ with versionPathElement
-    //        filesMatching("**/*.js") {
-               // logger.lifecycle("filter: "+filter(ReplaceTokens, tokens: ['@version@': versionPathElement]).toString())
-		//filter(ReplaceTokens, tokens: ['knockout': versionPathElement])
-     //       }
-     //       filesMatching("**/*.html") {
-                //filter(ReplaceTokens, tokens: [version: versionPathElement])
-     //       }
+    //from ('public_html') {
+	//include "**/*"
     //}
+
+    from (webRootSourceDir) {
+        include "**/*"
+            eachFile {
+                fileCopyDetails ->
+                fileCopyDetails.path = fileCopyDetails.path.replaceAll(/(.*\/|.*)@version@\/(.*)/, '$1/'+versionPathElement+'/$2')
+                fileCopyDetails.name = fileCopyDetails.name.replaceAll(/(.*)@version@(.*)/, '$1'+versionPathElement+'$2')
+            }
+            //replace @version@ with versionPathElement
+            filesMatching("**/*.js") {               
+		filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
+            filesMatching("**/*.html") {
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
+    }
     into stagingDir
 
     doLast {
        //this is here because of gradle bug, the old @version@ directory remains
-        //delete stagingDir+'/@version@'
-	//delete stagingDir+'/libs/@version@'
+       delete stagingDir+'/@version@'
+       delete stagingDir+'/libs/@version@'
     }
 }
 
 task stageJs(dependsOn: copyJsSource){
 }
 
+//define the JS source locations
 javascript.source {
-	dev {
+	staticjs {
             js {
-                srcDir 'public_html/emcsDependencies/uifwk'
+                srcDir 'public_html/js'
                 include "**/*.js"
 		exclude "**/*.orig.js"
             }
         }
+	cachedjs {
+	    js {
+		srcDir 'public_html/@version@/js'
+		//scrDir stagingDir+"/@version@/js"
+		include "**/*.js"
+		exclude "**/*.orig.js"
+	    }
+	}
 }
 
-javascript.source.dev.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.add(name: "dominify${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifystaticjs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 	String fileName = "${jsFile.name}"
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
-	def tmpFolder= parentDir.split("uifwk")
-	def sourceFile = stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+renamedFile
+	def tmpFolder= parentDir.split("js")
+	def sourceFile = stagingDir+"/js"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/js"+tmpFolder[1]+"/"+renamedFile
 	
 	doFirst{ 
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
@@ -101,7 +106,7 @@ javascript.source.dev.js.files.eachWithIndex { File jsFile, idx ->
         source = sourceFile
 	dest = sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+sourceMapFile)
+	sourceMap = file(stagingDir+"/js"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -114,7 +119,81 @@ javascript.source.dev.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/uifwk"+tmpFolder[1]+"/"+sourceMapFile)
+		File mapFile = new File(stagingDir+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		//logger.lifecycle("absPath:" + Pattern.quote(absPath))
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}	
+    }
+}
+
+javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "${jsFile.name}"
+	String renamedFile = fileName.replace(".",".orig.")
+	def parentDir = jsFile.parent
+	logger.lifecycle("jsFile: "+fileName)
+	logger.lifecycle("parentDir:" + parentDir)
+	def tmpFolder= parentDir.split("js") as String[]
+	//assert tmpFolder instanceof String[]
+	logger.lifecycle("tmpFolder:" + tmpFolder.length)
+	def sourceFile = "";
+	def destFile = "";
+	if ( tmpFolder.length > 1 )
+	{
+	    logger.lifecycle("sourceFile1:" + stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+fileName)
+    	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+fileName
+	    destFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+renamedFile
+	}
+	else
+	{
+		logger.lifecycle("sourceFile2:" + stagingDir+"/"+versionPathElement+"/js"+"/"+fileName)
+		logger.lifecycle("destFile2:" + stagingDir+"/"+versionPathElement+"/js"+"/"+renamedFile)
+	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+"/"+fileName
+	    destFile = stagingDir+"/"+versionPathElement+"/js"+"/"+renamedFile
+	}
+	
+	doFirst{ 
+		logger.lifecycle("sourceFile3:" + sourceFile)
+		logger.lifecycle("destFile3:" + destFile)
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+	
+
+        source = sourceFile
+	dest = sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+	if ( tmpFolder.length > 1 )
+	{
+	    sourceMap = file(stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+	}
+	else
+	{
+	    sourceMap = file(stagingDir+"/"+versionPathElement+"/js"+"/"+sourceMapFile)
+	}
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		//logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+		File mapFile = compiledFile
+		//fix file path in source map file
+		if ( tmpFolder.length > 1 )
+		{
+	    	     mapFile = new File(stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+		}
+		else
+		{
+	    	    mapFile = new File(stagingDir+"/"+versionPathElement+"/js"+"/"+sourceMapFile)
+		}
+		
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		//logger.lifecycle("absPath:" + Pattern.quote(absPath))
@@ -213,8 +292,9 @@ war.dependsOn individualMinify
 
 war {
 	from(stagingDir) {
-	       include '**/*'
-	        into('/')
+	    include '**/*'
+	    exclude '**/*.orig.js','**/*.map'
+	    into('/')
 	}
 
 	from('src/main/java') { 
@@ -232,8 +312,6 @@ war {
 //	into 'uifwk'
 //}
 
-
-
 dependencies {
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.2-19410', ext: 'war'){ transitive = false }	
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
@@ -243,18 +321,12 @@ check.dependsOn integTestJar
 
 publishing.publications {
     integTest(MavenPublication) {
-                        setArtifactId(project.name + '-' + integTestJar.appendix)
-                        setGroupId('com.oracle.emaas.emcpdf.test')
-                        artifact integTestJar.archivePath
+	setArtifactId(project.name + '-' + integTestJar.appendix)
+	setGroupId('com.oracle.emaas.emcpdf.test')
+        artifact integTestJar.archivePath
     }
-
 }
 
-
-
 artifactoryPublish {
-publications ('integTest')
-
-    }
-
-
+	publications ('integTest')
+}
