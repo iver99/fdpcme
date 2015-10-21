@@ -18,8 +18,8 @@ requirejs.config({
         'crossroads': '../../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../../emcsDependencies/oraclejet/js/libs/require/text',
         'dfutil': 'internaldfcommon/js/util/internal-df-util',
-        'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
-        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
+        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
+        'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -74,8 +74,8 @@ require(['ojs/ojcore',
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {
-                    viewModel: {require: '/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
-                    template: {require: 'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
+                    viewModel: {require: '/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
+                    template: {require: 'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
 
