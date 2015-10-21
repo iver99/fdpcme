@@ -179,11 +179,11 @@ body, html {
 }
 
 .dbd-toolbar-icon-add-widget:before {
-  content: url(images/func_plus_16_ena.png);
+  content: url(../images/func_plus_16_ena.png);
 }
 
 .dbd-toolbar-icon-save:before {
-  content: url(images/func_floppy_16_ena.png);
+  content: url(../images/func_floppy_16_ena.png);
 }
 
 .builder-toolbar-button-text {
@@ -514,31 +514,31 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .left-panel-dbd-widget-goto-icon {
     height: 16px;
     width: 16px;
-    content: url("images/func_arrowbox_16_ena.png");
+    content: url("../images/func_arrowbox_16_ena.png");
 }
 
 .left-panel-dbd-hide-region-icon:before {
     height: 16px;
     width: 16px;
-    content: url("images/region-hide.png");
+    content: url("../images/region-hide.png");
 }
 
 .left-panel-dbd-show-region-icon:before {
     height: 16px;
     width: 16px;
-    content: url("images/region-show.png");
+    content: url("../images/region-show.png");
 }
 
 .left-panel-dbd-clear-icon:before {
     height:16px;
     width:16px;
-    content:url("images/clearEntry_ena.png");
+    content:url("../images/clearEntry_ena.png");
 }
 
 .left-panel-dbd-search-icon:before {
     height:16px;
     width:16px;
-    content:url("images/func_search_16_ena.png");
+    content:url("../images/func_search_16_ena.png");
 }
 
 .dbd-left-panel-widget {

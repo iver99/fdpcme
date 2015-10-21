@@ -242,6 +242,14 @@ define(['knockout',
                 self.loadWidgets();
             };
             
+            self.searchWidgetsInputKeypressed = function(e, d) {
+                if (d.keyCode === 13) {
+                    self.searchWidgetsClicked();
+                    return false;
+                }
+                return true;
+            };
+            
             self.searchWidgetsClicked = function() {
                 self.page(1);
                 self.loadWidgets();
