@@ -156,7 +156,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }, self);
                                 
                 self.showBeyondWindowLimitError = ko.computed(function() {
-                    return !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
+                    return !self.showErrorMsg() && !self.showTimeValidateErrorMsg() && self.beyondWindowLimitError();
                 }, self);
 
                 self.applyButtonDisable = ko.computed(function() {
@@ -323,7 +323,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }else if(hours > 0) {
                         windowSize = msgUtil.formatMessage(nls.DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS, hours, mins);
                     }else{
-                        windowSize = msgUtil.formatMessage(nls.DATETIME_PICKER_WINDOW_SIZE_WITH_DAYS, mins);
+                        windowSize = msgUtil.formatMessage(nls.DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES, mins);
                     }
                     return windowSize;
                 };
@@ -606,17 +606,23 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.startTime(start.slice(10, 16));
                     self.endTime(end.slice(10, 16));
 
+                    var hyphenDisplay = "display: inline;";
                     start = self.adjustDateMoreFriendly(start.slice(0, 10));
                     end = self.adjustDateMoreFriendly(end.slice(0, 10));
+                    if(start === end) {
+                        end = "";
+                    }
                     
                     if(self.hideTimeSelection() === false) {
                         start = start + " " + self.timeConverter.format(self.startTime());
                         end = end + " " + self.timeConverter.format(self.endTime());
+                    }else {
+                        hyphenDisplay = end ? hyphenDisplay : "display: none;"
                     }
                     
                     self.dateTimeInfo("<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
                             start +
-                            "<span style='font-weight:bold'> - </span>" +
+                            "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" +
                             end);
                     
                     self.lastStartDate(self.startDate());
@@ -915,12 +921,19 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastStartTime(self.startTime());
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
-                    
+                   
+                    var hyphenDisplay = "display: inline;";
                     var startToShow = self.adjustDateMoreFriendly(self.startDateISO().slice(0, 10));
                     var endToShow = self.adjustDateMoreFriendly(self.endDateISO().slice(0, 10));
+                    //show "Today/Yesterday" only once
+                    if(startToShow === endToShow) {
+                        endToShow = "";
+                    }
                     if(self.hideTimeSelection() === true) {
                         var start = self.dateConverter.format(self.startDateISO().slice(0, 10));
                         var end = self.dateConverter.format(self.endDateISO().slice(0, 10));
+                        //hide hyphen when time range is "Today-Today"/"Yesterday-Yesterday"
+                        hyphenDisplay = endToShow ? "display: inline;" : "display: none;"
                     }else {
                         var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
                         var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
@@ -928,7 +941,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         endToShow = endToShow + " " + self.timeConverter.format(self.endTime());
                     }
                     self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
-                            + startToShow + "<span style='font-weight: bold'> - </span>"
+                            + startToShow + "<span style='font-weight: bold;" + hyphenDisplay + "'> - </span>"
                             + endToShow);
 
                     $(self.panelId).ojPopup("close");
