@@ -44,6 +44,9 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
             }
             filesMatching("**/*.html") {
                 filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }	
+	    filesMatching("**/*.css") {
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
             }
     }
     into stagingDir
@@ -53,9 +56,6 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
        delete stagingDir+'/@version@'
        delete stagingDir+'/libs/@version@'
     }
-}
-
-task stageJs(dependsOn: copyJsSource){
 }
 
 //define the JS source locations
@@ -262,7 +262,22 @@ war.archiveName "omc-ui-framework-web.war"
 
 copyJsSource.dependsOn unpackJETFromArtifactory, unpackFontFromArtifactory
 
-war.dependsOn individualMinify
+//copy files without minify when -PdevMode enabled
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackFontFromArtifactory]){
+    from(webRootSourceDir) {
+	include "**/*"
+    }
+    into stagingDir
+}
+
+if(project.hasProperty("devMode")){
+	war.dependsOn copyDevJs
+}
+else
+{
+	war.dependsOn individualMinify
+
+}
 
 war {
 	from(stagingDir) {
