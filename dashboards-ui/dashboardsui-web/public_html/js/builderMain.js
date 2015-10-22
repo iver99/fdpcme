@@ -37,9 +37,9 @@ requirejs.config({
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
-        'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
-        'idfbcutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-browser-close-util',
+        'dfutil':'../js/internaldfcommon/js/util/internal-df-util',
+        'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
+        'idfbcutil':'../js/internaldfcommon/js/util/internal-df-browser-close-util',
         'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
         'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
         'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
@@ -48,9 +48,9 @@ requirejs.config({
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
+        'emcsutl': '/emsaasui/uifwk/js/util',
         'ckeditor': '../emcsDependencies/ckeditor/ckeditor',
-        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
+        'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -129,14 +129,14 @@ require(['knockout',
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
-                    template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
+                    template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
             if (!ko.components.isRegistered('df-widget-selector')) {
                 ko.components.register("df-widget-selector",{
-                    viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/widgetselector/js/widget-selector.js'},
-                    template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/widgetselector/widget-selector.html'}
+                    viewModel:{require:'/emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js'},
+                    template:{require:'text!/emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html'}
                 });
             }
 //            ko.components.register("df-time-selector",{
@@ -144,16 +144,16 @@ require(['knockout',
 //                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
 //            });
 	    ko.components.register("df-datetime-picker",{
-         	viewModel: {require: '/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/js/datetime-picker.js'},
-	        template: {require: 'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/datetime-picker/datetime-picker.html'}
+         	viewModel: {require: '/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js'},
+	        template: {require: 'text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
 	    });
             ko.components.register("df-auto-refresh",{
-                viewModel:{require:'../emcsDependencies/autorefresh/js/auto-refresh'},
-                template:{require:'text!../emcsDependencies/autorefresh/auto-refresh.html'}
+                viewModel:{require:'../js/widgets/autorefresh/js/auto-refresh'},
+                template:{require:'text!../js/widgets/autorefresh/auto-refresh.html'}
             });
             ko.components.register("DF_V1_WIDGET_TEXT", {
-                viewModel: {require: '../emcsDependencies/widgets/textwidget/js/textwidget'},
-                template: {require: 'text!../emcsDependencies/widgets/textwidget/textwidget.html'}
+                viewModel: {require: '../js/widgets/textwidget/js/textwidget'},
+                template: {require: 'text!../js/widgets/textwidget/textwidget.html'}
             });
 
             function HeaderViewModel($b) {
