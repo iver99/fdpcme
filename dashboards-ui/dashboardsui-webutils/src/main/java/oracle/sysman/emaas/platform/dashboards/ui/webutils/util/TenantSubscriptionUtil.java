@@ -61,7 +61,7 @@ public class TenantSubscriptionUtil
 				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
 			}
 			else {
-				LogUtil.initializeInteractionLogContext(tenant, url, InteractionLogDirection.OUT);
+				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
 				itrLogger
 				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
 			}

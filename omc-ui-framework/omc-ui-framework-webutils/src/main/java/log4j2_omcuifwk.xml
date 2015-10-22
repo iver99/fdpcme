@@ -9,7 +9,7 @@
         <Property name="startupShutdownLog">omcUiFrameworkService_startup_shutdown.log</Property>
 	    <Property name="startupShutdownPattern">[%d{DEFAULT}{UTC}] [%p] [%t] [EMAAS] [OMC-UI-Framework] %m%n</Property>
         <Property name="interactionLog">omcUiFrameworkService_interaction.log</Property>
-	    <Property name="interactionPattern">[%d{DEFAULT}{UTC}] [%t] T[%X{tenantId}] [EMSAAS] [%X{serviceInvoked}] [%X{direction}] %m%n</Property>
+	    <Property name="interactionPattern">[%d{DEFAULT}{UTC}] [%p] [%t] T[%X{tenantId}] [EMSAAS] [%X{serviceInvoked}] [%X{direction}] %m%n</Property>
     </Properties>
 	<Appenders>
 		<Routing name="MAIN_LOG">
