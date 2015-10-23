@@ -70,8 +70,11 @@ public class TenantSubscriptionsAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSubscribedApplications(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("withEdition") String withEdition)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@QueryParam("withEdition") String withEdition)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/subscribedapps?withEdition={}",
+				withEdition);
 		if (withEdition != null && withEdition.toLowerCase().equals("true")) { // subscriptions with edition
 			return getSubscribedApplicationsWithEdition(tenantIdParam, userTenant);
 		}
@@ -95,6 +98,9 @@ public class TenantSubscriptionsAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	private Response getSubscribedApplicationsWithEdition(String tenantIdParam, String userTenant)
@@ -111,7 +117,7 @@ public class TenantSubscriptionsAPI extends APIBase
 					+ tenantsLink.getHref());
 			String tenantHref = tenantsLink.getHref() + "/" + tenantName;
 			TenantSubscriptionUtil.RestClient rc = new TenantSubscriptionUtil.RestClient();
-			String tenantResponse = rc.get(tenantHref);
+			String tenantResponse = rc.get(tenantHref, tenantName);
 			logger.debug("Checking tenant (" + tenantName + ") subscriptions with edition. Tenant response is " + tenantResponse);
 			JsonUtil ju = JsonUtil.buildNormalMapper();
 			TenantDetailEntity de = ju.fromJson(tenantResponse, TenantDetailEntity.class);
@@ -133,6 +139,9 @@ public class TenantSubscriptionsAPI extends APIBase
 		catch (IOException | UniformInterfaceException e) {
 			logger.error(e);
 			return buildErrorResponse(new ErrorEntity(new TenantWithoutSubscriptionException()));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 }

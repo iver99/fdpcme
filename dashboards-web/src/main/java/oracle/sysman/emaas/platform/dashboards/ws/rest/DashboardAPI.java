@@ -64,8 +64,10 @@ public class DashboardAPI extends APIBase
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, JSONObject dashboard)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			JSONObject dashboard)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards");
 		try {
 			logkeyHeaders("createDashboard()", userTenant, tenantIdParam);
 			Dashboard d = getJsonUtil().fromJson(dashboard.toString(), Dashboard.class);
@@ -89,13 +91,18 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@DELETE
 	@Path("{id: [1-9][0-9]*}")
 	public Response deleteDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") Long dashboardId)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/dashboards/{}", dashboardId);
 		DashboardManager manager = DashboardManager.getInstance();
 		try {
 			logkeyHeaders("deleteDashboard()", userTenant, tenantIdParam);
@@ -116,14 +123,20 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@GET
 	@Path("{id: [1-9][0-9]*}/screenshot")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDashboardBase64ScreenShot(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") Long dashboardId)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") Long dashboardId)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/screenshot",
+				dashboardId);
 		try {
 			logkeyHeaders("getDashboardBase64ScreenShot()", userTenant, tenantIdParam);
 			DashboardManager manager = DashboardManager.getInstance();
@@ -143,6 +156,9 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 
 	}
 
@@ -150,8 +166,10 @@ public class DashboardAPI extends APIBase
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") long dashboardId) throws DashboardException
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") long dashboardId) throws DashboardException
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
 		try {
 			logkeyHeaders("queryDashboardById()", userTenant, tenantIdParam);
@@ -169,16 +187,25 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboards(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("queryString") String queryString,
-			@DefaultValue("") @QueryParam("limit") Integer limit, @DefaultValue("0") @QueryParam("offset") Integer offset,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
+			@DefaultValue("0") @QueryParam("offset") Integer offset,
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
 			@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners)
 	{
+		infoInteractionLogAPIIncomingCall(
+				tenantIdParam,
+				referer,
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&types={}&appTypes={}&owners={}",
+				queryString, limit, offset, orderBy, types, appTypes, owners);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -212,14 +239,19 @@ public class DashboardAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("id") long dashboardId, JSONObject inputJson)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") long dashboardId, JSONObject inputJson)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}", dashboardId);
 		logkeyHeaders("updateDashboard()", userTenant, tenantIdParam);
 		Dashboard input = null;
 		try {
@@ -251,6 +283,9 @@ public class DashboardAPI extends APIBase
 		catch (BasicServiceMalfunctionException e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 

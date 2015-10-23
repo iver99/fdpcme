@@ -91,7 +91,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isSSFAvailable) {
 			rsm.markOutOfService();
-			logger.info("OMC UI Framework service is out of service because Saved Search API service is unavailable");
+			logger.error("OMC UI Framework service is out of service because Saved Search API service is unavailable");
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isDFApiAvailable) {
 			rsm.markOutOfService();
-			logger.info("OMC UI Framework service is out of service because Dashboard API service is unavailable");
+			logger.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
 			return;
 		}
 
