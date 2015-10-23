@@ -12,7 +12,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
                 var editor;
 //                var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
-                var defaultContent = '<p><span style="font-size: 18px"><strong>' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '</strong></span></p>';
+                var defaultContent = '<p><span style="font-family:arial,helvetica,sans-serif"><span style="font-size: 18px"><strong>' 
+                        + getNlsString("DBS_BUILDER_TEXT_WIDGET_SAMPLE") + '</strong></span></span></p>';
                 var preHeight;
                 
                 self.showErrorMsg = ko.observable(false);
@@ -72,7 +73,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                 self.showTextEditor = function () {
                     $("#textContentWrapper_" + self.randomId).hide();
-                    $("#textEditorWrapper_" + self.randomId).show();
+                    $("#textEditorWrapper_" + self.randomId).show();                       
                     $("#textEditor_" + self.randomId).focus();
                 }
 
@@ -81,7 +82,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     $("#textEditor_" + self.randomId).attr("contenteditable", "true");
 
                     editor = CKEDITOR.inline("textEditor_" + self.randomId, configOptions);
-
+                    
                     editor.on("instanceReady", function () {
                         this.setData(self.content());                        
                         $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
@@ -107,11 +108,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         self.show && self.show();
                         self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, self.showErrorMsg());
                     });
-
+                    
                     editor.on("focus", function () {
                         self.show && self.show();
                         self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
-                        preHeight = $("#textEditorWrapper_"+self.randomId).height();
+                        preHeight = $("#textEditorWrapper_"+self.randomId).height();                        
+                        setTimeout(function () {editor.execCommand("selectAll");}, 0);
                     });
                                        
                     editor.on("change", function() {
