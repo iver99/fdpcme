@@ -230,7 +230,7 @@ define({
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",
       "LANDING_HOME_VIDEOS_LINK": "Videos",
-      "LANDING_HOME_COMMUNITY_LINK": "OMC service offerings",
+      "LANDING_HOME_COMMUNITY_LINK": "Service Offerings",
       
       "DBS_BUILDER_EDIT_WIDGET_LINK": "Link",
       "DBS_BUILDER_EDIT_WIDGET_LINK_DESC": "Link to other dashboard",
