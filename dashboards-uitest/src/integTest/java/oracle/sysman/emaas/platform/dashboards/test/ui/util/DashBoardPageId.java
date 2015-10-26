@@ -152,5 +152,9 @@ public class DashBoardPageId {
 	
 	public static final String WelcomeID = "/html/body/div[2]/div/div[1]";//div[@class='welcome-slogan']";//"";                                                                                     
 
+	//welcome page verify
+//	public static final String APMLinkID = "id('mainContent')/x:div[2]/x:ul/x:li[1]/x:a/x:div/x:div[2]/x:div[1]";
+//	public static final String LALinkID = "id('LA_wrapper')/x:div/x:div[2]/x:div[2]";
+	//public static final String ITALinkID = 
 	
 }

@@ -520,9 +520,10 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		
-        login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName()+"-relogin","sso.welcome");
-        DashBoardUtils.loadWebDriverOnly(webd);
-        webd.getLogger().info("welcome page is being loaded, going to to verify...");
+        //login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName()+"-relogin","sso.welcome");
+        //DashBoardUtils.loadWebDriverOnly(webd);
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+        //webd.getLogger().info("welcome page is being loaded, going to to verify...");
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		DashBoardUtils.clickGVButton();
@@ -618,6 +619,20 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		webd.takeScreenShot();
 	}
+	/*
+	@Test
+	public void testWelcomepage() throws Excepition
+	{
+		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		webd.getLogger().info("start to test in testWelcomepage");
+		DashBoardUtils.clickNavigatorLink();
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		//Home link
+		webd.click(DashBoardPageId.HomeLinkID);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		
+		
+	}*/
 	
 
 }

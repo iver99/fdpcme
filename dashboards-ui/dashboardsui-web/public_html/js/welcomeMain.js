@@ -110,9 +110,12 @@ require(['ojs/ojcore',
                 
                 self.dashboardsUrl = "/emsaasui/emcpdfui/home.html";
                 self.landingHomeUrls = null;
-                self.getStartedUrl = "#";
-                self.videosUrl = "#";
-                self.communityUrl = "#";
+                self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                self.gsID = "em_home_gs";
+                self.videoID = "em_home_videos";
+                self.getStartedUrl = self.baseUrl + self.gsID;;
+                self.videosUrl = self.baseUrl + self.videoID;
+                self.communityUrl = "http://cloud.oracle.com/management";
                 
                 self.welcomeSlogan = getNlsString("LANDING_HOME_WELCOME_SLOGAN");
                 self.APM = getNlsString("LANDING_HOME_APM");
@@ -251,20 +254,20 @@ require(['ojs/ojcore',
                 };
                 self.openGetStarted = function() {
                     oj.Logger.info('Trying to open get started page by URL: ' + self.getStartedUrl);
-                    if(self.getStartedUrl) {                        
-                        window.location.href = self.getStartedUrl;
+                    if(self.getStartedUrl) {
+                        window.open(self.getStartedUrl, "_blank");
                     }
                 };
                 self.openVideos = function() {
                     oj.Logger.info('Trying to open Videos by URL: ' + self.videosUrl);
                     if(self.videosUrl) {
-                        window.location.href = self.videosUrl;
+                        window.open(self.videosUrl, "_blank");
                     }
                 };
                 self.openCommunity = function() {
                     oj.Logger.info('Trying to open Management Cloud Community by URL: ' + self.communityUrl);
                     if(self.communityUrl) {
-                        window.location.href = self.communityUrl; 
+                        window.open(self.communityUrl, "_blank");
                     }                   
                 };
             }

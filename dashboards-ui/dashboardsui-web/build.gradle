@@ -581,6 +581,7 @@ war.archiveName "dashboardsui-web.war"
 war {
 	from(compiledDir) {
 	       include '**/*'
+	       exclude '**/*.orig.js','**/*.map'
 	        into('/')
 	}
 	from('src/main/java') { 
