@@ -16,10 +16,10 @@ targetCompatibility = 1.7
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
 // source directories where jet, canvg, canvas files are copied
-def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
-def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'emcsDependencies/canvg')
-def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'emcsDependencies/html2canvas')
-def File sourceCKeditorDesDir = new File(sourceWebappDir, 'emcsDependencies/ckeditor')
+def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
+def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
+def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
+def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
 // 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
