@@ -576,6 +576,13 @@ task minifyHomeJs(dependsOn: minifyBuilderJs, type: com.eriwen.gradle.js.tasks.M
 //     jvmArgs '-Xmx2048M'
 //}
 
+//copy files without minify when -PdevMode enabled
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory]){
+    from('public_html') {
+	include "**/*"
+    }
+    into compiledDir
+}
 
 war.archiveName "dashboardsui-web.war"
 war {
@@ -592,7 +599,15 @@ war {
 	rootSpec.exclude("**/*.zip")
 }
 
-war.dependsOn minifyHomeJs//,compileSass
+if(project.hasProperty("devMode")){
+	war.dependsOn copyStagedJs
+}
+else
+{
+	war.dependsOn minifyHomeJs//,compileSass
+
+}
+
 
 dependencies {
         providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
