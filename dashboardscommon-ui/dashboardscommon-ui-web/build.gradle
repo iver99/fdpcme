@@ -177,6 +177,7 @@ war.dependsOn individualMinify
 war {
 	from(stagingDir) {
 	       include '**/*'
+	       exclude '**/*.orig.js','**/*.map'
 	        into('/')
 	}
 
@@ -192,6 +193,7 @@ task buildDFCommonLibZip(type: Zip){
 	baseName = 'emcs-ui-framework'
 	appendix = 'common'
 	from stagingDir+'/emcsDependencies/dfcommon/'
+	exclude '**/*.orig.js','**/*.map'
 	into 'dfcommon'
 }
 
