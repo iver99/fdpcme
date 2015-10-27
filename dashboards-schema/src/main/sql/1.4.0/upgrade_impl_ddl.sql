@@ -15,6 +15,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
+Rem    miayu     10/26/2015 - move to 1.4.0 folder
 Rem    miayu     10/16/2015 - move to 1.3.0 folder
 Rem    Guobao    09/28/2015 - Created
 
