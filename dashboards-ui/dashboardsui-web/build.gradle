@@ -1,6 +1,9 @@
 import java.nio.file.*
 import java.security.MessageDigest
 import java.util.regex.Pattern
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
 
 apply plugin: 'war'
 
@@ -8,6 +11,9 @@ apply plugin: 'war'
 
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
+
+jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -23,7 +29,8 @@ def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/cke
 // 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
-def File sourceDFCommonDestDir = new File(sourceWebappDir, 'emcsDependencies/dfcommon')
+//def File sourceDFCommonDestDir = new File(sourceWebappDir, 'emcsDependencies/dfcommon')
+def webRootSourceDir = 'public_html'
 
 configurations {
 	restDoc { transitive = false }
@@ -37,38 +44,72 @@ task cleanJs(type:Delete) {
 }
 
 task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
-    from ('public_html') {
-	include "**/*"
+    //from ('public_html') {
+	//include "**/*"
+    //}
+    //into stagingDir
+    from (webRootSourceDir) {
+        include "**/*"
+            eachFile {
+                fileCopyDetails ->
+                fileCopyDetails.path = fileCopyDetails.path.replaceAll(/(.*\/|.*)@version@\/(.*)/, '$1/'+versionPathElement+'/$2')
+                fileCopyDetails.name = fileCopyDetails.name.replaceAll(/(.*)@version@(.*)/, '$1'+versionPathElement+'$2')
+            }
+            //replace @version@ with versionPathElement
+            filesMatching("**/*.js") {               
+		filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
+            filesMatching("**/*.html") {
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }	
+	    filesMatching("**/*.css") {
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
     }
     into stagingDir
+
+    doLast {
+       //this is here because of gradle bug, the old @version@ directory remains
+       delete stagingDir+'/@version@'
+       delete stagingDir+'/libs/@version@'
+    }
 }
 
 //define the JS source locations
 javascript.source {
 	dev {
             js {
-                srcDir 'public_html/js'
+                srcDir 'public_html/@version@/js'
                 include "**/*.js"
             }
         }
 	internaldfcommon {
 	    js {
-		srcDir 'public_html/emcsDependencies/internaldfcommon/js/util'
+		srcDir 'public_html/@version@/js/internaldfcommon/js/util'
 		include "**/*.js"
 		exclude "**/*.orig.js"
 	    }
 	}
 	autorefresh {
 	    js {
-		srcDir 'public_html/emcsDependencies/autorefresh/js'
+		srcDir 'public_html/@version@/js/autorefresh/js'
 		include "**/*.js"
 		exclude "**/*.orig.js"
 	    }
 	}
 	widgets {
 	    js {
-		srcDir 'public_html/emcsDependencies/widgets/textwidget/js'
+		srcDir 'public_html/@version@/js/widgets/textwidget/js'
 		include "**/*.js"
+		exclude "**/*.orig.js"
+	    }
+	}
+	cachedjs {
+	    js {
+		srcDir 'public_html/@version@/js'
+		//scrDir stagingDir+"/@version@/js"
+		include "**/*.js"
+		exclude "*.js"
 		exclude "**/*.orig.js"
 	    }
 	}
@@ -303,14 +344,78 @@ task copyStagedJs(type:Copy, dependsOn:[cleanJs, stageJs]) {
     into compiledDir
 }
 
+javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+	String fileName = "${jsFile.name}"
+	String renamedFile = fileName.replace(".",".orig.")
+	def parentDir = jsFile.parent
+	def tmpFolder= parentDir.split("js") as String[]
+	def sourceFile = "";
+	def destFile = "";
+	if ( tmpFolder.length > 1 )
+	{
+    	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+fileName
+	    destFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+renamedFile
+	}
+	else
+	{
+	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+"/"+fileName
+	    destFile = stagingDir+"/"+versionPathElement+"/js"+"/"+renamedFile
+	}
+	
+	doFirst{ 
+	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+	}
+
+        source = sourceFile
+	dest = sourceFile
+	String sourceMapFile = fileName.replace(".js",".map")
+	if ( tmpFolder.length > 1 )
+	{
+	    sourceMap = file(stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+	}
+	else
+	{
+	    sourceMap = file(stagingDir+"/"+versionPathElement+"/js"+"/"+sourceMapFile)
+	}
+	
+	closure {
+	        warningLevel = 'QUIET'
+	}
+
+	doLast {
+		//update the compiled JS to point to the source map
+		File compiledFile = new File(sourceFile)
+		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+		//fix file path in source map file
+		File mapFile = compiledFile
+		if ( tmpFolder.length > 1 )
+		{
+	    	     mapFile = new File(stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+		}
+		else
+		{
+	    	    mapFile = new File(stagingDir+"/"+versionPathElement+"/js"+"/"+sourceMapFile)
+		}
+		
+		String contents = mapFile.getText('UTF-8')
+		String absPath = compiledFile
+		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+		mapFile.write(contents, 'UTF-8')
+    	}	
+    }
+}
+
+/*
 javascript.source.internaldfcommon.js.files.eachWithIndex { File jsFile, idx ->
     tasks.add(name: "dominifydfutil${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 	String fileName = "${jsFile.name}"
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
 	def tmpFolder = parentDir.split("internaldfcommon")
-	def sourceFile = stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+renamedFile
+	def sourceFile = stagingDir+"/"+versionPathElement+"/internaldfcommon"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/"+versionPathElement+"/internaldfcommon"+tmpFolder[1]+"/"+renamedFile
 	
 	doFirst{
 		logger.lifecycle("sourceFile:" + sourceFile)
@@ -320,7 +425,7 @@ javascript.source.internaldfcommon.js.files.eachWithIndex { File jsFile, idx ->
         source = sourceFile
 	dest =sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
+	sourceMap = file(stagingDir+"/"+versionPathElement+"/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -333,7 +438,7 @@ javascript.source.internaldfcommon.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
+		File mapFile = new File(stagingDir+"/"+versionPathElement+"/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		logger.lifecycle("sourceFile:" + sourceFile)
@@ -351,8 +456,8 @@ javascript.source.autorefresh.js.files.eachWithIndex { File jsFile, idx ->
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
 	def tmpFolder = parentDir.split("autorefresh")
-	def sourceFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+renamedFile
+	def sourceFile = stagingDir+"/"+versionPathElement+"/autorefresh"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/"+versionPathElement+"/autorefresh"+tmpFolder[1]+"/"+renamedFile
 	
 	doFirst{ 
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
@@ -361,7 +466,7 @@ javascript.source.autorefresh.js.files.eachWithIndex { File jsFile, idx ->
         source = sourceFile
 	dest =sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
+	sourceMap = file(stagingDir+"/"+versionPathElement+"/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -374,7 +479,7 @@ javascript.source.autorefresh.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
+		File mapFile = new File(stagingDir+"/"+versionPathElement+"/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		logger.lifecycle("absPath:" + Pattern.quote(absPath))
@@ -390,8 +495,8 @@ javascript.source.widgets.js.files.eachWithIndex { File jsFile, idx ->
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
 	def tmpFolder = parentDir.split("textwidget")
-	def sourceFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+renamedFile
+	def sourceFile = stagingDir+"/"+versionPathElement+"/widgets/textwidget"+tmpFolder[1]+"/"+fileName
+	def destFile = stagingDir+"/"+versionPathElement+"/widgets/textwidget"+tmpFolder[1]+"/"+renamedFile
 	
 	doFirst{ 
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
@@ -400,7 +505,7 @@ javascript.source.widgets.js.files.eachWithIndex { File jsFile, idx ->
         source = sourceFile
 	dest =sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
+	sourceMap = file(stagingDir+"/"+versionPathElement+"/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -413,7 +518,7 @@ javascript.source.widgets.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
+		File mapFile = new File(stagingDir+"/"+versionPathElement+"/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		logger.lifecycle("absPath:" + Pattern.quote(absPath))
@@ -422,13 +527,25 @@ javascript.source.widgets.js.files.eachWithIndex { File jsFile, idx ->
     	}	
     }
 }
+*/
 
 task individualUtilMinify(dependsOn:[copyStagedJs, tasks.matching { Task task -> task.name.startsWith("dominify")}])
 
-task require(type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+
+task prepareRequireJsConfig(type:Copy) {
+    from ('.') {
+	    include "dashboard.build.js"
+            //replace @version@ with versionPathElement
+            filter(ReplaceTokens, tokens: [version: versionPathElement])//, staging_dir:'../'+stagingDir+'/',compiled_dir:'../'+compiledDir+'/'])
+    }
+    into buildDir
+}
+
+
+task require(dependsOn: prepareRequireJsConfig, type: com.eriwen.gradle.js.tasks.RequireJsTask) {
 //requireJs {
     source = javascript.source.dev.js.files   //point to your source files
-    requirejs.buildprofile = file("dashboard.build.js") //this is where you configure the r.js compiler.  See this page for information on how to configure the r.js compiler.  This is what we do in target analytics.
+    requirejs.buildprofile = file(buildDir.absolutePath+"/dashboard.build.js") //this is where you configure the r.js compiler.  See this page for information on how to configure the r.js compiler.  This is what we do in target analytics.
     outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
 }
 
