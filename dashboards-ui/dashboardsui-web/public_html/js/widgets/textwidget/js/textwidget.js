@@ -11,7 +11,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 var self = this;
                 var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
                 var editor;
-//                var defaultContent = '<span style="font-size: 1.2em; font-weight: bold;">' + getNlsString("DBS_BUILDER_TEXT_WIDGET_EDIT") + '<span>';
                 var defaultContent = '<p><span style="font-family:arial,helvetica,sans-serif"><span style="font-size: 18px"><strong>' 
                         + getNlsString("DBS_BUILDER_TEXT_WIDGET_SAMPLE") + '</strong></span></span></p>';
                 var preHeight;
@@ -68,14 +67,110 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     ],
                     removePlugins: 'resize, elementspath',
                     startupFocus: false,
-                    uiColor: "#FFFFFF"
+                    uiColor: "#FFFFFF",
+                    linkShowAdvancedTab: false,
+                    linkShowTargetTab: false
+                    
                 }
+                var x,y,t;
+                self.textMouseDown = function(data, e) {
+                    x = e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft;
+                    y = e.clientY+document.body.scrollTop+document.documentElement.scrollTop;
+                }
+                self.textMouseUp = function(data, e) {
+                    if(e.which !== 1) {
+                        return;
+                    }
+                    //Do not open ckeditor when single click on hyperlink
+                    var elem = $(e.target);
+                    while(elem.attr("id") !== "textContentWrapper_"+self.randomId) {
+                       if(elem.is("a")) {
+                           return;
+                       }
+                       elem = elem.parent();
+                    }
 
+                    var tmpX  = e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft;;
+                    var tmpY = e.clientY+document.body.scrollTop+document.documentElement.scrollTop;
+                    if(x!==tmpX || y!==tmpY) {
+//                        console.log("dragged");
+                        return;
+                    }else {
+//                        console.log("clicked");
+                        self.textClicked(data, e);
+                    }
+                }
+                
+                
+                
+                var delay = 300;
+                var clicks = 0;
+                var timerClickType = null, timerSetCaret = null, timerHighlight = null;
+                
+                function insertBreakAtPoint(e) {
+                    var range, caretPosition;
+                    var textNode;
+                    var offset;
+
+                    if (document.caretPositionFromPoint) {
+                        caretPosition = document.caretPositionFromPoint(e.clientX, e.clientY);
+                        textNode = caretPosition.offsetNode;
+                        offset = caretPosition.offset;
+                        range = document.createRange();
+                    } else if (document.caretRangeFromPoint) {
+                        range = document.caretRangeFromPoint(e.clientX, e.clientY);
+                        textNode = range.startContainer;
+                        offset = range.startOffset;                        
+                    }                    
+                    var sel = window.getSelection();
+                    range.setStart(textNode, offset);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);                  
+                }
+                
+                self.textClicked = function(data, e) {
+                    clicks++;
+                    if(clicks === 1) {
+                        timerClickType = setTimeout(function() {
+//                            console.log("single click");
+                            clicks = 0;                            
+                            self.showTextEditor();
+                            timerSetCaret = setTimeout(function() {insertBreakAtPoint(e)}, 400);
+                        }, delay);             
+                    }else {
+                        clearTimeout(timerSetCaret);
+                        clearTimeout(timerClickType);
+//                        console.log("double click");
+                        clicks = 0;
+                        self.editTextEditor();
+                    }
+                }
+                
+                self.editTextEditor = function() {
+                    self.showTextEditor();
+                    editor.execCommand("selectAll");
+                }
+                
                 self.showTextEditor = function () {
                     $("#textContentWrapper_" + self.randomId).hide();
                     $("#textEditorWrapper_" + self.randomId).show();                       
                     $("#textEditor_" + self.randomId).focus();
                 }
+                
+                CKEDITOR.on('dialogDefinition', function(ev) {
+                    // Take the dialog name and its definition from the event data.
+                    var dialogName = ev.data.name;
+                    var dialogDefinition = ev.data.definition;
+
+                    dialogDefinition.height = "150px";
+                    dialogDefinition.resizable = CKEDITOR.DIALOG_RESIZE_NONE;
+                    if (dialogName == 'link') {
+                        //remove link type and set its option as "URL"
+                        var infoTab = dialogDefinition.getContents("info");
+                        infoTab.get("linkType").style = "display: none;";
+                    }
+                });
 
                 self.loadEditor = function (data, event) {
                     $("#textEditor").attr("id", "textEditor_" + self.randomId);
@@ -84,13 +179,26 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     editor = CKEDITOR.inline("textEditor_" + self.randomId, configOptions);
                     
                     editor.on("instanceReady", function () {
+                        this.dataProcessor.htmlFilter.addRules({
+                            elements: {
+                                a: function(element) {
+                                    element.attributes.target = "_blank";
+                                }
+                            }
+                        });
                         this.setData(self.content());                        
                         $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
                         $("#textEditorWrapper_" + self.randomId).hide();
                         self.show && self.show();
                         self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, self.showErrorMsg());
+                        
                     });
-
+//                    editor.addCommand("changeTextColorIcon", {
+//                            exec: function() {
+//                                $(".cke_button__textcolor_icon").css("background", 'url(/emsaasui/emcpdfui/images/alert.png)');
+//                            }
+//                        });
+                    
                     editor.on("blur", function () {
                         if(!this.getData()) {
                             this.setData(defaultContent);
@@ -110,10 +218,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     });
                     
                     editor.on("focus", function () {
+//                        editor.execCommand("changeTextColorIcon");
                         self.show && self.show();
                         self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
-                        preHeight = $("#textEditorWrapper_"+self.randomId).height();                        
-                        setTimeout(function () {editor.execCommand("selectAll");}, 0);
+                        preHeight = $("#textEditorWrapper_"+self.randomId).height();
                     });
                                        
                     editor.on("change", function() {
@@ -159,4 +267,4 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.loadEditor();
             }
             return textWidgetViewModel;
-        });
+        });        
