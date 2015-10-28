@@ -15,16 +15,16 @@ import org.testng.annotations.Test;
 public class TileParamTest
 {
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testGetValue()
 	{
-		Logger logger = EMTestLogger.getLogger("testGetValue");
+		//Logger logger = EMTestLogger.getLogger("testGetValue");
 
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_STRING);
 		tp.setStringValue("test");
 		Assert.assertEquals("test", tp.getValue(), tp.toString());
-		logger.info("Values inside TileParam is: " + tp.toString());
+		//logger.info("Values inside TileParam is: " + tp.toString());
 
 		tp.setType(null);
 		BigDecimal bd = new BigDecimal(1024);
@@ -43,10 +43,10 @@ public class TileParamTest
 		Assert.assertNull(tp.getValue());
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testSetValue() throws CommonFunctionalException
 	{
-		Logger logger = EMTestLogger.getLogger("testSetValue");
+		//Logger logger = EMTestLogger.getLogger("testSetValue");
 
 		TileParam tp = new TileParam();
 		tp.setType(TileParam.PARAM_TYPE_NUMBER);
@@ -66,11 +66,11 @@ public class TileParamTest
 
 		tp.setType(TileParam.PARAM_TYPE_BOOLEAN);
 		tp.setValue("true");
-		logger.info("Values inside TileParam is: " + tp.toString());
+		//logger.info("Values inside TileParam is: " + tp.toString());
 		System.out.println("Values inside TileParam is: " + tp.toString());
 		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue("TRUE");
-		logger.info("Values inside TileParam is: " + tp.toString());
+		//logger.info("Values inside TileParam is: " + tp.toString());
 		System.out.println("Values inside TileParam is: " + tp.toString());
 		Assert.assertEquals(tp.getValue(), Boolean.TRUE.toString(), tp.toString());
 		tp.setValue(null);

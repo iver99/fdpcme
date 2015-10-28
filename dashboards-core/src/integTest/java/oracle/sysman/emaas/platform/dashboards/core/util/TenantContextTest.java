@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
  */
 public class TenantContextTest
 {
-	@Test
+	@Test(groups = { "s1" })
 	public void testClearCurrentUser()
 	{
 		String testTenant = "tenant";

@@ -60,6 +60,10 @@
                                                 <div data-bind="visible: showServiceFilter">
                                                 <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
                                                 <div id="servicecb"  aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: serviceFilter, optionChange: handleServiceFilterChanged}">
+                                                    <span class="oj-choice-row" data-bind="visible: showApmSrviceFilter">
+                                                        <input id="apmopt" type="checkbox" name="services" value="APM">
+                                                        <label for="apmopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_APM_ABBR')"></label>
+                                                    </span>
                                                     <span class="oj-choice-row" data-bind="visible: showItaServiceFilter">
                                                         <input id="itaopt" type="checkbox" name="services" value="ITAnalytics">
                                                         <label for="itaopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_ITA')"></label>
@@ -67,10 +71,6 @@
                                                     <span class="oj-choice-row" data-bind="visible: showLaServiceFilter">
                                                         <input id="laopt" type="checkbox" name="services" value="LogAnalytics">
                                                         <label for="laopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LA')"></label>
-                                                    </span>
-                                                    <span class="oj-choice-row" data-bind="visible: showApmSrviceFilter">
-                                                        <input id="apmopt" type="checkbox" name="services" value="APM">
-                                                        <label for="apmopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_APM_ABBR')"></label>
                                                     </span>
                                                 </div>
                                                 </div>

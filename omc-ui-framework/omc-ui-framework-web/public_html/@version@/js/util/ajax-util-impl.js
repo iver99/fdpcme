@@ -64,24 +64,23 @@ define([
                 };
                 
                 var ajaxCallDfd = $.Deferred();
- 
+                var jqXhrObj = null;
+                //Add ability to abort ajaxWithRetry calls
+                ajaxCallDfd.abort = function(){
+                    if (jqXhrObj !== null && $.isFunction(jqXhrObj.abort)) {
+                        return jqXhrObj.abort();
+                    }
+                };
+                
                 (function ajaxCall (retries) {
-                    var dfd = $.ajax(retryOptions);
-                    dfd.done(function (data, textStatus, jqXHR) {
+                    jqXhrObj = $.ajax(retryOptions);
+                    jqXhrObj.done(function (data, textStatus, jqXHR) {
                         removeMessage(messageId);
                         ajaxCallDfd.resolve(data, textStatus, jqXHR);
-                    });
-                    dfd.fail(function (jqXHR, textStatus, errorThrown) {
-                        //TODO: session timeout handling as below is not available actually, need to update once find out the solution to catch status 302
-                        //If session timeout (status = 302), make a browser refresh call which then will redirect to sso login page
-                        if (jqXHR.status === 302) {
-                            var sessionTimeoutMsg = nls.BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING;
-                            logMessage(retryOptions.url, 'warn', sessionTimeoutMsg);
-                            
-                            location.reload(true);
-                        }
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
                         //Do retry
-                        else if (jqXHR.status === 408 || jqXHR.status === 503 || jqXHR.status === 0) {
+                        if (jqXHR.status === 408 || jqXHR.status === 503 || (jqXHR.status === 0 && textStatus !== 'abort')) {
                             retryCount++;
                             if (retries > 0) {
                                 //remove old retry message
