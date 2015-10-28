@@ -15,18 +15,19 @@ package oracle.sysman.emaas.platform.uifwk.timepicker.test.ui;
  */
 public class UIControls
 {
-	//Begin: Text	
+	//Begin: Text
 	public static final String sStartText = "//*[@id='start']";
 	public static final String sEndText = "//*[@id='end']";
 	public static final String sTimePeriod = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/span";
+	public static final String sErrorMsg = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[4]";
 	//End: Text
-	
+
 	//Begin: InputText
 	public static final String sStartDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[1]/div/input";
 	public static final String sStartTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[2]/div/div/input";
 	public static final String sEndDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[4]/div/input";
 	public static final String sEndTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[5]/div/div/input";
-	
+
 	//End: InputText
 
 	//Begin: Button
@@ -34,9 +35,9 @@ public class UIControls
 	public static final String sTimeRangeBtn_1_new = "/html/body/div[2]/div[2]/div/button";
 	public static final String sTimeRangeBtn_2 = "/html/body/div[1]/div[4]/div/div/button";
 	public static final String sTimeRangeBtn_2_new = "/html/body/div[2]/div[4]/div/div/button";
-	public static final String sApplyBtn ="//*[@id='applyButton']";
+	public static final String sApplyBtn = "//*[@id='applyButton']";
 	public static final String sCancelBtn = "//*[@id='cancelButton']";
-	
+
 	public static final String sLast15MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[1]";
 	public static final String sLast30MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[2]";
 	public static final String sLast60MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[3]";
@@ -55,6 +56,6 @@ public class UIControls
 	//End: Icon
 
 	//Begin: Components
-	public static final String sPickPanel = "/html/body/div[1]/div/div/div[1]/div";	
+	public static final String sPickPanel = "/html/body/div[1]/div/div/div[1]/div";
 	//End: Components
 }

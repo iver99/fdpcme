@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  */
 public class ErrorEntityTest
 {
-	@Test
+	@Test(groups = { "s1" })
 	public void testErrorEntity()
 	{
 		BasicServiceMalfunctionException e = new BasicServiceMalfunctionException("Test Message", "Test Message");

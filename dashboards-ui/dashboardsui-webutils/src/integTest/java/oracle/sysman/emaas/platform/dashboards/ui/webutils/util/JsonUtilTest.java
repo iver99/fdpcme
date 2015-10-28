@@ -56,7 +56,7 @@ public class JsonUtilTest
 
 	private static final String json = "{\"param1\":100,\"param2\":\"value2\"}";
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testFromJsonForJavaType() throws JsonProcessingException, IOException
 	{
 		JsonUtil ju = JsonUtil.buildNonDefaultMapper();
@@ -70,7 +70,7 @@ public class JsonUtilTest
 		Assert.assertNull(tc);
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testFromJsonForJsonNode() throws JsonProcessingException, IOException
 	{
 		JsonUtil ju = JsonUtil.buildNonDefaultMapper();
@@ -81,7 +81,7 @@ public class JsonUtilTest
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test
+	@Test (groups = {"s1"})
 	public void testFromJsonForString() throws JsonProcessingException, IOException
 	{
 		JsonUtil ju = JsonUtil.buildNonDefaultMapper();
@@ -94,7 +94,7 @@ public class JsonUtilTest
 		Assert.assertNull(tc);
 	}
 
-	@Test
+        @Test (groups = {"s1"})
 	public void testFromJsonForStringParametricType() throws JsonProcessingException, IOException
 	{
 		JsonUtil ju = JsonUtil.buildNonDefaultMapper();
@@ -103,7 +103,7 @@ public class JsonUtilTest
 		Assert.assertEquals(tc.getParam2(), "value2");
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testToJson() throws IOException
 	{
 		JsonUtil ju = JsonUtil.buildNonDefaultMapper();

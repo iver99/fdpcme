@@ -54,14 +54,14 @@ public class SchemaUtilTest
 			+ "\"http://slc07hgf.us.oracle.com:7001/lifecycle-schema-service/LifecycleInvManager\","
 			+ "\"https://slc07hgf.us.oracle.com:7002/lifecycle-schema-service/LifecycleInvManager\"" + "]" + "}]}";
 
-	@Test
+	@Test(groups = { "s1" })
 	public void testGetDeploymentUrl()
 	{
 		List<String> urls = SchemaUtil.getDeploymentUrl(urlItems);
 		Assert.assertEquals(urls.get(0), "http://slc07hgf.us.oracle.com:7001/lifecycle-schema-service/LifecycleInvManager");
 	}
 
-	@Test
+	@Test(groups = { "s1" })
 	public void testGetSchemaUserBySoftwareName()
 	{
 		SchemaUtil su = new SchemaUtil();

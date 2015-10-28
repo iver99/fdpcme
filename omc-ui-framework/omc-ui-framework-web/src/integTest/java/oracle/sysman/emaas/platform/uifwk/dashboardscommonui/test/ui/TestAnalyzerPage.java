@@ -38,7 +38,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 			webdriver.getLogger().info("Wait for the common UI page loading");
 			webdriver.waitForElementPresent("toolbar-left");
 			webdriver.takeScreenShot();
-
+			Thread.sleep(10000);
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
@@ -166,7 +166,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 			webdriver.getLogger().info("Wait for the common UI page loading");
 			webdriver.waitForElementPresent("toolbar-left");
 			webdriver.takeScreenShot();
-	
+			Thread.sleep(10000);
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
@@ -280,7 +280,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 			webdriver.getLogger().info("Wait for the common UI page loading");
 			webdriver.waitForElementPresent("toolbar-left");
 			webdriver.takeScreenShot();
-	
+			Thread.sleep(10000);
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
@@ -394,7 +394,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 			webdriver.getLogger().info("Wait for the common UI page loading");
 			webdriver.waitForElementPresent("toolbar-left");
 			webdriver.takeScreenShot();
-	
+			Thread.sleep(10000);
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
@@ -508,7 +508,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 			webdriver.getLogger().info("Wait for the common UI page loading");
 			webdriver.waitForElementPresent("toolbar-left");
 			webdriver.takeScreenShot();
-	
+			Thread.sleep(10000);
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));
@@ -622,7 +622,7 @@ public class TestAnalyzerPage extends CommonUIUtils
 			webdriver.getLogger().info("Wait for the common UI page loading");
 			webdriver.waitForElementPresent("toolbar-left");
 			webdriver.takeScreenShot();
-	
+			Thread.sleep(10000);
 			//verify the product name,app name,content of page
 			webdriver.getLogger().info("Verify the page content");
 			Assert.assertTrue(webdriver.isElementPresent(UIControls.sOracleImage));

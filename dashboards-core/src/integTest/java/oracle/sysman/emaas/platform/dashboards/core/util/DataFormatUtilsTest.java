@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
  */
 public class DataFormatUtilsTest
 {
-	@Test
+	@Test (groups = {"s1"})
 	public void testDashboardTypeString2Integer() throws CommonFunctionalException
 	{
 		Assert.assertEquals(Dashboard.DASHBOARD_TYPE_CODE_NORMAL, DataFormatUtils.dashboardTypeString2Integer(null));
@@ -36,7 +36,7 @@ public class DataFormatUtilsTest
 				DataFormatUtils.dashboardTypeString2Integer(Dashboard.DASHBOARD_TYPE_NORMAL));
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testDate2Timestamp()
 	{
 		Assert.assertNull(DataFormatUtils.date2Timestamp(null));
@@ -46,7 +46,7 @@ public class DataFormatUtilsTest
 		Assert.assertEquals(current, rtn.getTime());
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testInteger2Boolean()
 	{
 		Assert.assertNull(DataFormatUtils.integer2Boolean(null));
@@ -57,7 +57,7 @@ public class DataFormatUtilsTest
 		Assert.assertFalse(DataFormatUtils.integer2Boolean(0));
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testLong2BigDecimal()
 	{
 		Assert.assertNull(DataFormatUtils.long2BigDecimal(null));
@@ -66,7 +66,7 @@ public class DataFormatUtilsTest
 		Assert.assertEquals(DataFormatUtils.long2BigDecimal(Long.MAX_VALUE), new BigDecimal(Long.MAX_VALUE));
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testTileParamTypeInteger2String()
 	{
 		Assert.assertEquals(DataFormatUtils.tileParamTypeInteger2String(TileParam.PARAM_TYPE_CODE_NUMBER),
@@ -80,7 +80,7 @@ public class DataFormatUtilsTest
 		Assert.assertEquals(DataFormatUtils.tileParamTypeInteger2String(null), TileParam.PARAM_TYPE_STRING);
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testTileParamTypeString2Integer() throws CommonFunctionalException
 	{
 		Assert.assertEquals(DataFormatUtils.tileParamTypeString2Integer(TileParam.PARAM_TYPE_STRING),
@@ -99,7 +99,7 @@ public class DataFormatUtilsTest
 		}
 	}
 
-	@Test
+	@Test (groups = {"s1"})
 	public void testTimestamp2Date()
 	{
 		long current = System.currentTimeMillis();

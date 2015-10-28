@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -144,7 +146,13 @@ public class DashboardsCORSFilter implements Filter
 		HttpServletRequest oamRequest = new OAMHttpRequestWrapper(hReq);
 		// Only add CORS headers if the developer mode is enabled to add them
 		if (!new java.io.File("/var/opt/ORCLemaas/DEVELOPER_MODE-ENABLE_CORS_HEADERS").exists()) {
-			chain.doFilter(oamRequest, response);
+			try {
+			        chain.doFilter(oamRequest, response);
+		        }
+		        catch (Exception e) {
+			        logger.error(e.getLocalizedMessage(), e);
+			        hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
+		        }
 			logger.debug("developer mode is NOT enabled on server side");
 			return;
 		}
@@ -162,7 +170,13 @@ public class DashboardsCORSFilter implements Filter
 		hRes.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept,X-USER-IDENTITY-DOMAIN-NAME,X-REMOTE-USER,Authorization,x-sso-client");
 
-		chain.doFilter(oamRequest, response);
+		try {
+			chain.doFilter(oamRequest, response);
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			hRes.sendError(500, MessageUtils.getDefaultBundleString("REST_API_EXCEPTION"));
+		}
 	}
 
 	@Override

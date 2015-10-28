@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
  */
 public class TenantSubscriptionUtilTest
 {
-	@Test
+	@Test(groups = { "s1" })
 	public void testIsAPMServiceOnly()
 	{
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(null));
