@@ -1,0 +1,73 @@
+/* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.*/
+
+/*
+ * DESCRIPTION
+ *  This is setup task, run before running any EMTest task in each lrg.
+ *  Also used for refreshing or cleaning up solr and db data for querylanguage tests
+ * PRIVATE CLASSES
+ *     NONE
+ *
+ * NOTES
+ *    <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ * shhua 					-created
+ * weilia        04/16/15	-Added tasks to refresh solr and db data before tests
+ * weilia		 05/08/15   -Added a task to onboard an user without LA privilege
+ * weilia		 05/18/15   -Added buildLogLink to enable link "/var/opt/ORCLemaas->/scratch/var_opt_ORCLemaas" for tests
+ */
+apply plugin: 'java'
+apply plugin: 'groovy'
+import groovy.sql.Sql
+import groovy.json.JsonSlurper
+import groovy.util.XmlSlurper
+import java.util.regex.*
+
+
+
+
+
+/**********************************************************************
+ *	Preparing data refreshment
+ *
+ **********************************************************************/
+
+
+
+URLClassLoader loader = GroovyObject.class.classLoader
+
+
+
+
+String getGitRoot()
+{
+	def gitRoot=['git','rev-parse','--show-toplevel'].execute()
+	return ((gitRoot.text).replace("\n",""))
+}
+
+String getBranch()
+{	
+	String branchName="";
+	println "Get branch name via git branch."
+	try{
+		String branches=['git','branch'].execute().text
+		if(branches!=null||!branches.trim().isEmpty())
+		{
+			String stringAfterStar = branches.substring(branches.indexOf('*')+1)
+			branchName = stringAfterStar.substring(0,stringAfterStar.indexOf("\n")).trim();
+		}
+	}catch(Exception e){
+		println "Warning: Cannot get correct branch name via 'git branch',return empty string."
+		branchName=" ";
+	}	
+   
+   println "Current branch is: "+branchName
+   return branchName
+}
+
+ext{
+getBranch=this.&getBranch
+getGitRoot=this.&getGitRoot
+}
+
+

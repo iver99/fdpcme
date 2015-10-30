@@ -33,6 +33,8 @@ buildscript {
 }
 
 apply plugin: 'TestInfraPlugin'
+
+apply from: 'setup.gradle'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -78,24 +80,24 @@ restAssured.exclude module: 'groovy'
 }
 }
 
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_qa_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-            }
-        }
-    }
-    useWebdriver = true
-    useRestAssured = true
+task UndeployDFAPI(type:Exec) {
+
+        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerUndeploy'
+ ext.output = {
+    return standardOutput.toString()
+  }
+
+
 }
 
-     task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
+
+task DeployDFAPI(type:Exec,dependsOn: UndeployDFAPI) {
+
+        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerDeploy'
+	 
+}
+
+     task QATest(type:EMTest,dependsOn: DeployDFAPI){ 
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
@@ -107,22 +109,8 @@ task small_deploy_3n_block(type: EMTest) {
 	useRestAssured=true
 	ext.set("testType", "integration")
 }
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,QATest])
-}
 
 
-task emcpdf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+
+task emcpdf_qa_test_3n (dependsOn: QATest)
 
