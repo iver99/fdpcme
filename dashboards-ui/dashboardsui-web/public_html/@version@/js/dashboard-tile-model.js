@@ -34,7 +34,7 @@ define(['knockout',
         ko.mapping = km;
         
         var defaultCols = 8;
-        var defaultHeight = 260;
+        var defaultHeight = 186;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
         var widgetAreaWidth = 0;
@@ -612,7 +612,7 @@ define(['knockout',
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
             self.widgetCssStyle = ko.computed(function() {
-                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54-20) + "px;";
+                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-58-20) + "px;";
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
@@ -1574,7 +1574,7 @@ define(['knockout',
                         left: tile.left(),
                         top: tile.top(),
                         width: ui.helper.width() -20,
-                        height: ui.helper.height() - 20
+                        height: ui.helper.height() - 20 - 20
                     }).show();
                     startTime = curTime;
                 }
@@ -1625,7 +1625,7 @@ define(['knockout',
                     left: tile.left(),
                     top: tile.top(),
                     width: tile.cssWidth() -20,
-                    height: tile.cssHeight() - 20
+                    height: tile.cssHeight() - 20 - 20
                 }).show();
                 startTime = curTime;
             };
