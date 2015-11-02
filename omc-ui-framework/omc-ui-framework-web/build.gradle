@@ -83,8 +83,25 @@ javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
 	String renamedFile = fileName.replace(".",".orig.")
 	def parentDir = jsFile.parent
 	def tmpFolder= parentDir.split("js")
-	def sourceFile = stagingDir+"/js"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/js"+tmpFolder[1]+"/"+renamedFile
+	def sourceFile = "";
+	def destFile = "";
+	def tmp ="";
+
+	if ( parentDir.endsWith("/js")){
+		for(int i=1; i<tmpFolder.length;i++){
+		    tmp=tmp+'js'+tmpFolder[i]
+		}
+		sourceFile = stagingDir+"/"+tmp+"/js/"+fileName
+		destFile = stagingDir+"/"+tmp+"/js/"+renamedFile
+	}
+	else
+	{
+		for(int i=1; i<tmpFolder.length;i++){
+		    tmp=tmp+'js'+tmpFolder[i]
+		}
+		sourceFile = stagingDir+"/"+tmp+"/"+fileName
+		destFile = stagingDir+"/"+tmp+"/"+renamedFile
+	}
 	
 	doFirst{ 
 	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
@@ -93,7 +110,15 @@ javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
         source = sourceFile
 	dest = sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+		
+	if ( parentDir.endsWith("/js") )
+	{
+	    sourceMap = file(stagingDir+"/"+tmp+"/js/"+sourceMapFile)
+	}
+	else
+	{
+	    sourceMap = file(stagingDir+"/"+tmp+"/"+sourceMapFile)
+	}
 	
 	closure {
 	        warningLevel = 'QUIET'
@@ -105,7 +130,17 @@ javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
 		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
 
 		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+		File mapFile = compiledFile
+		
+		if ( parentDir.endsWith("/js") )
+		{
+	    	     mapFile = new File(stagingDir+"/"+tmp+"/js/"+sourceMapFile)
+		}
+		else
+		{
+	    	    mapFile = new File(stagingDir+"/"+tmp+"/"+sourceMapFile)
+		}
+
 		String contents = mapFile.getText('UTF-8')
 		String absPath = compiledFile
 		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
@@ -122,15 +157,22 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
 	def tmpFolder= parentDir.split("js") as String[]
 	def sourceFile = "";
 	def destFile = "";
-	if ( tmpFolder.length > 1 )
-	{
-    	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+fileName
-	    destFile = stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+renamedFile
+	def tmp ="";
+
+	if ( parentDir.endsWith("/js")){
+		for(int i=1; i<tmpFolder.length;i++){
+		    tmp=tmp+'js'+tmpFolder[i]
+		}
+		sourceFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+fileName
+		destFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+renamedFile
 	}
 	else
 	{
-	    sourceFile = stagingDir+"/"+versionPathElement+"/js"+"/"+fileName
-	    destFile = stagingDir+"/"+versionPathElement+"/js"+"/"+renamedFile
+		for(int i=1; i<tmpFolder.length;i++){
+		    tmp=tmp+'js'+tmpFolder[i]
+		}
+		sourceFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/"+fileName
+		destFile = stagingDir+"/"+versionPathElement+"/"+tmp+"/"+renamedFile
 	}
 	
 	doFirst{ 
@@ -140,15 +182,15 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
         source = sourceFile
 	dest = sourceFile
 	String sourceMapFile = fileName.replace(".js",".map")
-	if ( tmpFolder.length > 1 )
+	if ( parentDir.endsWith("/js") )
 	{
-	    sourceMap = file(stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+	    sourceMap = file(stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
 	}
 	else
 	{
-	    sourceMap = file(stagingDir+"/"+versionPathElement+"/js"+"/"+sourceMapFile)
+	    sourceMap = file(stagingDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
 	}
-	
+
 	closure {
 	        warningLevel = 'QUIET'
 	}
@@ -160,13 +202,13 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
 
 		//fix file path in source map file
 		File mapFile = compiledFile
-		if ( tmpFolder.length > 1 )
+		if ( parentDir.endsWith("/js") )
 		{
-	    	     mapFile = new File(stagingDir+"/"+versionPathElement+"/js"+tmpFolder[1]+"/"+sourceMapFile)
+	    	     mapFile = new File(stagingDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
 		}
 		else
 		{
-	    	    mapFile = new File(stagingDir+"/"+versionPathElement+"/js"+"/"+sourceMapFile)
+	    	    mapFile = new File(stagingDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
 		}
 		
 		String contents = mapFile.getText('UTF-8')
