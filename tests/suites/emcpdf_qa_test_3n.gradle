@@ -83,9 +83,6 @@ restAssured.exclude module: 'groovy'
 task UndeployDFAPI(type:Exec) {
 
         commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerUndeploy'
- ext.output = {
-    return standardOutput.toString()
-  }
 
 
 }
@@ -94,10 +91,18 @@ task UndeployDFAPI(type:Exec) {
 task DeployDFAPI(type:Exec,dependsOn: UndeployDFAPI) {
 
         commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerDeploy'
-	 
+	}
+task PropsCopy(type: Copy,dependsOn: DeployDFAPI) {
+   from '/net/slc07ctj/scratch/emaas/setuplogs/'
+   into '../../oracle/work/'
+    include '*.log'
 }
 
-     task QATest(type:EMTest,dependsOn: DeployDFAPI){ 
+
+
+
+
+     task QATest(type:EMTest,dependsOn: PropsCopy){ 
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"

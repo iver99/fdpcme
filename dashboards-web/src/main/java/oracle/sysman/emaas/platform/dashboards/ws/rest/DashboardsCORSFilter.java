@@ -77,9 +77,9 @@ public class DashboardsCORSFilter implements Filter
 					headerNames.add(X_USER_IDENTITY_DOMAIN_NAME_HEADER);
 				}
 				if (headerNames != null) {
-					Enumeration<String> em = request.getHeaderNames();
+					Enumeration em = request.getHeaderNames();
 					while (em.hasMoreElements()) {
-						headerNames.add(em.nextElement());
+						headerNames.add((String)em.nextElement());
 					}
 				}
 			}
@@ -101,7 +101,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
-		public Enumeration<String> getHeaderNames()
+		public Enumeration getHeaderNames()
 		{
 			if (headerNames != null) {
 				return headerNames.elements();
@@ -112,7 +112,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
-		public Enumeration<String> getHeaders(String name)
+		public Enumeration getHeaders(String name)
 		{
 			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {
 				Vector<String> v = new Vector<String>();

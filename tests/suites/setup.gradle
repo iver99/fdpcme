@@ -3,7 +3,6 @@
 /*
  * DESCRIPTION
  *  This is setup task, run before running any EMTest task in each lrg.
- *  Also used for refreshing or cleaning up solr and db data for querylanguage tests
  * PRIVATE CLASSES
  *     NONE
  *
@@ -11,10 +10,7 @@
  *    <other useful comments, qualifications, etc.>
  *
  * MODIFIED    (MM/DD/YY)
- * shhua 					-created
- * weilia        04/16/15	-Added tasks to refresh solr and db data before tests
- * weilia		 05/08/15   -Added a task to onboard an user without LA privilege
- * weilia		 05/18/15   -Added buildLogLink to enable link "/var/opt/ORCLemaas->/scratch/var_opt_ORCLemaas" for tests
+
  */
 apply plugin: 'java'
 apply plugin: 'groovy'
@@ -26,11 +22,6 @@ import java.util.regex.*
 
 
 
-
-/**********************************************************************
- *	Preparing data refreshment
- *
- **********************************************************************/
 
 
 
