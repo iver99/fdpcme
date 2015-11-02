@@ -88,6 +88,7 @@ public class Tile
 		tile.setWidgetTemplate(edt.getWidgetTemplate());
 		tile.setWidgetUniqueId(edt.getWidgetUniqueId());
 		tile.setWidgetViewmode(edt.getWidgetViewmode());
+		tile.setWidgetSupportTimeControl(DataFormatUtils.integer2Boolean(edt.getWidgetSupportTimeControl()));
 		tile.setWidth(edt.getWidth());
 		List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
 		if (edtpList != null) {
@@ -189,16 +190,19 @@ public class Tile
 	@JsonProperty("WIDGET_VIEWMODEL")
 	private String widgetViewmode;
 
+	@JsonProperty("WIDGET_SUPPORT_TIME_CONTROL")
+	private Boolean widgetSupportTimeControl;
+
 	private Integer width;
 
 	private String content;
 
 	private String linkText;
+
 	private String linkUrl;
 
 	@JsonIgnore
 	private Dashboard dashboard;
-
 	@JsonProperty("tileParameters")
 	private List<TileParam> parameters;
 
@@ -383,14 +387,6 @@ public class Tile
 		return widgetHistogram;
 	}
 
-	//    public Integer getPosition() {
-	//        return position;
-	//    }
-	//
-	//    public void setPosition(Integer position) {
-	//        this.position = position;
-	//    }
-
 	public String getWidgetIcon()
 	{
 		return widgetIcon;
@@ -400,6 +396,14 @@ public class Tile
 	{
 		return widgetKocName;
 	}
+
+	//    public Integer getPosition() {
+	//        return position;
+	//    }
+	//
+	//    public void setPosition(Integer position) {
+	//        this.position = position;
+	//    }
 
 	public String getWidgetName()
 	{
@@ -414,6 +418,11 @@ public class Tile
 	public Integer getWidgetSource()
 	{
 		return widgetSource;
+	}
+
+	public Boolean getWidgetSupportTimeControl()
+	{
+		return widgetSupportTimeControl;
 	}
 
 	public String getWidgetTemplate()
@@ -616,6 +625,11 @@ public class Tile
 		this.widgetSource = widgetSource;
 	}
 
+	public void setWidgetSupportTimeControl(Boolean widgetSupportTimeControl)
+	{
+		this.widgetSupportTimeControl = widgetSupportTimeControl;
+	}
+
 	public void setWidgetTemplate(String widgetTemplate)
 	{
 		this.widgetTemplate = widgetTemplate;
@@ -639,6 +653,7 @@ public class Tile
 	private EmsDashboardTile getDefaultTilePersistenceEntity(EmsDashboardTile to) throws DashboardException
 	{
 		Integer intIsMaximized = DataFormatUtils.boolean2Integer(isMaximized);
+		Integer intWidgetSupportTimeControl = DataFormatUtils.boolean2Integer(widgetSupportTimeControl);
 
 		if (title == null || "".equals(title)) {
 			throw new CommonFunctionalException(
@@ -663,6 +678,9 @@ public class Tile
 		}
 		if (isMaximized == null) {
 			isMaximized = TILE_DEFAULT_IS_MAX;
+		}
+		if (intWidgetSupportTimeControl == null) {
+			intWidgetSupportTimeControl = Integer.valueOf(1);
 		}
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
 		if (to == null) { // newly created tile
@@ -722,7 +740,8 @@ public class Tile
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, intIsMaximized, lastModificationDate,
 					lastModifiedBy, owner, providerAssetRoot, providerName, providerVersion, tileId, encodedTitle,
 					widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName,
-					widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, width);
+					widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode,
+					intWidgetSupportTimeControl, width);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
@@ -756,6 +775,7 @@ public class Tile
 			to.setWidgetTemplate(widgetTemplate);
 			to.setWidgetUniqueId(widgetUniqueId);
 			to.setWidgetViewmode(widgetViewmode);
+			to.setWidgetSupportTimeControl(intWidgetSupportTimeControl);
 			to.setWidth(width);
 			updateEmsDashboardTileParams(parameters, to);
 		}
@@ -772,13 +792,15 @@ public class Tile
 		width = 8;
 		height = 1;
 		Integer tileType = DataFormatUtils.tileTypeString2Integer(type);
+		// text tile does not support time control
+		Integer supportTimeControl = 0;
 		// whatever the input title is, text tile use the default title
 		title = TEXT_WIDGET_TITLE;
 		if (to == null) { // newly created tile
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, 0, lastModificationDate, lastModifiedBy,
 					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime,
 					widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner,
-					widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, width);
+					widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
@@ -811,6 +833,7 @@ public class Tile
 			to.setWidgetTemplate(widgetTemplate);
 			to.setWidgetUniqueId(widgetUniqueId);
 			to.setWidgetViewmode(widgetViewmode);
+			to.setWidgetSupportTimeControl(supportTimeControl);
 			to.setWidth(width);
 			updateEmsDashboardTileParams(parameters, to);
 		}

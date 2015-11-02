@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
         <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
-        
+    
         <script data-main="js/builderMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -351,10 +351,10 @@
                                 </div>
                             </div>
                             <div class="oj-row" style="margin-top: 10px;">
-                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12">
+                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12" data-bind="visible: showTimeControl">
                                     <span class="oj-form-control oj-choice-row">
                                         <input id="show-time-selector" type="checkbox" 
-                                               class="oj-checkbox-nocomp" data-bind="checked: dashboard.enableTimeRange"/>
+                                               class="oj-checkbox-nocomp" data-bind="checked: computedEnableTimeControl"/>
                                         <label for="show-time-selector" class="oj-checkbox-label-nocomp" 
                                                data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SHOW_TIME_SELECTOR')"></label>
                                     </span>
@@ -437,8 +437,8 @@
                                                                 optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:373px;'}}"-->
                                <!--df-time-selector params="{model:timeSelectorModel}" ></df-time-selector-->
-                               <div data-bind="visible: !dashboard.enableTimeRange()">&nbsp;</div>
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange"></div>
+                               <div data-bind="visible: !showTimeRange()">&nbsp;</div>
+                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: showTimeRange"></div>
                             </div>
                             <div class="oj-col oj-sm-6" data-bind="visible: dashboard.enableRefresh">
                                 <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>

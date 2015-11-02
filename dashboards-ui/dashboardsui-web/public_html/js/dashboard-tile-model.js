@@ -186,29 +186,10 @@ define(['knockout',
             });
         }
         
-        function initializeTileAfterLoad(dashboard, tile, timeSelectorModel, targetContext) {
+        function initializeTileAfterLoad(dashboard, tile, timeSelectorModel, targetContext, loadImmediately) {
             if (!tile)
                 return;
             
-            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
-            var kocVM = tile.WIDGET_VIEWMODEL();
-            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
-                kocVM = assetRoot + kocVM;
-            var kocTemplate = tile.WIDGET_TEMPLATE();
-            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
-                kocTemplate = assetRoot + kocTemplate;
-            registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
-
-            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                var url = getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
-                if (url){
-                    tile.configure = function(){
-                        var start = timeSelectorModel.viewStart().getTime();
-                        var end = timeSelectorModel.viewEnd().getTime();
-                        window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
-                    }
-                }
-            } 
             tile.shouldHide = ko.observable(false);
             tile.editDisabled = ko.computed(function() {
             	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
@@ -319,6 +300,27 @@ define(['knockout',
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
             
+            if (loadImmediately) {
+                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
+                var kocVM = tile.WIDGET_VIEWMODEL();
+                if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
+                    kocVM = assetRoot + kocVM;
+                var kocTemplate = tile.WIDGET_TEMPLATE();
+                if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
+                    kocTemplate = assetRoot + kocTemplate;
+                registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
+
+                if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
+                    var url = getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
+                    if (url){
+                        tile.configure = function(){
+                            var start = timeSelectorModel.viewStart().getTime();
+                            var end = timeSelectorModel.viewEnd().getTime();
+                            window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                        }
+                    }
+                }         
+            }
         }
         
         function DashboardTextTile($b, widget, funcShow, funcReorder) {
@@ -351,7 +353,7 @@ define(['knockout',
          *  @param width width for the tile
          *  @param widget widget from which the tile is to be created
          */
-        function DashboardTile(dashboard, type, title, description, widget, timeSelectorModel, targetContext) {
+        function DashboardTile(dashboard, type, title, description, widget, timeSelectorModel, targetContext, loadImmediately) {
             var self = this;
             self.dashboard = dashboard;
 //            self.type = type;
@@ -368,8 +370,13 @@ define(['knockout',
             }
             for (var p in kowidget)
                 self[p] = kowidget[p];
+            if (self['WIDGET_SUPPORT_TIME_CONTROL']() === '0')
+                self['WIDGET_SUPPORT_TIME_CONTROL'](false);
+            else
+                self['WIDGET_SUPPORT_TIME_CONTROL'](true);
+            console.debug("self['WIDGET_SUPPORT_TIME_CONTROL'] is set to " + self['WIDGET_SUPPORT_TIME_CONTROL']());
             
-            initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext);
+            initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext, loadImmediately);
         }
         
         function encodeHtml(html) {
@@ -766,12 +773,7 @@ define(['knockout',
             self.push = function(tile) {
                 tile.clientGuid = getGuid();
                 self.tiles.push(tile);
-            };
-            
-            self.remove = function(tile) {
-                self.tiles.remove(tile);
-            };
-            
+            };            
             
             self.configure = function(tile) {
                 if(tile.configure) {
@@ -961,6 +963,7 @@ define(['knockout',
             self.linkUrl = ko.observable();
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
+            self.showTimeRange = ko.observable(false);
 
             self.isEmpty = function() {
                 return !self.tiles.tiles() || self.tiles.tiles().length === 0;
@@ -1011,7 +1014,7 @@ define(['knockout',
                 self.show();
             };
             
-            self.createNewTile = function(name, description, width, height, widget) {
+            self.createNewTile = function(name, description, width, height, widget, loadImmediately) {
                 if (!widget)
                     return null;
                 
@@ -1041,7 +1044,7 @@ define(['knockout',
 //                            console.log("widget template: " + template);
 //                            console.log("widget viewmodel:: " + viewmodel);
 //
-//                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget); 
+//                          newTile =new DashboardTile(self.dashboard, koc_name, name, description, width, widget, loadImmediately); 
 //                        }
 //                    } 
 //                    else {                       
@@ -1072,7 +1075,7 @@ define(['knockout',
 ////                                self.tiles.push(tile);
 //                                self.tiles.tilesGrid.registerTileToGrid(tile);
 
-                            newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
+                            newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext, loadImmediately);
                             var tileCell;
                             if(!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
                                 tileCell = new Cell(0, 0);
@@ -1139,11 +1142,12 @@ define(['knockout',
             
             self.appendNewTile = function(name, description, width, height, widget) {
                 if (widget) {
-                    var newTile = self.createNewTile(name, description, width, height, widget);
+                    var newTile = self.createNewTile(name, description, width, height, widget, true);
                     if (newTile){
                        self.tiles.tiles.push(newTile);
                        self.show();
                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
+                       self.triggerTileTimeControlSupportEvent((newTile.type() === 'DEFAULT' && newTile.WIDGET_SUPPORT_TIME_CONTROL())?true:null);
                     }
                 }
                 else {
@@ -1193,6 +1197,7 @@ define(['knockout',
                        self.notifyTileChange(tile, new TileChange("POST_DELETE"));
                        $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
                        $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
+                       self.triggerTileTimeControlSupportEvent();
                        break;
                    case "wider":
                        self.tiles.broadenTile(tile);
@@ -1512,6 +1517,22 @@ define(['knockout',
                 checkForChanges();
             };
             
+            // trigger an event to indicates if there is tile(s) supporting time control or not
+            self.triggerTileTimeControlSupportEvent = function(exists) {
+                if (exists === true || exists === false) {
+                    $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, exists);
+                    return;
+                }
+                for (var i = 0; i < self.tiles.tiles().length; i++) {
+                    var tile = self.tiles.tiles()[i];
+                    if (tile && tile.type() === 'DEFAULT' && tile.WIDGET_SUPPORT_TIME_CONTROL()) {
+                        $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, true);
+                        return;
+                    }
+                }
+                $b.triggerEvent($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, null, false);
+            };
+            
             self.reRender = function() {
                 self.tilesView.disableMovingTransition();
                 self.show();
@@ -1590,7 +1611,7 @@ define(['knockout',
                 var tile = u.helper.tile;
                 if (!tile) {
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                    tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
+                    tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget, false);
                     u.helper.tile = tile;
                     self.tiles.tiles.push(tile);
                     $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -1625,7 +1646,8 @@ define(['knockout',
                     tile = u.helper.tile;
                     if (!tile) {
                         var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                        tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
+                        tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget, false);
+                        initializeTileAfterLoad(self.dashboard, tile, self.timeSelectorModel, self.targetContext);
                         u.helper.tile = tile;
                         self.tiles.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -1638,6 +1660,7 @@ define(['knockout',
                 $('#tile-dragging-placeholder').hide();
                 self.previousDragCell = null;
                 tile && $(u.helper).hide();
+                self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
             
             self.onNewTextDragging = function(e, u) {
@@ -1782,6 +1805,15 @@ define(['knockout',
                 }
             };
             
+            self.dashboardTileSupportTimeControlHandler = function(exists) {
+                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' date time picker accordingly (self.dashboard.enableTimeRange() value is: ' + self.dashboard.enableTimeRange() + ')');
+                self.showTimeRange(self.dashboard.enableTimeRange() !== 'FALSE' && exists);
+            };
+            
+            self.dashboardTimeRangeChangedHandler = function() {
+                self.showTimeRange(self.dashboard.enableTimeRange() === 'TRUE');
+            };
+            
             self.postDocumentShow = function() {
 //                self.maximizeFirst();
                 $b.triggerBuilderResizeEvent('resize builder after document show');
@@ -1789,6 +1821,8 @@ define(['knockout',
                 $(window).resize(function() {
                     $b.triggerBuilderResizeEvent('resize builder after window resized');
                 });
+                $b.triggerEvent($b.EVENT_TILE_EXISTS_CHANGED, null, self.tiles.tiles().length > 0);
+                self.triggerTileTimeControlSupportEvent();
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
             };
@@ -1820,6 +1854,8 @@ define(['knockout',
                     self.timeSelectorModel.timeRangeChange(true);		
                 }
             };
+            $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
+            $b.addEventListener($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, self.dashboardTimeRangeChangedHandler);
         }
         
         return {"DashboardTile": DashboardTile, 

@@ -15,17 +15,71 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonValue;
 
 public class Dashboard
 {
+	public static enum EnableTimeRangeState
+	{
+		FALSE("FALSE", 0), TRUE("TRUE", 1), AUTO("AUTO", 2);
+
+		@JsonCreator
+		public static EnableTimeRangeState fromName(String name)
+		{
+			if (name == null) {
+				return null;
+			}
+			for (EnableTimeRangeState etrs : EnableTimeRangeState.values()) {
+				if (etrs.getName().toLowerCase().equals(name.toLowerCase())) {
+					return etrs;
+				}
+			}
+			return null;
+		}
+
+		public static EnableTimeRangeState fromValue(Integer value)
+		{
+			for (EnableTimeRangeState etrs : EnableTimeRangeState.values()) {
+				if (etrs.getValue().equals(value)) {
+					return etrs;
+				}
+			}
+			return null;
+		}
+
+		private String name;
+
+		@JsonIgnore
+		private Integer value;
+
+		private EnableTimeRangeState(String name, Integer value)
+		{
+			this.name = name;
+			this.value = value;
+		}
+
+		@JsonValue
+		public String getName()
+		{
+			return name;
+		}
+
+		public Integer getValue()
+		{
+			return value;
+		}
+	}
+
 	public static final String DASHBOARD_TYPE_NORMAL = "NORMAL";
 	public static final Integer DASHBOARD_TYPE_CODE_NORMAL = Integer.valueOf(0);
 	public static final String DASHBOARD_TYPE_SINGLEPAGE = "SINGLEPAGE";
 	public static final Integer DASHBOARD_TYPE_CODE_SINGLEPAGE = Integer.valueOf(1);
-	public static final boolean DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = Boolean.FALSE;
+	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.AUTO;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
+
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
 	public static Dashboard valueOf(EmsDashboard ed)
@@ -55,7 +109,7 @@ public class Dashboard
 		to.setDashboardId(from.getDashboardId());
 		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted() > 0);
 		to.setDescription(from.getDescription());
-		to.setEnableTimeRange(DataFormatUtils.integer2Boolean(from.getEnableTimeRange()));
+		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 		to.setLastModificationDate(from.getLastModificationDate());
@@ -91,7 +145,7 @@ public class Dashboard
 
 	private String description;
 
-	private Boolean enableTimeRange;
+	private EnableTimeRangeState enableTimeRange;
 
 	private Boolean enableRefresh;
 
@@ -171,7 +225,7 @@ public class Dashboard
 		return enableRefresh;
 	}
 
-	public Boolean getEnableTimeRange()
+	public EnableTimeRangeState getEnableTimeRange()
 	{
 		return enableTimeRange;
 	}
@@ -218,14 +272,14 @@ public class Dashboard
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_DESCRIPTION_ERROR));
 		}
-		Integer isEnableTimeRange = DataFormatUtils.boolean2Integer(enableTimeRange);
+		Integer isEnableTimeRange = enableTimeRange == null ? null : enableTimeRange.getValue();
 		Integer isEnableRefresh = DataFormatUtils.boolean2Integer(enableRefresh);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
-                String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
+		String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
 		String htmlEcodedDesc = description == null ? null : StringEscapeUtils.escapeHtml4(description);
-			
+
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh, isIsSystem,
 					lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
@@ -322,7 +376,7 @@ public class Dashboard
 		this.enableRefresh = enableRefresh;
 	}
 
-	public void setEnableTimeRange(Boolean enableTimeRange)
+	public void setEnableTimeRange(EnableTimeRangeState enableTimeRange)
 	{
 		this.enableTimeRange = enableTimeRange;
 	}

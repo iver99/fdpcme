@@ -94,6 +94,41 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.showPanel = ko.observable(true);
             
+            self.showTimeControl = ko.observable(false);
+            // observable variable possibly updated by other events
+            self.enableTimeControl = ko.observable(false);
+            self.computedEnableTimeControl = ko.pureComputed({
+                read: function() {
+                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
+                    return self.enableTimeControl();
+                },
+                write: function(value) {
+                    console.debug('Time control settings is set to ' + value + ' manually');
+                    self.enableTimeControl(value);
+                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
+                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
+                }
+            });
+            
+            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
+                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
+//                self.showTimeControl(anyTileExists);
+            };
+            
+            self.dashboardTileSupportTimeControlHandler = function(exists) {
+                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
+                if (self.dashboard.enableTimeRange() === 'AUTO') {
+                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
+                    self.enableTimeControl(exists);
+                }
+                else {
+                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
+                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
+                }
+                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
+                self.showTimeControl(exists);
+            };
+            
             self.initialize = function() {
                 if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
                     self.completelyHidden(true);
@@ -117,6 +152,8 @@ define(['knockout',
                 $b.addEventListener($b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
                 $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
                 $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
+                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
+                $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
             };
             
             self.initDraggable = function() {
@@ -481,8 +518,6 @@ define(['knockout',
             
             self.initEventHandlers = function() {
                 $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
-//                $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleSaveEnable);
-//                $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleSaveEnable);
                 $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
                 $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
@@ -616,21 +651,6 @@ define(['knockout',
                 $("#parent-message-dialog").ojDialog("open");
             };
             
-//            self.editors = 0;
-//            self.handleSaveEnable = function(edit_type) {
-//                if(edit_type === 'START_EDITING') {
-//                    self.editors = self.editors + 1;
-//                    self.disableSave(true);
-//                }else {
-//                    self.editors = self.editors - 1;
-//                    if(self.editors>0) {
-//                       self.disableSave(true); 
-//                    }else{
-//                       self.disableSave(false);
-//                    }
-//                }
-//            } 
-            
             self.handleStartEditText = function () {
                 self.disableSave(true);
                 self.tilesViewModel.tilesView.disableDraggable();
@@ -756,19 +776,19 @@ define(['knockout',
             
             self.handleSaveUpdateDashboard = function(outputData) {
             	if (window.opener && window.opener.childMessageListener) {
-        			var jsonValue = JSON.stringify(outputData);
-        			console.log(jsonValue);
-        			window.opener.childMessageListener(jsonValue);
-        		}
+                    var jsonValue = JSON.stringify(outputData);
+                    console.log(jsonValue);
+                    window.opener.childMessageListener(jsonValue);
+                }
             	self.handleSaveUpdateToServer(function() {
-            		dfu.showMessage({
-            			type: 'confirm',
-            			summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
-            			detail: '',
-            			removeDelayTime: 5000
-            		});
+                    dfu.showMessage({
+                            type: 'confirm',
+                            summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
+                            detail: '',
+                            removeDelayTime: 5000
+                    });
             	}, function(error) {
-            		error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                    error && error.errorMessage() && dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
             	});
             };
             
@@ -865,6 +885,8 @@ define(['knockout',
             self.EVENT_POST_DOCUMENT_SHOW = "EVENT_POST_DOCUMENT_SHOW";
             self.EVENT_BUILDER_RESIZE = "EVENT_BUILDER_RESIZE";
             
+            self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED = "EVENT_DSB_ENABLE_TIMERANGE_CHANGED";
+            
             self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
             self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
             self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
@@ -885,6 +907,10 @@ define(['knockout',
             
             self.EVENT_TEXT_START_EDITING = "EVENT_TEXT_START_EDITING";
             self.EVENT_TEXT_STOP_EDITING = "EVENT_TEXT_STOP_EDITING";
+            
+            // an addition bool parameter to indicate at least one tile exists in dashboard, false to indicate no tiles in dashboard
+            self.EVENT_TILE_EXISTS_CHANGED = "EVENT_TILE_EXISTS_CHANGED";
+            self.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL = "EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL";
             
             function Dispatcher() {
                 var dsp = this;
