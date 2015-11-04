@@ -130,10 +130,14 @@ define(['knockout',
             };
             
             self.initialize = function() {
-                if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
-                    self.completelyHidden(true);
-                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
-                }
+                // hide left panel in sprint42_df
+//                if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
+//                    self.completelyHidden(true);
+//                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+//                }
+                self.completelyHidden(true);
+                $b.triggerBuilderResizeEvent('Hide hide left panel in sprint42');
+                
                 self.initEventHandlers();
                 self.loadWidgets();
                 self.initDraggable();
@@ -221,10 +225,11 @@ define(['knockout',
             };
             
             self.tileRestoredHandler = function() {
-                if (self.dashboard.type() !== 'SINGLEPAGE' && !self.dashboard.systemDashboard()) {
-                    self.completelyHidden(false);
-                    $b.triggerBuilderResizeEvent('tile restored and show left panel');
-                }
+                // hide left panel in sprint42
+//                if (self.dashboard.type() !== 'SINGLEPAGE' && !self.dashboard.systemDashboard()) {
+//                    self.completelyHidden(false);
+//                    $b.triggerBuilderResizeEvent('tile restored and show left panel');
+//                }
             };
             
             self.tileAddedHandler = function(tile) {
