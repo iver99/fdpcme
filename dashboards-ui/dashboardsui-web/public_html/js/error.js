@@ -80,13 +80,7 @@ function(ko, $, dfu, oj)
         
         var msgKey = dfu.getUrlParam("msg");
         var serviceid = dfu.getUrlParam("service");
-        var serviceName = null;
-        if (serviceid === "APM")
-            serviceName = "Application Performance Monitoring";
-        else if (serviceid === "ITAnalytics")
-            serviceName = "IT Analytics";
-        else if (serviceid === "LogAnalytics")
-            serviceName = "Log Analytics";
+        var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
         if (msgKey) {
             var rsc = null;
             if (serviceName)

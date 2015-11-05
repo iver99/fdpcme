@@ -183,6 +183,10 @@ define({
       "DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID": "Error: failed to retrieve user or tenant.",
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
+      
+      "SERVICE_NAME_APM":"Application Performance Monitoring",
+      "SERVICE_NAME_ITAnalytics":"IT Analytics",
+      "SERVICE_NAME_LogAnalytics":"Log Analytics",
 
       // common messages for error page are put here: add __PLUS_SERVICE to support url pattern '&service=APM|ITAnalytics|LogAnalytics'
       "COMMON_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG__PLUS_SERVICE":"You currently don't have access to this page because you're not subscribed to {0}.",
