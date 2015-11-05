@@ -105,5 +105,5 @@ task DEVUiTest(type:EMTest,dependsOn: PropsCopy){
 }
 
 
-task emcpdf_dev_ui_test_3n(dependsOn:DEVUiTest)
+task emcpdf_dev_ui_test(dependsOn:DEVUiTest)
 
