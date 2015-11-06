@@ -134,6 +134,9 @@ define(['knockout',
                     self.completelyHidden(true);
                     $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
                 }
+//                self.completelyHidden(true);
+//                $b.triggerBuilderResizeEvent('Hide hide left panel in sprint42');
+                
                 self.initEventHandlers();
                 self.loadWidgets();
                 self.initDraggable();
