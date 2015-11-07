@@ -69,7 +69,7 @@ function(ko, $, dfu, oj)
             userName: self.userName,
             tenantName: self.tenantName,
             appId: self.appId,
-            isAdmin: true
+            isAdmin: false
         };
     };
     
@@ -79,10 +79,20 @@ function(ko, $, dfu, oj)
         self.errorPageTitle = oj.Translations.getTranslatedString("DBS_ERROR_PAGE_TITLE");
         
         var msgKey = dfu.getUrlParam("msg");
+        var serviceid = dfu.getUrlParam("service");
+        var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
         if (msgKey) {
-            var rsc = oj.Translations.getResource(msgKey);
+            var rsc = null;
+            if (serviceName)
+                rsc = oj.Translations.getResource(msgKey + "__PLUS_SERVICE");
+            if (rsc) 
+                msgKey += "__PLUS_SERVICE";
+            else {
+                rsc = oj.Translations.getResource(msgKey);
+                serviceName = null;
+            }
             if (rsc)
-                self.errorPageMessage = oj.Translations.getTranslatedString(msgKey);
+                self.errorPageMessage = serviceName ? oj.Translations.getTranslatedString(msgKey, serviceName) : oj.Translations.getTranslatedString(msgKey);
         }
         if (!self.errorPageMessage)
             self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');
