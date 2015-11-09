@@ -56,6 +56,7 @@ define([
                 var appIdDashboard = "Dashboard";
                 var appIdTenantManagement = "TenantManagement";
                 var appIdError = "Error";
+                var appIdEventUI = "EventUI";
                 var appMap = {};
                 appMap[appIdAPM] = {
                     "appId": "APM",
@@ -99,7 +100,14 @@ define([
                     "serviceName": "Error",
                     "version": "0.1",
                     "helpTopicId": "em_home_gs"
-                };    
+                };   
+                appMap[appIdEventUI] = {
+                    "appId": "EventUI",
+                    "appName": "", 
+                    "serviceName": "EventUI",
+                    "version": "0.1",
+                    "helpTopicId": ""
+                }; 
             
                 self.appId = $.isFunction(params.appId) ? params.appId() : params.appId;
                 self.relNotificationCheck = $.isFunction(params.relNotificationCheck) ? params.relNotificationCheck() : params.relNotificationCheck;
@@ -260,6 +268,7 @@ define([
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],
                     appTenantManagement: appMap[appIdTenantManagement],
+                    appEventUI: appMap[appIdEventUI],
                     sessionTimeoutWarnDialogId: self.sessionTimeoutWarnDialogId
                 };
                 //Register a Knockout component for navigation links
@@ -576,9 +585,6 @@ define([
                             else 
                                 subscribedServices = subscribedServices + " | " + servicename;
                         }
-                    }
-                    if (self.appId===appIdTenantManagement){
-                        subscribedServices = nls[appMap[appIdTenantManagement]['appName']];
                     }
                     self.appName(subscribedServices);
                 };
