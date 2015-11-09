@@ -10,12 +10,10 @@
  */
 requirejs.config({
     //Set up module mapping
-    map: {
-        '*': {'df-util' : '../emcsDependencies/dfcommon/js/util/df-util'},
-        'prefutil': 
-            {'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-             'usertenant-util': '../emcsDependencies/dfcommon/js/util/usertenant-util'}
-    },
+//    map: {
+//        '*': 
+//            {'df-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util'}
+//    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -23,20 +21,21 @@ requirejs.config({
         'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-        'prefutil':'../emcsDependencies/dfcommon/js/util/preference-util',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util',
+//        'df-util':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util',
+        'prefutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/preference-util',
+        'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
         'dbs': '../js',
-        'require':'../emcsDependencies/oraclejet/js/libs/require/require'
+        'require':'../emcsDependencies/oraclejet/js/libs/require/require',
+        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -78,7 +77,7 @@ require(['dbs/dbsmodel',
     'jquery',
     'ojs/ojcore',
     'dfutil',
-    'df-util',
+    'uifwk/js/util/df-util',
     'loggingutil',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -110,8 +109,8 @@ require(['dbs/dbsmodel',
            
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
+                    template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
                 });
             }
             
@@ -245,7 +244,7 @@ function getDateString(isoString) {
     if (isoString && isoString.length > 0)
     {
         var s = isoString.split(/[\-\.\+: TZ]/g);
-        console.log(s);
+        //console.log(s);
         if (s.length > 1)
         {
             return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();

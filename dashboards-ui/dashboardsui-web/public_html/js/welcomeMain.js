@@ -4,9 +4,6 @@
 
 
 requirejs.config({
-    map: {
-        '*' : {'df-util': '../emcsDependencies/dfcommon/js/util/df-util'}
-    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
@@ -14,15 +11,15 @@ requirejs.config({
         'jqueryui-amd': '../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/min',
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/resources',
         'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../emcsDependencies/oraclejet/js/libs/require/text',
         'dfutil': '../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'df-util': '../emcsDependencies/dfcommon/js/util/df-util',
-        'loggingutil':'../emcsDependencies/dfcommon/js/util/logging-util'
+        'loggingutil':'/emsaasui/uifwk/emcsDependencies/uifwk/js/util/logging-util',
+        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -61,7 +58,7 @@ require(['ojs/ojcore',
     'knockout',
     'jquery',
     'dfutil',
-    'df-util',
+    'uifwk/js/util/df-util',
     'loggingutil',
     'ojs/ojknockout',
     'ojs/ojselectcombobox'
@@ -77,8 +74,8 @@ require(['ojs/ojcore',
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {
-                    viewModel: {require: '../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-                    template: {require: 'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+                    viewModel: {require: '/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
+                    template: {require: 'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
                 });
             }
 
@@ -93,11 +90,11 @@ require(['ojs/ojcore',
                     appId: self.appId,
                     isAdmin: true
                 };
-            }
+            };
 
             function getNlsString(key, args) {
                 return oj.Translations.getTranslatedString(key, args);
-            }
+            };
             
             function TitleViewModel(){
                var self = this;
@@ -106,16 +103,19 @@ require(['ojs/ojcore',
            }
 
             var headerViewModel = new HeaderViewModel();
-            var titleViewModel = new TitleViewModel()
+            var titleViewModel = new TitleViewModel();
 
             function landingHomeModel() {
                 var self = this;
                 
                 self.dashboardsUrl = "/emsaasui/emcpdfui/home.html";
                 self.landingHomeUrls = null;
-                self.getStartedUrl = "#";
-                self.videosUrl = "#";
-                self.communityUrl = "#";
+                self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                self.gsID = "em_home_gs";
+                self.videoID = "em_home_videos";
+                self.getStartedUrl = self.baseUrl + self.gsID;;
+                self.videosUrl = self.baseUrl + self.videoID;
+                self.communityUrl = "http://cloud.oracle.com/management";
                 
                 self.welcomeSlogan = getNlsString("LANDING_HOME_WELCOME_SLOGAN");
                 self.APM = getNlsString("LANDING_HOME_APM");
@@ -161,7 +161,7 @@ require(['ojs/ojcore',
                         },
                         async: true
                     }); 
-                }
+                };
                 
                 //get urls of databases and middleware
                 self.getITAVerticalAppUrl = function(rel) {
@@ -169,7 +169,7 @@ require(['ojs/ojcore',
                     var version = "0.1"; //TODO version upgrade to 1.0                   
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
-                }
+                };
                 
                 function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
@@ -191,7 +191,7 @@ require(['ojs/ojcore',
                     landingHomeUrls["DB_resource"] = self.getITAVerticalAppUrl("verticalApplication.db-resource");
                     landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
                     self.landingHomeUrls = landingHomeUrls;
-                }
+                };
                 self.getServiceUrls();
                                 
                 self.openAPM = function() {
@@ -199,7 +199,7 @@ require(['ojs/ojcore',
                     if(self.landingHomeUrls.APM) {
                         window.location.href = self.landingHomeUrls.APM;
                     }
-                }
+                };
                 self.openLogAnalytics = function (data, event) {
 
                     oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
@@ -207,16 +207,16 @@ require(['ojs/ojcore',
                         window.location.href = self.landingHomeUrls.LogAnalytics;
                     }
 
-                }
+                };
                 self.openITAnalytics = function(data, event) {
-                    if (event.type == "click" || (event.type == "keypress" && event.keyCode == 13)) {
+                    if (event.type === "click" || (event.type === "keypress" && event.keyCode === 13)) {
                         oj.Logger.info('Trying to open Log Analytics by URL: ' + self.landingHomeUrls.LogAnalytics);
                         if(self.landingHomeUrls.ITAnalytics) {
                             window.location.href = self.landingHomeUrls.ITAnalytics;
                         }
-                    } else if (event.type == "keypress" && event.keyCode == 9) {  //keyboard handle for Firefox                      
+                    } else if (event.type === "keypress" && event.keyCode === 9) {  //keyboard handle for Firefox                      
                         if (event.shiftKey) {
-                            if (event.target.id == "ITA_wrapper") {
+                            if (event.target.id === "ITA_wrapper") {
                                 $(event.target).blur();
                                 $("#LA_wrapper").focus();
                             } else {
@@ -224,52 +224,52 @@ require(['ojs/ojcore',
                                 $("#ITA_wrapper").focus();
                             }
                         } else {
-                            if(event.target.id=="ITA_wrapper") {
+                            if(event.target.id==="ITA_wrapper") {
                                 $(event.target).blur();
                                 $("#ITA_options").focus();
                             }else {
                                 $(event.target).blur();
-                                $("#dashboards_wrapper").focus()
+                                $("#dashboards_wrapper").focus();
                             }
                         }
                     }
-                }
+                };
                 self.ITAOptionChosen = function(event, data) {
                     if(data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
                         window.location.href = self.landingHomeUrls[data.value];
                     }
-                }
+                };
                 self.openDashboards = function() {
                     oj.Logger.info('Trying to open dashboards by URL: ' + self.dashboardsUrl);
                     if(self.dashboardsUrl) {
                         window.location.href = self.dashboardsUrl;
                     }
-                }
+                };
                 self.dataExplorersChosen = function (event, data) {                    
                     if (data.value && self.landingHomeUrls[data.value]) {
                         oj.Logger.info('Trying to open ' + data.value + ' by URL: ' + self.landingHomeUrls[data.value]);
                         window.location.href = self.landingHomeUrls[data.value];
                     }
-                }
+                };
                 self.openGetStarted = function() {
                     oj.Logger.info('Trying to open get started page by URL: ' + self.getStartedUrl);
-                    if(self.getStartedUrl) {                        
-                        window.location.href = self.getStartedUrl;
+                    if(self.getStartedUrl) {
+                        window.open(self.getStartedUrl, "_blank");
                     }
-                }
+                };
                 self.openVideos = function() {
                     oj.Logger.info('Trying to open Videos by URL: ' + self.videosUrl);
                     if(self.videosUrl) {
-                        window.location.href = self.videosUrl;
+                        window.open(self.videosUrl, "_blank");
                     }
-                }
+                };
                 self.openCommunity = function() {
                     oj.Logger.info('Trying to open Management Cloud Community by URL: ' + self.communityUrl);
                     if(self.communityUrl) {
-                        window.location.href = self.communityUrl; 
+                        window.open(self.communityUrl, "_blank");
                     }                   
-                }
+                };
             }
 
             $(document).ready(function () {

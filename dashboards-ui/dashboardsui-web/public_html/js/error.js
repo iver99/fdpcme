@@ -8,12 +8,12 @@ requirejs.config({
         'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
         'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/min',
+        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/min',
         'dfutil':'../emcsDependencies/internaldfcommon/js/util/internal-df-util',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.1/resources',
-        'text': '../emcsDependencies/oraclejet/js/libs/require/text'
-        
+        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/ojL10n',
+        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/resources',
+        'text': '../emcsDependencies/oraclejet/js/libs/require/text',
+        'uifwk': '/emsaasui/uifwk/emcsDependencies/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
@@ -55,8 +55,8 @@ function(ko, $, dfu, oj)
 {
     if (!ko.components.isRegistered('df-oracle-branding-bar')) {
         ko.components.register("df-oracle-branding-bar",{
-            viewModel:{require:'../emcsDependencies/dfcommon/widgets/brandingbar/js/brandingbar'},
-            template:{require:'text!../emcsDependencies/dfcommon/widgets/brandingbar/brandingbar.html'}
+            viewModel:{require:'/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/js/brandingbar.js'},
+            template:{require:'text!/emsaasui/uifwk/emcsDependencies/uifwk/widgets/brandingbar/brandingbar.html'}
         });
     }
     
@@ -69,7 +69,7 @@ function(ko, $, dfu, oj)
             userName: self.userName,
             tenantName: self.tenantName,
             appId: self.appId,
-            isAdmin: true
+            isAdmin: false
         };
     };
     
@@ -79,10 +79,20 @@ function(ko, $, dfu, oj)
         self.errorPageTitle = oj.Translations.getTranslatedString("DBS_ERROR_PAGE_TITLE");
         
         var msgKey = dfu.getUrlParam("msg");
+        var serviceid = dfu.getUrlParam("service");
+        var serviceName = oj.Translations.getResource("SERVICE_NAME_" + serviceid) ? oj.Translations.getTranslatedString("SERVICE_NAME_" + serviceid) : null;
         if (msgKey) {
-            var rsc = oj.Translations.getResource(msgKey);
+            var rsc = null;
+            if (serviceName)
+                rsc = oj.Translations.getResource(msgKey + "__PLUS_SERVICE");
+            if (rsc) 
+                msgKey += "__PLUS_SERVICE";
+            else {
+                rsc = oj.Translations.getResource(msgKey);
+                serviceName = null;
+            }
             if (rsc)
-                self.errorPageMessage = oj.Translations.getTranslatedString(msgKey);
+                self.errorPageMessage = serviceName ? oj.Translations.getTranslatedString(msgKey, serviceName) : oj.Translations.getTranslatedString(msgKey);
         }
         if (!self.errorPageMessage)
             self.errorPageMessage = oj.Translations.getTranslatedString('DBS_ERROR_PAGE_NOT_FOUND_MSG');

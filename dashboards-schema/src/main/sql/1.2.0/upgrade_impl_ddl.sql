@@ -1,3 +1,4 @@
+Rem --DDL change during upgrade
 Rem
 Rem upgrade_impl_ddl.sql
 Rem
@@ -15,4 +16,7 @@ Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
 Rem    wenjzhu    09/28/15- Created
+
+SET FEEDBACK ON
+SET SERVEROUTPUT ON
 
