@@ -186,6 +186,7 @@ public class DashboardServiceFacadeTest
 		tile.setWidgetUniqueId("widgetUniqueId");
 		tile.setWidgetViewmode("widgetViewmode");
 		tile.setWidgetHistogram("widgetHistogram");
+		tile.setWidgetSupportTimeControl(1);
 		return tile;
 	}
 
