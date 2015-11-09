@@ -21,6 +21,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 self.cloudServicesLabel = nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL;
                 self.dashboardLinkLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
                 
+                self.homeLinks = ko.observableArray();
                 self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
@@ -79,7 +80,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                     if(dfHomeUrl) {
                         window.location.href = dfHomeUrl;
                     }
-                }
+                };
                 
                 self.openDashboardHome = function(data, event) {
                     oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
@@ -93,6 +94,19 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 */
                 function discoverLinks() {
                     var fetchServiceLinks = function(data) {
+                    	if (data.homeLinks && data.homeLinks.length > 0) {
+                            var homelinks = data.homeLinks;
+                            var homeLinkList = [];
+                            for (var i = 0; i < homelinks.length; i++) {
+                                var hurl = homelinks[i].href;
+                                //Since EventUI is tenant subscription agnostic, use relative path for its home links
+                                if (dfu.isDevMode() || homelinks[i].serviceName === 'EventUI'){
+                                    hurl = dfu.getRelUrlFromFullUrl(hurl);
+                                }
+                                homeLinkList.push({name: homelinks[i].name, href: hurl});
+                            }
+                            self.homeLinks(homeLinkList);
+                        }
                         if (data.cloudServices && data.cloudServices.length > 0) {
                             var cloudServices = data.cloudServices;
                             var cloudServiceList = [];
@@ -136,7 +150,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                                                     break;
                             			}
                             		}
-                                        if (dfu.isDevMode()){
+                                        if (dfu.isDevMode() || link.serviceName === 'EventUI'){
                                             link.href = dfu.getRelUrlFromFullUrl(link.href);
                                         }
                             	}
@@ -150,6 +164,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                                             filteredAdminLinks.push(link);
                                         }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
                                             filteredAdminLinks.push(link);
+                                        }else if (link.serviceName === 'EventUI') {
+                                        	filteredAdminLinks.push(link);
                                         }
                                     }
                                     self.adminLinks(filteredAdminLinks);                                    
