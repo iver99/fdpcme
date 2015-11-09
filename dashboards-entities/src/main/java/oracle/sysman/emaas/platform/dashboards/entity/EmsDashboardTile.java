@@ -101,6 +101,8 @@ public class EmsDashboardTile implements Serializable
 	private String widgetUniqueId;
 	@Column(name = "WIDGET_VIEWMODE", nullable = false, length = 1024)
 	private String widgetViewmode;
+	@Column(name = "WIDGET_SUPPORT_TIME_CONTROL", nullable = false, length = 1024)
+	private Integer widgetSupportTimeControl;
 	@ManyToOne
 	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
@@ -117,7 +119,7 @@ public class EmsDashboardTile implements Serializable
 			String providerAssetRoot, String providerName, String providerVersion, Long tileId, String title,
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
-			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer width)
+			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width)
 	{
 		this.creationDate = creationDate;
 		dashboard = emsDashboard1;
@@ -147,6 +149,7 @@ public class EmsDashboardTile implements Serializable
 		this.widgetTemplate = widgetTemplate;
 		this.widgetUniqueId = widgetUniqueId;
 		this.widgetViewmode = widgetViewmode;
+		this.widgetSupportTimeControl = widgetSupportTimeControl;
 		this.width = width;
 	}
 
@@ -297,6 +300,11 @@ public class EmsDashboardTile implements Serializable
 	public Integer getWidgetSource()
 	{
 		return widgetSource;
+	}
+
+	public Integer getWidgetSupportTimeControl()
+	{
+		return widgetSupportTimeControl;
 	}
 
 	public String getWidgetTemplate()
@@ -462,6 +470,11 @@ public class EmsDashboardTile implements Serializable
 	public void setWidgetSource(Integer widgetSource)
 	{
 		this.widgetSource = widgetSource;
+	}
+
+	public void setWidgetSupportTimeControl(Integer widgetSupportTimeControl)
+	{
+		this.widgetSupportTimeControl = widgetSupportTimeControl;
 	}
 
 	public void setWidgetTemplate(String widgetTemplate)

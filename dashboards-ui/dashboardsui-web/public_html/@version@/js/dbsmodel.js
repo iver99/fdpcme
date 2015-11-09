@@ -362,7 +362,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
             
             var _addeddb = {"name": self.createDashboardModel.name(), 
                             "description": self.createDashboardModel.description(),
-                            "enableTimeRange": self.createDashboardModel.isEnableTimeRange(),
+                            "enableTimeRange": 'AUTO',//self.createDashboardModel.isEnableTimeRange(),
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
             
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)

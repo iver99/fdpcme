@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
         <style type="text/css">
             div.dbd-error-area {
               position: absolute; 
@@ -29,8 +29,7 @@
               word-break: break-all;
             }
         </style> 
-        
-        <script data-main="js/error" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="@version@/js/error" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
     <body>
         <div id="global-body" style="display: none">
@@ -47,7 +46,7 @@
             
             <div class="dbd-error-area" >
                 <div class="dbd-error-inner" id="errorMain">
-                    <img src="images/alert.png" data-bind="attr: {alt: errorPageMessage}">
+                    <img src="@version@/images/alert.png" data-bind="attr: {alt: errorPageMessage}">
                     <h4 class="dbd-error-msg" data-bind="text: errorPageMessage"></h4>
                     <div data-bind="visible: invalidUrl">
                         <span data-bind="text: invalidUrlLabel"></span>

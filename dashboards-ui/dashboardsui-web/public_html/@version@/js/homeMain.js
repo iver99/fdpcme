@@ -12,28 +12,28 @@ requirejs.config({
     //Set up module mapping
 //    map: {
 //        '*': 
-//            {'df-util': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util/df-util'}
+//            {'df-util': '/emsaasui/uifwk/libs/@version@/js/uifwk/js/util/df-util'}
 //    },
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
-        'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
-        'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
-        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
-        'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/resources',
-        'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
-        'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
-        'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
-        'text': '../emcsDependencies/oraclejet/js/libs/require/text',
-        'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
-        'dfutil':'../js/internaldfcommon/js/util/internal-df-util',
+        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
+        'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
+        'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/resources',
+        'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
+        'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
+        'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
+        'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
+        'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
+        'dbs': '.',
+        'dfutil':'internaldfcommon/js/util/internal-df-util',
         'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
-        'dbs': '../js',
-        'require':'../emcsDependencies/oraclejet/js/libs/require/require',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD

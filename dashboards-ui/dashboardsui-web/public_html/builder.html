@@ -6,11 +6,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
-        <link rel="stylesheet" href="css/builder-alta.css" type="text/css"/>
-        
-        <script data-main="js/builderMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+
+        <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
+        <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
+
+        <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
@@ -37,7 +38,7 @@
                                               data-bind="click:editDashboardName,ojComponent: {
                                                     component:'ojButton'
                                         }">
-                                        <img src="images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+                                        <img src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                     </button>
                                 </span>
 <!--                                 //ko if: isFavorite()===false 
@@ -45,7 +46,7 @@
                                     <button id="dashboard-favorite-add" class="oj-button oj-default oj-button-half-chrome"
                                             data-bind="ojComponent: {
                                                   component:'ojButton'}" title="Add to favorites">
-                                      <img src="images/add-favorites-24.png" alt="Add to favorites"/>
+                                      <img src="@version@/images/add-favorites-24.png" alt="Add to favorites"/>
                                     </button>
                                 </span>
                                  /ko 
@@ -53,7 +54,7 @@
                                 <button id="dashboard-favorite-del" class="oj-button oj-default oj-button-half-chrome"
                                         data-bind="click: deleteFromFavorites, ojComponent: {
                                               component:'ojButton'}" title="Remove from favorites">
-                                  <img src="images/favorites-marked-24.png" alt="Delete from favorites" class="dbd-not-gray"/>
+                                  <img src="@version@/images/favorites-marked-24.png" alt="Delete from favorites" class="dbd-not-gray"/>
                                 </button>
                                  /ko -->
                             </div>
@@ -92,7 +93,7 @@
                                               data-bind="click: editDashboardDescription,ojComponent: {
                                                     component:'ojButton'
                                         }">
-                                        <img width="16" height="16" src="images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+                                        <img width="16" height="16" src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                     </button>
                                 </span>
                             </div>
@@ -140,7 +141,7 @@
                                         disabled: editDisabled,
                                         icons: {start:'dbd-toolbar-icon-settings'}
                             }" title="Change Settings">
-                            <img src="images/qual_hammergear_16_full.png" alt="Change Settings"/><span class="builder-toolbar-button-text">Settings</span>
+                            <img src="@version@/images/qual_hammergear_16_full.png" alt="Change Settings"/><span class="builder-toolbar-button-text">Settings</span>
                           </button>
                         </span-->
                         <!--span  tabindex="0" data-bind="click: createNewWidget, enterpress: createNewWidget, visible: editDisabled() === false">
@@ -149,7 +150,7 @@
                                       disabled: editDisabled,  
                                       component:'ojButton'
                             }" title="Create new widget">
-                            <img src="images/tab_new_raised-24.png" alt="Create new widget" data-bind="css: {'dbd-not-gray': !editDisabled()}"/>
+                            <img src="@version@/images/tab_new_raised-24.png" alt="Create new widget" data-bind="css: {'dbd-not-gray': !editDisabled()}"/>
                           </button>
                         </span-->
                     </div>
@@ -351,10 +352,10 @@
                                 </div>
                             </div>
                             <div class="oj-row" style="margin-top: 10px;">
-                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12">
+                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12" data-bind="visible: showTimeControl">
                                     <span class="oj-form-control oj-choice-row">
                                         <input id="show-time-selector" type="checkbox" 
-                                               class="oj-checkbox-nocomp" data-bind="checked: dashboard.enableTimeRange"/>
+                                               class="oj-checkbox-nocomp" data-bind="checked: computedEnableTimeControl"/>
                                         <label for="show-time-selector" class="oj-checkbox-label-nocomp" 
                                                data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SHOW_TIME_SELECTOR')"></label>
                                     </span>
@@ -437,8 +438,8 @@
                                                                 optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:373px;'}}"-->
                                <!--df-time-selector params="{model:timeSelectorModel}" ></df-time-selector-->
-                               <div data-bind="visible: !dashboard.enableTimeRange()">&nbsp;</div>
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange"></div>
+                               <div data-bind="visible: !showTimeRange()">&nbsp;</div>
+                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: showTimeRange"></div>
                             </div>
                             <div class="oj-col oj-sm-6" data-bind="visible: dashboard.enableRefresh">
                                 <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>
@@ -451,7 +452,7 @@
 
                         <!-- ko if:$root.isEmpty() -->
                         <div id="addWidgetToolTip" style="padding-top: 64px; text-align: center">
-                            <img src="images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;"/>
+                            <img src="@version@/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
                             <p style="font-size: 16px;">
@@ -477,7 +478,7 @@
                                                        ojComponent: {component: 'ojButton', 
                                                                      label: '', 
                                                                      menu: '#tileMenu' + clientGuid}">
-                                                        <img src="images/func_threebullets_16_ena.png" alt="Edit"/>
+                                                        <img src="@version@/images/func_threebullets_16_ena.png" alt="Edit"/>
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
@@ -486,7 +487,7 @@
                                                         <li id="configure">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_arrowbox_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_CFG')}"/>
+                                                                    <img src="@version@/images/func_arrowbox_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_CFG')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_CFG')"></span>
                                                             </a>
@@ -494,7 +495,7 @@
                                                         <li id="refresh-this-widget">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_refresh_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_REFRESH')}"/>
+                                                                    <img src="@version@/images/func_refresh_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_REFRESH')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REFRESH')"></span>
                                                             </a>
@@ -502,7 +503,7 @@
                                                         <li id="delete" data-bind="css: { 'oj-disabled': editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_x_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DELETE')}"/>
+                                                                    <img src="@version@/images/func_x_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DELETE')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_DELETE')"></span>
                                                             </a>
@@ -510,7 +511,7 @@
                                                         <li id="wider" data-bind="css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
+                                                                    <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
                                                             </a>
@@ -518,7 +519,7 @@
                                                         <li id="narrower" data-bind="css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
+                                                                    <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
                                                             </a>
@@ -526,7 +527,7 @@
                                                         <li id="taller" data-bind="css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
+                                                                    <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                             </a>
@@ -534,7 +535,7 @@
                                                         <li id="shorter" data-bind="css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
+                                                                    <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                 </a>
@@ -542,13 +543,13 @@
                                                         <li id="maximize" data-bind="css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
+                                                                    <img src="@version@/images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')"></span></a>
                                                         </li>
                                                         <li id="restore" data-bind="css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
+                                                                    <img src="@version@/images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESTORE')"></span></a>
                                                         </li>
                                                         <!--<li id="changeUrl">
@@ -570,13 +571,13 @@
                                                     data-bind="click: function() {$parent.openEditTileLinkDialog($data)},ojComponent: {
                                                     component:'ojButton'
                                                     }, attr: {title: getNlsString('COMMON_BTN_EDIT'), id: 'dbd-tile-link-editor-btn_'+clientGuid}">
-                                                <img src="images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
+                                                <img src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                             </button>
                                             <button class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn dbd-tile-link-btn"
                                                     data-bind="click: function() {$parent.deleteTileLink($data)}, ojComponent: {
                                                     component:'ojButton'
                                                     }, attr: {title: getNlsString('COMMON_BTN_DELETE'), id: 'dbd-tile-link-delete-btn_'+clientGuid}" tabindex="0">
-                                                <img src="images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_DELETE')}"/>
+                                                <img src="@version@/images/func_delete_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_DELETE')}"/>
                                             </button>
                                             </div>  
                                         </div>

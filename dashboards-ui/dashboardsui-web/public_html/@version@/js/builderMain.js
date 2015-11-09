@@ -22,34 +22,34 @@ requirejs.config({
     },
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../emcsDependencies/oraclejet/js/libs/knockout/knockout-3.3.0',
-        'knockout.mapping': '../emcsDependencies/oraclejet/js/libs/knockout/knockout.mapping-latest',
-        'jquery': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-2.1.3.min',
-        'jqueryui': '../emcsDependencies/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
-        'jqueryui-amd':'../emcsDependencies/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
-        'hammerjs': '../emcsDependencies/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/min',
-        'ojL10n': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/ojL10n',
-        'ojtranslations': '../emcsDependencies/oraclejet/js/libs/oj/v1.1.2/resources',
-        'signals': '../emcsDependencies/oraclejet/js/libs/js-signals/signals.min',
-        'crossroads': '../emcsDependencies/oraclejet/js/libs/crossroads/crossroads.min',
-        'history': '../emcsDependencies/oraclejet/js/libs/history/history.iegte8.min',
-        'text': '../emcsDependencies/oraclejet/js/libs/require/text',
-        'promise': '../emcsDependencies/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'knockout.mapping': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
+        'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
+        'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
+        'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/resources',
+        'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
+        'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
+        'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
+        'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
+        'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
-        'dfutil':'../js/internaldfcommon/js/util/internal-df-util',
+        'dfutil':'internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
-        'idfbcutil':'../js/internaldfcommon/js/util/internal-df-browser-close-util',
-        'html2canvas':'../emcsDependencies/html2canvas/html2canvas',
-        'canvg-rgbcolor':'../emcsDependencies/canvg/rgbcolor',
-        'canvg-stackblur':'../emcsDependencies/canvg/StackBlur',
-        'canvg':'../emcsDependencies/canvg/canvg',
-        'd3':'../emcsDependencies/d3/d3.min',
+        'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
+        'html2canvas':'../../libs/@version@/js/html2canvas/html2canvas',
+        'canvg-rgbcolor':'../../libs/@version@/js/canvg/rgbcolor',
+        'canvg-stackblur':'../../libs/@version@/js/canvg/StackBlur',
+        'canvg':'../../libs/@version@/js/canvg/canvg',
+        'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
-        'emcsutl': '/emsaasui/uifwk/js/util',
-        'ckeditor': '../emcsDependencies/ckeditor/ckeditor',
+        'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
+        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -140,20 +140,20 @@ require(['knockout',
                 });
             }
 //            ko.components.register("df-time-selector",{
-//                viewModel:{require:'../emcsDependencies/timeselector/js/time-selector'},
-//                template:{require:'text!../emcsDependencies/timeselector/time-selector.html'}
+//                viewModel:{require:'../libs/@version@/js/timeselector/js/time-selector'},
+//                template:{require:'text!../libs/@version@/js/timeselector/time-selector.html'}
 //            });
 	    ko.components.register("df-datetime-picker",{
          	viewModel: {require: '/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js'},
 	        template: {require: 'text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
 	    });
             ko.components.register("df-auto-refresh",{
-                viewModel:{require:'../js/widgets/autorefresh/js/auto-refresh'},
-                template:{require:'text!../js/widgets/autorefresh/auto-refresh.html'}
+                viewModel:{require:'./widgets/autorefresh/js/auto-refresh'},
+                template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
             });
             ko.components.register("DF_V1_WIDGET_TEXT", {
-                viewModel: {require: '../js/widgets/textwidget/js/textwidget'},
-                template: {require: 'text!../js/widgets/textwidget/textwidget.html'}
+                viewModel: {require: './widgets/textwidget/js/textwidget'},
+                template: {require: 'text!./widgets/textwidget/textwidget.html'}
             });
 
             function HeaderViewModel($b) {
