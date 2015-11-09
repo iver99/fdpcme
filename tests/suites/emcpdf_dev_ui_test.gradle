@@ -77,15 +77,10 @@ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', versio
     }
 }
  
-task UndeployDFUI(type:Exec) {
-
-        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ui/dashboardsui-ee/', 'appServerUndeploy'
 
 
-}
 
-
-task DeployDFUI(type:Exec,dependsOn: UndeployDFUI) {
+task DeployDFUI(type:Exec) {
 
         commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ui/dashboardsui-ee/', 'appServerDeploy'
         }

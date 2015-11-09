@@ -70,15 +70,10 @@ dependencies {
 		restAssured.exclude module:'groovy'
 	}
 }
- task UndeployDFAPI(type:Exec) {
-
-        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerUndeploy'
 
 
-}
 
-
-task DeployDFAPI(type:Exec,dependsOn: UndeployDFAPI) {
+task DeployDFAPI(type:Exec) {
 
         commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerDeploy'
         }
