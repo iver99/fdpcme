@@ -715,3 +715,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 /*.text-widget-hover-area div p {
     display: inline;
 }*/
+/*.cke_textcolor_new_icon {
+    background: url(../images/func_textcolor_icon.png) no-repeat !important;
+}*/
+
+.dbd-tile-to-be-occupuied {
+    border: 1px dashed black;
+}
