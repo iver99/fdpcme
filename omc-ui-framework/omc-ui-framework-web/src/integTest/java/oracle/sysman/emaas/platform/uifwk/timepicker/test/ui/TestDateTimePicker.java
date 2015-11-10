@@ -32,7 +32,7 @@ public class TestDateTimePicker extends CommonUIUtils
 	private static String verifyDate(String time) throws ParseException {
 		SimpleDateFormat format = new java.text.SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-		SimpleDateFormat format2 = new SimpleDateFormat("MMM dd, yyyy");
+		SimpleDateFormat format2 = new SimpleDateFormat("MMM d, yyyy");
 		if(time==null ||"".equals(time)){
 			return "";
 		}
@@ -86,7 +86,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String sEndDate = null;
 		String sEndTime = null;
 		SimpleDateFormat fmt1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-		SimpleDateFormat fmt2 = new SimpleDateFormat("MMM dd, yyyy h:mm a");
+		SimpleDateFormat fmt2 = new SimpleDateFormat("MMM d, yyyy h:mm a");
 		Date dTmpStart = new Date();
 		Date dTmpEnd = new Date();
 		//Verify the component displayed
@@ -166,6 +166,8 @@ public class TestDateTimePicker extends CommonUIUtils
 		driver.getLogger().info("Verify the result in label");
 		driver.getLogger().info("dateformat: "+ fmt2.format(dTmpStart));
 		driver.getLogger().info("sStartText: "+ driver.getText(UIControls.sStartText));
+		driver.getLogger().info("dateformat: "+ fmt2.format(dTmpEnd));
+		driver.getLogger().info("sStartText: "+ driver.getText(UIControls.sEndText));
 		Assert.assertEquals(fmt2.format(dTmpStart),driver.getText(UIControls.sStartText));
 		Assert.assertEquals(fmt2.format(dTmpEnd),driver.getText(UIControls.sEndText));
 
