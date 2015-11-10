@@ -193,31 +193,9 @@ define(['knockout',
             if (!tile)
                 return;
             
-//<<<<<<< HEAD:dashboards-ui/dashboardsui-web/public_html/js/dashboard-tile-model.js
-//            var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION(), tile.PROVIDER_ASSET_ROOT(), true);
-//            var kocVM = tile.WIDGET_VIEWMODEL();
-//            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
-//                kocVM = assetRoot + kocVM;
-//            var kocTemplate = tile.WIDGET_TEMPLATE();
-//            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK)
-//                kocTemplate = assetRoot + kocTemplate;
-//            registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
-//
-//            if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-//                var url = getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
-//                if (url){
-//                    tile.configure = function(){
-//                        var start = timeSelectorModel.viewStart().getTime();
-//                        var end = timeSelectorModel.viewEnd().getTime();
-//                        window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
-//                    }
-//                }
-//            } 
             tile.shouldHide = ko.observable(false);            
             tile.toBeOccupied = ko.observable(false);
-//=======
-//            tile.shouldHide = ko.observable(false);
-//>>>>>>> 1ea8b837518472f095a12e24178e367ab5910f34:dashboards-ui/dashboardsui-web/public_html/@version@/js/dashboard-tile-model.js
+
             tile.editDisabled = ko.computed(function() {
             	return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
             });
@@ -1779,27 +1757,10 @@ define(['knockout',
                 if(tile.content) {
                     cell.column = 0;
                 }
-//<<<<<<< HEAD:dashboards-ui/dashboardsui-web/public_html/js/dashboard-tile-model.js
                 if(cell.row === tile.row() && cell.column === tile.column()) {
                     $('#tile-dragging-placeholder').hide();
                     tilesToBeOccupied && self.tiles.unhighlightTiles(tilesToBeOccupied);
                     return;
-//=======
-//                if ((curTime-startTime)>300 && 
-//                        (!self.previousDragCell || cell.row !== self.previousDragCell.row || cell.column !== self.previousDragCell.column) 
-//                        && cell.column+tile.width() <= defaultCols) {
-//                    self.previousDragCell = cell;
-//                    self.tiles.updateTilePosition(tile, cell.row, cell.column);
-//                    self.tiles.tilesReorder(tile);
-//                    self.show();
-//                    $('#tile-dragging-placeholder').css({
-//                        left: tile.left(),
-//                        top: tile.top(),
-//                        width: ui.helper.width() -20,
-//                        height: ui.helper.height() - 20 - 20
-//                    }).show();
-//                    startTime = curTime;
-//>>>>>>> 1ea8b837518472f095a12e24178e367ab5910f34:dashboards-ui/dashboardsui-web/public_html/@version@/js/dashboard-tile-model.js
                 }
                 $('#tile-dragging-placeholder').hide();
                 tilesToBeOccupied && self.tiles.unhighlightTiles(tilesToBeOccupied);
@@ -1872,7 +1833,6 @@ define(['knockout',
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                 var cell = self.getCellFromPosition(pos); 
                 if (!cell) return;
-//<<<<<<< HEAD:dashboards-ui/dashboardsui-web/public_html/js/dashboard-tile-model.js
                 
                 $('#tile-dragging-placeholder').hide();
                 tilesToBeOccupied && self.tiles.unhighlightTiles(tilesToBeOccupied);
@@ -1888,28 +1848,6 @@ define(['knockout',
                         height: self.getDisplayHeightForTile(1)-20
                     }).show();
                 }
-//=======
-//                var tile = u.helper.tile;
-//                if (!tile) {
-//                    var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-//                    tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget, false);
-//                    u.helper.tile = tile;
-//                    self.tiles.tiles.push(tile);
-//                    $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
-//                }
-//                self.previousDragCell = cell;
-//                self.tiles.updateTilePosition(tile, cell.row, cell.column);
-//                self.tiles.tilesReorder(tile);
-//                self.show();
-//                tile.shouldHide(true);
-//                $('#tile-dragging-placeholder').css({
-//                    left: tile.left(),
-//                    top: tile.top(),
-//                    width: tile.cssWidth() -20,
-//                    height: tile.cssHeight() - 20 - 20
-//                }).show();
-//                startTime = curTime;
-//>>>>>>> 1ea8b837518472f095a12e24178e367ab5910f34:dashboards-ui/dashboardsui-web/public_html/@version@/js/dashboard-tile-model.js
             };
             
             self.onNewWidgetStopDragging = function(e, u) {
