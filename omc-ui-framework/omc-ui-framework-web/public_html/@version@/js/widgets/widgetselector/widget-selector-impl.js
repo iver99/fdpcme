@@ -19,6 +19,8 @@ define([
                 var dialogTitle = $.isFunction(params.dialogTitle) ? params.dialogTitle() : params.dialogTitle;
                 var widgetProviderName = $.isFunction(params.providerName) ? params.providerName() : params.providerName;
                 var widgetProviderVersion = $.isFunction(params.providerVersion) ? params.providerVersion() : params.providerVersion;
+                var includeDashboardIneligible = $.isFunction(params.includeDashboardIneligible) ? params.includeDashboardIneligible() : 
+                        (params.includeDashboardIneligible ? params.includeDashboardIneligible : false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 self.dialogId = $.isFunction(params.dialogId) ? params.dialogId() : 
@@ -283,6 +285,9 @@ define([
                     var widgetsUrl = '/sso.static/savedsearch.widgets';
                     if (dfu.isDevMode()){
                         widgetsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgets");
+                        if (includeDashboardIneligible) {
+                            widgetsUrl = widgetsUrl + "?includeDashboardIneligible=true";
+                        }
                     }
                     
                     if (queryWidgetsForAllSubscribedApps) {
@@ -304,6 +309,9 @@ define([
                         for (var i = 0; i < availableWidgetGroups.length; i++) {
                             //Get widgets by widget group id
                             widgetsUrl = widgetsUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
+                            if (includeDashboardIneligible) {
+                                widgetsUrl = widgetsUrl + "&includeDashboardIneligible=true";
+                            }
                             dfu.ajaxWithRetry({
                                 url: widgetsUrl,
                                 headers: dfu.getSavedSearchServiceRequestHeader(),
@@ -333,6 +341,9 @@ define([
                     var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
                     if (dfu.isDevMode()){
                         widgetgroupsUrl=dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,"/widgetgroups");
+                        if (includeDashboardIneligible) {
+                            widgetgroupsUrl = widgetgroupsUrl + "?includeDashboardIneligible=true";
+                        }
                     }
                     return dfu.ajaxWithRetry({
                             url: widgetgroupsUrl,
