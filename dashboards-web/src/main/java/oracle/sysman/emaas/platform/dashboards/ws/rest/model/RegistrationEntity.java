@@ -328,8 +328,10 @@ public class RegistrationEntity
 			}
 		}
 		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI should be subscribed accordingly as agreement now
-		if (appSet.size() > 0 && isAdmin) {
-			appSet.add(TMUI_SERVICENAME);
+		if (appSet.size() > 0) {
+			if (isAdmin) {
+				appSet.add(TMUI_SERVICENAME);
+			}
 			appSet.add(EVENTUI_SERVICENAME);
 		}
 		return appSet;
