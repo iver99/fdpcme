@@ -115,7 +115,7 @@ define([
                 self.notificationVisible = ko.observable(false);
                 self.notificationDisabled = ko.observable(true);
                 self.notificationPageUrl = null;
-                self.navLinksVisible = self.appId === 'Error' ? false : true;
+                self.navLinksVisible = true; //self.appId === 'Error' ? false : true; EMCPDF-992
                 
                 var appProperties = appMap[self.appId];
                 self.serviceName = appProperties['serviceName'];

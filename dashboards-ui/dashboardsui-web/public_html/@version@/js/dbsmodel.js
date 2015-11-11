@@ -154,6 +154,8 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
         self.showItaServiceFilter = ko.observable(predata.getShowItaService());
         
         self.showSeachClear = ko.observable(false);
+        self.tilesViewGrid = 'gridtview';
+        self.tilesViewList = 'listview';
         self.isTilesView = ko.observable(predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
