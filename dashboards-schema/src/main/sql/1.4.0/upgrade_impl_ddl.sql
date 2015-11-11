@@ -48,6 +48,14 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.WIDGET_SUPPORT_TIME_CONTROL exists already, no change is needed');      
   END IF;
+  
+  --add new column 'EMS_DASHBOARD_TILE.WIDGET_LINKED_DASHBOARD'
+  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD_TILE' AND column_name='WIDGET_LINKED_DASHBOARD';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD_TILE ADD "WIDGET_LINKED_DASHBOARD" NUMBER(*,0)';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.WIDGET_LINKED_DASHBOARD exists already, no change is needed');      
+  END IF;
 END;
 /
 

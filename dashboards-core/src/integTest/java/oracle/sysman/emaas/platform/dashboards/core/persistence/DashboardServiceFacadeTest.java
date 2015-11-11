@@ -187,6 +187,7 @@ public class DashboardServiceFacadeTest
 		tile.setWidgetViewmode("widgetViewmode");
 		tile.setWidgetHistogram("widgetHistogram");
 		tile.setWidgetSupportTimeControl(1);
+		tile.setWidgetLinkedDashboard(1L);
 		return tile;
 	}
 
