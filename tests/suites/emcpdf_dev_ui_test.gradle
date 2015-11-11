@@ -99,8 +99,10 @@ task logdir(type: Copy,dependsOn: PropsCopy) {
     if( !logdir.exists() ) {
         println("creating logdir")
 
-        if(logdir.mkdirs()) {
+         if(exec{commandLine "/usr/local/packages/aime/em/run_as_root","mkdir -p /var/opt/ORCLemaas/logs/dashboardsService"}) {
             println("succeeded in making folder")
+           exec{commandLine "/usr/local/packages/aime/em/run_as_root","chmod 777 /var/opt/ORCLemaas/logs/dashboardsService"}
+
 
             if(logdir.exists()) {
                 println("folder exists")
