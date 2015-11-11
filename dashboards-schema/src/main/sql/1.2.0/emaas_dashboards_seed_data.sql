@@ -14,7 +14,7 @@ Rem    NOTES
 Rem      None
 Rem
 Rem    MODIFIED   (MM/DD/YY)
-Rem    wenjzhu    09/28/15- Created
+Rem    miayu    09/29/15- Created
 Rem
 
 DEFINE TENANT_ID = '&1'

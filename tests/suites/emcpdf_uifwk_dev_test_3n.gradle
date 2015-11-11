@@ -1,0 +1,115 @@
+/* Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.*/
+/*
+ * DESCRIPTION
+ *     <<description here>>
+ *
+ * PRIVATE CLASSES
+ *     NONE
+ *
+ * NOTES
+ *    <other useful comments, qualifications, etc.>
+ *
+ * MODIFIED    (MM/DD/YY)
+ *   << file history here >>
+ *
+ */
+/* *************************************************************************************************
+ *                   BEGIN TEST-INFRA-BLOCK
+ ***************************************************************************************************
+ * DO NOT EDIT THE LINES BELOW. PLEASE ADD YOUR LRG SPECIFIC CODE AFTER
+ * THE LINE "END OF TEST-INFRA-BLOCK
+ */
+/**
+ * Run the buildscript{} configuration to pull the em-test-infraplugin.
+ */
+buildscript {
+    repositories {
+        maven {
+            url = "${artifactory_contextUrl}/emaas-virtual" }
+    }
+    dependencies {
+        classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+    }
+}
+
+apply plugin: 'TestInfraPlugin'
+import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
+/* *************************************************************************************************
+ *                   END OF TEST-INFRA-BLOCK
+ ***************************************************************************************************/
+ 
+ 
+/* Your lrg specific code would come here */
+repositories {
+        maven {
+          url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+       }
+        maven {
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
+    }
+
+dependencies {
+    testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils-integ-tests', version: "${REPO_BID}") {
+	exclude('module':'groovy')
+}
+ testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+testConfig(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
+        testConfig(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
+	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
+	testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
+	testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
+	testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
+	testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
+	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
+	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
+	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){transitive=false }
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}")
+configurations {
+restAssured.exclude module: 'groovy'
+}
+}
+
+
+task small_deploy_3n_block(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_uifwk_dev_test_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'setupEmaasSmallDeploy')
+                    }
+                }
+        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true
+}
+
+     task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){ 
+	include "oracle/sysman/emaas/platform/uifwk/ui/webutils/util/StringUtilTest.class"
+	include "oracle/sysman/emaas/platform/uifwk/ui/wls/management/AppLoggingManageMXBeanTest.class"	
+	useRestAssured=true
+	ext.set("testType", "unit")
+}
+task small_deploy_3n_cleanup(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'logCollectionAndPostCleanup')
+                    }
+                }
+            }
+        }
+    }
+ mustRunAfter ([small_deploy_3n_block,DEVTest])
+}
+
+
+task emcpdf_uifwk_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+apply from: "../../codeCoverage/codeCoverage.gradle"

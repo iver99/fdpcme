@@ -1,5 +1,5 @@
 Rem ----------------------------------------------------------------
-Rem 09/28/2015	WENJZHU	Created file
+Rem 09/11/2015	WENJZHU	Created file
 Rem Extract unique teant IDs from tables EMS_DASHBOARD & append that ID next to upgrade implementation file & run that file
 Rem ----------------------------------------------------------------
 
@@ -7,10 +7,11 @@ Rem ----------------------------------------------------------------
 
 SET HEADING OFF
 SET FEEDBACK OFF
+SET LINESIZE 2000
 SPOOL &EMSAAS_SQL_ROOT/1.2.0/upgrade_impl_dml_tmp.sql
 SELECT DISTINCT '@&EMSAAS_SQL_ROOT/1.2.0/upgrade_impl_dml.sql ' || TENANT_ID  FROM EMS_DASHBOARD ORDER BY '@&EMSAAS_SQL_ROOT/1.2.0/upgrade_impl_dml.sql ' || TENANT_ID ;
 SPOOL OFF
-
+SPOOL ON
 SET HEADING ON
 SET FEEDBACK ON
 WHENEVER SQLERROR EXIT ROLLBACK

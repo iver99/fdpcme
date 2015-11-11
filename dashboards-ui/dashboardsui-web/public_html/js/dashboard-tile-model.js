@@ -7,7 +7,7 @@ define(['knockout',
         'knockout.mapping',
         'dashboards/time-selector-model',
         'dfutil',
-        'df-util',
+        'uifwk/js/util/df-util',
         'jquery',
         'jqueryui',
         'ojs/ojcore',
@@ -28,6 +28,8 @@ define(['knockout',
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
         var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
+        var LINK_NAME_MAX_LENGTH = 4000;
+        var LINK_URL_MAX_LENGTH = 4000;
         
         ko.mapping = km;
         
@@ -60,6 +62,21 @@ define(['knockout',
                 self.viewEndTime = endTime;
             }
         }
+        
+        function isURL(str_url) {
+                var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
+//                        + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?"
+//                        + "(([0-9]{1,3}\.){3}[0-9]{1,3}"
+//                        + "|"
+//                        + "([0-9a-z_!~*'()-]+\.)*"
+//                        + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\."
+//                        + "[a-z]{2,6})"
+//                        + "(:[0-9]{1,4})?"
+//                        + "((/?)|"
+//                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+                var re = new RegExp(strRegex);
+                return re.test(str_url);
+            }
         
         function DashboardTargetContext(target, type, emsite) {
             var self = this;
@@ -134,10 +151,21 @@ define(['knockout',
             }            
         }
         
-        function initializeTextTileAfterLoad(dashboard, tile, funcShow, funcReorder, isContentLengthValid) {
+        function getVisualAnalyzerUrl(pName, pVersion) {
+            var url = dfu.discoverQuickLink(pName, pVersion, "visualAnalyzer");
+            if (url){
+                if (dfu.isDevMode()){
+                    url = dfu.getRelUrlFromFullUrl(url);  
+                }
+            }
+            return url;
+        }
+        
+        function initializeTextTileAfterLoad($b, tile, funcShow, funcReorder, isContentLengthValid) {
             if(!tile) {
                 return;
             }
+            var dashboard = $b.dashboard;
             registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
             tile.shouldHide = ko.observable(false);
             tile.editDisabled = ko.computed(function() { //to do
@@ -148,12 +176,13 @@ define(['knockout',
                 reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
-                validator: isContentLengthValid
+                validator: isContentLengthValid,
+                builder: $b
             };
             
             tile.tileDisplayClass = ko.computed(function() {
                 var display = tile.shouldHide()?"none":"block";
-                return tile.cssStyle() + "display:" + display + "; left: 20px;";
+                return tile.cssStyle() + "display:" + display + "; left: 10px;";
             });
         }
         
@@ -171,13 +200,12 @@ define(['knockout',
             registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
 
             if (tile.WIDGET_SOURCE() !== WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                var visualAnalyzerUrl = dfu.discoverQuickLink(tile.PROVIDER_NAME(),tile.PROVIDER_VERSION(),"visualAnalyzer");
-                if (visualAnalyzerUrl){
-                    if (dfu.isDevMode()){
-                        visualAnalyzerUrl = dfu.getRelUrlFromFullUrl(visualAnalyzerUrl);  
-                    }
+                var url = getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
+                if (url){
                     tile.configure = function(){
-                        window.open(visualAnalyzerUrl+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                        var start = timeSelectorModel.viewStart().getTime();
+                        var end = timeSelectorModel.viewEnd().getTime();
+                        window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
                     }
                 }
             } 
@@ -290,17 +318,18 @@ define(['knockout',
             tile.fireDashboardItemChangeEvent = function(dashboardItemChangeEvent){
                 tile.dashboard.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
             };
+            
         }
         
-        function DashboardTextTile(dashboard, widget, funcShow, funcReorder) {
+        function DashboardTextTile($b, widget, funcShow, funcReorder) {
             var self = this;
-            self.dashboard = dashboard;
+            self.dashboard = $b.dashboard;
             self.title = ko.observable("text widget title"); //to do 
             self.description = ko.observable();
             self.isMaximized = ko.observable(false);
             
             var kowidget;
-            if(widget.type == "TEXT_WIDGET") {
+            if(widget.type === "TEXT_WIDGET") {
                 kowidget = new TextTileItem(widget);
             }else {
                 kowidget = new TileItem(widget);
@@ -309,7 +338,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTextTileAfterLoad(dashboard, self, funcShow, funcReorder, isContentLengthValid);            
+            initializeTextTileAfterLoad($b, self, funcShow, funcReorder, isContentLengthValid);            
         }
 
         /**
@@ -339,8 +368,6 @@ define(['knockout',
             }
             for (var p in kowidget)
                 self[p] = kowidget[p];
-//            tilesViewModel.tiles.push(self);
-//            tilesViewModel.show();
             
             initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext);
         }
@@ -351,17 +378,15 @@ define(['knockout',
             return div.innerHTML;
         }
         
-        function isContentLengthValid(content) {
+        function isContentLengthValid(content, maxLength) {
             if (!content)
                 return false;
             var encoded = encodeHtml(content);
-            return encoded.length > 0 && encoded.length <= TEXT_WIDGET_CONTENT_MAX_LENGTH;
+            return encoded.length > 0 && encoded.length <= maxLength;
         }
         
-        function decodeHtml(html) {
-            var div = document.createElement('div');
-            div.innerHTML = html;
-            return div.innerText || div.textContent;
+        function decodeHtml(data) {
+            return data && $("<div/>").html(data).text();
         }
         
         function getBaseUrl() {
@@ -418,8 +443,16 @@ define(['knockout',
                     if (data && data['description'] && data['description'] !== null)
                     {
                         data['description'] = $("<div/>").html(data['description']).text();
-                    }                    
+                    }
                     var dsb = ko.mapping.fromJS(data, mapping);
+                    dsb.isDefaultTileExist = function() {
+                        for(var i in dsb.tiles()){
+                            if(dsb.tiles()[i].type() === "DEFAULT") {
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
                     if (succCallBack)
                         succCallBack(dsb);
                 },
@@ -566,14 +599,19 @@ define(['knockout',
             self.top = ko.observable(0);
             self.cssWidth = ko.observable(0);
             self.cssHeight = ko.observable(0);
+            self.linkText = ko.observable('');
+            self.linkUrl = ko.observable('');
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
             self.widgetCssStyle = ko.computed(function() {
-                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54) + "px;";
+                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-54-20) + "px;";
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
+            data.title && (self.title = ko.observable(decodeHtml(data.title)));
+            data.linkText && (self.linkText(decodeHtml(data.linkText)));
+            data.linkUrl && (self.linkUrl(decodeHtml(data.linkUrl)));
             self.clientGuid = getGuid();
             self.sectionBreak = false;
             self.displayHeight = function() {
@@ -739,16 +777,13 @@ define(['knockout',
                 if(tile.configure) {
                     tile.configure();
                 }
-            }
-            //to be continued...
-            self.removeTile = function(tile, tileRemoveCallbacks) {
+            };
+            
+            self.removeTile = function(tile) {
                 self.tiles.remove(tile);
                 for (var i = 0; i < self.tiles().length; i++) {
                     var eachTile = self.tiles()[i];
                     eachTile.shouldHide(false);
-                }
-                for (var i = 0; i < tileRemoveCallbacks.length; i++) {
-                    tileRemoveCallbacks[i]();
                 }
             };
             
@@ -801,7 +836,7 @@ define(['knockout',
                 self.tilesGrid.updateTileSize(tile, tile.width(), height);
                 self.tilesReorder(tile);
             };
-            
+                                   
             self.tilesReorder = function(tile) {
                 self.sortTilesByRowsThenColumns();
                 self.tilesGrid.initialize();
@@ -901,29 +936,29 @@ define(['knockout',
             };
         }
         
-        function DashboardTilesViewModel(dashboard, tilesView/*, urlEditView*/) {
+        function DashboardTilesViewModel($b, tilesView) {
             var self = this;
             
             widgetAreaContainer = $('#widget-area');
             
             self.tiles = new TileItemList();
-            self.tiles.tiles = dashboard.tiles;
+            self.tiles.tiles = $b.dashboard.tiles;
             widgetAreaWidth = widgetAreaContainer.width();
             
             self.previousDragCell = null;
                         
-            self.dashboard = dashboard;
-//            self.builderTitle = getNlsString("DBS_BUILDER_TITLE",dashboard.name());
+            self.dashboard = $b.dashboard;
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
+            self.builderTitle = dfu_model.generateWindowTitle(self.dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.target = dfu_model.getUrlParam("target");
             self.type = dfu_model.getUrlParam("type");
             self.emsite = dfu_model.getUrlParam("emsite");
             self.targetContext = new DashboardTargetContext(self.target, self.type, self.emsite);
             self.timeSelectorModel = new TimeSelectorModel();
             self.tilesView = tilesView;
-            self.tileRemoveCallbacks = [];
-            self.isOnePageType = (dashboard.type() === SINGLEPAGE_TYPE);
+            self.isOnePageType = (self.dashboard.type() === SINGLEPAGE_TYPE);
+            self.linkName = ko.observable();
+            self.linkUrl = ko.observable();
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
 
@@ -931,6 +966,15 @@ define(['knockout',
                 return !self.tiles.tiles() || self.tiles.tiles().length === 0;
             };
             
+            self.isDefaultTileExist = function() {
+                for(var i in self.dashboard.tiles()){
+                    if(self.dashboard.tiles()[i].type() === "DEFAULT") {
+                        return true;
+                    }
+                }
+                return false;
+            }            
+                        
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             self.openAddWidgetDialog = function() {
             	var maximizedTile = self.getMaximizedTile();
@@ -939,12 +983,7 @@ define(['knockout',
                 $('#'+addWidgetDialogId).ojDialog('open');
             };
             
-            self.registerTileRemoveCallback = function(callbackMethod) {
-                self.tileRemoveCallbacks.push(callbackMethod);
-            };
-            
-            self.AppendTextTile = function () {
-                var newTextTile;
+            self.createTextWidget = function() {
                 var widget = {};
                 widget.WIDGET_KOC_NAME = "DF_V1_WIDGET_TEXT";
                 widget.WIDGET_TEMPLATE = "../emcsDependencies/widgets/textwidget/textwidget.html";
@@ -955,7 +994,14 @@ define(['knockout',
                 widget.column = null;
                 widget.row = null;
                 widget.content = null;
-                var newTextTile = new DashboardTextTile(self.dashboard, widget, self.show, self.tiles.tilesReorder);
+                return widget;
+            };
+            
+            self.AppendTextTile = function () {
+                var newTextTile;
+                var widget = self.createTextWidget();
+                
+                var newTextTile = new DashboardTextTile($b, widget, self.show, self.tiles.tilesReorder);
                 var textTileCell = new Cell(0, 0);
                 newTextTile.row(textTileCell.row);
                 newTextTile.column(textTileCell.column);
@@ -965,24 +1011,24 @@ define(['knockout',
                 self.show();
             };
             
-            self.appendNewTile = function(name, description, width, height, widget) {
+            self.createNewTile = function(name, description, width, height, widget) {
+                if (!widget)
+                    return null;
+                
                 var newTile = null;
                 
-                if (widget) {
-                    var koc_name = widget.WIDGET_KOC_NAME;
-                    var template = widget.WIDGET_TEMPLATE;
-                    var viewmodel = widget.WIDGET_VIEWMODEL;
-                    var provider_name = widget.PROVIDER_NAME;
-                    var provider_version = widget.PROVIDER_VERSION;
-                    var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
-                    var widget_source = widget.WIDGET_SOURCE;
-//                    widget.width = ko.observable(width);
-//                    widget.height = ko.observable(height);
-                    widget.width = width;
-                    widget.height = height;
-                    widget.column = null;
-                    widget.row = null;
-                    widget.type = "DEFAULT";
+                var koc_name = widget.WIDGET_KOC_NAME;
+                var template = widget.WIDGET_TEMPLATE;
+                var viewmodel = widget.WIDGET_VIEWMODEL;
+                var provider_name = widget.PROVIDER_NAME;
+                var provider_version = widget.PROVIDER_VERSION;
+                var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
+                var widget_source = widget.WIDGET_SOURCE;
+                widget.width = width;
+                widget.height = height;
+                widget.column = null;
+                widget.row = null;
+                widget.type = "DEFAULT";
 //                    if (widget_source === 0) {
 //                        if (koc_name && template && viewmodel){
 //                            if (!ko.components.isRegistered(koc_name)) {
@@ -999,26 +1045,26 @@ define(['knockout',
 //                        }
 //                    } 
 //                    else {                       
-                        if (widget_source===null || widget_source===undefined){
-                            widget_source=1;
-                        }
-                        
-                        if (koc_name && viewmodel && template) {
-                            if (widget_source===1){
-                                 if (!ko.components.isRegistered(koc_name)) {
-                                    var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
-                                    if (assetRoot===null){
-                                        oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
-                                    }
-                                    ko.components.register(koc_name,{
-                                          viewModel:{require:assetRoot+viewmodel},
-                                          template:{require:'text!'+assetRoot+template}
-                                      }); 
-                                    oj.Logger.log("widget: "+koc_name+" is registered");
-                                    oj.Logger.log("widget template: "+assetRoot+template);
-                                    oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                    if (widget_source===null || widget_source===undefined){
+                        widget_source=1;
+                    }
+
+                    if (koc_name && viewmodel && template) {
+                        if (widget_source===1){
+                             if (!ko.components.isRegistered(koc_name)) {
+                                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
+                                if (assetRoot===null){
+                                    oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
                                 }
-                                
+                                ko.components.register(koc_name,{
+                                      viewModel:{require:assetRoot+viewmodel},
+                                      template:{require:'text!'+assetRoot+template}
+                                  }); 
+                                oj.Logger.log("widget: "+koc_name+" is registered");
+                                oj.Logger.log("widget template: "+assetRoot+template);
+                                oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                            }
+
 //                                var tileCell = self.tiles.calAvailablePositionForTile(widget, 0, 0);
 //                                var tile = new TileItem({row: tileCell.row, column: tileCell.column, width: width, height: height});
 //                                tile.row = ko.observable(tileCell.row);
@@ -1026,17 +1072,17 @@ define(['knockout',
 ////                                self.tiles.push(tile);
 //                                self.tiles.tilesGrid.registerTileToGrid(tile);
 
-                                newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
-                                var tileCell;
-                                if(!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
-                                    tileCell = new Cell(0, 0);
-                                }else{
-                                    tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
-                                }
-                                newTile.row(tileCell.row);
-                                newTile.column(tileCell.column);
+                            newTile =new DashboardTile(self.dashboard, koc_name, name, description, widget, self.timeSelectorModel, self.targetContext);
+                            var tileCell;
+                            if(!(self.tiles.tiles && self.tiles.tiles().length > 0)) {
+                                tileCell = new Cell(0, 0);
+                            }else{
+                                tileCell = self.tiles.calAvailablePositionForTile(newTile, 0, 0);
+                            }
+                            newTile.row(tileCell.row);
+                            newTile.column(tileCell.column);
 //                                self.tiles.push(tile);
-                                self.tiles.tilesGrid.registerTileToGrid(newTile);
+                            self.tiles.tilesGrid.registerTileToGrid(newTile);
 //                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
 //                                    var worksheetName = 'WS_4_QDG_WIDGET';
 //                                    var workSheetCreatedBy = 'sysman';
@@ -1079,19 +1125,25 @@ define(['knockout',
 //                                    newTile.createdBy = workSheetCreatedBy;
 //                                    newTile.qdgId = qdgId;  
 //                                }
-                            } 
-                            else {
-                                oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
-                            }
-                        }
+                        } 
                         else {
-                            oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                            oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
                         }
+                    }
+                    else {
+                        oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                    }
 //                    } 
-                    
+                return newTile;
+            };
+            
+            self.appendNewTile = function(name, description, width, height, widget) {
+                if (widget) {
+                    var newTile = self.createNewTile(name, description, width, height, widget);
                     if (newTile){
                        self.tiles.tiles.push(newTile);
                        self.show();
+                       $b.triggerEvent($b.EVENT_TILE_ADDED, null, newTile);
                     }
                 }
                 else {
@@ -1101,13 +1153,23 @@ define(['knockout',
             };
             
             self.initialize = function() {
-                $(window).resize(function() {
-                    widgetAreaWidth = widgetAreaContainer.width();
-                    self.tilesView.disableMovingTransition();
-                    self.show();
-                    self.tilesView.enableMovingTransition();
-                });
+                $b.addNewWidgetDraggingListener(self.onNewWidgetDragging);
+                $b.addNewWidgetStopDraggingListener(self.onNewWidgetStopDragging);
+                $b.addNewTextDraggingListener(self.onNewTextDragging);
+                $b.addNewTextStopDraggingListener(self.onNewTextStopDragging);
+                
+                $b.addNewLinkDraggingListener(self.onNewLinkDragging);
+                $b.addNewLinkStopDraggingListener(self.onNewLinkStopDragging);
+
+                $b.addBuilderResizeListener(self.onBuilderResize);
+                $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
                 self.initializeTiles();
+            };
+            
+            self.onBuilderResize = function(width, height, leftWidth, topHeight) {
+                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
+//                console.debug('widget area width is ' + widgetAreaWidth);
+                self.show();
             };
             
            self.menuItemSelect = function(event, ui) {
@@ -1124,11 +1186,13 @@ define(['knockout',
                         self.refreshThisWidget(tile);
                         break;
                    case "delete":
-                       self.tiles.removeTile(tile, self.tileRemoveCallbacks);
+                       self.tiles.removeTile(tile);
                        self.tiles.tilesGrid.unregisterTileInGrid(tile);
                        self.tiles.tilesReorder();
                        self.show();
                        self.notifyTileChange(tile, new TileChange("POST_DELETE"));
+                       $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
+                       $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
                        break;
                    case "wider":
                        self.tiles.broadenTile(tile);
@@ -1153,14 +1217,83 @@ define(['knockout',
                    case "maximize":
                        self.maximize(tile);
                        self.notifyTileChange(tile, new TileChange("POST_MAXIMIZE"));
+                       $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
                        break;
                    case "restore":
                        self.restore(tile);
                        self.notifyTileChange(tile, new TileChange("POST_RESTORE"));
+                       $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
                        break;
+               }
+           };
+           
+           self.openEditTileLinkDialog = function(tile) { 
+               self.tileToEdit = ko.observable(tile);
+               self.linkName(tile.linkText());
+               self.linkUrl(tile.linkUrl());
+               $("#tilesLinkEditorDialog").ojDialog("open");
+           }
+           
+           self.closeEditTileLinkDialog = function() {
+               if(self.tileToEdit && self.tileToEdit()) {
+                   var tile = self.tileToEdit();
+                   if(!tile.linkText() || !tile.linkUrl()) {
+                       tile.linkText(null);
+                       tile.linkUrl(null);
+                   }
+               }
+           }
+           
+           self.deleteTileLink = function(tile) {
+               tile.linkText(null);
+               tile.linkUrl(null);
+           }
+           
+           self.linkNameValidated = true;
+           self.linkNameValidator = {
+               'validate': function(value){
+                   if(isContentLengthValid(value, LINK_NAME_MAX_LENGTH)) {
+                       self.linkNameValidated = true;
+                       return true;
+                   }else {
+                      self.linkNameValidated = false; 
+                      throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR"));
+                   }
+               }
+           };
+           
+           self.linkURLValidated = true;
+           self.linkURLValidator = {
+               'validate': function(value) {
+                    if(isURL(value)) {                       
+                        if(isContentLengthValid(value, LINK_URL_MAX_LENGTH)) {
+                            self.linkURLValidated = true;
+                        }else {
+                            self.linkURLValidated = false;
+                            throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR"));
+                        }
+                    }else {
+                        self.linkURLValidated = false;
+                        throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR"));
+                    }
                    
                }
            };
+           
+           self.editTileLinkConfirmed = function() {
+               if(!self.linkName() || !self.linkUrl() || !self.linkNameValidated || !self.linkURLValidated) {
+                   $("#tilesLinkEditorDialog").ojDialog("close");
+                   return false;
+               }
+               if(self.tileToEdit && self.tileToEdit()) {
+                  var tile = self.tileToEdit();
+                  tile.linkText(self.linkName());
+                  tile.linkUrl(self.linkUrl());
+               }               
+               self.linkName(null);
+               self.linkUrl(null);
+               $("#tilesLinkEditorDialog").ojDialog("close");
+           }
            
            self.initializeTiles = function() {
                 if(self.tiles.tiles && self.tiles.tiles()) {
@@ -1185,46 +1318,6 @@ define(['knockout',
                         - $('#head-bar-container').outerHeight() - $('#global-time-slider').outerHeight() 
                         - (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
             };
-            
-//            self.maximizeFirst = function() {
-//                if (self.isOnePageType && self.tiles.tiles() && self.tiles.tiles().length > 0) {
-//                    if (!$('#main-container').hasClass('dbd-one-page')) {
-//                        $('#main-container').addClass('dbd-one-page');
-//                    }
-//                    if (!$('#widget-area').hasClass('dbd-one-page')) {
-//                        $('#widget-area').addClass('dbd-one-page');
-//                    }
-//                    var tile = self.tiles.tiles()[0];
-//                    
-//                    var tileId = 'tile' + tile.clientGuid;
-//                    var iframe = $('#' + tileId + ' div iframe');
-//                    globalDom = iframe.context.body;
-//                    var height = globalDom.scrollHeight;
-//                    var maximizedTileHeight = self.calculateTilesRowHeight();
-//                    height = (maximizedTileHeight > height) ? maximizedTileHeight : height;
-//                    var width = globalDom.scrollWidth;
-//                    console.log('scroll width for iframe inside one page dashboard is ' + width + 'px');
-//                    oj.Logger.log("Error: could not find tile from the ui data");
-//                    // following are investigation code, and now work actually for plugins loaded by requireJS
-////                    $($('#df_iframe').context).ready(function() {
-////                        alert('iframe loaded');
-////                    });
-////                    $("iframe").on("iframeloading iframeready iframeloaded iframebeforeunload iframeunloaded", function(e){
-////                        console.log(e.type);
-////                    });
-////                    requirejs.onResourceLoad = function (context, map, depArray) {
-////                        alert('test');
-////                    };
-////                    iframe.height(height + 'px');
-////                    iframe.width(width + 'px');
-//                    onePageTile = $('#' + tileId);
-//                    $('#' + tileId).height(height + 'px');
-//                    $('#' + tileId).width(width + 'px');
-//                    if (!$('#df_iframe').hasClass('dbd-one-page'))
-//                        $('#df_iframe').addClass('dbd-one-page');
-//                    $('#df_iframe').width((width - 5) + 'px');
-//                }
-//            };
             
             self.showMaximizedTile = function(tile, width, height) {
                 if(!tile) {
@@ -1271,8 +1364,10 @@ define(['knockout',
             
             self.initializeMaximization = function() {
             	var maximized = self.getMaximizedTile();
-            	if (maximized)
-            		self.maximize(maximized);
+            	if (maximized) {
+                    self.maximize(maximized);
+                    $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, maximized);
+                }
             };
             
             self.restore = function(tile) {                
@@ -1283,7 +1378,6 @@ define(['knockout',
                 }
                 self.tilesView.enableDraggable();
                 self.show();
-                
             };
             
             self.notifyTileChange = function(tile, change){
@@ -1297,19 +1391,17 @@ define(['knockout',
             
             self.refreshThisWidget = function(tile) {
                 self.notifyTileChange(tile, new TileChange("PRE_REFRESH"));
-            }
+            };
             
             self.show = function() {
-                widgetAreaWidth = widgetAreaContainer.width();
+//                widgetAreaWidth = widgetAreaContainer.width();
                 self.showTiles();
-//                self.tilesView.enableDraggable();
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
                 var height = self.tiles.tilesGrid.getHeight();
                 $('#tiles-wrapper').height(height);
             };
-            
             
             self.getCellFromPosition = function(position) {
                 var row = 0, height = 0;
@@ -1383,8 +1475,8 @@ define(['knockout',
                 }
                 for (var i = 0; i < self.tiles.tiles().length; i++) {
                     var tile = self.tiles.tiles()[i];
-                    if(tile.type() == "TEXT_WIDGET") {
-                       tile.shouldHide(true);
+                    if(tile.type() === "TEXT_WIDGET") {
+                       tile.shouldHide(true); 
                     }                    
                     tile.cssWidth(self.getDisplayWidthForTile(tile));
                     tile.cssHeight(self.getDisplayHeightForTile(tile));
@@ -1411,7 +1503,6 @@ define(['knockout',
                 var lastHeight = elem.css('height');
                 
                 function checkForChanges() {
-                    console.log('repeatedly check text tile (id=' + textTile.clientGuid + ') height. Current height is ' + elem.css('height') + '. Last height is ' + lastHeight);
                     if (elem.css('height') !== lastHeight) {
                         self.reRender();
                         return;
@@ -1428,6 +1519,10 @@ define(['knockout',
             };
             var startTime, curTime;
             self.handleStartDragging = function(event, ui) {
+                if(!ui) {
+                    console.log(ui);
+                    return;
+                }
                 startTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);
                 dragStartRow = tile.row();
@@ -1437,39 +1532,19 @@ define(['knockout',
                 }
             };
             
-            self.reloadEditors = function() {
-                for(var i in CKEDITOR.instances) {
-                    delete CKEDITOR.instances[i];
-                    $("#cke_"+i).remove();
-                }
-                $("textarea.editor").each(function() {
-                    var targetId = $(this).attr("id");
-//                    CKEDITOR.replace(targetId);
-                    CKEDITOR.replace(targetId, {
-                            language: 'en',
-                            toolbar: [
-                                {name: 'styles', items: ['Font', 'FontSize']},
-                                {name: 'basicStyles', items: ['Bold', 'Italic', 'Underline']},
-                                {name: 'colors', items: ['TextColor']},
-                                {name: 'paragraph', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight']}
-//                                {name: 'insert', items: ['Image', 'Flash']}
-                            ],
-                            removePlugins: 'resize, elementspath',
-                            startupFocus: true
-                        });
-                });
-            };
-            
             self.handleOnDragging = function(event, ui) {
+                if(!ui) {
+                    return;
+                }
                 curTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);
                 var cell = self.getCellFromPosition(ui.helper.position()); 
                 if(tile.content) {
                     cell.column = 0;
                 }
-                if ((!self.previousDragCell || cell.row !== self.previousDragCell.row || cell.column !== self.previousDragCell.column) 
-                        && ((cell.column+tile.width())<=defaultCols) 
-                        && (curTime-startTime)>300) {
+                if ((curTime-startTime)>300 && 
+                        (!self.previousDragCell || cell.row !== self.previousDragCell.row || cell.column !== self.previousDragCell.column) 
+                        && cell.column+tile.width() <= defaultCols) {
                     self.previousDragCell = cell;
                     self.tiles.updateTilePosition(tile, cell.row, cell.column);
                     self.tiles.tilesReorder(tile);
@@ -1485,6 +1560,9 @@ define(['knockout',
             };
             
             self.handleStopDragging = function(event, ui) {
+                if(!ui) {
+                    return;
+                }
                 var tile = ko.dataFor(ui.helper[0]);
                 if (!self.previousDragCell)
                     return;
@@ -1498,14 +1576,167 @@ define(['knockout',
                 dragStartRow = null;
                 self.previousDragCell = null;
                 if(tile.type() === "TEXT_WIDGET") {
-                   self.reloadEditors(); 
+//                   self.reloadEditors(); 
                 }            
             };
-          
-//            self.changeUrl = function(tile) {
-//                urlEditView.setEditedTile(tile);
-//                $('#urlChangeDialog').ojDialog('open');
-//            };
+            
+            self.onNewWidgetDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width())
+                    return;
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var cell = self.getCellFromPosition(pos); 
+                if (!cell) return;
+                var tile = u.helper.tile;
+                if (!tile) {
+                    var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
+                    tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
+                    u.helper.tile = tile;
+                    self.tiles.tiles.push(tile);
+                    $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
+                }
+                self.previousDragCell = cell;
+                self.tiles.updateTilePosition(tile, cell.row, cell.column);
+                self.tiles.tilesReorder(tile);
+                self.show();
+                tile.shouldHide(true);
+                $('#tile-dragging-placeholder').css({
+                    left: tile.left(),
+                    top: tile.top(),
+                    width: tile.cssWidth() -20,
+                    height: tile.cssHeight() - 20
+                }).show();
+                startTime = curTime;
+            };
+            
+            self.onNewWidgetStopDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                var tile = null;
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (u.helper.tile) {
+                        var idx = self.tiles.tiles.indexOf(u.helper.tile);
+                        self.tiles.tiles.splice(idx, 1);
+                    }
+                }
+                else {
+                    var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                    var cell = self.getCellFromPosition(pos); 
+                    if (!cell) return;
+                    tile = u.helper.tile;
+                    if (!tile) {
+                        var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
+                        tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget);
+                        u.helper.tile = tile;
+                        self.tiles.tiles.push(tile);
+                        $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
+                    }
+                    if (!self.previousDragCell)
+                        return;
+                }
+                self.tiles.tilesReorder(tile);
+                self.show();
+                $('#tile-dragging-placeholder').hide();
+                self.previousDragCell = null;
+                tile && $(u.helper).hide();
+            };
+            
+            self.onNewTextDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width())
+                    return;
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var cell = self.getCellFromPosition(pos); 
+                if (!cell) return;
+                var tile = u.helper.tile;
+                if (!tile) {
+                    tile = new DashboardTextTile($b, self.createTextWidget(), self.show, self.tiles.tilesReorder);
+                    u.helper.tile = tile;
+                    self.tiles.tiles.push(tile);
+                }
+                self.previousDragCell = cell;
+                self.tiles.updateTilePosition(tile, cell.row, cell.column);
+                self.tiles.tilesReorder(tile);
+                self.show();
+                $('#tile-dragging-placeholder').css({
+                    left: tile.left(),
+                    top: tile.top(),
+                    width: u.helper.children("#left-panel-text-helper").width() - 80,
+                    height: u.helper.children("#left-panel-text-helper").height()
+                }).show();
+                startTime = curTime;
+            };
+            
+            self.onNewTextStopDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                var tile = null;
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (u.helper.tile) {
+                        var idx = self.tiles.tiles.indexOf(u.helper.tile);
+                        self.tiles.tiles.splice(idx, 1);
+                    }
+                }
+                else {
+                    var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                    var cell = self.getCellFromPosition(pos); 
+                    if (!cell) return;
+                    tile = u.helper.tile;
+                    if (!u.helper.tile) {
+                        tile = new DashboardTextTile($b, self.createTextWidget(), self.show, self.tiles.tilesReorder);
+                        u.helper.tile = tile;
+                        self.tiles.tiles.push(tile);
+                    }
+                    if (!self.previousDragCell)
+                        return;
+                }
+                self.tiles.tilesReorder(tile);
+                self.show();
+                $('#tile-dragging-placeholder').hide();
+                self.previousDragCell = null;
+                if (tile) {
+                    $(u.helper).css({left: tile.left(), top: tile.top()});
+//                    self.reloadEditors();
+                }
+            };
+            
+            self.onNewLinkDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return;
+                }
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var cell = self.getCellFromPosition(pos); 
+                if (!cell || !self.tiles.tilesGrid.tileGrid[cell.row] || !self.tiles.tilesGrid.tileGrid[cell.row][cell.column]) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return;
+                };
+                var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
+                if(!tile || tile.type() === "TEXT_WIDGET") return;
+                var tileId = "tile" + tile.clientGuid;
+                $(".dbd-tile-link-wrapper").css("border", "0px");
+                $("#"+tileId+" .dbd-tile-link-wrapper").css("border", "1px dashed red");
+            }
+            
+            self.onNewLinkStopDragging = function(e, u) {
+                var tcc = $("#tiles-col-container");
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return;
+                }
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var cell = self.getCellFromPosition(pos); 
+                if (!cell || !self.tiles.tilesGrid.tileGrid[cell.row] || !self.tiles.tilesGrid.tileGrid[cell.row][cell.column]) {
+                    $(".dbd-tile-link-wrapper").css("border", "0px");
+                    return
+                };
+                var tile = self.tiles.tilesGrid.tileGrid[cell.row][cell.column];
+                if(!tile || tile.type() === "TEXT_WIDGET") return;
+                tile.linkText(getNlsString("DBS_BUILDER_EDIT_WIDGET_LINK_DESC"));
+                var tileId = "tile" + tile.clientGuid;
+                $("#"+tileId+" .dbd-tile-link-wrapper").css("border", "0px");
+                $("#"+tileId+" .dbd-tile-link").css("display", "inline-block");
+                self.openEditTileLinkDialog(tile);
+            };
             
             self.fireDashboardItemChangeEventTo = function (tile, dashboardItemChangeEvent) {
                 var deferred = $.Deferred();
@@ -1553,7 +1784,13 @@ define(['knockout',
             
             self.postDocumentShow = function() {
 //                self.maximizeFirst();
+                $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
+                $(window).resize(function() {
+                    $b.triggerBuilderResizeEvent('resize builder after window resized');
+                });
+                //avoid brandingbar disappear when set font-size of text
+                $("#globalBody").addClass("globalBody");
             };
 
             var timeSelectorChangelistener = ko.computed(function(){
@@ -1570,58 +1807,26 @@ define(['knockout',
                 }
             });
 
-	var initStart = new Date(new Date() - 24*60*60*1000);
-        var initEnd = new Date();
- 	self.timeSelectorModel.viewStart(initStart);
-        self.timeSelectorModel.viewEnd(initEnd);
-	self.datetimePickerParams = {
-	    startDateTime: initStart,
- 	    endDateTime: initEnd,	   
-	    callbackAfterApply: function(start, end) {
-		self.timeSelectorModel.viewStart(start);
-		self.timeSelectorModel.viewEnd(end);
-		self.timeSelectorModel.timeRangeChange(true);		
-	    }
-	};
-
-/**
-	self.refreshCallback = function(start, end) {
-	    var dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(start,end),null);
-            self.fireDashboardItemChangeEvent(dashboardItemChangeEvent);
-	}
-	self.timeRangeStart = ko.observable(new Date(new Date() - 24*60*60*1000));
-        self.timeRangeEnd = ko.observable(new Date());
-	self.datetimePickerParams = {
-	    startDateTime: new Date() - 24*60*60*1000,
- 	    endDateTime: new Date(),
-	    callback: function(start, end) {
-		self.timeRangeStart(start);
-		self.timeRangeEnd(end);
-		self.refreshCallback(start, end);
-	    }
-	}
-	self.autoRefreshParams = ko.computed(function() {
-    	    return {
-	        timeRangeStart: self.timeRangeStart(),
-        	timeRangeEnd: self.timeRangeEnd(),
-	    	refreshCallback: self.refreshCallback
-	    }
-	}, self);
-**/
-
-    }
-//        function DashboardViewModel() {
-//            var self = this;
-//            
-//            self.name = observable("LaaS Dashboard");
-//            self.description = observable("Use dashbaord builder to edit, maintain, and view tiles for search results.");
-//        }
+            var initStart = new Date(new Date() - 24*60*60*1000);
+            var initEnd = new Date();
+            self.timeSelectorModel.viewStart(initStart);
+            self.timeSelectorModel.viewEnd(initEnd);
+            self.datetimePickerParams = {
+                startDateTime: initStart,
+                endDateTime: initEnd,	   
+                callbackAfterApply: function(start, end) {
+                    self.timeSelectorModel.viewStart(start);
+                    self.timeSelectorModel.viewEnd(end);
+                    self.timeSelectorModel.timeRangeChange(true);		
+                }
+            };
+        }
         
         return {"DashboardTile": DashboardTile, 
             "DashboardTilesViewModel": DashboardTilesViewModel,
-//            "DashboardViewModel": DashboardViewModel,
             "loadDashboard": loadDashboard,
             "isDashboardNameExisting": isDashboardNameExisting,
+            "getVisualAnalyzerUrl": getVisualAnalyzerUrl,
             "initializeFromCookie": initializeFromCookie,
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "initializeTextTileAfterLoad" : initializeTextTileAfterLoad,
