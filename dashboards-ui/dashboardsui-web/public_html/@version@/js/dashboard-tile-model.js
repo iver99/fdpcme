@@ -667,6 +667,15 @@ define(['knockout',
                 return self.tileGrid.length;
             };
             
+            self.isEmptyRow = function(row) {
+                for(var i=0; i<defaultCols; i++) {
+                    if(self.tileGrid[row][i]) {
+                            return false;
+                    }
+                    return true;
+                }
+            }
+            
             self.getRow = function(rowIndex) {
                 if (!self.tileGrid[rowIndex]) {
                     self.initializeGridRows(rowIndex + 1);
@@ -802,6 +811,7 @@ define(['knockout',
                 for(var i in tilesToMove) {
                     self.moveTileUp(tilesToMove[i], tile.height());
                 }
+                self.tilesReorder();
             }
             
             self.broadenTile = function(tile) {
@@ -821,6 +831,7 @@ define(['knockout',
                     self.moveTileDown(iTile, rowDiff);
                 }                
                 self.tilesGrid.updateTileSize(tile, ++width, tile.height());
+                self.tilesReorder();
             };
             
             self.narrowTile = function(tile) {
@@ -829,18 +840,18 @@ define(['knockout',
                     return;
                 width--;
                 self.tilesGrid.updateTileSize(tile, width, tile.height());
-//                self.tilesReorder(tile);
+                self.tilesReorder();
             };
             
             self.tallerTile = function(tile) {
                 var cells = self.getCellsOccupied(tile.row()+tile.height(), tile.column(), tile.width(), 1);                               
                 var tilesToMove = self.getTilesUnder(cells, tile);
-//                self.tilesReorder(tile);
-                self.tiles.moved = [];
+//                self.tiles.moved = [];
                 for(var i in tilesToMove) {                    
                     self.moveTileDown(tilesToMove[i], 1);
                 }
-                self.tilesGrid.updateTileSize(tile, tile.width(), tile.height() + 1);                
+                self.tilesGrid.updateTileSize(tile, tile.width(), tile.height() + 1);
+                self.tilesReorder();
             };
             
             self.shorterTile = function(tile) {
@@ -854,41 +865,51 @@ define(['knockout',
                 for(var i in tilesToMove) {
                     self.moveTileUp(tilesToMove[i], 1);
                 }
-                
+                self.tilesReorder();
             };
                                    
-            self.tilesReorder = function(tile) {
-                self.sortTilesByRowsThenColumns();
+//            self.tilesReorder = function(tile) {
+//                self.sortTilesByRowsThenColumns();
+//                self.tilesGrid.initialize();
+////                self.tilesGrid.initializeGridRows(self.tilesGrid.size());
+//                if (tile) {
+//                    self.updateTilePosition(tile, tile.row(), tile.column());
+//                    if(dragStartRow !== null){
+//                        var startRowInDragArea = Math.min(dragStartRow, tile.row());
+//                    }
+//                }else {
+//                    self.tilesGrid.initializeGridRows(1);
+//                }
+//                var startRow = 0, startCol = 0;
+//                for (var i = 0; i < self.tiles().length; i++) {
+//                    var tl = self.tiles()[i];
+//                    if(tl===tile){
+//                        self.updateTilePosition(tl, tl.row(), tl.column());
+//                        startRow = tl.row();
+//                        continue;
+//                    }
+//                    if(tile && dragStartRow!==null && self.areTilesOverlapped(tl, tile)) {
+//                        var cell =  self.calAvailablePositionForTile(tl, startRowInDragArea, startCol);
+//                    }else{
+//                        var cell = self.calAvailablePositionForTile(tl, startRow, startCol);
+//                    }                    
+//                    startRow = cell.row;
+//                    self.updateTilePosition(tl, cell.row, cell.column);
+//                    startRow = tl.row();
+////                    cell = self.getAvailableCellAfterTile(tl);
+////                    startRow = cell.row, startCol = cell.column;
+//                }
+//            };
+
+            //reorder and re-register tiles
+            self.tilesReorder = function() {
+                self.sortTilesByColumnsThenRows();
+                self.checkToMoveTilesUp();
                 self.tilesGrid.initialize();
-//                self.tilesGrid.initializeGridRows(self.tilesGrid.size());
-                if (tile) {
-                    self.updateTilePosition(tile, tile.row(), tile.column());
-                    if(dragStartRow !== null){
-                        var startRowInDragArea = Math.min(dragStartRow, tile.row());
-                    }
-                }else {
-                    self.tilesGrid.initializeGridRows(1);
+                for(var i=0; i<self.tiles().length; i++) {
+                    self.tilesGrid.registerTileToGrid(self.tiles()[i]);
                 }
-                var startRow = 0, startCol = 0;
-                for (var i = 0; i < self.tiles().length; i++) {
-                    var tl = self.tiles()[i];
-                    if(tl===tile){
-                        self.updateTilePosition(tl, tl.row(), tl.column());
-                        startRow = tl.row();
-                        continue;
-                    }
-                    if(tile && dragStartRow!==null && self.areTilesOverlapped(tl, tile)) {
-                        var cell =  self.calAvailablePositionForTile(tl, startRowInDragArea, startCol);
-                    }else{
-                        var cell = self.calAvailablePositionForTile(tl, startRow, startCol);
-                    }                    
-                    startRow = cell.row;
-                    self.updateTilePosition(tl, cell.row, cell.column);
-                    startRow = tl.row();
-//                    cell = self.getAvailableCellAfterTile(tl);
-//                    startRow = cell.row, startCol = cell.column;
-                }
-            };
+            }
             
             self.areTilesOverlapped = function(tile1, tile2) {
                var minx1 = tile1.row(), maxx1 = tile1.row() + tile1.height();
@@ -937,14 +958,23 @@ define(['knockout',
                 return new Cell(row, column);
             };
             
-            self.sortTilesByRowsThenColumns = function() {
+//            self.sortTilesByRowsThenColumns = function() {
+//                self.tiles.sort(function(tile1, tile2) {
+//                    if (tile1.row() !== tile2.row())
+//                        return tile1.row() - tile2.row();
+//                    else
+//                        return tile1.column() - tile2.column();
+//                });
+//            };
+            
+            self.sortTilesByColumnsThenRows = function() {
                 self.tiles.sort(function(tile1, tile2) {
-                    if (tile1.row() !== tile2.row())
-                        return tile1.row() - tile2.row();
-                    else
+                    if (tile1.column() !== tile2.column())
                         return tile1.column() - tile2.column();
+                    else
+                        return tile1.row() - tile2.row();
                 });
-            };
+            }
                         
             self.setRowHeight = function(rowIndex, height) {
                 self.tilesGrid.setRowHeight(rowIndex, height);
@@ -970,6 +1000,7 @@ define(['knockout',
                return cells;
             }
             
+            //get first row tiles under target tile
             self.getTilesUnder = function(cells, tile) {
                 var tiles = [];
                 var rows = cells.rows;
@@ -1016,9 +1047,12 @@ define(['knockout',
                 }                
                 return nexts;
             }
-            self.moved = [];
+//            self.moved = [];
             self.draggingTile = null;
             self.moveTileDown = function(tile, rowDiff) {
+                if(rowDiff <= 0) {
+                    return;
+                }
                 var actualRow = tile.row();
                 
                 var nextRow = actualRow +rowDiff;
@@ -1026,14 +1060,14 @@ define(['knockout',
                 var nextTiles  = self.getTilesBelow(tile);
                 for(var i in nextTiles) {
                     var iTile = nextTiles[i];
-                    if($.inArray(iTile, self.moved) === -1) {
+//                    if($.inArray(iTile, self.moved) === -1) {
                         if(self.draggingTile === iTile) {
                             self.moveTileDown(iTile, rowDiff-iTile.height());
                         }else {
                             self.moveTileDown(iTile, rowDiff);
                         }
-                        self.moved.push(iTile);
-                    }
+//                        self.moved.push(iTile);
+//                    }
                 }
                 self.updateTilePosition(tile, nextRow, tile.column());
             }
@@ -1058,6 +1092,9 @@ define(['knockout',
             }
             
             self.moveTileUp = function(tile, rowDiff) {
+                if(rowDiff <= 0) {
+                    return;
+                }
                 var actualRow = tile.row();                               
                                 
                 var nextRow = actualRow - rowDiff;
@@ -1080,6 +1117,7 @@ define(['knockout',
                 }
             }
             
+            //get first row tiles to be occupied
             self.getTilesToBeOccupied = function() {
                 var argNum = arguments.length;
                 
@@ -1097,6 +1135,9 @@ define(['knockout',
                 }
                 
                 for(var i=0; i<height; i++) {
+                    if(tiles.length > 0) {
+                        return tiles;
+                    }
                     row = cell.row + i;
                     for(var j=0; j<width; j++) {
                         col = cell.column + j;
@@ -1125,7 +1166,38 @@ define(['knockout',
                for(var i=0; i<tiles.length; i++) {
                    tiles[i].toBeOccupied(false);
                } 
-            }            
+            }
+            
+            //move tiles up if they can and remove empty rows
+            self.checkToMoveTilesUp = function() {
+                for(var i=0; i<self.tiles().length; i++) {
+                    var iTile = self.tiles()[i];
+                    var preTile = self.tiles()[i-1];
+                    var j;
+                    if(i === 0) {
+                        j = 0;
+                    }else {
+                        j = (preTile.row() > iTile.row()) ? 0 : preTile.row();
+                    }
+                    for(; j<iTile.row(); j++) {
+                        if(self.canMoveToRow(iTile, j)) {
+                            self.updateTilePosition(iTile, j, iTile.column());
+                            break;
+                        }
+                    }
+                }
+                var rows = self.tilesGrid.size();
+                var emptyRows = [];
+                for(var i=0; i< rows; i++) {
+                     if(self.tilesGrid.isEmptyRow(i)) {
+                         emptyRows.push(i);
+                     }
+                }
+
+                for(var i=emptyRows.length-1; i>=0; i--) {
+                       self.tilesGrid.tileGrid.splice(i, 1); 
+                }
+            }
         }
         
         function DashboardTilesViewModel($b, tilesView) {
@@ -1402,7 +1474,7 @@ define(['knockout',
                        self.notifyTileChange(tile, new TileChange("POST_NARROWER"));
                        break;
                    case "taller":
-                       self.tiles.tallerTile(tile);
+                       self.tiles.tallerTile(tile);                       
                        self.show();
                        self.notifyTileChange(tile, new TileChange("POST_TALLER"));
                        break;
@@ -1788,12 +1860,13 @@ define(['knockout',
                     cell.column = 0;
                 }
                 ui.helper.css({left:tile.left(), top:tile.top()});
-                if((self.previousDragCell) && cell.column+tile.width() <= defaultCols) {
+                var tileInCell = self.tiles.tilesGrid.tileGrid[cell.row] ? self.tiles.tilesGrid.tileGrid[cell.row][cell.column] : null;
+                if((self.previousDragCell) && cell.column+tile.width() <= defaultCols
+                        && (!tileInCell || (tileInCell && tileInCell.row() === cell.row))) {
                     var cellsOccupiedByTile = self.tiles.getCellsOccupied(cell.row, cell.column, tile.width(), tile.height());
                     var tilesUnderCell = self.tiles.getTilesUnder(cellsOccupiedByTile, tile);
                     var tilesBelowOriginalCell = self.tiles.getTilesBelow(tile);
-//                    self.tiles.moved = [tile];
-                    self.tiles.moved = [];
+//                    self.tiles.moved = [];
                     self.tiles.draggingTile = tile;
                     for(var i in tilesUnderCell) {
                         var iTile = tilesUnderCell[i];
@@ -1801,7 +1874,7 @@ define(['knockout',
                         self.tiles.moveTileDown(iTile, rowDiff);
                     }
                     self.tiles.draggingTile = null;
-                    self.tiles.moved = [];
+//                    self.tiles.moved = [];
                     self.tiles.updateTilePosition(tile, cell.row, cell.column);
                     
                     var rowDiff = Math.abs(cell.row - dragStartRow);
@@ -1811,11 +1884,7 @@ define(['knockout',
                         self.tiles.moveTileUp(iTile, rowDiff);
                     }                   
                 }
-                self.tiles.sortTilesByRowsThenColumns();
-                self.tiles.tilesGrid.initialize();
-                for(var i=0; i<self.tiles.tiles().length; i++) {
-                    self.tiles.tilesGrid.registerTileToGrid(self.tiles.tiles()[i]);
-                }
+                self.tiles.tilesReorder();
                 self.showTiles();
                 $('#tile-dragging-placeholder').hide();
                 if ($(ui.helper).hasClass(draggingTileClass)) {
@@ -1878,21 +1947,20 @@ define(['knockout',
                     if (!self.previousDragCell)
                         return;
                 }
+                var tileInCell = self.tiles.tilesGrid.tileGrid[cell.row] ? self.tiles.tilesGrid.tileGrid[cell.row][cell.column] :null;
+                if(tileInCell && tileInCell.row() !== cell.row) {
+                    return;
+                }
                 var cells = self.tiles.getCellsOccupied(cell.row, cell.column, 4, 1);
                 var tilesToMove = self.tiles.getTilesUnder(cells, tile);
                 for(var i in tilesToMove) {
                     var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
                     self.tiles.moveTileDown(tilesToMove[i], rowDiff);
                 }
-                self.tiles.moved = [];
+//                self.tiles.moved = [];
                 self.tiles.updateTilePosition(tile, cell.row, cell.column);
                 
-                self.tiles.sortTilesByRowsThenColumns();
-                self.tiles.tilesGrid.initialize();
-                for(var i=0; i<self.tiles.tiles().length; i++) {
-                    self.tiles.tilesGrid.registerTileToGrid(self.tiles.tiles()[i]);
-                }
-                
+                self.tiles.tilesReorder();
                 self.show();
                 $('#tile-dragging-placeholder').hide();
                 self.previousDragCell = null;
@@ -1949,26 +2017,21 @@ define(['knockout',
                     if (!self.previousDragCell)
                         return;
                 }
+                
+                var tileInCell = self.tiles.tilesGrid.tileGrid[cell.row] ? self.tiles.tilesGrid.tileGrid[cell.row][cell.column] : null;
+                if(tileInCell && tileInCell.row() !== cell.row) {
+                    return;
+                }
                 var cells = self.tiles.getCellsOccupied(cell.row, cell.column, 8, 1);
                 var tilesToMove = self.tiles.getTilesUnder(cells, tile);
                 for(var i in tilesToMove) {
                     var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
                     self.tiles.moveTileDown(tilesToMove[i], rowDiff);
                 }                    
-                self.tiles.moved = [];
+//                self.tiles.moved = [];
                 self.tiles.updateTilePosition(tile, cell.row, cell.column);
-                self.tiles.sortTilesByRowsThenColumns();
-                self.tiles.tilesGrid.initialize();
-                for(var i=0; i<self.tiles.tiles().length; i++) {
-                    self.tiles.tilesGrid.registerTileToGrid(self.tiles.tiles()[i]);
-                }
 
-                self.tiles.sortTilesByRowsThenColumns();
-                self.tiles.tilesGrid.initialize();
-                for(var i=0; i<self.tiles.tiles().length; i++) {
-                    self.tiles.tilesGrid.registerTileToGrid(self.tiles.tiles()[i]);
-                }
-                
+                self.tiles.tilesReorder();
                 self.show();
                 $('#tile-dragging-placeholder').hide();
                 self.previousDragCell = null;
