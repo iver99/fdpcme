@@ -676,8 +676,8 @@ define(['knockout',
                     if(self.tileGrid[row][i]) {
                             return false;
                     }
-                    return true;
-                }
+                }                
+                return true;
             }
             
             self.getRow = function(rowIndex) {
