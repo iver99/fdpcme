@@ -82,16 +82,13 @@ restAssured.exclude module: 'groovy'
 
 
 
-task DeployDFAPI(type:Exec) {
 
-        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerDeploy'
-	}
-task PropsCopy(type: Copy, dependsOn: DeployDFAPI) {
+task PropsCopy(type: Copy) {
    from '/net/slc07ctj/scratch/emaas/setuplogs/'
    into '../../oracle/work/'
     include '*.log'
    
-    sleep(300 * 1000)
+
 
 }
 
