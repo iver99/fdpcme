@@ -8,6 +8,8 @@ import java.util.TimeZone;
 
 public class DateUtil
 {
+	private static final SimpleDateFormat DATE_FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+
 	/**
 	 * Convert local time to UTC time and return
 	 *
@@ -15,7 +17,7 @@ public class DateUtil
 	 */
 	public static Date getCurrentUTCTime()
 	{
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance(Locale.getDefault());
 		long localNow = System.currentTimeMillis();
 		long offset = cal.getTimeZone().getOffset(localNow);
 		Date utcDate = new Date(localNow - offset);
@@ -42,6 +44,4 @@ public class DateUtil
 	{
 		DATE_FORMATTER_ISO8601.setTimeZone(tz);
 	}
-
-	private static final SimpleDateFormat DATE_FORMATTER_ISO8601 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 }

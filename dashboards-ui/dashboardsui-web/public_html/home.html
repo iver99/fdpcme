@@ -143,10 +143,10 @@
                                                 <div id="viewbtnset" aria-label="Choose one view"
                                                      data-bind="ojComponent: {component: 'ojButtonset', checked: isTilesView, optionChange: handleViewChanged}" >
                                                     <label for="gridviewbtn"></label>
-                                                    <input id="gridviewbtn" type="radio" name="view" data-bind="value: 'gridtview', 
+                                                    <input id="gridviewbtn" type="radio" name="view" data-bind="value: tilesViewGrid, 
                                                                            ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_GRID_LABEL'), icons: {start: 'icon-gridview-16 oj-fwk-icon'}}" />
                                                     <label for="listviewbtn"></label>
-                                                    <input id="listviewbtn" type="radio" name="view" title="List" data-bind="value: 'listview', 
+                                                    <input id="listviewbtn" type="radio" name="view" title="List" data-bind="value: tilesViewList, 
                                                                            ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_LIST_LABEL'), icons: {start: 'icon-listview-16 oj-fwk-icon'}}" />
                                                 </div>
                                                 </span>
