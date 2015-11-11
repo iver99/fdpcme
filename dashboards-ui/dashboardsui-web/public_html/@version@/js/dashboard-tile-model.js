@@ -1190,6 +1190,7 @@ define(['knockout',
                         }
                     }
                 }
+                //check for empry rows
                 var rows = self.tilesGrid.size();
                 var emptyRows = [];
                 for(var i=0; i< rows; i++) {
@@ -1197,9 +1198,19 @@ define(['knockout',
                          emptyRows.push(i);
                      }
                 }
-
+                //remove empty rows
                 for(var i=emptyRows.length-1; i>=0; i--) {
-                       self.tilesGrid.tileGrid.splice(i, 1); 
+                       self.tilesGrid.tileGrid.splice(emptyRows[i], 1); 
+                }
+                //reset rows of tiles below empty rows
+                for(var i=0; i<self.tiles().length; i++) {
+                    var iRow = self.tiles()[i].row();
+                    var iTile = self.tiles()[i];
+                    for(var j=0; j<emptyRows.length; j++) {
+                        if(iRow > emptyRows[j]) {
+                            self.updateTilePosition(iTile, iRow-j-1, iTile.column());
+                        }
+                    }
                 }
             }
         }
