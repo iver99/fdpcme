@@ -193,6 +193,9 @@ public class Tile
 	@JsonProperty("WIDGET_SUPPORT_TIME_CONTROL")
 	private Boolean widgetSupportTimeControl;
 
+	@JsonProperty("WIDGET_LINKED_DASHBOARD")
+	private Long widgetLinkedDashboard;
+
 	private Integer width;
 
 	private String content;
@@ -405,6 +408,11 @@ public class Tile
 	//        this.position = position;
 	//    }
 
+	public Long getWidgetLinkedDashboard()
+	{
+		return widgetLinkedDashboard;
+	}
+
 	public String getWidgetName()
 	{
 		return widgetName;
@@ -610,6 +618,11 @@ public class Tile
 		this.widgetKocName = widgetKocName;
 	}
 
+	public void setWidgetLinkedDashboard(Long widgetLinkedDashboard)
+	{
+		this.widgetLinkedDashboard = widgetLinkedDashboard;
+	}
+
 	public void setWidgetName(String widgetName)
 	{
 		this.widgetName = widgetName;
@@ -741,7 +754,7 @@ public class Tile
 					lastModifiedBy, owner, providerAssetRoot, providerName, providerVersion, tileId, encodedTitle,
 					widgetCreationTime, widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName,
 					widgetName, widgetOwner, widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode,
-					intWidgetSupportTimeControl, width);
+					intWidgetSupportTimeControl, width, widgetLinkedDashboard);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);
@@ -776,6 +789,7 @@ public class Tile
 			to.setWidgetUniqueId(widgetUniqueId);
 			to.setWidgetViewmode(widgetViewmode);
 			to.setWidgetSupportTimeControl(intWidgetSupportTimeControl);
+			to.setWidgetLinkedDashboard(widgetLinkedDashboard);
 			to.setWidth(width);
 			updateEmsDashboardTileParams(parameters, to);
 		}
@@ -800,7 +814,8 @@ public class Tile
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, 0, lastModificationDate, lastModifiedBy,
 					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime,
 					widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner,
-					widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width);
+					widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width,
+					widgetLinkedDashboard);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);

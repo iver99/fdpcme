@@ -34,8 +34,11 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 if(params.tile) {
                     self.tile = params.tile;
                 }
-                if(params.reorder) {
-                   self.reorder = params.reorder; 
+//                if(params.reorder) {
+//                   self.reorder = params.reorder; 
+//                }
+                if(params.deleteTextCallBack) {
+                    self.deleteTextCallBack = params.deleteTextCallBack;
                 }
                 if (params.builder) {
                     self.builder = params.builder;
@@ -186,6 +189,10 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                                 }
                             }
                         });
+                        //reset textcolor icon
+//                        $($(".cke_button__textcolor span")[0]).removeClass("cke_button__textcolor_icon");
+//                        $($(".cke_button__textcolor span")[0]).addClass("cke_textcolor_new_icon");
+                        
                         this.setData(self.content());                        
                         $("#textEditorWrapper_" + self.randomId).css("background-color", "white");
                         $("#textEditorWrapper_" + self.randomId).hide();
@@ -193,11 +200,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_STOP_EDITING, null, self.showErrorMsg());
                         
                     });
-//                    editor.addCommand("changeTextColorIcon", {
-//                            exec: function() {
-//                                $(".cke_button__textcolor_icon").css("background", 'url(/emsaasui/emcpdfui/images/alert.png)');
-//                            }
-//                        });
                     
                     editor.on("blur", function () {
                         if(!this.getData()) {
@@ -218,7 +220,6 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     });
                     
                     editor.on("focus", function () {
-//                        editor.execCommand("changeTextColorIcon");
                         self.show && self.show();
                         self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
                         preHeight = $("#textEditorWrapper_"+self.randomId).height();
@@ -238,7 +239,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.deleteEditor = function() {
                     $("#textWidget_"+self.randomId).remove();
                     self.tiles && self.tiles.remove(self.tile);
-                    self.reorder && self.reorder();
+                    self.deleteTextCallBack && self.deleteTextCallBack(self.tile);
+//                    self.reorder && self.reorder();
                     self.show && self.show();
                 }
                 
