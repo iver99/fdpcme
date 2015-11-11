@@ -90,8 +90,32 @@ task PropsCopy(type: Copy,dependsOn: DeployDFUI) {
     include '*.log'
 }
 
+apply plugin: 'java'
 
-task DEVUiTest(type:EMTest,dependsOn: PropsCopy){
+task logdir(type: Copy,dependsOn: PropsCopy) {
+    def logdir = new File("/var/opt/ORCLemaas/logs/dashboardsService")
+    println("logdir: "+logdir)
+
+    if( !logdir.exists() ) {
+        println("creating logdir")
+
+        if(logdir.mkdirs()) {
+            println("succeeded in making folder")
+
+            if(logdir.exists()) {
+                println("folder exists")
+            } else {
+                println("folder does not exist")
+            }
+        } else {
+            println("failed to make folder")
+        }
+    } else {
+        println("folder exists already")
+    }
+}
+
+task DEVUiTest(type:EMTest,dependsOn: logdir){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"

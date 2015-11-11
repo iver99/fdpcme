@@ -86,7 +86,7 @@ task PropsCopy(type: Copy,dependsOn: DeployDFAPI) {
 apply plugin: 'java'
 
 task logdir(type: Copy,dependsOn: PropsCopy) {
-    def logdir = new File("/var/opt/ORCLemaas/logs/dashboardsService2")
+    def logdir = new File("/var/opt/ORCLemaas/logs/dashboardsService")
     println("logdir: "+logdir)
 
     if( !logdir.exists() ) {
