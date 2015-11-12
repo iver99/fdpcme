@@ -128,6 +128,7 @@ require(['ojs/ojcore',
                 self.ITA_DB_Performance = getNlsString("LANDING_HOME_ITA_DB_PERFORMANCE");
                 self.ITA_DB_Resource = getNlsString("LANDING_HOME_ITA_DB_RESOURCE");
                 self.ITA_Middleware_Performance = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE");
+                self.ITA_Middleware_Resource = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_RESOURCE");
                 self.ITA_Search = getNlsString("LANDING_HOME_ITA_SEARCH");
                 self.ITA_Analyze = getNlsString("LANDING_HOME_ITA_ANALYZE");
                 self.ITA_AWR = getNlsString("LANDING_HOME_ITA_AWR");
@@ -190,6 +191,7 @@ require(['ojs/ojcore',
                     landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");
                     landingHomeUrls["DB_resource"] = self.getITAVerticalAppUrl("verticalApplication.db-resource");
                     landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
+                    landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
                     self.landingHomeUrls = landingHomeUrls;
                 };
                 self.getServiceUrls();
