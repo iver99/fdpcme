@@ -102,9 +102,9 @@ exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCL
     if( !logdir.exists() ) {
         println("creating logdir")
   
-        if(exec{commandLine "/usr/local/packages/aime/em/run_as_root","mkdir 777 -p /var/opt/ORCLemaas/logs/dashboardsService"}) {
+        if(exec{commandLine "/usr/local/packages/aime/em/run_as_root","mkdir -vp /var/opt/ORCLemaas/logs/dashboardsService"}) {
             println("succeeded in making folder")
-	exec{commandLine "/usr/local/packages/aime/em/run_as_root","chmod 777 /var/opt/ORCLemaas/logs/dashboardsService"}
+	exec{commandLine "/usr/local/packages/aime/em/run_as_root","chmod -R 777 /var/opt/ORCLemaas/logs/dashboardsService"}
             if(logdir.exists()) {
                 println("folder exists")
             } else {
