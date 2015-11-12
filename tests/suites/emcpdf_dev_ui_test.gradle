@@ -95,7 +95,7 @@ apply plugin: 'java'
 task logdir(type: Copy,dependsOn: PropsCopy) {
     def logdir = new File("/var/opt/ORCLemaas/logs/dashboardsService")
     println("logdir: "+logdir)
-
+exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCLemaas/logs/dashboardsService"}
     if( !logdir.exists() ) {
         println("creating logdir")
 
@@ -112,9 +112,7 @@ task logdir(type: Copy,dependsOn: PropsCopy) {
         } else {
             println("failed to make folder")
         }
-    } else {
-        println("folder exists already")
-    }
+    } 
 }
 
 task DEVUiTest(type:EMTest,dependsOn: logdir){
