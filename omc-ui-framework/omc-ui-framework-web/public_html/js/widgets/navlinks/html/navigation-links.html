@@ -13,6 +13,11 @@
             <div class="oj-row" style="font-weight: bold">
                 <a data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboardHome, text: dashboardLinkLabel"></a>
             </div>
+            <!-- ko foreach: homeLinks -->
+            <div class="oj-row" style="font-weight: bold">
+            	<a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a>
+           	</div>
+            <!-- /ko -->
         </div>
     </div>
     <div class="headerMenuItem">

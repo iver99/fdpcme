@@ -21,6 +21,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 self.cloudServicesLabel = nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL;
                 self.dashboardLinkLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
                 
+                self.homeLinks = ko.observableArray();
                 self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
@@ -79,7 +80,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                     if(dfHomeUrl) {
                         window.location.href = dfHomeUrl;
                     }
-                }
+                };
                 
                 self.openDashboardHome = function(data, event) {
                     oj.Logger.info('Trying to open Dashboard Home by URL: ' + dfDashboardsUrl);
@@ -93,6 +94,19 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 */
                 function discoverLinks() {
                     var fetchServiceLinks = function(data) {
+                        if (data.homeLinks && data.homeLinks.length > 0) {
+                            var homelinks = data.homeLinks;
+                            var homeLinkList = [];
+                            for (var i = 0; i < homelinks.length; i++) {
+                                var hurl = homelinks[i].href;
+                                //Since EventUI is tenant subscription agnostic, use relative path for its home links
+                                if (params.appEventUI && params.appEventUI.serviceName === homelinks[i].serviceName){
+                                    hurl = dfu.getRelUrlFromFullUrl(hurl);
+                                }
+                                homeLinkList.push({name: homelinks[i].name, href: hurl});
+                            }
+                            self.homeLinks(homeLinkList);
+                        }
                         if (data.cloudServices && data.cloudServices.length > 0) {
                             var cloudServices = data.cloudServices;
                             var cloudServiceList = [];
@@ -114,9 +128,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                             var analyzerList = [];
                             for (var i = 0; i < analyzers.length; i++) {
                                 var aurl = analyzers[i].href;
-                                if (dfu.isDevMode()){
-                                    aurl = dfu.getRelUrlFromFullUrl(aurl);
-                                }
                                 analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
                                     href: aurl});
                             }
@@ -124,25 +135,21 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         }
                         if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
                             if (params.app){
-                            	// let's use relative url for customer software for admin link
+                            	
                             	for (var i = 0; i < data.adminLinks.length; i++) {
-                            		var link = data.adminLinks[i];
-                            		if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
-                            			if (link.href.indexOf('customersoftware') !== -1){
-                                                    var protocolIndex = link.href.indexOf('://');
-                                                    var urlNoProtocol = link.href.substring(protocolIndex + 3);
-                                                    var relPathIndex = urlNoProtocol.indexOf('/');
-                                                    link.href = urlNoProtocol.substring(relPathIndex);
-                                                    break;
-                            			}
-                            		}
-                                        if (dfu.isDevMode()){
+                                    var link = data.adminLinks[i];
+                                    if (
+                                        // let's use relative url for customer software for admin link
+                                        (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName && 
+                                            link.href.indexOf('customersoftware') !== -1) ||
+                                        // use relative url for EventUI admin links
+                                        (params.appEventUI && params.appEventUI.serviceName === link.serviceName)) {
                                             link.href = dfu.getRelUrlFromFullUrl(link.href);
-                                        }
+                                    }
                             	}
                                 if (params.app.appId===params.appDashboard.appId){
                                     self.adminLinks(data.adminLinks);//show all avail admin links
-                                }else{ //show app related admin link and tenant management UI admin link only
+                                }else{ //show app related admin link and tenant management UI and Event UI admin link only
                                     var filteredAdminLinks = [];                                
                                     for (var i=0;i <data.adminLinks.length;i++ ){
                                         var link = data.adminLinks[i];
@@ -150,6 +157,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                                             filteredAdminLinks.push(link);
                                         }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
                                             filteredAdminLinks.push(link);
+                                        }else if (params.appEventUI && params.appEventUI.serviceName === link.serviceName) {
+                                        	filteredAdminLinks.push(link);
                                         }
                                     }
                                     self.adminLinks(filteredAdminLinks);                                    

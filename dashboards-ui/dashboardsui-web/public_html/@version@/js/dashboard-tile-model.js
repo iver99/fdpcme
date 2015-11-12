@@ -111,6 +111,7 @@ define(['knockout',
          * POST_SHORTER: After tile is shorter
          * POST_MAXIMIZE: After tile is maximized
          * POST_RESTORE: After tile is restored
+         * POST_WINDOWRESIZE: After window resize
          * @returns {undefined}
          */
         function TileChange(status){
@@ -2149,11 +2150,14 @@ define(['knockout',
                 self.showTimeRange(self.dashboard.enableTimeRange() === 'TRUE');
             };
             
+            var globalTimer = null;
             self.postDocumentShow = function() {
 //                self.maximizeFirst();
                 $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
                 $(window).resize(function() {
+                    clearTimeout(globalTimer);
+                    globalTimer = setTimeout(self.notifyWindowResize, 200);                                        
                     $b.triggerBuilderResizeEvent('resize builder after window resized');
                 });
                 $b.triggerEvent($b.EVENT_TILE_EXISTS_CHANGED, null, self.tiles.tiles().length > 0);
@@ -2161,6 +2165,15 @@ define(['knockout',
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
             };
+            
+            self.notifyWindowResize = function() {
+                for(var i=0; i<self.tiles.tiles().length; i++) {
+                        var tile = self.tiles.tiles()[i];
+                        if(tile.type() === "DEFAULT") {                            
+                            self.notifyTileChange(tile, new TileChange("POST_WINDOWRESIZE"));
+                        }
+                    }
+            }
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
