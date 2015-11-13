@@ -105,6 +105,7 @@ define({
       "DBS_BUILDER_BTN_ADD": "Add",
       "DBS_BUILDER_BTN_ADD_TEXT": "Add Text",
       "DBS_BUILDER_TEXT_WIDGET_SAMPLE": "Sample Text",
+      "DBS_BUILDER_TEXT_WIDGET_LINK_DIALOG_TITLE": "Add Hyperlink",
       "DBS_BUILDER_TEXT_WIDGET_RENAME": "Rename",
       "DBS_BUILDER_TEXT_WIDGET_DELETE": "Delete",
       "TEXT_LENGTH_ERROR_MSG": "Error: The Content is too long!",
