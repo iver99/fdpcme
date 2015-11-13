@@ -619,9 +619,9 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		webd.takeScreenShot();
 	}
-	/*
+	
 	@Test
-	public void testWelcomepage() throws Excepition
+	public void testWelcomepage() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testWelcomepage");
@@ -631,8 +631,12 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.click(DashBoardPageId.HomeLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_APMLinkID),"Application Performance Monitoring");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_LALinkID),"Log Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID),"IT Analytics");
+		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
 		
-	}*/
+	}
 	
 
 }
