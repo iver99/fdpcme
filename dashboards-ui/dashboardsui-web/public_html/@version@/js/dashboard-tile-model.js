@@ -381,11 +381,14 @@ define(['knockout',
             }
             for (var p in kowidget)
                 self[p] = kowidget[p];
-            if (self['WIDGET_SUPPORT_TIME_CONTROL']() === '0')
-                self['WIDGET_SUPPORT_TIME_CONTROL'](false);
-            else
-                self['WIDGET_SUPPORT_TIME_CONTROL'](true);
-            console.debug("self['WIDGET_SUPPORT_TIME_CONTROL'] is set to " + self['WIDGET_SUPPORT_TIME_CONTROL']());
+            if(self['WIDGET_SUPPORT_TIME_CONTROL']) {
+                if (self['WIDGET_SUPPORT_TIME_CONTROL']() === '0')
+                    self['WIDGET_SUPPORT_TIME_CONTROL'](false);
+                else
+                    self['WIDGET_SUPPORT_TIME_CONTROL'](true);
+                console.debug("self['WIDGET_SUPPORT_TIME_CONTROL'] is set to " + self['WIDGET_SUPPORT_TIME_CONTROL']());
+            }
+            
             
             initializeTileAfterLoad(dashboard, self, timeSelectorModel, targetContext, loadImmediately);
         }
@@ -1937,7 +1940,7 @@ define(['knockout',
             
             self.onNewWidgetStopDragging = function(e, u) {
                 var tcc = $("#tiles-col-container");
-                var tile = null;
+                var tile = null;                               
                 if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
                     if (u.helper.tile) {
                         var idx = self.tiles.tiles.indexOf(u.helper.tile);
@@ -1962,27 +1965,29 @@ define(['knockout',
                     }
                     if (!self.previousDragCell)
                         return;
+                    
+                    var tileInCell = self.tiles.tilesGrid.tileGrid[cell.row] ? self.tiles.tilesGrid.tileGrid[cell.row][cell.column] :null;
+                    if(tileInCell && tileInCell.row() !== cell.row) {
+                        return;
+                    }
+                    var cells = self.tiles.getCellsOccupied(cell.row, cell.column, 4, 1);
+                    var tilesToMove = self.tiles.getTilesUnder(cells, tile);
+                    for(var i in tilesToMove) {
+                        var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
+                        self.tiles.moveTileDown(tilesToMove[i], rowDiff);
+                    }
+    //                self.tiles.moved = [];
+                    self.tiles.updateTilePosition(tile, cell.row, cell.column);
+
+                    self.tiles.tilesReorder();
+                    self.show();
                 }
-                var tileInCell = self.tiles.tilesGrid.tileGrid[cell.row] ? self.tiles.tilesGrid.tileGrid[cell.row][cell.column] :null;
-                if(tileInCell && tileInCell.row() !== cell.row) {
-                    return;
-                }
-                var cells = self.tiles.getCellsOccupied(cell.row, cell.column, 4, 1);
-                var tilesToMove = self.tiles.getTilesUnder(cells, tile);
-                for(var i in tilesToMove) {
-                    var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
-                    self.tiles.moveTileDown(tilesToMove[i], rowDiff);
-                }
-//                self.tiles.moved = [];
-                self.tiles.updateTilePosition(tile, cell.row, cell.column);
                 
-                self.tiles.tilesReorder();
-                self.show();
                 $('#tile-dragging-placeholder').hide();
                 self.previousDragCell = null;
                 tilesToBeOccupied && self.tiles.unhighlightTiles(tilesToBeOccupied);
                 tile && $(u.helper).hide();
-                self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
+                tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
             
             self.onNewTextDragging = function(e, u) {
@@ -2000,14 +2005,14 @@ define(['knockout',
                 tilesToBeOccupied && self.tiles.highlightTiles(tilesToBeOccupied);
                 self.previousDragCell = cell;
 
-                if(tilesToBeOccupied.length === 0) {
-                    $('#tile-dragging-placeholder').css({
-                        left: self.getDisplayLeftForTile(cell),
-                        top: self.getDisplayTopForTile(cell),
-                        width: u.helper.children("#left-panel-text-helper").width() - 80,
-                        height: u.helper.children("#left-panel-text-helper").height()
-                    }).show();
-                }
+//                if(tilesToBeOccupied.length === 0) {
+//                    $('#tile-dragging-placeholder').css({
+//                        left: self.getDisplayLeftForTile(cell),
+//                        top: self.getDisplayTopForTile(cell),
+//                        width: u.helper.children("#left-panel-text-helper").width() - 80,
+//                        height: u.helper.children("#left-panel-text-helper").height()
+//                    }).show();
+//                }
             };
             
             self.onNewTextStopDragging = function(e, u) {
@@ -2032,23 +2037,24 @@ define(['knockout',
                     }
                     if (!self.previousDragCell)
                         return;
-                }
-                
-                var tileInCell = self.tiles.tilesGrid.tileGrid[cell.row] ? self.tiles.tilesGrid.tileGrid[cell.row][cell.column] : null;
-                if(tileInCell && tileInCell.row() !== cell.row) {
-                    return;
-                }
-                var cells = self.tiles.getCellsOccupied(cell.row, cell.column, 8, 1);
-                var tilesToMove = self.tiles.getTilesUnder(cells, tile);
-                for(var i in tilesToMove) {
-                    var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
-                    self.tiles.moveTileDown(tilesToMove[i], rowDiff);
-                }                    
-//                self.tiles.moved = [];
-                self.tiles.updateTilePosition(tile, cell.row, cell.column);
+                    
+                    var tileInCell = self.tiles.tilesGrid.tileGrid[cell.row] ? self.tiles.tilesGrid.tileGrid[cell.row][cell.column] : null;
+                    if(tileInCell && tileInCell.row() !== cell.row) {
+                        return;
+                    }
+                    var cells = self.tiles.getCellsOccupied(cell.row, cell.column, 8, 1);
+                    var tilesToMove = self.tiles.getTilesUnder(cells, tile);
+                    for(var i in tilesToMove) {
+                        var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
+                        self.tiles.moveTileDown(tilesToMove[i], rowDiff);
+                    }                    
+    //                self.tiles.moved = [];
+                    self.tiles.updateTilePosition(tile, cell.row, cell.column);
 
-                self.tiles.tilesReorder();
-                self.show();
+                    self.tiles.tilesReorder();
+                    self.show();
+                }                
+                
                 $('#tile-dragging-placeholder').hide();
                 self.previousDragCell = null;
                 tilesToBeOccupied && self.tiles.unhighlightTiles(tilesToBeOccupied);
