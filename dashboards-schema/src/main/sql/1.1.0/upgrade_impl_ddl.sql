@@ -47,6 +47,7 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.DESCRIPTION length is over 1280, no need to change.');      
   END IF;
+
 END;
 /
 

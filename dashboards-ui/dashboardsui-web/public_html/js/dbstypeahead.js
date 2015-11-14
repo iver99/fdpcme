@@ -38,7 +38,8 @@ $.widget( "dbs.dbsTypeAhead", {
                 
 		// event handlders
 		response: null,
-                acceptInput: undefined
+                acceptInput: undefined,
+                selfSearchStart: undefined
 	},
 
 	requestIndex: 0,
@@ -203,16 +204,22 @@ $.widget( "dbs.dbsTypeAhead", {
                 else if ( this.options.source && this.options.source['dsFactory']){
 			var _dsFac = this.options.source['dsFactory'], _dsFetchSize = this.options.source['fetchSize'], _dataSource;
                         this.source = function( request, response ) {
-                            var _fetchSize = 20;
+                            var _fetchSize = 20, _searchText = (request.term && request.term !== null) ? request.term.trim() : request.term;
                             if (_dsFetchSize)
                             {
                                 if ($.isFunction(_dsFetchSize)) _fetchSize = _dsFetchSize();
                                 else _fetchSize = _dsFetchSize;
                             }
-                            _dataSource = _dsFac.build(request.term, _fetchSize);
+                            _dataSource = _dsFac.build(_searchText, _fetchSize);
+                            //var __callback = request.callback;
                             _dataSource['pagingDS'].setPage(0, {
+                                'silent': true,
                                 success: function() {
                                     //console.log("[dbsTypeAhead] fetch success");
+                                    //if ($.isFunction(__callback))
+                                    //{
+                                    //    __callback();
+                                    //}
                                     response(_dataSource);
                                 },
                                 error: function() {
@@ -228,7 +235,7 @@ $.widget( "dbs.dbsTypeAhead", {
 
 	_searchTimeout: function( event ) {
 		clearTimeout( this.searching );
-		this.searching = this._delay(function() {
+                this.searching = this._delay(function() {
 
 			// Search if the value has changed, or if the user retypes the same value
 			var equalValues = this.term === this._value(),
@@ -260,15 +267,25 @@ $.widget( "dbs.dbsTypeAhead", {
 	},
         
         
-        forceSearch: function(  ) {
-		// always save the actual value, not the one passed as an argument
-		var value = this.term = this._value();
-                
-		return this._search( value );
+        forceSearch: function(  callback  ) {
+	    this._searchTimeOutWithoutEvent(0, true, callback);	
 	},
-
-	_search: function( value ) {
+        
+        _searchTimeOutWithoutEvent: function( timeout, isForceSearch, callback ) {
+            clearTimeout( this.searching );
+            // always save the actual value, not the one passed as an argument
+            var value = this.term = this._value();
+	    this.searching = this._delay(function() {
+                return this._search( value, isForceSearch, callback );
+	    }, timeout );	
+        },
+        
+	_search: function( value, isForceSearch, callback ) {
 		this.pending++;
+                if (isForceSearch !== true)
+                {
+                    this._selfSearchStart();
+                }
 		//this.element.addClass( "ui-autocomplete-loading" );
                 //set busy crusor
                 if (this.options["busyElement"] && this.options["busyElement"] !== null)
@@ -281,10 +298,10 @@ $.widget( "dbs.dbsTypeAhead", {
                 }
 		this.cancelSearch = false;
 
-		this.source( { term: value }, this._response() );
+		this.source( { term: value }, this._response(callback) );
 	},
 
-	_response: function() {
+	_response: function( endcallback ) {
 		var index = ++this.requestIndex;
 
 		return $.proxy(function( content ) {
@@ -299,6 +316,10 @@ $.widget( "dbs.dbsTypeAhead", {
                                     this.element.css("cursor", "text");
                                 }
 				this.__response( content );
+                                if ($.isFunction(endcallback))
+                                {
+                                        endcallback();
+                                }
 			}
 
 			this.pending--;
@@ -321,10 +342,20 @@ $.widget( "dbs.dbsTypeAhead", {
             if (isTextarea || isInput)
             {
                 this.element.val("");
-                this.forceSearch();
+                this._searchTimeOutWithoutEvent(0, false);
                 this._acceptInput();
             }
         },
+        
+        _selfSearchStart: function( ) {
+            this._delay(function() {
+	        var _value = this._value();
+		if ( !this.options.disabled && this.options.selfSearchStart  ) {
+			this._trigger( "selfSearchStart", null, _value );
+		} 
+	    }, 0 );
+                
+	},
         
         _acceptInput: function( ) {
             this._delay(function() {

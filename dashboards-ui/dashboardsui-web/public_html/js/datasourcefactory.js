@@ -11,14 +11,13 @@ function(dm, dc, dp, oj, ko, $)
  */
 
 
-    DatasourceFactory = function(dashbaordsUrl, sortBy, types, appTypes, owners, syncCallback) {
+    DatasourceFactory = function(dashbaordsUrl, sortBy, types, appTypes, owners) {
         var self = this;
         self.dashbaordsUrl = dashbaordsUrl;
         self.sortBy = sortBy;
         self.types = types;
         self.appTypes = appTypes;
         self.owners = owners;
-        self.syncCallback = syncCallback;
         self.build = function(query, pageSize) {
           return (function () {
             var _orderby = self.sortBy, _types = self.types, _appTypes = self.appTypes, _owners =  self.owners, 
@@ -41,10 +40,6 @@ function(dm, dc, dp, oj, ko, $)
                          'model': _model});
             var _pagingds = new dp.DashboardPaging(_collection);// new oj.CollectionPagingDataSource(_collection);
             _pagingds.setPageSize(_pageSize);
-            if ($.isFunction(self.syncCallback))
-            {
-                _pagingds.on("sync", self.syncCallback);
-            }
             return {'model' : _model, 'collection': _collection, "pagingDS": _pagingds};
           })();
         };

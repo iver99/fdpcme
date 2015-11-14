@@ -22,6 +22,28 @@ SET FEEDBACK ON
 SET SERVEROUTPUT ON
 
 DECLARE
+
+BEGIN  
+
+--Rem screenshots for OOB ITA Dashboards
+UPDATE EMS_DASHBOARD
+SET LAST_MODIFICATION_DATE   =NVL(LAST_MODIFICATION_DATE,CREATION_DATE),
+  LAST_MODIFIED_BY='Oracle'
+WHERE tenant_id   ='&TENANT_ID'
+AND dashboard_id <=1000;
+
+commit;
+DBMS_OUTPUT.PUT_LINE('Update OOB Dashboard modification data in Schema object: EMS_DASHBOARD for tenant: &TENANT_ID successfully');
+
+EXCEPTION
+WHEN OTHERS THEN
+  ROLLBACK;
+  DBMS_OUTPUT.PUT_LINE('Failed to update OOB Dashboard modification data in Schema object: EMS_DASHBOARD for tenant: &TENANT_ID due to '||SQLERRM);   
+  RAISE;
+END;
+/
+
+DECLARE
   V_COUNT number;
 BEGIN
 
@@ -41,3 +63,4 @@ EXCEPTION
     RAISE;
 END;
 /
+
