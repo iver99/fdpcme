@@ -138,7 +138,7 @@ define({
       "DBS_BUILDER_LEFT_PANEL_ADD_LINK_HELPER": "Link to other dashboard",
       "DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES": "Pages",
       "DBS_BUILDER_LEFT_PANEL_SHOW_TIME_SELECTOR": "Show Time Selector",
-      "DBS_BUILDER_LEFT_PANEL_SHOW_REFRESH": "Show Referesh Control",
+      "DBS_BUILDER_LEFT_PANEL_SHOW_REFRESH": "Show Refresh Control",
       "DBS_BUILDER_ADD_WIDGET_DLG_TITLE": "Add Widgets",
       "DBS_BUILDER_ADD_WIDGET_DLG_WIDGET_GROUP": "Widget Group",
       "DBS_BUILDER_ADD_WIDGET_DLG_CREATE_WIDGET": "Create Widget",
@@ -256,7 +256,7 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_REQUIRED": "Name is required",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_REQUIRED": "URL is required",
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
-      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length shoud be less than 4000 characters.",
+      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
       
 }
