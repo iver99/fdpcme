@@ -531,6 +531,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }
 
                 var curDate = new Date();
+                self.init = true;
                 self.initialize = function() {
                     start = new Date(curDate - 15 * 60 * 1000);
                     end = new Date();
@@ -555,7 +556,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             start = range.start;
                             end = range.end;
                         } else {
-                            customClick();
+                            customClick(0);
                         }
                     } else if (!params.startDatetime && params.endDateTime) {
                         if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
@@ -564,12 +565,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             start = range.start;
                             end = range.end;
                         }else {
-                            customClick();
+                            customClick(0);
                         }
                         //print warning...
                         oj.Logger.warn("The user just input end time");
                     } else if (params.startDateTime && !params.endDateTime) {
-                        customClick();
+                        customClick(0);
                         start = new Date(params.startDateTime);
                         end = new Date();
                     } else {
@@ -580,7 +581,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             start = range.start;
                             end = range.end;
                         }else{
-                            customClick();
+                            customClick(0);
                         }
                     }
 
@@ -591,7 +592,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             start = range.start;
                             end = range.end;
                         }else {
-                            customClick();
+                            customClick(0);
                         }
                         //print warning...
                         oj.Logger.warn("Start time is larger than end time. Change time range to default time range");
@@ -631,8 +632,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
             }
-                
-                function customClick() {
+            
+            /**
+             * type: 0 for initialize time picker, 1 for user's action. This param is used for not validating window limit when initialized.
+             * @returns {undefined}
+             */    
+                function customClick(type) {
                     self.timePeriod(self.timePeriodCustom);
                     self.selectByDrawer(false);
                     
@@ -641,6 +646,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     $(self.panelId + ' #drawer9_' + self.randomId).css('background-color', '#ffffff');
                     $(self.panelId + ' #drawer9_' + self.randomId).css('font-weight', 'bold');
 
+                    // Do not validate window limit when initialized
+                    if(type === 0) {
+                        return;
+                    }
+                    
                     if(self.customWindowLimit) {
                         self.isCustomBeyondWindowLimit();
                     }                    
@@ -701,7 +711,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             self.endDateError(false);
                         }
                         if (data.option === "value" && !self.selectByDrawer()) {
-                            customClick();
+                            if(self.init === true) {
+                               customClick(0); 
+                            }else {
+                                customClick(1);
+                            }
                             self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                             self.updateRange(self.startDate(), self.endDate());
                         }
@@ -738,7 +752,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if (data.option === "value" && !self.selectByDrawer()) {
                         self.setFocusOnInput(eleId);
                         self.lastFocus(0);
-                        customClick();
+                        customClick(1);
                     }
                     timeValidate();
                     if (self.panelId) {
@@ -839,6 +853,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 //contol whether the panel should popup or not
                 self.panelControl = function () {
+                    if(self.init === true) {
+                        self.init = false;
+                    }
                     if ($(self.panelId).ojPopup('isOpen')) {
                         $(self.panelId).ojPopup('close');
                     } else {
@@ -867,7 +884,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.setTimePeriodChosen(self.lastTimePeriod());
                         self.setTimePeriodToLastX(self.lastTimePeriod(), null, null);
                     }else{
-                        customClick();
+                        var lastBeyondWindowLimitError = self.beyondWindowLimitError();
+                        self.init = !lastBeyondWindowLimitError;
+                        customClick(1);
+                        self.beyondWindowLimitError(lastBeyondWindowLimitError);
                     }
 
                     $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', '/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg');
@@ -884,6 +904,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if ($(event.target).text() !== self.timePeriodCustom) {
 //                        start = oj.IntlConverterUtils.dateToLocalIso(new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]));
 //                        end = oj.IntlConverterUtils.dateToLocalIso(curDate);
+                        //just show window limit error in custom mode
+                        self.beyondWindowLimitError(false);
                         curDate = new Date();
                         start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
                         end = curDate;

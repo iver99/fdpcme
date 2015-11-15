@@ -1,6 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
-
 /*
  * Copyright (C) 2015 Oracle
  * All rights reserved.
@@ -11,23 +10,13 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
  * $$Revision: $$
  */
 
-
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Properties;	 
-
+import java.util.ArrayList;
+import java.util.List;
 
 //import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -37,14 +26,11 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 /**
  * @author guobaochen
  */
-public class SchemaUtil { 
+public class SchemaUtil
+{
 
 	//added constant
-	
-	
-	private static String ITEMS ="items";
-	private static final String AUTHORIZATION = "Authorization";
-	 private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
+
 	private static class SchemaDeployment
 	{
 		private String deploymentId;
@@ -283,8 +269,6 @@ public class SchemaUtil {
 		}
 	}
 
-	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
-
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class SchemaDeploymentUrls
 	{
@@ -327,7 +311,13 @@ public class SchemaUtil {
 
 	}
 
-	
+	private static String ITEMS = "items";
+	private static final String AUTHORIZATION = "Authorization";
+
+	private static final String AUTH_STRING = "Basic d2VibG9naWM6d2VsY29tZTE=";
+
+	private static Logger logger = LogManager.getLogger(SchemaUtil.class);
+
 	public static List<String> getDeploymentUrl(String json)
 	{
 		if (json == null || "".equals(json)) {
@@ -338,7 +328,7 @@ public class SchemaUtil {
 
 		try {
 			JsonUtil ju = JsonUtil.buildNormalMapper();
-			
+
 			List<SchemaDeploymentUrls> sdlist = ju.fromJsonToList(json, SchemaDeploymentUrls.class, ITEMS);
 			if (sdlist == null | sdlist.isEmpty()) {
 				return null;
@@ -369,13 +359,11 @@ public class SchemaUtil {
 		return urls;
 	}
 
-
 	public String get(String url)
 	{
 		if (url == null || "".equals(url.trim())) {
 			return null;
 		}
-		
 
 		BufferedReader in = null;
 		InputStreamReader inReader = null;
@@ -385,7 +373,7 @@ public class SchemaUtil {
 			HttpURLConnection con = (HttpURLConnection) schema_dep_url.openConnection();
 			con.setRequestProperty(AUTHORIZATION, AUTH_STRING);
 			//int responseCode = con.getResponseCode();
-			inReader = new InputStreamReader(con.getInputStream());
+			inReader = new InputStreamReader(con.getInputStream(), "UTF-8");
 			in = new BufferedReader(inReader);
 			String inputLine;
 			while ((inputLine = in.readLine()) != null) {
@@ -418,7 +406,7 @@ public class SchemaUtil {
 		}
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
-			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class );
+			List<SchemaDeployment> sdlist = ju.fromJsonToList(json, SchemaDeployment.class);
 			if (sdlist == null | sdlist.isEmpty()) {
 				return null;
 			}

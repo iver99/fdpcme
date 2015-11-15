@@ -168,13 +168,42 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 
                     dialogDefinition.height = "150px";
                     dialogDefinition.resizable = CKEDITOR.DIALOG_RESIZE_NONE;
-                    if (dialogName == 'link') {
+                    if (dialogName === 'link') {
+                        //change dialog title to "Add Hyperlink"
+                        dialogDefinition.title = getNlsString("DBS_BUILDER_TEXT_WIDGET_LINK_DIALOG_TITLE");
                         //remove link type and set its option as "URL"
                         var infoTab = dialogDefinition.getContents("info");
                         infoTab.get("linkType").style = "display: none;";
-                    }
+                        infoTab.get("anchorOptions").style = "display: none";
+                        infoTab.get("emailOptions").style = "display: none";
+                        
+                        //reset ok button in link dialog
+                        dialogDefinition.onShow = function() {
+                            var dialog = CKEDITOR.dialog.getCurrent();
+                            var okButtonId = dialog.getButton("ok").domId;
+                            
+                            $("#"+okButtonId).css("background", "linear-gradient(to bottom, #0470c9 0%, #0571cd 50%, #0479d8 100%)");
+                            $("#"+okButtonId).css("background-image", "none");
+                            $("#"+okButtonId).css("background-color", "#0572ce");
+                            $("#"+okButtonId).css("color", "#ffffff");
+                            $("#"+okButtonId).css("border-color", "#0476d3");
+                            $("#"+okButtonId).css("border-shadow", "none");
+                            if($("#"+okButtonId).hasClass("cke_dialog_ui_button_ok")) {
+                                $("#"+okButtonId).hover(
+                                    function() {
+                                        $("#"+okButtonId).css("background-color", "#3a9aea");
+                                        $("#"+okButtonId).css("border", "1px solid #3a9aea");
+                                    },
+                                    function() {
+                                        $("#"+okButtonId).css("background-color", "#0572ce");
+                                        $("#"+okButtonId).css("border", "1px solid #0476d3");
+                                    }
+                                )
+                            };
+                        }
+                    }                    
                 });
-
+                
                 self.loadEditor = function (data, event) {
                     $("#textEditor").attr("id", "textEditor_" + self.randomId);
                     $("#textEditor_" + self.randomId).attr("contenteditable", "true");

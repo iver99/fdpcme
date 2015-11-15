@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en-us" id='global-html'>
+<html id='global-html'>
     <head>
         <title data-bind="text:builderTitle"></title>
-        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
@@ -121,12 +121,12 @@
                         </div>
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
-                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+                        <!-- button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD'),
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
-                        </button>
+                        </button -->
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: handleDashboardSave, ojComponent: {

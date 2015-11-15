@@ -163,6 +163,7 @@ require(['knockout',
                 var dialogConfirmBtnLabel = appId === "Dashboard" ? "Add" : "Open";
                 self.widgetsContainerPadding = '0px '+widgetsContainerPaddingWidth+'px '+ '0px '+widgetsContainerPaddingWidth+'px';
                 self.pageTitle = 'Sample page for OMC UI Framework components testing only';
+                self.addWidgetsTilte = 'Add Widgets';
                 self.widgetList = ko.observableArray(widgetArray);
                 self.addWidgetBtnLabel = appId === "Dashboard" ? "Add" : "Open";
                 self.addWidgetBtnDisabled = (appId === "Dashboard" || appId === "ITAnalytics" || appId === "LogAnalytics") ? false : true;
