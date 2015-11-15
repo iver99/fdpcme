@@ -228,7 +228,13 @@ define(['knockout',
                 return css;
             });
             tile.linkedDashboard = ko.computed(function() {
-            	return tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD() ? '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD() : '#';
+                if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
+                    var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
+                    targetContext && targetContext.target && (link += '&target='+targetContext.target+'&type='+targetContext.type+'&emsite='+targetContext.emsite);
+                    timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
+                    return link;
+                } else
+                    return "#";
             });
             tile.dashboardItemChangeEvent = new DashboardItemChangeEvent(new DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext);
     
@@ -2102,8 +2108,9 @@ define(['knockout',
                 }
             });
 
-            var initStart = new Date(new Date() - 24*60*60*1000);
-            var initEnd = new Date();
+            var current = new Date();
+            var initStart = dfu_model.getUrlParam("startTime") ? new Date(dfu_model.getUrlParam("startTime")) : new Date(current - 24*60*60*1000);
+            var initEnd = dfu_model.getUrlParam("endTime") ? new Date(dfu_model.getUrlParam("endTime")) : current;
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
             self.datetimePickerParams = {
