@@ -89,6 +89,7 @@ public class Tile
 		tile.setWidgetUniqueId(edt.getWidgetUniqueId());
 		tile.setWidgetViewmode(edt.getWidgetViewmode());
 		tile.setWidgetSupportTimeControl(DataFormatUtils.integer2Boolean(edt.getWidgetSupportTimeControl()));
+		tile.setWidgetLinkedDashboard(edt.getWidgetLinkedDashboard());
 		tile.setWidth(edt.getWidth());
 		List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
 		if (edtpList != null) {
