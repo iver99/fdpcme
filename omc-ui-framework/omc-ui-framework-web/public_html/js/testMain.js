@@ -184,7 +184,7 @@ require(['knockout',
                 };
                 appMap[appIdLogAnalytics] = {
                     "providerName": "LoganService",
-                    "providerVersion": "0.1"
+                    "providerVersion": "1.0"
                 };
                 appMap[appIdDashboard] = {
                     "providerName": null,
