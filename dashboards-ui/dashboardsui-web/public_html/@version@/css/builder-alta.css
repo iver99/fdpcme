@@ -511,7 +511,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     position: relative;
 }
 
-.left-panel-dbd-widget-goto-icon {
+.left-panel-dbd-widget-goto-icon:before {
     height: 16px;
     width: 16px;
     content: url("../images/func_arrowbox_16_ena.png");
@@ -562,6 +562,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-left-panel-widget button {
     display: none;
     margin: 0px;
+    float: right !important;
 }
 
 .dbd-left-panel-widget:hover button {
