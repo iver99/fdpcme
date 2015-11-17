@@ -5,6 +5,11 @@
             <pipeline name="COMPONENT"/>
          </pipelines>
      </lrg>
+<lrg name="emcpdf_qa_test_3n" launcher="tests/suites/emcpdf_qa_test_3n.gradle" description="product lrg for QATest">
+         <pipelines>
+            <pipeline name="COMPONENT"/>
+         </pipelines>
+     </lrg>
  <lrg name="emcpdf_web_unit_test" launcher="tests/suites/emcpdf_web_unit_test.gradle" description="lrg for QAUnitTest">
          <pipelines>
             <pipeline name="COMPONENT"/>
@@ -17,9 +22,15 @@
             <pipeline name="COMPONENT"/>
              </pipelines>
      </lrg>
+
+<lrg name="emcpdf_dev_test_3n" launcher="tests/suites/emcpdf_dev_test_3n.gradle" description="product lrg for DEVTest">
+             <pipelines>
+            <pipeline name="PRODUCT"/>
+             </pipelines>
+     </lrg>
      <lrg name="emcpdf_dashboard_uitest_3n" launcher="tests/suites/emcpdf_dashboard_uitest_3n.gradle" description="lrg for ui automation,running in farm">
              <pipelines>
-            <pipeline name="COMPONENT"/>
+            <pipeline name="PRODUCT"/>
              </pipelines>
      </lrg>
      <lrg name="emcpdf_dev_ui_test" launcher="tests/suites/emcpdf_dev_ui_test.gradle" description="lrg for DEVTest(webui)">
@@ -27,16 +38,20 @@
             <pipeline name="COMPONENT"/>
              </pipelines>
      </lrg>
-
+      <lrg name="emcpdf_dev_ui_test_3n" launcher="tests/suites/emcpdf_dev_ui_test_3n.gradle" description="lrg for DEVTest(webui)">
+             <pipelines>
+            <pipeline name="COMPONENT"/>
+             </pipelines>
+     </lrg>
 
      <lrg name="emcpdf_uifwk_test_3n" launcher="tests/suites/emcpdf_uifwk_test_3n.gradle" description="lrg for QATest of uifwk">
          <pipelines>
-             <pipeline name="COMPONENT" />
+             <pipeline name="PRODUCT" />
          </pipelines>
      </lrg>
      <lrg name="emcpdf_uifwk_dev_test_3n" launcher="tests/suites/emcpdf_uifwk_dev_test_3n.gradle" description="lrg for DEVTest of uifwk">
          <pipelines>
-             <pipeline name="COMPONENT" />
+             <pipeline name="PRODUCT" />
          </pipelines>
      </lrg>
  </lrg-metadata>
