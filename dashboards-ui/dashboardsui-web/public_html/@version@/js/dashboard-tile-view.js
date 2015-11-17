@@ -527,6 +527,7 @@ define(['knockout',
             
             self.initEventHandlers = function() {
                 $b.addEventListener($b.EVENT_NEW_TEXT_START_DRAGGING, self.handleAddWidgetTooltip);
+                $b.addEventListener($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, self.handleAddWidgetTooltip);
                 $b.addEventListener($b.EVENT_TEXT_START_EDITING, self.handleStartEditText);
                 $b.addEventListener($b.EVENT_TEXT_STOP_EDITING, self.handleStopEditText);
             };
@@ -867,17 +868,12 @@ define(['knockout',
                 $('#'+addWidgetDialogId).ojDialog('close');
             };
             
-//            self.showAddWidgetTooltip = function() {
-//                if (tilesViewModel.isEmpty() && dashboard && dashboard.systemDashboard && !dashboard.systemDashboard()) {
-//                   $('#add-widget-tooltip').ojPopup('open', "#add-widget-button");
-//                }
-//            };
-                        
-            // code to be executed at the end after function defined
-//            tilesViewModel.registerTileRemoveCallback(self.showAddWidgetTooltip);
-
-            self.handleAddWidgetTooltip = function() {
-                if (tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
+            self.handleAddWidgetTooltip = function(hasContent) {
+                if (hasContent === true)
+                    $("#addWidgetToolTip").css("display", "none");
+                else if (hasContent === false)
+                    $("#addWidgetToolTip").css("display", "block");
+                else if (tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
                     $("#addWidgetToolTip").css("display", "block");
                 }else {
                     $("#addWidgetToolTip").css("display", "none");
@@ -921,6 +917,8 @@ define(['knockout',
             self.EVENT_TILE_EXISTS_CHANGED = "EVENT_TILE_EXISTS_CHANGED";
             self.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL = "EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL";
             
+            self.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA = "EVENT_DISPLAY_CONTENT_IN_EDIT_AREA";
+            
             function Dispatcher() {
                 var dsp = this;
                 dsp.queue = [];
@@ -933,7 +931,7 @@ define(['knockout',
                     if (dsp.queue[event].indexOf(handler) !== -1)
                         return;
                     dsp.queue[event].push(handler);
-                    //console.log('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
+                    //console.debug('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
                 };
                 
                 dsp.triggerEvent = function(event, p1, p2, p3, p4) {

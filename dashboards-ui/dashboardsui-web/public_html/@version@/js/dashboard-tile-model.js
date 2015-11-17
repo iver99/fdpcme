@@ -802,7 +802,7 @@ define(['knockout',
             self.push = function(tile) {
                 tile.clientGuid = getGuid();
                 self.tiles.push(tile);
-            };            
+            };
             
             self.configure = function(tile) {
                 if(tile.configure) {
@@ -971,15 +971,6 @@ define(['knockout',
                     column = 0;
                 return new Cell(row, column);
             };
-            
-//            self.sortTilesByRowsThenColumns = function() {
-//                self.tiles.sort(function(tile1, tile2) {
-//                    if (tile1.row() !== tile2.row())
-//                        return tile1.row() - tile2.row();
-//                    else
-//                        return tile1.column() - tile2.column();
-//                });
-//            };
             
             self.sortTilesByColumnsThenRows = function() {
                 self.tiles.sort(function(tile1, tile2) {
@@ -1922,8 +1913,14 @@ define(['knockout',
             
             self.onNewWidgetDragging = function(e, u) {
                 var tcc = $("#tiles-col-container");
-                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width())
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (self.isEmpty()) {
+                        $('#tile-dragging-placeholder').hide();
+                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area", false);
+                    }
                     return;
+                }
+                if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area", true);
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                 var cell = self.getCellFromPosition(pos); 
                 if (!cell) return;
@@ -1948,12 +1945,17 @@ define(['knockout',
                 var tcc = $("#tiles-col-container");
                 var tile = null;                               
                 if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (self.isEmpty()) {
+                        $('#tile-dragging-placeholder').hide();
+                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area (stopped dragging)", false);
+                    }
                     if (u.helper.tile) {
                         var idx = self.tiles.tiles.indexOf(u.helper.tile);
                         self.tiles.tiles.splice(idx, 1);
                     }
                 }
                 else {
+                    if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
                     var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                     var cell = self.getCellFromPosition(pos); 
                     if (!cell) return;
@@ -1998,8 +2000,14 @@ define(['knockout',
             
             self.onNewTextDragging = function(e, u) {
                 var tcc = $("#tiles-col-container");
-                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width())
+                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (self.isEmpty()) {
+                        $('#tile-dragging-placeholder').hide();
+                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new text widget dragging out of edit area", false);
+                    }
                     return;
+                }
+                if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new text widget dragging into edit area", true);
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                 var cell = self.getCellFromPosition(pos); 
                 if (!cell) return;
@@ -2025,12 +2033,17 @@ define(['knockout',
                 var tcc = $("#tiles-col-container");
                 var tile = null;
                 if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (self.isEmpty()) {
+                        $('#tile-dragging-placeholder').hide();
+                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (text) widget dragging out of edit area (stopped dragging)", false);
+                    }
                     if (u.helper.tile) {
                         var idx = self.tiles.tiles.indexOf(u.helper.tile);
                         self.tiles.tiles.splice(idx, 1);
                     }
                 }
                 else {
+                    if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (text) widget dragging out of edit area (stopped dragging)", true);
                     var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                     var cell = self.getCellFromPosition(pos); 
                     if (!cell) return;
