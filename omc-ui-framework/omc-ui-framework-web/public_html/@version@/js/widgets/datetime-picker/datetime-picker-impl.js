@@ -51,9 +51,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.dateConverter2 = oj.Validation.converterFactory("dateTime").createConverter(dateOption2);
                 self.timeConverter = oj.Validation.converterFactory("dateTime").createConverter(timeOption);
                 
-                self.longMonths = [nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
-                                    nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
-                                    nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER];
+//                self.longMonths = [nls.DATETIME_PICKER_MONTHS_JANUARY, nls.DATETIME_PICKER_MONTHS_FEBRUARY, nls.DATETIME_PICKER_MONTHS_MARCH, nls.DATETIME_PICKER_MONTHS_APRIL,
+//                                    nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
+//                                    nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER];
+                self.longMonths = oj.LocaleData.getMonthNames("wide");
                 self.timePeriodLast15mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS;
                 self.timePeriodLast30mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS;
                 self.timePeriodLast60mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS;
@@ -952,13 +953,17 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         endToShow = "";
                     }
                     if(self.hideTimeSelection() === true) {
-                        var start = self.dateConverter.format(self.startDateISO().slice(0, 10));
-                        var end = self.dateConverter.format(self.endDateISO().slice(0, 10));
+//                        var start = self.dateConverter.format(self.startDateISO().slice(0, 10));
+//                        var end = self.dateConverter.format(self.endDateISO().slice(0, 10));
+                        var start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10));
+                        var end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10));
                         //hide hyphen when time range is "Today-Today"/"Yesterday-Yesterday"
                         hyphenDisplay = endToShow ? "display: inline;" : "display: none;"
                     }else {
-                        var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
-                        var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
+//                        var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
+//                        var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
+                        var start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10) + self.startTime());
+                        var end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10) + self.endTime());
                         startToShow = startToShow + " " + self.timeConverter.format(self.startTime());
                         endToShow = endToShow + " " + self.timeConverter.format(self.endTime());
                     }

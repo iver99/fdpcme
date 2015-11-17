@@ -2216,8 +2216,8 @@ define(['knockout',
             });
 
             var current = new Date();
-            var initStart = dfu_model.getUrlParam("startTime") ? new Date(dfu_model.getUrlParam("startTime")) : new Date(current - 24*60*60*1000);
-            var initEnd = dfu_model.getUrlParam("endTime") ? new Date(dfu_model.getUrlParam("endTime")) : current;
+            var initStart = dfu_model.getUrlParam("startTime") ? new Date(parseInt(dfu_model.getUrlParam("startTime"))) : new Date(current - 24*60*60*1000);
+            var initEnd = dfu_model.getUrlParam("endTime") ? new Date(parseInt(dfu_model.getUrlParam("endTime"))) : current;
             self.timeSelectorModel.viewStart(initStart);
             self.timeSelectorModel.viewEnd(initEnd);
             self.datetimePickerParams = {
