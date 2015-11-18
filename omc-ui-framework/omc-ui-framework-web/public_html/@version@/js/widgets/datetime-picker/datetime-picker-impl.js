@@ -882,6 +882,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.endTime(self.lastEndTime());
 //                    self.timePeriod(self.lastTimePeriod());
                     if(self.lastTimePeriod() !== self.timePeriodCustom) {
+                        self.beyondWindowLimitError(false);
                         self.setTimePeriodChosen(self.lastTimePeriod());
                         self.setTimePeriodToLastX(self.lastTimePeriod(), null, null);
                     }else{

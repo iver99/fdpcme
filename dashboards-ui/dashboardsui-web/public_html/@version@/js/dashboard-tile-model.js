@@ -2180,7 +2180,6 @@ define(['knockout',
 //                self.maximizeFirst();
                 $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
-                self.timeSelectorModel.timeRangeChange(true);
                 $(window).resize(function() {
                     clearTimeout(globalTimer);
                     globalTimer = setTimeout(self.notifyWindowResize, 200);                                        
