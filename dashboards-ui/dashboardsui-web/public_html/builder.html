@@ -121,12 +121,12 @@
                         </div>
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
-                        <!-- button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD'),
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
-                        </button -->
+                        </button>
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: handleDashboardSave, ojComponent: {
@@ -265,7 +265,7 @@
             <!-- /ko -->
             <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;">
                 <!-- ko stopBinding: true -->
-                <div id="dbd-left-panel" class="fit-size-horizontal-sibling" 
+                <div id="dbd-left-panel" class="fit-size-horizontal-sibling" style="display: none;"
                      data-bind="css: {'dbd-no-left-panel': completelyHidden(), 'dbd-left-panel-show': showPanel(), 'dbd-left-panel-hide': !showPanel()}">
                     <!-- ko if: showPanel() -->
                     <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
