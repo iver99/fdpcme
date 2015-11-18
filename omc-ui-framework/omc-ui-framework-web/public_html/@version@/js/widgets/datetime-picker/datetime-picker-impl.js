@@ -232,7 +232,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 });
                 
                 self.minDate = ko.observable(null);
-                self.maxDate = ko.observable(null);
+                self.maxDate = ko.observable(new Date(new Date().toDateString()));
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
                 
@@ -437,20 +437,24 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.valueSubscriber.subscribe(function (value) {
                     if (self.startDate() === self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() === 1) {
-                            self.updateRange(self.startDate(), self.endDate());
+                            self.maxDate(oj.IntlConverterUtils.dateToLocalIso(new Date(new Date().toDateString())));
+                            setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                             self.endDateFocus(true);
                         } else if (self.lastFocus() === 2) {
                             self.endDateISO(self.value());
-                            self.endDateFocus(true);
+                            self.maxDate(self.value());
+                            self.startDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                         }
                     } else if (self.endDate() === self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() === 2) {
-                            self.updateRange(self.startDate(), self.endDate());
-                            self.endDateFocus(true);
+                            self.maxDate(self.endDateISO());
+                            setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
+                            self.startDateFocus(true);
                         } else if (self.lastFocus() === 1) {
                             self.startDateISO(self.value());
+                            self.maxDate(oj.IntlConverterUtils.dateToLocalIso(new Date(new Date().toDateString())));
                             self.endDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
@@ -459,10 +463,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         var tmp = self.value();
                         if (self.lastFocus() === 1) {
                             self.startDateISO(tmp);
+                            self.maxDate(oj.IntlConverterUtils.dateToLocalIso(new Date(new Date().toDateString())));
                             self.endDateFocus(true);
                         } else if (self.lastFocus() === 2) {
                             self.endDateISO(tmp);
-                            self.endDateFocus(true);
+                            self.maxDate(tmp);
+                            self.startDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                             console.log("Should focus on an input");
@@ -673,12 +679,16 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 self.focusOnStartDate = function (data, event) {
+                    self.maxDate(self.endDateISO());
+                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(1);
                 };
 
                 self.focusOnEndDate = function (data, event) {
+                    self.maxDate(new Date(new Date().toDateString()));
+                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(2);
@@ -882,6 +892,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.endTime(self.lastEndTime());
 //                    self.timePeriod(self.lastTimePeriod());
                     if(self.lastTimePeriod() !== self.timePeriodCustom) {
+                        self.beyondWindowLimitError(false);
+                        self.maxDate(new Date(new Date().toDateString()));
                         self.setTimePeriodChosen(self.lastTimePeriod());
                         self.setTimePeriodToLastX(self.lastTimePeriod(), null, null);
                     }else{
@@ -907,6 +919,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 //                        end = oj.IntlConverterUtils.dateToLocalIso(curDate);
                         //just show window limit error in custom mode
                         self.beyondWindowLimitError(false);
+                        self.maxDate(oj.IntlConverterUtils.dateToLocalIso(new Date(new Date().toDateString())));
                         curDate = new Date();
                         start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
                         end = curDate;
@@ -933,7 +946,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                     self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
 
-                    self.updateRange(self.startDate(), self.endDate());
+                    setTimeout(function(){self.updateRange(self.startDate(), self.endDate())}, 0);
                     $(event.target).focus();
                 };
 
