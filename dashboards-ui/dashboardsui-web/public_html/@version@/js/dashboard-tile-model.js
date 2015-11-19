@@ -162,7 +162,7 @@ define(['knockout',
             return url;
         }
         
-        function initializeTextTileAfterLoad($b, tile, funcShow, deleteTextCallBack, isContentLengthValid) {
+        function initializeTextTileAfterLoad($b, tile, funcShow, removeTextCallBack, isContentLengthValid) {
             if(!tile) {
                 return;
             }
@@ -175,7 +175,7 @@ define(['knockout',
             });
             tile.params = {
                 show: funcShow,
-                deleteTextCallBack: deleteTextCallBack,
+                removeTextCallBack: removeTextCallBack,
 //                reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
@@ -340,7 +340,7 @@ define(['knockout',
             }
         }
         
-        function DashboardTextTile($b, widget, funcShow, deleteTextCallBack) {
+        function DashboardTextTile($b, widget, funcShow, removeTextCallBack) {
             var self = this;
             self.dashboard = $b.dashboard;
             self.title = ko.observable("text widget title"); //to do 
@@ -357,7 +357,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTextTileAfterLoad($b, self, funcShow, deleteTextCallBack, isContentLengthValid);            
+            initializeTextTileAfterLoad($b, self, funcShow, removeTextCallBack, isContentLengthValid);            
         }
 
         /**
@@ -1467,12 +1467,8 @@ define(['knockout',
                     case "refresh-this-widget":
                         self.refreshThisWidget(tile);
                         break;
-                   case "delete":
-                       self.tiles.deleteTile(tile);                       
-                      
-//                       self.tiles.removeTile(tile);
-//                       self.tiles.tilesGrid.unregisterTileInGrid(tile);
-//                       self.tiles.tilesReorder();
+                   case "remove":
+                       self.tiles.deleteTile(tile);
                        self.show();
                        self.notifyTileChange(tile, new TileChange("POST_DELETE"));
                        $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
