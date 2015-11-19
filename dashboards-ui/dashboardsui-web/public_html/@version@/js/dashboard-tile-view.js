@@ -762,7 +762,8 @@ define(['knockout',
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
                         'tileParameters', 'name', 'systemParameter', 
-                        'tileId', 'value', 'content', 'linkText', 'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                        'tileId', 'value', 'content', 'linkText', 
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", 
                         "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard", 
@@ -770,7 +771,8 @@ define(['knockout',
                         "maximizeEnabled", "narrowerEnabled", 
                         "onDashboardItemChangeEvent", "restoreEnabled", 
                         "setParameter", "shouldHide", "systemParameters", 
-                        "tileDisplayClass", "widerEnabled", "widget"]
+                        "tileDisplayClass", "widerEnabled", "widget", 
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
