@@ -432,7 +432,7 @@
                         </div> 
                         <div id="global-time-control" class="oj-row fit-size-vertical-sibling" 
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none;"
-                             data-bind="visible: showTimeRange() || dashboard.enableRefresh">
+                             data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                             <div class="oj-col oj-sm-6">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',
@@ -440,8 +440,8 @@
                                                                 optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:373px;'}}"-->
                                <!--df-time-selector params="{model:timeSelectorModel}" ></df-time-selector-->
-                               <div data-bind="visible: !showTimeRange()">&nbsp;</div>
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: showTimeRange"></div>
+                               <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() === 'FALSE'">&nbsp;</div>
+                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                             </div>
                             <div class="oj-col oj-sm-6" data-bind="visible: dashboard.enableRefresh">
                                 <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>

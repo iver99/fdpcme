@@ -48,7 +48,7 @@ define({
       "DBS_HOME_CREATE_DLG_TITLE": "Create Dashboard",
       "DBS_HOME_CREATE_DLG_NAME": "Name",
       "DBS_HOME_CREATE_DLG_DES": "Description",
-      "DBS_HOME_CREATE_DLG_TIME_RANGE": "Show refresh control",
+      "DBS_HOME_CREATE_DLG_TIME_RANGE": "Show time selector & refresh control",
       "DBS_HOME_CREATE_DLG_INVALID_NAME_SUM": "Name is invalid",
       "DBS_HOME_CREATE_DLG_INVALID_NAME": "You must enter a non empty name and its length should be less than 64 characters.",
       "DBS_HOME_CREATE_DLG_INVALID_DES_SUM": "Description is invalid",
