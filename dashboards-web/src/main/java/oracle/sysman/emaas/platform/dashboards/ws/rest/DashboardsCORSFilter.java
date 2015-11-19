@@ -46,6 +46,7 @@ public class DashboardsCORSFilter implements Filter
 		private String tenant = null;
 		private Vector<String> headerNames = null;
 
+                @SuppressWarnings("unchecked")
 		public OAMHttpRequestWrapper(HttpServletRequest request)
 		{
 			super(request);
@@ -101,6 +102,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
+                @SuppressWarnings("unchecked")
 		public Enumeration<String> getHeaderNames()
 		{
 			if (headerNames != null) {
@@ -112,6 +114,7 @@ public class DashboardsCORSFilter implements Filter
 		}
 
 		@Override
+                @SuppressWarnings("unchecked")
 		public Enumeration<String> getHeaders(String name)
 		{
 			if (X_REMOTE_USER_HEADER.equals(name) && oam_remote_user != null) {

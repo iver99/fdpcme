@@ -20,6 +20,7 @@ public class OmcUiFrameworkLifecycleService extends AbstractApplicationLifecycle
 		addApplicationServiceManager(rsm);
 		addApplicationServiceManager(new LoggingServiceManager());
 		addApplicationServiceManager(new AvailabilityServiceManager(rsm));
+		addApplicationServiceManager(new EMTargetInitializer());
 	}
 
 }

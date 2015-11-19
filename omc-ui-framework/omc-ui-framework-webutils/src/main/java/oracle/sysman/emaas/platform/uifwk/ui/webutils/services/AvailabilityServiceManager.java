@@ -23,7 +23,7 @@ import oracle.sysman.emaas.platform.uifwk.ui.webutils.wls.lifecycle.ApplicationS
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import oracle.sysman.emaas.platform.uifwk.ui.target.services.GlobalStatus;
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
 
@@ -91,8 +91,9 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isSSFAvailable) {
 			rsm.markOutOfService();
+			GlobalStatus.setOmcUiDownStatus();
 			logger.error("OMC UI Framework service is out of service because Saved Search API service is unavailable");
-			return;
+                        return;
 		}
 
 		// check df api service's availability
@@ -106,13 +107,15 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isDFApiAvailable) {
 			rsm.markOutOfService();
-			logger.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
-			return;
+			GlobalStatus.setOmcUiDownStatus();
+                        logger.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
+                        return;
 		}
 
 		// now all checking is OK
 		try {
 			rsm.markServiceUp();
+			GlobalStatus.setOmcUiUpStatus();
 			logger.debug("OMC UI Framework service is up");
 		}
 		catch (Exception e) {
