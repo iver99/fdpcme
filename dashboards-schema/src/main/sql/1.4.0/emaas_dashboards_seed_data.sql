@@ -49,7 +49,7 @@ DECLARE
 
 BEGIN
   --Rem by default, OOBdashboards support 'auto' showing time control. 
-  UPDATE EMS_DASHBOARD SET ENABLE_TIME_RANGE=2 WHERE TENANT_ID='&TENANT_ID' AND IS_SYSTEM=1;
+  --UPDATE EMS_DASHBOARD SET ENABLE_TIME_RANGE=2 WHERE TENANT_ID='&TENANT_ID' AND IS_SYSTEM=1;
 
   --Rem by default, TA tiles support time control, other tile do not support
   UPDATE EMS_DASHBOARD_TILE SET WIDGET_SUPPORT_TIME_CONTROL=0 WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_NAME='TargetAnalytics';
