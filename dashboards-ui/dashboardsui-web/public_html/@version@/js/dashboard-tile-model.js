@@ -34,7 +34,7 @@ define(['knockout',
         ko.mapping = km;
         
         var defaultCols = 8;
-        var defaultHeight = 186;
+        var defaultHeight = 161;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
         var widgetAreaWidth = 0;
