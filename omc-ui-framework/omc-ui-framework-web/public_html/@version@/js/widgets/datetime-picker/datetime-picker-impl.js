@@ -867,9 +867,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var curYears = new Array();
                     var curMonths = new Array();
                     var monthDiff, clickNumber = 0;
+                    var regExp = new RegExp(/\d{4}/);
 
                     $(self.panelId + " .oj-datepicker-year").each(function () {
-                        curYears.push($(this).text());
+                        var year = $(this).text();
+                        curYears.push(Number(year.match(regExp)[0]));
                     });
                     $(self.panelId + " .oj-datepicker-month").each(function () {
                         curMonths.push(self.monthObject()[$(this).text()]);
@@ -1039,9 +1041,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var curYears = new Array();
                     var tmpMonths = new Array();
                     var curMonth, curDay, curDate;
+                    var regExp = new RegExp(/\d{4}/);
 
                     $(self.panelId + " .oj-datepicker-year").each(function () {
-                        curYears.push($(this).text().slice(0, 4));
+                        var year = $(this).text();
+                        curYears.push(Number(year.match(regExp)[0]));
                     });
                     $(self.panelId + " .oj-datepicker-month").each(function () {
                         tmpMonths.push(self.monthObject()[$(this).text()]);
