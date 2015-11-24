@@ -1014,6 +1014,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     $(self.panelId).ojPopup("close");
                     if (self.callbackAfterApply) {
                         $.ajax({
+                            url: "/emsaasui/uifwk/datetimePicker.html",
                             success: function () {
                                 self.callbackAfterApply(new Date(start), new Date(end));
                             },
@@ -1022,7 +1023,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             }
                         });
                     }
-                    return true;
+                    return false;
                 };
 
                 self.cancelClick = function () {
