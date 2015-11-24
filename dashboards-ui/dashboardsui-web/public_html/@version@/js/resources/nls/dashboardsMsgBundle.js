@@ -107,7 +107,7 @@ define({
       "DBS_BUILDER_TEXT_WIDGET_SAMPLE": "Sample Text",
       "DBS_BUILDER_TEXT_WIDGET_LINK_DIALOG_TITLE": "Add Hyperlink",
       "DBS_BUILDER_TEXT_WIDGET_RENAME": "Rename",
-      "DBS_BUILDER_TEXT_WIDGET_REMOVE": "Remove",
+      "DBS_BUILDER_TEXT_WIDGET_DELETE": "Delete",
       "TEXT_LENGTH_ERROR_MSG": "Error: The Content is too long!",
 //      "DBS_BUILDER_BTN_ADD_TEXT_TITLE": "Add Text Widget",
 //      "DBS_BUILDER_BTN_ADD_HINT_TITLE": "How do I use this page?",

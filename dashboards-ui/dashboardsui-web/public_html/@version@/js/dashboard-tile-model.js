@@ -162,7 +162,7 @@ define(['knockout',
             return url;
         }
         
-        function initializeTextTileAfterLoad($b, tile, funcShow, removeTextCallBack, isContentLengthValid) {
+        function initializeTextTileAfterLoad($b, tile, funcShow, deleteTextCallback, isContentLengthValid) {
             if(!tile) {
                 return;
             }
@@ -175,7 +175,7 @@ define(['knockout',
             });
             tile.params = {
                 show: funcShow,
-                removeTextCallBack: removeTextCallBack,
+                deleteTextCallback: deleteTextCallback,
 //                reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
@@ -340,7 +340,7 @@ define(['knockout',
             }
         }
         
-        function DashboardTextTile($b, widget, funcShow, removeTextCallBack) {
+        function DashboardTextTile($b, widget, funcShow, deleteTextCallback) {
             var self = this;
             self.dashboard = $b.dashboard;
             self.title = ko.observable("text widget title"); //to do 
@@ -357,7 +357,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
             
-            initializeTextTileAfterLoad($b, self, funcShow, removeTextCallBack, isContentLengthValid);            
+            initializeTextTileAfterLoad($b, self, funcShow, deleteTextCallback, isContentLengthValid);            
         }
 
         /**
