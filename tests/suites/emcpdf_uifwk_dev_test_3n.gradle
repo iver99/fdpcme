@@ -112,4 +112,6 @@ task small_deploy_3n_cleanup(type: EMTest) {
 
 
 task emcpdf_uifwk_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+if (new File("codeCoverage.gradle").exists()) {
 apply from: "../../codeCoverage/codeCoverage.gradle"
+}
