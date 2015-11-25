@@ -89,9 +89,10 @@ require(['ojs/ojcore',
                     endDateTime: end,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
-                    callbackAfterApply: function (start, end) {
+                    callbackAfterApply: function (start, end, tp) {
                         console.log(start);
                         console.log(end);
+                        console.log(tp);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         self.start(self.dateTimeConverter1.format(appliedStart));
@@ -199,7 +200,7 @@ require(['ojs/ojcore',
 //                    endDateTime: "2015-05-16T13:00:00"
                       startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
                       endDateTime: new Date(),
-                      timePeriodsNotToShow: ["Last 90 days", "Last 30 days"], //an array of what not to show
+                      timePeriodsNotToShow: ["Last 90 days", "Last 30 days", "Latest"], //an array of what not to show
                       customWindowLimit: 4*24*60*60*1000-12*60*60*1000, //in custom mode, limit the size of window
                       adjustLastX: self.adjustTime, //used to adjust times when user choose "Last X"
                       customTimeBack: 7*24*60*60*1000, //the max timestamp of how far the user can pick the date from
