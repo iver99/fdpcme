@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.logging.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
-import oracle.sysman.qatool.uifwk.webdriver.logging.EMTestLogger;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
