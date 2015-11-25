@@ -728,6 +728,7 @@ define(['knockout',
                 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
                     ssu.screenShot('#tiles-wrapper', 320, function(data) {
+                        self.setAncestorsOverflowVisible();
                         outputData.screenShot = data;
                         tilesViewModel.dashboard.screenShot = ko.observable(data);                
                         self.resetAncestorsOverflow();

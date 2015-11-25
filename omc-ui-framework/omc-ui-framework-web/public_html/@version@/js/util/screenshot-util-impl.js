@@ -5,10 +5,10 @@
  */
 define(['jquery',
         'ojs/ojcore',
-        'uifwk/emcsDependencies/html2canvas/html2canvas',
-        'uifwk/emcsDependencies/canvg/rgbcolor',
-        'uifwk/emcsDependencies/canvg/StackBlur',
-        'uifwk/emcsDependencies/canvg/canvg'],
+        'uifwk/libs/@version@/js/html2canvas/html2canvas',
+        'uifwk/libs/@version@/js/canvg/rgbcolor',
+        'uifwk/libs/@version@/js/canvg/StackBlur',
+        'uifwk/libs/@version@/js/canvg/canvg'],
     function($, oj)
     {
         function ScreenShotUtils() {
@@ -19,28 +19,27 @@ define(['jquery',
                 var nodesToRemove = [];
                 var elems = $(elem_id).find('svg');
                 elems.each(function(index, node) {
-                        var parentNode = node.parentNode;
-                        var width = $(node).width();
-                        var height = $(node).height();
-                        var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
-                        var canvas = document.createElement('canvas');
-                        try {
-                            canvg(canvas, svg);
-                        } catch (e) {
-                            oj.Logger.error(e);
-                        }
-                        nodesToRecover.push({
-                            parent: parentNode,
-                            child: node
-                        });
-                        parentNode.removeChild(node);
-                        nodesToRemove.push({
-                            parent: parentNode,
-                            child: canvas
-                        });
-                        parentNode.appendChild(canvas);
+                    var parentNode = node.parentNode;
+                    var width = $(node).width();
+                    var height = $(node).height();
+                    var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
+                    var canvas = document.createElement('canvas');
+                    try {
+                        canvg(canvas, svg);
+                    } catch (e) {
+                        oj.Logger.error(e);
+                    }
+                    nodesToRecover.push({
+                        parent: parentNode,
+                        child: node
+                    });
+                    parentNode.removeChild(node);
+                    nodesToRemove.push({
+                        parent: parentNode,
+                        child: canvas
+                    });
+                    parentNode.appendChild(canvas);
                 });
-                self.setAncestorsOverflowVisible();
                 html2canvas($(elem_id), {
                     background: "#fff",
                     onrendered: function(canvas) {
