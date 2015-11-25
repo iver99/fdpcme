@@ -1022,7 +1022,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
                     if (self.callbackAfterApply) {
                         $.ajax({
-                            url: "/emsaasui/uifwk/datetimePicker.html",
+                            url: "/emsaasui/uifwk/empty.html",
                             success: function () {
                                 self.callbackAfterApply(new Date(start), new Date(end), timePeriod);
                             },
