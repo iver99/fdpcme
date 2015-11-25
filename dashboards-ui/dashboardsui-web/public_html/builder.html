@@ -507,7 +507,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REFRESH')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="remove" data-bind="css: { 'oj-disabled': editDisabled()}">
+                                                        <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="@version@/images/func_x_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DELETE')}"/>
@@ -515,7 +515,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="wider" data-bind="css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
+                                                        <li id="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
@@ -523,7 +523,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="narrower" data-bind="css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                        <li id="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
@@ -531,7 +531,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="taller" data-bind="css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                        <li id="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
@@ -539,7 +539,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="shorter" data-bind="css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                        <li id="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
@@ -547,13 +547,13 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                 </a>
                                                         </li>
-                                                        <li id="maximize" data-bind="css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                        <li id="maximize" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="@version@/images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')"></span></a>
                                                         </li>
-                                                        <li id="restore" data-bind="css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
+                                                        <li id="restore" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <img src="@version@/images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
