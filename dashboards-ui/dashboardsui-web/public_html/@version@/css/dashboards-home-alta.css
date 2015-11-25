@@ -41,6 +41,11 @@
 .oj-button.oj-active .icon-listview-16:before, .oj-button.oj-selected .icon-listview-16:before {
     content: url("../images/func_threehorizontalbars_16_onb.png"); }
 
+.dbs-icon-size-16 {
+    width: 16px;
+    height: 16px;
+}
+
 .dbs-welcome-centeredImage{
     text-align:center;
     margin-top:0px;
@@ -166,16 +171,7 @@
     font-weight: bold;
     white-space: nowrap;
 }
-/*
-.dbs-summary-header-title h2 {
-    font-size: 1rem;
-    white-space: nowrap;
-}
 
-.dbs-summary-header-title.active {
-    //text-align: left;
-}
-*/
 .dbs-summary-header-toolbar {
     position: absolute; 
     top: 0; 
