@@ -727,7 +727,7 @@ define(['knockout',
                 outputData.eventType = "SAVE";
                 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
-                    ssu.screenShot('#tiles-wrapper', 320, 0.8, function(data) {
+                    ssu.getBase64ScreenShot('#tiles-wrapper', 320, 0.8, function(data) {
                         outputData.screenShot = data;
                         tilesViewModel.dashboard.screenShot = ko.observable(data);  
                         self.handleSaveUpdateDashboard(outputData);

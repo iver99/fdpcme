@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 define(['jquery',
-        'ojs/ojcore',
+        'uifwk/libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min/ojcore',
         'uifwk/libs/@version@/js/html2canvas/html2canvas',
         'uifwk/libs/@version@/js/canvg/rgbcolor',
         'uifwk/libs/@version@/js/canvg/StackBlur',
@@ -12,19 +12,25 @@ define(['jquery',
     function($, oj)
     {
         function ScreenShotUtils() {
-            var self = this;
-            
-            self.screenShot = function(elem_id, width, quality, callback) {
-                console.debug("Element width is: " + $(elem_id).width());
-                console.debug("Element height is: " + $(elem_id).height());
-                var nodesToRecover = [];
-                var nodesToRemove = [];
-                var elems = $(elem_id).find('svg');
-                elems.each(function(index, node) {
-                    var parentNode = node.parentNode;
-                    var width = $(node).width();
-                    var height = $(node).height();
-                    var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
+            this.getBase64ScreenShot = function(elem_id, width, quality, callback) {
+                var nodesToRecover = [], nodesToRemove = [], overflowElems = [], parents = $(elem_id).parents();
+                parents && parents.each(function() {
+                    if ($(this).css("overflow") && $(this).css("overflow") !== "visible") {
+                        overflowElems.push({element: $(this), field: "overflow", value: $(this).css("overflow")});
+                        $(this).css("overflow", "visible");
+                    }
+                    if ($(this).css("overflow-x") && $(this).css("overflow-x") !== "visible") {
+                        overflowElems.push({element: $(this), field: "overflow-x", value: $(this).css("overflow-x")});
+                        $(this).css("overflow-x", "visible");
+                    }
+                    if ($(this).css("overflow-y") && $(this).css("overflow-y") !== "visible") {
+                        overflowElems.push({element: $(this), field: "overflow-y", value: $(this).css("overflow-y")});
+                        $(this).css("overflow-y", "visible");
+                    }
+                });
+                $(elem_id).find('svg').each(function(idx, node) {
+                    var parentNode = node.parentNode, nodeWidth = $(node).width(), nodeHeight = $(node).height();
+                    var svg = '<svg width="' + nodeWidth + 'px" height="' + nodeHeight + 'px">' + node.innerHTML + '</svg>';
                     var canvas = document.createElement('canvas');
                     try {
                         canvg(canvas, svg);
@@ -42,17 +48,13 @@ define(['jquery',
                     });
                     parentNode.appendChild(canvas);
                 });
-                $("#tiles-col-container").css("overflow", "visible");
-                $("body").css("overflow", "visible");
-                $("html").css("overflow", "visible");
-                var elemWidth = $(elem_id).width, elemHeight=$(elem_id).height;
                 html2canvas($(elem_id), {
                     background: "#fff",
                     onrendered: function(canvas) {
                         try {
                             var resize_canvas = document.createElement('canvas');
                             resize_canvas.width = width;
-                            resize_canvas.height = (elemHeight * resize_canvas.width) / elemWidth;
+                            resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;
                             var resize_ctx = resize_canvas.getContext('2d');
                             resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
                             var data = resize_canvas.toDataURL("image/jpeg", quality);
@@ -62,16 +64,15 @@ define(['jquery',
                             nodesToRecover.forEach(function(pair) {
                                 pair.parent.appendChild(pair.child);
                             });
+                            overflowElems.forEach(function(elem) {
+                                elem.element.css(elem.field, elem.value);
+                            });
                             callback(data);
                         } catch (e) {
                             oj.Logger.error(e);
                         }
                     }
                 });
-                $("body").css("overflow", "hidden");
-                $("html").css("overflow", "hidden");
-                $("#tiles-col-container").css("overflow-x", "hidden");
-                $("#tiles-col-container").css("overflow-y", "auto");
             };
         }
         
