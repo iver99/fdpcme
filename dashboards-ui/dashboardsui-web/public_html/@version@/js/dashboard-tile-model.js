@@ -13,10 +13,6 @@ define(['knockout',
         'ojs/ojcore',
         'ojs/ojknockout',
         'ojs/ojmenu',
-        'html2canvas',
-        'canvg-rgbcolor',
-        'canvg-stackblur',
-        'canvg',
         'ckeditor'
     ],
     
