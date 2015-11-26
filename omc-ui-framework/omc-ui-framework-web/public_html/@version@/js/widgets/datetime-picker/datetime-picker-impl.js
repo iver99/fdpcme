@@ -105,6 +105,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last90daysChosen = ko.observable(false);
                 self.latestChosen = ko.observable(false);
                 
+                self.displayDateTimeSelection = ko.observable("inline");
                 self.hideTimeSelection = ko.observable(false);
                 
                 self.last15minsCss = ko.computed(function() {
@@ -467,6 +468,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.updateRange(self.startDate(), self.endDate());
                 });
                 self.valueSubscriber.subscribe(function (value) {
+                    self.displayDateTimeSelection("inline");
                     if (self.startDate() === self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() === 1) {
                             self.updateRange(self.startDate(), self.endDate());
@@ -942,9 +944,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.beyondWindowLimitError(false);
                         curDate = new Date();
                         if($(event.target).text() === self.timePeriodLatest) {
+                            self.displayDateTimeSelection("none");
                            start = curDate;
                            end = curDate;
                         }else {
+                            self.displayDateTimeSelection("inline");
                             start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
                             end = curDate;
                             if(self.adjustLastX) {
@@ -963,6 +967,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.startTime(start.slice(10, 16));
                         self.endTime(end.slice(10, 16));
                         self.selectByDrawer(true); 
+                    }else {
+                        self.displayDateTimeSelection("inline");
                     }
 
                     self.timePeriod(event.target.innerHTML);
@@ -1014,9 +1020,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         startToShow = startToShow + " " + self.timeConverter.format(self.startTime());
                         endToShow = endToShow + " " + self.timeConverter.format(self.endTime());
                     }
-                    self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
-                            + startToShow + "<span style='font-weight: bold;" + hyphenDisplay + "'> - </span>"
-                            + endToShow);
+                    
+                    if(self.timePeriod() === self.timePeriodLatest) {
+                        self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + "</span>");
+                    }else {
+                        self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
+                                + startToShow + "<span style='font-weight: bold;" + hyphenDisplay + "'> - </span>"
+                                + endToShow);
+                    }
                     
                     $(self.panelId).ojPopup("close");
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
