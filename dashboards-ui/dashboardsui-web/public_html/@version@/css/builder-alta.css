@@ -571,8 +571,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 .dbd-left-panel-img-pop {
     display: none;
-    height:120px; 
-    width: 120px; 
+    height:170px; 
+    width: 400px; 
     z-index: 40;
 }
 

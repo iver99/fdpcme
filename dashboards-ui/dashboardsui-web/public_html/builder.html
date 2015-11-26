@@ -316,7 +316,19 @@
                                 </button>
                                 <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
                                                 ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
-                                    <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}"/>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-12 oj-md-12">
+                                            <h2 data-bind="text:WIDGET_NAME"></h2>
+                                        </div>
+                                    </div>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-4 oj-md-4">
+                                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="height:120px;width:120px;"/>
+                                        </div>
+                                        <div class="oj-col oj-sm-8 oj-md-8">
+                                            <span data-bind="text:WIDGET_DESCRIPTION"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
