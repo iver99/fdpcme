@@ -272,7 +272,6 @@ project.task("unpackJSLibFromArtifactory") << {
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
         if (artifact.name.equals('canvg') && files(sourceJsCanvgDestDir.listFiles()).isEmpty()) {
             logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
-logger.lifecycle("${buildJsCanvgUnzipDir.absolutePath}")
             sourceJsCanvgDestDir.mkdirs()
             project.copy {
                 from project.zipTree(artifact.file.absolutePath)
