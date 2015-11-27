@@ -84,9 +84,13 @@ require(['ojs/ojcore',
                 
                 self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
                 self.end = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                self.initStart = ko.observable(start);
+                self.initEnd = ko.observable(end);
+                self.timePeriodsNotToShow = ko.observableArray([]);
                 self.timeParams1 = {
-                    startDateTime: start,
-                    endDateTime: end,
+                    startDateTime: /*self.initStart,*/ start,
+                    endDateTime: self.initEnd, //end,
+                    timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
                     callbackAfterApply: function (start, end, tp) {
@@ -100,6 +104,12 @@ require(['ojs/ojcore',
                         self.generateData(start, end);
                     }
                 };
+                
+                self.changeOption = function() {
+                    self.initStart(new Date(new Date() - 48*60*60*1000));
+                    self.initEnd(new Date(new Date() - 3*60*60*1000));
+                    self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
+                }
                 
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
@@ -200,6 +210,7 @@ require(['ojs/ojcore',
 //                    endDateTime: "2015-05-16T13:00:00"
                       startDateTime: new Date(new Date() - 24 * 60 * 60 * 1000),
                       endDateTime: new Date(),
+//                      appId: "APM",
                       timePeriodsNotToShow: ["Last 90 days", "Last 30 days", "Latest"], //an array of what not to show
                       customWindowLimit: 4*24*60*60*1000-12*60*60*1000, //in custom mode, limit the size of window
                       adjustLastX: self.adjustTime, //used to adjust times when user choose "Last X"
