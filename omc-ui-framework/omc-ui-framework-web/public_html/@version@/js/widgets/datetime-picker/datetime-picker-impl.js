@@ -302,6 +302,19 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 }
                 
+                self.setAllTimePeriodsToShow = function() {
+                    self.last15minsNotToShow(false);
+                    self.last30minsNotToShow(false);
+                    self.last60minsNotToShow(false);
+                    self.last4hoursNotToShow(false);
+                    self.last6hoursNotToShow(false);
+                    self.last1dayNotToShow(false);
+                    self.last7daysNotToShow(false);
+                    self.last30daysNotToShow(false);
+                    self.last90daysNotToShow(false);
+                    self.latestNotToShow(false);
+                }
+                
                 self.setTimePeriodNotToShow = function(timePeriod) {
                     switch(timePeriod) {
                         case self.timePeriodLast15mins:
@@ -336,13 +349,59 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 }
                 
-                //hide specified time periods
-                if(params.timePeriodsNotToShow && isArray(params.timePeriodsNotToShow) && params.timePeriodsNotToShow.length>0) {
-                    self.timePeriodsNotToShow = [];
-                    var l = params.timePeriodsNotToShow.length;
-                    for(var i=0; i<l; i++) {
-                        var tp = params.timePeriodsNotToShow[i];
-                        self.timePeriodsNotToShow.push(self.timePeriodsNlsObject[tp]);
+                self.getParam = function(param) {
+                    var p = ko.isObservable(param) ? param() : param;
+                    return p;
+                }
+                
+                if(params.startDateTime) {
+                    if(ko.isObservable(params.startDateTime)) {
+                        self.startDateTime = ko.computed(function() {
+                            return params.startDateTime();
+                        }, self);
+                        self.startDateTime.subscribe(function(value) {
+                            self.initialize && self.initialize();
+                        });
+                    }else {
+                        self.startDateTime = params.startDateTime;
+                    }
+                }
+                
+                if(params.endDateTime) {
+                    if(ko.isObservable(params.endDateTime)) {
+                        self.endDateTime = ko.computed(function() {
+                            return params.endDateTime();
+                        }, self);
+                        self.endDateTime.subscribe(function(value) {
+                            self.initialize && self.initialize();
+                        });
+                    }else {
+                        self.endDateTime = params.endDateTime;
+                    }
+                }
+                
+                //hide time periods according to params.timePeriodsNotToShow
+                if(params.timePeriodsNotToShow) {
+                    if(isArray(params.timePeriodsNotToShow) && params.timePeriodsNotToShow.length>0) {
+                        self.timePeriodsNotToShow = [];
+                        var l = params.timePeriodsNotToShow.length;
+                        for(var i=0; i<l; i++) {
+                            var tp = params.timePeriodsNotToShow[i];
+                            self.timePeriodsNotToShow.push(self.timePeriodsNlsObject[tp]);
+                            self.setTimePeriodNotToShow(self.timePeriodsNlsObject[tp]);
+                        }
+                    }else if(ko.isObservable(params.timePeriodsNotToShow)) {
+                        self.timePeriodsNotToShow = ko.computed(function() {
+                            var tmp = [];
+                            self.setAllTimePeriodsToShow();
+                            var l = params.timePeriodsNotToShow().length;
+                            for(var i=0; i<l; i++) {
+                                var tp = params.timePeriodsNotToShow()[i];
+                                tmp.push(self.timePeriodsNlsObject[tp]);
+                                self.setTimePeriodNotToShow(tp);
+                            }
+                            return tmp;
+                        }, self);
                     }
                 }
                 
@@ -570,22 +629,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.initialize = function() {
                     start = new Date(curDate - 15 * 60 * 1000);
                     end = new Date();
+                    var tpNotToShow = self.getParam(self.timePeriodsNotToShow);
 
-                    //hide time period according to params: timePeriodsNotToShow
-                    if(self.timePeriodsNotToShow) {
-                        for(var i in self.timePeriodsNotToShow){
-                            self.setTimePeriodNotToShow(self.timePeriodsNotToShow[i])
-                        }
-                    }
-
-                    if (params.startDateTime && params.endDateTime) {
+                    if(self.startDateTime && self.endDateTime) {
                         //users input start date and end date
-                        start = new Date(params.startDateTime);
-                        end = new Date(params.endDateTime);
+                        var sdt = self.getParam(self.startDateTime);
+                        var edt = self.getParam(self.endDateTime);
+                        start = new Date(sdt);
+                        end = new Date(edt);
                         dateTimeDiff = end - start;
                         var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
-
-                        if (t_timePeriod && $.inArray(t_timePeriod, self.timePeriodsNotToShow)<0) {
+                        
+                        if (t_timePeriod && $.inArray(t_timePeriod, tpNotToShow)<0) {
                             self.setTimePeriodChosen(t_timePeriod);
                             var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
                             start = range.start;
@@ -593,8 +648,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         } else {
                             customClick(0);
                         }
-                    } else if (!params.startDatetime && params.endDateTime) {
-                        if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                    } else if (!self.startDateTime && self.endDateTime) {
+                        if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                             self.setTimePeriodChosen(self.timePeriodLast15mins);
                             var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
                             start = range.start;
@@ -604,13 +659,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }
                         //print warning...
                         oj.Logger.warn("The user just input end time");
-                    } else if (params.startDateTime && !params.endDateTime) {
+                    } else if (self.startDateTime && !self.endDateTime) {
                         customClick(0);
-                        start = new Date(params.startDateTime);
+                        var sdt = self.getParam(self.startDateTime);
+                        start = new Date(sdt);
                         end = new Date();
                     } else {
                         //users input nothing
-                        if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                        if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                             self.setTimePeriodChosen(self.timePeriodLast15mins);
                             var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
                             start = range.start;
@@ -621,7 +677,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
 
                     if (start.getTime() > end.getTime()) {
-                        if($.inArray(self.timePeriodLast15mins, self.timePeriodsNotToShow)<0) {
+                        if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                             self.setTimePeriodChosen(self.timePeriodLast15mins);
                             var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
                             start = range.start;
