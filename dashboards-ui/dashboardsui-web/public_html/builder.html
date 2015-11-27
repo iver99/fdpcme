@@ -304,9 +304,9 @@
                     </div>
                     <div id="dbd-left-panel-widgets" class="fit-size">
                         <div class="oj-col stretch-width" data-bind="foreach: widgets">
-                            <div class="dbd-left-panel-widget"
-                                 data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                <div class="dbd-left-panel-widget-text">
+                            <div class="dbd-left-panel-widget">
+                                <div class="dbd-left-panel-widget-text"
+                                            data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
                                     <span data-bind="text:WIDGET_NAME"></span>
                                 </div>
                                 <button class="oj-button-half-chrome" 
