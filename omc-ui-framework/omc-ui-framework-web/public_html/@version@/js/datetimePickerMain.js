@@ -86,7 +86,7 @@ require(['ojs/ojcore',
                 self.end = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
                 self.initStart = ko.observable(start);
                 self.initEnd = ko.observable(end);
-                self.timePeriodsNotToShow = ko.observableArray(["Last 1 day"]);
+                self.timePeriodsNotToShow = ko.observableArray([]);
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
