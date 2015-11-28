@@ -21,6 +21,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 
+import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil;
 import oracle.sysman.emaas.platform.dashboards.core.wls.management.AppLoggingManageMXBean;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
 
@@ -74,12 +75,14 @@ public class LoggingServiceManager implements ApplicationServiceManager
 	{
 		URL url = LoggingServiceManager.class.getResource("/log4j2_dsb.xml");
 		Configurator.initialize("root", LoggingServiceManager.class.getClassLoader(), url.toURI());
+		LogUtil.initializeLoggersUpdateTime();
+		logger.info("Dashboard logging configuration has been initialized");
 
 		try {
 			registerMBean(MBEAN_NAME);
 		}
 		catch (InstanceAlreadyExistsException e) {
-			logger.error("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
+			logger.warn("MBean '" + MBEAN_NAME + "' exists already when trying to register. Unregister it first.", e);
 			try {
 				unregisterMBean(MBEAN_NAME);
 			}

@@ -12,6 +12,7 @@ package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
 
 /**
  * @author guobaochen
@@ -29,6 +30,7 @@ public class TenantContext
 		if (tenant != null) {
 			tenantThreadLocal.remove();
 		}
+		ThreadContext.remove(LogUtil.INTERACTION_LOG_PROP_TENANTID);
 	}
 
 	public static String getCurrentTenant()
@@ -40,11 +42,11 @@ public class TenantContext
 	{
 		logger.debug("TenantContext is set with new tenant value {}", tenant);
 		tenantThreadLocal.set(tenant);
+		ThreadContext.put(LogUtil.INTERACTION_LOG_PROP_TENANTID, tenant);
 	}
 
 	private TenantContext()
 	{
-
 	}
 
 }

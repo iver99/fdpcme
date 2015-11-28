@@ -18,16 +18,16 @@
 
 <html class='demo-sticky-footer-layout'>
     <head>
-        <title>Date/time Picker</title>
+        <title></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         
-        <link rel="icon" type="image/png" href="emcsDependencies/uifwk/images/o_logo.png" />
+        <link rel="icon" type="image/png" href="images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
         
         <!-- RequireJS bootstrap file -->
-        <script data-main="js/datetimePickerMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="@version@/js/datetimePickerMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
@@ -37,7 +37,7 @@
                 <span id="end" data-bind="text: end"></span>
             </div>
             <div data-bind="component: {name: 'date-time-picker', params: timeParams1}"></div>
-            
+            <!--<button data-bind="click: changeOption">click</button>-->
                 
             <div id="chartContainer">
                 <div id="lineChart" data-bind="ojComponent: {

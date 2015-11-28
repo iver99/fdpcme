@@ -498,4 +498,62 @@ public class TestDateTimePicker extends CommonUIUtils
 		webdriver.shutdownBrowser(true);
 
 	}
+	
+	@Test
+	public void testDateTimePicker_Latest() throws Exception
+	{
+
+		CommonUIUtils.commonUITestLog("This is to test DateTimeSelector Component");
+
+		String testName = this.getClass().getName() + ".testDateTimePicker_Latest";
+		WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+		Thread.sleep(5000);
+
+		//login
+		Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver);
+		Thread.sleep(10000);
+		webdriver.getLogger().info("Assert that common UI login was successfuly");
+		Assert.assertTrue(bLoginSuccessful);
+		
+		//Verify the component displayed
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sTimeRangeBtn_1));
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sTimeRangeBtn_2));
+		webdriver.getLogger().info(webdriver.getText(UIControls.sTimeRangeBtn_1));
+		String sDateTime_2 = webdriver.getText(UIControls.sTimeRangeBtn_2);
+
+		//click Time Range dropdown list
+		webdriver.getLogger().info("Click the DateTimePicker Componment");
+		webdriver.click(UIControls.sTimeRangeBtn_1);
+		webdriver.takeScreenShot();
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Pick Panel displayed");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPickPanel));
+
+		//click Latest button
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click button: Latest");
+		webdriver.click(UIControls.sLatestBtn);
+		webdriver.takeScreenShot();
+
+		//verify the date time range is changed to time period
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Latest is selected");
+		Assert.assertEquals(webdriver.getText(UIControls.sTimePeriod), "Latest");		
+
+		//click Apply button
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Click Apply button");
+		webdriver.click(UIControls.sApplyBtn);
+		//verify the date time is set
+		Thread.sleep(5000);
+		webdriver.takeScreenShot();
+
+		webdriver.getLogger().info("Verify the component is existed");
+		Assert.assertTrue(webdriver.isElementPresent(UIControls.sTimeRangeBtn_1_new));
+
+		webdriver.getLogger().info("Verify the result");
+		webdriver.getLogger().info(webdriver.getText(UIControls.sTimeRangeBtn_1_new));
+		Assert.assertEquals(webdriver.getText(UIControls.sTimeRangeBtn_1_new), "Latest");
+	}
+
 }

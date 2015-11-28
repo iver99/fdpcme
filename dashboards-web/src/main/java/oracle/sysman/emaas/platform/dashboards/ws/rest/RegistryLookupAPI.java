@@ -45,9 +45,11 @@ public class RegistryLookupAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLink(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("serviceName") String serviceName,
-			@QueryParam("version") String version)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
+				"Service call to [POST] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version)) {
@@ -84,9 +86,11 @@ public class RegistryLookupAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLink(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("serviceName") String serviceName,
-			@QueryParam("version") String version, @QueryParam("rel") String rel)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version, @QueryParam("rel") String rel)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
+				"Service call to [GET] /v1/registry/lookup/link?serviceName={}&version={}", serviceName, version);
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {
@@ -125,9 +129,12 @@ public class RegistryLookupAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getRegistryLinkWithRelPrefix(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @QueryParam("serviceName") String serviceName,
-			@QueryParam("version") String version, @QueryParam("rel") String rel)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@QueryParam("serviceName") String serviceName, @QueryParam("version") String version, @QueryParam("rel") String rel)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
+				"Service call to [GET] /v1/registry/lookup/linkWithRelPrefix?serviceName={}&version={}&rel={}", serviceName,
+				version, rel);
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
 			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version) || StringUtil.isEmpty(rel)) {

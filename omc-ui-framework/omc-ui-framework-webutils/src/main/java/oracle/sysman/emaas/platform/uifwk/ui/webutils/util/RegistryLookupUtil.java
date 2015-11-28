@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 public class RegistryLookupUtil
 {
 	private static final Logger logger = LogManager.getLogger(RegistryLookupUtil.class);
+	private static final Logger itrLogger = LogUtil.getInteractionLogger();
 
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
@@ -41,7 +42,9 @@ public class RegistryLookupUtil
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
 		try {
+			LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", result, tenantName);
 			if (result != null && result.size() > 0) {
 
 				//find https link first
@@ -56,6 +59,8 @@ public class RegistryLookupUtil
 
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
+						itrLogger.debug("Retrieved link {} by using getLinks(WithRelPrefix)WithProtocol for rel={} for https",
+								lk, rel);
 						break;
 					}
 				}
@@ -75,6 +80,8 @@ public class RegistryLookupUtil
 					}
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
+						itrLogger.debug("Retrieved link {} by using getLinks(WithRelPrefix)WithProtocol for rel={} for https",
+								lk, rel);
 						return lk;
 					}
 				}
