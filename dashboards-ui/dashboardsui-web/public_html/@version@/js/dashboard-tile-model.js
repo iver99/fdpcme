@@ -56,7 +56,7 @@ define(['knockout',
         }
         
         function getTileDefaultWidth(wgt) {
-        	if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH < BUILDER_DEFAULT_TILE_WIDTH)
+        	if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH <= defaultCols)
         		return wgt.WIDGET_DEFAULT_WIDTH;
         	return BUILDER_DEFAULT_TILE_WIDTH;
         }
@@ -1867,7 +1867,7 @@ define(['knockout',
                 $('#tile-dragging-placeholder').hide();
                 tilesToBeOccupied && self.tiles.unhighlightTiles(tilesToBeOccupied);
                 var wgt = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                var width = getTileDefaultWdith(wgt), height = getTileDefaultHeight(wgt);
+                var width = getTileDefaultWidth(wgt), height = getTileDefaultHeight(wgt);
                 tilesToBeOccupied = self.tiles.getTilesToBeOccupied(cell, width, height);
                 tilesToBeOccupied && self.tiles.highlightTiles(tilesToBeOccupied);
                 self.previousDragCell = cell; 
@@ -1900,12 +1900,12 @@ define(['knockout',
                     var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                     var cell = self.getCellFromPosition(pos); 
                     if (!cell) return;
-                    if(cell.column>4) {
-                        cell.column = 4;
-                    }
                     tile = u.helper.tile;
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
                     var width = getTileDefaultWidth(widget), height = getTileDefaultHeight(widget);
+                    if(cell.column>defaultCols-width) {
+                        cell.column = defaultCols-width;
+                    }
                     if (!tile) {
                         tile = self.createNewTile(widget.WIDGET_NAME, null, width, height, widget, false);
                         initializeTileAfterLoad(self.dashboard, tile, self.timeSelectorModel, self.targetContext);
