@@ -73,7 +73,7 @@ dependencies {
 
 
 
-task DeployDFAPI(type:Exec) {
+task DeployDFAPI(type:Exec,dependsOn:cleanUpDB) {
 
         commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerDeploy'
         }

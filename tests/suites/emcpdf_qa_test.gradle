@@ -83,7 +83,7 @@ restAssured.exclude module: 'groovy'
 
 
 
-task PropsCopy(type: Copy) {
+task PropsCopy(type: Copy,dependsOn:cleanUpDB) {
    from '/net/slc07ctj/scratch/emaas/setuplogs/'
    into '../../oracle/work/'
     include '*.log'
