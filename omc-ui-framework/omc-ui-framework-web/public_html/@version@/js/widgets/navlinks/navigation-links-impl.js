@@ -99,26 +99,31 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 };
                 
                 function checkCurrentUserRoles(authUrl) {
-                    discoveredSecAuthUrl = authUrl;
-                    var path = "api/v1/roles/grants/getRoles?granteeUser=" + tenantName + "." + userName;
-                    var secAuthRoleUrl = dfu.buildFullUrl(authUrl, path);
-                    dfu.ajaxWithRetry({
-                        url: secAuthRoleUrl,
-                        headers: dfu.getDefaultHeader(), 
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            determineWhetherToShowAdminLinks(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get user roles by URL: '+ secAuthRoleUrl);
-                        },
-                        async: true
-                    });  
+                    if (dfu.isDevMode()) {
+                        determineWhetherToShowAdminLinks(dfu.getDevData().userRoles);
+                    }
+                    else {
+                        discoveredSecAuthUrl = authUrl;
+                        var path = "api/v1/roles/grants/getRoles?granteeUser=" + tenantName + "." + userName;
+                        var secAuthRoleUrl = dfu.buildFullUrl(authUrl, path);
+                        dfu.ajaxWithRetry({
+                            url: secAuthRoleUrl,
+                            headers: dfu.getDefaultHeader(), 
+                            contentType:'application/json',
+                            success: function(data, textStatus) {
+                                determineWhetherToShowAdminLinks(data);
+                            },
+                            error: function(xhr, textStatus, errorThrown){
+                                oj.Logger.error('Failed to get user roles by URL: '+ secAuthRoleUrl);
+                            },
+                            async: true
+                        });
+                    }
                 };
                 
                 function checkAdminPrivileges() {
                     if (dfu.isDevMode()) {
-                        checkCurrentUserRoles(dfu.getDevData().secAuthRestApiEndPoint);
+                        checkCurrentUserRoles(null);
                     }
                     else {
                         dfu.discoverUrlAsync("SecurityAuthorization", "0.1", null, checkCurrentUserRoles);
