@@ -109,7 +109,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         dfu.ajaxWithRetry({
                             url: secAuthRoleUrl,
                             headers: dfu.getDefaultHeader(), 
-                            contentType:'application/json',
                             success: function(data, textStatus) {
                                 determineWhetherToShowAdminLinks(data);
                             },
