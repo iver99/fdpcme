@@ -46,8 +46,9 @@ public class PreferenceAPI extends APIBase
 
 	@DELETE
 	public Response deleteAllPreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/preferences");
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
@@ -63,14 +64,19 @@ public class PreferenceAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@DELETE
 	@Path("{key}")
 	//@Path("{key: [\\w\\-\\.]{1,256}}")
 	public Response deletePreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("key") String key)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("key") String key)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [DELETE] /v1/preferences/{}", key);
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
@@ -86,6 +92,9 @@ public class PreferenceAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@GET
@@ -93,8 +102,10 @@ public class PreferenceAPI extends APIBase
 	//@Path("{key: [\\w\\-\\.]{1,256}}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryPreferenceByKey(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("key") String key)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("key") String key)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/preferences/{}", key);
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
@@ -110,13 +121,17 @@ public class PreferenceAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryPreferences(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/preferences");
 		PreferenceManager pm = PreferenceManager.getInstance();
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
@@ -137,6 +152,9 @@ public class PreferenceAPI extends APIBase
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
 		}
+		finally {
+			clearUserContext();
+		}
 	}
 
 	@PUT
@@ -144,8 +162,10 @@ public class PreferenceAPI extends APIBase
 	//@Path("{key: [\\w\\-\\.]{1,256}}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updatePreference(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @PathParam("key") String key, JSONObject inputJson)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("key") String key, JSONObject inputJson)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/preferences/{}", key);
 		Preference input = null;
 		try {
 			input = getJsonUtil().fromJson(inputJson.toString(), Preference.class);
@@ -178,6 +198,9 @@ public class PreferenceAPI extends APIBase
 			//e.printStackTrace();
 			logger.error(e.getLocalizedMessage(), e);
 			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
 		}
 	}
 

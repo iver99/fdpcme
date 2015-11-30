@@ -2,21 +2,21 @@
 
 <!-- Dashboards home -->
 
-<html lang="en-us">
+<html>
     <head>
         <title data-bind="text:homeTitle"></title>
         
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="/emsaasui/uifwk/emcsDependencies/uifwk/images/o_logo.png" />
+        <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
 
-        <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
-        <link rel="stylesheet" href="css/dashboards-home-alta.css" type="text/css"/>
+        <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
+        <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
 
         <!-- RequireJS bootstrap file -->
-        <script data-main="js/homeMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
@@ -143,10 +143,10 @@
                                                 <div id="viewbtnset" aria-label="Choose one view"
                                                      data-bind="ojComponent: {component: 'ojButtonset', checked: isTilesView, optionChange: handleViewChanged}" >
                                                     <label for="gridviewbtn"></label>
-                                                    <input id="gridviewbtn" type="radio" name="view" data-bind="value: 'gridtview', 
+                                                    <input id="gridviewbtn" type="radio" name="view" data-bind="value: tilesViewGrid, 
                                                                            ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_GRID_LABEL'), icons: {start: 'icon-gridview-16 oj-fwk-icon'}}" />
                                                     <label for="listviewbtn"></label>
-                                                    <input id="listviewbtn" type="radio" name="view" title="List" data-bind="value: 'listview', 
+                                                    <input id="listviewbtn" type="radio" name="view" title="List" data-bind="value: tilesViewList, 
                                                                            ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_LIST_LABEL'), icons: {start: 'icon-listview-16 oj-fwk-icon'}}" />
                                                 </div>
                                                 </span>
@@ -347,13 +347,13 @@
                     <tbody>
                         <tr style="height:103px; ">
                             <td width="33%" class="dbs-welcome-centeredImage">
-                                <img height="91" width="114" src="css/images/browse.png" alt="browse">                    
+                                <img height="91" width="114" src="@version@/images/browse.png" alt="browse">                    
                             </td>
                             <td width="33%" class="dbs-welcome-centeredImage">
-                                <img height="92" width="115" src="css/images/build.png" alt="build">                    
+                                <img height="92" width="115" src="@version@/images/build.png" alt="build">                    
                             </td>
                             <td width="33%" class="dbs-welcome-centeredImage">
-                                <img height="113" width="114" src="css/images/explore.png" alt="explore">                    
+                                <img height="113" width="114" src="@version@/images/explore.png" alt="explore">                    
                             </td>
                         </tr>
                         <tr>

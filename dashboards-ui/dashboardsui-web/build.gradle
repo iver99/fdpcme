@@ -1,6 +1,9 @@
 import java.nio.file.*
 import java.security.MessageDigest
 import java.util.regex.Pattern
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
 
 apply plugin: 'war'
 
@@ -9,87 +12,61 @@ apply plugin: 'war'
 group = 'com.oracle.emaas.emcpdf'
 version = '1.1'
 
+jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
+def versionPathElement = jsversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
+
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-
 // source 'webapp' directory
 def File sourceWebappDir = new File(project.projectDir, 'public_html')
+
 // source directories where jet, canvg, canvas files are copied
-def File sourceJetDestDir = new File(sourceWebappDir, 'emcsDependencies/oraclejet')
-def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'emcsDependencies/canvg')
-def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'emcsDependencies/html2canvas')
-def File sourceCKeditorDesDir = new File(sourceWebappDir, 'emcsDependencies/ckeditor')
-// 
+def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
+def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
+def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
+def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
+
+// folders for minify, fingereprint js files
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
 def compiledDir = buildDir.absolutePath+'/public_html'
-def File sourceDFCommonDestDir = new File(sourceWebappDir, 'emcsDependencies/dfcommon')
+def webRootSourceDir = 'public_html'
 
 configurations {
-	restDoc { transitive = false }
-	enunciateCore { transitive = false }
-	ftpAntTask { transitive = false }
-}
-
-task cleanJs(type:Delete) {
-	delete fileTree(dir: stagingDir)
-        delete fileTree(dir: compiledDir)
-}
-
-task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
-    from ('public_html') {
-	include "**/*"
-    }
-    into stagingDir
+    restDoc { transitive = false }
+    enunciateCore { transitive = false }
+    ftpAntTask { transitive = false }
 }
 
 //define the JS source locations
 javascript.source {
-	dev {
+    dev {
             js {
-                srcDir 'public_html/js'
+                srcDir 'public_html/@version@/js'
                 include "**/*.js"
             }
         }
-	internaldfcommon {
-	    js {
-		srcDir 'public_html/emcsDependencies/internaldfcommon/js/util'
-		include "**/*.js"
-		exclude "**/*.orig.js"
-	    }
-	}
-	autorefresh {
-	    js {
-		srcDir 'public_html/emcsDependencies/autorefresh/js'
-		include "**/*.js"
-		exclude "**/*.orig.js"
-	    }
-	}
-	widgets {
-	    js {
-		srcDir 'public_html/emcsDependencies/widgets/textwidget/js'
-		include "**/*.js"
-		exclude "**/*.orig.js"
-	    }
-	}
+    cachedjs {
+        js {
+        srcDir 'public_html/@version@/js'
+        include "**/*.js"
+        exclude "*.js"
+        exclude "**/*.orig.js"
+        }
+    }
  }
 
+task cleanJs(type:Delete) {
+    delete fileTree(dir: stagingDir)
+        delete fileTree(dir: compiledDir)
+}
+
+//unpack JET
 project.task("unpackJETFromArtifactory") << {
-    // if the resources/web/js/libs directory is empty - either the first time this task is
-    // run or the directory has been cleaned, then
-    // iterate over the project artifacts and look for the oraclejet.zip,
-    // - downloaded on the local file system (generally found in <user_home_dir>/.gradle)
-    // - unzip to the build/jet directory
-    // - copy over the directories to different common/resources directories
-    // (these directories are specified in the .gitignore file)
-    // - delete the build/jet directory
-    // build directory where the oraclejet.zip will be unzipped
-    
     def File buildJetUnzipDir = new File(buildDir.absolutePath, 'jet')
     //first time or if custom cleans removes it
     sourceJetDestDir.mkdirs()
 
-    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
         if (artifact.name.equals('oraclejet') && files(sourceJetDestDir.listFiles()).isEmpty()) {
             logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
@@ -98,15 +75,10 @@ project.task("unpackJETFromArtifactory") << {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildJetUnzipDir.absolutePath
             }
-            // Copy each of the unzipped jet directories to
-            // the appropriate source directories
-            // 1. build/jet/ >> public_html/emcsDependencies/oraclejet/
             project.copy {
                 from  buildJetUnzipDir
                 into sourceJetDestDir.absolutePath
             }
-            
-            //finally delete the build/jet directory
             project.delete(buildJetUnzipDir)
         }
     }
@@ -118,7 +90,6 @@ project.task("cleanJet") << {
     sourceJetDestDir.deleteDir()
 }
 
-
 //unpack js libs from artifactory
 project.task("unpackJSLibFromArtifactory") << {
     def File buildJsCanvgUnzipDir = new File(buildDir.absolutePath, 'canvg')
@@ -129,7 +100,6 @@ project.task("unpackJSLibFromArtifactory") << {
     sourceJsCanvasDesDir.mkdirs()
     sourceCKeditorDesDir.mkdirs()
 
-    //project.configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
     configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
         if (artifact.name.equals('canvg') && files(sourceJsCanvgDestDir.listFiles()).isEmpty()) {
             logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
@@ -138,58 +108,41 @@ project.task("unpackJSLibFromArtifactory") << {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildJsCanvgUnzipDir.absolutePath
             }
-            // Copy each of the unzipped jet directories to
-            // the appropriate source directories
-            // 1. build/canvg/ >> public_html/emcsDependencies/canvg/
             project.copy {
                 from  buildJsCanvgUnzipDir
                 into sourceJsCanvgDestDir.absolutePath
             }
-            
-            //finally delete the build/jet directory
             project.delete(buildJsCanvgUnzipDir)
         }
 
-	if (artifact.name.equals('html2canvas') && files(sourceJsCanvasDesDir.listFiles()).isEmpty()) {
+    if (artifact.name.equals('html2canvas') && files(sourceJsCanvasDesDir.listFiles()).isEmpty()) {
             logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
             sourceJsCanvasDesDir.mkdirs()
             project.copy {
                 from artifact.file.absolutePath
                 into buildJsCanvasUnzipDir.absolutePath
             }
-            // Copy each of the unzipped jet directories to
-            // the appropriate source directories
-            // 1. build/canvg/ >> public_html/emcsDependencies/canvg/
             project.copy {
                 from  buildJsCanvasUnzipDir
                 into sourceJsCanvasDesDir.absolutePath
-		rename 'html2canvas-(.+)', 'html2canvas.js'
+        rename 'html2canvas-(.+)', 'html2canvas.js'
             }
-            
-            //finally delete the build/jet directory
             project.delete(buildJsCanvasUnzipDir)
         }
-	
-	if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
+    
+    if (artifact.name.equals('ckeditor_full') && files(sourceCKeditorDesDir.listFiles()).isEmpty()) {
             logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
             sourceCKeditorDesDir.mkdirs()
             project.copy {
                 from project.zipTree(artifact.file.absolutePath)
                 into buildCKeditorUnzipDir.absolutePath
             }
-            // Copy each of the unzipped jet directories to
-            // the appropriate source directories
-            // 1. build/ckeditor/ >> public_html/emcsDependencies/ckeditor/
-            project.copy {
+        project.copy {
                 from  buildCKeditorUnzipDir.absolutePath+'/ckeditor/'
                 into sourceCKeditorDesDir.absolutePath
-		//rename 'html2canvas-(.+)', 'html2canvas.js'
             }
-            
-            //finally delete the build/jet directory
             project.delete(buildCKeditorUnzipDir)
         }
-
     }
 }
 
@@ -203,12 +156,276 @@ project.task("cleanJSLib") << {
     sourceCKeditorDesDir.deleteDir()
 }
 
-clean.dependsOn cleanJet,cleanJSLib, cleanJs
+task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory]) {
 
-task stageJs(dependsOn: copyJsSource){
+    from (webRootSourceDir) {
+        include "**/*"
+            eachFile {
+                fileCopyDetails ->
+                fileCopyDetails.path = fileCopyDetails.path.replaceAll(/(.*\/|.*)@version@\/(.*)/, '$1/'+versionPathElement+'/$2')
+                fileCopyDetails.name = fileCopyDetails.name.replaceAll(/(.*)@version@(.*)/, '$1'+versionPathElement+'$2')
+            }
+            //replace @version@ with versionPathElement
+            filesMatching("**/*.js") {               
+            filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
+            filesMatching("**/*.html") {
+                filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
+        filesMatching("**/*.css") {
+        filter(ReplaceTokens, tokens: [version: versionPathElement])
+            }
+    }
+    into stagingDir
+
+    doLast {
+       //this is here because of gradle bug, the old @version@ directory remains
+    delete stagingDir+'/@version@'
+    delete stagingDir+'/libs/@version@'
+    }
 }
 
-copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory
+clean.dependsOn cleanJet,cleanJSLib, cleanJs
+
+/**
+ * combine -> minify -> fingerprint JavaScript
+ */
+
+task copyStagedJs(type:Copy, dependsOn:[copyJsSource]) {
+    from (stagingDir) {
+    include "**/*"
+    }
+    into compiledDir
+}
+
+javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
+    tasks.add(name: "dominifycachejs${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    String fileName = "${jsFile.name}"
+    String renamedFile = fileName.replace(".",".orig.")
+    def parentDir = jsFile.parent
+    def tmpFolder= parentDir.split("js") as String[]
+    def sourceFile = "";
+    def destFile = "";
+    def tmp ="";
+
+    if ( parentDir.endsWith("/js")){
+        for(int i=1; i<tmpFolder.length;i++){
+            tmp=tmp+'js'+tmpFolder[i]
+        }
+        sourceFile = compiledDir+"/"+versionPathElement+"/"+tmp+"/js/"+fileName
+        destFile = compiledDir+"/"+versionPathElement+"/"+tmp+"/js/"+renamedFile
+    }
+    else
+    {
+        for(int i=1; i<tmpFolder.length;i++){
+            tmp=tmp+'js'+tmpFolder[i]
+        }
+        sourceFile = compiledDir+"/"+versionPathElement+"/"+tmp+"/"+fileName
+        destFile = compiledDir+"/"+versionPathElement+"/"+tmp+"/"+renamedFile
+    }
+    
+    doFirst{ 
+        Files.copy(Paths.get(sourceFile),Paths.get(destFile))
+    }
+
+        source = sourceFile
+    dest = sourceFile
+    String sourceMapFile = fileName.replace(".js",".map")
+    if ( parentDir.endsWith("/js") )
+    {
+        sourceMap = file(compiledDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
+    }
+    else
+    {
+        sourceMap = file(compiledDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
+    }
+    
+    closure {
+            warningLevel = 'QUIET'
+    }
+
+    doLast {
+        //update the compiled JS to point to the source map
+        File compiledFile = new File(sourceFile)
+        compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
+
+        //fix file path in source map file
+        File mapFile = compiledFile
+        if ( parentDir.endsWith("/js") )
+        {
+                 mapFile = new File(compiledDir+"/"+versionPathElement+"/"+tmp+"/js/"+sourceMapFile)
+        }
+        else
+        {
+                mapFile = new File(compiledDir+"/"+versionPathElement+"/"+tmp+"/"+sourceMapFile)
+        }
+        
+        String contents = mapFile.getText('UTF-8')
+        String absPath = compiledFile
+        contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
+        mapFile.write(contents, 'UTF-8')
+        }   
+    }
+}
+
+task individualUtilMinify(dependsOn:[copyStagedJs, tasks.matching { Task task -> task.name.startsWith("dominify")}])
+
+task prepareRequireJsConfig(type:Copy) {
+    from ('.') {
+        include "dashboard.build.js"
+            //replace @version@ with versionPathElement
+            filter(ReplaceTokens, tokens: [version: versionPathElement])
+    }
+    into buildDir
+}
+
+task combineAppJs(dependsOn: [copyStagedJs,prepareRequireJsConfig], type: com.eriwen.gradle.js.tasks.RequireJsTask) {
+    source = javascript.source.dev.js.files   //point to your source files
+    requirejs.buildprofile = file(buildDir.absolutePath+"/dashboard.build.js")
+    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
+//generateMD5 is a helper method which will generate an MD5 string for a given file
+def generateMD5(String s) {
+    MessageDigest digest = MessageDigest.getInstance("MD5")
+    digest.update(s.bytes);
+    new BigInteger(1, digest.digest()).toString(16).padLeft(32, '0').toString()
+}
+
+//minifyJs runs the google closure compiler.  Addtionally the doFirst and doLast will fingerprint and set up HTML 5 source maps for your code
+
+task minifyWelcomeJs(dependsOn: [individualUtilMinify, combineAppJs],type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+        Files.copy(Paths.get(compiledDir+"/"+versionPathElement+'/js/welcomeMain.js'), Paths.get(compiledDir+"/"+versionPathElement+'/js/welcomeMain.orig.js'))
+    }
+    source = file(compiledDir+"/"+versionPathElement+'/js/welcomeMain.js')
+    dest = file(compiledDir+"/"+versionPathElement+'/js/welcomeMain.js')
+    sourceMap = file(compiledDir+"/"+versionPathElement+'/js/welcomeMain.map')
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+    //update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+"/"+versionPathElement+'/js/welcomeMain.js')
+    logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=welcomeMain.map", 'UTF-8')
+
+       //generate a fingerprint
+        String md5 = generateMD5(compiledFile.getText('UTF-8'))
+        compiledFile.renameTo(compiledDir+"/"+versionPathElement+'/js/welcomeMain-'+md5+'.js')
+
+       //update references to point to fingerprinted file
+        File htmlFile = new File(compiledDir+'/welcome.html')
+        String html = htmlFile.getText('UTF-8')
+        html = html.replaceAll(Pattern.quote('js/welcomeMain'), 'js/welcomeMain-'+md5)
+        htmlFile.write(html, 'UTF-8')
+
+        //fix file path in source map file
+        File mapFile = new File(compiledDir+"/"+versionPathElement+'/js/welcomeMain.map')
+        String contents = mapFile.getText('UTF-8')
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), 'welcomeMain.orig.js')
+        mapFile.write(contents, 'UTF-8')
+    }
+}
+
+task minifyBuilderJs(dependsOn: [minifyWelcomeJs],  type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+    Files.copy(Paths.get(compiledDir+"/"+versionPathElement+'/js/builderMain.js'), Paths.get(compiledDir+"/"+versionPathElement+'/js/builderMain.orig.js'))
+    }
+    source = file(compiledDir+"/"+versionPathElement+'/js/builderMain.js')
+    dest = file(compiledDir+"/"+versionPathElement+'/js/builderMain.js')
+    sourceMap = file(compiledDir+"/"+versionPathElement+'/js/builderMain.map')
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+    //update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+"/"+versionPathElement+'/js/builderMain.js')
+    logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=builderMain.map", 'UTF-8')
+
+       //generate a fingerprint
+        String md5 = generateMD5(compiledFile.getText('UTF-8'))
+        compiledFile.renameTo(compiledDir+"/"+versionPathElement+'/js/builderMain-'+md5+'.js')
+
+       //update references to point to fingerprinted file
+        File htmlFile = new File(compiledDir+'/builder.html')
+        String html = htmlFile.getText('UTF-8')
+        html = html.replaceAll(Pattern.quote('js/builderMain'), 'js/builderMain-'+md5)
+        htmlFile.write(html, 'UTF-8')
+
+        //fix file path in source map file
+        File mapFile = new File(compiledDir+"/"+versionPathElement+'/js/builderMain.map')
+        String contents = mapFile.getText('UTF-8')
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), 'builderMain.orig.js')
+        mapFile.write(contents, 'UTF-8')
+    }
+}
+
+task minifyHomeJs(dependsOn: [minifyBuilderJs], type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    doFirst {
+        //copy the original source which will be used in a source map
+        Files.copy(Paths.get(compiledDir+"/"+versionPathElement+'/js/homeMain.js'), Paths.get(compiledDir+"/"+versionPathElement+'/js/homeMain.orig.js'))
+    }
+    source = file(compiledDir+"/"+versionPathElement+'/js/homeMain.js')
+    dest = file(compiledDir+"/"+versionPathElement+'/js/homeMain.js')
+    sourceMap = file(compiledDir+"/"+versionPathElement+'/js/homeMain.map')
+
+    closure {
+        warningLevel = 'QUIET'
+    }
+
+    doLast {
+    //update the compiled JS to point to the source map
+        File compiledFile = new File(compiledDir+"/"+versionPathElement+'/js/homeMain.js')
+    logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
+        compiledFile.append("\n//# sourceMappingURL=homeMain.map", 'UTF-8')
+
+       //generate a fingerprint
+        String md5 = generateMD5(compiledFile.getText('UTF-8'))
+        compiledFile.renameTo(compiledDir+"/"+versionPathElement+'/js/homeMain-'+md5+'.js')
+
+       //update references to point to fingerprinted file
+        File htmlFile = new File(compiledDir+'/home.html')
+        String html = htmlFile.getText('UTF-8')
+        html = html.replaceAll(Pattern.quote('js/homeMain'), 'js/homeMain-'+md5)
+        htmlFile.write(html, 'UTF-8')
+
+        //fix file path in source map file
+        File mapFile = new File(compiledDir+"/"+versionPathElement+'/js/homeMain.map')
+        String contents = mapFile.getText('UTF-8')
+        String absPath = compiledFile;
+        contents = contents.replaceAll(Pattern.quote(absPath), 'homeMain.orig.js')
+        mapFile.write(contents, 'UTF-8')
+    }
+}
+
+//compass {
+    // We package the gems into the .jar file (see compass dependencies)
+    // so that http proxy issues do not affect us.  To enable this, 
+    // we also build our own plugin for use.
+//    gemPath = file('build/.jruby/gems')
+ //   gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
+ //   gems = []
+ //   cssDir file('build/staging/public_html/css')
+ //   sassDir file ('public_html/scss')
+ //   debugInfo false // Defaults to true,
+                    // set to false to remove debug info from generated css file
+//    noLineComments true
+//    force true
+//}
+
+//compileSass {
+//     jvmArgs '-Xmx2048M'
+//}
 
 task runQAUITestSuite(type: Test){
         useTestNG(){
@@ -257,10 +474,10 @@ restDoc << {
             javacSourceVersion: '7') {
         
         include(name: '**/*.java')
-	exclude(name: '*/exception')
+    exclude(name: '*/exception')
         export(artifactId: 'docs', destination: restDocOutputDir)
         javacArgument(argument: '-g')
-    }	
+    }   
 }
 
 /**
@@ -268,331 +485,56 @@ restDoc << {
  */
 
 task ftpRestDoc << {
-		ant {
-			taskdef(name: 'ftp',
+    ant {
+        taskdef(name: 'ftp',
                 classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
                 classpath: configurations.ftpAntTask.asPath)
-			ftp(server: ftpserver, userid: uidoc_username, password: uidoc_password, remotedir: remote_restdoc_dir) {
-				fileset(dir: "${restDocOutputDir}")
-			}
-		}
-	}
+        ftp(server: ftpserver, userid: uidoc_username, password: uidoc_password, remotedir: remote_restdoc_dir) {
+            fileset(dir: "${restDocOutputDir}")
+        }
+    }
+}
 
 sourceSets {
-                            test{
-                                java {
-                                          srcDirs = ['src/test/java']
-                                }
-                                resources.srcDirs = ['src/test/java']
-                            }
- }
+    test{
+            java {
+                    srcDirs = ['src/test/java']
+                }
+                resources.srcDirs = ['src/test/java']
+        }
+}
 
-
-/**
- * combine -> minify -> fingerprint JavaScript
- */
-
-
-//requireJs task combines JS using the requireJS compiler
-
-
-task copyStagedJs(type:Copy, dependsOn:[cleanJs, stageJs]) {
-    from (stagingDir) {
-	include "**/*"
+//copy files without any convert when -PdevMode enabled
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory]){
+    from('public_html') {
+    include "**/*"
     }
     into compiledDir
 }
 
-javascript.source.internaldfcommon.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.add(name: "dominifydfutil${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	String fileName = "${jsFile.name}"
-	String renamedFile = fileName.replace(".",".orig.")
-	def parentDir = jsFile.parent
-	def tmpFolder = parentDir.split("internaldfcommon")
-	def sourceFile = stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+renamedFile
-	
-	doFirst{
-		logger.lifecycle("sourceFile:" + sourceFile)
-	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
-	}
-
-        source = sourceFile
-	dest =sourceFile
-	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
-	
-	closure {
-	        warningLevel = 'QUIET'
-	}
-
-	doLast {
-		//update the compiled JS to point to the source map
-		File compiledFile = new File(sourceFile)
-		logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
-
-		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/internaldfcommon"+tmpFolder[1]+"/"+sourceMapFile)
-		String contents = mapFile.getText('UTF-8')
-		String absPath = compiledFile
-		logger.lifecycle("sourceFile:" + sourceFile)
-		logger.lifecycle("absPath:" + Pattern.quote(absPath))
-		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
-		mapFile.write(contents, 'UTF-8')
-		logger.lifecycle("mapFile:" + sourceMapFile)
-    	}	
-    }
-}
-
-javascript.source.autorefresh.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.add(name: "dominifyautorefresh${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	String fileName = "${jsFile.name}"
-	String renamedFile = fileName.replace(".",".orig.")
-	def parentDir = jsFile.parent
-	def tmpFolder = parentDir.split("autorefresh")
-	def sourceFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+renamedFile
-	
-	doFirst{ 
-	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
-	}
-
-        source = sourceFile
-	dest =sourceFile
-	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
-	
-	closure {
-	        warningLevel = 'QUIET'
-	}
-
-	doLast {
-		//update the compiled JS to point to the source map
-		File compiledFile = new File(sourceFile)
-		logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
-
-		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/autorefresh"+tmpFolder[1]+"/"+sourceMapFile)
-		String contents = mapFile.getText('UTF-8')
-		String absPath = compiledFile
-		logger.lifecycle("absPath:" + Pattern.quote(absPath))
-		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
-		mapFile.write(contents, 'UTF-8')
-    	}	
-    }
-}
-
-javascript.source.widgets.js.files.eachWithIndex { File jsFile, idx ->
-    tasks.add(name: "dominifywidgets${idx}", type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-	String fileName = "${jsFile.name}"
-	String renamedFile = fileName.replace(".",".orig.")
-	def parentDir = jsFile.parent
-	def tmpFolder = parentDir.split("textwidget")
-	def sourceFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+fileName
-	def destFile = stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+renamedFile
-	
-	doFirst{ 
-	    Files.copy(Paths.get(sourceFile),Paths.get(destFile))
-	}
-
-        source = sourceFile
-	dest =sourceFile
-	String sourceMapFile = fileName.replace(".js",".map")
-	sourceMap = file(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
-	
-	closure {
-	        warningLevel = 'QUIET'
-	}
-
-	doLast {
-		//update the compiled JS to point to the source map
-		File compiledFile = new File(sourceFile)
-		logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-		compiledFile.append("\n//# sourceMappingURL="+sourceMapFile, 'UTF-8')       
-
-		//fix file path in source map file
-		File mapFile = new File(stagingDir+"/emcsDependencies/widgets/textwidget"+tmpFolder[1]+"/"+sourceMapFile)
-		String contents = mapFile.getText('UTF-8')
-		String absPath = compiledFile
-		logger.lifecycle("absPath:" + Pattern.quote(absPath))
-		contents = contents.replaceAll(Pattern.quote(absPath), renamedFile)
-		mapFile.write(contents, 'UTF-8')
-    	}	
-    }
-}
-
-task individualUtilMinify(dependsOn:[copyStagedJs, tasks.matching { Task task -> task.name.startsWith("dominify")}])
-
-task require(type: com.eriwen.gradle.js.tasks.RequireJsTask) {
-//requireJs {
-    source = javascript.source.dev.js.files   //point to your source files
-    requirejs.buildprofile = file("dashboard.build.js") //this is where you configure the r.js compiler.  See this page for information on how to configure the r.js compiler.  This is what we do in target analytics.
-    outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
-}
-
-require.dependsOn copyStagedJs                 //stageJs sets up the JS directory structure in the build area.  The implementation will be specific to your application/build
-
-//generateMD5 is a helper method which will generate an MD5 string for a given file
-def generateMD5(String s) {
-    MessageDigest digest = MessageDigest.getInstance("MD5")
-    digest.update(s.bytes);
-    new BigInteger(1, digest.digest()).toString(16).padLeft(32, '0').toString()
-}
-
-//minifyJs runs the google closure compiler.  Addtionally the doFirst and doLast will fingerprint and set up HTML 5 source maps for your code
-
-task minifyWelcomeJs(dependsOn: [individualUtilMinify,require],type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    doFirst {
-        //copy the original source which will be used in a source map
-        Files.copy(Paths.get(compiledDir+'/js/welcomeMain.js'), Paths.get(compiledDir+'/js/welcomeMain.orig.js'))
-    }
-    source = file(compiledDir+'/js/welcomeMain.js')
-    dest = file(compiledDir+'/js/welcomeMain.js')
-    sourceMap = file(compiledDir+'/js/welcomeMain.map')
-
-    closure {
-        warningLevel = 'QUIET'
-    }
-
-    doLast {
-	//update the compiled JS to point to the source map
-        File compiledFile = new File(compiledDir+'/js/welcomeMain.js')
-	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-        compiledFile.append("\n//# sourceMappingURL=welcomeMain.map", 'UTF-8')
-
-       //generate a fingerprint
-        String md5 = generateMD5(compiledFile.getText('UTF-8'))
-        compiledFile.renameTo(compiledDir+'/js/welcomeMain-'+md5+'.js')
-
-       //update references to point to fingerprinted file
-        File htmlFile = new File(compiledDir+'/welcome.html')
-        String html = htmlFile.getText('UTF-8')
-        html = html.replaceAll(Pattern.quote('js/welcomeMain'), 'js/welcomeMain-'+md5)
-        htmlFile.write(html, 'UTF-8')
-
-        //fix file path in source map file
-        File mapFile = new File(compiledDir+'/js/welcomeMain.map')
-        String contents = mapFile.getText('UTF-8')
-        String absPath = compiledFile;
-        contents = contents.replaceAll(Pattern.quote(absPath), 'welcomeMain.orig.js')
-        mapFile.write(contents, 'UTF-8')
-    }
-}
-
-task minifyBuilderJs(dependsOn: minifyWelcomeJs,  type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    doFirst {
-        //copy the original source which will be used in a source map
-	Files.copy(Paths.get(compiledDir+'/js/builderMain.js'), Paths.get(compiledDir+'/js/builderMain.orig.js'))
-    }
-    source = file(compiledDir+'/js/builderMain.js')
-    dest = file(compiledDir+'/js/builderMain.js')
-    sourceMap = file(compiledDir+'/js/builderMain.map')
-
-    closure {
-        warningLevel = 'QUIET'
-    }
-
-    doLast {
-	//update the compiled JS to point to the source map
-        File compiledFile = new File(compiledDir+'/js/builderMain.js')
-	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-        compiledFile.append("\n//# sourceMappingURL=builderMain.map", 'UTF-8')
-
-       //generate a fingerprint
-        String md5 = generateMD5(compiledFile.getText('UTF-8'))
-        compiledFile.renameTo(compiledDir+'/js/builderMain-'+md5+'.js')
-
-       //update references to point to fingerprinted file
-        File htmlFile = new File(compiledDir+'/builder.html')
-        String html = htmlFile.getText('UTF-8')
-        html = html.replaceAll(Pattern.quote('js/builderMain'), 'js/builderMain-'+md5)
-        htmlFile.write(html, 'UTF-8')
-
-        //fix file path in source map file
-        File mapFile = new File(compiledDir+'/js/builderMain.map')
-        String contents = mapFile.getText('UTF-8')
-        String absPath = compiledFile;
-        contents = contents.replaceAll(Pattern.quote(absPath), 'builderMain.orig.js')
-        mapFile.write(contents, 'UTF-8')
-    }
-}
-
-task minifyHomeJs(dependsOn: minifyBuilderJs, type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    doFirst {
-        //copy the original source which will be used in a source map
-        Files.copy(Paths.get(compiledDir+'/js/homeMain.js'), Paths.get(compiledDir+'/js/homeMain.orig.js'))
-    }
-    source = file(compiledDir+'/js/homeMain.js')
-    dest = file(compiledDir+'/js/homeMain.js')
-    sourceMap = file(compiledDir+'/js/homeMain.map')
-
-    closure {
-        warningLevel = 'QUIET'
-    }
-
-    doLast {
-	//update the compiled JS to point to the source map
-        File compiledFile = new File(compiledDir+'/js/homeMain.js')
-	logger.lifecycle("compiledFile:" + compiledFile.absolutePath)
-        compiledFile.append("\n//# sourceMappingURL=homeMain.map", 'UTF-8')
-
-       //generate a fingerprint
-        String md5 = generateMD5(compiledFile.getText('UTF-8'))
-        compiledFile.renameTo(compiledDir+'/js/homeMain-'+md5+'.js')
-
-       //update references to point to fingerprinted file
-        File htmlFile = new File(compiledDir+'/home.html')
-        String html = htmlFile.getText('UTF-8')
-        html = html.replaceAll(Pattern.quote('js/homeMain'), 'js/homeMain-'+md5)
-        htmlFile.write(html, 'UTF-8')
-
-        //fix file path in source map file
-        File mapFile = new File(compiledDir+'/js/homeMain.map')
-        String contents = mapFile.getText('UTF-8')
-        String absPath = compiledFile;
-        contents = contents.replaceAll(Pattern.quote(absPath), 'homeMain.orig.js')
-        mapFile.write(contents, 'UTF-8')
-    }
-}
-
-//compass {
-    // We package the gems into the .jar file (see compass dependencies)
-	// so that http proxy issues do not affect us.  To enable this, 
-	// we also build our own plugin for use.
-//    gemPath = file('build/.jruby/gems')
- //   gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
- //   gems = []
- //   cssDir file('build/staging/public_html/css')
- //   sassDir file ('public_html/scss')
- //   debugInfo false // Defaults to true,
-                    // set to false to remove debug info from generated css file
-//    noLineComments true
-//    force true
-//}
-
-//compileSass {
-//     jvmArgs '-Xmx2048M'
-//}
-
-
 war.archiveName "dashboardsui-web.war"
 war {
-	from(compiledDir) {
-	       include '**/*'
-	       exclude '**/*.orig.js','**/*.map'
-	        into('/')
-	}
-	from('src/main/java') { 
-		include '**/*.properties'
-		into('WEB-INF/classes') 
-	}
+    from(compiledDir) {
+        include '**/*'
+        exclude '**/*.orig.js','**/*.map'
+        into('/')
+    }
+    from('src/main/java') { 
+        include '**/*.properties'
+        into('WEB-INF/classes') 
+    }
 
-	rootSpec.exclude("**/*.zip")
+    rootSpec.exclude("**/*.zip")
 }
 
-war.dependsOn minifyHomeJs//,compileSass
+if(project.hasProperty("devMode")){
+    war.dependsOn copyDevJs
+}
+else
+{
+    war.dependsOn minifyHomeJs//,compileSass
+
+}
 
 dependencies {
         providedCompile project(':dashboards-ui:dashboardsui-webutils'){ transitive = false }
@@ -601,36 +543,36 @@ dependencies {
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+'){ transitive = false }
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+'){ transitive = false }
 
-	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
-	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
-	
-	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
-	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
+    providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
+    providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
+    
+    providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1'){ transitive = false }
+    providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){ transitive = false }
+    providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
+    providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
         compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.2-19410', ext: 'war'){ transitive = false }
-	compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
-	compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
-	//compile(group: 'emcs-ui-framework', name: 'emcs-ui-framework-common-dev', version: '1.3.1', ext: 'zip'){transitive = false}
-	compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
+    compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
+    compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
+    //compile(group: 'emcs-ui-framework', name: 'emcs-ui-framework-common-dev', version: '1.3.1', ext: 'zip'){transitive = false}
+    compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
 
-	enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
-	restDoc(
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.28'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.28'],
-		[group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.28'],
-		[group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
-		[group: 'com.oracle.weblogic', name: 'jersey-server-1.17.1', version: '12.1.2-0-0'],
-		[group: 'com.oracle.weblogic', name: 'jersey-servlet-1.17.1', version: '12.1.2-0-0']
-	)
-	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
-		module('commons-net:commons-net:1.4.1') {
-				dependencies 'oro:oro:2.0.8:jar'
-		}
-	}
+    enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
+    restDoc(
+        [group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
+        [group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.28'],
+        [group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.28'],
+        [group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.28'],
+        [group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
+        [group: 'com.oracle.weblogic', name: 'jersey-server-1.17.1', version: '12.1.2-0-0'],
+        [group: 'com.oracle.weblogic', name: 'jersey-servlet-1.17.1', version: '12.1.2-0-0']
+    )
+    ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
+        module('commons-net:commons-net:1.4.1') {
+                dependencies 'oro:oro:2.0.8:jar'
+        }
+    }
 
-//	compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
+//  compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')
 }

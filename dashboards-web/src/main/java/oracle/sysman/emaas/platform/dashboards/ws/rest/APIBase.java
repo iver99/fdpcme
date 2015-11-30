@@ -19,6 +19,9 @@ import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.tenant.TenantIdPro
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogContext;
+import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogDirection;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
@@ -26,11 +29,9 @@ import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 
 /**
  * @author wenjzhu
@@ -57,6 +58,12 @@ public class APIBase
 			return null;
 		}
 		return Response.status(error.getStatusCode()).entity(getJsonUtil().toJson(error)).build();
+	}
+
+	public void clearUserContext()
+	{
+		UserContext.clearCurrentUser();
+		TenantContext.clearCurrentUser();
 	}
 
 	public JsonUtil getJsonUtil()
@@ -112,6 +119,14 @@ public class APIBase
 					MessageUtils.getDefaultBundleString(CommonSecurityException.VALID_X_REMOTE_USER_REQUIRED));
 		}
 		TenantContext.setCurrentTenant(tenantName);
+	}
+
+	protected void infoInteractionLogAPIIncomingCall(String tenantId, String serviceInvoked, String msg, Object... params)
+	{
+		InteractionLogContext ilc = LogUtil.setInteractionLogThreadContext(tenantId, serviceInvoked, InteractionLogDirection.IN);
+		LogUtil.getInteractionLogger().info(msg, params);
+		// recover the previous log thread context
+		LogUtil.setInteractionLogThreadContext(ilc);
 	}
 
 	/*

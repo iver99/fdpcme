@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html>
     <head>
         <title data-bind="text: landingHomeTitle"></title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="icon" type="image/png" href="/emsaasui/uifwk/emcsDependencies/uifwk/images/o_logo.png" />
+        <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="emcsDependencies/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
 
-        <link rel="stylesheet" href="css/dashboards-common-alta.css" type="text/css"/>
-        <link rel="stylesheet" href="css/landing-home-alta.css" type="text/css"/>
+        <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
+        <link rel="stylesheet" href="@version@/css/landing-home-alta.css" type="text/css"/>
 		       
         <!-- RequireJS bootstrap file -->
-        <script data-main="js/welcomeMain" src="emcsDependencies/oraclejet/js/libs/require/require.js"></script>
+        <script data-main="@version@/js/welcomeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
     <body>
@@ -36,7 +36,7 @@
                             <a data-bind="attr: {href: 'javascript: this.click()'}, click: openAPM">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img APM-box">
-                                        <img class="app-image" src="css/images/AppPerfMonitoring_w_92px.png" data-bind="attr: {alt: APM}"/>
+                                        <img class="app-image" src="@version@/images/AppPerfMonitoring_w_92px.png" data-bind="attr: {alt: APM}"/>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: APM"></div>
@@ -49,7 +49,7 @@
                             <a id="LA_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openLogAnalytics">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img LA-box">
-                                        <img class="app-image" src="css/images/LogAnalytics_w_92px.png" data-bind="attr: {alt: LA}"/>
+                                        <img class="app-image" src="@version@/images/LogAnalytics_w_92px.png" data-bind="attr: {alt: LA}"/>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: LA"></div>
@@ -63,7 +63,7 @@
                             <div id="ITA_wrapper" tabindex="0" aria-label="IT Analytics" data-bind="event: {click: openITAnalytics, keypress: openITAnalytics}" style="cursor: pointer">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img ITA-box">
-                                        <img class="app-image" src="css/images/ItAnalytics_w_92px.png" data-bind="attr: {alt: ITA}"/>
+                                        <img class="app-image" src="@version@/images/ItAnalytics_w_92px.png" data-bind="attr: {alt: ITA}"/>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: ITA"></div>
@@ -87,7 +87,7 @@
                             <a id="dashboards_wrapper" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboards">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img dashboards-box">
-                                        <img class="app-image" src="css/images/Dashboards_w_92px.png" data-bind="attr: {alt: dashboards}"/>
+                                        <img class="app-image" src="@version@/images/Dashboards_w_92px.png" data-bind="attr: {alt: dashboards}"/>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dashboards"></div>
@@ -101,7 +101,7 @@
                             <div id="data_explore_wrapper" tabindex="0" aria-label="Data Explorers">
                                 <div class="service-box-wrapper">
                                     <div class="landing-home-box-img data-explorers-box">
-                                        <img class="app-image" src="css/images/DataExplorers_w_92px.png" data-bind="attr: {alt: dataExplorers}"/>
+                                        <img class="app-image" src="@version@/images/DataExplorers_w_92px.png" data-bind="attr: {alt: dataExplorers}"/>
                                     </div>
                                     <div class="landing-home-box-content">
                                         <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
@@ -121,7 +121,7 @@
                         </li>
                         <li class="box-list-li">
                             <div style="width: 276px; height: 296px; border: 2px solid #EBEBEB;">
-                                <div class="landing-home-box-learn-more-head" data-bind="text: learnMore">Learn More</div>
+                                <div class="landing-home-box-learn-more-head" data-bind="text: learnMore"></div>
                                 <hr/>
                                 <ul>
                                     <li class="landing-home-box-learn-more">

@@ -13,33 +13,25 @@ package oracle.sysman.emaas.platform.dashboards.webutils.services;
 import java.util.Date;
 
 import javax.management.InstanceNotFoundException;
-import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emaas.platform.dashboards.core.DBConnectionManager;
-import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
+import oracle.sysman.emaas.platform.dashboards.webutils.timer.AvailabilityNotification;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
-import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
-import oracle.sysman.emaas.platform.dashboards.targetmodel.services.GlobalStatus;
+
 /**
  * @author guobaochen
  */
-public class AvailabilityServiceManager implements ApplicationServiceManager, NotificationListener
+public class AvailabilityServiceManager implements ApplicationServiceManager
 {
 	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private static final long PERIOD = Timer.ONE_MINUTE;
-
-	private static final String ENTITY_NAMING_SERVICE_NAME = "EntityNaming";
-	private static final String ENTITY_NAMING_SERVICE_VERSION = "0.1";
-	private static final String ENTITY_NAMING_SERVICE_REL = "collection/domains";
 
 	private Timer timer;
 	private Integer notificationId;
@@ -60,76 +52,16 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	}
 
 	/* (non-Javadoc)
-	 * @see javax.management.NotificationListener#handleNotification(javax.management.Notification, java.lang.Object)
-	 */
-	@Override
-	public void handleNotification(Notification notification, Object handback)
-	{
-		logger.debug("Time triggered handler method. sequenceNumber={}, notificationId={}", notification.getSequenceNumber(),
-				notificationId);
-		if (rsm.isRegistrationComplete() == null) {
-			logger.info("RegistryServiceManager hasn't registered. Check registry service next time");
-			return;
-		}
-		// check if service manager is up and registration is complete
-		if (!rsm.isRegistrationComplete() && !rsm.registerService()) {
-			logger.info("Dashboards service registration is not completed. Ignore database or other dependant services availability checking");
-			return;
-		}
-
-		// check database available
-		boolean isDBAvailable = true;
-		try {
-			isDBAvailable = isDatabaseAvailable();
-		}
-		catch (Exception e) {
-			isDBAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
-		}
-		if (!isDBAvailable) {
-			rsm.markOutOfService();
-			GlobalStatus.setDashboardDownStatus();
-			logger.info("Dashboards service is out of service because database is unavailable");
-			return;
-		}
-
-		// check entity naming availibility
-		boolean isEntityNamingAvailable = true;
-		try {
-			isEntityNamingAvailable = isEntityNamingAvailable();
-		}
-		catch (Exception e) {
-			isEntityNamingAvailable = false;
-			logger.error(e.getLocalizedMessage(), e);
-		}
-		if (!isEntityNamingAvailable) {
-			rsm.markOutOfService();
-			GlobalStatus.setDashboardDownStatus();
-			logger.info("Dashboards service is out of service because entity naming service is unavailable");
-			return;
-		}
-
-		// now all checking is OK
-		try {
-			rsm.markServiceUp();
-			GlobalStatus.setDashboardUpStatus();	
-			logger.debug("Dashboards service is up");
-		}
-		catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-		}
-	}
-
-	/* (non-Javadoc)
 	 * @see oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager#postStart(weblogic.application.ApplicationLifecycleEvent)
 	 */
 	@Override
 	public void postStart(ApplicationLifecycleEvent evt) throws Exception
 	{
 		timer = new Timer();
-		timer.addNotificationListener(this, null, null);
+		NotificationListener notification = new AvailabilityNotification(rsm);
+		timer.addNotificationListener(notification, null, null);
 		Date timerTriggerAt = new Date(new Date().getTime() + 10000L);
-		notificationId = timer.addNotification("DashboardsServiceTimer", null, this, timerTriggerAt, PERIOD, 0);
+		notificationId = timer.addNotification("DashboardsServiceTimer", null, notification, timerTriggerAt, PERIOD, 0);
 		timer.start();
 		logger.info("Timer for dashboard service dependencies checking started. notificationId={}", notificationId);
 	}
@@ -165,19 +97,6 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		catch (InstanceNotFoundException e) {
 			logger.error(e.getLocalizedMessage(), e);
 		}
-	}
-
-	private boolean isDatabaseAvailable()
-	{
-		DBConnectionManager dbcm = DBConnectionManager.getInstance();
-		return dbcm.isDatabaseConnectionAvailable();
-	}
-
-	private boolean isEntityNamingAvailable()
-	{
-		Link lk = RegistryLookupUtil.getServiceInternalLink(ENTITY_NAMING_SERVICE_NAME, ENTITY_NAMING_SERVICE_VERSION,
-				ENTITY_NAMING_SERVICE_REL, null);
-		return lk != null && !StringUtil.isEmpty(lk.getHref());
 	}
 
 }

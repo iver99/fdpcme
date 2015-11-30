@@ -30,6 +30,7 @@ public class DashboardsApplication extends Application
 		//		hs.add(FavoriteAPI.class);
 		hs.add(PreferenceAPI.class);
 		hs.add(LoggingAPI.class);
+		hs.add(LoggingConfigAPI.class);
 		hs.add(TenantSubscriptionsAPI.class);
 		hs.add(ConfigurationAPI.class);
 		hs.add(RegistryLookupAPI.class);
