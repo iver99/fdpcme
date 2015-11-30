@@ -326,6 +326,14 @@ body, html {
   vertical-align: middle;
 }
 
+.dbd-widget[ismobile="false"] .dbd-btn-group {
+    display: none;
+}
+
+.dbd-widget[ismobile="false"]:hover .dbd-btn-group {
+    display: inline-block;
+}
+
 .dbd-tile-header h2.dbd-tile-title {
   height: 2.34rem;
   line-height: 2.34rem;

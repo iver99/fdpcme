@@ -8,6 +8,7 @@ define(['knockout',
         'dashboards/time-selector-model',
         'dfutil',
         'uifwk/js/util/df-util',
+        'mobileutil',
         'jquery',
         'jqueryui',
         'ojs/ojcore',
@@ -20,7 +21,7 @@ define(['knockout',
         'ckeditor'
     ],
     
-    function(ko, km, TimeSelectorModel,dfu, dfumodel,$)
+    function(ko, km, TimeSelectorModel,dfu, dfumodel, mbu, $)
     {
         var dtm = this;
         
@@ -1214,10 +1215,12 @@ define(['knockout',
                     }
                 }
             }
-        }
+        };
         
+     
         function DashboardTilesViewModel($b, tilesView) {
             var self = this;
+            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             
             widgetAreaContainer = $('#widget-area');
             

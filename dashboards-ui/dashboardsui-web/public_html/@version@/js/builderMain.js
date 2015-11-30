@@ -39,6 +39,7 @@ requirejs.config({
         'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
+        'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'html2canvas':'../../libs/@version@/js/html2canvas/html2canvas',
         'canvg-rgbcolor':'../../libs/@version@/js/canvg/rgbcolor',
