@@ -30,7 +30,7 @@ define(['knockout',
         ko.mapping = km;
         
         var defaultCols = 8;
-        var defaultHeight = 186;
+        var defaultHeight = 161;
         var draggingTileClass = 'dbd-tile-in-dragging';
         
         var widgetAreaWidth = 0;
@@ -1957,7 +1957,7 @@ define(['knockout',
                     tile = u.helper.tile;
                     if (!tile) {
                         var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                        tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 1, widget, false);
+                        tile = self.createNewTile(widget.WIDGET_NAME, null, 4, 2, widget, false);
                         initializeTileAfterLoad(self.dashboard, tile, self.timeSelectorModel, self.targetContext);
                         u.helper.tile = tile;
                         self.tiles.tiles.push(tile);
@@ -2172,7 +2172,6 @@ define(['knockout',
 //                self.maximizeFirst();
                 $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
-                self.timeSelectorModel.timeRangeChange(true);
                 $(window).resize(function() {
                     clearTimeout(globalTimer);
                     globalTimer = setTimeout(self.notifyWindowResize, 200);                                        

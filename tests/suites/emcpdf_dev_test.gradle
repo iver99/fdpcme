@@ -31,7 +31,7 @@ buildscript {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
     }
 }
-
+apply from: 'setup.gradle'
 apply plugin: 'TestInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
@@ -63,32 +63,51 @@ dependencies {
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
          testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
-        //testConfig(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
+        testConfig(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 
 
 	configurations{
 		restAssured.exclude module:'groovy'
 	}
 }
- 
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-            }
+
+
+
+task DeployDFAPI(type:Exec) {
+
+        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerDeploy'
         }
-    }
-    useWebdriver = true
-    useRestAssured = true
+task PropsCopy(type: Copy,dependsOn: DeployDFAPI) {
+   from '/net/slc07ctj/scratch/emaas/setuplogs/'
+   into '../../oracle/work/'
+    include '*.log'
 }
 
-task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
+apply plugin: 'java'
+
+task logdir(type: Copy,dependsOn: PropsCopy) {
+    def logdir = new File("/var/opt/ORCLemaas/logs/dashboardsService")
+    println("logdir: "+logdir)
+	exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCLemaas/logs/dashboardsService"}
+    if( !logdir.exists() ) {
+        println("creating logdir")
+ if(exec{commandLine "/usr/local/packages/aime/em/run_as_root","mkdir -p /var/opt/ORCLemaas/logs/dashboardsService"}) {
+            println("succeeded in making folder")
+           exec{commandLine "/usr/local/packages/aime/em/run_as_root","chmod -R 777 /var/opt/ORCLemaas/logs/dashboardsService"}
+
+            if(logdir.exists()) {
+                println("folder exists")
+            } else {
+                println("folder does not exist")
+            }
+        } else {
+            println("failed to make folder")
+        }
+    } 
+}
+
+
+task DEVTest(type:EMTest,dependsOn: logdir){
 
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
@@ -99,20 +118,6 @@ task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
 	ext.set("testType", "unit")
 }
 
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,DEVTest])
-}
 
-task emcpdf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+
+task emcpdf_dev_test(dependsOn: DEVTest)
