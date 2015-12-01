@@ -121,12 +121,12 @@
                         </div>
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
-                        <!-- button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+                        <!--button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD'),
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
-                        </button -->
+                        </button-->
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: handleDashboardSave, ojComponent: {
@@ -265,7 +265,7 @@
             <!-- /ko -->
             <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;">
                 <!-- ko stopBinding: true -->
-                <div id="dbd-left-panel" class="fit-size-horizontal-sibling" 
+                <div id="dbd-left-panel" class="fit-size-horizontal-sibling"
                      data-bind="css: {'dbd-no-left-panel': completelyHidden(), 'dbd-left-panel-show': showPanel(), 'dbd-left-panel-hide': !showPanel()}">
                     <!-- ko if: showPanel() -->
                     <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
@@ -445,7 +445,7 @@
                         </div> 
                         <div id="global-time-control" class="oj-row fit-size-vertical-sibling" 
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none;"
-                             data-bind="visible: showTimeRange() || dashboard.enableRefresh">
+                             data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                             <div class="oj-col oj-sm-6">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',
@@ -453,8 +453,8 @@
                                                                 optionChange: optionChangedHandler,
                                                                 rootAttributes: {style:'max-width:373px;'}}"-->
                                <!--df-time-selector params="{model:timeSelectorModel}" ></df-time-selector-->
-                               <div data-bind="visible: !showTimeRange()">&nbsp;</div>
-                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: showTimeRange"></div>
+                               <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
+                               <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                             </div>
                             <div class="oj-col oj-sm-6" data-bind="visible: dashboard.enableRefresh">
                                 <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>
@@ -470,11 +470,11 @@
                             <img src="@version@/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
-                            <!-- <p style="font-size: 16px;">
+                            <p style="font-size: 16px;">
                                 <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1')"></span>
                                 <a data-bind="attr: {href:'javascript: this.click()'}, click: $root.openAddWidgetDialog, text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_ADD_LINK')"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2')"></span>
-                            </p> -->
+                            </p>
                         </div>
                         <!-- /ko -->
                         <div style="padding-left: 10px;">
@@ -482,7 +482,7 @@
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
                             <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
-                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid}, css: tileDisplayClass()">
+                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass()">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
                                         <div class="dbd-tile-header tile-drag-handle">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->

@@ -34,6 +34,7 @@ requirejs.config({
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
+        'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD

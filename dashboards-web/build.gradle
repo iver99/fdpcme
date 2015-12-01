@@ -9,7 +9,9 @@ ext.restDocRootDir = "${buildDir}/restdoc"
 ext.restDocOutputDir = "${restDocRootDir}"
 
 
-
+tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
 configurations {
 	restDoc
 	enunciateCore

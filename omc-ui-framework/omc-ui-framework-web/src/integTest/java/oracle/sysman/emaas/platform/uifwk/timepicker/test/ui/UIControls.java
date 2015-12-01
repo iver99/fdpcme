@@ -23,10 +23,10 @@ public class UIControls
 	//End: Text
 
 	//Begin: InputText
-	public static final String sStartDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[1]/div/input";
-	public static final String sStartTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[2]/div/div/input";
-	public static final String sEndDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[4]/div/input";
-	public static final String sEndTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[5]/div/div/input";
+	public static final String sStartDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[1]/div/input";
+	public static final String sStartTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[2]/div/div/input";
+	public static final String sEndDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[4]/div/input";
+	public static final String sEndTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[5]/div/div/input";
 
 	//End: InputText
 
@@ -47,7 +47,8 @@ public class UIControls
 	public static final String sLast7DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[7]";
 	public static final String sLast30DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[8]";
 	public static final String sLast90DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[9]";
-	public static final String sLastCustomBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[10]";
+	public static final String sLatestBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[10]";
+	public static final String sLastCustomBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[11]";
 	//End: Button
 
 	//Begin: Icon

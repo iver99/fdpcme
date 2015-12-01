@@ -137,7 +137,7 @@ define(['knockout',
                     $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
                 }
 //                self.completelyHidden(true);
-//                $b.triggerBuilderResizeEvent('Hide hide left panel in sprint42');
+//                $b.triggerBuilderResizeEvent('Hide hide left panel in sprint44');
                 
                 self.initEventHandlers();
                 self.loadWidgets();
@@ -763,7 +763,8 @@ define(['knockout',
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
                         'tileParameters', 'name', 'systemParameter', 
-                        'tileId', 'value', 'content', 'linkText', 'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                        'tileId', 'value', 'content', 'linkText', 
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", 
                         "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard", 
@@ -771,7 +772,8 @@ define(['knockout',
                         "maximizeEnabled", "narrowerEnabled", 
                         "onDashboardItemChangeEvent", "restoreEnabled", 
                         "setParameter", "shouldHide", "systemParameters", 
-                        "tileDisplayClass", "widerEnabled", "widget"]
+                        "tileDisplayClass", "widerEnabled", "widget", 
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
@@ -787,7 +789,7 @@ define(['knockout',
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
             
             self.addSelectedWidgetToDashboard = function(widget) {
-                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 4, 1, widget);
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 4, 2, widget);
             };
             
             self.addWidgetDialogParams = {
