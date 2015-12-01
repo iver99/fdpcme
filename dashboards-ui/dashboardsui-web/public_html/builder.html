@@ -489,7 +489,7 @@
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
-                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
+                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, event: {mouseover: $root.showPullRightBtn}, 
                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
                                                         <li id="configure">
                                                             <a href="#">

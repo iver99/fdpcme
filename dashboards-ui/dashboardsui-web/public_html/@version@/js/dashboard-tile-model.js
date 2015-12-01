@@ -1400,6 +1400,10 @@ define(['knockout',
                 self.show();
             };
             
+            self.showPullRightBtn = function() {
+                $(".dbd-btn-group").css("display", "inline-block");
+            }
+            
            self.menuItemSelect = function(event, ui) {
                var tile = ko.dataFor(ui.item[0]);
                if (!tile) {
