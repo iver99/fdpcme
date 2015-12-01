@@ -117,7 +117,11 @@ exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCL
 
 
 
-     task QATest(type:EMTest,dependsOn: [logdir,cleanUpDB]){ 
+     task QATest(type:EMTest,dependsOn: logdir){
+	
+doFirst{
+tasks.cleanUpDB.execute()
+} 
 	
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
