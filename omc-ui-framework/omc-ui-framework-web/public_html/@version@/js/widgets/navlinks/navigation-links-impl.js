@@ -104,7 +104,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                     }
                     else {
                         discoveredSecAuthUrl = authUrl;
-                        var path = "api/v1/roles/grants/getRoles?granteeUser=" + tenantName + "." + userName;
+                        var path = "api/v1/roles/grants/getRoles?grantee=" + tenantName + "." + userName;
                         var secAuthRoleUrl = dfu.buildFullUrl(authUrl, path);
                         dfu.ajaxWithRetry({
                             url: secAuthRoleUrl,
