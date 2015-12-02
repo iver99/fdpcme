@@ -304,10 +304,10 @@
                     </div>
                     <div id="dbd-left-panel-widgets" class="fit-size">
                         <div class="oj-col stretch-width" data-bind="foreach: widgets">
-                            <div class="dbd-left-panel-widget"
-                                 data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                <div class="dbd-left-panel-widget-text">
-                                    <span data-bind="text:WIDGET_NAME, attr: {title: WIDGET_NAME}"></span>
+                            <div class="dbd-left-panel-widget">
+                                <div class="dbd-left-panel-widget-text"
+                                            data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
+                                    <span data-bind="text:WIDGET_NAME"></span>
                                 </div>
                                 <button class="oj-button-half-chrome" 
                                         data-bind="attr: {id: 'widget-goto-'+WIDGET_UNIQUE_ID()}, click: $root.widgetGoDataExploreHandler,
@@ -316,7 +316,20 @@
                                 </button>
                                 <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
                                                 ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
-                                    <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}"/>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-12 oj-md-12">
+                                            <h2 data-bind="text:WIDGET_NAME"></h2>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-4 oj-md-4">
+                                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="height:120px;width:120px;"/>
+                                        </div>
+                                        <div class="oj-col oj-sm-8 oj-md-8">
+                                            <span data-bind="text:WIDGET_DESCRIPTION" style="color: #9e9e9e;"></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

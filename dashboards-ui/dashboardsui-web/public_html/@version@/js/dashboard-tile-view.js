@@ -56,6 +56,7 @@ define(['knockout',
                 var widgetsUrl = dfu.getWidgetsUrl();
 
                 dfu.ajaxWithRetry({
+                    type: 'get',
                     url: widgetsUrl,
                     headers: dfu.getSavedSearchRequestHeader(),
                     success: function(data) {
