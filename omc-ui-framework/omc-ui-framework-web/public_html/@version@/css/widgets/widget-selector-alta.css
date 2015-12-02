@@ -228,6 +228,7 @@
     background-color: white;
     border-radius: 0px 0px 5px 5px;
     position: relative;
+    display: inline-block;
 }
 
 .widget-selector-container:hover .widget-box-navigation{
