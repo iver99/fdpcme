@@ -132,23 +132,23 @@ define(['knockout',
             };
             
             self.initialize = function() {
-                if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
-                    self.completelyHidden(true);
-                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
-                }
-//                self.completelyHidden(true);
-//                $b.triggerBuilderResizeEvent('Hide hide left panel in sprint44');
+//                if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
+//                    self.completelyHidden(true);
+//                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+//                }
+                self.completelyHidden(true);
+                $b.triggerBuilderResizeEvent('Hide left panel in sprint47');
                 
-                self.initEventHandlers();
-                self.loadWidgets();
-                self.initDraggable();
-                self.checkAndDisableLinkDraggable();
-                $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
-                    var replacedValue = this.value.replace(/[^0-9\.]/g, '');
-                    if (this.value !== replacedValue) {
-                        this.value = replacedValue;
-                    }
-                });
+//                self.initEventHandlers();
+//                self.loadWidgets();
+//                self.initDraggable();
+//                self.checkAndDisableLinkDraggable();
+//                $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
+//                    var replacedValue = this.value.replace(/[^0-9\.]/g, '');
+//                    if (this.value !== replacedValue) {
+//                        this.value = replacedValue;
+//                    }
+//                });
             };
             
             self.initEventHandlers = function() {
