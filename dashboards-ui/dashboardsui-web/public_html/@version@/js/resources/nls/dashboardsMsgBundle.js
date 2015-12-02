@@ -231,6 +231,8 @@ define({
       "LANDING_HOME_SELECT": "Select",
       "LANDING_HOME_ITA_DB_RESOURCE": "Resource Analytics - Database",
       "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Performance Analytics - Middleware",
+      "LANDING_HOME_ITA_MIDDLEWARE_DATASOURCE_PERFORMANCE": "Performance Analytics - Middleware Datasource",
+      "LANDING_HOME_ITA_MIDDLEWARE_RESOURCE": "Resource Analytics - Middleware",
       "LANDING_HOME_ITA_SEARCH": "Data Explorer - Search",
       "LANDING_HOME_ITA_ANALYZE":"Data Explorer - Analyze",
       "LANDING_HOME_ITA_AWR": "Data Explorer - AWR",
