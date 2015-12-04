@@ -54,7 +54,13 @@ javascript.source {
         exclude "**/*.orig.js"
         }
     }
- }
+    jshint {
+	js {
+		srcDir 'public_html'
+                include "**/*.js"
+	}
+    }
+}
 
 task cleanJs(type:Delete) {
     delete fileTree(dir: stagingDir)
@@ -283,6 +289,14 @@ task combineAppJs(dependsOn: [copyStagedJs,prepareRequireJsConfig], type: com.er
     source = javascript.source.dev.js.files   //point to your source files
     requirejs.buildprofile = file(buildDir.absolutePath+"/dashboard.build.js")
     outputs.upToDateWhen { false }           //requireJs task does not know how to accurately determine if it is UP-TO-DATE so this line says the task is never up to date.
+}
+
+task jsHint(type:com.eriwen.gradle.js.tasks.JsHintTask){
+        source = javascript.source.jshint.js.files
+        dest = file(buildDir.absolutePath+'/jshint.out')
+        reporter = 'checkstyle'
+        jshint.options = [expr: "true", unused: "true", sub: "true"]
+        jshint.predef = [define: 1, require:2, requirejs:3, window:4, document:5, setTimeout:6, console:7, d3:8, $: 9, canvg:10, html2canvas:11, clearTimeout: 12, Promise: 13, setInterval: 14, importScripts:15, Worker: 16, postMessage: 17, btoa: 18, escape: 19, unescape: 20, atob: 21, Storage: 22]
 }
 
 //generateMD5 is a helper method which will generate an MD5 string for a given file
