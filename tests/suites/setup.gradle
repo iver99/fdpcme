@@ -19,13 +19,8 @@ import groovy.json.JsonSlurper
 import groovy.util.XmlSlurper
 import java.util.regex.*
 
+ext.TWORK=(System.getenv('T_WORK')!=null&&!System.getenv('T_WORK').trim().isEmpty())?System.getenv('T_WORK'):buildUri(getGitRoot(),"oracle/work")
 
-
-
-
-
-
-URLClassLoader loader = GroovyObject.class.classLoader
 
 
 
@@ -61,4 +56,93 @@ getBranch=this.&getBranch
 getGitRoot=this.&getGitRoot
 }
 
+
+
+
+
+/**********************************************************************
+ *	Preparing data refreshment
+ *
+ **********************************************************************/
+
+  repositories {
+	maven {
+          url = "${PUB_MAVEN_MY_MAVEN_REPO}"
+       }
+        maven {
+            url = "${artifactory_contextUrl}/${artifactory_virtual_repoKey}" }
+    }      
+
+configurations {
+    driver
+}
+
+ dependencies {
+     driver group: 'com.oracle.jdbc', name: 'ojdbc7', version: '12.1.0.1.0'
+}
+
+URLClassLoader loader = GroovyObject.class.classLoader
+configurations.driver.each {File file ->
+    loader.addURL(file.toURL())
+}
+
+
+String CLEANUP_SQL="cleanup.sql"
+
+
+
+
+
+String	db_usr="SYSEMS_T_3"
+String	db_pw="welcome1"
+String	db_url='jdbc:oracle:thin:@slc07her.us.oracle.com:1521:orcl12c'
+
+
+
+task cleanUpDB<<{
+	
+    def driverName = 'oracle.jdbc.OracleDriver'
+    Class.forName(driverName)
+    def props = [user: db_usr, password: db_pw] as Properties
+    def url=db_url
+    def sql =groovy.sql.Sql.newInstance(url,props,driverName)
+ 
+    def file = new File(buildUri(TWORK,"testClasses/"+CLEANUP_SQL))
+
+
+    file.eachLine{
+		def line=it
+		if(!line.trim().isEmpty()&&!line.contains("commit"))
+		{
+			if(line.trim().toLowerCase().startsWith("delete"))
+			{
+				line=line.replace(";","")
+				sql.execute(line)
+				println "Successfully Executed: "+line+" , affected row count:"+sql.getUpdateCount()
+			}
+		}	
+    }
+
+    sql.close() 
+	println "\t================================\n"
+	println "\t     Clean up DB data done\n"
+	println "\t================================"
+}
+
+
+
+
+
+
+
+ String buildUri(String base, String relative)
+ {
+           if (base.endsWith("/")) {
+                   base = base.substring(0, base.length() - 1);
+          }
+           if (relative.startsWith("/")) {
+                   relative = relative.substring(1);
+          }
+           return base + "/" + relative;
+   }
 

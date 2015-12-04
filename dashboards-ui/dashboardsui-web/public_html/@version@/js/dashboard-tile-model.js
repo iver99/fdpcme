@@ -1439,8 +1439,14 @@ define(['knockout',
                 self.show();
             };
             
-            self.showPullRightBtn = function() {
-                $(".dbd-btn-group").css("display", "inline-block");
+            self.showPullRightBtn = function(clientGuid, data, event) {
+                $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
+            }
+            
+            self.hidePullRightBtn = function(clientGuid, data, event) {
+                if($("#tileMenu"+clientGuid).css("display") === "none") {
+                    $("#tile"+clientGuid+" .dbd-btn-group").css("display", "none");
+                }
             }
             
            self.menuItemSelect = function(event, ui) {

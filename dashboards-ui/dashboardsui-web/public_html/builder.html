@@ -491,7 +491,8 @@
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
                             <div id="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
-                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass()">
+                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass(), 
+                                                                    event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
                                         <div class="dbd-tile-header tile-drag-handle">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
@@ -503,7 +504,7 @@
                                             <div class="dbd-pull-right">
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
-                                                            data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
+                                                            data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                        ojComponent: {component: 'ojButton', 
                                                                      label: '', 
                                                                      menu: '#tileMenu' + clientGuid}">
@@ -511,7 +512,8 @@
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
-                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, event: {mouseover: $root.showPullRightBtn}, 
+                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
+                                                        event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
                                                         <li id="configure">
                                                             <a href="#">
