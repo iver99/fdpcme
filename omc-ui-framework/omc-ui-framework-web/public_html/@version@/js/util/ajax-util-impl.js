@@ -2,7 +2,7 @@ define([
     'jquery', 
     'ojs/ojcore', 
     'uifwk/js/util/message-util', 
-    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsgBundle'
+    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
     function($, oj, msgUtilModel, nls)
     {

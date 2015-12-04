@@ -72,7 +72,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsUiMsg'
             }
         }
         ,
