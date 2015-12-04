@@ -77,6 +77,12 @@ javascript.source {
 		exclude "**/*.orig.js"
 	    }
 	}
+    jshint {
+	js {
+		srcDir 'public_html'
+                include "**/*.js"
+	}
+    }
 }
 
 javascript.source.staticjs.js.files.eachWithIndex { File jsFile, idx ->
@@ -222,6 +228,14 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
 }
 
 task individualMinify(dependsOn: [copyJsSource, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
+
+task jsHint(type:com.eriwen.gradle.js.tasks.JsHintTask){
+        source = javascript.source.jshint.js.files
+        dest = file(buildDir.absolutePath+'/jshint.out')
+        reporter = 'checkstyle'
+        jshint.options = [expr: "true", unused: "true", sub: "true"]
+        jshint.predef = [define: 1, require:2, requirejs:3, window:4, document:5, setTimeout:6, console:7, d3:8, $: 9, canvg:10, html2canvas:11, clearTimeout: 12, Promise: 13, setInterval: 14, importScripts:15, Worker: 16, postMessage: 17, btoa: 18, escape: 19, unescape: 20, atob: 21, Storage: 22]
+}
 
 project.task("unpackJETFromArtifactory") << {
     // if the resources/web/js/libs directory is empty - either the first time this task is
