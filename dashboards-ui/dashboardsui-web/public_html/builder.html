@@ -121,6 +121,15 @@
                         </div>
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
+                        <!-- ko if: window.DEV_MODE -->
+                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+                                data-bind="click: changeMode, ojComponent: {
+                                      component:'ojButton', label: 'ChangeMode',
+                                      icons: {start: 'dbd-toolbar-icon-add-widget'},
+                          }, attr: {title: 'Change Mode'}">
+                        </button>
+                        <!-- /ko -->
+                        
                         <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD'),
@@ -480,7 +489,7 @@
                         <div style="padding-left: 10px;">
                         <div id="tiles-wrapper" class="fit-size" style="width: 100%; float: left; position: relative; height: auto;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
-                            <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
+                            <div id="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass()">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
