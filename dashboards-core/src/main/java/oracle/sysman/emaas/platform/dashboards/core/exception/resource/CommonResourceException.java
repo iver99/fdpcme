@@ -25,6 +25,8 @@ public class CommonResourceException extends DashboardException
 
 	public static final String NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD = "NOT_SUPPORT_UPDATE_IS_SYSTEM_FIELD";
 	public static final String NOT_SUPPORT_UPDATE_TYPE_FIELD = "NOT_SUPPORT_UPDATE_TYPE_FIELD";
+	public static final String LOGGER_NOT_FOUND_TO_CONFIG = "LOGGER_NOT_FOUND_TO_CONFIG";
+	public static final String LOGGER_LEVEL_NOT_FOUND_TO_CONFIG = "LOGGER_LEVEL_NOT_FOUND_TO_CONFIG";
 
 	/**
 	 * Constructs a new <code>CommonResourceException</code> with the specified detail message.

@@ -101,10 +101,15 @@ public class EmsDashboardTile implements Serializable
 	private String widgetUniqueId;
 	@Column(name = "WIDGET_VIEWMODE", nullable = false, length = 1024)
 	private String widgetViewmode;
+	@Column(name = "WIDGET_SUPPORT_TIME_CONTROL", nullable = false)
+	private Integer widgetSupportTimeControl;
+	@Column(name = "WIDGET_LINKED_DASHBOARD")
+	private Long widgetLinkedDashboard;
 	@ManyToOne
 	@JoinColumns(value = { @JoinColumn(name = "DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmsDashboard dashboard;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardTile", orphanRemoval = true)
 	private List<EmsDashboardTileParams> dashboardTileParamsList;
 
@@ -117,7 +122,8 @@ public class EmsDashboardTile implements Serializable
 			String providerAssetRoot, String providerName, String providerVersion, Long tileId, String title,
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,
-			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer width)
+			String widgetTemplate, String widgetUniqueId, String widgetViewmode, Integer widgetSupportTimeControl, Integer width,
+			Long widgetLinkedDashboard)
 	{
 		this.creationDate = creationDate;
 		dashboard = emsDashboard1;
@@ -147,6 +153,8 @@ public class EmsDashboardTile implements Serializable
 		this.widgetTemplate = widgetTemplate;
 		this.widgetUniqueId = widgetUniqueId;
 		this.widgetViewmode = widgetViewmode;
+		this.widgetSupportTimeControl = widgetSupportTimeControl;
+		this.widgetLinkedDashboard = widgetLinkedDashboard;
 		this.width = width;
 	}
 
@@ -284,6 +292,11 @@ public class EmsDashboardTile implements Serializable
 		return widgetKocName;
 	}
 
+	public Long getWidgetLinkedDashboard()
+	{
+		return widgetLinkedDashboard;
+	}
+
 	public String getWidgetName()
 	{
 		return widgetName;
@@ -297,6 +310,11 @@ public class EmsDashboardTile implements Serializable
 	public Integer getWidgetSource()
 	{
 		return widgetSource;
+	}
+
+	public Integer getWidgetSupportTimeControl()
+	{
+		return widgetSupportTimeControl;
 	}
 
 	public String getWidgetTemplate()
@@ -449,6 +467,11 @@ public class EmsDashboardTile implements Serializable
 		this.widgetKocName = widgetKocName;
 	}
 
+	public void setWidgetLinkedDashboard(Long widgetLinkedDashboard)
+	{
+		this.widgetLinkedDashboard = widgetLinkedDashboard;
+	}
+
 	public void setWidgetName(String widgetName)
 	{
 		this.widgetName = widgetName;
@@ -462,6 +485,11 @@ public class EmsDashboardTile implements Serializable
 	public void setWidgetSource(Integer widgetSource)
 	{
 		this.widgetSource = widgetSource;
+	}
+
+	public void setWidgetSupportTimeControl(Integer widgetSupportTimeControl)
+	{
+		this.widgetSupportTimeControl = widgetSupportTimeControl;
 	}
 
 	public void setWidgetTemplate(String widgetTemplate)

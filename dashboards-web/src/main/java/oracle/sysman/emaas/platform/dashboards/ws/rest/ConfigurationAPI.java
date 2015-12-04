@@ -102,8 +102,10 @@ public class ConfigurationAPI extends APIBase
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDiscoveryConfigurations(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@HeaderParam(value = "SESSION_EXP") String sessionExpiryTime)
 	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/configurations/registration");
 		if (responseError != null) {
 			return responseError; //need redeployment to remove error with fix
 		}

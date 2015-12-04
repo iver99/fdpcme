@@ -92,8 +92,8 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		if (!isSSFAvailable) {
 			rsm.markOutOfService();
 			GlobalStatus.setOmcUiDownStatus();
-			logger.info("OMC UI Framework service is out of service because Saved Search API service is unavailable");
-			return;
+			logger.error("OMC UI Framework service is out of service because Saved Search API service is unavailable");
+                        return;
 		}
 
 		// check df api service's availability
@@ -108,8 +108,8 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		if (!isDFApiAvailable) {
 			rsm.markOutOfService();
 			GlobalStatus.setOmcUiDownStatus();
-			logger.info("OMC UI Framework service is out of service because Dashboard API service is unavailable");
-			return;
+                        logger.error("OMC UI Framework service is out of service because Dashboard API service is unavailable");
+                        return;
 		}
 
 		// now all checking is OK

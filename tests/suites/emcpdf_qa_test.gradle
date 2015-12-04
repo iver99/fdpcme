@@ -87,8 +87,7 @@ task PropsCopy(type: Copy) {
    from '/net/slc07ctj/scratch/emaas/setuplogs/'
    into '../../oracle/work/'
     include '*.log'
-   
-
+  sleep( 300000)
 
 }
 
@@ -118,7 +117,12 @@ exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCL
 
 
 
-     task QATest(type:EMTest,dependsOn: logdir){ 
+     task QATest(type:EMTest,dependsOn: logdir){
+	
+doFirst{
+tasks.cleanUpDB.execute()
+} 
+	
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"

@@ -99,7 +99,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		if (!isSSFAvailable) {
 			rsm.markOutOfService();
 			GlobalStatus.setDashboardUIDownStatus();
-			logger.info("Dashboards UI service is out of service because Saved Search API service is unavailable");
+			logger.error("Dashboards UI service is out of service because Saved Search API service is unavailable");
 			return;
 		}
 
@@ -115,7 +115,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		if (!isDFApiAvailable) {
 			rsm.markOutOfService();
 			GlobalStatus.setDashboardUIDownStatus();
-			logger.info("Dashboards UI service is out of service because Dashboard API service is unavailable");
+			logger.error("Dashboards UI service is out of service because Dashboard API service is unavailable");
 			return;
 		}
 

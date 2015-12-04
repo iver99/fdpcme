@@ -7,6 +7,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
@@ -764,7 +765,7 @@ public class DashboardManagerTest
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
 				AssertJUnit
-						.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+				.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 			if (dbd.getName().equals(dbd13.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
@@ -838,11 +839,11 @@ public class DashboardManagerTest
 
 		dm.setDashboardIncludeTimeControl(dbd1.getDashboardId(), true, tenantId1);
 		Dashboard queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Assert.assertTrue(queried.getEnableTimeRange());
+		Assert.assertEquals(EnableTimeRangeState.TRUE, queried.getEnableTimeRange());
 
 		dm.setDashboardIncludeTimeControl(dbd1.getDashboardId(), false, tenantId1);
 		queried = dm.getDashboardById(dbd1.getDashboardId(), tenantId1);
-		Assert.assertFalse(queried.getEnableTimeRange());
+		Assert.assertEquals(EnableTimeRangeState.FALSE, queried.getEnableTimeRange());
 
 		// post test
 		dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);

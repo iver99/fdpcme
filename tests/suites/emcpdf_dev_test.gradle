@@ -108,7 +108,9 @@ task logdir(type: Copy,dependsOn: PropsCopy) {
 
 
 task DEVTest(type:EMTest,dependsOn: logdir){
-
+doFirst{
+tasks.cleanUpDB.execute()
+}
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"

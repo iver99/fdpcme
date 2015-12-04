@@ -45,6 +45,7 @@ public class RegistrationEntity
 	public static final String NAME_DASHBOARD_API_SERVICENAME = "Dashboard-API";
 	public static final String NAME_DASHBOARD_API_VERSION = "1.0+";
 	public static final String NAME_QUICK_LINK = "quickLink";
+	public static final String NAME_HOME_LINK = "homeLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
 	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
@@ -68,6 +69,7 @@ public class RegistrationEntity
 	public static final String TA_SERVICENAME = "TargetAnalytics";
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";
 	public static final String TMUI_SERVICENAME = "TenantManagementUI";
+	public static final String EVENTUI_SERVICENAME = "EventUI";
 
 	private static final Logger _logger = LogManager.getLogger(RegistrationEntity.class);
 	//	private String registryUrls;
@@ -111,21 +113,6 @@ public class RegistrationEntity
 		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 	}
 
-	//	private String ssfServiceName;
-	//	private String ssfVersion;
-
-	//	public RegistrationEntity(String regValue, String ssfServiceName, String ssfVersion)
-	//	{
-	//		setRegistryUrls(regValue);
-	//		setSsfServiceName(ssfServiceName);
-	//		setSsfVersion(ssfVersion);
-	//	}
-
-	//	public RegistrationEntity(String regValue)
-	//	{
-	//		setRegistryUrls(regValue);
-	//	}
-
 	/**
 	 * @return the authorizationHeader
 	 */
@@ -159,6 +146,29 @@ public class RegistrationEntity
 			}
 		}
 		return list;
+	}
+
+	//	private String ssfServiceName;
+	//	private String ssfVersion;
+
+	//	public RegistrationEntity(String regValue, String ssfServiceName, String ssfVersion)
+	//	{
+	//		setRegistryUrls(regValue);
+	//		setSsfServiceName(ssfServiceName);
+	//		setSsfVersion(ssfVersion);
+	//	}
+
+	//	public RegistrationEntity(String regValue)
+	//	{
+	//		setRegistryUrls(regValue);
+	//	}
+
+	/**
+	 * @return Home links discovered from service manager
+	 */
+	public List<LinkEntity> getHomeLinks()
+	{
+		return lookupLinksWithRelPrefix(NAME_HOME_LINK);
 	}
 
 	public String getSessionExpiryTime()
@@ -317,9 +327,12 @@ public class RegistrationEntity
 				appSet.add(LA_SERVICENAME);
 			}
 		}
-		//if any of APM/LA/TA is subscribed, TenantManagementUI should be subscribed accordingly as agreement now
-		if (appSet.size() > 0 && isAdmin) {
-			appSet.add(TMUI_SERVICENAME);
+		//if any of APM/LA/TA is subscribed, TenantManagementUI/EventUI should be subscribed accordingly as agreement now
+		if (appSet.size() > 0) {
+			if (isAdmin) {
+				appSet.add(TMUI_SERVICENAME);
+			}
+			appSet.add(EVENTUI_SERVICENAME);
 		}
 		return appSet;
 	}
