@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 define(['knockout',
+        'ojs/ojcore',
         'knockout.mapping',
         'dashboards/time-selector-model',
         'dfutil',
@@ -12,13 +13,12 @@ define(['knockout',
         'jquery',
         './builder/builder-editor-modes',
         'jqueryui',
-        'ojs/ojcore',
         'ojs/ojknockout',
         'ojs/ojmenu',
         'ckeditor'
     ],
     
-    function(ko, km, TimeSelectorModel,dfu, dfumodel, mbu, $, em)
+    function(ko, oj, km, TimeSelectorModel,dfu, dfumodel, mbu, $, em)
     {
         var dtm = this;
         
@@ -810,25 +810,25 @@ define(['knockout',
             self.tilesGrid = new TilesGrid(mode);
             
             self.changeMode = function(newMode) {
-                self.mode = newMode;
-                self.tilesGrid.initializeGridRows(self.tilesGrid.size());
-                self.tilesGrid.changeMode(newMode);
-                for(var i=0; i<self.tiles().length; i++) {
-                    self.mode.resetModeRow(self.tiles()[i]);
-                    self.mode.resetModeColumn(self.tiles()[i]);
-                    self.mode.resetModeWidth(self.tiles()[i]);
-                    self.mode.resetModeHeight(self.tiles()[i]);
+                if (newMode)
+                    self.mode = newMode;
+                if (!self.mode) {
+                    console.error("Error: tiles editor holds an empty mode!");
+                    return;
                 }
-                if (newMode.POSITION_TYPE === "BASED_ON_ROW_COLUMN")
+                self.tilesGrid.initializeGridRows(self.tilesGrid.size());
+                self.tilesGrid.changeMode(self.mode);
+                self.resetTiles();
+                if (self.mode.POSITION_TYPE === "BASED_ON_ROW_COLUMN")
                     self.tilesReorder();
-                else if (newMode.POSITION_TYPE === "FIND_SUITABLE_SPACE") {
+                else if (self.mode.POSITION_TYPE === "FIND_SUITABLE_SPACE") {
                     self.sortTilesByColumnsThenRows();
 //                    self.tilesGrid.initializeGridRows(self.tilesGrid.size());
                     var startrow = 0, startcolumn = 0;
                     for(var i=0; i<self.tiles().length; i++) {
                         var tile = self.tiles()[i];
                         var pos = self.calAvailablePositionForTile(tile, startrow, startcolumn);
-                        newMode.setModeRow(tile, pos.row), newMode.setModeColumn(tile, pos.column);
+                        self.mode.setModeRow(tile, pos.row), self.mode.setModeColumn(tile, pos.column);
                         pos = self.getAvailableCellAfterTile(tile);
 //                        if (pos.column >= newMode.MODE_MAX_COLUMNS) {
 //                            pos.row += newMode.getModeHeight(tile), pos.column = 0;
@@ -836,6 +836,20 @@ define(['knockout',
                         startrow = pos.row, startcolumn = pos.column;
                         self.tilesGrid.registerTileToGrid(self.tiles()[i]);
                     }
+                }
+            };
+            
+            // initialize with the initial mode passed as parameter of TilesEditor
+            self.initializeMode = function() {
+                self.changeMode();
+            };
+            
+            self.resetTiles = function() {
+                for(var i=0; i<self.tiles().length; i++) {
+                    self.mode.resetModeRow(self.tiles()[i]);
+                    self.mode.resetModeColumn(self.tiles()[i]);
+                    self.mode.resetModeWidth(self.tiles()[i]);
+                    self.mode.resetModeHeight(self.tiles()[i]);
                 }
             };
             
@@ -1230,7 +1244,12 @@ define(['knockout',
             self.normalMode = new em.NormalEditorMode();
             self.tabletMode = new em.TabletEditorMode();
             
-            self.editor = new TilesEditor(self.normalMode);
+            var smQuery = oj.ResponsiveUtils.getFrameworkQuery(
+                                oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
+            var smObservable = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
+            console.debug("Checking sm media type result: " + (smObservable&smObservable()));
+            
+            self.editor = new TilesEditor(smObservable && smObservable() ? self.tabletMode : self.normalMode);
             self.editor.tiles = $b.dashboard.tiles;
             widgetAreaWidth = widgetAreaContainer.width();
             
@@ -2190,6 +2209,7 @@ define(['knockout',
                 self.triggerTileTimeControlSupportEvent();
                 //avoid brandingbar disappear when set font-size of text
                 $("#globalBody").addClass("globalBody");
+                self.editor.initializeMode();
             };
             
             self.notifyWindowResize = function() {

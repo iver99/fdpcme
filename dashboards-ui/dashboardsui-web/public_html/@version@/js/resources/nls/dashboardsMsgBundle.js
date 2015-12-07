@@ -104,6 +104,7 @@ define({
       "DBS_BUILDER_BTN_ADD_WIDGET": "Add Widgets",
       "DBS_BUILDER_BTN_ADD": "Add",
       "DBS_BUILDER_BTN_ADD_TEXT": "Add Text",
+      "DBS_BUILDER_BTN_TOGGLE_MODE": "Toggle Mode",
       "DBS_BUILDER_TEXT_WIDGET_SAMPLE": "Sample Text",
       "DBS_BUILDER_TEXT_WIDGET_LINK_DIALOG_TITLE": "Add Hyperlink",
       "DBS_BUILDER_TEXT_WIDGET_RENAME": "Rename",
