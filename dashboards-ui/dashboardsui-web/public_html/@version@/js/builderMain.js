@@ -208,9 +208,9 @@ require(['knockout',
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
                             if(tile.type() === "TEXT_WIDGET") {
-                                dtm.initializeTextTileAfterLoad($b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, dtm.isContentLengthValid);
+                                dtm.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, dtm.isContentLengthValid);
                             }else {
-                                dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
+                                dtm.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
                             }
                         }
                     }
