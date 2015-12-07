@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-        
+
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -125,6 +125,14 @@
                         </div>
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
+                        <!-- ko if: window.DEV_MODE -->
+                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+                                data-bind="click: changeMode, ojComponent: {
+                                      component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE'),
+                                      icons: {start: 'dbd-toolbar-icon-add-widget'},
+                          }, attr: {title: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE')}">
+                        </button>
+                        <!-- /ko -->
 <!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD'),
@@ -468,7 +476,7 @@
                         <div id="global-time-control" class="oj-row fit-size-vertical-sibling" 
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none;"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
-                            <div class="oj-col oj-sm-6">
+                            <div class="oj-col oj-sm-12 oj-md-7">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
                                     data-bind="ojComponent: {component: 'ojSelect',
                                                                 value: categoryValue,
@@ -478,7 +486,7 @@
                                <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                             </div>
-                            <div class="oj-col oj-sm-6" data-bind="visible: dashboard.enableRefresh">
+                            <div class="oj-col oj-sm-12 oj-md-5" data-bind="visible: dashboard.enableRefresh">
                                 <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>
                                 <!--div data-bind="component: {name: 'df-auto-refresh', params: autoRefreshParams}" style="float:right;padding-right: 10px"></div-->
                                 <!--df-auto-refresh params="autoRefreshParams"></df-auto-refresh-->
@@ -502,9 +510,10 @@
                         <div style="padding-left: 10px;">
                         <div id="tiles-wrapper" class="fit-size" style="width: 100%; float: left; position: relative; height: auto;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
-                            <div id="widget-area" data-bind="foreach: tiles.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
+                            <div id="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
-                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass()">
+                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass(), 
+                                                                    event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
                                         <div class="dbd-tile-header tile-drag-handle">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
@@ -516,7 +525,7 @@
                                             <div class="dbd-pull-right">
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
-                                                            data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
+                                                            data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                        ojComponent: {component: 'ojButton', 
                                                                      label: '', 
                                                                      menu: '#tileMenu' + clientGuid}">
@@ -524,7 +533,8 @@
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
-                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, event: {mouseover: $root.showPullRightBtn}, 
+                                                        data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
+                                                        event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
                                                         <li id="configure">
                                                             <a href="#">

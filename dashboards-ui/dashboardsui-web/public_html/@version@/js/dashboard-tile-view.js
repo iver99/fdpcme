@@ -496,6 +496,13 @@ define(['knockout',
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard());
             self.disableSave = ko.observable(false);
             
+            if (window.DEV_MODE) { // for dev mode debug only
+                self.changeMode = function() {
+                    self.tilesViewModel.editor.changeMode(self.tilesViewModel.editor.mode === self.tilesViewModel.tabletMode ? self.tilesViewModel.normalMode : self.tilesViewModel.tabletMode);
+                    self.tilesViewModel.show();
+                };
+            }
+            
             self.includeTimeRangeFilter = ko.pureComputed({
                 read: function() {
                     if (self.dashboard.enableTimeRange()) {
@@ -765,8 +772,8 @@ define(['knockout',
                         'tileParameters', 'name', 'systemParameter', 
                         'tileId', 'value', 'content', 'linkText', 
                         'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
-                    'ignore': ["createdOn", "href", "owner", 
-                        "screenShotHref", "systemDashboard",
+                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
+                        "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard", 
                         "fireDashboardItemChangeEvent", "getParameter", 
                         "maximizeEnabled", "narrowerEnabled", 
@@ -894,6 +901,8 @@ define(['knockout',
             
             self.EVENT_POST_DOCUMENT_SHOW = "EVENT_POST_DOCUMENT_SHOW";
             self.EVENT_BUILDER_RESIZE = "EVENT_BUILDER_RESIZE";
+            self.EVENT_ENTER_NORMAL_MODE = "EVENT_ENTER_NORMAL_MODE";
+            self.EVENT_ENTER_TABLET_MODE = "EVENT_ENTER_TABLET_MODE";
             
             self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED = "EVENT_DSB_ENABLE_TIMERANGE_CHANGED";
             
@@ -954,7 +963,7 @@ define(['knockout',
             };
             
             self.triggerEvent = function(event, message, p1, p2, p3, p4) {
-//                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
+                console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
                 self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
             };
             
@@ -994,6 +1003,7 @@ define(['knockout',
                 self.addEventListener(self.EVENT_NEW_WIDGET_STOP_DRAGGING, listener);
             };
             
+            var previousWidth, NORMAL_MIN_WIDTH = 768;
             self.triggerBuilderResizeEvent = function(message) {
                 var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                         - $('#head-bar-container').outerHeight()*/;
@@ -1001,6 +1011,11 @@ define(['knockout',
                 var leftWidth = $('#dbd-left-panel').width();
                 var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
                 self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
+                if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
+                    self.triggerEvent(self.EVENT_ENTER_NORMAL_MODE, null, width, height, leftWidth, topHeight);
+                else if (previousWidth && width < NORMAL_MIN_WIDTH && previousWidth >= NORMAL_MIN_WIDTH)
+                    self.triggerEvent(self.EVENT_ENTER_TABLET_MODE, null, width, height, leftWidth, topHeight);
+                previousWidth = width;
             };    
             
             self.addBuilderResizeListener = function(listener) {
