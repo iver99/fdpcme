@@ -24,6 +24,7 @@ define({
       "COMMON_TEXT_ERROR": "Error",
       "COMMON_REQUIRE_ERROR": "{0} is required",
       "COMMON_SERVER_ERROR": "Error on accessing server",
+      "COMMON_DASHBAORD_SAME_NAME_ERROR": "Dashboard name already exists. Provide a unique name.",
       "DBS_HOME_SEARCH_ARIA_LABEL": "Search for a Dashboard",
       "DBS_HOME_SEARCH_PLACE_HODE": "Search",
       "DBS_HOME_SEARCH_BTN_LABEL": "Search",
