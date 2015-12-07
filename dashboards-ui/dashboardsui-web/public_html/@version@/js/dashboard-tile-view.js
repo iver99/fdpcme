@@ -839,6 +839,53 @@ define(['knockout',
             };
             
             self.initialize();
+            
+            //Dashboard Options ======start=======
+            self.dashboardOtionsLabel = getNlsString('DBS_BUILDER_BTN_OPTIONS');
+            self.openDashboardEditDialog = function() {
+                //TODO: open edit dialog
+            };
+            self.openDashboardDuplicateDialog = function() {
+                //TODO: open duplicate dialog
+            };
+            self.openDashboardDeleteConfirmDialog = function() {
+                //TODO: open delete confirmation dialog
+            };
+            self.dashboardOptsMenuItems = [
+                {
+                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_add",
+                    "onclick": self.openAddWidgetDialog,
+                    "icon":"dbd-toolbar-icon-add-widget",
+                    "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')
+                },
+                {
+                    "label": getNlsString('COMMON_BTN_EDIT'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_edit",
+                    "onclick": self.openDashboardEditDialog,
+                    "icon":"dbd-toolbar-icon-edit",
+                    "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE')
+                },
+                {
+                    "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_duplicate",
+                    "onclick": self.openDashboardDuplicateDialog,
+                    "icon":"dbd-toolbar-icon-duplicate",
+                    "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE')
+                },
+                {
+                    "label": getNlsString('COMMON_BTN_DELETE'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_delete",
+                    "onclick": self.openDashboardDeleteConfirmDialog,
+                    "icon":"dbd-toolbar-icon-delete",
+                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE')
+                }
+            ];
+            //Dashboard Options ======end=======
         }
         
         function DashboardBuilder(dashboard) {

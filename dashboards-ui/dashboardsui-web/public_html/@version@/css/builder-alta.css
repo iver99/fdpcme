@@ -173,10 +173,10 @@ body, html {
   width: auto;
 }
 
-#builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
+/*#builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
   padding-right: 40px;
   margin-right: -40px;
-}
+}*/
 
 .dbd-toolbar-icon-add-widget:before {
   content: url(../images/func_plus_16_ena.png);
@@ -184,6 +184,22 @@ body, html {
 
 .dbd-toolbar-icon-save:before {
   content: url(../images/func_floppy_16_ena.png);
+}
+
+.dbd-toolbar-icon-options:before {
+  content: url(../images/func_gear_16_ena.png);
+}
+
+.dbd-toolbar-icon-edit:before {
+  content: url(../images/func_edit_16_ena.png);
+}
+
+.dbd-toolbar-icon-duplicate:before {
+  content: url(../images/func_papers_16_ena.png);
+}
+
+.dbd-toolbar-icon-delete:before {
+  content: url(../images/func_trashcan_16_ena.png);
 }
 
 .builder-toolbar-button-text {
@@ -214,7 +230,8 @@ body, html {
 }
 
 .dbd-display-area:not(.dbd-edit-disabled) .dbd-display-hover-area:hover .dbd-display-area-editor-btn {
-  display: inline;
+  /*display: inline;*/
+  display: none;
 }
 
 .dbd-tile-no-display {
