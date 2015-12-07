@@ -297,7 +297,19 @@ body, html {
 }
 
 .dbd-tile-action span.oj-button-icon:before {
-  content: url('../images/func_threebullets_16_ena.png');
+  content: url('../images/func_threebullets_black_16_ena.png');
+}
+
+.dbd-tile-action.oj-hover span.oj-button-icon:before {
+    content: url('../images/func_threebullets_blue_16_ena.png');
+}
+
+.dbd-tile-action.oj-hover.oj-selected span.oj-button-icon:before {
+    content: url('../images/func_threebullets_16_ena.png');
+}
+
+.dbd-tile-action.oj-selected span.oj-button-icon:before {
+    content: url('../images/func_threebullets_white_16_ena.png');
 }
 
 .dbd-tile-maximized .dbd-tile-header {
@@ -359,6 +371,10 @@ body, html {
   float: right;
   display: block;
   margin-bottom: 1px;
+  width: 44px;
+  height: 32px;
+  min-width: 46px;
+  min-height: 32px;
 }
 
 .dbd-tile-element {
