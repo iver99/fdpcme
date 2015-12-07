@@ -10,7 +10,7 @@
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams</class>
-        <!-- <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class> -->
+        <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsPreference</class>
 
 		<properties>
