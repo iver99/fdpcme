@@ -848,7 +848,6 @@ define(['knockout',
             self.initialize();
             
             //Dashboard Options ======start=======
-            self.dashboardOtionsLabel = getNlsString('DBS_BUILDER_BTN_OPTIONS');
             self.openDashboardEditDialog = function() {
                 //TODO: open edit dialog
             };

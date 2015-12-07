@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-
+        
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -126,12 +126,12 @@
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
                         <!-- ko if: window.DEV_MODE -->
-                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+<!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: changeMode, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE'),
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE')}">
-                        </button>
+                        </button>-->
                         <!-- /ko -->
 <!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
@@ -160,9 +160,9 @@
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome'
-                                data-bind="ojComponent: { component: 'ojButton', label: dashboardOtionsLabel, 
+                                data-bind="ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
                                     icons: {start: 'dbd-toolbar-icon-options'}, menu: '#dashboardOptsMenu'},
-                                attr: {title: dashboardOtionsLabel}">
+                                attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
                         <!--span  tabindex="0" data-bind="click: handleSettingsDialogOpen, enterpress: handleSettingsDialogOpen, visible: editDisabled() !== true">
                           <button id="dashboard-settings" class="oj-button oj-default oj-button-half-chrome dbd-gray"
