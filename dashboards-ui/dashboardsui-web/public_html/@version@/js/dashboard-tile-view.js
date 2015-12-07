@@ -471,10 +471,60 @@ define(['knockout',
             $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
         }
         
+    function editDashboardDialogModel(dsb) {
+        var self = this;
+        self.dashboard = dsb;
+        self.name = ko.observable(dsb.name());
+        self.nameInputed = ko.observable(undefined); //read only input text
+        self.description = ko.observable(dsb.description());
+        self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
+        self.targetFilterValue = ko.observable(["OFF"]);
+        self.isDisabled = ko.computed(function() { 
+            if (self.nameInputed() && self.nameInputed().length > 0)
+            {
+                return false;
+            }
+            return true;
+        });
+        
+        self.open = function() {
+            $( "#cDsbDialog" ).ojDialog( "open" );    
+        };
+        
+        self.save = function() {
+            self.dashboard.name(self.name());
+            self.dashboard.description(self.description());
+        };
+        
+        self.clear = function() {
+            self.name(undefined);
+            self.description('');
+            self.timeRangeFilterValue(["ON"]);
+            self.targetFilterValue(["OFF"]);
+            //self.isDisabled(false);
+        };
+        
+        self.isEnableTimeRange = function() {
+            if (self.timeRangeFilterValue()  === "ON" || 
+                    self.timeRangeFilterValue()[0] === "ON")
+            {
+                return true;
+            }
+            return false;
+        };
+        
+//        self.keydown = function (d, e) {
+//           if (e.keyCode === 13) {
+//              $( "#cDsbDialog" ).ojDialog( "close" );
+//           }
+//        };
+    };
+    
         function ToolBarModel($b, tilesViewModel) {
             var self = this;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.editDashboardDialogModel = new editDashboardDialogModel($b.dashboard);
             
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
