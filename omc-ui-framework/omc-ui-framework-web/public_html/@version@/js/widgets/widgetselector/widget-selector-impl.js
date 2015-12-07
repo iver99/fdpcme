@@ -3,7 +3,7 @@ define([
     'jquery', 
     'uifwk/js/util/df-util', 
     'ojs/ojcore', 
-    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsgBundle',
+    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'uifwk/js/util/typeahead-search', 
     'ojs/ojselectcombobox', 
     'ojs/ojdialog',

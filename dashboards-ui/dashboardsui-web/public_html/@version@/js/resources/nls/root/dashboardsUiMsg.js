@@ -5,7 +5,6 @@
  */
 
 define({
-  "root": {
 //      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
 //      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
       "DBS_HOME_TITLE_HOME": "Home",
@@ -102,7 +101,12 @@ define({
       "DBS_BUILDER_NAME_EDIT": "Double click to edit name",
       "DBS_BUILDER_SAME_NAME_EXISTS_ERROR": "Dashboard with the same name exists already",
       "DBS_BUILDER_REQUIRE_NAME": "Name is required",
-      "DBS_BUILDER_BTN_ADD_WIDGET": "Add Widgets",
+      "DBS_BUILDER_BTN_OPTIONS": "Options",
+      "DBS_BUILDER_BTN_DUPLICATE": "Duplicate",
+      "DBS_BUILDER_BTN_DUPLICATE_TITLE": "Duplicate a dashboard",
+      "DBS_BUILDER_BTN_EDIT_TITLE": "Edit dashboard",
+      "DBS_BUILDER_BTN_DELETE_TITLE": "Delete dashboard",
+      "DBS_BUILDER_BTN_ADD_WIDGET": "Add widgets",
       "DBS_BUILDER_BTN_ADD": "Add",
       "DBS_BUILDER_BTN_ADD_TEXT": "Add Text",
       "DBS_BUILDER_BTN_TOGGLE_MODE": "Toggle Mode",
@@ -262,7 +266,5 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
-      
-}
 });
 
