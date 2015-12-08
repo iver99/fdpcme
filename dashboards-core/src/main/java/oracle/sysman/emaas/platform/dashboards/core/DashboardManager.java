@@ -186,9 +186,9 @@ public class DashboardManager
 		if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
 			throw new DashboardNotFoundException();
 		}
-		//		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
-		//			removeFavoriteDashboard(dashboardId, tenantId);
-		//		}
+		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
+			removeFavoriteDashboard(dashboardId, tenantId);
+		}
 		if (!permanent) {
 			ed.setDeleted(dashboardId);
 			dsf.mergeEmsDashboard(ed);
@@ -340,12 +340,13 @@ public class DashboardManager
 	{
 		String currentUser = UserContext.getCurrentUser();
 		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
-				+ currentUser + "'";
+				+ currentUser + "' and d.deleted = ?1";
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			Query query = em.createQuery(hql);
+			query.setParameter(1, new Integer(0));
 			@SuppressWarnings("unchecked")
 			List<EmsDashboard> edList = query.getResultList();
 			List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
