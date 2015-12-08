@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-
+        
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -33,7 +33,8 @@
                         <div id="builder-dbd-name">
                             <div id="builder-dbd-name-display-area" class="dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
                                 <span id="builder-dbd-name-display-hover-area" class="dbd-display-hover-area">
-                                    <h1 data-bind="text: dashboardName, event: { dblclick: editDashboardName }, enterpress: editDashboardName, attr: {title: getNlsString('DBS_BUILDER_NAME_EDIT')}" tabindex="0"></h1>
+                                    <!--<h1 data-bind="text: dashboardName, event: { dblclick: editDashboardName }, enterpress: editDashboardName, attr: {title: getNlsString('DBS_BUILDER_NAME_EDIT')}" tabindex="0"></h1>-->
+                                    <h1 data-bind="text: dashboardName, attr: {title: dashboardName}"></h1>
                                     <button id="builder-dbd-name-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click:editDashboardName,ojComponent: {
                                                     component:'ojButton'
@@ -84,11 +85,14 @@
                         <div id="builder-dbd-description">
                             <div id="builder-dbd-description-display-area" class="dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
                                 <span id="builder-dbd-description-display-hover-area" class="dbd-display-hover-area">
-                                    <span data-bind="text: dashboardDescription, 
+<!--                                    <span data-bind="text: dashboardDescription, 
                                                      event: { dblclick: editDashboardDescription }, 
                                                      enterpress: editDashboardDescription, 
                                                      attr: {title: dashboardDescription}" 
-                                          class="dbd-display-area-text"  tabindex="0"></span>
+                                          class="dbd-display-area-text"  tabindex="0"></span>-->
+                                    <span data-bind="text: dashboardDescription,
+                                                     attr: {title: dashboardDescription}" 
+                                          class="dbd-display-area-text"></span>
                                     <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDescription,ojComponent: {
                                                     component:'ojButton'
@@ -122,26 +126,43 @@
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
                         <!-- ko if: window.DEV_MODE -->
-                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+<!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: changeMode, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE'),
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_TOGGLE_MODE')}">
-                        </button>
+                        </button>-->
                         <!-- /ko -->
-                        
-                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
+<!--                        <button id="add-widget-button" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: openAddWidgetDialog, ojComponent: {
                                       component:'ojButton', label: getNlsString('DBS_BUILDER_BTN_ADD'),
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
-                        </button>
+                        </button>-->
+                        <script type="text/html" id="dsbOptsMenuItemTemplate">
+                            <li>
+                                <a data-bind="attr:{'id':id}, href: url, click: onclick">
+                                    <span class="oj-menu-item-icon oj-fwk-icon" data-bind="css: icon"></span>
+                                    <span data-bind="text: label"></span></a>
+                            </li>
+                        </script>
+
+                        <ul id="dashboardOptsMenu" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
+                          <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
+                          <!-- /ko -->
+                        </ul>
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true">
+                        </button>
+                        <button id="dashboardOptsBtn"
+                                class='oj-button oj-default oj-button-half-chrome'
+                                data-bind="ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
+                                    icons: {start: 'dbd-toolbar-icon-options'}, menu: '#dashboardOptsMenu'},
+                                attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
                         <!--span  tabindex="0" data-bind="click: handleSettingsDialogOpen, enterpress: handleSettingsDialogOpen, visible: editDisabled() !== true">
                           <button id="dashboard-settings" class="oj-button oj-default oj-button-half-chrome dbd-gray"
