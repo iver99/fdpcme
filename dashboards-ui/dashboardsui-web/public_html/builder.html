@@ -35,12 +35,12 @@
                                 <span id="builder-dbd-name-display-hover-area" class="dbd-display-hover-area">
                                     <!--<h1 data-bind="text: dashboardName, event: { dblclick: editDashboardName }, enterpress: editDashboardName, attr: {title: getNlsString('DBS_BUILDER_NAME_EDIT')}" tabindex="0"></h1>-->
                                     <h1 data-bind="text: dashboardName, attr: {title: dashboardName}"></h1>
-                                    <button id="builder-dbd-name-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
+<!--                                    <button id="builder-dbd-name-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click:editDashboardName,ojComponent: {
                                                     component:'ojButton'
                                         }">
                                         <img src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
-                                    </button>
+                                    </button>-->
                                 </span>
 <!--                                 //ko if: isFavorite()===false 
                                 <span  tabindex="0" data-bind="click: addToFavorites, enterpress: addToFavorites">
@@ -59,7 +59,7 @@
                                 </button>
                                  /ko -->
                             </div>
-                            <div id="builder-dbd-name-edit-area" class="dbd-edit-area">
+<!--                            <div id="builder-dbd-name-edit-area" class="dbd-edit-area">
                                 <input id="builder-dbd-name-input"
                                        data-bind="event: {keypress: handleDashboardNameInputKeyPressed},valueUpdate: 'afterkeydown',
                                        		   ojComponent: {component: 'ojInputText', 
@@ -80,7 +80,7 @@
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
                                   </button>
-                              </div>
+                              </div>-->
                         </div>
                         <div id="builder-dbd-description">
                             <div id="builder-dbd-description-display-area" class="dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
@@ -93,15 +93,15 @@
                                     <span data-bind="text: dashboardDescription,
                                                      attr: {title: dashboardDescription}" 
                                           class="dbd-display-area-text"></span>
-                                    <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
+<!--                                    <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDescription,ojComponent: {
                                                     component:'ojButton'
                                         }">
                                         <img width="16" height="16" src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
-                                    </button>
+                                    </button>-->
                                 </span>
                             </div>
-                            <div id="builder-dbd-description-edit-area" class="dbd-edit-area">
+<!--                            <div id="builder-dbd-description-edit-area" class="dbd-edit-area">
                                 <input id="builder-dbd-description-input"
                                        data-bind="event: {keypress: handleDashboardDescriptionInputKeyPressed},valueUpdate: 'afterkeydown',
                                        		   ojComponent: {component: 'ojInputText', 
@@ -121,7 +121,7 @@
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
                                   </button>
-                              </div>
+                              </div>-->
                         </div>
                     </div>
                     <div id="builder-toolbar-right" data-bind="css: rightButtonsAreaClasses()" class="oj-toolbar-row">
@@ -139,8 +139,66 @@
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
                         </button>-->
+                        <!-- Duplicate Dashboard dialog start -->
+                        <div style="display:none" id="duplicateDsbDialog"
+                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', 
+                                     beforeOpen: duplicateDashboardModel.beforeOpenDialog,
+                                     rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
+                            <div class="oj-dialog-header oj-helper-clearfix">
+                                <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_DUPLICATE_DIALOG_TITLE')"></span>
+                            </div>
+                            <div class="oj-dialog-body">
+                                <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
+                                    <div class="oj-row">
+                                        <div class="oj-col">
+                                            <label for="dupDsbNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
+                                        </div>
+                                        <div class="oj-col">
+                                            <input id="dupDsbNameIn" required
+                                                   data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: duplicateDashboardModel.tracker,
+                                                   messagesCustom: duplicateDashboardModel.errorMessages, value: duplicateDashboardModel.name, 
+                                                   optionChange: duplicateDashboardModel.nameOptionChanged,
+                                                   validators : [{type: 'regExp', options : {
+                                                        pattern: '.{1,64}', 
+                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
+                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}}],
+                                                   rootAttributes: {style:'max-width:420px;'},
+                                                   translations: {'required': {
+                                                            hint: '',
+                                                            messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'), 
+                                                            messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')
+                                                   }
+                                                 }}">
+                                        </div>
+                                    </div>
+                                    <div class="oj-row">
+                                        <div class="oj-col">
+                                            <label for="dupDsbDescIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
+                                        </div>
+                                        <div class="oj-col">
+                                            <textarea id="dupDsbDescIn" rows="6"
+                                                      data-bind="ojComponent: {component: 'ojTextArea', value: duplicateDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
+                                                                    invalidComponentTracker: duplicateDashboardModel.tracker,  
+                                                                    validators : [{type: 'regExp', options : {
+                                                                           pattern: '.{0,256}', 
+                                                                           messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
+                                                                           messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
+                                                }"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="createDialogFooter" class="oj-dialog-footer">
+                                <button id="createDsb" data-bind="click: duplicateDashboardModel.duplicateDashboardConfirmed, ojComponent: { 
+                                                 component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), 
+                                                 disabled: duplicateDashboardModel.saveBtnDisabled, 
+                                                 rootAttributes: {style:'margin-right:5px'} }"></button>
+                            </div>
+                        </div>
+                        <!-- Duplicate Dashboard dialog end -->
+                        
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
-                            <li>
+                            <li data-bind="css: {'oj-disabled': disabled}">
                                 <a data-bind="attr:{'id':id}, href: url, click: onclick">
                                     <span class="oj-menu-item-icon oj-fwk-icon" data-bind="css: icon"></span>
                                     <span data-bind="text: label"></span></a>
@@ -160,8 +218,8 @@
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome'
-                                data-bind="ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
-                                    icons: {start: 'dbd-toolbar-icon-options'}, menu: '#dashboardOptsMenu'},
+                                data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
+                                    menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
                         <!--span  tabindex="0" data-bind="click: handleSettingsDialogOpen, enterpress: handleSettingsDialogOpen, visible: editDisabled() !== true">
@@ -647,7 +705,7 @@
                         </div>
                         </div>
                 </div>
-            <!--</div>-->
+            </div>
         </div>
     </body>
 </html>
