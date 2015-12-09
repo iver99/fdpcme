@@ -403,12 +403,15 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                             $( "#cDsbDialog" ).css("cursor", "default");
                             //self.createDashboardModel.isDisabled(false);
                             var _m = null; //getNlsString('COMMON_SERVER_ERROR');
+                            var _mdetail = undefined;
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
                             {
                                  _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR'); //jqXHR[0].responseJSON.errorMessage;
+                                 _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
                             }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorCode === 10001)
                             {
                                 _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                                _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
                             }
                             else
                             {
@@ -419,7 +422,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                             {
                                 _trackObj = new oj.InvalidComponentTracker();
                                 self.tracker(_trackObj);
-                                self.createMessages.push(new oj.Message(_m));
+                                self.createMessages.push(new oj.Message(_m, _mdetail));
                                 _trackObj.showMessages();
                                 _trackObj.focusOnFirstInvalid();
                                 $( "#cDsbDialog" ).css("cursor", "default");

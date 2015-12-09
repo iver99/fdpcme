@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-        
+            
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -193,14 +193,14 @@
                     </div>-->
                 </div>
                 
-                <!-- Create Dashboard dilog start -->
+                <!-- edit Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <!--div class="oj-dialog-header-close-wrapper" >
                                 <a class="df-dialog-header-close" tabindex="0" data-bind="click: cancelDashboardCreate, event: { keydown: editDashboardDialogModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div-->
-                            <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TITLE')"></span>
+                            <span class="oj-dialog-title" data-bind="text: getNlsString('COMMON_EDIT_DASHBOARD_DIALOG_TITLE')"></span>
                         </div>
                         <div class="oj-dialog-body">
                             <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
@@ -212,10 +212,13 @@
                                         <input id="dbsHNameIn" maxlength="64" required
                                                data-bind="ojComponent: { component: 'ojInputText', value: editDashboardDialogModel.name, 
                                                rawValue: editDashboardDialogModel.nameInputed,
-                                               validators : [{type: 'regExp', options : {
-                                                    pattern: '.{1,64}', 
-                                                    messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
-                                                    messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}}],
+                                               validators : [{
+                                                       type: 'regExp', options : {
+                                                       pattern: '.{1,64}', 
+                                                       messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
+                                                       messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}
+                                                    },
+                                                    editDashboardDialogModel.noSameNameValidator],
                                                rootAttributes: {style:'max-width:420px;'},
                                                translations: {'required': {
                                                         hint: '',
@@ -238,19 +241,35 @@
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                             }"></textarea>
                                     </div>
-                                </div>
-                    
-                                                         
+                                </div>             
                             </div>
                         </div>
                         <div id="createDialogFooter" class="oj-dialog-footer">
                             <button id="createDsb" data-bind="click: editDashboardDialogModel.save, ojComponent: { 
-                                             component: 'ojButton', label: getNlsString('COMMON_TEXT_CREATE'), 
+                                             component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), 
                                              disabled: editDashboardDialogModel.isDisabled, 
                                              rootAttributes: {style:'margin-right:5px'} }"></button>
                         </div>
                     </div>
-                    <!-- Create Dashboard dilog end -->
+                    <!-- edit Dashboard dilog end -->
+                    <!-- delete dilog start -->
+                    <div style="display:none" id="dbs_cfmDialog"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG', dashboardName())"></p>
+                        </div>
+                        <div class="oj-dialog-footer">
+                            <button data-bind="click: handleDeleteDashboardClicked, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                            <button id="dbs_dcbtn" data-bind="click: handleDeleteDashboardCancelled, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                        </div>
+                    </div>
+                    <!-- delete dilog end -->
                     
 <!--                <div style="display:none;" id="parent-message-dialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
