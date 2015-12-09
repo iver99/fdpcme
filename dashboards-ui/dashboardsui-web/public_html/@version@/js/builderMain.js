@@ -37,6 +37,7 @@ requirejs.config({
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
+        'builder': './builder',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
@@ -92,6 +93,9 @@ require(['knockout',
     'dfutil',
     'dashboards/dashboard-tile-model',
     'dashboards/dashboard-tile-view',
+    'builder/dashboard-builder',
+    'builder/left-panel',
+    'builder/tool-bar',
     'loggingutil',
     'idfbcutil',
     'ojs/ojchart',
@@ -115,7 +119,7 @@ require(['knockout',
     'ojs/ojpopup',
     'dashboards/dbstypeahead'
 ],
-        function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
+        function(ko, $, dfu,dtm, dtv, builder, lp, tb, _emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger()
             var logReceiver = dfu.getLogUrl();
@@ -190,18 +194,12 @@ require(['knockout',
             }            
             dtm.initializeFromCookie();
 
-//            var dashboardModel = function(dashboardId) {
-//                if (window.opener && window.opener.dashboarDataCallBack) {
-//                    return window.opener.dashboarDataCallBack(parseInt(dashboardId));
-//                }
-//                return undefined;
-//            }(dsbId);
             $(document).ready(function() {
                 dtm.loadDashboard(dsbId, function(dashboard) {
-                    var $b = new dtv.DashboardBuilder(dashboard);
+                    var $b = new builder.DashboardBuilder(dashboard);
                     var tilesView = new dtv.DashboardTilesView($b, dtm);
                     var tilesViewModel = new dtm.DashboardTilesViewModel($b, tilesView/*, urlChangeView*/); 
-                    var toolBarModel = new dtv.ToolBarModel($b, tilesViewModel);
+                    var toolBarModel = new tb.ToolBarModel($b, tilesViewModel);
                     var headerViewModel = new HeaderViewModel($b);
                     
                     if (dashboard.tiles && dashboard.tiles()) {
@@ -245,10 +243,10 @@ require(['knockout',
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
                     ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                    var leftPanelView = new dtv.LeftPanelView($b);
-                    ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
-                    leftPanelView.initialize();
-                    new dtv.ResizableView($b);
+                    var leftPanelModel = new lp.LeftPanelModel($b);
+                    ko.applyBindings(leftPanelModel, $('#dbd-left-panel')[0]);
+                    leftPanelModel.initialize();
+                    new lp.ResizableView($b);
 
                     $("#loading").hide();
                     $('#globalBody').show();
