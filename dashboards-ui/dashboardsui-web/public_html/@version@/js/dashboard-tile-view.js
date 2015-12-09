@@ -470,6 +470,84 @@ define(['knockout',
             $b.addBuilderResizeListener(self.resizeEventHandler);
             $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
         }
+
+        function editDashboardDialogModel(dsb, tbModel) {
+        var self = this;
+        self.dashboard = dsb;
+        self.tbModel = tbModel;
+        self.name = ko.observable(dsb.name());
+        self.nameInputed = ko.observable(undefined); //read only input text
+        self.description = ko.observable(dsb.description ? dsb.description() : undefined);
+        self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
+        self.targetFilterValue = ko.observable(["OFF"]);
+        self.nameValidated = ko.observable(true);
+        self.isDisabled = ko.computed(function() { 
+            if (self.nameInputed() && self.nameInputed().length > 0)
+            {
+                return false;
+            }
+            return true;
+        });
+        
+        self.noSameNameValidator = {
+                'validate' : function (value) {
+                    self.nameValidated(true);
+                    if (self.name() === value)
+                        return true;
+                    value = value + "";
+
+                    if (value && dtm.isDashboardNameExisting(value)) {
+                        //$('#builder-dbd-name-input').focus();
+                        self.nameValidated(false);
+                        throw new oj.ValidatorError(oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR"), 
+                                         oj.Translations.getTranslatedString("COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL"));
+                    }
+                    return true;
+                }
+        };
+            
+        self.open = function() {
+            self.clear();
+            $( "#cDsbDialog" ).ojDialog( "open" );    
+        };
+        
+        self.save = function() {
+            if (self.nameValidated() === false) 
+                return;
+            self.dashboard.name(self.name());
+            self.tbModel.dashboardName(self.name());
+            if (self.dashboard.description)
+            {
+                self.dashboard.description(self.description());
+            }
+            else
+            {
+                self.dashboard.description = ko.observable(self.description()); 
+            }
+            self.tbModel.dashboardDescription(self.description());
+            $( "#cDsbDialog" ).ojDialog( "close" ); 
+        };
+        
+        self.clear = function() {
+            self.name(self.dashboard.name());
+            self.description(self.dashboard.description ? self.dashboard.description() : undefined);
+        };
+        
+        self.isEnableTimeRange = function() {
+            if (self.timeRangeFilterValue()  === "ON" || 
+                    self.timeRangeFilterValue()[0] === "ON")
+            {
+                return true;
+            }
+            return false;
+        };
+        
+//        self.keydown = function (d, e) {
+//           if (e.keyCode === 13) {
+//              $( "#cDsbDialog" ).ojDialog( "close" );
+//           }
+//        };
+    };
         
         function DuplicateDashboardModel(tilesViewModel) {
             var self = this;
@@ -618,6 +696,7 @@ define(['knockout',
             var self = this;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.editDashboardDialogModel = new editDashboardDialogModel($b.dashboard, self);
             self.duplicateDashboardModel = new DuplicateDashboardModel(tilesViewModel);
             
             if (self.dashboard.id && self.dashboard.id())
@@ -721,6 +800,25 @@ define(['knockout',
                     }
                     return true;
                 }
+            };
+            
+            self.handleDeleteDashboardClicked = function() {
+                var _url="/sso.static/dashboards.service/";
+                if (dfu.isDevMode()){
+                    _url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
+                }
+                dfu.ajaxWithRetry(_url + self.dashboard.id(), {
+                    type: 'DELETE',
+                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                    success: function(result) {
+                        window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {}
+                });
+            };
+            
+            self.handleDeleteDashboardCancelled = function() {
+                $( "#dbs_cfmDialog" ).ojDialog( "close" ); 
             };
             
             self.handleDashboardNameInputKeyPressed = function(vm, evt) {
@@ -993,7 +1091,7 @@ define(['knockout',
             
             //Dashboard Options ======start=======
             self.openDashboardEditDialog = function() {
-                //TODO: open edit dialog
+                self.editDashboardDialogModel.open();
             };
             self.openDashboardDuplicateDialog = function() {
                 //TODO: open duplicate dialog
@@ -1001,6 +1099,8 @@ define(['knockout',
             };
             self.openDashboardDeleteConfirmDialog = function() {
                 //TODO: open delete confirmation dialog
+                $( "#dbs_cfmDialog" ).ojDialog( "open" ); 
+                $('#dbs_dcbtn').focus();
             };
             self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
@@ -1179,3 +1279,4 @@ define(['knockout',
             "DashboardBuilder": DashboardBuilder};
     }
 );
+

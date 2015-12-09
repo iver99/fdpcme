@@ -255,9 +255,10 @@
                                         <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                     </div>
                                     <div class="oj-col">
-                                        <input id="dbsHNameIn" required 
+                                        <input id="dbsHNameIn" maxlength="64" required
                                                data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: tracker, 
                                                messagesCustom: createMessages, value: createDashboardModel.name, 
+                                               rawValue: createDashboardModel.nameInputed,
                                                validators : [{type: 'regExp', options : {
                                                     pattern: '.{1,64}', 
                                                     messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
@@ -276,7 +277,7 @@
                                         <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                     </div>
                                     <div class="oj-col">
-                                        <textarea id="dbsHDpIn" rows="6"
+                                        <textarea id="dbsHDpIn" maxlength="256" rows="6"
                                                   data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                 invalidComponentTracker: tracker,  
                                                                 validators : [{type: 'regExp', options : {
