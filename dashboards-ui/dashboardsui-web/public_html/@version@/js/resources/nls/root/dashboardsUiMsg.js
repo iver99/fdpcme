@@ -106,7 +106,8 @@ define({
       "DBS_BUILDER_REQUIRE_NAME": "Name is required",
       "DBS_BUILDER_BTN_OPTIONS": "Options",
       "DBS_BUILDER_BTN_DUPLICATE": "Duplicate",
-      "DBS_BUILDER_BTN_DUPLICATE_TITLE": "Duplicate a dashboard",
+      "DBS_BUILDER_BTN_DUPLICATE_TITLE": "Duplicate dashboard",
+      "DBS_BUILDER_DUPLICATE_DIALOG_TITLE": "Duplicate Dashboard",
       "DBS_BUILDER_BTN_EDIT_TITLE": "Edit dashboard",
       "DBS_BUILDER_BTN_DELETE_TITLE": "Delete dashboard",
       "DBS_BUILDER_BTN_ADD_WIDGET": "Add widgets",
@@ -197,7 +198,10 @@ define({
       "DBS_BUILDER_AUTOREFRESH_1MIN":"1 Minute",
       "DBS_BUILDER_AUTOREFRESH_15MIN":"15 Minutes",
       "DBS_BUILDER_MSG_CHANGES_SAVED": "Changes on the dashboard have been saved successfully.",
-      "DBS_BUILDER_MSG_ERROR_IN_SAVING": "Error occurred when saving the dashboard. Check console log or server log for details",
+      "DBS_BUILDER_MSG_ERROR_IN_SAVING": "Error occurred when saving the dashboard. Check console log or server log for details.",
+      "DBS_BUILDER_MSG_ERROR_IN_DUPLICATING": "Error occurred when duplicating the dashboard. Check console log or server log for details.",
+      "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_SUMMARY": "Dashboard name already exists.",
+      "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
       
       
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
