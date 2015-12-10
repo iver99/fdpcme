@@ -454,14 +454,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var today = new Date(new Date().toDateString());
                     if(!minDate) {
                         if(self.customTimeBack) {
-                            minDate = oj.IntlConverterUtils.dateToLocalIso(new Date(today - self.customTimeBack));
+                            minDate = oj.IntlConverterUtils.dateToLocalIso(new Date(today - self.customTimeBack)).slice(0, 10);
                         }else {
                             minDate = null;
                         }
                     }
                     
                     if(!maxDate) {
-                        maxDate = oj.IntlConverterUtils.dateToLocalIso(today);
+                        maxDate = oj.IntlConverterUtils.dateToLocalIso(today).slice(0, 10);
                     }
                     
                     self.minDate(minDate);
