@@ -1621,11 +1621,13 @@ define(['knockout',
                 var columnWidth = widgetAreaWidth / self.editor.mode.MODE_MAX_COLUMNS;
                 var baseLeft = widgetAreaContainer.position().left;
                 var top = widgetAreaContainer.position().top;
+                var tileHeight = height*defaultHeight;
                 tile.cssWidth(width*columnWidth);
-                tile.cssHeight(height*defaultHeight);
+                tile.cssHeight(tileHeight);
                 tile.left(baseLeft);
                 tile.top(top);
                 self.tilesView.disableDraggable();
+                $('#tiles-wrapper').height(tileHeight)
             };
             
             self.maximize = function(tile) {
@@ -1694,8 +1696,6 @@ define(['knockout',
                 $('.dbd-widget').on('dragstart', self.handleStartDragging);
                 $('.dbd-widget').on('drag', self.handleOnDragging);
                 $('.dbd-widget').on('dragstop', self.handleStopDragging);
-                var height = self.editor.tilesGrid.getHeight();
-                $('#tiles-wrapper').height(height);
             };
             
             self.getCellFromPosition = function(position) {
@@ -1785,10 +1785,14 @@ define(['knockout',
                         self.editor.setRowHeight(self.editor.mode.getModeRow(tile), displayHeight);
                     }
                     else {
-                        self.editor.setRowHeight(self.editor.mode.getModeRow(tile));
+                        for (var j = 0; j < self.editor.mode.getModeHeight(tile); j++) {
+                            self.editor.setRowHeight(self.editor.mode.getModeRow(tile) + j);
+                        }
                     }
                 }
                 self.tilesView.enableDraggable();
+                var height = self.editor.tilesGrid.getHeight();
+                $('#tiles-wrapper').height(height);
             };
 
             self.detectTextTileRender = function(textTile) {

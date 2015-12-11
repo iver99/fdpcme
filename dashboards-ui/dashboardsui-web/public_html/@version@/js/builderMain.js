@@ -210,7 +210,7 @@ require(['knockout',
                             if(tile.type() === "TEXT_WIDGET") {
                                 dtm.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, dtm.isContentLengthValid);
                             }else {
-                                dtm.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
+                                dtm.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
                             }
                         }
                     }
