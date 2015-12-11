@@ -46,6 +46,7 @@ define([
                 self.aboutBoxNeedRefresh = ko.observable(false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+                self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 var dfWelcomeUrl =dfu.discoverWelcomeUrl();
                 var subscribedApps = null;
@@ -262,6 +263,7 @@ define([
                     userName: self.userName, 
                     tenantName: self.tenantName,
                     nlsStrings: nls,
+                    isAdmin: self.isAdmin,
                     appMap: appMap,
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],
