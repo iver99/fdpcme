@@ -28,7 +28,7 @@ task printCcVersion << {
 
 def serversInfo = [
     '3node': [
-        'slc07pud.us.oracle.com': [8080],
+        'slc07ctj.us.oracle.com': [8090],
     ]
 ]
 
