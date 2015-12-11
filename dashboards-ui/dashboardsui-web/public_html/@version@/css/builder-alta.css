@@ -202,6 +202,18 @@ body, html {
   content: url(../images/func_trashcan_16_ena.png);
 }
 
+.dbd-toolbar-icon-add-widget-disabled:before {
+  content: url(../images/func_plus_16_dis.png);
+}
+
+.dbd-toolbar-icon-edit-disabled:before {
+  content: url(../images/func_edit_16_dis.png);
+}
+
+.dbd-toolbar-icon-delete-disabled:before {
+  content: url(../images/func_trashcan_16_dis.png);
+}
+
 .builder-toolbar-button-text {
   color: rgb(0, 0, 0);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

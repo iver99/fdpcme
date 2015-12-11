@@ -551,6 +551,43 @@ define(['knockout',
             });
         }
         
+        function duplicateDashboard(dashboard, succCallBack, errorCallBack) {
+            var url = dfu.buildFullUrl(getBaseUrl());
+            dfu.ajaxWithRetry(url, {
+                type: 'post',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                data: dashboard,
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(e) {
+                    oj.Logger.error("Error to duplicate dashboard: "+e.responseText);
+                    if (errorCallBack)
+                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+                }
+            });
+        }
+        
+        function fetchDashboardScreenshot(dashboardId, succCallBack, errorCallBack) {
+            var url = dfu.buildFullUrl(getBaseUrl(), dashboardId+"/screenshot");
+            dfu.ajaxWithRetry(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(e) {
+                    oj.Logger.error("Error to fetch dashboard screen shot: "+e.responseText);
+                    if (errorCallBack)
+                        errorCallBack(ko.mapping.fromJSON(e.responseText));
+                }
+            });
+        }
+        
 //        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
 //            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
 //            dfu.ajaxWithRetry(url, {
@@ -2268,6 +2305,8 @@ define(['knockout',
             "initializeTileAfterLoad": initializeTileAfterLoad,
             "initializeTextTileAfterLoad" : initializeTextTileAfterLoad,
             "updateDashboard": updateDashboard,
+            "duplicateDashboard": duplicateDashboard,
+            "fetchDashboardScreenshot": fetchDashboardScreenshot,
             "registerComponent": registerComponent,
             "encodeHtml": encodeHtml,
             "decodeHtml": decodeHtml,
