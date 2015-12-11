@@ -250,7 +250,7 @@ public class DashBoardUtils {
 		clickRefreshItem();
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//add time selector
-		clickTimePicker();
+		//clickTimePicker();
 		
 		TileManager tg = new TileManager(driver);
 		
