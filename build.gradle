@@ -181,32 +181,27 @@ dependencies {
 			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 }
 
-task runS1Tests(dependsOn: allprojects.s1tests) {
-    doLast {
+
+task runS1Tests(type: Exec) {
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpdf_dev_test'
+    if (project.hasProperty('BuildID')) {
+        args "-PREPO_BID=${BuildID}"
+    }
+    finalizedBy "print_results"
+}
  
-        logger.debug "Overall Failure Count: ${project.failedTestCount}"
-        if (project.failedTestCount != 0)
-        {
-            def err = "S1 tests had errors.  Build Aborted"
-        }
-    
-}
-}
-runS1Tests.enabled = !project.disableBuildTests
+task runS2Tests(type: Exec) {
+    executable project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpdf_dev_ui_test'
+    if (project.hasProperty('BuildID')) {
+        args "-PREPO_BID=${BuildID}"
+    }
+    finalizedBy "print_results"
+} 
 
-task runS2Tests(dependsOn: allprojects.s2tests) {
-    doLast {
 
-        logger.debug "Overall Failure Count: ${project.failedTestCount}"
-        if (project.failedTestCount != 0)
-        {
-            def err = "S2 tests had errors.  Build Aborted"
-        }
-    
-}
-}
-runS2Tests.enabled = !project.disableBuildTests
-runS2Tests.mustRunAfter runS1Tests
+
 
 // Copy downloaded 3rd party jars from Artifactory into the locations 
 // that we are using those jars from as of now.
