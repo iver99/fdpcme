@@ -173,7 +173,7 @@ define({
       "DBS_BUILDER_CHANGE_URL_TITLE": "Change URL",
       "DBS_BUILDER_TILE_ACTIONS": "Configure widget",
       "DBS_BUILDER_TILE_REFRESH": "Refresh",
-      "DBS_BUILDER_TILE_DELETE": "Delete",
+      "DBS_BUILDER_TILE_REMOVE": "Remove",
       "DBS_BUILDER_TILE_WIDER": "Wider",
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
       "DBS_BUILDER_TILE_TALLER": "Taller",

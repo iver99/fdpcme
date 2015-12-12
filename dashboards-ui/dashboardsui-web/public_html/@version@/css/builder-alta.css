@@ -297,7 +297,19 @@ body, html {
 }
 
 .dbd-tile-action span.oj-button-icon:before {
-  content: url('../images/func_threebullets_16_ena.png');
+  content: url('../images/func_threebullets_black_16_ena.png');
+}
+
+.dbd-tile-action.oj-hover span.oj-button-icon:before {
+    content: url('../images/func_threebullets_blue_16_ena.png');
+}
+
+.dbd-tile-action.oj-hover.oj-selected span.oj-button-icon:before {
+    content: url('../images/func_threebullets_16_ena.png');
+}
+
+.dbd-tile-action.oj-selected span.oj-button-icon:before {
+    content: url('../images/func_threebullets_white_16_ena.png');
 }
 
 .dbd-tile-maximized .dbd-tile-header {
@@ -326,6 +338,14 @@ body, html {
   vertical-align: middle;
 }
 
+.dbd-widget[ismobile="false"] .dbd-btn-group {
+    display: none;
+}
+
+.dbd-widget[ismobile="false"]:hover .dbd-btn-group {
+    display: inline-block;
+}
+
 .dbd-tile-header h2.dbd-tile-title {
   height: 2.34rem;
   line-height: 2.34rem;
@@ -351,6 +371,10 @@ body, html {
   float: right;
   display: block;
   margin-bottom: 1px;
+  width: 44px;
+  height: 32px;
+  min-width: 46px;
+  min-height: 32px;
 }
 
 .dbd-tile-element {
@@ -571,8 +595,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 .dbd-left-panel-img-pop {
     display: none;
-    height:120px; 
-    width: 120px; 
+    height:180px; 
+    width: 400px; 
     z-index: 40;
 }
 

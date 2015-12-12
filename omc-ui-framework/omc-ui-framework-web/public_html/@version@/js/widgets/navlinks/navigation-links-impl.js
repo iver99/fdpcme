@@ -135,7 +135,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         }
                         if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
                             if (params.app){
-                            	
                             	for (var i = 0; i < data.adminLinks.length; i++) {
                                     var link = data.adminLinks[i];
                                     if (
@@ -167,8 +166,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                             else {
                                 oj.Logger.warn('Empty app!');
                             }
-
                         }
+                        
                         //Setup timer to handle session timeout
                         if (!dfu.isDevMode()) {
                             dfu.setupSessionLifecycleTimeoutTimer(data.sessionExpiryTime, sessionTimeoutWarnDialogId);
@@ -189,6 +188,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                             oj.Logger.error('Failed to get service instances by URL: '+serviceUrl);
                             self.visualAnalyzers([]);
                             self.adminLinks([]);
+                            self.cloudServices([]);
                         },
                         async: true
                     });                
@@ -196,7 +196,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 
                 function refreshLinks() {
                     dfHomeUrl = '/emsaasui/emcpdfui/welcome.html';
-                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';//dfu.discoverDFHomeUrl();
+                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';
                     
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 

@@ -163,9 +163,12 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.searchDashBoard("AAA_testDashboard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.click(DashBoardPageId.InfoBtnID);
+		webd.takeScreenShot();
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.click(DashBoardPageId.RmBtnID);
+		webd.takeScreenShot();
 		
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
@@ -174,7 +177,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 					
 	}
-	
+	/*
 	@Test
 	public void testCreateSpecialDashBoard() throws Exception
 	{
@@ -237,7 +240,8 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 					
 	}
-	
+	*/
+/*
 	@Test(dependsOnMethods = { "testHomepage" })
 	public void testUserMenu() throws Exception
 	{
@@ -270,7 +274,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//webd.click(DashBoardPageId.MenuBtnID);
 		//webd.click(DashBoardPageId.SignOutID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
+	}*/
 	
 	@Test
 	public void testHomeLink() throws Exception

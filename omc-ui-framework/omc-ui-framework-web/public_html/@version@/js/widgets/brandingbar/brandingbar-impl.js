@@ -92,7 +92,7 @@ define([
                     "appName": "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI", 
                     "serviceName": "TenantManagementUI",
                     "version": "0.1",
-                    "helpTopicId": ""
+                    "helpTopicId": "em_home_gs"
                 };     
                 appMap[appIdError] = {
                     "appId": "Error",
@@ -220,7 +220,7 @@ define([
                 };
                 
                 //Open help link
-                var helpBaseUrl = "http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 var helpTopicId = appProperties["helpTopicId"];
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);

@@ -8,6 +8,7 @@ define(['knockout',
         'jquery',
         'dashboards/dashboard-tile-model',
         'dfutil',
+        'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
         'ojs/ojtree',
         'ojs/ojvalidation',
@@ -17,7 +18,7 @@ define(['knockout',
         'ojs/ojpopup'
     ],
     
-    function(ko, $, dtm, dfu, oj)
+    function(ko, $, dtm, dfu, ssu, oj)
     {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
@@ -55,6 +56,7 @@ define(['knockout',
                 var widgetsUrl = dfu.getWidgetsUrl();
 
                 dfu.ajaxWithRetry({
+                    type: 'get',
                     url: widgetsUrl,
                     headers: dfu.getSavedSearchRequestHeader(),
                     success: function(data) {
@@ -135,7 +137,7 @@ define(['knockout',
 //                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
 //                }
                 self.completelyHidden(true);
-                $b.triggerBuilderResizeEvent('Hide hide left panel in sprint44');
+                $b.triggerBuilderResizeEvent('Hide left panel in sprint47');
                 
 //                self.initEventHandlers();
 //                self.loadWidgets();
@@ -726,61 +728,15 @@ define(['knockout',
                 outputData.eventType = "SAVE";
                 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
-                	var nodesToRecover = [];
-                	var nodesToRemove = [];
-                	var elems = $('#tiles-wrapper').find('svg');
-                	elems.each(function(index, node) {
-                		var parentNode = node.parentNode;
-                		var width = $(node).width();
-                		var height = $(node).height();
-                		var svg = '<svg width="' + width + 'px" height="' + height + 'px">' + node.innerHTML + '</svg>';
-                		var canvas = document.createElement('canvas');
-                		try {
-                			canvg(canvas, svg);
-                		} catch (e) {
-                			oj.Logger.error(e);
-                		}
-                		nodesToRecover.push({
-                			parent: parentNode,
-                			child: node
-                		});
-                		parentNode.removeChild(node);
-                		nodesToRemove.push({
-                			parent: parentNode,
-                			child: canvas
-                		});
-                		parentNode.appendChild(canvas);
-                	});
-                        self.setAncestorsOverflowVisible();
-                	html2canvas($('#tiles-wrapper'), {
-                                background: "#fff",
-                		onrendered: function(canvas) {
-                			try {
-                                                var resize_canvas = document.createElement('canvas');
-                				resize_canvas.width = 320;
-                				resize_canvas.height = (canvas.height * resize_canvas.width) / canvas.width;
-                				var resize_ctx = resize_canvas.getContext('2d');
-                				resize_ctx.drawImage(canvas, 0, 0, resize_canvas.width, resize_canvas.height);
-                				var data = resize_canvas.toDataURL("image/jpeg", 0.8);
-                				nodesToRemove.forEach(function(pair) {
-                					pair.parent.removeChild(pair.child);
-                				});
-                				nodesToRecover.forEach(function(pair) {
-                					pair.parent.appendChild(pair.child);
-                				});
-                				outputData.screenShot = data;
-                				tilesViewModel.dashboard.screenShot = ko.observable(data);
-                			} catch (e) {
-                				oj.Logger.error(e);
-                			}                                        
-                                        self.resetAncestorsOverflow();
-                			self.handleSaveUpdateDashboard(outputData);
-                		}  		
-                	});                       
+                    ssu.getBase64ScreenShot('#tiles-wrapper', 320, 0.8, function(data) {
+                        outputData.screenShot = data;
+                        tilesViewModel.dashboard.screenShot = ko.observable(data);  
+                        self.handleSaveUpdateDashboard(outputData);
+                    });                
             	}
                 else {
-                	tilesViewModel.dashboard.screenShot = ko.observable(null);
-        			self.handleSaveUpdateDashboard(outputData);
+                    tilesViewModel.dashboard.screenShot = ko.observable(null);
+                    self.handleSaveUpdateDashboard(outputData);
                 }
             };
             
@@ -807,7 +763,8 @@ define(['knockout',
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
                         'tileParameters', 'name', 'systemParameter', 
-                        'tileId', 'value', 'content', 'linkText', 'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                        'tileId', 'value', 'content', 'linkText', 
+                        'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
                     'ignore': ["createdOn", "href", "owner", 
                         "screenShotHref", "systemDashboard",
                         "customParameters", "clientGuid", "dashboard", 
@@ -815,7 +772,8 @@ define(['knockout',
                         "maximizeEnabled", "narrowerEnabled", 
                         "onDashboardItemChangeEvent", "restoreEnabled", 
                         "setParameter", "shouldHide", "systemParameters", 
-                        "tileDisplayClass", "widerEnabled", "widget"]
+                        "tileDisplayClass", "widerEnabled", "widget", 
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
