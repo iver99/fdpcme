@@ -91,11 +91,6 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
-    'dashboards/dashboard-tile-model',
-    'dashboards/dashboard-tile-view',
-    'builder/dashboard-builder',
-    'builder/left-panel',
-    'builder/tool-bar',
     'loggingutil',
     'idfbcutil',
     'ojs/ojchart',
@@ -117,9 +112,16 @@ require(['knockout',
     'ojs/ojtree',
     'ojs/ojcheckboxset',
     'ojs/ojpopup',
+    'builder/builder.core',
+    'builder/left.panel',
+    'builder/builder.tiles',
+    'builder/builder.functions',
+    'builder/dashboard.tile.model',
+    'builder/dashboard.tile.view',
+    'builder/tool.bar',
     'dashboards/dbstypeahead'
 ],
-        function(ko, $, dfu,dtm, dtv, builder, lp, tb, _emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
+        function(ko, $, dfu, _emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger()
             var logReceiver = dfu.getLogUrl();
@@ -192,23 +194,23 @@ require(['knockout',
                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
                location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
             }            
-            dtm.initializeFromCookie();
+            Builder.initializeFromCookie();
 
             $(document).ready(function() {
-                dtm.loadDashboard(dsbId, function(dashboard) {
-                    var $b = new builder.DashboardBuilder(dashboard);
-                    var tilesView = new dtv.DashboardTilesView($b, dtm);
-                    var tilesViewModel = new dtm.DashboardTilesViewModel($b, tilesView/*, urlChangeView*/); 
-                    var toolBarModel = new tb.ToolBarModel($b, tilesViewModel);
+                Builder.loadDashboard(dsbId, function(dashboard) {
+                    var $b = new Builder.DashboardBuilder(dashboard);
+                    var tilesView = new Builder.DashboardTilesView($b);
+                    var tilesViewModel = new Builder.DashboardTilesViewModel($b, tilesView/*, urlChangeView*/); 
+                    var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
                     var headerViewModel = new HeaderViewModel($b);
                     
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
                             if(tile.type() === "TEXT_WIDGET") {
-                                dtm.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, dtm.isContentLengthValid);
+                                Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, Builder.isContentLengthValid);
                             }else {
-                                dtm.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
+                                Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
                             }
                         }
                     }
@@ -243,10 +245,10 @@ require(['knockout',
                     ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                     tilesViewModel.initialize();
                     ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                    var leftPanelModel = new lp.LeftPanelModel($b);
+                    var leftPanelModel = new Builder.LeftPanelModel($b);
                     ko.applyBindings(leftPanelModel, $('#dbd-left-panel')[0]);
                     leftPanelModel.initialize();
-                    new lp.ResizableView($b);
+                    new Builder.ResizableView($b);
 
                     $("#loading").hide();
                     $('#globalBody').show();

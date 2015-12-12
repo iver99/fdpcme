@@ -3,7 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 'jquery', 'ojs/ojcore'], function(ko, $, oj) {
+define(['knockout', 
+        'jquery', 
+        'ojs/ojcore',
+        'builder/builder.core'
+    ], function(ko, $, oj) {
     function NormalEditorMode() {
         this.mode = "Normal Display Mode";
         this.MODE_MAX_COLUMNS = 8;
@@ -11,6 +15,7 @@ define(['knockout', 'jquery', 'ojs/ojcore'], function(ko, $, oj) {
         this.POSITION_TYPE = "BASED_ON_ROW_COLUMN";
     };
     NormalEditorMode.prototype = {
+        constructor: NormalEditorMode,
         getModeWidth : function(tile) {
             if (!tile.modeWidth) tile.modeWidth = ko.observable(tile.width());
             return tile.modeWidth();
@@ -68,6 +73,7 @@ define(['knockout', 'jquery', 'ojs/ojcore'], function(ko, $, oj) {
         this.POSITION_TYPE = "FIND_SUITABLE_SPACE";
     };
     TabletEditorMode.prototype = new NormalEditorMode();
+    TabletEditorMode.prototype.constructor = TabletEditorMode;
     TabletEditorMode.prototype.resetModeWidth = function(tile) {
         !tile.modeWidth && (tile.modeWidth = ko.observable());
         tile.modeWidth(tile.width() <= 2 ? 1 : 2);
@@ -78,6 +84,9 @@ define(['knockout', 'jquery', 'ojs/ojcore'], function(ko, $, oj) {
     TabletEditorMode.prototype.setModeHeight = function(tile, height) {
         oj.Logger.error("Unsupport operation: TabletEditorMode.setModeHeight()");
     };
+    
+    Builder.registerModule(NormalEditorMode);
+    Builder.registerModule(TabletEditorMode);
     
     return {"NormalEditorMode": NormalEditorMode, "TabletEditorMode": TabletEditorMode};
 });

@@ -5,11 +5,10 @@
  */
 
 define(['knockout', 
-        'jquery'
+        'jquery',
+        'builder/builder.core'
     ],
     function(ko, $) {
-        var defaultHeight = 161;
-        
         function TileItem(data) {
             var self = this;
             self.column = ko.observable();
@@ -30,18 +29,18 @@ define(['knockout',
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
-            data.title && (self.title = ko.observable(decodeHtml(data.title)));
-            data.linkText && (self.linkText(decodeHtml(data.linkText)));
-            data.linkUrl && (self.linkUrl(decodeHtml(data.linkUrl)));
-            self.clientGuid = getGuid();
+            data.title && (self.title = ko.observable(Builder.decodeHtml(data.title)));
+            data.linkText && (self.linkText(Builder.decodeHtml(data.linkText)));
+            data.linkUrl && (self.linkUrl(Builder.decodeHtml(data.linkUrl)));
+            self.clientGuid = Builder.getGuid();
             self.sectionBreak = false;
             self.displayHeight = function() {
-                return self.height * defaultHeight;
+                return self.height * Builder.DEFAULT_HEIGHT;
             };
         }
         
         function TextTileItem(data) {
-            ko.utils.extend(this, new TileItem(data));
+            ko.utils.extend(this, new Builder.TileItem(data));
             ko.mapping.fromJS(data, {include: ['content']}, this);
             this.content = ko.observable(decodeHtml(data.content));
             this.sectionBreak = true;
@@ -54,12 +53,17 @@ define(['knockout',
             };
         }
         
+        
         function Cell(row, column) {
             var self = this;
             
             self.row = row;
             self.column = column;
         }
+        
+        Builder.registerModule(TileItem);
+        Builder.registerModule(TextTileItem);
+        Builder.registerModule(Cell);
         
         return {"TileItem": TileItem, 
             "TextTileItem": TextTileItem, 

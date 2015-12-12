@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 'jquery'], function(ko, $) {
+define(['knockout', 'jquery', 'ojs/ojcore', 'builder/builder.core'], function(ko, $, oj) {
 
     function TimeSelectorModel() {
         var me = this;
@@ -16,6 +16,8 @@ define(['knockout', 'jquery'], function(ko, $) {
         me.timeRangeChange = ko.observable(false);
         
     }
+    
+    Builder.registerModule(TimeSelectorModel);
     
     return TimeSelectorModel;
 });

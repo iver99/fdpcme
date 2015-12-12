@@ -6,7 +6,8 @@
 define(['knockout', 
         'jquery',
         'dfutil',
-        'ojs/ojcore'
+        'ojs/ojcore',
+        'builder/builder.core'
     ], 
     function(ko, $, dfu, oj) {
         function ResizableView($b) {
@@ -323,7 +324,7 @@ define(['knockout',
             };
 
             self.widgetGoDataExploreHandler = function(widget) {
-                var url = dtm.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
+                var url = Builder.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
                 url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
             };
 
@@ -350,6 +351,9 @@ define(['knockout',
                 }
             };
         }
+        
+        Builder.registerModule(LeftPanelModel);
+        Builder.registerModule(ResizableView);
 
         return {"LeftPanelModel": LeftPanelModel, "ResizableView": ResizableView};
     }

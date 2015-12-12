@@ -4,7 +4,46 @@
  * and open the template in the editor.
  */
 
-define(['./event-dispatcher'], function(dsp) {
+define(['./builder.event.dispatcher'], function(dsp) {
+    var Builder = {
+        _modules: {},
+        _funcs: {},
+        registerModule: function(module, name) {
+            var moduleName = name || functionName(module);
+            if (this._modules[moduleName]) {
+                console.warn("There might be some issue: module with name '" + moduleName + "' has been registered already");
+            }
+            if (this._funcs[moduleName]) {
+                console.warn("There might be some issue: module with name '" + moduleName + "' has been registered (as a function) already");
+            }
+            window.DEV_MODE && console.debug("Registering module: " + moduleName);
+            this._modules[moduleName] = this[moduleName] = module;
+        },
+        registerFunction: function(func, name) {
+            var funcName = name || functionName(func);
+            if (this._modules[funcName]) {
+                console.warn("There might be some issue: function with name '" + funcName + "' has been registered (as a module) already");
+            }
+            if (this._modules[funcName]) {
+                console.warn("There might be some issue: function with name '" + funcName + "' has been registered already");
+            }
+            window.DEV_MODE && console.debug("Registering function: " + funcName);
+            this._modules[funcName] = this[funcName] = func;
+        }
+    };
+        
+    // dashboard type to keep the same with return data from REST API
+    Builder.SINGLEPAGE_TYPE = "SINGLEPAGE";
+    Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
+    Builder.TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
+    Builder.LINK_NAME_MAX_LENGTH = 4000;
+    Builder.LINK_URL_MAX_LENGTH = 4000;
+    Builder.BUILDER_DEFAULT_TILE_WIDTH = 4;
+    Builder.BUILDER_DEFAULT_TILE_HEIGHT = 1;
+    Builder.DEFAULT_HEIGHT = 161;
+    
+    window.Builder = Builder;
+    
     function DashboardBuilder(dashboard) {
         var self = this;
         
@@ -50,7 +89,7 @@ define(['./event-dispatcher'], function(dsp) {
         };
 
         self.triggerEvent = function(event, message, p1, p2, p3, p4) {
-            console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
+            window.DEV_MODE && console.debug('Dashboard builder event [Event]' + event + (message?' [Message]'+message:'') + ((p1||p2||p3)?(' [Parameter(s)]'+(p1?'(p1:'+p1+')':'')+(p2?'(p2:'+p2+')':'')+(p3?'(p3:'+p3+')':'')+(p4?'(p4:'+p4+')':'')):""));
             self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
         };
 
@@ -110,5 +149,21 @@ define(['./event-dispatcher'], function(dsp) {
         };
     }
     
-    return {"DashboardBuilder": DashboardBuilder};
+    Builder.registerModule(DashboardBuilder, 'DashboardBuilder');
+    
+    function functionName(fn) {
+        if (Function.prototype.name === undefined) {
+            var funcNameRegex = /function\s([^(]{1,})\(/;
+            var results = (funcNameRegex).exec((fn).toString());
+            return (results && results.length > 1) ? results[1].trim() : "";
+        }
+        else if (fn.prototype === undefined) {
+            return fn.constructor.name;
+        }
+        else {
+            return fn.prototype.constructor.name;
+        }
+    }
+    
+    return DashboardBuilder;
 });

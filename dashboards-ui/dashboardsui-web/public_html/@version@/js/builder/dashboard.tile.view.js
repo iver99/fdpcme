@@ -6,7 +6,6 @@
 
 define(['knockout',
         'jquery',
-        'dashboards/dashboard-tile-model',
         'dfutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
@@ -15,14 +14,14 @@ define(['knockout',
         'ojs/ojknockout-validation',
         'ojs/ojbutton',
         'ojs/ojselectcombobox',
-        'ojs/ojpopup'
+        'ojs/ojpopup',
+        'builder/builder.core'
     ],
     
-    function(ko, $, dtm, dfu, ssu, oj)
+    function(ko, $, dfu, ssu, oj)
     {            
-        function DashboardTilesView($b, dtm) {
+        function DashboardTilesView($b) {
             var self = this;
-            self.dtm = dtm;
             self.dashboard = $b.dashboard;
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
@@ -112,7 +111,9 @@ define(['knockout',
             $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
         }
         
-        return {"DashboardTilesView": DashboardTilesView, 
-            "ResizableView": ResizableView};
+        Builder.registerModule(DashboardTilesView);
+
+        return DashboardTilesView;
     }
 );
+

@@ -7,9 +7,12 @@ define(['knockout',
         'jquery',
         'dfutil',
         'uifwk/js/util/screenshot-util',
-        'ojs/ojcore'
+        'ojs/ojcore',
+        './tool-bar/edit-dialog',
+        './tool-bar/duplicate-dialog',
+        'builder/builder.core'
     ], 
-    function(ko, $, dfu, ssu, oj) {
+    function(ko, $, dfu, ssu, oj, ed, dd) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         
@@ -17,6 +20,8 @@ define(['knockout',
             var self = this;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b.dashboard, self);
+            self.duplicateDashboardModel = new dd.DuplicateDashboardModel(tilesViewModel);
 
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
@@ -112,13 +117,32 @@ define(['knockout',
                         return true;
                     value = value + "";
 
-                    if (value && dtm.isDashboardNameExisting(value)) {
+                    if (value && Builder.isDashboardNameExisting(value)) {
                         $('#builder-dbd-name-input').focus();
                         self.nameValidated = false;
                         throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_SAME_NAME_EXISTS_ERROR"));
                     }
                     return true;
                 }
+            };
+            
+            self.handleDeleteDashboardClicked = function() {
+                var _url="/sso.static/dashboards.service/";
+                if (dfu.isDevMode()){
+                    _url=dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"dashboards/");
+                }
+                dfu.ajaxWithRetry(_url + self.dashboard.id(), {
+                    type: 'DELETE',
+                    headers: dfu.getDashboardsRequestHeader(),//{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                    success: function(result) {
+                        window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {}
+                });
+            };
+            
+            self.handleDeleteDashboardCancelled = function() {
+                $( "#dbs_cfmDialog" ).ojDialog( "close" ); 
             };
 
             self.handleDashboardNameInputKeyPressed = function(vm, evt) {
@@ -215,7 +239,7 @@ define(['knockout',
             self.handleStartEditText = function () {
                 self.disableSave(true);
                 self.tilesViewModel.tilesView.disableDraggable();
-            }
+            };
 
             self.handleStopEditText = function (showErrorMsg) {
                 if (showErrorMsg) {
@@ -224,7 +248,7 @@ define(['knockout',
                     self.disableSave(false);
                 }
                 self.tilesViewModel.tilesView.enableDraggable();
-            }
+            };
 
             self.getSummary = function(dashboardId, name, description, tilesViewModel) {
                 function dashboardSummary(name, description) {
@@ -250,14 +274,14 @@ define(['knockout',
                 $("#tiles-col-container").css("overflow", "visible");
                 $("body").css("overflow", "visible");
                 $("html").css("overflow", "visible");
-            }
+            };
 
             self.resetAncestorsOverflow = function() {
                 $("#tiles-col-container").css("overflow-x", "hidden");
                 $("#tiles-col-container").css("overflow-y", "auto");
                 $("body").css("overflow", "hidden");
                 $("html").css("overflow", "hidden");
-            }
+            };
 
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
@@ -326,7 +350,7 @@ define(['knockout',
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
                 var dashboardId = tilesViewModel.dashboard.id();
-                dtm.updateDashboard(dashboardId, dashboardJSON, function() {
+                Builder.updateDashboard(dashboardId, dashboardJSON, function() {
                         succCallback && succCallback();
                 }, function(error) {
                     console.log(error.errorMessage());
@@ -362,7 +386,7 @@ define(['knockout',
                 if (maximizedTile)
                     tilesViewModel.restore(maximizedTile);
                 tilesViewModel.AppendTextTile();
-            }
+            };
 
             self.openAddWidgetDialog = function() {
                 var maximizedTile = tilesViewModel.getMaximizedTile();
@@ -391,51 +415,61 @@ define(['knockout',
 
             //Dashboard Options ======start=======
             self.openDashboardEditDialog = function() {
-                //TODO: open edit dialog
+                self.editDashboardDialogModel.open();
             };
             self.openDashboardDuplicateDialog = function() {
                 //TODO: open duplicate dialog
+                $('#duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
                 //TODO: open delete confirmation dialog
+                $( "#dbs_cfmDialog" ).ojDialog( "open" ); 
+                $('#dbs_dcbtn').focus();
             };
+            self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_ADD'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_add",
-                    "onclick": self.openAddWidgetDialog,
-                    "icon":"dbd-toolbar-icon-add-widget",
-                    "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')
+                    "onclick": self.isSystemDashboard ? "" : self.openAddWidgetDialog,
+                    "icon": self.isSystemDashboard ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
+                    "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "disabled": self.isSystemDashboard
                 },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_edit",
-                    "onclick": self.openDashboardEditDialog,
-                    "icon":"dbd-toolbar-icon-edit",
-                    "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE')
+                    "onclick": self.isSystemDashboard ? "" : self.openDashboardEditDialog,
+                    "icon": self.isSystemDashboard ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
+                    "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
+                    "disabled": self.isSystemDashboard
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_duplicate",
                     "onclick": self.openDashboardDuplicateDialog,
-                    "icon":"dbd-toolbar-icon-duplicate",
-                    "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE')
+                    "icon": "dbd-toolbar-icon-duplicate",
+                    "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
+                    "disabled": false
                 },
                 {
                     "label": getNlsString('COMMON_BTN_DELETE'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_delete",
-                    "onclick": self.openDashboardDeleteConfirmDialog,
-                    "icon":"dbd-toolbar-icon-delete",
-                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE')
+                    "onclick": self.isSystemDashboard ? "" : self.openDashboardDeleteConfirmDialog,
+                    "icon": self.isSystemDashboard ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
+                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
+                    "disabled": self.isSystemDashboard
                 }
             ];
             //Dashboard Options ======end=======
         }
-        return {"ToolBarModel": ToolBarModel};
+        
+        Builder.registerModule(ToolBarModel);
+        return ToolBarModel;
     }
 );
 
