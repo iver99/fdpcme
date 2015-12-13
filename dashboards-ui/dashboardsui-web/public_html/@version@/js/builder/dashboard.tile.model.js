@@ -843,7 +843,7 @@ define(['knockout',
                    case "remove":
                        self.editor.deleteTile(tile);
                        self.show();
-                       self.notifyTileChange(tile, new TileChange("POST_DELETE"));
+                       self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
                        $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
                        $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
                        self.triggerTileTimeControlSupportEvent();
