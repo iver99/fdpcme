@@ -8,8 +8,8 @@ define(['knockout',
         'dfutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
-        './tool-bar/edit-dialog',
-        './tool-bar/duplicate-dialog',
+        'builder/tool-bar/edit-dialog',
+        'builder/tool-bar/duplicate-dialog',
         'builder/builder.core'
     ], 
     function(ko, $, dfu, ssu, oj, ed, dd) {
