@@ -42,7 +42,7 @@ define(['knockout',
         function TextTileItem(data) {
             ko.utils.extend(this, new Builder.TileItem(data));
             ko.mapping.fromJS(data, {include: ['content']}, this);
-            this.content = ko.observable(decodeHtml(data.content));
+            this.content = ko.observable(Builder.decodeHtml(data.content));
             this.sectionBreak = true;
             var self = this;
             this.cssStyle = ko.computed(function() {
