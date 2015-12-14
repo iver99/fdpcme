@@ -46,6 +46,7 @@ define([
                 self.aboutBoxNeedRefresh = ko.observable(false);
                 self.userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 self.tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
+                self.isAdmin = params.isAdmin ? params.isAdmin : false;
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 var dfWelcomeUrl =dfu.discoverWelcomeUrl();
                 var subscribedApps = null;
@@ -91,7 +92,7 @@ define([
                     "appName": "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI", 
                     "serviceName": "TenantManagementUI",
                     "version": "0.1",
-                    "helpTopicId": ""
+                    "helpTopicId": "em_home_gs"
                 };     
                 appMap[appIdError] = {
                     "appId": "Error",
@@ -219,7 +220,7 @@ define([
                 };
                 
                 //Open help link
-                var helpBaseUrl = "http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 var helpTopicId = appProperties["helpTopicId"];
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
@@ -262,6 +263,7 @@ define([
                     userName: self.userName, 
                     tenantName: self.tenantName,
                     nlsStrings: nls,
+                    isAdmin: self.isAdmin,
                     appMap: appMap,
                     app: appMap[self.appId],
                     appDashboard: appMap[appIdDashboard],

@@ -8,11 +8,10 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
                 var dfu = new dfumodel(userName, tenantName);
                 var nlsStrings = params.nlsStrings ? params.nlsStrings : {};
+                var isAdminObservable = $.isFunction(params.isAdmin) ? true : false;
                 var appMap = params.appMap;
                 var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
-                var discoveredAdminLinks = [];
-                var discoveredSecAuthUrl = null;
-                self.isAdmin = false;
+                self.isAdmin = isAdminObservable ? params.isAdmin() : (params.isAdmin ? params.isAdmin : false);
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
                 //NLS strings
@@ -30,9 +29,16 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 //Fetch links and session expiry time from server side
                 refreshLinks();
                 
-                //Check user roles to determine whether to show admin links or not
-                if (discoveredSecAuthUrl === null) {
-                    checkAdminPrivileges();
+                //Refresh admin links if isAdmin is observable and will be updated at a later point
+                if (isAdminObservable) {
+                    params.isAdmin.subscribe(function(value) {
+                        self.isAdmin = value;
+                        self.isAdminLinksVisible(value);
+                        //Refresh links only if the links menu drop down is visible
+                        if ($('#links_menu').is(':visible')) {
+                            refreshLinks();
+                        }
+                    });
                 }
                 
                 var refreshListener = ko.computed(function(){
@@ -83,90 +89,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                     }
                 };
                 
-                function determineWhetherToShowAdminLinks(data) {
-                    if (data && data.roleNames && data.roleNames.length > 0) {
-                        for (var i = 0; i < data.roleNames.length; i++) {
-                            if ("APM Administrator" === data.roleNames[i] ||
-                                "IT Analytics Administrator" === data.roleNames[i] ||
-                                "Log Analytics Administrator" === data.roleNames[i]) {
-                                self.isAdmin = true;
-                                self.isAdminLinksVisible(true);
-                                refreshAdminLinks();
-                                break;
-                            }
-                        }
-                    }
-                };
-                
-                function checkCurrentUserRoles(authUrl) {
-                    if (dfu.isDevMode()) {
-                        determineWhetherToShowAdminLinks(dfu.getDevData().userRoles);
-                    }
-                    else {
-                        discoveredSecAuthUrl = authUrl;
-                        var path = "api/v1/roles/grants/getRoles?grantee=" + tenantName + "." + userName;
-                        var secAuthRoleUrl = dfu.buildFullUrl(authUrl, path);
-                        dfu.ajaxWithRetry({
-                            url: secAuthRoleUrl,
-                            headers: dfu.getDefaultHeader(), 
-                            success: function(data, textStatus) {
-                                determineWhetherToShowAdminLinks(data);
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                oj.Logger.error('Failed to get user roles by URL: '+ secAuthRoleUrl);
-                            },
-                            async: true
-                        });
-                    }
-                };
-                
-                function checkAdminPrivileges() {
-                    if (dfu.isDevMode()) {
-                        checkCurrentUserRoles(null);
-                    }
-                    else {
-                        dfu.discoverUrlAsync("SecurityAuthorization", "0.1", null, checkCurrentUserRoles);
-                    }
-                };
-                
-                function refreshAdminLinks() {
-                    if (self.isAdmin) {
-                        if (params.app){
-                            for (var i = 0; i < discoveredAdminLinks.length; i++) {
-                                var link = discoveredAdminLinks[i];
-                                if (
-                                    // let's use relative url for customer software for admin link
-                                    (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName && 
-                                        link.href.indexOf('customersoftware') !== -1) ||
-                                    // use relative url for EventUI admin links
-                                    (params.appEventUI && params.appEventUI.serviceName === link.serviceName)) {
-                                        link.href = dfu.getRelUrlFromFullUrl(link.href);
-                                }
-                            }
-                            if (params.app.appId===params.appDashboard.appId){
-                                self.adminLinks(discoveredAdminLinks);//show all avail admin links
-                            }else{ //show app related admin link and tenant management UI and Event UI admin link only
-                                var filteredAdminLinks = [];                                
-                                for (var i=0;i <discoveredAdminLinks.length;i++ ){
-                                    var link = discoveredAdminLinks[i];
-                                    if (params.app && params.app.serviceName===link.serviceName){
-                                        filteredAdminLinks.push(link);
-                                    }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
-                                        filteredAdminLinks.push(link);
-                                    }else if (params.appEventUI && params.appEventUI.serviceName === link.serviceName) {
-                                            filteredAdminLinks.push(link);
-                                    }
-                                }
-                                self.adminLinks(filteredAdminLinks);                                    
-                            }
-                        }
-                        else {
-                            oj.Logger.warn('Empty app!');
-                        }
-
-                    }
-                };
-                
                 /**
                 * Discover available quick links and administration links by calling registration api
                 */
@@ -211,9 +133,39 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                             }
                             self.visualAnalyzers(analyzerList);
                         }
-                        if (data.adminLinks && data.adminLinks.length > 0) {
-                            discoveredAdminLinks = data.adminLinks;
-                            refreshAdminLinks();
+                        if (data.adminLinks && data.adminLinks.length > 0 && self.isAdmin) {
+                            if (params.app){
+                            	for (var i = 0; i < data.adminLinks.length; i++) {
+                                    var link = data.adminLinks[i];
+                                    if (
+                                        // let's use relative url for customer software for admin link
+                                        (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName && 
+                                            link.href.indexOf('customersoftware') !== -1) ||
+                                        // use relative url for EventUI admin links
+                                        (params.appEventUI && params.appEventUI.serviceName === link.serviceName)) {
+                                            link.href = dfu.getRelUrlFromFullUrl(link.href);
+                                    }
+                            	}
+                                if (params.app.appId===params.appDashboard.appId){
+                                    self.adminLinks(data.adminLinks);//show all avail admin links
+                                }else{ //show app related admin link and tenant management UI and Event UI admin link only
+                                    var filteredAdminLinks = [];                                
+                                    for (var i=0;i <data.adminLinks.length;i++ ){
+                                        var link = data.adminLinks[i];
+                                        if (params.app && params.app.serviceName===link.serviceName){
+                                            filteredAdminLinks.push(link);
+                                        }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
+                                            filteredAdminLinks.push(link);
+                                        }else if (params.appEventUI && params.appEventUI.serviceName === link.serviceName) {
+                                        	filteredAdminLinks.push(link);
+                                        }
+                                    }
+                                    self.adminLinks(filteredAdminLinks);                                    
+                                }
+                            }
+                            else {
+                                oj.Logger.warn('Empty app!');
+                            }
                         }
                         
                         //Setup timer to handle session timeout
