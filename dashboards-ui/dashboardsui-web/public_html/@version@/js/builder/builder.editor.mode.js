@@ -45,6 +45,7 @@ define(['knockout',
             return tile.modeColumn();
         },
         setModeColumn : function(tile, modeColumn) {
+            tile.column(modeColumn);
             !tile.modeColumn && (tile.modeColumn = ko.observable());
             tile.modeColumn(modeColumn);
         },
@@ -57,6 +58,7 @@ define(['knockout',
             return tile.modeRow();
         },
         setModeRow : function(tile, modeRow) {
+            tile.row(modeRow);
             !tile.modeRow && (tile.modeRow = ko.observable());
             tile.modeRow(modeRow);
         },

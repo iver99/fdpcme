@@ -125,7 +125,7 @@ define({
       "DBS_BUILDER_BTN_ADD_HINT_TITLE": "Your dashboard has no data to display",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1": "Add one or more widgets to see data in the dashboard",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1": "Click ",
-      "DBS_BUILDER_BTN_ADD_HINT_ADD_LINK": "Add",
+      "DBS_BUILDER_BTN_ADD_HINT_ADD_LINK": "Options->Add",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2": " to get started",
       "DBS_BUILDER_BTN_SAVE_DASHBOARD": "Save Dashboard",
       "DBS_BUILDER_SETTINGS": "Settings",

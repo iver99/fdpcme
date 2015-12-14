@@ -24,14 +24,15 @@ define(['./builder.event.dispatcher'], function(dsp) {
             if (this._modules[funcName]) {
                 console.warn("There might be some issue: function with name '" + funcName + "' has been registered (as a module) already");
             }
-            if (this._modules[funcName]) {
+            if (this._funcs[funcName]) {
                 console.warn("There might be some issue: function with name '" + funcName + "' has been registered already");
             }
             window.DEV_MODE && console.debug("Registering function: " + funcName);
-            this._modules[funcName] = this[funcName] = func;
+            this._funcs[funcName] = this[funcName] = func;
         }
     };
-        
+    
+    // Literal definitions
     // dashboard type to keep the same with return data from REST API
     Builder.SINGLEPAGE_TYPE = "SINGLEPAGE";
     Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
