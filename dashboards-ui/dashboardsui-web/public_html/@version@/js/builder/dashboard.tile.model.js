@@ -1605,7 +1605,8 @@ define(['knockout',
             self.timeSelectorModel.viewEnd(initEnd);
             self.datetimePickerParams = {
                 startDateTime: initStart,
-                endDateTime: initEnd,	   
+                endDateTime: initEnd,	  
+                hideMainLabel: true,
                 callbackAfterApply: function(start, end) {
                     self.timeSelectorModel.viewStart(start);
                     self.timeSelectorModel.viewEnd(end);
