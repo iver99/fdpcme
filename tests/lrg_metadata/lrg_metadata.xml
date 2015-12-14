@@ -7,7 +7,7 @@
      </lrg>
 <lrg name="emcpdf_qa_test_3n" launcher="tests/suites/emcpdf_qa_test_3n.gradle" description="product lrg for QATest">
          <pipelines>
-            <pipeline name="COMPONENT"/>
+            <pipeline name="PRODUCT"/>
          </pipelines>
      </lrg>
  <lrg name="emcpdf_web_unit_test" launcher="tests/suites/emcpdf_web_unit_test.gradle" description="lrg for QAUnitTest">
@@ -40,7 +40,7 @@
      </lrg>
       <lrg name="emcpdf_dev_ui_test_3n" launcher="tests/suites/emcpdf_dev_ui_test_3n.gradle" description="lrg for DEVTest(webui)">
              <pipelines>
-            <pipeline name="COMPONENT"/>
+            <pipeline name="PRODUCT"/>
              </pipelines>
      </lrg>
 
