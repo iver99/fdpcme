@@ -20,7 +20,7 @@
         <div class="loadingIndicator" id="loading">Loading</div>
         <div id="globalBody" style="display:none;">
             <!-- branding bar -->
-            <header id="headerWrapper" >
+            <header id="headerWrapper" role="banner">
                 <div data-bind="component: {
                         name: 'df-oracle-branding-bar',
                         params: brandingbarParams
@@ -28,7 +28,7 @@
                 </div>
             </header>
 
-            <div id="mainContent">
+            <div id="mainContent" role="main">
                 <div class="welcome-slogan" data-bind="text: welcomeSlogan"></div>
                 <div class="landing-home-box-wrapper">
                     <ul class="box-list-ul">

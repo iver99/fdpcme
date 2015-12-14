@@ -17,7 +17,6 @@
 
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
-
     </head>
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
@@ -25,7 +24,7 @@
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
             -->
-            <header id="headerWrapper" >
+            <header id="headerWrapper" role="banner">
                 <div data-bind="component: {
                         name: 'df-oracle-branding-bar',
                         params: brandingbarParams
@@ -34,7 +33,7 @@
             </header>
 
             <!-- main content -->
-            <div id="mainContent" style="display: none;">
+            <div id="mainContent" style="display: none;" role="main">
                         <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
                             <div id="dhometab" class="dbs-tab-container">
                                 <div class="oj-row oj-cols-nopad" style="max-width: none;">
