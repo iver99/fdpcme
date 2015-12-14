@@ -69,7 +69,7 @@ public class DashBoardPageId {
 	//Flex link
 	public static final String FlexLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
 	//Target link
-	public static final String TargetLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[5]/a";
+	public static final String TargetLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";//"/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[5]/a";
 	//Customer Software link
 	public static final String CustomLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[2]/a";
 	//IT Analytics Administration link
@@ -114,12 +114,13 @@ public class DashBoardPageId {
 	
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
 	public static final String AutoRefreshID = "//*[@id='ojChoiceId_autoRefreshSelect_selected']";
-	public static final String AutoRefreshBy_15_Secs_ID = "/html/body/div[1]/div/div/ul/li[2]/div";//oj-listbox-result-label-2";	
-	public static final String AutoRefreshBy_30_Secs_ID = "/html/body/div[1]/div/div/ul/li[3]/div";//oj-listbox-result-label-3";
-	public static final String AutoRefreshBy_1_Min_ID = "/html/body/div[1]/div/div/ul/li[4]/div";//oj-listbox-result-label-4";
-	public static final String AutoRefreshBy_15_Mins_ID = "/html/body/div[1]/div/div/ul/li[5]/div";//oj-listbox-result-label-5";
+	public static final String AutoRefreshBy_15_Secs_ID = "/html/body/div[*]/div/div/ul/li[2]/div";//"/html/body/div[1]/div/div/ul/li[2]/div";//oj-listbox-result-label-2";	
+	public static final String AutoRefreshBy_30_Secs_ID = "/html/body/div[*]/div/div/ul/li[3]/div";//"/html/body/div[1]/div/div/ul/li[3]/div";//oj-listbox-result-label-3";
+	public static final String AutoRefreshBy_1_Min_ID = "/html/body/div[*]/div/div/ul/li[4]/div";//"/html/body/div[1]/div/div/ul/li[4]/div";//oj-listbox-result-label-4";
+	public static final String AutoRefreshBy_15_Mins_ID = "/html/body/div[*]/div/div/ul/li[5]/div";//"/html/body/div[1]/div/div/ul/li[5]/div";//oj-listbox-result-label-5";
 	
 	//tile operation
+	public static final String TileTitle = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]";
 	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div/button";///html/body/div[*]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div/button";//";///html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
 	public static final String EditTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
 	public static final String RefreshTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
