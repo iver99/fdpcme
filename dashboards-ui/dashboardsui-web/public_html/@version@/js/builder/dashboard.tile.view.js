@@ -23,6 +23,7 @@ define(['knockout',
         function DashboardTilesView($b) {
             var self = this;
             self.dashboard = $b.dashboard;
+            $b.registerObject(this, 'DashboardTilesView');
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
                 $('#tiles-col-container').css("left", leftWidth);

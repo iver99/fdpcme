@@ -48,6 +48,8 @@ define(['./builder.event.dispatcher'], function(dsp) {
     Builder.BUILDER_DEFAULT_TILE_WIDTH = 4;
     Builder.BUILDER_DEFAULT_TILE_HEIGHT = 1;
     Builder.DEFAULT_HEIGHT = 161;
+    Builder.EDITOR_POS_BASED_ON_ROW_COLUMN = "BASED_ON_ROW_COLUMN";
+    Builder.EDITOR_POS_FIND_SUITABLE_SPACE = "FIND_SUITABLE_SPACE";
     
     window.Builder = Builder;
     
@@ -55,6 +57,13 @@ define(['./builder.event.dispatcher'], function(dsp) {
         var self = this;
         
         self.dashboard = dashboard;
+        
+        // module objects registration
+        self._objects = {};
+        self.registerObject = function(obj, name) {
+            window.DEV_MODE && console.debug("Registering object: " + name);
+            self._objects[name] = self['get'+name] = function() {return obj;};
+        };
 
         self.EVENT_POST_DOCUMENT_SHOW = "EVENT_POST_DOCUMENT_SHOW";
         self.EVENT_BUILDER_RESIZE = "EVENT_BUILDER_RESIZE";

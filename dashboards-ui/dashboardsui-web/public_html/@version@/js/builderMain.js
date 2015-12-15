@@ -114,11 +114,11 @@ require(['knockout',
     'ojs/ojpopup',
     'builder/builder.core',
     'builder/builder.left.panel',
-    'builder/builder.tiles',
     'builder/builder.functions',
     'builder/dashboard.tile.model',
     'builder/dashboard.tile.view',
     'builder/tool-bar/builder.tool.bar',
+    'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead'
 ],
     function(ko, $, dfu, _emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
@@ -194,7 +194,7 @@ require(['knockout',
             Builder.loadDashboard(dsbId, function(dashboard) {
                 var $b = new Builder.DashboardBuilder(dashboard);
                 var tilesView = new Builder.DashboardTilesView($b);
-                var tilesViewModel = new Builder.DashboardTilesViewModel($b, tilesView/*, urlChangeView*/); 
+                var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/); 
                 var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
                 var headerViewModel = new HeaderViewModel($b);
 

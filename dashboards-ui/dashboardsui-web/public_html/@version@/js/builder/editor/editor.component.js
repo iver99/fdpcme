@@ -9,9 +9,17 @@ define(['knockout',
         'ojs/ojcore',
         'dfutil',
         'builder/dashboard.tile.model',
-        'builder/builder.tiles'
+        'builder/editor/editor.tiles'
     ], 
     function(ko, $, oj, dfu, dtm) {
+        function Cell(row, column) {
+            var self = this;
+            
+            self.row = row;
+            self.column = column;
+        }
+        Builder.registerModule(Cell, 'Cell');
+        
         /**
          * 
          * @param {Date} startTime: start time of new time range
