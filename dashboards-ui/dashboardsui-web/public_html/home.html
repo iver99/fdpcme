@@ -280,7 +280,7 @@
                                                   data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                 invalidComponentTracker: tracker,  
                                                                 validators : [{type: 'regExp', options : {
-                                                                       pattern: '.{0,256}', 
+                                                                       pattern: '(.|\\b|\\s){0,256}', 
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                             }"></textarea>
