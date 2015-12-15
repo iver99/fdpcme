@@ -37,7 +37,8 @@ define(['knockout',
             if(self.dashboard.description && self.dashboard.description()){
                 self.dashboardDescription = ko.observable(self.dashboard.description());
             }else{
-                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
+//                self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
+                self.dashboardDescription = ko.observable();
             }
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard());
