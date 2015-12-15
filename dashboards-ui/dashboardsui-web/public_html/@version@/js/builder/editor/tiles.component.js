@@ -158,7 +158,7 @@ define(['knockout',
                     self['WIDGET_SUPPORT_TIME_CONTROL'](false);
                 else
                     self['WIDGET_SUPPORT_TIME_CONTROL'](true);
-                console.debug("self['WIDGET_SUPPORT_TIME_CONTROL'] is set to " + self['WIDGET_SUPPORT_TIME_CONTROL']());
+                window.DEV_MODE && console.debug("self['WIDGET_SUPPORT_TIME_CONTROL'] is set to " + self['WIDGET_SUPPORT_TIME_CONTROL']());
             }
 
 

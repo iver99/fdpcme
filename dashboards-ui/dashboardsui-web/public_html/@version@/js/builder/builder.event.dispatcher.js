@@ -17,8 +17,7 @@ define([], function() {
             if (self.queue[event].indexOf(handler) !== -1)
                 return;
             self.queue[event].push(handler);
-            if (window.DEV_MODE)
-                console.debug('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
+            window.DEV_MODE && console.debug('Dashboard builder event registration. [Event]' + event + ' [Handler]' + handler);
         };
 
         self.triggerEvent = function(event, p1, p2, p3, p4) {

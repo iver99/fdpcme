@@ -44,7 +44,7 @@ define(['knockout',
             var smQuery = oj.ResponsiveUtils.getFrameworkQuery(
                                 oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
             var smObservable = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
-            console.debug("Checking sm media type result: " + (smObservable&smObservable()));
+            window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable&smObservable()));
             
             self.editor = new Builder.TilesEditor(smObservable && smObservable() ? self.tabletMode : self.normalMode);
             self.editor.tiles = $b.dashboard.tiles;
@@ -251,7 +251,7 @@ define(['knockout',
             
             self.onBuilderResize = function(width, height, leftWidth, topHeight) {
                 widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
-//                console.debug('widget area width is ' + widgetAreaWidth);
+                window.DEV_MODE && console.debug('widget area width is ' + widgetAreaWidth);
                 self.show();
             };
             
@@ -980,7 +980,7 @@ define(['knockout',
             };
             
             self.dashboardTileSupportTimeControlHandler = function(exists) {
-                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' date time picker accordingly (self.dashboard.enableTimeRange() value is: ' + self.dashboard.enableTimeRange() + ')');
+                window.DEV_MODE && console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' date time picker accordingly (self.dashboard.enableTimeRange() value is: ' + self.dashboard.enableTimeRange() + ')');
                 self.showTimeRange(self.dashboard.enableTimeRange() !== 'FALSE' && exists);
             };
             
@@ -998,7 +998,6 @@ define(['knockout',
             
             var globalTimer = null;
             self.postDocumentShow = function() {
-//                self.maximizeFirst();
                 $b.triggerBuilderResizeEvent('resize builder after document show');
                 self.initializeMaximization();
                 $(window).resize(function() {
@@ -1015,12 +1014,12 @@ define(['knockout',
             
             self.notifyWindowResize = function() {
                 for(var i=0; i<self.editor.tiles().length; i++) {
-                        var tile = self.editor.tiles()[i];
-                        if(tile.type() === "DEFAULT") {                            
-                            self.notifyTileChange(tile, new Builder.TileChange("POST_WINDOWRESIZE"));
-                        }
+                    var tile = self.editor.tiles()[i];
+                    if(tile.type() === "DEFAULT") {                            
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_WINDOWRESIZE"));
                     }
-            }
+                }
+            };
 
             var timeSelectorChangelistener = ko.computed(function(){
                 return {
@@ -1063,9 +1062,5 @@ define(['knockout',
     }
 );
 
-// global variable for iframe dom object
-var globalDom;
-// original height for document inside iframe
-var originalHeight;
 // tile used to wrapper the only widget inside one page dashboard
 var onePageTile;

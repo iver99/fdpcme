@@ -9,26 +9,32 @@ define(['./builder.event.dispatcher'], function(dsp) {
         _modules: {},
         _funcs: {},
         registerModule: function(module, name) {
-            var moduleName = name || functionName(module);
-            if (this._modules[moduleName]) {
-                console.warn("There might be some issue: module with name '" + moduleName + "' has been registered already");
+            if (!name) {
+                console.error("Failed to register module: name for module '" + functionName(module) + "' is not specified");
+                return;
             }
-            if (this._funcs[moduleName]) {
-                console.warn("There might be some issue: module with name '" + moduleName + "' has been registered (as a function) already");
+            if (this._modules[name]) {
+                console.warn("There might be some issue: module with name '" + name + "' has been registered already");
             }
-            window.DEV_MODE && console.debug("Registering module: " + moduleName);
-            this._modules[moduleName] = this[moduleName] = module;
+            if (this._funcs[name]) {
+                console.warn("There might be some issue: module with name '" + name + "' has been registered (as a function) already");
+            }
+            window.DEV_MODE && console.debug("Registering module: " + name);
+            this._modules[name] = this[name] = module;
         },
         registerFunction: function(func, name) {
-            var funcName = name || functionName(func);
-            if (this._modules[funcName]) {
-                console.warn("There might be some issue: function with name '" + funcName + "' has been registered (as a module) already");
+            if (!name) {
+                console.error("Failed to register module: name for function '" + functionName(func) + "' is not specified");
+                return;
             }
-            if (this._funcs[funcName]) {
-                console.warn("There might be some issue: function with name '" + funcName + "' has been registered already");
+            if (this._modules[name]) {
+                console.warn("There might be some issue: function with name '" + name + "' has been registered (as a module) already");
             }
-            window.DEV_MODE && console.debug("Registering function: " + funcName);
-            this._funcs[funcName] = this[funcName] = func;
+            if (this._funcs[name]) {
+                console.warn("There might be some issue: function with name '" + name + "' has been registered already");
+            }
+            window.DEV_MODE && console.debug("Registering function: " + name);
+            this._funcs[name] = this[name] = func;
         }
     };
     
