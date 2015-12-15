@@ -111,7 +111,7 @@ define(['knockout',
             $b.addEventListener($b.EVENT_POST_DOCUMENT_SHOW, self.postDocumentShow);
         }
         
-        Builder.registerModule(DashboardTilesView);
+        Builder.registerModule(DashboardTilesView, 'DashboardTilesView');
 
         return DashboardTilesView;
     }

@@ -87,8 +87,8 @@ define(['knockout',
         oj.Logger.error("Unsupport operation: TabletEditorMode.setModeHeight()");
     };
     
-    Builder.registerModule(NormalEditorMode);
-    Builder.registerModule(TabletEditorMode);
+    Builder.registerModule(NormalEditorMode, 'NormalEditorMode');
+    Builder.registerModule(TabletEditorMode, 'TabletEditorMode');
     
     return {"NormalEditorMode": NormalEditorMode, "TabletEditorMode": TabletEditorMode};
 });

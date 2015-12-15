@@ -442,7 +442,7 @@ define(['knockout',
             };
         };
         
-        Builder.registerModule(TilesEditor);
+        Builder.registerModule(TilesEditor, 'TilesEditor');
         
         return TilesEditor;
     }

@@ -352,8 +352,8 @@ define(['knockout',
             };
         }
         
-        Builder.registerModule(LeftPanelModel);
-        Builder.registerModule(ResizableView);
+        Builder.registerModule(LeftPanelModel, 'LeftPanelModel');
+        Builder.registerModule(ResizableView, 'ResizableView');
 
         return {"LeftPanelModel": LeftPanelModel, "ResizableView": ResizableView};
     }
