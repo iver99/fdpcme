@@ -469,7 +469,7 @@ define(['knockout',
             //Dashboard Options ======end=======
         }
         
-        Builder.registerModule(ToolBarModel);
+        Builder.registerModule(ToolBarModel, 'ToolBarModel');
         return ToolBarModel;
     }
 );

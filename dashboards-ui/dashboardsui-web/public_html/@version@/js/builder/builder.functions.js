@@ -17,15 +17,15 @@ define(['knockout',
                 if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
                         return wgt.WIDGET_DEFAULT_WIDTH;
                 return Builder.BUILDER_DEFAULT_TILE_WIDTH;
-        }
-        Builder.registerFunction(getTileDefaultWidth);
+        };
+        Builder.registerFunction(getTileDefaultWidth, 'getTileDefaultWidth');
 
         function getTileDefaultHeight(wgt, mode) {
                 if (wgt && (typeof wgt.WIDGET_DEFAULT_HEIGHT==='number') && (wgt.WIDGET_DEFAULT_HEIGHT%1)===0 && wgt.WIDGET_DEFAULT_HEIGHT >= 1)
                         return wgt.WIDGET_DEFAULT_HEIGHT;
                 return Builder.BUILDER_DEFAULT_TILE_HEIGHT;
-        }
-        Builder.registerFunction(getTileDefaultHeight);
+        };
+        Builder.registerFunction(getTileDefaultHeight, 'getTileDefaultHeight');
 
         function isURL(str_url) {
                 var strRegex = "^((https|http|ftp|rtsp|mms)?://)";
@@ -40,8 +40,8 @@ define(['knockout',
     //                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
                 var re = new RegExp(strRegex);
                 return re.test(str_url);
-            }
-        Builder.registerFunction(isURL);
+            };
+        Builder.registerFunction(isURL, 'isURL');
 
         function getVisualAnalyzerUrl(pName, pVersion) {
             var url = dfu.discoverQuickLink(pName, pVersion, "visualAnalyzer");
@@ -51,33 +51,33 @@ define(['knockout',
                 }
             }
             return url;
-        }
-        Builder.registerFunction(getVisualAnalyzerUrl);
+        };
+        Builder.registerFunction(getVisualAnalyzerUrl, 'getVisualAnalyzerUrl');
 
         function encodeHtml(html) {
             var div = document.createElement('div');
             div.appendChild(document.createTextNode(html));
             return div.innerHTML;
-        }
-        Builder.registerFunction(encodeHtml);
+        };
+        Builder.registerFunction(encodeHtml, 'encodeHtml');
 
         function isContentLengthValid(content, maxLength) {
             if (!content)
                 return false;
             var encoded = encodeHtml(content);
             return encoded.length > 0 && encoded.length <= maxLength;
-        }
-        Builder.registerFunction(isContentLengthValid);
+        };
+        Builder.registerFunction(isContentLengthValid, 'isContentLengthValid');
 
         function decodeHtml(data) {
             return data && $("<div/>").html(data).text();
-        }
-        Builder.registerFunction(decodeHtml);
+        };
+        Builder.registerFunction(decodeHtml, 'decodeHtml');
 
         function getBaseUrl() {
             return dfu.getDashboardsUrl();
-        }
-        Builder.registerFunction(getBaseUrl);
+        };
+        Builder.registerFunction(getBaseUrl, 'getBaseUrl');
 
         function initializeFromCookie() {
             var userTenant= dfu.getUserTenant();
@@ -85,8 +85,8 @@ define(['knockout',
                 dtm.tenantName = userTenant.tenant;
                 dtm.userTenant  =  userTenant.tenantUser;      
             }
-        }
-        Builder.registerFunction(initializeFromCookie);
+        };
+        Builder.registerFunction(initializeFromCookie, 'initializeFromCookie');
 
         function getDefaultHeaders() {
             var headers = {
@@ -103,8 +103,8 @@ define(['knockout',
                 headers.Authorization="Basic "+btoa(dfu.getDevData().wlsAuth);
             }
             return headers;
-        }
-        Builder.registerFunction(getDefaultHeaders);
+        };
+        Builder.registerFunction(getDefaultHeaders, 'getDefaultHeaders');
 
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
@@ -151,8 +151,8 @@ define(['knockout',
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
             });
-        }
-        Builder.registerFunction(loadDashboard);
+        };
+        Builder.registerFunction(loadDashboard, 'loadDashboard');
 
         function isDashboardNameExisting(name) {
             if (!name)
@@ -180,8 +180,8 @@ define(['knockout',
                 async: false
             });
             return exists;
-        }
-        Builder.registerFunction(isDashboardNameExisting);
+        };
+        Builder.registerFunction(isDashboardNameExisting, 'isDashboardNameExisting');
 
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), dashboardId);
@@ -209,7 +209,7 @@ define(['knockout',
                 }
             });
         }
-        Builder.registerFunction(updateDashboard);
+        Builder.registerFunction(updateDashboard, 'updateDashboard');
 
         function duplicateDashboard(dashboard, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl());
@@ -229,7 +229,7 @@ define(['knockout',
                 }
             });
         }
-        Builder.registerFunction(duplicateDashboard);
+        Builder.registerFunction(duplicateDashboard, 'duplicateDashboard');
 
         function fetchDashboardScreenshot(dashboardId, succCallBack, errorCallBack) {
             var url = dfu.buildFullUrl(getBaseUrl(), dashboardId+"/screenshot");
@@ -248,7 +248,7 @@ define(['knockout',
                 }
             });
         }
-        Builder.registerFunction(fetchDashboardScreenshot);
+        Builder.registerFunction(fetchDashboardScreenshot, 'fetchDashboardScreenshot');
 
     //        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
     //            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
@@ -311,7 +311,7 @@ define(['knockout',
               }); 
             }
         }
-        Builder.registerFunction(registerComponent);
+        Builder.registerFunction(registerComponent, 'registerComponent');
 
         function getGuid() {
             function S4() {
@@ -319,6 +319,6 @@ define(['knockout',
             }
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         };
-        Builder.registerFunction(getGuid);
+        Builder.registerFunction(getGuid, 'getGuid');
     }
 );

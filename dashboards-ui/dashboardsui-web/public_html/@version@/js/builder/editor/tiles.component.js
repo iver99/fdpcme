@@ -27,7 +27,7 @@ define(['knockout',
                 self.viewEndTime = endTime;
             }
         }
-        Builder.registerModule(DashboardTimeRangeChange);
+        Builder.registerModule(DashboardTimeRangeChange, 'DashboardTimeRangeChange');
 
         function DashboardTargetContext(target, type, emsite) {
             var self = this;
@@ -35,7 +35,7 @@ define(['knockout',
             self.type = type;
             self.emsite = emsite;
         }
-        Builder.registerModule(DashboardTargetContext);
+        Builder.registerModule(DashboardTargetContext, 'DashboardTargetContext');
 
         /**
          * 
@@ -50,7 +50,7 @@ define(['knockout',
                 self.value = value;
             }
         }
-        Builder.registerModule(DashboardCustomChange);
+        Builder.registerModule(DashboardCustomChange, 'DashboardCustomChange');
 
         /**
          * 
@@ -73,7 +73,7 @@ define(['knockout',
                 self.status = status.toString();
             }
         }
-        Builder.registerModule(TileChange);
+        Builder.registerModule(TileChange, 'TileChange');
 
         function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange){
             var self = this;
@@ -105,7 +105,7 @@ define(['knockout',
                 self.tileChange = tileChange;
             }            
         }
-        Builder.registerModule(DashboardItemChangeEvent);
+        Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
 
         function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
             var self = this;
@@ -126,7 +126,7 @@ define(['knockout',
 
             Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, isContentLengthValid);            
         }
-        Builder.registerModule(DashboardTextTile);
+        Builder.registerModule(DashboardTextTile, 'DashboardTextTile');
 
         /**
          *  Object used to represents a dashboard tile created by clicking adding widget
@@ -164,7 +164,7 @@ define(['knockout',
 
             initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targetContext, loadImmediately);
         }
-        Builder.registerModule(DashboardTile);
+        Builder.registerModule(DashboardTile, 'DashboardTile');
 
         function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback, isContentLengthValid) {
             if(!tile) {
@@ -193,7 +193,7 @@ define(['knockout',
                 return tile.cssStyle() + "display:" + display + "; left: 10px;"+tileBorder;
             });
         }
-        Builder.registerFunction(initializeTextTileAfterLoad);
+        Builder.registerFunction(initializeTextTileAfterLoad, 'initializeTextTileAfterLoad');
 
         function initializeTileAfterLoad(mode, dashboard, tile, timeSelectorModel, targetContext, loadImmediately) {
             if (!tile)
@@ -344,6 +344,6 @@ define(['knockout',
                 }         
             }
         }
-        Builder.registerFunction(initializeTileAfterLoad);
+        Builder.registerFunction(initializeTileAfterLoad, 'initializeTileAfterLoad');
     }
 );

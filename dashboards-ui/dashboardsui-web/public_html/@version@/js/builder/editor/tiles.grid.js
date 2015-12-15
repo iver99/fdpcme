@@ -136,7 +136,7 @@ define(['builder/builder.core'
                 return height;
             };
         }
-        Builder.registerModule(TilesGrid);
+        Builder.registerModule(TilesGrid, 'TilesGrid');
         
         return TilesGrid;
     }

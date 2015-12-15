@@ -1057,7 +1057,7 @@ define(['knockout',
             $b.addEventListener($b.EVENT_ENTER_TABLET_MODE, self.enterTabletModeHandler);
         }
         
-        Builder.registerModule(DashboardTilesViewModel);
+        Builder.registerModule(DashboardTilesViewModel, 'DashboardTilesViewModel');
         
         return {"DashboardTilesViewModel": DashboardTilesViewModel};
     }

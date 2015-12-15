@@ -61,9 +61,9 @@ define(['knockout',
             self.column = column;
         }
         
-        Builder.registerModule(TileItem);
-        Builder.registerModule(TextTileItem);
-        Builder.registerModule(Cell);
+        Builder.registerModule(TileItem, 'TileItem');
+        Builder.registerModule(TextTileItem, 'TextTileItem');
+        Builder.registerModule(Cell, 'Cell');
         
         return {"TileItem": TileItem, 
             "TextTileItem": TextTileItem, 
