@@ -7,7 +7,7 @@ define(['knockout',
         'ojs/ojcore',
         'dfutil',
         'builder/builder.core',
-        'builder/editor/tiles.grid'
+        'builder/editor/editor.grid'
     ], 
     function(ko, oj, dfu) {
         function TilesEditor($b, mode) {

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-define(['./builder.event.dispatcher'], function(dsp) {
+define(['builder/core/builder.event.dispatcher'], function(dsp) {
     var Builder = {
         _modules: {},
         _funcs: {},
