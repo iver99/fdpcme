@@ -5,7 +5,6 @@
  */
 
 define({
-  "root": {
 //      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
 //      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
       "DBS_HOME_TITLE_HOME": "Home",
@@ -254,7 +253,5 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
-      
-}
 });
 

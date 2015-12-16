@@ -4,7 +4,7 @@ define([
     'uifwk/js/util/df-util', 
     'uifwk/js/util/message-util',
     'ojs/ojcore', 
-    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsgBundle',
+    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojknockout', 
     'ojs/ojtoolbar', 
     'ojs/ojmenu', 
