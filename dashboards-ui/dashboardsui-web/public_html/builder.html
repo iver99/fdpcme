@@ -180,7 +180,7 @@
                                                       data-bind="ojComponent: {component: 'ojTextArea', value: duplicateDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                     invalidComponentTracker: duplicateDashboardModel.tracker,  
                                                                     validators : [{type: 'regExp', options : {
-                                                                           pattern: '.{0,256}', 
+                                                                           pattern: '(.|\\b|\\s){0,256}', 
                                                                            messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                            messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                                 }"></textarea>
@@ -188,8 +188,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="createDialogFooter" class="oj-dialog-footer">
-                                <button id="createDsb" data-bind="click: duplicateDashboardModel.duplicateDashboardConfirmed, ojComponent: { 
+                            <div id="createDialogFooter-1" class="oj-dialog-footer">
+                                <button id="createDsb-1" data-bind="click: duplicateDashboardModel.duplicateDashboardConfirmed, ojComponent: { 
                                                  component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), 
                                                  disabled: duplicateDashboardModel.saveBtnDisabled, 
                                                  rootAttributes: {style:'margin-right:5px'} }"></button>
@@ -294,7 +294,7 @@
                                         <textarea id="dbsHDpIn" maxlength="256" rows="6"
                                                   data-bind="ojComponent: {component: 'ojTextArea', value: editDashboardDialogModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
-                                                                       pattern: '.{0,256}', 
+                                                                       pattern: '(.|\\b|\\s){0,256}', 
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                             }"></textarea>
@@ -302,8 +302,8 @@
                                 </div>             
                             </div>
                         </div>
-                        <div id="createDialogFooter" class="oj-dialog-footer">
-                            <button id="createDsb" data-bind="click: editDashboardDialogModel.save, ojComponent: { 
+                        <div id="createDialogFooter-2" class="oj-dialog-footer">
+                            <button id="createDsb-2" data-bind="click: editDashboardDialogModel.save, ojComponent: { 
                                              component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), 
                                              disabled: editDashboardDialogModel.isDisabled, 
                                              rootAttributes: {style:'margin-right:5px'} }"></button>

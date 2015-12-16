@@ -173,7 +173,7 @@ dependencies {
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
         testCompile(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
 	testCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+'){ transitive = false }
-	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
+//	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 
  	testCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1') { transitive = false }
         testCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1') { transitive = false }

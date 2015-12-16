@@ -17,7 +17,7 @@ define(['knockout', 'jquery', 'ojs/ojcore', 'builder/builder.core'], function(ko
         
     }
     
-    Builder.registerModule(TimeSelectorModel);
+    Builder.registerModule(TimeSelectorModel, 'TimeSelectorModel');
     
     return TimeSelectorModel;
 });

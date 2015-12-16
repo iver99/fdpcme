@@ -214,7 +214,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         if (data.adminLinks && data.adminLinks.length > 0) {
                             discoveredAdminLinks = data.adminLinks;
                             refreshAdminLinks();
-                        }
+                         }
                         
                         //Setup timer to handle session timeout
                         if (!dfu.isDevMode()) {

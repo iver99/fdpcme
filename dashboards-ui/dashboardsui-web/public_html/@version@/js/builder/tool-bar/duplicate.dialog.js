@@ -89,7 +89,7 @@ define(['knockout',
                 }
                 else {
                     if (newDashboard.tiles() && newDashboard.tiles().length > 0) {
-                        ssu.getBase64ScreenShot('#tiles-wrapper', 320, 0.8, function(data) {
+                        ssu.getBase64ScreenShot('#tiles-wrapper', 314, 165, 0.8, function(data) {
                             newDashboard.screenShot = data;  
                             self.saveDuplicatedDashboardToServer(newDashboard);
                         });                

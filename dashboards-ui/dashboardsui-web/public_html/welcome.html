@@ -75,9 +75,9 @@
                                             <option value="mwds_perf" data-bind="text: ITA_Middleware_Datasource_Performance"></option>
                                             <option value="DB_resource" data-bind="text: ITA_DB_Resource"></option>
                                             <option value="mw_resource" data-bind="text: ITA_Middleware_Resource"></option>
-                                            <option value="Analyze" data-bind="text: ITA_Analyze"></option>
-                                            <option value="AWR" data-bind="text: ITA_AWR"></option>
-                                            <option value="Search" data-bind="text: ITA_Search"></option>
+                                            <!-- ko foreach: exploreDataInITA -->                                            
+                                            <option data-bind="value: name, text: $parent.dataExplorer + name"></option>
+                                            <!-- /ko -->
                                         </select>
                                     </div>
                                 </div>
@@ -107,11 +107,10 @@
                                         <div class="landing-home-box-content-head" data-bind="text: dataExplorers"></div>
                                         <div class="landing-home-box-content-desc" data-bind="text: dataExplorersDesc"></div>
                                         <select aria-label="Data Explorers" style="float: right; margin-top: 25px; margin-right: 10px; width: 235px;" data-bind="ojComponent: {component: 'ojSelect', value: data_type, optionChange: dataExplorersChosen}">                                      
-                                            <option value="select" data-bind="text: select"></option>
-                                            <option value="Analyze" data-bind="text: dataExplorers_analyze"></option>
-                                            <option value="AWR" data-bind="text: dataExplorers_AWR"></option>
-                                            <option value="Search" data-bind="text: dataExplorers_search"></option>
-                                            <option value="LogAnalytics" data-bind="text: dataExplorers_log_analytics"></option>
+                                            <option value="select" data-bind="text: select"></option>                                            
+                                            <!-- ko foreach: exploreDataLinkList -->
+                                            <option data-bind="value: name, text: name"></option>
+                                            <!-- /ko -->
                                         </select>
 
                                     </div>
