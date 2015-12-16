@@ -77,6 +77,10 @@ define(['knockout',
                 return false;
             };
             
+            self.openAddWidgetDialog = function() {
+                $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
+             };
+            
             self.appendTextTile = function () {
                 var newTextTile;
                 var widget = Builder.createTextWidget(self.editor.mode.MODE_MAX_COLUMNS);
