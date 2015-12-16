@@ -21,7 +21,7 @@ define(['knockout',
             self.dashboard = $b.dashboard;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b.dashboard, self);
-            self.duplicateDashboardModel = new dd.DuplicateDashboardModel(self.tilesViewModel);
+            self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
 
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
