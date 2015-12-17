@@ -38,7 +38,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsUiMsg'
             }
         }
     },
@@ -130,17 +130,16 @@ require(['ojs/ojcore',
                 self.ITA_Middleware_Performance = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE");
                 self.ITA_Middleware_Datasource_Performance = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_DATASOURCE_PERFORMANCE");
                 self.ITA_Middleware_Resource = getNlsString("LANDING_HOME_ITA_MIDDLEWARE_RESOURCE");
-                self.ITA_Search = getNlsString("LANDING_HOME_ITA_SEARCH");
-                self.ITA_Analyze = getNlsString("LANDING_HOME_ITA_ANALYZE");
-                self.ITA_AWR = getNlsString("LANDING_HOME_ITA_AWR");
+
                 self.dashboards = getNlsString("LANDING_HOME_DASHBOARDS");
                 self.dashboardsDesc = getNlsString("LANDING_HOME_DASHBOARDS_DESC");
                 self.dataExplorers = getNlsString("LANDING_HOME_DATA_EXPLORERS");
                 self.dataExplorersDesc = getNlsString("LANDING_HOME_DATA_EXPLORERS_DESC");
-                self.dataExplorers_search = getNlsString("LANDING_HOME_DATA_EXPLORERS_SEARCH");
-                self.dataExplorers_analyze = getNlsString("LANDING_HOME_DATA_EXPLORERS_ANALYZE");
-                self.dataExplorers_AWR = getNlsString("LANDING_HOME_DATA_EXPLORERS_AWR");
-                 self.dataExplorers_log_analytics = getNlsString("LANDING_HOME_DATA_EXPLORERS_LOG_ANALYTICS");
+                self.dataExplorer = getNlsString("LANDING_HOME_DATA_EXPLORER");
+                
+                self.exploreDataLinkList = ko.observableArray();
+                self.exploreDataInITA = ko.observableArray();
+                
                 self.learnMore = getNlsString("LANDING_HOME_LEARN_MORE");
                 self.getStarted = getNlsString("LANDING_HOME_GET_STARTED_LINK");
                 self.videos = getNlsString("LANDING_HOME_VIDEOS_LINK");
@@ -186,7 +185,14 @@ require(['ojs/ojcore',
                         var dataExplorers = data.visualAnalyzers;
                         var dataExplorersNum = dataExplorers.length;
                         for(var i=0; i<dataExplorersNum; i++) {
+                            var originalName = dataExplorers[i].name;
+                            dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
+                            self.exploreDataLinkList.push(dataExplorers[i]);                            
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
+                            //change name of data explorer in ITA starting with "Data Explorer - "
+                            if(dataExplorers[i].serviceName === "EmcitasApplications" || dataExplorers[i].serviceName === "TargetAnalytics") {
+                                self.exploreDataInITA.push(dataExplorers[i]);
+                            }
                         }
                     }
                     landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");

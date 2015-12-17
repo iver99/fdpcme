@@ -36,7 +36,12 @@ public class TileManager {
 	
 	public void tileOpen() throws Exception
 	{
+		driver.getLogger().info("foucus on the widget");
+		driver.click(DashBoardPageId.TileTitle);
+		driver.takeScreenShot();
+		driver.getLogger().info("click configure widget icon");
 		driver.click(DashBoardPageId.ConfigTileID);
+		driver.takeScreenShot();
 	}
 	
 	

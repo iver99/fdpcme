@@ -37,6 +37,7 @@ requirejs.config({
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'dashboards': '.',
+        'builder': './builder',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
@@ -69,7 +70,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsUiMsg'
             }
         }
         ,
@@ -90,8 +91,6 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
-    'dashboards/dashboard-tile-model',
-    'dashboards/dashboard-tile-view',
     'loggingutil',
     'idfbcutil',
     'ojs/ojchart',
@@ -113,181 +112,163 @@ require(['knockout',
     'ojs/ojtree',
     'ojs/ojcheckboxset',
     'ojs/ojpopup',
+    'builder/builder.core',
+    'builder/left.panel.model',
+    'builder/builder.functions',
+    'builder/dashboard.tile.model',
+    'builder/dashboard.tile.view',
+    'builder/tool.bar.model',
+    'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead'
 ],
-        function(ko, $, dfu,dtm, dtv,_emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
-        {
-            var logger = new _emJETCustomLogger()
-            var logReceiver = dfu.getLogUrl();
-            logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
-            // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
-            // If you comment the line below, our current log calls will not be output!
-            logger.setLogLevel(oj.Logger.LEVEL_LOG);
-            
-            if (!ko.components.isRegistered('df-oracle-branding-bar')) {
-                ko.components.register("df-oracle-branding-bar",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
-                });
-            }
-            if (!ko.components.isRegistered('df-widget-selector')) {
-                ko.components.register("df-widget-selector",{
-                    viewModel:{require:'/emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js'},
-                    template:{require:'text!/emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html'}
-                });
-            }
-//            ko.components.register("df-time-selector",{
-//                viewModel:{require:'../libs/@version@/js/timeselector/js/time-selector'},
-//                template:{require:'text!../libs/@version@/js/timeselector/time-selector.html'}
-//            });
-	    ko.components.register("df-datetime-picker",{
-         	viewModel: {require: '/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js'},
-	        template: {require: 'text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
-	    });
-            ko.components.register("df-auto-refresh",{
-                viewModel:{require:'./widgets/autorefresh/js/auto-refresh'},
-                template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
-            });
-            ko.components.register("DF_V1_WIDGET_TEXT", {
-                viewModel: {require: './widgets/textwidget/js/textwidget'},
-                template: {require: 'text!./widgets/textwidget/textwidget.html'}
-            });
+    function(ko, $, dfu, _emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
+    {
+        var logger = new _emJETCustomLogger()
+        var logReceiver = dfu.getLogUrl();
+        logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
+        // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
+        // If you comment the line below, our current log calls will not be output!
+        logger.setLogLevel(oj.Logger.LEVEL_LOG);
 
-            function HeaderViewModel($b) {
-                var self = this;
-                self.userName = dfu.getUserName();
-                self.tenantName = dfu.getTenantName();
-                self.appId = "Dashboard";
-                self.brandingbarParams = {
-                    userName: self.userName,
-                    tenantName: self.tenantName,
-                    appId: self.appId,
-                    isAdmin:true
-                };
-            
-                $("#headerWrapper").on("DOMSubtreeModified", function() {
-                    var height = $("#headerWrapper").height();
-                    if (!self.headerHeight)
-                        self.headerHeight = height;
-                    if (self.headerHeight === height)
-                        return;
-                    $b.triggerBuilderResizeEvent('header wrapper bar height changed');
-                    self.headerHeight = height;
-                });
-            };
-
-//            var urlChangeView = new dtv.TileUrlEditView();
-//            var includeTimeRangeFilter = dfu.getUrlParam("includeTimeRangeFilter");
-//            includeTimeRangeFilter ="true";//TODO remove
-            var dsbId = dfu.getUrlParam("dashboardId");
-            if (dsbId) {
-                dsbId = decodeURIComponent(dsbId);
-            }    
-            var isInteger = /^([0-9]+)$/.test(dsbId);
-            if (!isInteger){
-               oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-               location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
-            }            
-            dtm.initializeFromCookie();
-
-//            var dashboardModel = function(dashboardId) {
-//                if (window.opener && window.opener.dashboarDataCallBack) {
-//                    return window.opener.dashboarDataCallBack(parseInt(dashboardId));
-//                }
-//                return undefined;
-//            }(dsbId);
-            $(document).ready(function() {
-                dtm.loadDashboard(dsbId, function(dashboard) {
-                    var $b = new dtv.DashboardBuilder(dashboard);
-                    var tilesView = new dtv.DashboardTilesView($b, dtm);
-                    var tilesViewModel = new dtm.DashboardTilesViewModel($b, tilesView/*, urlChangeView*/); 
-                    var toolBarModel = new dtv.ToolBarModel($b, tilesViewModel);
-                    var headerViewModel = new HeaderViewModel($b);
-                    
-                    if (dashboard.tiles && dashboard.tiles()) {
-                        for (var i = 0; i < dashboard.tiles().length; i++) {
-                            var tile = dashboard.tiles()[i];
-                            if(tile.type() === "TEXT_WIDGET") {
-                                dtm.initializeTextTileAfterLoad($b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, dtm.isContentLengthValid);
-                            }else {
-                                dtm.initializeTileAfterLoad(dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, tilesViewModel.tiles);
-                            }
-                        }
-                    }
-                    
-                     ko.bindingHandlers.sortableList = {
-                        init: function(element, valueAccessor) {
-                            var list = valueAccessor();
-                            tilesView.enableSortable(element, list);
-                        }
-                    };
-                    ko.bindingHandlers.stopBinding = {
-                        init: function() {
-                            return { controlsDescendantBindings: true};
-                        }
-                    };
-                    ko.bindingHandlers.enterpress = {
-                        init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-                            var allBindings = allBindingsAccessor();
-                            $(element).keypress(function (event) {
-                                var keyCode = (event.which ? event.which : event.keyCode);
-                                if (keyCode === 13) {
-                                    allBindings.enterpress.call(viewModel);
-                                    return false;
-                                }
-                                return true;
-                            });
-                        }
-                    };
-                    ko.virtualElements.allowedBindings.stopBinding = true;
-
-                    ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
-                    ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
-                    tilesViewModel.initialize();
-                    ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                    var leftPanelView = new dtv.LeftPanelView($b);
-                    ko.applyBindings(leftPanelView, $('#dbd-left-panel')[0]);
-                    leftPanelView.initialize();
-                    new dtv.ResizableView($b);
-
-                    $("#loading").hide();
-                    $('#globalBody').show();
-                    tilesView.enableDraggable();
-                    tilesViewModel.show();
-//                    var timeSliderDisplayView = new dtv.TimeSliderDisplayView();
-//                    if (dashboard.enableTimeRange()){
-//                       timeSliderDisplayView.showOrHideTimeSlider("ON"); 
-//                    }else{
-//                       timeSliderDisplayView.showOrHideTimeSlider(null);  
-//                    }
-//
-//                    $("#ckbxTimeRangeFilter").on({
-//                        'ojoptionchange': function (event, data) {
-//                            timeSliderDisplayView.showOrHideTimeSlider(data['value']);
-//                        }
-//                    });
-
-//                    toolBarModel.showAddWidgetTooltip();
-                    toolBarModel.handleAddWidgetTooltip();
-                    $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
-                    tilesView.enableMovingTransition();
-                    idfbcutil.hookupBrowserCloseEvent(function(){
-                       oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
-                    });
-                    /*
-                     * Code to test df_util_widget_lookup_assetRootUrl
-                    var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
-                    console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
-                    */
-                }, function(e) {
-                    console.log(e.errorMessage());
-                    if (e.errorCode && e.errorCode() === 20001) {
-                        oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                        location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
-                    }
-                });
+        if (!ko.components.isRegistered('df-oracle-branding-bar')) {
+            ko.components.register("df-oracle-branding-bar",{
+                viewModel:{require:'/emsaasui/uifwk/js/widgets/brandingbar/js/brandingbar.js'},
+                template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
             });
         }
+        if (!ko.components.isRegistered('df-widget-selector')) {
+            ko.components.register("df-widget-selector",{
+                viewModel:{require:'/emsaasui/uifwk/js/widgets/widgetselector/js/widget-selector.js'},
+                template:{require:'text!/emsaasui/uifwk/js/widgets/widgetselector/html/widget-selector.html'}
+            });
+        }
+        ko.components.register("df-datetime-picker",{
+            viewModel: {require: '/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js'},
+            template: {require: 'text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
+        });
+        ko.components.register("df-auto-refresh",{
+            viewModel:{require:'./widgets/autorefresh/js/auto-refresh'},
+            template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
+        });
+        ko.components.register("DF_V1_WIDGET_TEXT", {
+            viewModel: {require: './widgets/textwidget/js/textwidget'},
+            template: {require: 'text!./widgets/textwidget/textwidget.html'}
+        });
+
+        function HeaderViewModel($b) {
+            var self = this;
+            self.userName = dfu.getUserName();
+            self.tenantName = dfu.getTenantName();
+            self.appId = "Dashboard";
+            self.brandingbarParams = {
+                userName: self.userName,
+                tenantName: self.tenantName,
+                appId: self.appId,
+                isAdmin:true
+            };
+
+            $("#headerWrapper").on("DOMSubtreeModified", function() {
+                var height = $("#headerWrapper").height();
+                if (!self.headerHeight)
+                    self.headerHeight = height;
+                if (self.headerHeight === height)
+                    return;
+                $b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                self.headerHeight = height;
+            });
+        };
+
+        var dsbId = dfu.getUrlParam("dashboardId");
+        if (dsbId) {
+            dsbId = decodeURIComponent(dsbId);
+        }    
+        var isInteger = /^([0-9]+)$/.test(dsbId);
+        if (!isInteger){
+           oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
+           location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
+        }            
+
+        Builder.initializeFromCookie();
+
+        $(document).ready(function() {
+            Builder.loadDashboard(dsbId, function(dashboard) {
+                var $b = new Builder.DashboardBuilder(dashboard);
+                var tilesView = new Builder.DashboardTilesView($b);
+                var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/); 
+                var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
+                var headerViewModel = new HeaderViewModel($b);
+
+                if (dashboard.tiles && dashboard.tiles()) {
+                    for (var i = 0; i < dashboard.tiles().length; i++) {
+                        var tile = dashboard.tiles()[i];
+                        if(tile.type() === "TEXT_WIDGET") {
+                            Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, Builder.isContentLengthValid);
+                        }else {
+                            Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
+                        }
+                    }
+                }
+
+                 ko.bindingHandlers.sortableList = {
+                    init: function(element, valueAccessor) {
+                        var list = valueAccessor();
+                        tilesView.enableSortable(element, list);
+                    }
+                };
+                ko.bindingHandlers.stopBinding = {
+                    init: function() {
+                        return { controlsDescendantBindings: true};
+                    }
+                };
+                ko.bindingHandlers.enterpress = {
+                    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+                        var allBindings = allBindingsAccessor();
+                        $(element).keypress(function (event) {
+                            var keyCode = (event.which ? event.which : event.keyCode);
+                            if (keyCode === 13) {
+                                allBindings.enterpress.call(viewModel);
+                                return false;
+                            }
+                            return true;
+                        });
+                    }
+                };
+                ko.virtualElements.allowedBindings.stopBinding = true;
+
+                ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
+                ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
+                tilesViewModel.initialize();
+                ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
+                var leftPanelModel = new Builder.LeftPanelModel($b);
+                ko.applyBindings(leftPanelModel, $('#dbd-left-panel')[0]);
+                leftPanelModel.initialize();
+                new Builder.ResizableView($b);
+
+                $("#loading").hide();
+                $('#globalBody').show();
+                tilesView.enableDraggable();
+                tilesViewModel.show();
+
+                toolBarModel.handleAddWidgetTooltip();
+                $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
+                tilesView.enableMovingTransition();
+                idfbcutil.hookupBrowserCloseEvent(function(){
+                   oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
+                });
+                /*
+                 * Code to test df_util_widget_lookup_assetRootUrl
+                var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
+                console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
+                */
+            }, function(e) {
+                console.log(e.errorMessage());
+                if (e.errorCode && e.errorCode() === 20001) {
+                    oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                }
+            });
+        });
+    }
 );
 
 // method to be called by page inside iframe (especially inside one page type dashboard)

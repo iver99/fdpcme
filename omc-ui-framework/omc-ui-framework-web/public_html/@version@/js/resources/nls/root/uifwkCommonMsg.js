@@ -5,7 +5,6 @@
  */
 
 define({
-  "root": {
       "BRANDING_BAR_COMMA": ",",
       "BRANDING_BAR_TEXT_ORACLE": "Oracle",
       "BRANDING_BAR_TEXT_APP_NAVIGATOR": "Application navigator",
@@ -116,6 +115,5 @@ define({
       "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s).",
       "DATETIME_PICKER_SHOW_TODAY": "Today",
       "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday"
-}
 });
 
