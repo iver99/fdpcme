@@ -118,7 +118,7 @@ exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCL
 task DEVUiTest(type:EMTest,dependsOn: logdir){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
+//	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")
 }
