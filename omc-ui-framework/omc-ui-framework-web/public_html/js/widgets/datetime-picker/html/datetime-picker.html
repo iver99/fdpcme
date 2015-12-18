@@ -8,10 +8,10 @@
             <label for="dropdown" id="dropdownLabel" style="font-weight: bold; font-size: 14px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <button class="dropdown" style="margin-left: 7px;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl" aria-label="Pick datetime">
                 <div data-bind="html: dateTimeInfo" style="width: auto; display: inline-block"></div>
-                <img data-bind="attr: {id: 'panelArrow_'+randomId}" alt="dropdown" src="/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg"/>
+                <img data-bind="attr: {id: 'panelArrow_'+randomId, alt: dropDownAlt}" src="/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg"/>
             </button>            
 
-            <div class="panel" style="display:none" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas, rootAttributes: {style: 'height:387px; width: 630px;'}}, attr: {id: 'panel_'+randomId}"> 
+            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas, /*rootAttributes: {style: 'height:387px; width: 630px;'}*/}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
                     <a href="#" class="drawer"  data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins, css: last15minsCss"></a>
@@ -28,7 +28,7 @@
                 </div>
 
                 <!-- right of panel-->
-                <div class="pickerPanel">
+                <div class="pickerPanel" data-bind="visible: showCalendar">
 
                     <!--date and time info above picker -->
                     <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">

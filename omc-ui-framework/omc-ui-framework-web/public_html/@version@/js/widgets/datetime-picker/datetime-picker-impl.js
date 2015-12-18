@@ -55,6 +55,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 //                                    nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
 //                                    nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER];
                 self.longMonths = oj.LocaleData.getMonthNames("wide");
+                self.dropDownAlt = nls.DATETIME_PICKER_DROP_DOWN;
                 self.timePeriodLast15mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS;
                 self.timePeriodLast30mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS;
                 self.timePeriodLast60mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS;
@@ -532,6 +533,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriod = ko.observable();
                 self.dateTimeInfo = ko.observable();
                 self.selectByDrawer = ko.observable(false);
+                self.showCalendar = ko.observable(false);
 
                 self.random = ko.observable(new Date().getTime());
                 self.random1 = ko.observable(new Date().getTime());
@@ -1020,6 +1022,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if ($(self.panelId).ojPopup('isOpen')) {
                         $(self.panelId).ojPopup('close');
                     } else {
+                        self.setTimePeriodChosen(self.timePeriod());
+                        if(self.timePeriod() === self.timePeriodCustom) {
+                            self.showCalendar(true);
+                        }else {
+                            self.showCalendar(false);
+                        }
                         self.autoFocus("inputStartDate_" + self.randomId);
                         self.lastFocus(1);
 
@@ -1095,14 +1103,17 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         
                         self.startDate(self.dateConverter2.format(start));
                         self.endDate(self.dateConverter2.format(end));
-
+                        
                         self.startTime(start.slice(10, 16));
                         self.endTime(end.slice(10, 16));
-                        self.selectByDrawer(true); 
+                        self.selectByDrawer(true);
+                        
+                        setTimeout(function() {self.applyClick()}, 0);
                     }else {
                         self.displayDateTimeSelection("inline");
+                        self.showCalendar(true);
                     }
-
+                                                                                        
                     self.timePeriod(event.target.innerHTML);
                     event.target.style.backgroundColor = '#ffffff';
                     event.target.style.fontWeight = 'bold';
@@ -1129,7 +1140,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastStartTime(self.startTime());
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
-                   
+                                      
                     if(self.hideTimeSelection() === false) {
                         var start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10) + self.startTime());
                         var end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10) + self.endTime());
@@ -1137,7 +1148,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         var start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10));
                         var end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10));
                     }
-                    
+                                                          
                     self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
                     
                     $(self.panelId).ojPopup("close");

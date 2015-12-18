@@ -22,14 +22,13 @@
     border-style: solid;
     border-color: #dfe4e7;
     border-radius: 2px;
-    /*padding: 10px;*/
-    height: 396px;
-    width: 630px;
+    /*height: 396px;*/
+    /*width: 630px;*/
 }
 .drawers {
     width: 104px;
     float: left;
-    height: 396px;
+    /*height: 396px;*/
     background-color: #f0f0f0;
 }
 .drawer {
@@ -66,8 +65,8 @@
 }
 
 .pickerPanel {
-    width: 510px;
-    height: 396px;
+    /*width: 510px;*/
+    /*height: 396px;*/
     float: right;
     padding-top: 10px;
     padding-right: 10px;
