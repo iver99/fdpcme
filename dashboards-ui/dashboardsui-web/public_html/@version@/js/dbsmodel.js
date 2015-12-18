@@ -17,11 +17,12 @@ define([
     'jquery', 
     'dfutil',
     'prefutil',
+    'mobileutil',
     'ojs/ojknockout', 
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, dts, oj, ko, $, dfu, pfu)
+function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -145,6 +146,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil, showWelcome);
         
         //dashboards
+        self.isMobileDevice = ko.observable( (new mbu()).isMobile );
         self.typeFilter = ko.observable(filter['types']);
         self.serviceFilter = ko.observable(filter['appTypes']);
         self.creatorFilter = ko.observable(filter['owners']);
@@ -647,7 +649,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
         
         self.listInfoRender = function (context) 
         {
-            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}\"></button>")
+            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click', function(event) {
                         //prevent event bubble
@@ -804,8 +806,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu)
         self.loadAll = function() {
             return $.when(self.loadPreferences(), self.loadSubscribedApplications());
         };
-    }
-    
+    };
     
     return {'ViewModel': ViewModel, 'PredataModel': PredataModel};
 });

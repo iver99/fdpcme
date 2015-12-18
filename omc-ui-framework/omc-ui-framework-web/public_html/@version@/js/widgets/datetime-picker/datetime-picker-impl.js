@@ -1,4 +1,4 @@
-define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsgBundle", "ojs/ojdatetimepicker"],
+define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
         function (ko, $, msgUtilModel, oj, nls) {
 
             /**
@@ -232,6 +232,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     } else {
                         if (!(self.startDateFocus() && self.endDateFocus() && self.endTimeFocus())) {
                             self.autoFocus("inputStartDate_" + self.randomId);
+                            //when the focus is on start time, set self.lastFocus(1) to make sure when user clicks calendar, start date will be changed
                             self.lastFocus(1);
                         }
                         $("#divStartTime_" + self.randomId).removeClass("input-focus");
@@ -248,14 +249,15 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     } else {
                         if (!(self.startDateFocus() && self.endDateFocus() && self.startTimeFocus())) {
                             self.autoFocus("inputEndDate_" + self.randomId);
-                            self.lastFocus(2);
+                            //when the focus is on end time, set self.lastFocus(1) to make sure when user clicks calendar, start date will be changed
+                            self.lastFocus(1);
                         }
                         $("#divEndTime_" + self.randomId).removeClass("input-focus");
                     }
                 });
                 
                 self.minDate = ko.observable(null);
-                self.maxDate = ko.observable(null);
+                self.maxDate = ko.observable(new Date(new Date().toDateString()));
                 self.timePeriodObject = ko.observable();
                 self.monthObject = ko.observable();
                 
@@ -402,6 +404,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             }
                             return tmp;
                         }, self);
+                        self.timePeriodsNotToShow.subscribe(function(value) {
+                            var tp = self.timePeriod();
+                            if($.inArray(tp, value) >= 0) {
+                                self.displayDateTimeSelection("inline");
+                                customClick(0);
+                                self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                            }
+                        });
                     }
                 }
                 
@@ -433,19 +443,35 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 if(params.adjustLastX && typeof params.adjustLastX === "function") {
                     self.adjustLastX = params.adjustLastX;
                 }
-                
-                self.setMinMaxDate = function() {
+
+                /**
+                 * restrict date range accroding to current date, customTimeBack, startDateISO and endDateISO
+                 * @param {type} minDate
+                 * @param {type} maxDate
+                 * @returns {undefined}
+                 */
+                self.setMinMaxDate = function(minDate, maxDate) {
                     var today = new Date(new Date().toDateString());
-                    var minDate = new Date(today - self.customTimeBack);
-                    var maxDate = today;
-                    self.minDate(oj.IntlConverterUtils.dateToLocalIso(minDate));
-                    self.maxDate(oj.IntlConverterUtils.dateToLocalIso(maxDate));
-                };
+                    if(!minDate) {
+                        if(self.customTimeBack) {
+                            minDate = oj.IntlConverterUtils.dateToLocalIso(new Date(today - self.customTimeBack));
+                        }else {
+                            minDate = null;
+                        }
+                    }
+                    
+                    if(!maxDate) {
+                        maxDate = oj.IntlConverterUtils.dateToLocalIso(today);
+                    }
+                    
+                    self.minDate(minDate);
+                    self.maxDate(maxDate);
+                }
                 
                 //the max timestamp of how far the user can pick the date from, expressed as milliseconds
                 if(params.customTimeBack && params.customTimeBack>0) {
                     self.customTimeBack = params.customTimeBack;
-                    self.setMinMaxDate();
+                    self.setMinMaxDate(null, null);
                 }
                 
                 if(params.hideMainLabel && params.hideMainLabel === true) {
@@ -530,20 +556,24 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.displayDateTimeSelection("inline");
                     if (self.startDate() === self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() === 1) {
-                            self.updateRange(self.startDate(), self.endDate());
+                            self.setMinMaxDate(self.startDateISO(), null);
+                            setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                             self.endDateFocus(true);
                         } else if (self.lastFocus() === 2) {
                             self.endDateISO(self.value());
-                            self.endDateFocus(true);
+                            self.setMinMaxDate(null, self.value());
+                            self.startDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                         }
                     } else if (self.endDate() === self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() === 2) {
-                            self.updateRange(self.startDate(), self.endDate());
-                            self.endDateFocus(true);
+                            self.setMinMaxDate(null, self.endDateISO());
+                            setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
+                            self.startDateFocus(true);
                         } else if (self.lastFocus() === 1) {
                             self.startDateISO(self.value());
+                            self.setMinMaxDate(self.value(), null);
                             self.endDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
@@ -552,10 +582,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         var tmp = self.value();
                         if (self.lastFocus() === 1) {
                             self.startDateISO(tmp);
+                            self.setMinMaxDate(tmp, null);
                             self.endDateFocus(true);
                         } else if (self.lastFocus() === 2) {
                             self.endDateISO(tmp);
-                            self.endDateFocus(true);
+                            self.setMinMaxDate(null, tmp);
+                            self.startDateFocus(true);
                         } else {
                             self.updateRange(self.startDate(), self.endDate());
                             console.log("Should focus on an input");
@@ -622,6 +654,43 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }else {
                         return self.dateConverter.format(date);
                     }
+                }
+                
+                /**
+                 * 
+                 * @param {type} startDate
+                 * @param {type} endDate
+                 * @param {type} startTime
+                 * @param {type} endTime
+                 * @returns {String} return the dateTime info format
+                 */
+                self.getDateTimeInfo = function(startDate, endDate, startTime, endTime) {
+                    var dateTimeInfo;
+                    var hyphenDisplay = "display: inline;";
+                    var start = self.adjustDateMoreFriendly(startDate);
+                    var end = self.adjustDateMoreFriendly(endDate);
+                    //show "Today/Yesterday" only once
+                    if(start === end) {
+                        end = "";
+                    }
+                    
+                    if(self.hideTimeSelection() === false) {
+                        start = start + " " + self.timeConverter.format(startTime);
+                        end = end + " " + self.timeConverter.format(endTime);
+                    }else {
+                        //hide hyphen when time range is "Today-Today"/"Yestarday-Yesterday"
+                        hyphenDisplay = end ? hyphenDisplay : "display: none;"
+                    }
+                    
+                    if(self.timePeriod() === self.timePeriodLatest) {
+                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + "</span>";
+                    }else {
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
+                                start +
+                                "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" +
+                                end;
+                    }
+                    return dateTimeInfo;
                 }
 
                 var curDate = new Date();
@@ -698,24 +767,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.startTime(start.slice(10, 16));
                     self.endTime(end.slice(10, 16));
 
-                    var hyphenDisplay = "display: inline;";
-                    start = self.adjustDateMoreFriendly(start.slice(0, 10));
-                    end = self.adjustDateMoreFriendly(end.slice(0, 10));
-                    if(start === end) {
-                        end = "";
-                    }
-                    
-                    if(self.hideTimeSelection() === false) {
-                        start = start + " " + self.timeConverter.format(self.startTime());
-                        end = end + " " + self.timeConverter.format(self.endTime());
-                    }else {
-                        hyphenDisplay = end ? hyphenDisplay : "display: none;"
-                    }
-                    
-                    self.dateTimeInfo("<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
-                            start +
-                            "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" +
-                            end);
+                    self.dateTimeInfo(self.getDateTimeInfo(start.slice(0, 10), end.slice(0, 10), self.startTime(), self.endTime()));
                     
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
@@ -763,12 +815,16 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 self.focusOnStartDate = function (data, event) {
+                    self.setMinMaxDate(null, self.endDateISO());
+                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(1);
                 };
 
                 self.focusOnEndDate = function (data, event) {
+                    self.setMinMaxDate(self.startDateISO(), null);
+                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.id);
                     self.lastFocus(2);
@@ -778,11 +834,17 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
                     self.lastFocus(0);
+                    //when the focus is on start time, users can set start date using calendar.
+                    self.setMinMaxDate(null, self.endDateISO());
+                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                 };
                 self.focusOnEndTime = function (data, event) {
                     self.selectByDrawer(false);
                     self.setFocusOnInput(event.target.parentNode.parentNode.parentNode.id);
                     self.lastFocus(0);
+                    //when the focus is on end time, users can set start date using calendar.
+                    self.setMinMaxDate(null, self.endDateISO());
+                    setTimeout(function() {self.updateRange(self.startDate(), self.endDate())}, 0);
                 };
 
                 self.autoFocus = function (id) {
@@ -792,6 +854,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.changeDate = function (event, data, value) {
                     try {
+                        //make sure the date is valid.
                         var convertedDate = self.dateConverter2.format(oj.IntlConverterUtils.dateToLocalIso(new Date(data.value)));
                         if(convertedDate !== data.value) throw true;
                         
@@ -915,14 +978,21 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 };
 
-                //switch the calendar view to current time period by simulating "click" on "<" / ">"
+                /**
+                 * switch the calendar viwe to show start month and its next month by simulating "click" on "<" / ">"
+                 * @param {type} startYear
+                 * @param {type} startMonth
+                 * @returns {undefined}
+                 */
                 self.toStartMonth = function (startYear, startMonth) {
                     var curYears = new Array();
                     var curMonths = new Array();
                     var monthDiff, clickNumber = 0;
+                    var regExp = new RegExp(/\d{4}/);
 
                     $(self.panelId + " .oj-datepicker-year").each(function () {
-                        curYears.push($(this).text());
+                        var year = $(this).text();
+                        curYears.push(Number(year.match(regExp)[0]));
                     });
                     $(self.panelId + " .oj-datepicker-month").each(function () {
                         curMonths.push(self.monthObject()[$(this).text()]);
@@ -965,6 +1035,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 };
 
+                /**
+                 * set everyting to original state if not applied
+                 * @returns {undefined}
+                 */
                 self.setLastDatas = function () {
                     self.startDate(self.lastStartDate());
                     self.endDate(self.lastEndDate());
@@ -994,10 +1068,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     $(self.panelId + ' .drawer').css('font-weight', 'normal');
                     
                     if ($(event.target).text() !== self.timePeriodCustom) {
-//                        start = oj.IntlConverterUtils.dateToLocalIso(new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]));
-//                        end = oj.IntlConverterUtils.dateToLocalIso(curDate);
                         //just show window limit error in custom mode
                         self.beyondWindowLimitError(false);
+                        self.setMinMaxDate(null, null);
                         curDate = new Date();
                         if($(event.target).text() === self.timePeriodLatest) {
                             self.displayDateTimeSelection("none");
@@ -1033,7 +1106,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                     self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
 
-                    self.updateRange(self.startDate(), self.endDate());
+                    setTimeout(function(){self.updateRange(self.startDate(), self.endDate())}, 0);
                     $(event.target).focus();
                 };
 
@@ -1054,36 +1127,15 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.lastEndTime(self.endTime());
                     self.lastTimePeriod(self.timePeriod());
                    
-                    var hyphenDisplay = "display: inline;";
-                    var startToShow = self.adjustDateMoreFriendly(self.startDateISO().slice(0, 10));
-                    var endToShow = self.adjustDateMoreFriendly(self.endDateISO().slice(0, 10));
-                    //show "Today/Yesterday" only once
-                    if(startToShow === endToShow) {
-                        endToShow = "";
-                    }
-                    if(self.hideTimeSelection() === true) {
-//                        var start = self.dateConverter.format(self.startDateISO().slice(0, 10));
-//                        var end = self.dateConverter.format(self.endDateISO().slice(0, 10));
-                        var start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10));
-                        var end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10));
-                        //hide hyphen when time range is "Today-Today"/"Yesterday-Yesterday"
-                        hyphenDisplay = endToShow ? "display: inline;" : "display: none;"
-                    }else {
-//                        var start = self.dateTimeConverter.format(self.startDateISO().slice(0, 10) + self.startTime());
-//                        var end = self.dateTimeConverter.format(self.endDateISO().slice(0, 10) + self.endTime());
+                    if(self.hideTimeSelection() === false) {
                         var start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10) + self.startTime());
                         var end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10) + self.endTime());
-                        startToShow = startToShow + " " + self.timeConverter.format(self.startTime());
-                        endToShow = endToShow + " " + self.timeConverter.format(self.endTime());
+                    }else {
+                        var start = oj.IntlConverterUtils.isoToLocalDate(self.startDateISO().slice(0, 10));
+                        var end = oj.IntlConverterUtils.isoToLocalDate(self.endDateISO().slice(0, 10));
                     }
                     
-                    if(self.timePeriod() === self.timePeriodLatest) {
-                        self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + "</span>");
-                    }else {
-                        self.dateTimeInfo("<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + ": " + "</span>"
-                                + startToShow + "<span style='font-weight: bold;" + hyphenDisplay + "'> - </span>"
-                                + endToShow);
-                    }
+                    self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
                     
                     $(self.panelId).ojPopup("close");
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
@@ -1117,9 +1169,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var curYears = new Array();
                     var tmpMonths = new Array();
                     var curMonth, curDay, curDate;
+                    var regExp = new RegExp(/\d{4}/);
 
                     $(self.panelId + " .oj-datepicker-year").each(function () {
-                        curYears.push($(this).text().slice(0, 4));
+                        var year = $(this).text();
+                        curYears.push(Number(year.match(regExp)[0]));
                     });
                     $(self.panelId + " .oj-datepicker-month").each(function () {
                         tmpMonths.push(self.monthObject()[$(this).text()]);

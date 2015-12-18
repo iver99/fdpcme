@@ -61,13 +61,12 @@ dependencies {
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
         testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
         testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+'){ transitive = false }
-        testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
 	 testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
 	testConfig(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
-
+	testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 
 }
 

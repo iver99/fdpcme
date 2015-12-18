@@ -37,8 +37,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 //                if(params.reorder) {
 //                   self.reorder = params.reorder; 
 //                }
-                if(params.deleteTextCallBack) {
-                    self.deleteTextCallBack = params.deleteTextCallBack;
+                if(params.deleteTextCallback) {
+                    self.deleteTextCallback = params.deleteTextCallback;
                 }
                 if (params.builder) {
                     self.builder = params.builder;
@@ -268,7 +268,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 self.deleteEditor = function() {
                     $("#textWidget_"+self.randomId).remove();
                     self.tiles && self.tiles.remove(self.tile);
-                    self.deleteTextCallBack && self.deleteTextCallBack(self.tile);
+                    self.deleteTextCallback && self.deleteTextCallback(self.tile);
 //                    self.reorder && self.reorder();
                     self.show && self.show();
                 }

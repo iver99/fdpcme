@@ -329,7 +329,7 @@ public class DashBoardUtils {
 		
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		driver.click(DashBoardPageId.DateID1);
-		driver.click(DashBoardPageId.DateID2);
+		//driver.click(DashBoardPageId.DateID2);
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		driver.click(DashBoardPageId.ApplyBtnID);
 	}

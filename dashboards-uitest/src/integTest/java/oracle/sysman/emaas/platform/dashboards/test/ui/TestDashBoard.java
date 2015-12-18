@@ -163,9 +163,12 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.searchDashBoard("AAA_testDashboard");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.click(DashBoardPageId.InfoBtnID);
+		webd.takeScreenShot();
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.click(DashBoardPageId.RmBtnID);
+		webd.takeScreenShot();
 		
 		//click delete button
 		DashBoardUtils.clickDeleteButton();
@@ -238,11 +241,15 @@ public class TestDashBoard extends LoginAndLogout{
 					
 	}
 	
+
 	@Test(dependsOnMethods = { "testHomepage" })
 	public void testUserMenu() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testUserMenu");
+		
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check OOB delete protection
 		DashBoardUtils.searchDashBoard("Application Performance");
@@ -374,7 +381,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
-	@Test
+	/*@Test
 	public void testAWRLink() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -390,7 +397,7 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-	
+
 	
 	@Test
 	public void testFlexLink() throws Exception
@@ -408,7 +415,7 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/db-awrviewer-war/html/db-awr-analytics.html");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-
+*/
 	@Test
 	public void testTargetLink() throws Exception
 	{
@@ -426,7 +433,7 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(sub_str.substring(0,23),"emcta/ta/analytics.html");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-	
+	/*
 	@Test
 	public void testSoftwareLink() throws Exception
 	{
@@ -460,7 +467,7 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/warehouseadmin/html/admin-sources.html");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-	
+	*/
 	@Test
 	public void testEMPCDF_812_1() throws Exception
 	{

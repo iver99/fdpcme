@@ -2,7 +2,7 @@ define([
     'jquery', 
     'ojs/ojcore', 
     'uifwk/js/util/ajax-util',
-    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsgBundle'
+    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg'
 ],
     function($, oj, ajaxUtilModel, nls)
     {

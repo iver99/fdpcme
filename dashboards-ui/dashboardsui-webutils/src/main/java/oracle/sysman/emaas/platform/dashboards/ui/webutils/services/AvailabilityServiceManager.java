@@ -45,7 +45,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private static final String DASHBOARD_API_SERVICE_REL = "base";
 
 	private static final String DASHBOARD_COMMON_UI_SERVICE_NAME = "OMC-UI-Framework";
-	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "0.1";
+	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "1.0+";
 
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";

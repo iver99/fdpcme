@@ -5,7 +5,6 @@
  */
 
 define({
-  "root": {
 //      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
 //      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
       "DBS_HOME_TITLE_HOME": "Home",
@@ -173,7 +172,7 @@ define({
       "DBS_BUILDER_CHANGE_URL_TITLE": "Change URL",
       "DBS_BUILDER_TILE_ACTIONS": "Configure widget",
       "DBS_BUILDER_TILE_REFRESH": "Refresh",
-      "DBS_BUILDER_TILE_DELETE": "Delete",
+      "DBS_BUILDER_TILE_REMOVE": "Remove",
       "DBS_BUILDER_TILE_WIDER": "Wider",
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
       "DBS_BUILDER_TILE_TALLER": "Taller",
@@ -231,19 +230,12 @@ define({
       "LANDING_HOME_SELECT": "Select",
       "LANDING_HOME_ITA_DB_RESOURCE": "Resource Analytics - Database",
       "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Performance Analytics - Middleware",
-      "LANDING_HOME_ITA_MIDDLEWARE_DATASOURCE_PERFORMANCE": "Performance Analytics - Middleware Datasource",
       "LANDING_HOME_ITA_MIDDLEWARE_RESOURCE": "Resource Analytics - Middleware",
-      "LANDING_HOME_ITA_SEARCH": "Data Explorer - Search",
-      "LANDING_HOME_ITA_ANALYZE":"Data Explorer - Analyze",
-      "LANDING_HOME_ITA_AWR": "Data Explorer - AWR",
       "LANDING_HOME_DASHBOARDS": "Dashboards",
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
-      "LANDING_HOME_DATA_EXPLORERS_SEARCH": "Search",
-      "LANDING_HOME_DATA_EXPLORERS_ANALYZE": "Analyze",
-      "LANDING_HOME_DATA_EXPLORERS_AWR": "AWR",
-      "LANDING_HOME_DATA_EXPLORERS_LOG_ANALYTICS": "Log Analytics",
+      "LANDING_HOME_DATA_EXPLORER": "Data Explorer - ",
       
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",
@@ -260,7 +252,5 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
-      
-}
 });
 

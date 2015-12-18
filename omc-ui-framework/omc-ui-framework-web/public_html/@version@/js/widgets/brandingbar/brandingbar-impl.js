@@ -4,7 +4,7 @@ define([
     'uifwk/js/util/df-util', 
     'uifwk/js/util/message-util',
     'ojs/ojcore', 
-    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsgBundle',
+    'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojknockout', 
     'ojs/ojtoolbar', 
     'ojs/ojmenu', 
@@ -93,7 +93,7 @@ define([
                     "appName": "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI", 
                     "serviceName": "TenantManagementUI",
                     "version": self.SERVICE_VERSION,
-                    "helpTopicId": ""
+                    "helpTopicId": "em_home_gs"
                 };     
                 appMap[appIdError] = {
                     "appId": "Error",
@@ -221,7 +221,7 @@ define([
                 };
                 
                 //Open help link
-                var helpBaseUrl = "http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
+                var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 var helpTopicId = appProperties["helpTopicId"];
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
