@@ -34,7 +34,7 @@ def webRootSourceDir = 'public_html'
 
 configurations {
     restDoc { transitive = false }
-    enunciateCore { transitive = false }
+    
     ftpAntTask { transitive = false }
 }
 
@@ -464,50 +464,9 @@ task restDoc {
     inputs.files 'src/main/java/oracle/sysman/emaas/platform/dashboards/ui/web/rest'
     outputs.dir restDocOutputDir
 }
-restDoc << {
-    
-    // Declare the enunciate ant task
-    ant.taskdef (name: 'enunciate', 
-        classname: 'org.codehaus.enunciate.main.EnunciateTask',
-        classpath: configurations.enunciateCore.asPath)
-    
-    // Make the directory to store enunciate output
-    ant.mkdir(dir: "${restDocOutputDir}")
 
-    // Define classpath for running enunciate
-    ant.path(id:'enunciateRuntimePath') {
-        pathelement(path: configurations.restDoc.asPath)
-    }  
 
-    // Run the enunciate task
-    ant.enunciate(basedir: 'src/main/java/oracle/sysman/emaas/platform/dashboards/ui/web/rest/',
-            classpathRef: 'enunciateRuntimePath',
-            verbose: 'true', 
-            debug: 'true', 
-            configFile: 'enunciate.xml',
-            javacSourceVersion: '7') {
-        
-        include(name: '**/*.java')
-    exclude(name: '*/exception')
-        export(artifactId: 'docs', destination: restDocOutputDir)
-        javacArgument(argument: '-g')
-    }   
-}
 
-/**
- * FTP the REST API document to the ftp server
- */
-
-task ftpRestDoc << {
-    ant {
-        taskdef(name: 'ftp',
-                classname: 'org.apache.tools.ant.taskdefs.optional.net.FTP',
-                classpath: configurations.ftpAntTask.asPath)
-        ftp(server: ftpserver, userid: uidoc_username, password: uidoc_password, remotedir: remote_restdoc_dir) {
-            fileset(dir: "${restDocOutputDir}")
-        }
-    }
-}
 
 sourceSets {
     test{
@@ -571,17 +530,6 @@ dependencies {
     //compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
     //compile(group: 'emcs-ui-framework', name: 'emcs-ui-framework-common-dev', version: '1.3.1', ext: 'zip'){transitive = false}
     compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
-
-    enunciateCore 'org.codehaus.enunciate:enunciate-core:1.28'
-    restDoc(
-        [group: 'org.codehaus.enunciate', name: 'enunciate-core-rt', version: '1.28'],
-        [group: 'org.codehaus.enunciate', name: 'enunciate-core', version: '1.28'],
-        [group: 'org.codehaus.enunciate', name: 'enunciate-docs', version: '1.28'],
-        [group: 'org.codehaus.enunciate', name: 'enunciate-core-annotations', version: '1.28'],
-        [group: 'com.oracle.weblogic', name: 'jersey-core-1.17.1', version: '12.1.2-0-0'],
-        [group: 'com.oracle.weblogic', name: 'jersey-server-1.17.1', version: '12.1.2-0-0'],
-        [group: 'com.oracle.weblogic', name: 'jersey-servlet-1.17.1', version: '12.1.2-0-0']
-    )
     ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
         module('commons-net:commons-net:1.4.1') {
                 dependencies 'oro:oro:2.0.8:jar'
