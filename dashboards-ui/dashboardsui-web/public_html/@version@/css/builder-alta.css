@@ -214,6 +214,14 @@ body, html {
   content: url(../images/func_trashcan_16_dis.png);
 }
 
+.dbd-toolbar-icon-home:before {
+  content: url(../images/func_home_16_ena.png);
+}
+
+.dbd-toolbar-icon-favorites:before {
+  content: url(../images/func_star_16_ena.png);
+}
+
 .builder-toolbar-button-text {
   color: rgb(0, 0, 0);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
