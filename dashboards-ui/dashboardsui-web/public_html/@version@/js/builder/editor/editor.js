@@ -5,12 +5,12 @@
  */
 define(['knockout',
         'ojs/ojcore',
-        'knockout.mapping',
+        'dfutil',
         'builder/builder.core',
-        'builder/editor/tiles.grid'
+        'builder/editor/editor.grid'
     ], 
-    function(ko, oj, km) {
-        function TilesEditor(mode) {
+    function(ko, oj, dfu) {
+        function TilesEditor($b, mode) {
             var self = this;
             
             self.mode = mode;
@@ -27,11 +27,11 @@ define(['knockout',
                 self.tilesGrid.initializeGridRows(self.tilesGrid.size());
                 self.tilesGrid.changeMode(self.mode);
                 self.resetTiles();
-                if (self.mode.POSITION_TYPE === "BASED_ON_ROW_COLUMN")
+                if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_BASED_ON_ROW_COLUMN)
                     self.tilesReorder();
-                else if (self.mode.POSITION_TYPE === "FIND_SUITABLE_SPACE") {
-                    self.sortTilesByColumnsThenRows();
-//                    self.tilesGrid.initializeGridRows(self.tilesGrid.size());
+                else if (self.mode.POSITION_TYPE === Builder.EDITOR_POS_FIND_SUITABLE_SPACE) {
+                    self.sortTilesByRowsThenColumns();
+                    self.tilesGrid.setNullToGridRows(self.tilesGrid.size());
                     var startrow = 0, startcolumn = 0;
                     for(var i=0; i<self.tiles().length; i++) {
                         var tile = self.tiles()[i];
@@ -64,6 +64,19 @@ define(['knockout',
             self.push = function(tile) {
                 tile.clientGuid = getGuid();
                 self.tiles.push(tile);
+            };
+            
+            self.getMaximizedTile = function() {
+                if(!(self.tiles && self.tiles())) {
+                    return null;
+                }
+                for (var i = 0; i < self.tiles().length; i++) {
+                    var tile = self.tiles()[i];
+                    if (tile && tile.isMaximized && tile.isMaximized()) {
+                    	return tile;
+                    }
+                }
+                return null;
             };
             
             self.configure = function(tile) {
@@ -163,12 +176,14 @@ define(['knockout',
                var maxy = Math.min(maxy1, maxy2);
                return (minx<maxx) && (miny<maxy);               
             };
-                        
+
             self.updateTilePosition = function(tile, row, column) {
                 if (tile.row() !== null && tile.column() !== null)
                     self.tilesGrid.unregisterTileInGrid(tile);
-                self.mode.setModeRow(tile, row);
-                self.mode.setModeColumn(tile, column);
+                tile.row(row);
+                self.mode.resetModeRow(tile, row);
+                tile.column(column);
+                self.mode.resetModeColumn(tile, column);
                 self.tilesGrid.registerTileToGrid(tile);
             };
             
@@ -207,6 +222,16 @@ define(['knockout',
                         return tile1.column() - tile2.column();
                     else
                         return tile1.row() - tile2.row();
+                });
+            };
+            
+            self.sortTilesByRowsThenColumns = function() {
+                // note that sort is based on the internal position, not the mode position
+                self.tiles.sort(function(tile1, tile2) {
+                    if (tile1.row() !== tile2.row())
+                        return tile1.row() - tile2.row();
+                    else
+                        return tile1.column() - tile2.column();
                 });
             };
                         
@@ -439,6 +464,122 @@ define(['knockout',
                         }
                     }
                 }
+            };
+            
+            self.getCellFromPosition = function(widgetAreaWidth, position) {
+                var row = 0, height = 0;
+                var grid = self.tilesGrid;
+                for (; row < grid.size(); row++) {
+                    height += grid.getRowHeight(row);
+                    if (position.top < (height >= Builder.DEFAULT_HEIGHT / 2 ? height : Builder.DEFAULT_HEIGHT / 2))
+                        break;
+                }
+                var columnWidth = widgetAreaWidth / self.mode.MODE_MAX_COLUMNS;
+                var column = Math.round(position.left / columnWidth);
+                column = (column <= 0) ? 0 : (column >= self.mode.MODE_MAX_COLUMNS ? self.mode.MODE_MAX_COLUMNS - 1 : column);
+                return new Builder.Cell(row, column);
+            };
+            
+            self.createNewTile = function(name, description, width, height, widget, timeSelectorModel, targetContext, loadImmediately) {
+                if (!widget)
+                    return null;
+                
+                var newTile = null;
+                
+                var koc_name = widget.WIDGET_KOC_NAME;
+                var template = widget.WIDGET_TEMPLATE;
+                var viewmodel = widget.WIDGET_VIEWMODEL;
+                var provider_name = widget.PROVIDER_NAME;
+                var provider_version = widget.PROVIDER_VERSION;
+                var provider_asset_root = widget.PROVIDER_ASSET_ROOT;
+                var widget_source = widget.WIDGET_SOURCE;
+                widget.width = widget.WIDGET_DEFAULT_WIDTH ? widget.WIDGET_DEFAULT_WIDTH : width;
+                widget.height = widget.WIDGET_DEFAULT_HEIGHT ? widget.WIDGET_DEFAULT_HEIGHT: height;
+                widget.column = null;
+                widget.row = null;
+                widget.type = "DEFAULT";
+                    if (widget_source===null || widget_source===undefined){
+                        widget_source=1;
+                    }
+
+                    if (koc_name && viewmodel && template) {
+                        if (widget_source===1){
+                             if (!ko.components.isRegistered(koc_name)) {
+                                var assetRoot = dfu.df_util_widget_lookup_assetRootUrl(provider_name,provider_version,provider_asset_root, true);
+                                if (assetRoot===null){
+                                    oj.Logger.error("Unable to find asset root: PROVIDER_NAME=["+provider_name+"], PROVIDER_VERSION=["+provider_version+"], PROVIDER_ASSET_ROOT=["+provider_asset_root+"]");
+                                }
+                                ko.components.register(koc_name,{
+                                      viewModel:{require:assetRoot+viewmodel},
+                                      template:{require:'text!'+assetRoot+template}
+                                  }); 
+                                oj.Logger.log("widget: "+koc_name+" is registered");
+                                oj.Logger.log("widget template: "+assetRoot+template);
+                                oj.Logger.log("widget viewmodel:: "+assetRoot+viewmodel);    
+                            }
+
+                            newTile =new Builder.DashboardTile(self.mode, $b.dashboard, koc_name, name, description, widget, timeSelectorModel, targetContext, loadImmediately);
+                            var tileCell;
+                            if(!(self.tiles && self.tiles().length > 0)) {
+                                tileCell = new Builder.Cell(0, 0);
+                            }else{
+                                tileCell = self.calAvailablePositionForTile(newTile, 0, 0);
+                            }
+                            newTile.row(tileCell.row);
+                            newTile.column(tileCell.column);
+                            self.tilesGrid.registerTileToGrid(newTile);
+//                                if (newTile && widget.WIDGET_GROUP_NAME==='IT Analytics'){
+//                                    var worksheetName = 'WS_4_QDG_WIDGET';
+//                                    var workSheetCreatedBy = 'sysman';
+//                                    var qdgId = 'chart1';
+//                                    var ssfUrl = '/sso.static/savedsearch.categories'; 
+//                                    if (ssfUrl && ssfUrl !== '') {
+//                                        var href = ssfUrl + '/search/'+widget.WIDGET_UNIQUE_ID;
+//                                        var widgetDetails = null;
+//                                        dfu.ajaxWithRetry({
+//                                            url: href,
+//                                            headers: dfu.getSavedSearchServiceRequestHeader(),
+//                                            success: function(data, textStatus) {
+//                                                widgetDetails = data;
+//                                            },
+//                                            error: function(xhr, textStatus, errorThrown){
+//                                                console.log('Error when get widget details!');
+//                                            },
+//                                            async: false
+//                                        });
+//
+//                                        if (widgetDetails){
+//                                            if (widgetDetails.parameters instanceof Array && widgetDetails.parameters.length>0){
+//                                               widget.parameters = {};
+//                                               for(var i=0;i<widgetDetails.parameters.length;i++){
+//                                                   widget.parameters[widgetDetails.parameters[i]["name"]] = widgetDetails.parameters[i]["value"];
+//                                               }
+//                                            }                        
+//                                        }
+//                                    }
+//                                    
+//                                    // specific parameters for ita which is required. Retrieve them from SSF
+//                                    if (widget.parameters["ITA_WIDGET_WORKSHEETNAME"])
+//                                        worksheetName = widget.parameters["ITA_WIDGET_WORKSHEETNAME"];
+//                                    if (widget.parameters["ITA_WIDGET_CREATEDBY"])
+//                                        workSheetCreatedBy = widget.parameters["ITA_WIDGET_CREATEDBY"];
+//                                    if (widget.parameters["ITA_WIDGET_QDGID"])
+//                                        qdgId = widget.parameters["ITA_WIDGET_QDGID"];
+//
+//                                    newTile.worksheetName = worksheetName;
+//                                    newTile.createdBy = workSheetCreatedBy;
+//                                    newTile.qdgId = qdgId;  
+//                                }
+                        } 
+                        else {
+                            oj.Logger.error("Invalid WIDGET_SOURCE: "+widget_source);
+                        }
+                    }
+                    else {
+                        oj.Logger.error("Invalid input: KOC_NAME=["+koc_name+"], Template=["+template+"], ViewModel=["+viewmodel+"]");
+                    }
+//                    } 
+                return newTile;
             };
         };
         

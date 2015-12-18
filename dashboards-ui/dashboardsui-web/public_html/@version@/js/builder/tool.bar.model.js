@@ -8,21 +8,21 @@ define(['knockout',
         'dfutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
-        'builder/tool-bar/edit-dialog',
-        'builder/tool-bar/duplicate-dialog',
-        "uifwk/js/util/preference-util",
+        'builder/tool-bar/edit.dialog',
+        'builder/tool-bar/duplicate.dialog',
+        'uifwk/js/util/preference-util',
         'builder/builder.core'
     ], 
     function(ko, $, dfu, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         
-        function ToolBarModel($b, tilesViewModel) {
+        function ToolBarModel($b) {
             var self = this;
             self.dashboard = $b.dashboard;
-            self.tilesViewModel = tilesViewModel;
+            self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b.dashboard, self);
-            self.duplicateDashboardModel = new dd.DuplicateDashboardModel(tilesViewModel);
+            self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
 
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
@@ -287,17 +287,17 @@ define(['knockout',
 
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
-                        try {
-                                if (!self.okChangeDashboardName())
-                                        return;  // validator not passed, so do not save
-                        }
-                        catch (e) {
+                    try {
+                        if (!self.okChangeDashboardName())
+                            return;  // validator not passed, so do not save
+                    }
+                    catch (e) {
                         oj.Logger.error(e);
-                                return;
-                        }
+                        return;
+                    }
                 }
                 if (self.isDescriptionUnderEdit()) {
-                        self.okChangeDashboardDescription();
+                    self.okChangeDashboardDescription();
                 }
                 var outputData = self.getSummary(self.dashboardId, self.dashboardName(), self.dashboardDescription(), self.tilesViewModel);
                 outputData.eventType = "SAVE";
@@ -305,22 +305,22 @@ define(['knockout',
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
                     ssu.getBase64ScreenShot('#tiles-wrapper', 314, 165, 0.8, function(data) {
                         outputData.screenShot = data;
-                        tilesViewModel.dashboard.screenShot = ko.observable(data);  
+                        self.tilesViewModel.dashboard.screenShot = ko.observable(data);  
                         self.handleSaveUpdateDashboard(outputData);
                     });                
                 }
                 else {
-                    tilesViewModel.dashboard.screenShot = ko.observable(null);
+                    self.tilesViewModel.dashboard.screenShot = ko.observable(null);
                     self.handleSaveUpdateDashboard(outputData);
                 }
             };
 
             self.handleSaveUpdateDashboard = function(outputData) {
-                if (window.opener && window.opener.childMessageListener) {
-                    var jsonValue = JSON.stringify(outputData);
-                    console.log(jsonValue);
-                    window.opener.childMessageListener(jsonValue);
-                }
+//                if (window.opener && window.opener.childMessageListener) {
+//                    var jsonValue = JSON.stringify(outputData);
+//                    console.log(jsonValue);
+//                    window.opener.childMessageListener(jsonValue);
+//                }
                 self.handleSaveUpdateToServer(function() {
                     dfu.showMessage({
                             type: 'confirm',
@@ -334,7 +334,7 @@ define(['knockout',
             };
 
             self.handleSaveUpdateToServer = function(succCallback, errorCallback) {
-                var dbdJs = ko.mapping.toJS(tilesViewModel.dashboard, {
+                var dbdJs = ko.mapping.toJS(self.tilesViewModel.dashboard, {
                     'include': ['screenShot', 'description', 'height', 
                         'isMaximized', 'title', 'type', 'width', 
                         'tileParameters', 'name', 'systemParameter', 
@@ -351,11 +351,11 @@ define(['knockout',
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
-                var dashboardId = tilesViewModel.dashboard.id();
+                var dashboardId = self.tilesViewModel.dashboard.id();
                 Builder.updateDashboard(dashboardId, dashboardJSON, function() {
                         succCallback && succCallback();
                 }, function(error) {
-                    console.log(error.errorMessage());
+                    console.error(error.errorMessage());
                     errorCallback && errorCallback(error);
                 });
             };
@@ -384,16 +384,16 @@ define(['knockout',
             };
 
             self.HandleAddTextWidget = function() {
-                var maximizedTile = tilesViewModel.getMaximizedTile();
+                var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
                 if (maximizedTile)
-                    tilesViewModel.restore(maximizedTile);
-                tilesViewModel.AppendTextTile();
+                    self.tilesViewModel.restore(maximizedTile);
+                self.tilesViewModel.appendTextTile();
             };
 
             self.openAddWidgetDialog = function() {
-                var maximizedTile = tilesViewModel.getMaximizedTile();
+                var maximizedTile = self.tilesViewModel.editor.getMaximizedTile();
                 if (maximizedTile)
-                        tilesViewModel.restore(maximizedTile);
+                    self.tilesViewModel.restore(maximizedTile);
                 $('#'+addWidgetDialogId).ojDialog('open');
             };
 
@@ -406,7 +406,7 @@ define(['knockout',
                     $("#addWidgetToolTip").css("display", "none");
                 else if (hasContent === false)
                     $("#addWidgetToolTip").css("display", "block");
-                else if (tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
+                else if (self.tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
                     $("#addWidgetToolTip").css("display", "block");
                 }else {
                     $("#addWidgetToolTip").css("display", "none");

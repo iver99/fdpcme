@@ -53,20 +53,10 @@ define(['knockout',
             };
         }
         
-        
-        function Cell(row, column) {
-            var self = this;
-            
-            self.row = row;
-            self.column = column;
-        }
-        
         Builder.registerModule(TileItem, 'TileItem');
         Builder.registerModule(TextTileItem, 'TextTileItem');
-        Builder.registerModule(Cell, 'Cell');
         
         return {"TileItem": TileItem, 
-            "TextTileItem": TextTileItem, 
-            "Cell": Cell};
+            "TextTileItem": TextTileItem};
     }
 );

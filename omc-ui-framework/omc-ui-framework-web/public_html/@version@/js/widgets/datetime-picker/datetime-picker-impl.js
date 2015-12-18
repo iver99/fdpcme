@@ -1079,6 +1079,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }else {
                             self.displayDateTimeSelection("inline");
                             start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
+                            //calculate timezone difference to solve issues caused by daylight saving.
+                            var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
+                            start = new Date(start.getTime() - timezoneDiffInMillis);
                             end = curDate;
                             if(self.adjustLastX) {
                                 var adjustedTime = self.adjustLastX(start, end);

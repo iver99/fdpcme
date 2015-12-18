@@ -9,21 +9,20 @@ define(['knockout',
         'ojs/ojcore',
         'dfutil',
         'builder/dashboard.tile.model',
-        'builder/builder.tiles'
+        'builder/editor/editor.tiles'
     ], 
     function(ko, $, oj, dfu, dtm) {
-
         function getTileDefaultWidth(wgt, mode) {
-                if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
-                        return wgt.WIDGET_DEFAULT_WIDTH;
-                return Builder.BUILDER_DEFAULT_TILE_WIDTH;
+            if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
+                    return wgt.WIDGET_DEFAULT_WIDTH;
+            return Builder.BUILDER_DEFAULT_TILE_WIDTH;
         };
         Builder.registerFunction(getTileDefaultWidth, 'getTileDefaultWidth');
 
         function getTileDefaultHeight(wgt, mode) {
-                if (wgt && (typeof wgt.WIDGET_DEFAULT_HEIGHT==='number') && (wgt.WIDGET_DEFAULT_HEIGHT%1)===0 && wgt.WIDGET_DEFAULT_HEIGHT >= 1)
-                        return wgt.WIDGET_DEFAULT_HEIGHT;
-                return Builder.BUILDER_DEFAULT_TILE_HEIGHT;
+            if (wgt && (typeof wgt.WIDGET_DEFAULT_HEIGHT==='number') && (wgt.WIDGET_DEFAULT_HEIGHT%1)===0 && wgt.WIDGET_DEFAULT_HEIGHT >= 1)
+                    return wgt.WIDGET_DEFAULT_HEIGHT;
+            return Builder.BUILDER_DEFAULT_TILE_HEIGHT;
         };
         Builder.registerFunction(getTileDefaultHeight, 'getTileDefaultHeight');
 
@@ -321,5 +320,14 @@ define(['knockout',
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
         };
         Builder.registerFunction(getGuid, 'getGuid');
+        
+        function isSmallMediaQuery() {
+            var smQuery = oj.ResponsiveUtils.getFrameworkQuery(
+                                oj.ResponsiveUtils.FRAMEWORK_QUERY_KEY.SM_ONLY);
+            var smObservable = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
+            window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable&smObservable()));
+            return smObservable & smObservable();
+        };
+        Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
     }
 );
