@@ -80,6 +80,7 @@ define({
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later or contact Oracle Support Services if it persists.",
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
+       "DATETIME_PICKER_DROP_DOWN": "Drop Down",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 minutes",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 minutes",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 minutes",
