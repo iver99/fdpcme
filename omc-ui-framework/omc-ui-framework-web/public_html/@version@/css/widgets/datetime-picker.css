@@ -34,8 +34,6 @@
 .drawer {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
-    font-weight: normal;
-    background-color: #f0f0f0;
     color: #333333;
     border-width: 1px;
     border-style: solid;
@@ -48,9 +46,14 @@
     display: block;
 }
 
+.drawerNotChosen {
+    background-color:  #f0f0f0 !important;
+    font-weight: normal !important;
+}
+
 .drawerChosen {
-    background-color:  #ffffff;
-    font-weight: bold;
+    background-color:  #ffffff !important;
+    font-weight: bold !important;
 }
 
 .drawerNotToShow {
@@ -65,8 +68,8 @@
 }
 
 .pickerPanel {
-    /*width: 510px;*/
-    /*height: 396px;*/
+    width: 510px;
+    height: 387px;
     float: right;
     padding-top: 10px;
     padding-right: 10px;
