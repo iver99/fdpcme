@@ -20,6 +20,7 @@ define(['knockout',
             var self = this;
             self.dashboard = $b.dashboard;
             self.tilesViewModel = tilesViewModel;
+            self.currentUser = dfu.getUserName();
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b.dashboard, self);
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel(tilesViewModel);
 
@@ -40,7 +41,7 @@ define(['knockout',
                 self.dashboardDescription = ko.observable("Description of sample dashboard. You can use dashboard builder to view/edit dashboard");
             }
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
-            self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard());
+            self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
 
             if (window.DEV_MODE) { // for dev mode debug only
@@ -410,6 +411,29 @@ define(['knockout',
                     $("#addWidgetToolTip").css("display", "none");
                 }  
             };
+            
+            self.handleShareUnshare = function() {
+                var _shareState = self.dashboard.sharePublic();
+                var _url = "/sso.static/dashboards.service/";
+                if (dfu.isDevMode()) {
+                        _url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
+                }
+                dfu.ajaxWithRetry(_url + self.dashboard.id() + "/quickUpdate", {
+                        type: 'PUT',
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify({sharePublic: (_shareState === true ? false : true)}),
+                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        success: function (result) {
+                            //self.sharePublic(_shareState === true ? false : true);
+                            self.dashboard.sharePublic(_shareState === true ? false : true);
+                            $("#share_cfmDialog").ojDialog("close"); 
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                        }
+                    });
+            };
 
             self.initialize();
 
@@ -426,25 +450,31 @@ define(['knockout',
                 $( "#dbs_cfmDialog" ).ojDialog( "open" ); 
                 $('#dbs_dcbtn').focus();
             };
-            self.isSystemDashboard = self.dashboard.systemDashboard();
+            
+            self.openShareConfirmDialog = function() {
+                //self.handleShareUnshare();
+                $("#share_cfmDialog").ojDialog("open"); 
+            };
+            
+            //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_ADD'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_add",
-                    "onclick": self.isSystemDashboard ? "" : self.openAddWidgetDialog,
-                    "icon": self.isSystemDashboard ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
+                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
+                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
                     "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.isSystemDashboard
+                    "disabled": self.editDisabled() === true
                 },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_edit",
-                    "onclick": self.isSystemDashboard ? "" : self.openDashboardEditDialog,
-                    "icon": self.isSystemDashboard ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
+                    "onclick": self.editDisabled() === true ? "" : self.openDashboardEditDialog,
+                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
                     "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
-                    "disabled": self.isSystemDashboard
+                    "disabled": self.editDisabled() === true
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
@@ -459,10 +489,10 @@ define(['knockout',
                     "label": getNlsString('COMMON_BTN_DELETE'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_delete",
-                    "onclick": self.isSystemDashboard ? "" : self.openDashboardDeleteConfirmDialog,
-                    "icon": self.isSystemDashboard ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
+                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
+                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
                     "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-                    "disabled": self.isSystemDashboard
+                    "disabled": self.editDisabled() === true
                 }
             ];
             //Dashboard Options ======end=======
