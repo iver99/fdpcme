@@ -23,12 +23,13 @@ define(['knockout',
         function DashboardTilesView($b) {
             var self = this;
             self.dashboard = $b.dashboard;
+            $b.registerObject(this, 'DashboardTilesView');
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
                 $('#tiles-col-container').css("left", leftWidth);
                 $('#tiles-col-container').width(width - leftWidth);
                 $('#tiles-col-container').height(height - topHeight);               
-//                console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
+//                window.DEV_MODE && console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
             
             self.getTileElement = function(tile) {
@@ -98,11 +99,11 @@ define(['knockout',
                         return;
                     var top = parseInt(target.css("top")), left = parseInt(target.css("left"));
                     if (!isNaN(top) && !isNaN(left) && target.position() && target.position().left !== 0 && target.position().top !== 0) {
-//                        console.debug("old target position: top-" + target.css("top") + ", left-" + target.css("left"));
+//                        window.DEV_MODE && console.debug("old target position: top-" + target.css("top") + ", left-" + target.css("left"));
                         target.css("top", top - $('#headerWrapper').outerHeight() - $('#head-bar-container').outerHeight() + $("#tiles-col-container").scrollTop());
                         target.css("left", left - $("#dbd-left-panel").width());
                         elem.cacheLeft = target.css("left");
-//                        console.debug("new target position: top-" + target.css("top") + ", left-" + target.css("left"));
+//                        window.DEV_MODE && console.debug("new target position: top-" + target.css("top") + ", left-" + target.css("left"));
                     }
                 }
             };

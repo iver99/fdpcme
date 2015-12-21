@@ -177,7 +177,7 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.takeScreenShot();
 					
 	}
-	/*
+	
 	@Test
 	public void testCreateSpecialDashBoard() throws Exception
 	{
@@ -248,6 +248,9 @@ public class TestDashBoard extends LoginAndLogout{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testUserMenu");
 		
+		DashBoardUtils.clickGVButton();
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		
 		//check OOB delete protection
 		DashBoardUtils.searchDashBoard("Application Performance");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -275,7 +278,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//webd.click(DashBoardPageId.SignOutID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-	*/
+	
 	@Test
 	public void testHomeLink() throws Exception
 	{
