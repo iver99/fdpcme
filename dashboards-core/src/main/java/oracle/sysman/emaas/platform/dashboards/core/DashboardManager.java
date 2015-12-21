@@ -230,8 +230,10 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			String currentUser = UserContext.getCurrentUser();
-			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
-				throw new DashboardNotFoundException();
+			if (ed.getSharePublic().intValue() == 0) {
+				if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+					throw new DashboardNotFoundException();
+				}
 			}
 			if (!isDashboardAccessbyCurrentTenant(ed)) {
 				throw new DashboardNotFoundException();
@@ -274,10 +276,13 @@ public class DashboardManager
 			}
 			String currentUser = UserContext.getCurrentUser();
 			// user can access owned or system dashboard
-			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
-				logger.debug("Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
-						dashboardId, currentUser);
-				throw new DashboardNotFoundException();
+			if (ed.getSharePublic().intValue() == 0) {
+				if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+					logger.debug(
+							"Dashboard with id {} is not found for it's a non-OOB dashboard and not owned by current user {}",
+							dashboardId, currentUser);
+					throw new DashboardNotFoundException();
+				}
 			}
 			if (!isDashboardAccessbyCurrentTenant(ed)) {
 				logger.debug("Dashboard with id {} is not found for it can't be accessed by current tenant", dashboardId);
@@ -304,7 +309,7 @@ public class DashboardManager
 			return null;
 		}
 		String currentUser = UserContext.getCurrentUser();
-		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
+		String jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 or d.sharePublic = 1) and d.deleted = ?3";
 		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
 		EntityManager em = null;
 		try {
@@ -557,7 +562,7 @@ public class DashboardManager
 			// no subscribe apps
 			sb = new StringBuilder(
 					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
-							+ "where p.deleted = 0 and p.tenant_Id = ?2 and p.owner = ?3 ");
+							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3) ");
 			index = 4;
 		}
 		else {
@@ -573,7 +578,7 @@ public class DashboardManager
 			//11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
 			sb = new StringBuilder(
 					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
-							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.owner = ?3 or (p.is_system = 1 and p.application_type in ("
+							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3 or (p.is_system = 1 and p.application_type in ("
 							+ sbApps.toString() + "))) ");
 
 			index = 4;
@@ -660,8 +665,8 @@ public class DashboardManager
 			}
 
 			if (!ic) {
-				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?" + index++
-						+ " )) ");
+				sb.append(" or p.dashboard_Id in (select t.dashboard_Id from Ems_Dashboard_Tile t where t.type <> 1 and t.title like ?"
+						+ index++ + " )) ");
 				paramList.add("%" + queryString + "%");
 			}
 			else {
@@ -924,6 +929,10 @@ public class DashboardManager
 			if (DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
 				throw new CommonSecurityException(
 						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
+			}
+			if (!currentUser.equals(ed.getOwner())) {
+				throw new CommonSecurityException(
+						MessageUtils.getDefaultBundleString(CommonSecurityException.DASHBOARD_ACTION_REQUIRE_OWNER));
 			}
 			ed = dbd.getPersistenceEntity(ed);
 			ed.setLastModificationDate(DateUtil.getCurrentUTCTime());
