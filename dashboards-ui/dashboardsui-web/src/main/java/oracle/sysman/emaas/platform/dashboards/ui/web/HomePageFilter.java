@@ -56,7 +56,7 @@ public class HomePageFilter implements Filter
 	private static final String HOME_PAGE_PREFERENCE_KEY = "Dashboards.homeDashboardId";
 	private static final String AUTH_CRED_PATH = "oam/server/auth_cred_submit";
 	private static final String SERVICE_NAME = "Dashboard-API";
-	private static final String VERSION = "1.0";
+	private static final String VERSION = "0.1";
 	private static final String PATH = "static/dashboards.preferences";
 
 	@Override
@@ -107,45 +107,47 @@ public class HomePageFilter implements Filter
 		String value = "";
 		CloseableHttpClient client = HttpClients.createDefault();
 		Link link = RegistryLookupUtil.getServiceInternalLink(SERVICE_NAME, VERSION, PATH, domainName);	
-		String href = link.getHref();
-		String url = href + "/" + HOME_PAGE_PREFERENCE_KEY;
-		HttpGet get = new HttpGet(url);
-		get.addHeader(USER_IDENTITY_DOMAIN_NAME, domainName);
-		get.addHeader(AUTHORIZATION, authorization);
-		get.addHeader(REMOTE_USER, remoteUser);
-		CloseableHttpResponse response = null;
-		try {
-			response = client.execute(get);
-		}
-		catch (ClientProtocolException e) {
-			logger.error(e.getLocalizedMessage(), e);
-		}
-		catch (IOException e) {
-			logger.error(e.getLocalizedMessage(), e);
-		}
-		InputStream instream = null;
-		try {
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				try {
-					instream = entity.getContent();
-					value = getStrFromInputSteam(instream);
+		if (link != null) {
+			String href = link.getHref();
+			String url = href + "/" + HOME_PAGE_PREFERENCE_KEY;
+			HttpGet get = new HttpGet(url);
+			get.addHeader(USER_IDENTITY_DOMAIN_NAME, domainName);
+			get.addHeader(AUTHORIZATION, authorization);
+			get.addHeader(REMOTE_USER, remoteUser);
+			CloseableHttpResponse response = null;
+			try {
+				response = client.execute(get);
+			}
+			catch (ClientProtocolException e) {
+				logger.error(e.getLocalizedMessage(), e);
+			}
+			catch (IOException e) {
+				logger.error(e.getLocalizedMessage(), e);
+			}
+			InputStream instream = null;
+			try {
+				HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					try {
+						instream = entity.getContent();
+						value = getStrFromInputSteam(instream);
+					}
+					catch (IllegalStateException e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
+					catch (IOException e) {
+						logger.error(e.getLocalizedMessage(), e);
+					}
 				}
-				catch (IllegalStateException e) {
-					logger.error(e.getLocalizedMessage(), e);
+			}
+			finally {
+				try {
+					instream.close();
+					response.close();
 				}
 				catch (IOException e) {
 					logger.error(e.getLocalizedMessage(), e);
 				}
-			}
-		}
-		finally {
-			try {
-				instream.close();
-				response.close();
-			}
-			catch (IOException e) {
-				logger.error(e.getLocalizedMessage(), e);
 			}
 		}
 		return value;
