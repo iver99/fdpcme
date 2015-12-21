@@ -132,7 +132,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
 
-            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, isContentLengthValid);            
+            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback);            
         }
         Builder.registerModule(DashboardTextTile, 'DashboardTextTile');
 
@@ -174,7 +174,7 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
-        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback, isContentLengthValid) {
+        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
             if(!tile) {
                 return;
             }
@@ -191,7 +191,7 @@ define(['knockout',
     //                reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
-                validator: isContentLengthValid,
+                validator: Builder.isContentLengthValid,
                 builder: $b
             };
 

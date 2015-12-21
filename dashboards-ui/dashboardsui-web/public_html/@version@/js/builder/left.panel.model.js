@@ -45,6 +45,7 @@ define(['knockout',
         function LeftPanelModel($b) {
             var self = this;
             self.dashboard = $b.dashboard;
+            $b.registerObject(this, 'LeftPanelModel');
 
             self.keyword = ko.observable('');
             self.page = ko.observable(1);
@@ -90,23 +91,23 @@ define(['knockout',
             };
 
             self.initialize = function() {
-    //                if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
-    //                    self.completelyHidden(true);
-    //                    $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
-    //                }
-                self.completelyHidden(true);
-                $b.triggerBuilderResizeEvent('Hide left panel in sprint47');
+                    if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
+                        self.completelyHidden(true);
+                        $b.triggerBuilderResizeEvent('OOB dashboard detected and hide left panel');
+                    }
+//                self.completelyHidden(true);
+//                $b.triggerBuilderResizeEvent('Hide left panel in sprint47');
 
-    //                self.initEventHandlers();
-    //                self.loadWidgets();
-    //                self.initDraggable();
-    //                self.checkAndDisableLinkDraggable();
-    //                $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
-    //                    var replacedValue = this.value.replace(/[^0-9\.]/g, '');
-    //                    if (this.value !== replacedValue) {
-    //                        this.value = replacedValue;
-    //                    }
-    //                });
+                    self.initEventHandlers();
+                    self.loadWidgets();
+                    self.initDraggable();
+                    self.checkAndDisableLinkDraggable();
+                    $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
+                        var replacedValue = this.value.replace(/[^0-9\.]/g, '');
+                        if (this.value !== replacedValue) {
+                            this.value = replacedValue;
+                        }
+                    });
             };
 
             self.initEventHandlers = function() {
@@ -175,6 +176,8 @@ define(['knockout',
 
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
                 $('#dbd-left-panel').height(height - topHeight);
+//                $('#right-panel-content').height(height - topHeight - $('#right-panel-design').height() - $('#right-panel-settings').height());
+                $('#right-panel-content').css('max-height', height - topHeight - $('#right-panel-design').height() - $('#right-panel-settings').height());
                 $('#left-panel-text-helper').css("width", width - 20);
             };
 
@@ -264,6 +267,20 @@ define(['knockout',
                 if (self.keyword()) {
                     self.keyword(null);
                     self.searchWidgetsClicked();
+                }
+            };
+            
+            self.toggleLeftPanel = function() {
+                if (!self.completelyHidden()) {
+                    self.completelyHidden(true);
+                    $('#right-panel-toggler').css('right', '0');
+                    $b.triggerBuilderResizeEvent('hide left panel');
+                } 
+                else {
+                    self.completelyHidden(false);
+                    $('#right-panel-toggler').css('right', '217px');
+                    self.initDraggable();
+                    $b.triggerBuilderResizeEvent('show left panel');
                 }
             };
 

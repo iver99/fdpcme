@@ -26,10 +26,10 @@ define(['knockout',
             $b.registerObject(this, 'DashboardTilesView');
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
-                $('#tiles-col-container').css("left", leftWidth);
+//                $('#tiles-col-container').css("right", leftWidth);
                 $('#tiles-col-container').width(width - leftWidth);
                 $('#tiles-col-container').height(height - topHeight);               
-//                window.DEV_MODE && console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
+//                window.DEV_MODE && console.debug('tiles-col-container rightright set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
             
             self.getTileElement = function(tile) {

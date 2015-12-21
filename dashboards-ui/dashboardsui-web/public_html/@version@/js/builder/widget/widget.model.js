@@ -5,7 +5,7 @@
  */
 
 define(['jquery',
-        'uifwk/js/util/df-util',
+        'dfutil',
         'builder/builder.core'], function($, dfu) {
     function WidgetDataSource() {
         var self = this;

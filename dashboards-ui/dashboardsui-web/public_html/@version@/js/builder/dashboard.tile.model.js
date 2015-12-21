@@ -79,7 +79,15 @@ define(['knockout',
             
             self.openAddWidgetDialog = function() {
                 $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
-             };
+            };
+             
+            self.rightPanelStatus = ko.observableArray(['shown']);
+            self.rightPanelShown = ko.observable(true);
+            self.toggleRightPanel = function() {
+                $b.getLeftPanelModel().toggleLeftPanel();
+                self.rightPanelShown(!self.rightPanelShown());
+                self.rightPanelStatus(self.rightPanelShown() ? ['shown'] : []);
+            };
             
             self.appendTextTile = function () {
                 var newTextTile;
@@ -584,7 +592,7 @@ define(['knockout',
                 $('#tile-dragging-placeholder').hide();
                 tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
                 var wgt = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                var width = getTileDefaultWidth(wgt), height = getTileDefaultHeight(wgt);
+                var width = Builder.getTileDefaultWidth(wgt), height = Builder.getTileDefaultHeight(wgt);
                 tilesToBeOccupied = self.editor.getTilesToBeOccupied(cell, width, height);
                 tilesToBeOccupied && self.editor.highlightTiles(tilesToBeOccupied);
                 self.previousDragCell = cell; 
@@ -619,13 +627,13 @@ define(['knockout',
                     if (!cell) return;
                     tile = u.helper.tile;
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                    var width = getTileDefaultWidth(widget), height = getTileDefaultHeight(widget);
+                    var width = Builder.getTileDefaultWidth(widget), height = Builder.getTileDefaultHeight(widget);
                     if(cell.column>self.editor.mode.MODE_MAX_COLUMNS-width) {
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
                         tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targetContext, false);
-                        initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targetContext);
+                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targetContext);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -699,7 +707,7 @@ define(['knockout',
                     cell.column = 0;
                     tile = u.helper.tile;
                     if (!u.helper.tile) {
-                        tile = new Builder.DashboardTextTile($b, Builder.createTextWidget(self.editor.mode.MODE_MAX_COLUMNS), self.show, self.editor.deleteTile);
+                        tile = new Builder.DashboardTextTile(self.editor.mode, $b, Builder.createTextWidget(self.editor.mode.MODE_MAX_COLUMNS), self.show, self.editor.deleteTile);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                     }
