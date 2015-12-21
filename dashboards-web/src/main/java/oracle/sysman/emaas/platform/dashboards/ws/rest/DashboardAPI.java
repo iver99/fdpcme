@@ -245,6 +245,73 @@ public class DashboardAPI extends APIBase
 	}
 
 	@PUT
+	@Path("{id: [1-9][0-9]*}/quickUpdate")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response quickUpdateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") long dashboardId, JSONObject inputJson)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/quickUpdate",
+				dashboardId);
+		logkeyHeaders("quickUpdateDashboard()", userTenant, tenantIdParam);
+		String name = null;
+		String description = null;
+		Boolean share = null;
+		try {
+			if (inputJson.has("name")) {
+				name = inputJson.getString("name");
+			}
+			if (inputJson.has("description")) {
+				description = inputJson.getString("description");
+			}
+			if (inputJson.has("sharePublic")) {
+				share = inputJson.getBoolean("sharePublic");
+			}
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			ErrorEntity error = new ErrorEntity(new IOException("Can't parse input parameters.", e));
+			return buildErrorResponse(error);
+		}
+
+		DashboardManager dm = DashboardManager.getInstance();
+		try {
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			Dashboard input = dm.getDashboardById(dashboardId, tenantId);
+			if (input.getIsSystem() != null && input.getIsSystem()) {
+				throw new CommonSecurityException(
+						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR));
+			}
+			if (name != null) {
+				input.setName(name);
+			}
+			if (description != null) {
+				input.setDescription(description);
+			}
+			if (share != null) {
+				input.setSharePublic(share);
+			}
+			String screenShot = dm.getDashboardBase64ScreenShotById(dashboardId, tenantId);
+			input.setScreenShot(screenShot); //set screen shot back otherwise it will be cleared
+			Dashboard dbd = dm.updateDashboard(input, tenantId);
+			updateDashboardAllHref(dbd, tenantIdParam);
+			return Response.ok(getJsonUtil().toJson(dbd)).build();
+		}
+		catch (DashboardException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
+
+	@PUT
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateDashboard(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
