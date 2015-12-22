@@ -274,6 +274,14 @@ define(['knockout',
                     self.searchWidgetsClicked();
                 }
             };
+             
+            self.rightPanelStatus = ko.observableArray(['shown']);
+            self.rightPanelShown = ko.observable(true);
+            self.toggleRightPanel = function() {
+                self.toggleLeftPanel();
+                self.rightPanelShown(!self.rightPanelShown());
+                self.rightPanelStatus(self.rightPanelShown() ? ['shown'] : []);
+            };
             
             self.toggleLeftPanel = function() {
                 if (!self.completelyHidden()) {

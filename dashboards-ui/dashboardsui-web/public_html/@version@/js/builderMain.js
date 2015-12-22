@@ -202,7 +202,7 @@ require(['knockout',
                     for (var i = 0; i < dashboard.tiles().length; i++) {
                         var tile = dashboard.tiles()[i];
                         if(tile.type() === "TEXT_WIDGET") {
-                            Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, Builder.isContentLengthValid);
+                            Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                         }else {
                             Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
                         }
