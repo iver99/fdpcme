@@ -113,7 +113,7 @@ require(['knockout',
     'ojs/ojcheckboxset',
     'ojs/ojpopup',
     'builder/builder.core',
-    'builder/left.panel.model',
+    'builder/right.panel.model',
     'builder/builder.functions',
     'builder/dashboard.tile.model',
     'builder/dashboard.tile.view',
@@ -239,9 +239,9 @@ require(['knockout',
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                 tilesViewModel.initialize();
                 ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                var leftPanelModel = new Builder.LeftPanelModel($b);
-                ko.applyBindings(leftPanelModel, $('#dbd-left-panel')[0]);
-                leftPanelModel.initialize();
+                var rightPanelModel = new Builder.RightPanelModel($b);
+                ko.applyBindings(rightPanelModel, $('#dbd-left-panel')[0]);
+                rightPanelModel.initialize();
                 new Builder.ResizableView($b);
 
                 $("#loading").hide();

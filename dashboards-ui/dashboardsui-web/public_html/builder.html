@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-
+  
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -435,21 +435,21 @@
                     <div id="" data-bind="ojComponent: {component: 'ojButtonset', checked: rightPanelStatus}" 
                          class="oj-buttonset oj-component oj-component-initnode" 
                          role="toolbar">
-                        <label for="buttonIcon1"></label>
-                        <input type="checkbox" id="buttonIcon1" value="shown" style="display: block;"
+                        <label for="toggle-right-panel-btn"></label>
+                        <input type="checkbox" id="toggle-right-panel-btn" value="shown" style="display: block;"
                                data-bind="ojComponent: {
                                     checked: rightPanelShown,
                                     component:'ojButton', 
                                     display: 'icons', 
                                     icons: {start:'oj-icon right-panel-toggler-icon-toggle'}, 
-                                    label: 'Toggle button with icon only'
+                                    label: getNlsString(rightPanelShown() ? 'DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL' : 'DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL')
                                }, click: toggleRightPanel"/>
                     </div>
                     <button data-bind="ojComponent: {
                         component:'ojButton', 
                         display: 'icons', 
                         icons: {start:'oj-icon right-panel-toggler-icon-help'}, 
-                        label: 'home'}"></button>
+                        label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>
                 </div>
                 <!-- ko stopBinding: true -->
                 <div id="dbd-left-panel" class="dbd-left-panel-show"
@@ -484,7 +484,7 @@
                         </div>
                         <div id="dbd-left-panel-widgets" class="fit-size">
                             <div class="oj-col stretch-width" data-bind="foreach: widgets">
-                                <div class="dbd-left-panel-widget">
+                                <div class="dbd-left-panel-widget" data-bind="attr: {id: 'widget-item-'+WIDGET_UNIQUE_ID()}">
                                     <div class="dbd-left-panel-widget-text"
                                                 data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
                                         <span data-bind="text:WIDGET_NAME"></span>
@@ -537,8 +537,13 @@
                         <div>
                             <div id="dbd-left-panel-footer-text">
                                 <div class="oj-row">
-                                    <div id="dbd-left-panel-text" class="oj-col oj-sm-6 oj-md-6 oj-lg-6">
-                                        <div id="dbd-left-panel-text-handle" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT')"></div>
+                                    <span style="font-weight: bold; color: gray;">Page Elements</span>
+                                </div>
+                                <div class="oj-row">
+                                    <div id="dbd-left-panel-text" class="oj-col oj-sm-12" style="margin-top: 5px; padding-right: 0;">
+                                        <div class="oj-col oj-sm-12" id="dbd-left-panel-text-handle" 
+                                             data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT')"></div>
+                                        <div class="oj-col oj-sm-12" id="dbd-left-panel-text-desc"><i><small>Add text to the page.</small></i></div>
                                         <div id="left-panel-text-helper" class="left-panel-text-helper">
                                             <p><span id="left-panel-text-helper-content" 
                                                      data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT_HELPER')"><span></p>
@@ -557,7 +562,7 @@
                     <div id="right-panel-settings">
                         <span>Settings</span>
                         <div>
-                            <div class="oj-row" style="margin-top: 10px;">
+                            <div class="oj-row">
                                 <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12" data-bind="enable showTimeControl">
                                     <span class="oj-form-control oj-choice-row">
                                         <input id="show-time-selector" type="checkbox" 

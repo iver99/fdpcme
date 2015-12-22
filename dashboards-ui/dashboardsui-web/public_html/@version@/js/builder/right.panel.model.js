@@ -40,12 +40,10 @@ define(['knockout',
             self.initialize();
         }
         
-        
-        
-        function LeftPanelModel($b) {
+        function RightPanelModel($b) {
             var self = this;
             self.dashboard = $b.dashboard;
-            $b.registerObject(this, 'LeftPanelModel');
+            $b.registerObject(this, 'RightPanelModel');
 
             self.keyword = ko.observable('');
             self.page = ko.observable(1);
@@ -177,7 +175,14 @@ define(['knockout',
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
                 $('#dbd-left-panel').height(height - topHeight);
 //                $('#right-panel-content').height(height - topHeight - $('#right-panel-design').height() - $('#right-panel-settings').height());
+//                console.debug('Right panel height=', height);
                 $('#right-panel-content').css('max-height', height - topHeight - $('#right-panel-design').height() - $('#right-panel-settings').height());
+//                console.debug('Height-topHeight=', (height-topHeight));
+                var collapsibleHeaderHeight = $('#right-panel-content .oj-collapsible-header').outerHeight();
+//                console.debug('accordion header height=', collapsibleHeaderHeight);
+                var contentHeight = height - topHeight - 3*collapsibleHeaderHeight + 2;
+//                console.debug('accordion content height=', contentHeight);
+                $('#dbd-left-panel .oj-collapsible-wrapper').css('height', contentHeight);
                 $('#left-panel-text-helper').css("width", width - 20);
             };
 
@@ -304,9 +309,9 @@ define(['knockout',
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
                 if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
-                   $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-goto-'+widget.WIDGET_UNIQUE_ID()), 
+                   $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-item-'+widget.WIDGET_UNIQUE_ID()), 
                    {
-                       my : "start center", at : "end+35 center"
+                       my : "end center", at : "start-35 center"
                    });
                }
             };
@@ -324,10 +329,10 @@ define(['knockout',
             };
         }
         
-        Builder.registerModule(LeftPanelModel, 'LeftPanelModel');
+        Builder.registerModule(RightPanelModel, 'RightPanelModel');
         Builder.registerModule(ResizableView, 'ResizableView');
 
-        return {"LeftPanelModel": LeftPanelModel, "ResizableView": ResizableView};
+        return {"RightPanelModel": RightPanelModel, "ResizableView": ResizableView};
     }
 );
 

@@ -528,10 +528,20 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-bottom: 1px solid #d6dfe6;
 }
 
+#dbd-left-panel .oj-collapsible-content {
+    height: 100%;
+}
+
 #dbd-left-panel #right-panel-content .oj-collapsible-content {
     padding-right: 0;
     padding-left: 0;
+    padding-bottom: 0;
     border-right: 0;
+}
+
+#dbd-left-panel #right-panel-settings .oj-collapsible-content {
+    padding-right: 0;
+    padding-left: 0;
 }
 
 #dbd-left-panel-header {
@@ -659,13 +669,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 #dbd-left-panel-footer {
-    height: 210px;
+    height: 176px;
 }
 
 #dbd-left-panel-footer-text {
-    height: 30px; 
-    border-top: 1px solid #d6dfe6; 
-    padding-top: 10px;
+    height: 300px;
 }
 
 #dbd-left-panel-text {

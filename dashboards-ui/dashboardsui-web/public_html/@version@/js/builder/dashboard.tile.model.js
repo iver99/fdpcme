@@ -84,7 +84,7 @@ define(['knockout',
             self.rightPanelStatus = ko.observableArray(['shown']);
             self.rightPanelShown = ko.observable(true);
             self.toggleRightPanel = function() {
-                $b.getLeftPanelModel().toggleLeftPanel();
+                $b.getRightPanelModel().toggleLeftPanel();
                 self.rightPanelShown(!self.rightPanelShown());
                 self.rightPanelStatus(self.rightPanelShown() ? ['shown'] : []);
             };
