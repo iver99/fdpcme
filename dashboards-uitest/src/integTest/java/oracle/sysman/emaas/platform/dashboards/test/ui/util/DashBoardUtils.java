@@ -129,12 +129,16 @@ public class DashBoardUtils {
 		String widgetName;
 		
 		driver.getLogger().info("start to test in addWidget");
-		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
+		//waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		//driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 		
-		driver.getLogger().info("add widget button is found");
-		driver.takeScreenShot();
+		//driver.getLogger().info("add widget button is found");
+		//driver.takeScreenShot();
 		waitForMilliSeconds(3*DashBoardPageId.Delaytime_long);
+		
+		driver.getLogger().info("verify dashboard title and description");
+		driver.getLogger().info(getText(DashBoardPageId.DashboardNameID));
+		driver.getLogger().info(getText(DashBoardPageId.DashboardDescID));
 		//verify title and desc of dashboard
 		/*if( getText(DashBoardPageId.DashboardNameID) == null)
 		{
@@ -145,11 +149,13 @@ public class DashBoardUtils {
 			Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),dbname);//"AAA_testDashboard");
 			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),dbdesc);//"AAA_testDashBoard desc");
 		}
-		driver.getLogger().info("before clicking add widget button");		
+		driver.getLogger().info("start clicking add widget button");		
+		driver.takeScreenShot();
+		driver.click(DashBoardPageId.OptionsID);
 		driver.takeScreenShot();
 		driver.click(DashBoardPageId.WidgetAddButtonID);
 		
-		driver.getLogger().info("after clicking add widget button");		
+		driver.getLogger().info("finish clicking add widget button");		
 		driver.takeScreenShot();
 		widgetName = WidgetPageId.widgetName;
 		
