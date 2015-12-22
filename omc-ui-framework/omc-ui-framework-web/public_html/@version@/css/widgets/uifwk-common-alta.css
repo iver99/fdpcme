@@ -27,16 +27,8 @@ a:hover {
     display: inline-block;
 }
 
-/*.fa-link:before {
-  content: "\f0c1"; 
-}
-
 .fa-star:before {
   content: "\f005"; }
-
-.fa-history:before {
-  content: "\f1da"; 
-}*/
 
 .fa-cogs:before {
   content: "\f085"; }
@@ -52,14 +44,12 @@ a:hover {
 
 .fa-notification:before {
   content: "\f0a2"; 
-  /*color: #0CA3D1;*/
   color: #454545;
   font-size: larger;
 }
 
 .fa-compass:before {
   content: "\f14e"; 
-  /*color: #0CA3D1;*/
   color: #454545;
   font-size: larger;
 }
@@ -86,17 +76,23 @@ a:hover {
 #links_menu .oj-row{
     height:24px;
     line-height: 24px;
+    width: 186px;
+    max-width: 186px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
 #links_menu .links-content-container{
-    margin : 30px auto; 
+    margin : 30px auto;
     width: 100%;
-    text-align:center; 
+    text-align: center;
 }
 .headerMenuItem {
-    width: 24%;
+    width: 19%;
     display: inline-block;
     vertical-align: top;
-    min-width: 330px;
+    min-width: 300px;
 }
 #links_menu .iconCircle {
     width: 100px;
@@ -113,66 +109,86 @@ a:hover {
 .headerMenuText {
     display: inline-block;
     vertical-align: top;
-    margin-left: 20px;
-    text-align:left; 
+    margin-left: 10px;
+    text-align:left;
 }
-@media screen and (max-width: 1331px) and (min-width:1000px) {
+@media screen and (max-width: 1578px) and (min-width:1274px) {
+    .headerMenuItem {
+        min-width:fit-content;
+    }
+    #links_menu .oj-row{
+        max-width: 128px;
+    }
+}
+@media screen and (max-width: 1273px) and (min-width:1020px) {
     #links_menu .links-content-container {
-        margin : 30px auto;
-        min-width: 1000px;
         text-align:left; 
     }
     .headerMenuItem {
-        /*width: 300px;*/
+        min-width: 252px;
         display: inline-block;
         vertical-align: top;
     }
-     .headerMenuItem:first-child {
-        margin-bottom: 30px;
+    #links_menu .oj-row{
+        max-width: 128px;
     }
-}
-@media screen and (max-width: 1000px) and (min-width:670px) {
-    #links_menu .links-content-container {
-        margin : 30px auto;
-        min-width: 670px;
-        text-align:left; 
-    }
-    .headerMenuItem {
-        /*width: 300px;*/
-        display: inline-block;
-        vertical-align: top;
-    }
-     .headerMenuItem:first-child {
-        margin-bottom: 30px;
-    }
-}
-@media screen and (max-width: 670px) {
-    #links_menu .links-content-container {
-        margin : 30px auto;
-        min-width: 330px;
-        text-align:left; 
-    }
-        
-    .headerMenuItem {
-        /*width: 300px;*/
-        display: inline-block;
-        margin-top: 30px;
-        vertical-align: top;
-    }
-    
     .headerMenuItem:first-child {
-        margin-top: 0px;
+        margin-bottom: 30px;
+    }
+    .headerMenuItem:last-child {
+        min-width: 300px;
+    }
+    #links_menu .links-content-container .headerMenuItem:last-child .oj-row{
+        max-width: 186px;
     }
 }
-/*#iconLink{
-    background-color: #ed813e;
+@media screen and (max-width: 1019px) and (min-width:908px) {
+    #links_menu .links-content-container {
+        text-align:left; 
+    }
+    .headerMenuItem {
+        min-width: 300px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .headerMenuItem:first-child {
+        margin-bottom: 30px;
+    }
 }
-#iconStar{
-    background-color: #5a68ad;
+@media screen and (max-width: 907px) and (min-width:621px) {
+    #links_menu .links-content-container {
+        text-align:left; 
+    }
+    .headerMenuItem {
+        min-width: 300px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .headerMenuItem:first-child {
+        margin-bottom: 30px;
+    }
+    .headerMenuItem:last-child {
+        margin-top: 30px;
+    }
 }
-#iconHistory{
-    background-color: #3caf85;
-}*/
+@media screen and (max-width: 620px) {
+    #links_menu .links-content-container {
+        text-align:left; 
+    }
+    .headerMenuItem {
+        min-width: 300px;
+        display: inline-block;
+        vertical-align: top;
+        margin-bottom: 30px;
+    }
+    .headerMenuItem:last-child {
+        margin-bottom: 0px;
+    }
+}
+
+#iconFavorites{
+    background-color: #fbce4a;
+}
 #iconCogs{
     background-color: #3caf85;
 }
@@ -299,127 +315,92 @@ a:hover {
   cursor: default;
 }
 
-/*@media screen and (max-width: 1023px) {*/
-    .emaas-appheader-lite .emaas-appheader-seperator {
-        display: none;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-oneline {
-        display: none;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-twoline {
-        display: block;
-        padding-top: 2px;
-    }
-    .emaas-appheader-toolbar{
-        height:44px;
-    }
-    .emaas-appheader-toolbar-button {
-        height:44px;
-        line-height: 44px;
-    }
-    .emaas-appheader-toolbar-button-icon {
-        width:32px;
-        height:32px;
-        vertical-align: middle;
-    }
-    .fa-notification:before {
-        font-size:xx-large;
-    }
-    .fa-compass:before {
-        font-size:xx-large;
-    }
-/*}*/
-/*@media screen and (min-width: 1024px) {
-    .emaas-appheader-lite .emaas-appheader-seperator {
-        display: inline-block;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-oneline {
-        display: inline-block;
-        padding-left: 10px;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-twoline {
-        display: none;
-    }
-    .emaas-appheader-toolbar-button {
-        height:27px;
-        line-height: 27px;
-    }
-    .emaas-appheader-toolbar-button-icon {
-        width:24px;
-        height:24px;
-    }
-}*/
+.emaas-appheader-lite .emaas-appheader-seperator {
+    display: none;
+}
+.emaas-appheader-lite .emaas-appheader-appname-oneline {
+    display: none;
+}
+.emaas-appheader-lite .emaas-appheader-appname-twoline {
+    display: block;
+    padding-top: 2px;
+}
+.emaas-appheader-toolbar{
+    height:44px;
+}
+.emaas-appheader-toolbar-button {
+    height:44px;
+    line-height: 44px;
+}
+.emaas-appheader-toolbar-button-icon {
+    width:32px;
+    height:32px;
+    vertical-align: middle;
+}
+.fa-notification:before {
+    font-size:xx-large;
+}
+.fa-compass:before {
+    font-size:xx-large;
+}
 
 .emaas-appheader-message-box {
-        padding-left: 30px;
-        min-height: 36px;
-        vertical-align: middle;
-        line-height: 36px;
-        overflow: hidden;
-    }
-    .emaas-appheader-message-box-error {
-        background-color: #FFDFDF;
-        border-bottom: 1px #ffc5c5; 
-    }
-    .emaas-appheader-message-box-warn {
-        background-color: #FFEACA; 
-        border-bottom: 1px #ffe0b0; 
-    }
-    .emaas-appheader-message-box-confirm {
-        background-color: #D6F1DE;
-        border-bottom: 1px #c3ebcf;
-    }
-    .emaas-appheader-message-box-info {
-        background-color: #D9EDF8;
-        border-bottom: 1px #bfe4f8; 
-    }
-    .emaas-appheader-message-box-tool {
-        background-color: #f0f0f0;
-        border-bottom: 1px #c4ced7; 
-    }
-    .emaas-appheader-message {
-        font-size:14px;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: bold;
-        color: #333333;
-        text-align: left;
-        /*padding-left:10px;*/
-    }
-    .emaas-appheader-message-summary {
-        font-weight: bold;
-    }
-    .emaas-appheader-message-detail {
-        font-weight: normal;
-        padding-left:10px;
-    }
-    .emaas-appheader-message-icon{
-        vertical-align: middle;
-        height:16px;
-        width:16px;
-    }
-    .emaas-appheader-message-textbox {
-        padding-left:10px;
-        line-height: 20px;
-    }
-    .emaas-appheader-message-table-cell {
-        display: table-cell;
-    }
-    .emaas-appheader-message-icon-clear {
-        cursor: pointer;
-    }
-    .emaas-warn-msg-table-cell {
-        display:table-cell;
-        vertical-align: top;
-    }
-/*    .emaas-appheader-message-icon-error:before{
-        content:url("../images/stat_error_16.png")
-    }
-    .emaas-appheader-message-icon-warn:before{
-        content:url("../images/stat_warn_16.png")
-    }
-    .emaas-appheader-message-icon-confirm:before{
-        content:url("../images/stat_confirm_16.png")
-    }
-    .emaas-appheader-message-icon-info:before{
-        content:url("../images/stat_info_16.png")
-    }*/
+    padding-left: 30px;
+    min-height: 36px;
+    vertical-align: middle;
+    line-height: 36px;
+    overflow: hidden;
+}
+.emaas-appheader-message-box-error {
+    background-color: #FFDFDF;
+    border-bottom: 1px #ffc5c5; 
+}
+.emaas-appheader-message-box-warn {
+    background-color: #FFEACA; 
+    border-bottom: 1px #ffe0b0; 
+}
+.emaas-appheader-message-box-confirm {
+    background-color: #D6F1DE;
+    border-bottom: 1px #c3ebcf;
+}
+.emaas-appheader-message-box-info {
+    background-color: #D9EDF8;
+    border-bottom: 1px #bfe4f8; 
+}
+.emaas-appheader-message-box-tool {
+    background-color: #f0f0f0;
+    border-bottom: 1px #c4ced7; 
+}
+.emaas-appheader-message {
+    font-size:14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    color: #333333;
+    text-align: left;
+}
+.emaas-appheader-message-summary {
+    font-weight: bold;
+}
+.emaas-appheader-message-detail {
+    font-weight: normal;
+    padding-left:10px;
+}
+.emaas-appheader-message-icon{
+    vertical-align: middle;
+    height:16px;
+    width:16px;
+}
+.emaas-appheader-message-textbox {
+    padding-left:10px;
+    line-height: 20px;
+}
+.emaas-appheader-message-table-cell {
+    display: table-cell;
+}
+.emaas-appheader-message-icon-clear {
+    cursor: pointer;
+}
+.emaas-warn-msg-table-cell {
+    display:table-cell;
+    vertical-align: top;
+}

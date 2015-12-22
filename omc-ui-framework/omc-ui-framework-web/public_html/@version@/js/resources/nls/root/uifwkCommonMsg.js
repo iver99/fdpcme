@@ -20,6 +20,7 @@ define({
       "BRANDING_BAR_MENU_ABOUT": "About",
       "BRANDING_BAR_MENU_SIGN_OUT": "Sign Out",
       "BRANDING_BAR_LINKS_BTN_LABEL": "Links",
+      "BRANDING_BAR_NAV_FAVORITES_LABEL": "Favorites",
       "BRANDING_BAR_NAV_DASHBOARDS_LABEL": "Dashboards",
       "BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL": "Cloud Services",
       "BRANDING_BAR_NAV_HOME_LABEL": "Home",
