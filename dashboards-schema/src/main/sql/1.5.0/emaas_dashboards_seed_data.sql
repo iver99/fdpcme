@@ -17,3 +17,6 @@ Rem    MODIFIED   (MM/DD/YY)
 Rem    guochen  12/22/15 - Created
 Rem
 
+DEFINE TENANT_ID = '&1'
+SET FEEDBACK ON
+SET SERVEROUTPUT ON
