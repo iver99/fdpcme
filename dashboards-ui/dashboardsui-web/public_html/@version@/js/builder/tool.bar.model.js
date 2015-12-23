@@ -655,6 +655,15 @@ define(['knockout',
                     "disabled": self.editDisabled() === true
                 },
                 {
+                    "label": getNlsString('COMMON_BTN_DELETE'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_delete",
+                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
+                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
+                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
+                    "disabled": self.editDisabled() === true
+                },
+                {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_duplicate",
@@ -680,15 +689,6 @@ define(['knockout',
                     "icon": "dbd-toolbar-icon-home",
                     "title": self.setAsHomeLabel,
                     "disabled": false
-                },
-                {
-                    "label": getNlsString('COMMON_BTN_DELETE'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_delete",
-                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
-                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-                    "disabled": self.editDisabled() === true
                 }
             ];
             //Dashboard Options ======end=======
