@@ -226,6 +226,13 @@
                         <ul id="dashboardOptsMenu" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
+                          <li data-bind="css: {'oj-disabled': editDisabled() === true}">
+                                <a id="emcpdf_dsbopts_share" data-bind="attr:{'title': dashboard.sharePublic() === true ? getNlsString('COMMON_TEXT_SHARE_TITLE') : getNlsString('COMMON_TEXT_UNSHARE_TITLE')}, 
+                                                   href: '', click: editDisabled() === true ? null : openShareConfirmDialog">
+                                    <span class="oj-menu-item-icon oj-fwk-icon" 
+                                          data-bind="css: (editDisabled() === true ? (dashboard.sharePublic() === false ? 'dbd-toolbar-icon-share-disabled': 'dbd-toolbar-icon-unshare-disabled') : (dashboard.sharePublic() === false ? 'dbd-toolbar-icon-share': 'dbd-toolbar-icon-unshare'))"></span>
+                                    <span data-bind="text: dashboard.sharePublic() === false ? getNlsString('COMMON_TEXT_SHARE') : getNlsString('COMMON_TEXT_UNSHARE')"></span></a>
+                          </li>
                         </ul>
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
@@ -268,8 +275,23 @@
                                  <br/><span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_DETAIL')"></span><br/>
                     </div>-->
                 </div>
-                
-                <!-- edit Dashboard dilog start -->
+                    <!-- share dilog start -->
+                    <div style="display:none" id="share_cfmDialog"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <span class="oj-dialog-title" data-bind="text: dashboard.sharePublic() === false ? getNlsString('COMMON_SHARE_DAHBOARD_DIALOG_TILE') : getNlsString('COMMON_UNSHARE_DAHBOARD_DIALOG_TILE')"></span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <p data-bind="html: dashboard.sharePublic() === false ? getNlsString('COMMON_SHARE_DAHBOARD_DIALOG_CONTENT', dashboardName()) : getNlsString('COMMON_UNSHARE_DAHBOARD_DIALOG_CONTENT', dashboardName())"></p>
+                        </div>
+                        <div class="oj-dialog-footer">
+                            <button data-bind="click: handleShareUnshare, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_OK'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                        </div>
+                    </div>
+                    <!-- share dilog end -->
+                    <!-- edit Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
