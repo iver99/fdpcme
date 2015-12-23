@@ -28,17 +28,23 @@ import com.jayway.restassured.response.Response;
  */
 public class CommonUIUtils
 {
-	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
+	//static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
-	static String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
-	static String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
+	//static String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
+	//static String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
 	static String sAuthToken = CommonUIUtils.getEmaasPropertyValue("SAAS_AUTH_TOKEN");
 	static String sAPIUrl = CommonUIUtils.getEmaasPropertyValue("DASHBOARD_API_ENDPOINT");
+
+	static String sRolesUrl = CommonUIUtils.getEmaasPropertyValue("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
 
 	static String sCommonUiUrlSuffix = CommonUIUtils.getEmaasPropertyValue("COMMON_UI_URL_SUFFIX");
 
 	static String sAppName = "";
+	
+	static Boolean isAPMAdmin = false;
+	static Boolean isITAAdmin = false;
+	static Boolean isLAAdmin = false;
 
 	public static void commonUITestLog(String sDesc)
 	{
@@ -129,6 +135,20 @@ public class CommonUIUtils
 					}
 				}
 			}
+			else if (sProperty.equals("TARGETMODEL_SERVICE_SHARD_ENDPOINT")) {
+				sPropertyValue = emaasProp.getProperty("TARGETMODEL_SERVICE_SHARD_ENDPOINT");
+				if (sPropertyValue == null) {
+					CommonUIUtils.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property value is null ... set it to a different value.");
+					sRolesUrl = CommonUIUtils.getEmaasPropertyValue("EMCS_NODE2_HOSTNAME");
+					if (sRolesUrl == null) {
+						sPropertyValue = null;
+					}
+					else {
+						CommonUIUtils.commonUITestLog("The TARGETMODEL_SERVICE_SHARD_ENDPOINT property is '" + sRolesUrl + "'.");
+						sPropertyValue = "http://"+sRolesUrl + ":7004/targetmodel";
+					}
+				}
+			}
 			else {
 				sPropertyValue = emaasProp.getProperty(sProperty);
 			}
@@ -159,7 +179,40 @@ public class CommonUIUtils
 
 	}
 
-	public static void InitValue()
+	public static void getRoles(String sTenant, String sUser)
+	{
+		String sTempRolsUrl = sRolesUrl.substring(sRolesUrl.length()-11);
+		RestAssured.useRelaxedHTTPSValidation();
+		RestAssured.baseURI = sTempRolsUrl+"authorization/ws/api/v1/";
+
+		Response res1 = RestAssured
+				.given()
+				.contentType(ContentType.JSON)
+				.log()
+				.everything()
+				.headers("OAM-REMOTE-USER", sTenant + "." + sUser,
+						"Authorization", sAuthToken).when().get("/roles/grants/getRoles?grantee="+sTenant+"."+sUser);
+		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
+		String s_rolename = res1.jsonPath().getString("roleNames");
+		CommonUIUtils.commonUITestLog("The response content is:" + s_rolename);
+		String[] ls_rolename = s_appname.split(",");
+		for (int i = 0; i < ls_appname.length; i++) {
+			CommonUIUtils.commonUITestLog(i + " : " + ls_rolename[i]);
+			if (ls_rolename[i].equals("APM Administrator")) {
+				isAPMAdmin = true;
+			}
+			else if (ls_rolename[i].equals("IT Analytics Administrator")) {
+				isITAAdmin = true;
+			}
+			else if (ls_rolename[i].contains("Log Analytics Administrator")) {
+				isLAAdmin = true;
+			}
+		}
+		//CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
+
+	}
+
+	public static String getAppName(String sTenant, String sUser)
 	{
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = sAPIUrl;
@@ -169,7 +222,7 @@ public class CommonUIUtils
 				.contentType(ContentType.JSON)
 				.log()
 				.everything()
-				.headers("X-USER-IDENTITY-DOMAIN-NAME", sTenantId, "X-REMOTE-USER", sTenantId + "." + sSsoUserName,
+				.headers("X-USER-IDENTITY-DOMAIN-NAME", sTenant, "X-REMOTE-USER", sTenant + "." + sUser,
 						"Authorization", sAuthToken).when().get("/subscribedapps");
 		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
 		String s_appname = res1.jsonPath().getString("applications");
@@ -203,10 +256,10 @@ public class CommonUIUtils
 			}
 		}
 		CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
-
+		
 	}
 
-	public static Boolean loginCommonUI(WebDriver driver)
+	public static Boolean loginCommonUI(WebDriver driver, String sUser, String sPassword)
 	{
 
 		String sCommonUiUrl = "";
@@ -221,13 +274,13 @@ public class CommonUIUtils
 		}
 
 		driver.getLogger().info("Supply credentials and doLogin()");
-		LoginUtils.doLogin(driver, sSsoUserName, sSsoPassword, sTenantId, sCommonUiUrl);
+		LoginUtils.doLogin(driver, sUser, sSsoPassword, sPassword, sCommonUiUrl);
 
 		return true;
 
 	}
 
-	public static Boolean loginCommonUI(WebDriver driver, String parameters)
+	public static Boolean loginCommonUI(WebDriver driver, String parameters, String sUser, String sPassword)
 	{
 
 		String sCommonUiUrl = "";
@@ -242,7 +295,7 @@ public class CommonUIUtils
 		}
 
 		driver.getLogger().info("Supply credentials and doLogin()");
-		LoginUtils.doLogin(driver, sSsoUserName, sSsoPassword, sTenantId, sCommonUiUrl);
+		LoginUtils.doLogin(driver, sUser, sPassword, sTenantId, sCommonUiUrl);
 
 		return true;
 
@@ -254,5 +307,122 @@ public class CommonUIUtils
 			LoginUtils.doLogout(driver);
 			driver.shutdownBrowser(true);
 		}
+	}
+
+public static void verifyPageContent(WebDriver driver, String sAppName) throws Exception
+	{
+		//verify the product name,app name,content of page
+		driver.getLogger().info("Verify the page content");
+		Assert.assertTrue(driver.isElementPresent(UIControls.sOracleImage));
+		Assert.assertEquals(driver.getAttribute(UIControls.sOracleImage + "@alt"), "Oracle");
+		Assert.assertTrue(driver.isElementPresent(UIControls.sProductText));
+		driver.getLogger().info("The Product is:  " + driver.getText(UIControls.sProductText));
+		Assert.assertEquals(driver.getText(UIControls.sProductText), "Management Cloud");
+		Assert.assertTrue(driver.isElementPresent(UIControls.sAppText));
+		driver.getLogger().info("The App is:  " + sAppName);
+		Assert.assertEquals(driver.getText(UIControls.sAppText), sAppName);
+		Assert.assertTrue(driver.isElementPresent(UIControls.sPageText));
+		driver.getLogger().info("The page content is:  " + driver.getText(UIControls.sPageText));
+		Assert.assertEquals(driver.getText(UIControls.sPageText),
+		"Sample page for OMC UI Framework components testing only");
+		Assert.assertTrue(driver.isElementPresent(UIControls.sCompassIcon));
+		Assert.assertTrue(driver.isElementPresent(UIControls.sAddWidgetIcon));		
+	}
+
+	public static void verifyMenu(WebDriver driver, boolean isAdmin) throws Exception
+	{
+		//verify the menus
+		driver.getLogger().info("Verify the Links menu displayed");
+		driver.getLogger().info("The Link menu is:  " + driver.getAttribute(UIControls.sLinksMenu + "@style"));
+		Assert.assertNotEquals(driver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
+
+		if(isAdmin){
+
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHome));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHomeIcon));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHomeLabel));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHomeLink));
+
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudService));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudServiceIcon));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudServiceLabel));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudServiceLink));
+
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzer));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzerIcon));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzerLabel));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzerLink));
+
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAdmin));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAdminIcon));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAdminLabel));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAdminLink));
+		}
+		else
+		{
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHome));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHomeIcon));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHomeLabel));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sHomeLink));
+
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudService));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudServiceIcon));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudServiceLabel));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sCloudServiceLink));
+
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzer));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzerIcon));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzerLabel));
+			Assert.assertTrue(driver.isElementPresent(UIControls.sAnalyzerLink));
+
+			Assert.assertFalse(driver.isElementPresent(UIControls.sAdmin));
+			Assert.assertFalse(driver.isElementPresent(UIControls.sAdminIcon));
+			Assert.assertFalse(driver.isElementPresent(UIControls.sAdminLabel));
+			Assert.assertFalse(driver.isElementPresent(UIControls.sAdminLink));
+		}		
+	}
+
+	public static void addWidget(WebDriver driver) throw Exception
+	{
+		//click Add Widget icon
+		driver.getLogger().info("Verify if Add Widgets icon displayed");
+		Assert.assertTrue(driver.isDisplayed(UIControls.sAddWidgetIcon));
+		driver.getLogger().info("The buton is:  " + driver.getText(UIControls.sAddWidgetIcon));
+		Assert.assertEquals(driver.getText(UIControls.sAddWidgetIcon), "Add");
+
+		driver.getLogger().info("Click the Add Widgets icon");
+		driver.click(UIControls.sAddWidgetIcon);
+		Thread.sleep(15000);
+
+		driver.getLogger().info("Verify the Add Widgets window is opened");
+		Assert.assertTrue(driver.isElementPresent(UIControls.sWidgetWindowTitle));
+		driver.getLogger().info("The window title is:  " + driver.getText(UIControls.sWidgetWindowTitle));
+		Assert.assertTrue(driver.isTextPresent("Add Widgets", UIControls.sWidgetWindowTitle));
+		driver.takeScreenShot();
+		driver.getLogger().info("Verify the Add Widgets button is disabled");
+		driver.getLogger().info("The button is:  " + driver.getText(UIControls.sAddWidgetBtn));
+		Assert.assertEquals(driver.getText(UIControls.sAddWidgetBtn), "Add");
+		driver.getLogger().info("The button has been:  " + driver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		Assert.assertNotNull(driver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+		driver.getLogger().info("Verify the select category drop-down list in Add Widgets button is displayed");
+		Assert.assertTrue(driver.isElementPresent(UIControls.sCategorySelect));
+
+		//Add a widget
+		driver.getLogger().info("Select a widget and add it to the main page");
+		driver.getLogger().info("Select a widget");
+		driver.click(UIControls.sWidgetSelct);
+		Thread.sleep(15000);
+		driver.getLogger().info("Click Add button");
+		driver.click(UIControls.sAddWidgetBtn);
+		driver.takeScreenShot();
+		Thread.sleep(5000);
+		driver.getLogger().info("Close the Add Widget window");
+		driver.click(UIControls.sCloseWidget);
+		driver.takeScreenShot();
+		Thread.sleep(15000);
+
+		driver.getLogger().info("Verify the widget has been added to main page");
+		Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
+		driver.takeScreenShot();
 	}
 }
