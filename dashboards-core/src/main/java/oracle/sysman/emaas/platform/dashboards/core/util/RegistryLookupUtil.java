@@ -309,7 +309,10 @@ public class RegistryLookupUtil
 		logger.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName)/*.withVersion(version)*/.build();
+		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
+		if (!StringUtil.isEmpty(version))
+			builder = builder.withVersion(version);
+		InstanceInfo info = builder.build();
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
 		try {
