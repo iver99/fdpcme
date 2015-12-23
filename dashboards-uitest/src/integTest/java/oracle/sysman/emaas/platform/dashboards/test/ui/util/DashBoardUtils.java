@@ -129,12 +129,12 @@ public class DashBoardUtils {
 		String widgetName;
 		
 		driver.getLogger().info("start to test in addWidget");
-		//waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 		
 		//driver.getLogger().info("add widget button is found");
 		//driver.takeScreenShot();
-		waitForMilliSeconds(3*DashBoardPageId.Delaytime_long);
+		//waitForMilliSeconds(3*DashBoardPageId.Delaytime_long);
 		
 		driver.getLogger().info("verify dashboard title and description");
 		driver.getLogger().info(getText(DashBoardPageId.DashboardNameID));
@@ -150,10 +150,12 @@ public class DashBoardUtils {
 			Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),dbdesc);//"AAA_testDashBoard desc");
 		}
 		driver.getLogger().info("start clicking add widget button");		
-		driver.takeScreenShot();
+		
 		driver.click(DashBoardPageId.OptionsID);
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		driver.takeScreenShot();
-		driver.click(DashBoardPageId.WidgetAddButtonID);
+		driver.click(DashBoardPageId.WidgetAddButton);
+		driver.takeScreenShot();
 		
 		driver.getLogger().info("finish clicking add widget button");		
 		driver.takeScreenShot();
@@ -190,7 +192,7 @@ public class DashBoardUtils {
 				
 		driver.getLogger().info("start to test in addWidget");
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
+		//driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
 		
 		driver.getLogger().info("add widget button is found");
 		driver.takeScreenShot();
@@ -209,7 +211,11 @@ public class DashBoardUtils {
 		modifyDashboardInfo(dbname,dbdesc);
 		
 		driver.takeScreenShot();
-		driver.click(DashBoardPageId.WidgetAddButtonID);
+		driver.click(DashBoardPageId.OptionsID);
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		driver.takeScreenShot();
+		driver.click(DashBoardPageId.WidgetAddButton);
+		driver.takeScreenShot();
 		
 				
 		driver.takeScreenShot();
@@ -279,10 +285,10 @@ public class DashBoardUtils {
 	
 	
 	
-	public static void modifyDashboardInfo(String dbname,String dbdesc) throws Exception
+	public static void modifyDashboardInfo(String dbName,String dbDesc) throws Exception
 	{
 		
-		WebElement mainelement = driver.getElement(DashBoardPageId.DashboardNameID);
+		/*WebElement mainelement = driver.getElement(DashBoardPageId.DashboardNameID);
 		WebElement editNamebutton = driver.getElement(DashBoardPageId.NameEditID);
         Actions builder = new Actions(driver.getWebDriver());
         builder.moveToElement(mainelement).moveToElement(editNamebutton).click().perform();        
@@ -296,7 +302,22 @@ public class DashBoardUtils {
         builder.moveToElement(mainelement).moveToElement(editDescbutton).click().perform();  
         driver.getElement(DashBoardPageId.DescInputID).clear();
 		driver.sendKeys(DashBoardPageId.DescInputID, dbdesc);//"DBA_DESC_MODIFY");
-		driver.click(DashBoardPageId.DescEditOKID);
+		driver.click(DashBoardPageId.DescEditOKID);*/
+
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		driver.takeScreenShot();
+		driver.click(DashBoardPageId.OptionsID);
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		driver.takeScreenShot();
+		driver.click(DashBoardPageId.DashboardEdit);
+		driver.takeScreenShot();
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		driver.sendKeys(DashBoardPageId.DashBoardNameBoxID, dbName);
+		driver.sendKeys(DashBoardPageId.DashBoardDescBoxID, dbDesc);
+		driver.takeScreenShot();
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		driver.click(DashBoardPageId.DashSaveButtonID);
+		driver.takeScreenShot();
 		
 	}
 	
@@ -360,8 +381,12 @@ public class DashBoardUtils {
 				Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
 			}
 	
-			driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
-			driver.click(DashBoardPageId.WidgetAddButtonID);					
+			//driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
+			driver.click(DashBoardPageId.OptionsID);
+			waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+			driver.takeScreenShot();
+			driver.click(DashBoardPageId.WidgetAddButton);
+			driver.takeScreenShot();				
 			
 			driver.getLogger().info("before select");
 			WebElement Box = driver.getWebDriver().findElement(By.xpath(WidgetPageId.dropListID));//*[@id='oj-listbox-drop']"));//));
