@@ -24,14 +24,13 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 self.homeLinkLabel = nlsStrings.BRANDING_BAR_NAV_HOME_LABEL;
                 self.cloudServicesLabel = nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL;
                 self.dashboardLinkLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
-                self.favoritesLabel = nlsStrings.BRANDING_BAR_NAV_FAVORITES_LABEL;
                 self.welcomeLabel = nlsStrings.BRANDING_BAR_NAV_WELCOME_LABEL;
+                self.favoritesLabel = nlsStrings.BRANDING_BAR_NAV_FAVORITES_LABEL;
                 
                 self.homeLinks = ko.observableArray();
                 self.cloudServices = ko.observableArray();
                 self.adminLinks = ko.observableArray();
                 self.visualAnalyzers = ko.observableArray();
-                self.favoriteDashboards = ko.observableArray();
 
                 //Fetch links and session expiry time from server side
                 refreshLinks();
@@ -50,8 +49,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 refreshListener.subscribe(function (value) {
                     if (value.needRefresh){
                         refreshLinks();
-                        //Refresh favorite dashboards
-                        fetchFavoriteDashboards();
                         //Check home settings
                         checkDashboardAsHomeSettings();
                         params.navLinksNeedRefresh(false);
@@ -86,6 +83,13 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                     }
                     else if (dfWelcomeUrl){
                         window.location.href = dfWelcomeUrl;
+                    }
+                };
+                
+                self.openMyFavorites = function() {
+                    oj.Logger.info('Trying to open my favorites by URL: ' + dfDashboardsUrl);
+                    if(dfDashboardsUrl) {
+                        window.location.href = dfDashboardsUrl;
                     }
                 };
                 
@@ -260,39 +264,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                         },
                         async: true
                     });                
-                };
-                
-                function fetchFavoriteDashboards() {
-                    var succCallback = function(data) {
-                        if (data && data.length > 0) {
-                            var favorites = [];
-                            for (var i = 0; i < data.length; i++) {
-                                favorites.push({name: data[i].name, 
-                                                href: "/emsaasui/emcpdfui/builder.html?dashboardId="+data[i].id});
-                            }
-                            self.favoriteDashboards(favorites);
-                        }
-                        else {
-                            self.favoriteDashboards([]);
-                        }
-                    };
-                    var serviceUrl = "/sso.static/dashboards.service/favorites";
-                    if (dfu.isDevMode()){
-                        serviceUrl = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint,"/dashboards/favorites");
-                    }
-                    dfu.ajaxWithRetry({
-                        url: serviceUrl,
-                        headers: dfu.getDefaultHeader(), 
-                        contentType:'application/json',
-                        success: function(data, textStatus) {
-                            succCallback(data);
-                        },
-                        error: function(xhr, textStatus, errorThrown){
-                            oj.Logger.error('Failed to get favorite dashboards by URL: '+serviceUrl);
-                            self.favoriteDashboards([]);
-                        },
-                        async: true
-                    });   
                 };
                 
                 function checkDashboardAsHomeSettings() {

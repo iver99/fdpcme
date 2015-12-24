@@ -6,12 +6,15 @@
             </div>
         </div>
         <div class="headerMenuText">
-            <div class="oj-row" style="font-weight: bolder; font-size: medium;"></div>
+            <!--<div class="oj-row" style="font-weight: bolder; font-size: medium;"></div>-->
             <div class="oj-row">
                 <a data-bind="attr: {href: 'javascript: this.click()'}, click: openHome, text: homeLinkLabel"></a>
             </div>
             <div class="oj-row">
                 <a data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboardHome, text: dashboardLinkLabel"></a>
+            </div>
+            <div class="oj-row">
+                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openMyFavorites, text: favoritesLabel"></a>
             </div>
             <div class="oj-row">
                 <a data-bind="attr: {href: 'javascript: this.click()'}, click: openWelcomePage, text: welcomeLabel"></a>
@@ -20,19 +23,6 @@
             <div class="oj-row">
             	<a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a>
            	</div>
-            <!-- /ko -->
-        </div>
-    </div>
-    <div class="headerMenuItem">
-        <div class="headerMenuIcon">
-            <div class="iconCircle" id="iconFavorites">
-                <i class="fa fa-icon-font fa-star" role="img" data-bind="attr: {'aria-label': favoritesLabel}"></i>
-            </div>
-        </div>
-        <div class="headerMenuText">
-            <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: favoritesLabel"></div>
-            <!-- ko foreach: favoriteDashboards -->
-            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>

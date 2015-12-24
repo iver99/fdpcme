@@ -27,9 +27,6 @@ a:hover {
     display: inline-block;
 }
 
-.fa-star:before {
-  content: "\f005"; }
-
 .fa-cogs:before {
   content: "\f085"; }
 
@@ -76,23 +73,17 @@ a:hover {
 #links_menu .oj-row{
     height:24px;
     line-height: 24px;
-    width: 186px;
-    max-width: 186px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
-
 #links_menu .links-content-container{
-    margin : 30px auto;
+    margin : 30px auto; 
     width: 100%;
-    text-align: center;
+    text-align:center; 
 }
 .headerMenuItem {
-    width: 19%;
+    width: 24%;
     display: inline-block;
     vertical-align: top;
-    min-width: 300px;
+    min-width: 330px;
 }
 #links_menu .iconCircle {
     width: 100px;
@@ -109,86 +100,55 @@ a:hover {
 .headerMenuText {
     display: inline-block;
     vertical-align: top;
-    margin-left: 10px;
-    text-align:left;
+    margin-left: 20px;
+    text-align:left; 
 }
-@media screen and (max-width: 1578px) and (min-width:1274px) {
-    .headerMenuItem {
-        min-width:fit-content;
-    }
-    #links_menu .oj-row{
-        max-width: 128px;
-    }
-}
-@media screen and (max-width: 1273px) and (min-width:1020px) {
+@media screen and (max-width: 1331px) and (min-width:1000px) {
     #links_menu .links-content-container {
+        margin : 30px auto;
+        min-width: 1000px;
         text-align:left; 
     }
     .headerMenuItem {
-        min-width: 252px;
         display: inline-block;
         vertical-align: top;
     }
-    #links_menu .oj-row{
-        max-width: 128px;
-    }
-    .headerMenuItem:first-child {
-        margin-bottom: 30px;
-    }
-    .headerMenuItem:last-child {
-        min-width: 300px;
-    }
-    #links_menu .links-content-container .headerMenuItem:last-child .oj-row{
-        max-width: 186px;
-    }
-}
-@media screen and (max-width: 1019px) and (min-width:908px) {
-    #links_menu .links-content-container {
-        text-align:left; 
-    }
-    .headerMenuItem {
-        min-width: 300px;
-        display: inline-block;
-        vertical-align: top;
-    }
-    .headerMenuItem:first-child {
+     .headerMenuItem:first-child {
         margin-bottom: 30px;
     }
 }
-@media screen and (max-width: 907px) and (min-width:621px) {
+@media screen and (max-width: 1000px) and (min-width:670px) {
     #links_menu .links-content-container {
+        margin : 30px auto;
+        min-width: 670px;
         text-align:left; 
     }
     .headerMenuItem {
-        min-width: 300px;
         display: inline-block;
         vertical-align: top;
     }
-    .headerMenuItem:first-child {
+     .headerMenuItem:first-child {
         margin-bottom: 30px;
     }
-    .headerMenuItem:last-child {
+}
+@media screen and (max-width: 670px) {
+    #links_menu .links-content-container {
+        margin : 30px auto;
+        min-width: 330px;
+        text-align:left; 
+    }
+        
+    .headerMenuItem {
+        display: inline-block;
         margin-top: 30px;
-    }
-}
-@media screen and (max-width: 620px) {
-    #links_menu .links-content-container {
-        text-align:left; 
-    }
-    .headerMenuItem {
-        min-width: 300px;
-        display: inline-block;
         vertical-align: top;
-        margin-bottom: 30px;
     }
-    .headerMenuItem:last-child {
-        margin-bottom: 0px;
+    
+    .headerMenuItem:first-child {
+        margin-top: 0px;
     }
 }
 
-#iconFavorites{
-    background-color: #fbce4a;
-}
 #iconCogs{
     background-color: #3caf85;
 }

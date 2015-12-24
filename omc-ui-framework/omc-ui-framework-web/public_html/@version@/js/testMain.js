@@ -23,7 +23,6 @@ requirejs.config({
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
-//        'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -74,7 +73,7 @@ require(['knockout',
     'uifwk/js/util/usertenant-util',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
-//    'prefutil',
+    'uifwk/js/util/preference-util',
     'ojs/ojknockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
