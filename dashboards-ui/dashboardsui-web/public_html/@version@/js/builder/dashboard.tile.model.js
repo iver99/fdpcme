@@ -829,7 +829,7 @@ define(['knockout',
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
                     var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
-                    self.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
+                    Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });

@@ -52,7 +52,7 @@ public class RegistryLookupAPI extends APIBase
 				"Service call to [POST] /v1/registry/lookup/endpoint?serviceName={}&version={}", serviceName, version);
 		try {
 			initializeUserContext(tenantIdParam, userTenant);
-			if (StringUtil.isEmpty(serviceName) || StringUtil.isEmpty(version)) {
+			if (StringUtil.isEmpty(serviceName) /*|| StringUtil.isEmpty(version)*/) {
 				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
 						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR", serviceName, version));
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
@@ -60,12 +60,19 @@ public class RegistryLookupAPI extends APIBase
 			EndpointEntity endPoint = RegistryLookupUtil.getServiceExternalEndPointEntity(serviceName, version, tenantIdParam);
 			if (endPoint != null) {
 				endPoint = RegistryLookupUtil.replaceWithVanityUrl(endPoint, tenantIdParam, serviceName);
-				return Response.status(Status.OK).entity(JsonUtil.buildNormalMapper().toJson(endPoint)).build();
+				return Response.status(Status.OK).entity(JsonUtil.buildNonNullMapper().toJson(endPoint)).build();
 			}
 			else {
-				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE,
-						MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR",
-								getSafeOutputString(serviceName), getSafeOutputString(version)));
+				String msg = null;
+				if(version!=null) {
+					msg=MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR",
+								getSafeOutputString(serviceName), getSafeOutputString(version));
+				}
+				else {
+					msg=MessageUtils.getDefaultBundleString("REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_NO_VERSION",
+								getSafeOutputString(serviceName));
+				}
+				ErrorEntity error = new ErrorEntity(DashboardErrorConstants.REGISTRY_LOOKUP_ENDPOINT_NOT_FOUND_ERROR_CODE, msg);
 				return Response.status(Status.NOT_FOUND).entity(JsonUtil.buildNormalMapper().toJson(error)).build();
 			}
 		}
