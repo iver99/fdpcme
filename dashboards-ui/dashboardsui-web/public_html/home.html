@@ -14,7 +14,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-       
+        
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
@@ -81,8 +81,12 @@
                                                         <label for="oracleopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ORACLE')"></label>
                                                     </span>
                                                     <span class="oj-choice-row">
-                                                        <input id="otheropt" type="checkbox" name="creators" value="Others">
-                                                        <label for="otheropt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_OTHER')"></label>
+                                                        <input id="shareopt" type="checkbox" name="creators" value="Share">
+                                                        <label for="shareopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_SHARE')"></label>
+                                                    </span>
+                                                    <span class="oj-choice-row">
+                                                        <input id="otheropt" type="checkbox" name="creators" value="Me">
+                                                        <label for="otheropt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ME')"></label>
                                                     </span>
                                                 </div>
                                             </div>
