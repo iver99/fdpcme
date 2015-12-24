@@ -106,12 +106,6 @@ define(['knockout',
                             this.value = replacedValue;
                         }
                     });
-                    $('#widget-search-input').autocomplete({
-                        source: ['a', 'b'],
-                        open: function() {
-                            console.debug('test');
-                        }
-                    });
             };
 
             self.initEventHandlers = function() {
