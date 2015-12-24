@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
- 
+
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -454,14 +454,16 @@
                 </div>
                 <!-- ko stopBinding: true -->
                 <div id="dbd-left-panel" class="dbd-left-panel-show"
-                     data-bind="css: {'dbd-no-left-panel': completelyHidden()}, ojComponent: {component: 'ojAccordion'}">
-                    <div id="right-panel-content" data-bind="ojComponent: {component: 'ojCollapsible', expanded:true}">
-                        <span>Content</span>
-                        <div>
+                     data-bind="css: {'dbd-no-left-panel': completelyHidden()}">
                         <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
+                            <div class="oj-row">
+                                <div class="oj-col">
+                                    <h3 class="dbd-left-panel-header-title" >Content</h3>
+                                </div>
+                            </div>
                             <div class="dbd-left-panel-header-search">
                                 <div  class="dbd-left-panel-header-search-input">
-                                    <input id="sinput" type="text" name="searchInput"
+                                    <input id="widget-search-input" type="text" name="searchInput"
                                        data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
                                                   placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                                   ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
@@ -516,6 +518,11 @@
                             </div>
                         </div>
                         <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling">
+                            <div id="dbd-left-panel-footer-contain" style="padding-top: 10px; border-top: 1px solid #d6dfe6">
+                                <div class="oj-row">
+                                    <div class="oj-col oj-sm-12" style="height: 28px;">Container</div>
+                                </div>
+                            </div>
                             <div id="dbd-left-panel-footer-btns">
                                 <div class="oj-row">
                                     <div id="dbd-left-panel-footer-pages" class="oj-col oj-sm-3 oj-md-3 oj-lg-3" 
@@ -531,58 +538,8 @@
                             </div>
                         </div>
                     
-                        </div>
-                    </div>
-                    <div id="right-panel-design">
-                        <span>Design</span>
-                        <div>
-                            <div id="dbd-left-panel-footer-text">
-                                <div class="oj-row">
-                                    <span style="font-weight: bold; color: gray;">Page Elements</span>
-                                </div>
-                                <div class="oj-row">
-                                    <div id="dbd-left-panel-text" class="oj-col oj-sm-12" style="margin-top: 5px; padding-right: 0;">
-                                        <div class="oj-col oj-sm-12" id="dbd-left-panel-text-handle" 
-                                             data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT')"></div>
-                                        <div class="oj-col oj-sm-12" id="dbd-left-panel-text-desc"><i><small>Add text to the page.</small></i></div>
-                                        <div id="left-panel-text-helper" class="left-panel-text-helper">
-                                            <p><span id="left-panel-text-helper-content" 
-                                                     data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT_HELPER')"><span></p>
-                                        </div>
-                                    </div>
-    <!--                                <div id="dbd-left-panel-link" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: move;">
-                                        <div id="dbd-left-panel-link-handle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK')"></div>
-                                        <div id="left-panel-link-helper" class="left-panel-link-helper">
-                                            <p><span data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DESC')"><span></p>
-                                        </div>
-                                    </div>-->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="right-panel-settings">
-                        <span>Settings</span>
-                        <div>
-                            <div class="oj-row">
-                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12" data-bind="enable showTimeControl">
-                                    <span class="oj-form-control oj-choice-row">
-                                        <input id="show-time-selector" type="checkbox" 
-                                               class="oj-checkbox-nocomp" data-bind="checked: computedEnableTimeControl"/>
-                                        <label for="show-time-selector" class="oj-checkbox-label-nocomp" 
-                                               data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SHOW_TIME_SELECTOR')"></label>
-                                    </span>
-                                </div>
-                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12">
-                                    <span class="oj-form-control oj-choice-row">
-                                        <input id="show-referesh-control" type="checkbox" 
-                                               class="oj-checkbox-nocomp"  data-bind="checked: dashboard.enableRefresh"/>
-                                        <label for="show-referesh-control" class="oj-checkbox-label-nocomp"
-                                               data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SHOW_REFRESH')"></label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    
                 </div>
                 <!-- /ko -->
                 <!--<div class="oj-row stretch-height tile-container" id="tileContainer"  
