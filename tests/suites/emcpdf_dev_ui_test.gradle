@@ -70,7 +70,7 @@ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', versio
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
-        
+	 testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 
     configurations{
 	restAssured.exclude module:'groovy'
@@ -118,7 +118,7 @@ exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCL
 task DEVUiTest(type:EMTest,dependsOn: logdir){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
+//	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")
 }

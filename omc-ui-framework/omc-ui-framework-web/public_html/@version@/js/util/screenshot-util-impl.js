@@ -71,9 +71,7 @@ define(['jquery',
                                 swidth = canvas.width;
                                 sheight = (swidth * target_height) / target_width;
                             }
-//                            if (window.DEV_MODE) {
-//                                console.debug("Capturing screenshot. Expecteds size [" + target_width + "x" + target_height + "]. Page size [" + canvas.width + "x" + canvas.height + "] (captured size [" + swidth + "x" + sheight + "]).");
-//                            }
+//                            window.DEV_MODE && console.debug("Capturing screenshot. Expecteds size [" + target_width + "x" + target_height + "]. Page size [" + canvas.width + "x" + canvas.height + "] (captured size [" + swidth + "x" + sheight + "]).");
                             var resize_ctx = resize_canvas.getContext('2d');
                             resize_ctx.drawImage(canvas, 0, 0, swidth, sheight, 0, 0, target_width, target_height);
                             var data = resize_canvas.toDataURL("image/jpeg", quality);

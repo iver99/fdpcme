@@ -214,6 +214,22 @@ body, html {
   content: url(../images/func_trashcan_16_dis.png);
 }
 
+.dbd-toolbar-icon-share:before {
+  content: url(../images/func_unlock_16_ena.png);
+}
+
+.dbd-toolbar-icon-unshare:before {
+  content: url(../images/func_lock_16_ena.png);
+}
+
+.dbd-toolbar-icon-share-disabled:before {
+  content: url(../images/func_unlock_16_dis.png);
+}
+
+.dbd-toolbar-icon-unshare-disabled:before {
+  content: url(../images/func_lock_16_dis.png);
+}
+
 .builder-toolbar-button-text {
   color: rgb(0, 0, 0);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -287,12 +303,12 @@ body, html {
   padding: 1px 8px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border-left: 1px solid;
-  border-right: 1px solid;
+  /*border-left: 1px solid;*/
+  /*border-right: 1px solid;*/
   border-bottom: 0px;
   border-color: #ddd;
   font-size: 14px;
-  border-top: 1px solid #D8D6D6 !important;
+  /*border-top: 1px solid #D8D6D6 !important;*/
   height: 32px;
 }
 
@@ -407,11 +423,11 @@ body, html {
 }
 
 .dbd-tile-element {
-  border: 1px solid #d6dfe6; 
+  /*border: 1px solid #d6dfe6;*/ 
   overflow: auto;   
   /*height: 220px;*/
   clear: right;
-  border-top:0px;
+  /*border-top:0px;*/
   background-color: white
 }
 

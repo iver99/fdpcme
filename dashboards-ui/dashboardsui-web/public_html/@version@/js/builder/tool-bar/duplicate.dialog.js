@@ -9,9 +9,9 @@ define(['knockout',
         'uifwk/js/util/screenshot-util'
     ], 
     function(ko, $, oj, ssu) {       
-        function DuplicateDashboardModel(tilesViewModel) {
+        function DuplicateDashboardModel($b) {
             var self = this;
-            self.tilesViewModel = tilesViewModel;
+            self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.tracker = ko.observable();
             self.errorMessages = ko.observableArray([]);
             self.name = ko.observable();
@@ -63,7 +63,7 @@ define(['knockout',
             };
             
             self.duplicateDashboard = function() {
-                var origDashboard = self.tilesViewModel.dashboard;
+                var origDashboard = $b.dashboard;
                 var newDashboard = $.extend(true, {}, origDashboard);
                 newDashboard.id = undefined;
                 newDashboard.name = self.name();
