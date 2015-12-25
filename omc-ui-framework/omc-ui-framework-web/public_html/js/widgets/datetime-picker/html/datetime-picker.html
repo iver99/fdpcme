@@ -39,7 +39,7 @@
 
                         <span style="font-weight: bold; display: inline-block; width: 90px;padding-left: 5px; text-align:center; padding-top: 9px; padding-bottom:9px;" data-bind="text: timePeriod, style: {display: hideRangeLabel}">                            
                         </span>
-                        <div data-bind="style: {display: displayDateTimeSelection}">
+                        <div style="display:inline-block;">
                             <div class="chosenDate">
                                 <input data-bind="attr: {id: 'inputStartDate_'+randomId}, ojComponent: {component: 'ojInputText', value: startDate, placeholder: 'mm/dd/yyyy', rootAttributes:{style : 'width: 70px;'}, optionChange: function(event, data){changeDate(event, data, 1)}}, click: focusOnStartDate, hasFocus: startDateFocus"/>
                             </div>
