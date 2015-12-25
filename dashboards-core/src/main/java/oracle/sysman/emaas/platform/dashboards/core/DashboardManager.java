@@ -619,26 +619,39 @@ public class DashboardManager
 
 			if (filter.getIncludedOwners() != null && !filter.getIncludedOwners().isEmpty()) {
 				sb.append(" and ( ");
-				if (filter.getIncludedOwners().contains("Oracle")) {
-					sb.append(" p.owner = ?" + index++);
-					paramList.add("Oracle");
-				}
-				if (filter.getIncludedOwners().contains("Others")) {
-					if (filter.getIncludedOwners().contains("Oracle")) {
-						sb.append(" or ");
-					}
-					sb.append(" p.owner != ?" + index++);
-					paramList.add("Oracle");
-				}
-				/*
+				//				if (filter.getIncludedOwners().contains("Oracle")) {
+				//					sb.append(" p.owner = ?" + index++);
+				//					paramList.add("Oracle");
+				//				}
+				//				if (filter.getIncludedOwners().contains("Others")) {
+				//					if (filter.getIncludedOwners().contains("Oracle")) {
+				//						sb.append(" or ");
+				//					}
+				//					sb.append(" p.owner != ?" + index++);
+				//					paramList.add("Oracle");
+				//				}
+
 				for (int i = 0; i < filter.getIncludedOwners().size(); i++) {
 					if (i != 0) {
 						sb.append(" or ");
 					}
-					sb.append(" p.owner = ?" + index++);
-					paramList.add(filter.getIncludedOwners().get(i));
+					if (filter.getIncludedOwners().get(i).equals("Oracle")) {
+						sb.append(" p.owner = ?" + index++);
+						paramList.add("Oracle");
 					}
-				 */
+					if (filter.getIncludedOwners().get(i).equals("Others")) {
+						sb.append(" p.owner != ?" + index++);
+						paramList.add("Oracle");
+					}
+					if (filter.getIncludedOwners().get(i).equals("Me")) {
+						sb.append(" p.owner = ?" + index++);
+						paramList.add(UserContext.getCurrentUser());
+					}
+					if (filter.getIncludedOwners().get(i).equals("Share")) {
+						sb.append(" p.owner != ?" + index++ + " and p.share_public > 0");
+						paramList.add(UserContext.getCurrentUser());
+					}
+				}
 
 				sb.append(" ) ");
 			}

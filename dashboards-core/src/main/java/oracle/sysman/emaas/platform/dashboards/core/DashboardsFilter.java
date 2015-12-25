@@ -167,9 +167,7 @@ public class DashboardsFilter
 		String[] splitedOwners = owners.split(",");
 		includedOwners = new ArrayList<String>();
 		for (String o : splitedOwners) {
-			if ("Oracle".equals(o) || "Others".equals(o)) {
-				includedOwners.add(o);
-			}
+			includedOwners.add(o.trim());
 		}
 	}
 
