@@ -23,16 +23,18 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 
+import org.testng.Assert;
+
 /**
  * @author shangwan
  */
 public class CommonUIUtils
 {
-	//static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
+	static String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
 	static String sOhsUrl = CommonUIUtils.getEmaasPropertyValue("OHS_URL");
 	static String sRegistryUrl = CommonUIUtils.getEmaasPropertyValue("OHS_REGISTRY_URL");
-	//static String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
-	//static String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
+	static String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
+	static String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
 	static String sAuthToken = CommonUIUtils.getEmaasPropertyValue("SAAS_AUTH_TOKEN");
 	static String sAPIUrl = CommonUIUtils.getEmaasPropertyValue("DASHBOARD_API_ENDPOINT");
 
@@ -45,6 +47,7 @@ public class CommonUIUtils
 	static Boolean isAPMAdmin = false;
 	static Boolean isITAAdmin = false;
 	static Boolean isLAAdmin = false;
+	static Boolean isDSAdmin = false;
 
 	public static void commonUITestLog(String sDesc)
 	{
@@ -181,39 +184,46 @@ public class CommonUIUtils
 
 	public static void getRoles(String sTenant, String sUser)
 	{
-		String sTempRolsUrl = sRolesUrl.substring(sRolesUrl.length()-11);
+		CommonUIUtils.commonUITestLog("The Roles URL is:" + sRolesUrl);
+		String sTempRolsUrl = sRolesUrl.substring(0,sRolesUrl.length()-11);
+		CommonUIUtils.commonUITestLog("The Roles URL is:" + sTempRolsUrl);
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = sTempRolsUrl+"authorization/ws/api/v1/";
+		CommonUIUtils.commonUITestLog("The base URL is:" + sTempRolsUrl+"authorization/ws/api/v1/");
 
 		Response res1 = RestAssured
 				.given()
 				.contentType(ContentType.JSON)
 				.log()
 				.everything()
-				.headers("OAM-REMOTE-USER", sTenant + "." + sUser,
+				.headers("OAM_REMOTE_USER", sTenant + "." + sUser,
 						"Authorization", sAuthToken).when().get("/roles/grants/getRoles?grantee="+sTenant+"."+sUser);
-		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode() + res1.jsonPath().get("applications"));
+		CommonUIUtils.commonUITestLog("The statu code is:" + res1.getStatusCode()+", The response content is " + res1.jsonPath().get("roleNames"));
 		String s_rolename = res1.jsonPath().getString("roleNames");
-		CommonUIUtils.commonUITestLog("The response content is:" + s_rolename);
-		String[] ls_rolename = s_appname.split(",");
-		for (int i = 0; i < ls_appname.length; i++) {
+		//CommonUIUtils.commonUITestLog("The response content is:" + s_rolename);
+		String[] ls_rolename = s_rolename.split(",");
+		for (int i = 0; i < ls_rolename.length; i++) {
 			CommonUIUtils.commonUITestLog(i + " : " + ls_rolename[i]);
-			if (ls_rolename[i].equals("APM Administrator")) {
+			if (ls_rolename[i].contains("APM Administrator")) {
 				isAPMAdmin = true;
 			}
-			else if (ls_rolename[i].equals("IT Analytics Administrator")) {
+			else if (ls_rolename[i].contains("IT Analytics Administrator")) {
 				isITAAdmin = true;
 			}
 			else if (ls_rolename[i].contains("Log Analytics Administrator")) {
 				isLAAdmin = true;
 			}
 		}
-		//CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
-
+		if(isAPMAdmin || isITAAdmin || isLAAdmin)
+		{
+			isDSAdmin = true;
+		}
 	}
 
 	public static String getAppName(String sTenant, String sUser)
 	{
+		//String sAppName = "";
+		
 		RestAssured.useRelaxedHTTPSValidation();
 		RestAssured.baseURI = sAPIUrl;
 
@@ -256,10 +266,12 @@ public class CommonUIUtils
 			}
 		}
 		CommonUIUtils.commonUITestLog("The App Name is:" + sAppName);
+		return sAppName;
 		
 	}
+	
 
-	public static Boolean loginCommonUI(WebDriver driver, String sUser, String sPassword)
+	public static Boolean loginCommonUI(WebDriver driver, String sTenant, String sUser, String sPassword)
 	{
 
 		String sCommonUiUrl = "";
@@ -274,13 +286,13 @@ public class CommonUIUtils
 		}
 
 		driver.getLogger().info("Supply credentials and doLogin()");
-		LoginUtils.doLogin(driver, sUser, sSsoPassword, sPassword, sCommonUiUrl);
+		LoginUtils.doLogin(driver, sUser, sPassword, sTenant, sCommonUiUrl);
 
 		return true;
 
 	}
 
-	public static Boolean loginCommonUI(WebDriver driver, String parameters, String sUser, String sPassword)
+	public static Boolean loginCommonUI(WebDriver driver, String parameters, String sTenant, String sUser, String sPassword)
 	{
 
 		String sCommonUiUrl = "";
@@ -295,7 +307,7 @@ public class CommonUIUtils
 		}
 
 		driver.getLogger().info("Supply credentials and doLogin()");
-		LoginUtils.doLogin(driver, sUser, sPassword, sTenantId, sCommonUiUrl);
+		LoginUtils.doLogin(driver, sUser, sPassword, sTenant, sCommonUiUrl);
 
 		return true;
 
@@ -309,7 +321,7 @@ public class CommonUIUtils
 		}
 	}
 
-public static void verifyPageContent(WebDriver driver, String sAppName) throws Exception
+	public static void verifyPageContent(WebDriver driver, String sAppName) throws Exception
 	{
 		//verify the product name,app name,content of page
 		driver.getLogger().info("Verify the page content");
@@ -382,7 +394,7 @@ public static void verifyPageContent(WebDriver driver, String sAppName) throws E
 		}		
 	}
 
-	public static void addWidget(WebDriver driver) throw Exception
+	public static void addWidget(WebDriver driver) throws Exception
 	{
 		//click Add Widget icon
 		driver.getLogger().info("Verify if Add Widgets icon displayed");
@@ -424,5 +436,64 @@ public static void verifyPageContent(WebDriver driver, String sAppName) throws E
 		driver.getLogger().info("Verify the widget has been added to main page");
 		Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
 		driver.takeScreenShot();
+	}
+	
+	public static void openWidget(WebDriver driver, boolean isEnabled) throws Exception
+	{
+		if(isEnabled){
+			//click Open Widget icon
+			driver.getLogger().info("Verify if Open Widgets icon displayed");
+			Assert.assertTrue(driver.isDisplayed(UIControls.sAddWidgetIcon));
+			driver.getLogger().info("The buton is:  " + driver.getText(UIControls.sAddWidgetIcon));
+			Assert.assertEquals(driver.getText(UIControls.sAddWidgetIcon), "Open");
+
+			driver.getLogger().info("Click the Open icon");
+			driver.click(UIControls.sAddWidgetIcon);
+			Thread.sleep(10000);
+
+			driver.getLogger().info("Verify the Open Widgets window is opened");
+			Assert.assertTrue(driver.isElementPresent(UIControls.sWidgetWindowTitle));
+			driver.getLogger().info("The window title is:  " + driver.getText(UIControls.sWidgetWindowTitle));
+			Assert.assertTrue(driver.isTextPresent("Open", UIControls.sWidgetWindowTitle));
+			driver.takeScreenShot();
+			driver.getLogger().info("Verify the Open button is disabled");
+			driver.getLogger().info("The button is:  " + driver.getText(UIControls.sAddWidgetBtn));
+			Assert.assertEquals(driver.getText(UIControls.sAddWidgetBtn), "Open");
+			driver.getLogger().info("The button has been:  " + driver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+			Assert.assertNotNull(driver.getAttribute(UIControls.sAddWidgetBtn + "@disabled"));
+			driver.getLogger().info("Verify the select category drop-down list in Add Widgets button is displayed");
+			try {
+				driver.getLogger().info("the category display is: " + driver.isDisplayed(UIControls.sCategorySelect));
+			}
+			catch (RuntimeException re) {
+				Assert.fail(re.getLocalizedMessage());
+			}
+			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));
+
+			//Open a widget
+			driver.getLogger().info("Select a widget and open it in the main page");
+			driver.getLogger().info("Select a widget");
+			driver.click(UIControls.sWidgetSelct);
+			Thread.sleep(5000);
+			driver.getLogger().info("Click Open button");
+			driver.click(UIControls.sAddWidgetBtn);
+			driver.takeScreenShot();
+			Thread.sleep(5000);
+
+			driver.getLogger().info("Verify the widget has been opened in main page");
+			Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
+			driver.takeScreenShot();
+		}
+		else
+		{
+			//verify the Open widget icon is disabled
+			driver.getLogger().info("Verify the Open widget icon");
+			Assert.assertTrue(driver.isDisplayed(UIControls.sAddWidgetIcon));
+			driver.getLogger().info("The buton is:  " + driver.getText(UIControls.sAddWidgetIcon));
+			Assert.assertEquals(driver.getText(UIControls.sAddWidgetIcon), "Open");
+			driver.getLogger().info("Verify the Open widget icon is disabled");
+			driver.getLogger().info("The icon has been:  " + driver.getAttribute(UIControls.sAddWidgetIcon + "@disabled"));
+			Assert.assertNotNull(driver.getAttribute(UIControls.sAddWidgetIcon + "@disabled"));
+		}		
 	}
 }
