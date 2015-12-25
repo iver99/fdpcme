@@ -39,9 +39,9 @@
     border-style: solid;
     border-color: #dfe4e7;
     padding-left: 8px;
-    padding-top: 11px;
+    padding-top: 10px; //11px;
     padding-bottom: 3px;
-    height: 20px;
+    height: 18px; //20px;
     width: 94px;
     display: block;
 }
