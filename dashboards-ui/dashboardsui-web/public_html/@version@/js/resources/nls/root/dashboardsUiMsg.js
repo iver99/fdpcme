@@ -29,7 +29,7 @@ define({
       "COMMON_DELETE_DASHBOARD_MSG": "Delete <b>{0}</b>? This action cannot be undone.",
       "COMMON_TEXT_SHARE": "Share Public",
       "COMMON_TEXT_SHARE_TITLE": "Share to public",
-      "COMMON_TEXT_UNSHARE": "Stop Share",
+      "COMMON_TEXT_UNSHARE": "Stop Sharing",
       "COMMON_TEXT_UNSHARE_TITLE": "Stoping share to public",
       "COMMON_SHARE_DAHBOARD_DIALOG_TILE": "Share Dashboard",
       "COMMON_SHARE_DAHBOARD_DIALOG_CONTENT": "Do you want to share <b>{0}</b>? This action will make the dashboard to be viewed by others.",
