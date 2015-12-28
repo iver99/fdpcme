@@ -7,6 +7,7 @@ define(['knockout',
         'jquery',
         'dfutil',
         'ojs/ojcore',
+        'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ], 
@@ -106,6 +107,11 @@ define(['knockout',
                             this.value = replacedValue;
                         }
                     });
+                    $('#widget-search-input').autocomplete({
+                        source: self.autoSearchWidgets,
+                        delay: 700,
+                        minLength: 0
+                    });
             };
 
             self.initEventHandlers = function() {
@@ -199,8 +205,8 @@ define(['knockout',
                 self.checkAndDisableLinkDraggable();
             };
 
-            self.loadWidgets = function() {
-                new Builder.WidgetDataSource().loadWidgetData(self.page(), self.keyword(), function(page, widgets, totalPages) {
+            self.loadWidgets = function(req) {
+                new Builder.WidgetDataSource().loadWidgetData(self.page(), req&&(typeof req.term === "string")?req.term:self.keyword(), function(page, widgets, totalPages) {
                     self.widgets([]);
                     if (widgets && widgets.length > 0) {
                         widgets.sort(function(a, b) {
@@ -257,6 +263,11 @@ define(['knockout',
             self.searchWidgetsClicked = function() {
                 self.page(1);
                 self.loadWidgets();
+            };
+            
+            self.autoSearchWidgets = function(req) {
+                self.page(1);
+                self.loadWidgets(req);
             };
 
             self.clearWidgetSearchInputClicked = function() {
