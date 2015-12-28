@@ -221,7 +221,7 @@ define(['knockout',
            self.linkNameValidated = true;
            self.linkNameValidator = {
                'validate': function(value){
-                   if(isContentLengthValid(value, Builder.LINK_NAME_MAX_LENGTH)) {
+                   if(Builder.isContentLengthValid(value, Builder.LINK_NAME_MAX_LENGTH)) {
                        self.linkNameValidated = true;
                        return true;
                    }else {
@@ -235,7 +235,7 @@ define(['knockout',
            self.linkURLValidator = {
                'validate': function(value) {
                     if(isURL(value)) {                       
-                        if(isContentLengthValid(value, Builder.LINK_URL_MAX_LENGTH)) {
+                        if(Builder.isContentLengthValid(value, Builder.LINK_URL_MAX_LENGTH)) {
                             self.linkURLValidated = true;
                         }else {
                             self.linkURLValidated = false;
