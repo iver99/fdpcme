@@ -5,9 +5,9 @@
 .fa-icon-font {
   font-family: FaFont;
   font-size: 1.34rem;
-  display: inline-block;
+  /* display: inline-block; */
   font-weight: normal;
-  speak: none;
+  /* speak: none; */
   font-style: normal;
   font-variant: normal;
   text-transform: none;
@@ -15,7 +15,8 @@
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
+  -moz-osx-font-smoothing: grayscale;
+  }
 
 .fa-icon-font:before{
     display: inline-block;

@@ -132,7 +132,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
 
-            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback);            
+            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, Builder.isContentLengthValid);            
         }
         Builder.registerModule(DashboardTextTile, 'DashboardTextTile');
 
@@ -170,7 +170,7 @@ define(['knockout',
             }
 
 
-            initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targetContext, loadImmediately);
+            Builder.initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targetContext, loadImmediately);
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 

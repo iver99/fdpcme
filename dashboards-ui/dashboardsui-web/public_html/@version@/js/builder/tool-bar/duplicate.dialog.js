@@ -6,9 +6,10 @@
 define(['knockout', 
         'jquery',
         'ojs/ojcore',
+        'dfutil',
         'uifwk/js/util/screenshot-util'
     ], 
-    function(ko, $, oj, ssu) {       
+    function(ko, $, oj, dfu, ssu) {       
         function DuplicateDashboardModel($b) {
             var self = this;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
