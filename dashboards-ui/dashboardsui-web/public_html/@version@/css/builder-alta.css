@@ -218,6 +218,10 @@ body, html {
   content: url(../images/func_home_16_ena.png);
 }
 
+.dbd-toolbar-icon-home-outline:before {
+  content: url(../images/remove_home_16.png);
+}
+
 .dbd-toolbar-icon-favorites:before {
   content: url(../images/func_star_16_ena.png);
 }
@@ -236,6 +240,28 @@ body, html {
 
 .dbd-toolbar-icon-unshare-disabled:before {
   content: url(../images/func_lock_16_dis.png);
+}
+
+.fa-star:before {
+  content: "\f005"; }
+
+.fa-star-o:before {
+  content: "\f006"; }
+
+.dbd-toolbar-fa-icon {
+    font-family: FaFont;
+    font-size: 1.24rem;
+    display: inline-block;
+    font-weight: normal;
+    speak: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-align: center;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .builder-toolbar-button-text {

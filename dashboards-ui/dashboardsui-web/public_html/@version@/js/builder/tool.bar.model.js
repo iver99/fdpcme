@@ -446,6 +446,12 @@ define(['knockout',
             var setAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_SET');
             var removeAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_REMOVE');
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+            var cssSetDsbAsHome = "dbd-toolbar-icon-home";
+            var cssRemoveDsbAsHome = "dbd-toolbar-icon-home-outline";
+            var cssAddFavorite = "fa-star dbd-toolbar-fa-icon";
+            var cssRemoveFavorite = "fa-star-o dbd-toolbar-fa-icon";
+            self.dashboardsAsHomeIcon = ko.observable(cssSetDsbAsHome);
+            self.favoritesIcon = ko.observable(cssAddFavorite);
             self.isSystemDashboard = self.dashboard.systemDashboard();
             self.favoriteLabel = ko.observable(addFavoriteLabel);
             self.dashboardAsHomeLabel = ko.observable(setAsHomeLabel);
@@ -478,6 +484,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.favoriteLabel(removeFavoriteLabel);
+                    self.favoritesIcon(cssRemoveFavorite);
                     self.isFavoriteDashboard = true;
                 };
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -498,6 +505,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.favoriteLabel(addFavoriteLabel);
+                    self.favoritesIcon(cssAddFavorite);
                     self.isFavoriteDashboard = false;
                 };
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -533,6 +541,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.dashboardAsHomeLabel(removeAsHomeLabel);
+                    self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                     self.isHomeDashboard = true;
                     self.hasAnotherDashboardSetAsHome = false;
                 };
@@ -558,6 +567,7 @@ define(['knockout',
                             removeDelayTime: 5000
                     });
                     self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
                 };
@@ -593,15 +603,18 @@ define(['knockout',
                 function succCallback(data) {
                     if (data && data.isFavorite === true) {
                         self.favoriteLabel(removeFavoriteLabel);
+                        self.favoritesIcon(cssRemoveFavorite);
                         self.isFavoriteDashboard = true;
                     }
                     else {
                         self.favoriteLabel(addFavoriteLabel);
+                        self.favoritesIcon(cssAddFavorite);
                         self.isFavoriteDashboard = false;
                     }
                 };
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.favoriteLabel(addFavoriteLabel);
+                    self.favoritesIcon(cssAddFavorite);
                     self.isFavoriteDashboard = false;
                 };
                 Builder.checkDashboardFavorites(self.dashboard.id(), succCallback, errorCallback);
@@ -610,16 +623,19 @@ define(['knockout',
                 function succCallback(data) {
                     if (data && data.value === (self.dashboard.id()+"")) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
+                        self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                         self.isHomeDashboard = true;
                     }
                     else {
                         self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                         self.isHomeDashboard = false;
                         self.hasAnotherDashboardSetAsHome = true;
                     }
                 };
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
                 };
@@ -677,7 +693,7 @@ define(['knockout',
                     "url": "#",
                     "id":"emcpdf_dsbopts_favorites",
                     "onclick": self.handleDashboardFavorites,
-                    "icon": "dbd-toolbar-icon-favorites",
+                    "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": self.favoriteLabel,
                     "disabled": false
                 },
@@ -686,7 +702,7 @@ define(['knockout',
                     "url": "#",
                     "id":"emcpdf_dsbopts_home",
                     "onclick": self.handleDashboardAsHome,
-                    "icon": "dbd-toolbar-icon-home",
+                    "icon": self.dashboardsAsHomeIcon,
                     "title": self.setAsHomeLabel,
                     "disabled": false
                 }

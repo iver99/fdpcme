@@ -14,7 +14,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-       
+        
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
@@ -74,15 +74,25 @@
                                                 </div>
                                                 </div>
                                                 <br/>
-                                                <label id="creatorcblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_LABEL')"></label>
-                                                <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: creatorFilter, optionChange: handleOwnerFilterChanged}">
+                                                <div>
+                                                    <label id="creatorcblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_LABEL')"></label>
+                                                    <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: creatorFilter, optionChange: handleOwnerFilterChanged}">
+                                                        <span class="oj-choice-row">
+                                                            <input id="oracleopt" type="checkbox" name="creators" value="Oracle">
+                                                            <label for="oracleopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ORACLE')"></label>
+                                                        </span>
+                                                        <span class="oj-choice-row">
+                                                            <input id="otheropt" type="checkbox" name="creators" value="Others">
+                                                            <label for="otheropt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_OTHER')"></label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <label id="favoritescblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_FAVORITES_LABEL')"></label>
+                                                <div id="favoritescb" aria-controls="dtabhomesc" aria-labelledby="favoritescblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: favoritesFilter, optionChange: handleFavoritesFilterChanged}">
                                                     <span class="oj-choice-row">
-                                                        <input id="oracleopt" type="checkbox" name="creators" value="Oracle">
-                                                        <label for="oracleopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ORACLE')"></label>
-                                                    </span>
-                                                    <span class="oj-choice-row">
-                                                        <input id="otheropt" type="checkbox" name="creators" value="Others">
-                                                        <label for="otheropt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_OTHER')"></label>
+                                                        <input id="myfavorites" type="checkbox" name="favorites" value="favoritesOnly">
+                                                        <label for="myfavorites" data-bind="text: getNlsString('DBS_HOME_FILTER_FAVORITES_MY')"></label>
                                                     </span>
                                                 </div>
                                             </div>

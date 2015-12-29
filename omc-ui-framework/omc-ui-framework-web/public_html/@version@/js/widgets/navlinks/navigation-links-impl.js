@@ -286,7 +286,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 };
                 
                 function refreshLinks() {
-                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';
+                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
                     dfWelcomeUrl = '/emsaasui/emcpdfui/welcome.html';
                     
                     //Fetch available cloud services, visual analyzers and administration links
