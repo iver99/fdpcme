@@ -315,11 +315,6 @@ define(['knockout',
             };
 
             self.handleSaveUpdateDashboard = function(outputData) {
-//                if (window.opener && window.opener.childMessageListener) {
-//                    var jsonValue = JSON.stringify(outputData);
-//                    console.log(jsonValue);
-//                    window.opener.childMessageListener(jsonValue);
-//                }
                 self.handleSaveUpdateToServer(function() {
                     dfu.showMessage({
                             type: 'confirm',
@@ -363,7 +358,9 @@ define(['knockout',
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
 
             self.addSelectedWidgetToDashboard = function(widget) {
-                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 4, 2, widget);
+                var width = Builder.getTileDefaultWidth(widget, self.tilesViewModel.editor.mode), 
+                        height = Builder.getTileDefaultHeight(widget, self.tilesViewModel.editor.mode);
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", width, height, widget);
             };
 
             self.addWidgetDialogParams = {

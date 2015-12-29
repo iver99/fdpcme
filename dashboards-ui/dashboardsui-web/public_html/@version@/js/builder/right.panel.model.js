@@ -293,7 +293,7 @@ define(['knockout',
                 } 
                 else {
                     self.completelyHidden(false);
-                    $('#right-panel-toggler').css('right', '217px');
+                    $('#right-panel-toggler').css('right', '282px');
                     self.initDraggable();
                     $b.triggerBuilderResizeEvent('show left panel');
                 }

@@ -581,7 +581,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .dbd-left-panel-show {
-    width: 215px;
+    width: 280px;
 }
 
 .dbd-left-panel-hide {
@@ -637,13 +637,14 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     margin: 0 10px 10px 10px;
     background-color: #fcfdfe;
     float: left;
-    box-sizing: border-box; width: 195px;
+    box-sizing: border-box; 
+    width: 260px;
 }
 
 .dbd-left-panel-header-search-input {
     float: left; 
     height: 30px;
-    width: 163px;
+    width: 228px;
 }
 
 .dbd-left-panel-header-search-input input {
@@ -699,14 +700,14 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .dbd-left-panel-widget {
-    width: 190px; 
+    width: 245px; 
     height: 30px;
 }
 
 .dbd-left-panel-widget-text {
     /*padding-right: 35px;*/ 
     float: left; 
-    width: 185px; 
+    width: 240px; 
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis; 

@@ -46,7 +46,7 @@ define(['builder/core/builder.event.dispatcher'], function(dsp) {
     Builder.LINK_NAME_MAX_LENGTH = 4000;
     Builder.LINK_URL_MAX_LENGTH = 4000;
     Builder.BUILDER_DEFAULT_TILE_WIDTH = 4;
-    Builder.BUILDER_DEFAULT_TILE_HEIGHT = 1;
+    Builder.BUILDER_DEFAULT_TILE_HEIGHT = 2;
     Builder.DEFAULT_HEIGHT = 161;
     Builder.EDITOR_POS_BASED_ON_ROW_COLUMN = "BASED_ON_ROW_COLUMN";
     Builder.EDITOR_POS_FIND_SUITABLE_SPACE = "FIND_SUITABLE_SPACE";
