@@ -199,7 +199,8 @@ public class DashboardAPI extends APIBase
 			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
 			@DefaultValue("0") @QueryParam("offset") Integer offset,
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
-			@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners)
+			@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
+			@QueryParam("onlyFavorites") Boolean onlyFavorites)
 	{
 		infoInteractionLogAPIIncomingCall(
 				tenantIdParam,
@@ -223,6 +224,7 @@ public class DashboardAPI extends APIBase
 			filter.setIncludedAppsFromString(appTypes);
 			filter.setIncludedOwnersFromString(owners);
 			filter.setIncludedTypesFromString(types);
+			filter.setIncludedFavorites(onlyFavorites);
 			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {

@@ -561,12 +561,29 @@ public class DashboardManager
 
 		StringBuilder sb = null;
 		int index = 1;
+		String currentUser = UserContext.getCurrentUser();
+		List<Object> paramList = new ArrayList<Object>();
 		if (apps.isEmpty()) {
 			// no subscribe apps
-			sb = new StringBuilder(
-					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
-							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3) ");
-			index = 4;
+			//			sb = new StringBuilder(
+			//					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
+			//							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3) ");
+			//			index = 4;
+			sb = new StringBuilder(" from Ems_Dashboard p  ");
+			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
+						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+				paramList.add(currentUser);
+			}
+			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id =df.dashboard_Id and df.user_name = ?"
+						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
+				paramList.add(currentUser);
+			}
+			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
+					+ ") ");
+			paramList.add(tenantId);
+			paramList.add(currentUser);
 		}
 		else {
 			StringBuilder sbApps = new StringBuilder();
@@ -578,21 +595,34 @@ public class DashboardManager
 				sbApps.append(String.valueOf(app.getValue()));
 			}
 
-			//11,12,13 are id for OOB ITA worksheet, hide them as requested and will recover later upon request
-			sb = new StringBuilder(
-					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
-							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3 or (p.is_system = 1 and p.application_type in ("
-							+ sbApps.toString() + "))) ");
+			//			sb = new StringBuilder(
+			//					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
+			//							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3 or (p.is_system = 1 and p.application_type in ("
+			//							+ sbApps.toString() + "))) ");
 
-			index = 4;
+			//			index = 4;
+			sb = new StringBuilder(" from Ems_Dashboard p  ");
+			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
+						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+				paramList.add(currentUser);
+			}
+			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id = df.dashboard_Id and df.user_name = ?"
+						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
+				paramList.add(currentUser);
+			}
+			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
+					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
+			paramList.add(tenantId);
+			paramList.add(currentUser);
 		}
-		List<Object> paramList = new ArrayList<Object>();
-		String currentUser = UserContext.getCurrentUser();
-		paramList.add(currentUser);
-		paramList.add(tenantId);
-		paramList.add(currentUser);
 
 		if (filter != null) {
+			if (filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+				sb.append(" and df.user_name is not null ");
+			}
+
 			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
 				sb.append(" and ( ");
 				for (int i = 0; i < filter.getIncludedTypeIntegers().size(); i++) {
@@ -622,26 +652,27 @@ public class DashboardManager
 
 			if (filter.getIncludedOwners() != null && !filter.getIncludedOwners().isEmpty()) {
 				sb.append(" and ( ");
-				if (filter.getIncludedOwners().contains("Oracle")) {
-					sb.append(" p.owner = ?" + index++);
-					paramList.add("Oracle");
-				}
-				if (filter.getIncludedOwners().contains("Others")) {
-					if (filter.getIncludedOwners().contains("Oracle")) {
-						sb.append(" or ");
-					}
-					sb.append(" p.owner != ?" + index++);
-					paramList.add("Oracle");
-				}
-				/*
 				for (int i = 0; i < filter.getIncludedOwners().size(); i++) {
 					if (i != 0) {
 						sb.append(" or ");
 					}
-					sb.append(" p.owner = ?" + index++);
-					paramList.add(filter.getIncludedOwners().get(i));
+					if (filter.getIncludedOwners().get(i).equals("Oracle")) {
+						sb.append(" p.owner = ?" + index++);
+						paramList.add("Oracle");
 					}
-				 */
+					if (filter.getIncludedOwners().get(i).equals("Others")) {
+						sb.append(" p.owner != ?" + index++);
+						paramList.add("Oracle");
+					}
+					if (filter.getIncludedOwners().get(i).equals("Me")) {
+						sb.append(" p.owner = ?" + index++);
+						paramList.add(UserContext.getCurrentUser());
+					}
+					if (filter.getIncludedOwners().get(i).equals("Share")) {
+						sb.append(" p.owner != ?" + index++ + " and p.share_public > 0");
+						paramList.add(UserContext.getCurrentUser());
+					}
+				}
 
 				sb.append(" ) ");
 			}
@@ -677,53 +708,16 @@ public class DashboardManager
 						+ index++ + " )) ");
 				paramList.add("%" + queryString.toLowerCase(locale) + "%");
 			}
-			//			sb.append(" or lower(p.owner) = :owner)");
-			//			paramMap.put("owner", queryString.toLowerCase(locale));
-			//			sb.append(" and p.deleted = 0 ");
 		}
 
-		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
-				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
-			sb.append(" order by lower(p.name), p.name, p.dashboard_Id DESC");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(orderBy)) {
-			sb.append(" order by lower(p.name) DESC, p.name DESC, p.dashboard_Id DESC");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME.equals(orderBy)
-				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(orderBy)) {
-			sb.append(" order by CASE WHEN p.creation_Date IS NULL THEN 0 ELSE 1 END DESC, p.creation_Date DESC, p.dashboard_Id DESC");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(orderBy)) {
-			sb.append(" order by CASE WHEN p.creation_Date IS NULL THEN 0 ELSE 1 END, p.creation_Date, p.dashboard_Id");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)
-				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(orderBy)) {
-			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(orderBy)) {
-			sb.append(" order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END, le.access_Date, p.dashboard_Id");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)
-				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(orderBy)) {
-			sb.append(" order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END DESC, p.dashboard_Id DESC");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(orderBy)) {
-			sb.append(" order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END, p.dashboard_Id");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER.equals(orderBy)
-				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(orderBy)) {
-			sb.append(" order by lower(p.owner), p.owner, lower(p.name), p.name, p.dashboard_Id DESC");
-		}
-		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(orderBy)) {
-			sb.append(" order by lower(p.owner) DESC, p.owner DESC, lower(p.name), p.name, p.dashboard_Id DESC");
-		}
-		else {
-			//default order by
-			sb.append(" order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC");
-		}
+		// order by
+		sb.append(getListDashboardsOrderBy(orderBy));
+
+		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
 		sbQuery.insert(0, "select p.* ");
 		String jpqlQuery = sbQuery.toString();
+		//System.out.println("sql: " + jpqlQuery);
 		logger.debug(jpqlQuery);
 		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 		EntityManager em = dsf.getEntityManager();
@@ -760,7 +754,7 @@ public class DashboardManager
 						maxResults, dbdList);
 				return pd;*/
 	}
-
+	
 	/**
 	 * Removes a dashboard from favorite list
 	 *
@@ -861,6 +855,41 @@ public class DashboardManager
 			}
 		}
 	}
+
+	//	/**
+	//	 * Removes a dashboard from favorite list
+	//	 *
+	//	 * @param dashboardId
+	//	 * @param tenantId
+	//	 * @throws DashboardNotFoundException
+	//	 */
+	//	public void removeFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardNotFoundException
+	//	{
+	//		if (dashboardId == null || dashboardId <= 0) {
+	//			throw new DashboardNotFoundException();
+	//		}
+	//		EntityManager em = null;
+	//		try {
+	//			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+	//			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+	//			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
+	//				logger.debug("Dashboard with id {} is not found for it does not exists or is deleted already", dashboardId);
+	//				throw new DashboardNotFoundException();
+	//			}
+	//			em = dsf.getEntityManager();
+	//			String currentUser = UserContext.getCurrentUser();
+	//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+	//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+	//			if (edf != null) {
+	//				dsf.removeEmsDashboardFavorite(edf);
+	//			}
+	//		}
+	//		finally {
+	//			if (em != null) {
+	//				em.close();
+	//			}
+	//		}
+	//	}
 
 	/**
 	 * Enables or disables the 'include time control' settings for specified dashboard
@@ -995,6 +1024,49 @@ public class DashboardManager
 		else {
 			edla.setAccessDate(DateUtil.getCurrentUTCTime());
 			dsf.mergeEmsDashboardLastAccess(edla);
+		}
+	}
+
+	private String getListDashboardsOrderBy(String orderBy)
+	{
+		if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC.equals(orderBy)) {
+			return " order by lower(p.name), p.name, p.dashboard_Id DESC";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_DSC.equals(orderBy)) {
+			return " order by lower(p.name) DESC, p.name DESC, p.dashboard_Id DESC";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC.equals(orderBy)) {
+			return " order by CASE WHEN p.creation_Date IS NULL THEN 0 ELSE 1 END DESC, p.creation_Date DESC, p.dashboard_Id DESC";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC.equals(orderBy)) {
+			return " order by CASE WHEN p.creation_Date IS NULL THEN 0 ELSE 1 END, p.creation_Date, p.dashboard_Id";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC.equals(orderBy)) {
+			return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC, p.dashboard_Id DESC";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC.equals(orderBy)) {
+			return " order by CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END, le.access_Date, p.dashboard_Id";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC.equals(orderBy)) {
+			return " order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END DESC, p.dashboard_Id DESC";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC.equals(orderBy)) {
+			return " order by CASE WHEN p.last_modification_Date IS NULL THEN p.creation_Date ELSE p.last_modification_Date END, p.dashboard_Id";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER.equals(orderBy)
+				|| DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC.equals(orderBy)) {
+			return " order by lower(p.owner), p.owner, lower(p.name), p.name, p.dashboard_Id DESC";
+		}
+		else if (DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC.equals(orderBy)) {
+			return " order by lower(p.owner) DESC, p.owner DESC, lower(p.name), p.name, p.dashboard_Id DESC";
+		}
+		else {
+			//default order by
+			return " order by p.application_Type, p.type DESC, lower(p.name), p.name, CASE WHEN le.access_Date IS NULL THEN 0 ELSE 1 END DESC, le.access_Date DESC";
 		}
 	}
 
