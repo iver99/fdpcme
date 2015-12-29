@@ -26,6 +26,8 @@ def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclej
 //def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 //def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
 def File sourceCKeditorDesDir = new File(sourceWebappDir, 'libs/@version@/js/ckeditor')
+// sourc directories where font files are copied
+def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 // folders for minify, fingereprint js files
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
@@ -162,7 +164,40 @@ project.task("cleanJSLib") << {
     sourceCKeditorDesDir.deleteDir()
 }
 
-task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory]) {
+project.task("unpackFontFromArtifactory") << {
+    
+    def File buildFontUnzipDir = new File(buildDir.absolutePath, 'font-awesome')
+    //first time or if custom cleans removes it
+    sourceFontDestDir.mkdirs()
+
+    configurations.compile.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+        if (artifact.name.equals('font-awesome') && files(sourceFontDestDir.listFiles()).isEmpty()) {
+            logger.lifecycle("Unpacking artifact ${artifact.name}, version:${artifact.moduleVersion.id.version}..")
+            buildFontUnzipDir.mkdirs()
+            project.copy {  
+		from project.file(artifact.file.absolutePath)
+		into buildFontUnzipDir.absolutePath
+	    }
+	    
+	    ant.unzip(src: buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0.zip", dest:buildFontUnzipDir.absolutePath)
+		    
+	    project.copy {
+	    	    from buildFontUnzipDir.absolutePath+"/font-awesome-4.3.0"
+		    into sourceFontDestDir.absolutePath
+	    }
+		    
+	    project.delete(buildFontUnzipDir)
+        }
+    }
+}
+
+project.task("cleanFont") << {
+    println 'Cleaning up font directories ...'
+    println 'font-awesome dir: ' + sourceFontDestDir.absolutePath
+    sourceFontDestDir.deleteDir()
+}
+
+task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory]) {
 
     from (webRootSourceDir) {
         include "**/*"
@@ -191,7 +226,7 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpac
     }
 }
 
-clean.dependsOn cleanJet,cleanJSLib, cleanJs
+clean.dependsOn cleanJet,cleanJSLib, cleanJs, cleanFont
 
 /**
  * combine -> minify -> fingerprint JavaScript
@@ -478,7 +513,7 @@ sourceSets {
 }
 
 //copy files without any convert when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory]){
     from('public_html') {
     include "**/*"
     }
@@ -537,6 +572,7 @@ dependencies {
     //compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
     //compile(group: 'emcs-ui-framework', name: 'emcs-ui-framework-common-dev', version: '1.3.1', ext: 'zip'){transitive = false}
     compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
+	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
     ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
         module('commons-net:commons-net:1.4.1') {
                 dependencies 'oro:oro:2.0.8:jar'
