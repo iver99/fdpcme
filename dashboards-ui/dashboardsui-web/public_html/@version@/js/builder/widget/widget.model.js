@@ -31,6 +31,7 @@ define(['jquery',
                 url: widgetsUrl,
                 headers: dfu.getSavedSearchRequestHeader(),
                 success: function(data) {
+                    sortWidgetsData(data);
                     data && data.length > 0 && (filterWidgetsData(data, keyword));
                 },
                 error: function(){
@@ -39,6 +40,17 @@ define(['jquery',
                 async: false
             });
         };
+        
+        function sortWidgetsData(widgets) {
+            if (widgets && widgets.length > 0) {
+                widgets.sort(function(a, b) {
+                    var na = a.WIDGET_NAME.toLowerCase(), nb = b.WIDGET_NAME.toLowerCase();
+                    if (na < nb) return -1;
+                    if (na > nb) return 1;
+                    return 0;
+                });
+            }
+        }
 
         function filterWidgetsData(data, keyword){
             var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;

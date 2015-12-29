@@ -209,13 +209,9 @@ define(['knockout',
                 new Builder.WidgetDataSource().loadWidgetData(self.page(), req&&(typeof req.term === "string")?req.term:self.keyword(), function(page, widgets, totalPages) {
                     self.widgets([]);
                     if (widgets && widgets.length > 0) {
-                        widgets.sort(function(a, b) {
-                            var na = a.WIDGET_NAME.toLowerCase(), nb = b.WIDGET_NAME.toLowerCase();
-                            if (na < nb) return -1;
-                            if (na > nb) return 1;
-                            return 0;
-                        });
                         for (var i = 0; i < widgets.length; i++) {
+                            if (!widgets[i].WIDGET_DESCRIPTION)
+                                widgets[i].WIDGET_DESCRIPTION = null;
                             var wgt = ko.mapping.fromJS(widgets[i]);
                             self.getWidgetScreenshot(wgt);
                             self.widgets.push(wgt);
