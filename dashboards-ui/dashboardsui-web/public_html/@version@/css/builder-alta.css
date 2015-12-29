@@ -562,10 +562,32 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     background: #fff;
 }
 
-#right-panel-toggler .oj-button { 
+#right-panel-toggler .oj-button {
     display:block;
     float: left;
     margin-bottom: 0;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 0; 
+    outline: none;
+}
+
+#right-panel-toggler .oj-buttonset-first{
+    border-top-left-radius: 2px !important; 
+}
+
+#right-panel-help-btn {
+    border-bottom-left-radius: 2px !important;
+    border-bottom: 1px solid #c4ced7 !important;
+}
+
+#right-panel-toggler .oj-button.oj-selected {
+    background-color: white;
+    border-color: #c4ced7
+}
+
+#right-panel-toggler .oj-button.oj-selected .oj-button-label {
+    border-right: 1px solid white
 }
 
 .right-panel-toggler-icon-toggle:before {

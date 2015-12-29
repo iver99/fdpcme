@@ -432,7 +432,7 @@
             <!-- /ko -->
             <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;" role="main">
                 <div id="right-panel-toggler" data-bind="visible: !dashboard.systemDashboard()"
-                     style="position: absolute; top: 2px; right: 282px; z-index: 999; max-width: 30px;">
+                     style="position: absolute; top: 2px; right: 282px; z-index: 999; max-width: 30px; padding-left: 5px;">
                     <div id="" data-bind="ojComponent: {component: 'ojButtonset', checked: rightPanelStatus}" 
                          class="oj-buttonset oj-component oj-component-initnode" 
                          role="toolbar">
@@ -446,7 +446,7 @@
                                     label: getNlsString(rightPanelShown() ? 'DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL' : 'DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL')
                                }, click: toggleRightPanel"/>
                     </div>
-                    <button data-bind="ojComponent: {
+                    <button id="right-panel-help-btn" data-bind="ojComponent: {
                         component:'ojButton', 
                         display: 'icons', 
                         icons: {start:'oj-icon right-panel-toggler-icon-help'}, 
