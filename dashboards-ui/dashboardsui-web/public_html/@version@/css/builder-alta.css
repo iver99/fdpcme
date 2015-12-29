@@ -704,14 +704,14 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 .dbd-left-panel-widget-text {
-    padding-right: 35px; 
+    /*padding-right: 35px;*/ 
     float: left; 
-    width: 155px; 
+    width: 185px; 
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis; 
     display: block; 
-    margin-right: -35px; 
+    /*margin-right: -35px;*/ 
     margin-top: 9px; 
     cursor: move;
 }
