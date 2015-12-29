@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 define(['jquery',
-        'uifwk/libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min/ojcore',
+//        'uifwk/libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min/ojcore',
         'uifwk/libs/@version@/js/html2canvas/html2canvas',
         'uifwk/libs/@version@/js/canvg/rgbcolor',
         'uifwk/libs/@version@/js/canvg/StackBlur',
         'uifwk/libs/@version@/js/canvg/canvg'],
-    function($, oj)
+    function($)
     {
         function ScreenShotUtils() {
             this.getBase64ScreenShot = function(elem_id, target_width, target_height, quality, callback) {
@@ -41,7 +41,7 @@ define(['jquery',
                     try {
                         canvg(canvas, svg);
                     } catch (e) {
-                        oj.Logger.error(e);
+                        console.error(e);
                     }
                     nodesToRecover.push({
                         parent: parentNode,
@@ -86,7 +86,7 @@ define(['jquery',
                             });
                             callback(data);
                         } catch (e) {
-                            oj.Logger.error(e);
+                            console.error(e);
                         }
                     }
                 });
