@@ -73,7 +73,7 @@ require(['ojs/ojcore',
                 viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
                 template: {require: "text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
             });
-
+            
             function MyViewModel() {
                 var self = this;
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
@@ -96,6 +96,9 @@ require(['ojs/ojcore',
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
+                    KOCadvanced: {KOCname: 'time-filter', 
+                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
+                        KOCviewModel:'/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'},
                     callbackAfterApply: function (start, end, tp) {
                         console.log(start);
                         console.log(end);
