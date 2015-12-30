@@ -262,12 +262,12 @@ define([
                 }
                 
                 return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-            };
+            }
             
             function isValidShowMessageOption(messageOption) {
                 return messageOption === "none" || messageOption === "summary" || 
                         messageOption === "all";
-            };
+            }
             
             function logMessage(url, messageType, messageText) {
                 if (messageType) 
@@ -308,14 +308,14 @@ define([
                             oj.Logger.log(messageText);
                     }
                 }
-            };
+            }
             
             function removeMessage(messageId) {
                 if (messageId) {
                     var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove', category: 'retry_in_progress'};
                     window.postMessage(messageObj, window.location.href);
                 }
-            };
+            }
             
             function getMessageFromXhrResponse(xhr) {
                 var message = null;
@@ -335,7 +335,7 @@ define([
 //                }
                 
                 return message;
-            };
+            }
             
         }
         
