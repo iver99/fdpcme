@@ -87,10 +87,12 @@ require(['ojs/ojcore',
                 self.initStart = ko.observable(start);
                 self.initEnd = ko.observable(end);
                 self.timePeriodsNotToShow = ko.observableArray([]);
+                self.timeDisplay = ko.observable("short");
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
+//                    timeDisplay: self.timeDisplay,
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
@@ -110,6 +112,7 @@ require(['ojs/ojcore',
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
+                    self.timeDisplay("long");
                 }
                 
                 self.lineSeriesValues = ko.observableArray();

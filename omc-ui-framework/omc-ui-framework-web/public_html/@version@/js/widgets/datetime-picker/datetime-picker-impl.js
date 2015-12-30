@@ -467,7 +467,26 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     return windowSize;
                 };
                 
-                //In custom mode, limit the sise of window, expressed as milliseconds
+                //Meet the requirement of displaying relative time vs. absolute time
+                //Set flag "timeDisplay" to determine whether relative time or absolute time should be displayed in the drop-down. 
+                //If "timeDisplay" is set as "long", both relative time("Last X") and absolute time will be displayed in drop-down.
+                //If "timeDisplay" is set as "short", ONLY relative time will be displayed when the user selects a relative time option and ONLY absolute time will be displayed when the user choose "Custom". 
+                if(params.timeDisplay) {
+                    if(ko.isObservable(params.timeDisplay)) {
+                        self.timeDisplay = ko.computed(function() {
+                            return params.timeDisplay();
+                        }, self);
+                        self.timeDisplay.subscribe(function(value) {
+                            self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
+                        });
+                    }else {
+                        self.timeDisplay = params.timeDisplay;
+                    }
+                }else {
+                    self.timeDisplay = "long";
+                }
+                
+                //In custom mode, limit the size of window, expressed as milliseconds
                 if(params.customWindowLimit && params.customWindowLimit>60*1000) {
                     self.customWindowLimit = params.customWindowLimit;
                     if(self.customWindowLimit) {                                    
@@ -728,12 +747,27 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                     
                     if(self.timePeriod() === self.timePeriodLatest) {
-                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: " + self.hideRangeLabel +  "'>" + self.timePeriod() + "</span>";
-                    }else {
-                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" +
-                                start +
-                                "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" +
+                        dateTimeInfo = "<span style='font-weight: bold; padding-right: 5px; display: inline-block;'>" + self.timePeriod() + "</span>";
+                        return dateTimeInfo;
+                    }
+                    
+                    if(self.timePeriod() === self.timePeriodCustom) {
+                        if(self.getParam(self.timeDisplay) === "short") {
+                            dateTimeInfo = start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
+                        }else {
+                            dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>" + 
+                                start + 
+                                "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + 
                                 end;
+                        }
+                        return dateTimeInfo;
+                    }
+                    
+                    if(self.getParam(self.timeDisplay) === "short") {
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.timePeriod() + ": </span>";
+                    }else {
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>";
+                        dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
                     }
                     return dateTimeInfo;
                 }
