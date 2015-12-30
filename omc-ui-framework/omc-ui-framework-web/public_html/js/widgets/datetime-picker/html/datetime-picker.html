@@ -26,11 +26,12 @@
                     <a href="#" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days, css: last90daysCss"></a>
                     <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss"></a>
                     <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodAdvanced, css: advancedCss"></a>
                 </div>
                 </div>
 
                 <!-- right of panel-->
-                <div class="pickerPanel" data-bind="visible: showCalendar">
+                <div class="pickerPanel" data-bind="visible: showRightPanel">
 
                     <!--date and time info above picker -->
                     <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">
@@ -62,6 +63,7 @@
 
                     </div>
 
+                    <script type="text/html" data-bind="attr: {id: 'calendar_'+randomId}">
                     <!--date picker -->
                     <div class="datePicker" data-bind="attr: {id: 'datePicker_'+randomId}, ojComponent:{component: 'ojInputDate', 
                                                                     datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
@@ -88,6 +90,14 @@
                     <!--ko if: showBeyondWindowLimitError-->
                     <div class="errorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
                     <!-- /ko -->
+                    </script>
+                    
+                    <!-- ko if: showCalendar -->
+                    <div data-bind="template: {name: 'calendar_'+randomId}"></div>
+                    <!-- /ko -->
+                    <!-- ko if: showAdvancedPanel -->
+                    <div data-bind="component: {name: KOCname}"></div>
+                    <!-- /ko -->                    
                 </div>
             </div> 
 

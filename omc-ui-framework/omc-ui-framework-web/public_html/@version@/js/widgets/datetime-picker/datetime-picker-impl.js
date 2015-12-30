@@ -67,6 +67,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
                 self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
                 self.timePeriodLatest = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST;
+                self.timePeriodAdvanced = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_ADVANCED;
                 self.today = nls.DATETIME_PICKER_SHOW_TODAY;
                 self.yesterday = nls.DATETIME_PICKER_SHOW_YESTERDAY;
                 
@@ -94,6 +95,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last30daysNotToShow = ko.observable(false);
                 self.last90daysNotToShow = ko.observable(false);
                 self.latestNotToShow = ko.observable(false);
+                self.advancedNotToShow = ko.observable(true);
                 
                 self.last15minsChosen = ko.observable(false);
                 self.last30minsChosen = ko.observable(false);
@@ -106,6 +108,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last90daysChosen = ko.observable(false);
                 self.latestChosen = ko.observable(false);
                 self.customChosen = ko.observable(false);
+                self.advancedChosen = ko.observable(false);
                 
                 self.displayDateTimeSelection = ko.observable("inline");
                 self.hideTimeSelection = ko.observable(false);
@@ -173,6 +176,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.customCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.customChosen() ? " drawerChosen" : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.advancedCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.advancedNotToShow() ? " drawerNotToShow" : "";
+                    css += self.advancedChosen() ? " drawerChosen" : " drawerNotChosen";
                     return css;
                 }, self);
                 
@@ -298,6 +307,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.last90daysChosen(false);
                     self.latestChosen(false);
                     self.customChosen(false);
+                    self.advancedChosen(false);
                 }
                 
                 
@@ -336,6 +346,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             break;
                         case self.timePeriodCustom:
                             self.customChosen(true);
+                            break;
+                        case self.timePeriodAdvanced:
+                            self.advancedChosen(true);
                             break;
                     }
                 }
@@ -552,6 +565,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.hideTimeSelection(true);
                 }
                 
+//                if(params.KOCname && params.KOCtemplate && params.KOCviewModel) {
+                if(params.KOCadvanced && params.KOCadvanced.KOCname && params.KOCadvanced.KOCtemplate && params.KOCadvanced.KOCviewModel) {
+                    self.advancedNotToShow(false);
+                    self.KOCname = params.KOCadvanced.KOCname;
+                    if(!ko.components.isRegistered(self.KOCname)) {
+                        ko.components.register(self.KOCname, {
+                            template: {require: "text!" + params.KOCadvanced.KOCtemplate},
+                            viewModel: {require: params.KOCadvanced.KOCviewModel}
+                        });
+                    }
+                }
+                
                 if (params.callbackAfterApply && typeof params.callbackAfterApply === "function") {
                     self.callbackAfterApply = params.callbackAfterApply;
                 }
@@ -587,7 +612,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriod = ko.observable();
                 self.dateTimeInfo = ko.observable();
                 self.selectByDrawer = ko.observable(false);
+                self.showRightPanel = ko.observable(false);
                 self.showCalendar = ko.observable(false);
+                self.showAdvancedPanel = ko.observable(false);
                 
                 self.random = ko.observable(new Date().getTime());
                 self.random1 = ko.observable(new Date().getTime());
@@ -599,8 +626,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.lastTimePeriod = ko.observable();
 
                 self.leftDrawerHeight = ko.computed(function() {
-                    if(self.showCalendar() === true) {
-                        return "397px";
+                    if(self.showRightPanel() === true) {
+//                        return "397px";
+                        return "433px";
                     }else {
                         return "auto";
                     }
@@ -864,6 +892,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.selectByDrawer(false);
                     
                     self.customChosen(true);
+                    self.showCalendar(true);
 
                     // Do not validate window limit when initialized
                     if(type === 0) {
@@ -1097,9 +1126,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         $(self.panelId).ojPopup('close');
                     } else {
                         if(self.timePeriod() === self.timePeriodCustom) {
-                            self.showCalendar(true);
+                            self.showRightPanel(true);
                         }else {
-                            self.showCalendar(false);
+                            self.showRightPanel(false);
                         }
                         self.autoFocus("inputStartDate_" + self.randomId);
                         self.lastFocus(1);
@@ -1128,11 +1157,17 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.timePeriod(self.lastTimePeriod());
                     self.setMinMaxDate(null, null);
 
+                    if(self.advancedChosen() === true) {
+                        self.advancedChosen(false);
+                        self.showAdvancedPanel(false);
+                    }
                     if(self.lastTimePeriod() !== self.timePeriodCustom) {
+                        self.showCalendar(false);
                         self.beyondWindowLimitError(false);
                         self.setTimePeriodChosen(self.lastTimePeriod());
                         self.setTimePeriodToLastX(self.lastTimePeriod(), null, null);
                     }else{
+                        self.showCalendar(true);
                         var lastBeyondWindowLimitError = self.beyondWindowLimitError();
                         self.init = !lastBeyondWindowLimitError;
                         customClick(1);
@@ -1146,6 +1181,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.chooseTimePeriod = function (data, event) {
                     self.setFocusOnInput("inputStartDate_" + self.randomId);
                     self.lastFocus(1);
+                    
+                    if($(event.target).text() === self.timePeriodAdvanced) {
+                        self.showCalendar(false);
+                        self.showRightPanel(true);
+                        self.showAdvancedPanel(true);
+                        self.setTimePeriodChosen(self.timePeriodAdvanced);
+                        return;
+                    }
                     
                     if ($(event.target).text() !== self.timePeriodCustom) {
                         //just show window limit error in custom mode
@@ -1185,8 +1228,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     
                         setTimeout(function() {self.applyClick()}, 0);
                     }else {
-                        self.displayDateTimeSelection("inline");
+                        self.showAdvancedPanel(false);
+                        self.showRightPanel(true);
                         self.showCalendar(true);
+                        self.displayDateTimeSelection("inline");
                     }
 
                     self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
