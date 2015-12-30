@@ -436,7 +436,8 @@ define(['knockout',
                     "onclick": self.isSystemDashboard ? "" : self.openAddWidgetDialog,
                     "icon": self.isSystemDashboard ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
                     "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.isSystemDashboard
+                    "disabled": self.isSystemDashboard,
+                    "showOnMobile": true
                 },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
@@ -445,7 +446,8 @@ define(['knockout',
                     "onclick": self.isSystemDashboard ? "" : self.openDashboardEditDialog,
                     "icon": self.isSystemDashboard ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
                     "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
-                    "disabled": self.isSystemDashboard
+                    "disabled": self.isSystemDashboard,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
@@ -454,7 +456,8 @@ define(['knockout',
                     "onclick": self.openDashboardDuplicateDialog,
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
-                    "disabled": false
+                    "disabled": false,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
                 },
                 {
                     "label": getNlsString('COMMON_BTN_DELETE'),
@@ -463,7 +466,8 @@ define(['knockout',
                     "onclick": self.isSystemDashboard ? "" : self.openDashboardDeleteConfirmDialog,
                     "icon": self.isSystemDashboard ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
                     "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-                    "disabled": self.isSystemDashboard
+                    "disabled": self.isSystemDashboard,
+                    "showOnMobile": true
                 }
             ];
             //Dashboard Options ======end=======
