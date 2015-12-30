@@ -598,7 +598,7 @@ define(['knockout',
                 $('#tile-dragging-placeholder').hide();
                 tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
                 var wgt = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                var width = Builder.getTileDefaultWidth(wgt), height = Builder.getTileDefaultHeight(wgt);
+                var width = Builder.getTileDefaultWidth(wgt, self.editor.mode), height = Builder.getTileDefaultHeight(wgt, self.editor.mode);
                 tilesToBeOccupied = self.editor.getTilesToBeOccupied(cell, width, height);
                 tilesToBeOccupied && self.editor.highlightTiles(tilesToBeOccupied);
                 self.previousDragCell = cell; 
@@ -633,7 +633,7 @@ define(['knockout',
                     if (!cell) return;
                     tile = u.helper.tile;
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                    var width = Builder.getTileDefaultWidth(widget), height = Builder.getTileDefaultHeight(widget);
+                    var width = Builder.getTileDefaultWidth(widget, self.editor.mode), height = Builder.getTileDefaultHeight(widget, self.editor.mode);
                     if(cell.column>self.editor.mode.MODE_MAX_COLUMNS-width) {
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
