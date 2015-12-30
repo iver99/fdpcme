@@ -572,7 +572,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if(!ko.components.isRegistered(self.KOCname)) {
                         ko.components.register(self.KOCname, {
                             template: {require: "text!" + params.KOCadvanced.KOCtemplate},
-                            viewModel: {require: params.KOCadvanced.KOCviewModel}
+                            viewModel: params.KOCadvanced.KOCviewModel //{require: params.KOCadvanced.KOCviewModel}
                         });
                     }
                 }
