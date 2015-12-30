@@ -207,13 +207,13 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
                 var tenantName = logOwner.substring(0, logOwner.indexOf('.'));
                 dfu = new dfumodel(userName, tenantName);
 
-                if (maxInterval != undefined) {
+                if (maxInterval !== undefined) {
                     logsCacheMaxInterval = maxInterval;
                 }
-                if (frequency != undefined) {
+                if (frequency !== undefined) {
                     logsCacheFrequency = frequency;
                 }
-                if (limit != undefined) {
+                if (limit !== undefined) {
                     logsCacheLimit = limit;
                 }
 
