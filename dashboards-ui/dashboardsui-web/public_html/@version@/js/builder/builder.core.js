@@ -150,7 +150,7 @@ define(['builder/core/builder.event.dispatcher'], function(dsp) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
-            var leftWidth = $('#dbd-left-panel').width() + $('#right-panel-toggler').outerWidth();
+            var leftWidth = $('#dbd-left-panel').width() + ($('#right-panel-toggler').is(":visible") ? $('#right-panel-toggler').outerWidth() : 0);
             var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
