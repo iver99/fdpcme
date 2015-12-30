@@ -7,6 +7,33 @@ and open the template in the editor.
     Created on : 2014-8-29, 14:51:26
     Author     : guobaochen
 */
+@font-face {
+  font-family: 'FaFont';
+  src: url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format('woff2'),
+       url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format('woff');
+  font-weight: normal;
+  font-style: normal; 
+}
+
+.fa-icon-font {
+  font-family: FaFont;
+  font-size: 1.34rem;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; 
+}
+
+.fa-icon-font-16 {
+    font-size: 16px;
+}
 
 body, html {
   width: 100%;
@@ -214,14 +241,15 @@ body, html {
   content: url(../images/func_trashcan_16_dis.png);
 }
 
-.dbd-toolbar-icon-share:before {
-  content: url(../images/func_unlock_16_ena.png);
+.dbd-toolbar-icon-share:before, .fa-users:before {
+  content: "\f0c0";
+} 
+
+.dbd-toolbar-icon-unshare:before, .fa-user:before {
+  content: "\f007";
 }
 
-.dbd-toolbar-icon-unshare:before {
-  content: url(../images/func_lock_16_ena.png);
-}
-
+/*
 .dbd-toolbar-icon-share-disabled:before {
   content: url(../images/func_unlock_16_dis.png);
 }
@@ -229,7 +257,7 @@ body, html {
 .dbd-toolbar-icon-unshare-disabled:before {
   content: url(../images/func_lock_16_dis.png);
 }
-
+*/
 .builder-toolbar-button-text {
   color: rgb(0, 0, 0);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

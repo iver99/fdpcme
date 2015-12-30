@@ -428,7 +428,15 @@ define(['knockout',
                         success: function (result) {
                             //self.sharePublic(_shareState === true ? false : true);
                             self.dashboard.sharePublic(_shareState === true ? false : true);
-                            $("#share_cfmDialog").ojDialog("close"); 
+                            if (self.dashboard.sharePublic() === true)
+                            {
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                            else
+                            {
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                            //$("#share_cfmDialog").ojDialog("close"); 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
@@ -453,8 +461,8 @@ define(['knockout',
             };
             
             self.openShareConfirmDialog = function() {
-                //self.handleShareUnshare();
-                $("#share_cfmDialog").ojDialog("open"); 
+                self.handleShareUnshare();
+                //$("#share_cfmDialog").ojDialog("open"); 
             };
             
             //self.isSystemDashboard = self.dashboard.systemDashboard();
