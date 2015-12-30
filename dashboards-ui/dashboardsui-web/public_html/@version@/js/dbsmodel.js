@@ -602,7 +602,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             {
                 _filter.owners = creatorFilter;
             }
-            if (favoritesFilter !== undefined && favoritesFilter.length > 0)
+            if (favoritesFilter !== undefined && favoritesFilter !== null && favoritesFilter.length > 0)
             {
                 _filter.favoritesOnly = true;
             }
