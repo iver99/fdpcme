@@ -58,9 +58,7 @@ requirejs.config({
             merge: {
 //                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
-        }
-        ,
-        text: {
+        },text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
               // remote server allows CORS
@@ -134,7 +132,7 @@ require(['knockout',
             function getUrlParam(name){
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
                 return results === null ? "" : results[1];                
-            };
+            }
             
             function HeaderViewModel() {
                 var self = this;
@@ -147,7 +145,7 @@ require(['knockout',
 //                    relNotificationShow: "warnings",
                     isAdmin: isAdmin
                 };
-            };
+            }
             
             function MainViewModel() {
                 var self = this;
@@ -231,7 +229,7 @@ require(['knockout',
                 self.openWidgetSelectorDialog = function() {
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
-            };
+            }
             
             $(document).ready(function() {
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]); 
