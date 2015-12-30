@@ -88,6 +88,14 @@ define(['knockout',
                 console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
                 self.showTimeControl(exists);
             };
+            
+            self.dashboardMaximizedHandler = function() {
+                self.completelyHidden(true);
+            };
+            
+            self.dashboardRestoredHandler = function() {
+                self.completelyHidden(false);
+            };
 
             self.initialize = function() {
                     if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
@@ -122,6 +130,8 @@ define(['knockout',
                 $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
                 $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
                 $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
+                $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.dashboardMaximizedHandler);
+                $b.addEventListener($b.EVENT_TILE_RESTORED, self.dashboardRestoredHandler);
             };
 
             self.initDraggable = function() {

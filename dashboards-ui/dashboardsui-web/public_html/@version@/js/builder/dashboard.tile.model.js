@@ -64,6 +64,7 @@ define(['knockout',
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);
             self.showWidgetTitle = ko.observable(true);
+            self.showRightPanelToggler = ko.observable(true);
 
             self.isEmpty = function() {
                 return !self.editor.tiles() || self.editor.tiles().length === 0;
@@ -132,6 +133,8 @@ define(['knockout',
                 $b.addEventListener($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, self.dashboardTimeRangeChangedHandler);
                 $b.addEventListener($b.EVENT_ENTER_NORMAL_MODE, self.enterNormalModeHandler);
                 $b.addEventListener($b.EVENT_ENTER_TABLET_MODE, self.enterTabletModeHandler);
+                $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.dashboardMaximizedHandler);
+                $b.addEventListener($b.EVENT_TILE_RESTORED, self.dashboardRestoredHandler);
                 self.initializeTiles();
             };
             
@@ -796,6 +799,14 @@ define(['knockout',
             
             self.enterTabletModeHandler = function() {
                 self.editor.changeMode(self.tabletMode);
+            };
+            
+            self.dashboardMaximizedHandler = function() {
+                self.showRightPanelToggler(false);
+            };
+            
+            self.dashboardRestoredHandler = function() {
+                self.showRightPanelToggler(true);
             };
             
             var globalTimer = null;
