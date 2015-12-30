@@ -87,10 +87,9 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 };
                 
                 self.openMyFavorites = function() {
-                    oj.Logger.info('Trying to open my favorites by URL: ' + dfDashboardsUrl);
-                    if(dfDashboardsUrl) {
-                        window.location.href = dfDashboardsUrl;
-                    }
+                    var favoritesUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
+                    oj.Logger.info('Trying to open my favorites by URL: ' + favoritesUrl);
+                    window.location.href = favoritesUrl;
                 };
                 
                 self.openWelcomePage = function() {
@@ -286,7 +285,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 };
                 
                 function refreshLinks() {
-                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
+                    dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';
                     dfWelcomeUrl = '/emsaasui/emcpdfui/welcome.html';
                     
                     //Fetch available cloud services, visual analyzers and administration links
