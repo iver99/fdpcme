@@ -24,8 +24,7 @@ requirejs.config({
     shim: {
         'jquery': {
             exports: ['jQuery', '$']
-        },
-        'crossroads': {
+        },'crossroads': {
             deps: ['signals'],
             exports: 'crossroads'
         }
@@ -113,7 +112,7 @@ require(['ojs/ojcore',
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
                     self.timeDisplay("long");
-                }
+                };
                 
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
@@ -122,7 +121,6 @@ require(['ojs/ojcore',
                     var lineSeries = [];
                     var lineGroups = [];
                     var timeInterval, dateTimeDiff;
-                    var startTmp, endTmp;
 
                     var dateTimeOption = {formatType: "datetime", dateFormat: "short"};
                     self.dateTimeConverter = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
