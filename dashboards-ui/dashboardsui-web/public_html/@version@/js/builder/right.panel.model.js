@@ -337,6 +337,23 @@ define(['knockout',
                     $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
                 }
             };
+            
+            self.containerMouseOverHandler = function() {
+                if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
+                    return;
+                if (!$('#right-container-pop').ojPopup("isOpen")) {
+                   $('#right-container-pop').ojPopup("open", $('#dbd-left-panel-footer-contain'), 
+                   {
+                       my : "end bottom", at : "start bottom"
+                   });
+                }
+            };
+
+            self.containerMouseOutHandler = function() {
+                if ($('#right-container-pop').ojPopup("isOpen")) {
+                    $('#right-container-pop').ojPopup("close");
+                }
+            };
 
             self.checkAndDisableLinkDraggable = function() {
                 if(!self.dashboard.isDefaultTileExist()) {
