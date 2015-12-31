@@ -314,7 +314,7 @@ define([
              * @returns {String} url
              */
             self.discoverDFHomeUrl = function() {
-            	return "/emsaasui/emcpdfui/home.html";
+                return "/emsaasui/emcpdfui/home.html";
             };    
 
             /**
@@ -322,7 +322,7 @@ define([
              * @returns {String} url
              */
             self.discoverWelcomeUrl = function() {
-            	var welcomeUrl = "/emsaasui/emcpdfui/welcome.html";
+                var welcomeUrl = "/emsaasui/emcpdfui/welcome.html";
                 return welcomeUrl;
             };  
             
@@ -392,10 +392,10 @@ define([
              * @returns {string array or null if no application is subscribed}, 
              * e.g. 
              * [
-	     * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
-	     * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
-	     * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
-	     * ]
+             *          {"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
+             *          {"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
+             *          {"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
+             * ]
              */
             self.getSubscribedApplicationsWithEdition = function() {
                 if (!self.tenantName) {
@@ -436,10 +436,10 @@ define([
              * 
              * e.g. 
              * [
-             * 		{"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
-             * 		{"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
-	     * 		{"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
-	     * ]
+             *          {"application":"LogAnalytics","edition":"Log Analytics Enterprise Edition"},
+             *          {"application":"ITAnalytics","edition":"IT Analytics Enterprise Edition"},
+             *          {"application":"APM","edition":"Application Performance Monitoring Enterprise Edition"}
+             * ]
              */
             self.checkSubscribedApplicationsWithEdition = function(callbackFunc) {
                 if (!self.tenantName) {
@@ -627,9 +627,9 @@ define([
              * Keep it here for now and will be removed in the future.
              * 
              * @param {Object} message message to be shown on UI, supported properties include:
-             *          type:	         String, Required. Message type, should be one of "error", "warn", "confirm", "info".
-             *          summary:	 String, Required. Message summary.
-             *          detail:	         String, Optional. Message details.
+             *          type:            String, Required. Message type, should be one of "error", "warn", "confirm", "info".
+             *          summary:         String, Required. Message summary.
+             *          detail:          String, Optional. Message details.
              *          removeDelayTime: Number, Optional. Delay time (in milliseconds) for the message to be closed automatically from common message UI. 
              *                           If not specified, it will not be closed automatically by default.
              * 
@@ -661,16 +661,16 @@ define([
             };
             
             self.getRelUrlFromFullUrl = function(url) {
-            	if (!url)
-            		return url;
-            	var protocolIndex = url.indexOf('://');
-            	if (protocolIndex === -1)
-            		return url;
-            	var urlNoProtocol = url.substring(protocolIndex + 3);
-            	var relPathIndex = urlNoProtocol.indexOf('/');
-            	if (relPathIndex === -1)
-            		return url;
-            	return urlNoProtocol.substring(relPathIndex);
+                    if (!url)
+                        return url;
+                    var protocolIndex = url.indexOf('://');
+                    if (protocolIndex === -1)
+                        return url;
+                    var urlNoProtocol = url.substring(protocolIndex + 3);
+                    var relPathIndex = urlNoProtocol.indexOf('/');
+                    if (relPathIndex === -1)
+                        return url;
+                    return urlNoProtocol.substring(relPathIndex);
             };
 
             /**
@@ -730,7 +730,7 @@ define([
                 window.currentUserSessionExpired = true;
                 //Open sessin timeout warning dialog
                 $('#'+warningDialogId).ojDialog('open');
-            };
+            }
             
         }
         
