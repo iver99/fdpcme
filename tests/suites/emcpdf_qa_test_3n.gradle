@@ -78,8 +78,7 @@ restAssured.exclude module: 'groovy'
 }
 }
 
-task QATest(type:EMTest,dependsOn: omcSetup)
-{ 
+task QATest(type:EMTest,dependsOn: omcSetup) { 
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
