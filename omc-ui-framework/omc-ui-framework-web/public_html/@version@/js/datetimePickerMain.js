@@ -64,10 +64,11 @@ requirejs.config({
 require(['ojs/ojcore',
     'knockout',
     'jquery',
+    'uifwk/js/widgets/timeFilter/js/timeFilter',
     'ojs/ojknockout',
     'ojs/ojchart'
 ],
-        function (oj, ko, $) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $, timeFilter) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("date-time-picker", {
                 viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
@@ -79,7 +80,7 @@ require(['ojs/ojcore',
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
                 var end = new Date();
                 var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
-                
+                var tf = new timeFilter();
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
                 
                 self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
@@ -98,7 +99,7 @@ require(['ojs/ojcore',
 //                    hideTimeSelection: true,
                     KOCadvanced: {KOCname: 'time-filter', 
                         KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
-                        KOCviewModel:'/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'},
+                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
                     callbackAfterApply: function (start, end, tp) {
                         console.log(start);
                         console.log(end);
@@ -112,6 +113,9 @@ require(['ojs/ojcore',
                 };
                 
                 self.changeOption = function() {
+                    console.log(tf.daysChecked());
+                    return;
+        
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);

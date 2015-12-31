@@ -116,6 +116,13 @@ define({
       "DATETIME_PICKER_WINDOW_SIZE_WITH_HOURS": "{0} hour(s) {1} minute(s).",
       "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s).",
       "DATETIME_PICKER_SHOW_TODAY": "Today",
-      "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday"
+      "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday",
+      
+      //time filter
+      "TIME_FILTER_TIME_LABEL": "Time",
+      "TIME_FILTER_TIME_HINT": "Hint : Enter time ranges in 24 hr format. For multiple time ranges separate them with ',' Ex: 1-7,13-17",
+      "TIME_FILTER_DAYS_LABEL": "Days",
+      "TIME_FILTER_MONTHS_LABEL": "Months",
+      "TIME_FILTER_OPTION_ALL": "All"      
 });
 
