@@ -52,7 +52,7 @@ define(['knockout',
             self.totalPages = ko.observable(1);
 
             self.completelyHidden = ko.observable(false);
-            self.showPanel = ko.observable(true);
+            self.maximized = ko.observable(false);
 
             self.showTimeControl = ko.observable(false);
             // observable variable possibly updated by other events
@@ -88,14 +88,6 @@ define(['knockout',
                 console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
                 self.showTimeControl(exists);
             };
-            
-            self.dashboardMaximizedHandler = function() {
-                self.completelyHidden(true);
-            };
-            
-            self.dashboardRestoredHandler = function() {
-                self.completelyHidden(false);
-            };
 
             self.initialize = function() {
                     if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
@@ -130,8 +122,6 @@ define(['knockout',
                 $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
                 $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
                 $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
-                $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.dashboardMaximizedHandler);
-                $b.addEventListener($b.EVENT_TILE_RESTORED, self.dashboardRestoredHandler);
             };
 
             self.initDraggable = function() {
@@ -194,17 +184,16 @@ define(['knockout',
             };
 
             self.tileMaximizedHandler = function() {
-                self.completelyHidden(true);
+                self.maximized(true);
                 $b.triggerBuilderResizeEvent('tile maximized and completely hide left panel');
             };
 
             self.tileRestoredHandler = function() {
-                if (self.dashboard.type() !== 'SINGLEPAGE' && !self.dashboard.systemDashboard()) {
-                    self.completelyHidden(false);
-                    $b.triggerBuilderResizeEvent('tile restored and show left panel');
-                }
+                self.maximized(false);
+                self.initDraggable();
+                $b.triggerBuilderResizeEvent('hide left panel because restore');
             };
-
+            
             self.tileAddedHandler = function(tile) {
                 tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
             };
@@ -305,21 +294,10 @@ define(['knockout',
                 }
             };
 
-            self.showLeftPanel = function() {
-                self.showPanel(true);
-                self.initDraggable();
-                $b.triggerBuilderResizeEvent('show left panel');
-            };
-
-            self.hideLeftPanel = function() {
-                self.showPanel(false);
-                $b.triggerBuilderResizeEvent('hide left panel');
-            };
-
-            self.widgetGoDataExploreHandler = function(widget) {
-                var url = Builder.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
-                url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
-            };
+//            self.widgetGoDataExploreHandler = function(widget) {
+//                var url = Builder.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
+//                url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
+//            };
 
             self.widgetMouseOverHandler = function(widget) {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)

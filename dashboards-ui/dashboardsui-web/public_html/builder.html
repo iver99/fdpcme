@@ -454,7 +454,7 @@
                 </div>
                 <!-- ko stopBinding: true -->
                 <div id="dbd-left-panel" class="dbd-left-panel-show"
-                     data-bind="css: {'dbd-no-left-panel': completelyHidden()}">
+                     data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()}">
                         <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
                             <div class="oj-row">
                                 <div class="oj-col">
