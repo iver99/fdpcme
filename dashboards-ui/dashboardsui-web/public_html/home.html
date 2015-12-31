@@ -17,7 +17,6 @@
 
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
-
     </head>
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
@@ -25,7 +24,7 @@
             <!-- Header section which contains the Global Branding, Global Navigation, and Application Navigation code.
                 Template is located in /templates/demoAppHeaderTemplate.html
             -->
-            <header id="headerWrapper" >
+            <header id="headerWrapper" role="banner">
                 <div data-bind="component: {
                         name: 'df-oracle-branding-bar',
                         params: brandingbarParams
@@ -34,7 +33,7 @@
             </header>
 
             <!-- main content -->
-            <div id="mainContent" style="display: none;">
+            <div id="mainContent" style="display: none;" role="main">
                         <div class="main-content-area main-content-area-sm main-content-area-md main-content-area-lg main-content-area-xsl main-content-area-xl">
                             <div id="dhometab" class="dbs-tab-container">
                                 <div class="oj-row oj-cols-nopad" style="max-width: none;">
@@ -59,7 +58,7 @@
                                                 </div>
                                                 <div data-bind="visible: showServiceFilter">
                                                 <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
-                                                <div id="servicecb"  aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: serviceFilter, optionChange: handleServiceFilterChanged}">
+                                                <div id="servicecb" aria-controls="dtabhomesc" aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: serviceFilter, optionChange: handleServiceFilterChanged}">
                                                     <span class="oj-choice-row" data-bind="visible: showApmSrviceFilter">
                                                         <input id="apmopt" type="checkbox" name="services" value="APM">
                                                         <label for="apmopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_APM_ABBR')"></label>
@@ -76,7 +75,7 @@
                                                 </div>
                                                 <br/>
                                                 <label id="creatorcblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_LABEL')"></label>
-                                                <div id="creatorcb"  aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: creatorFilter, optionChange: handleOwnerFilterChanged}">
+                                                <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: creatorFilter, optionChange: handleOwnerFilterChanged}">
                                                     <span class="oj-choice-row">
                                                         <input id="oracleopt" type="checkbox" name="creators" value="Oracle">
                                                         <label for="oracleopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ORACLE')"></label>
@@ -109,7 +108,7 @@
                                                 
                                                 <span id="homettbtns" class="oj-md-float-end dbs-rbtns-panel-md dbs-rbtns-panel-lg dbs-rbtns-panel-xsl dbs-rbtns-panel-xl">
                                                 <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
-                                                <select id="sortcb"  data-bind="ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: handleSortByChanged, 
+                                                <select id="sortcb" aria-controls="dtabhomesc" data-bind="ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: handleSortByChanged, 
                                                    rootAttributes: {style:'width: 14em; max-width:20em'}}"/>
                                                         <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
                                                         <option value="name_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
@@ -255,9 +254,10 @@
                                         <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                     </div>
                                     <div class="oj-col">
-                                        <input id="dbsHNameIn" required 
+                                        <input id="dbsHNameIn" maxlength="64" required
                                                data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: tracker, 
                                                messagesCustom: createMessages, value: createDashboardModel.name, 
+                                               rawValue: createDashboardModel.nameInputed,
                                                validators : [{type: 'regExp', options : {
                                                     pattern: '.{1,64}', 
                                                     messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
@@ -276,11 +276,11 @@
                                         <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
                                     </div>
                                     <div class="oj-col">
-                                        <textarea id="dbsHDpIn" rows="6"
+                                        <textarea id="dbsHDpIn" maxlength="256" rows="6"
                                                   data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                 invalidComponentTracker: tracker,  
                                                                 validators : [{type: 'regExp', options : {
-                                                                       pattern: '.{0,256}', 
+                                                                       pattern: '(.|\\b|\\s){0,256}', 
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                             }"></textarea>
