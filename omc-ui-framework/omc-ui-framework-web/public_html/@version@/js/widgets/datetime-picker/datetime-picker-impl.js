@@ -1298,7 +1298,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 self.cancelClick = function () {
-                    if(self.KOCvmImstance) {
+                    if(self.KOCvmInstance) {
                         self.KOCvmInstance.timeFilterValue(self.lastTimeFilterValue);
                         self.KOCvmInstance.daysChecked(self.lastDaysChecked);
                         self.KOCvmInstance.monthsChecked(self.lastMonthsChecked);
