@@ -22,12 +22,119 @@ import org.testng.annotations.Test;
  */
 public class TestDashboardPage extends CommonUIUtils
 {
-	@BeforeClass
-	public static void getAppName()
-	{
-		CommonUIUtils.InitValue();
-	}
 
+	//String sSsoUserName = CommonUIUtils.getEmaasPropertyValue("SSO_USERNAME");
+	//String sSsoPassword = CommonUIUtils.getEmaasPropertyValue("SSO_PASSWORD");
+	//String sTenantId = CommonUIUtils.getEmaasPropertyValue("TENANT_ID");
+
+	@BeforeClass
+	public static void initValue()
+	{
+		CommonUIUtils.getAppName(sTenantId,sSsoUserName);
+		CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+	}
+	
+	@Test
+	public void testDashboardPage_noPara() throws Exception
+	{
+		try
+		{
+			CommonUIUtils.commonUITestLog("This is to test Dashboard Page");
+
+			String testName = this.getClass().getName() + ".testDashboardPage_noPara";
+			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+			//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
+			//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+			Thread.sleep(5000);
+			
+			//login
+			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,sTenantId,sSsoUserName,sSsoPassword);
+			webdriver.getLogger().info("Assert that common UI login was successfuly");
+			Assert.assertTrue(bLoginSuccessful);
+
+			verifyPageContent(webdriver, sAppName);
+
+			//click the compass icon
+			webdriver.getLogger().info("Click the Application navigator icon");
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+
+			verifyMenu(webdriver, isDSAdmin);
+
+			//click the compass icon again
+			Thread.sleep(10000);
+
+			webdriver.getLogger().info("Click the Application navigator icon again");
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+			Thread.sleep(5000);
+			webdriver.getLogger().info("Verify the Links menu disappeared");
+			Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
+			
+			//Add a widget
+			addWidget(webdriver);
+
+			//logout
+			webdriver.getLogger().info("Logout");
+			CommonUIUtils.logoutCommonUI(webdriver);			
+			
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}
+	}
+	
+	@Test
+	public void testDashboardPage_withPara() throws Exception
+	{
+			try
+			{
+				CommonUIUtils.commonUITestLog("This is to test Dashboard Page");
+		
+				String testName = this.getClass().getName() + ".testDashboardPage_withPara";
+				WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+				//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
+				//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+				Thread.sleep(5000);
+				
+				//login
+				Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,"?appId=Dashboard",sTenantId,sSsoUserName,sSsoPassword);
+				webdriver.getLogger().info("Assert that common UI login was successfuly");
+				Assert.assertTrue(bLoginSuccessful);
+		
+				verifyPageContent(webdriver, sAppName);
+		
+				//click the compass icon
+				webdriver.getLogger().info("Click the Application navigator icon");
+				webdriver.click(UIControls.sCompassIcon);
+				webdriver.takeScreenShot();
+		
+				verifyMenu(webdriver, isDSAdmin);
+		
+				//click the compass icon again
+				Thread.sleep(10000);
+		
+				webdriver.getLogger().info("Click the Application navigator icon again");
+				webdriver.click(UIControls.sCompassIcon);
+				webdriver.takeScreenShot();
+				Thread.sleep(5000);
+				webdriver.getLogger().info("Verify the Links menu disappeared");
+				Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
+				
+				//Add a widget
+				addWidget(webdriver);
+		
+				//logout
+				webdriver.getLogger().info("Logout");
+				CommonUIUtils.logoutCommonUI(webdriver);			
+				
+			}
+			catch (Exception ex) {
+				Assert.fail(ex.getLocalizedMessage());
+			}	
+	}
+	
+	/*
 	@Test
 	public void testDashboardPage_noPara() throws Exception
 	{
@@ -628,4 +735,5 @@ public class TestDashboardPage extends CommonUIUtils
 			webdriver.getLogger().info("Logout");
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
+	*/
 }

@@ -198,7 +198,7 @@
                         <!-- Duplicate Dashboard dialog end -->
                         
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
-                            <li data-bind="css: {'oj-disabled': disabled}">
+                            <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
                                 <a data-bind="attr:{'id':id}, href: url, click: onclick">
                                     <span class="oj-menu-item-icon oj-fwk-icon" data-bind="css: icon"></span>
                                     <span data-bind="text: label"></span></a>
@@ -222,7 +222,7 @@
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'dbd-toolbar-icon-save'}
-                            }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true">
+                            }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome'
@@ -666,7 +666,7 @@
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text: title,style:{visibility : $root.showWidgetTitle()==true ? '':'hidden'}"></h2>
                                           <!-- /ko -->                                          
-                                          <div class="dbd-pull-right" style="display: flex">
+                                          <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome" tabindex="0"
                                                           data-bind="

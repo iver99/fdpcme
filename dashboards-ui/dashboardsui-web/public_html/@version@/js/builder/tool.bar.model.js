@@ -474,7 +474,8 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
                     "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.editDisabled() === true
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": true
                 },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
@@ -483,7 +484,8 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardEditDialog,
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
                     "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
-                    "disabled": self.editDisabled() === true
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
@@ -492,7 +494,8 @@ define(['knockout',
                     "onclick": self.openDashboardDuplicateDialog,
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
-                    "disabled": false
+                    "disabled": false,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
                 },
                 {
                     "label": getNlsString('COMMON_BTN_DELETE'),
@@ -501,7 +504,8 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
                     "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-                    "disabled": self.editDisabled() === true
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": true
                 }
             ];
             //Dashboard Options ======end=======
