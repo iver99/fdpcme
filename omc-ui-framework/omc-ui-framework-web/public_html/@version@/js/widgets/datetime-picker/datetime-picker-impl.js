@@ -565,10 +565,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.hideTimeSelection(true);
                 }
                 
-//                if(params.KOCname && params.KOCtemplate && params.KOCviewModel) {
                 if(params.KOCadvanced && params.KOCadvanced.KOCname && params.KOCadvanced.KOCtemplate && params.KOCadvanced.KOCviewModel) {
                     self.advancedNotToShow(false);
                     self.KOCname = params.KOCadvanced.KOCname;
+                    self.KOCvmInstance = params.KOCadvanced.KOCviewModel.instance;
                     if(!ko.components.isRegistered(self.KOCname)) {
                         ko.components.register(self.KOCname, {
                             template: {require: "text!" + params.KOCadvanced.KOCtemplate},
@@ -1186,6 +1186,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.showCalendar(false);
                         self.showRightPanel(true);
                         self.showAdvancedPanel(true);
+                        if(self.KOCvmInstance) {
+                            self.lastTimeFilterValue = self.KOCvmInstance.timeFilterValue();
+                            self.lastDaysChecked = self.KOCvmInstance.daysChecked();
+                            self.lastMonthsChecked = self.KOCvmInstance.monthsChecked();
+                        }
                         self.setTimePeriodChosen(self.timePeriodAdvanced);
                         return;
                     }
@@ -1250,7 +1255,16 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     return "";
                 }
 
-                self.applyClick = function () {
+                self.applyClick = function () {                                        
+                    self.timeFilter = ko.observable(null);
+                    if(self.KOCvmInstance) {
+                        self.timeFilter({
+                            timeFilterValue: self.KOCvmInstance.timeFilterValue(),
+                            daysChecked: self.KOCvmInstance.daysChecked(),
+                            monthsChecked: self.KOCvmInstance.monthsChecked()
+                        });
+                    }
+                    
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
                     self.lastStartTime(self.startTime());
@@ -1273,7 +1287,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         $.ajax({
                             url: "/emsaasui/uifwk/empty.html",
                             success: function () {
-                                self.callbackAfterApply(new Date(start), new Date(end), timePeriod);
+                                self.callbackAfterApply(new Date(start), new Date(end), timePeriod, self.timeFilter());
                             },
                             error: function () {
                                 console.log(self.errorMsg);
@@ -1284,6 +1298,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 self.cancelClick = function () {
+                    if(self.KOCvmImstance) {
+                        self.KOCvmInstance.timeFilterValue(self.lastTimeFilterValue);
+                        self.KOCvmInstance.daysChecked(self.lastDaysChecked);
+                        self.KOCvmInstance.monthsChecked(self.lastMonthsChecked);
+                    }
+                    
                     $(self.panelId).ojPopup("close");
                     return;
                 };

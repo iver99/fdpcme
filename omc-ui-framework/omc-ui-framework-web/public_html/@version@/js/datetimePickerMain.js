@@ -97,13 +97,14 @@ require(['ojs/ojcore',
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
-                    KOCadvanced: {KOCname: 'time-filter', 
-                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
-                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
-                    callbackAfterApply: function (start, end, tp) {
+//                    KOCadvanced: {KOCname: 'time-filter', 
+//                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
+//                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
+                    callbackAfterApply: function (start, end, tp, tf) {
                         console.log(start);
                         console.log(end);
                         console.log(tp);
+                        console.log(tf);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         self.start(self.dateTimeConverter1.format(appliedStart));
@@ -113,7 +114,9 @@ require(['ojs/ojcore',
                 };
                 
                 self.changeOption = function() {
+                    console.log(tf.timeFilterValue());
                     console.log(tf.daysChecked());
+                    console.log(tf.monthsChecked());
                     return;
         
                     self.initStart(new Date(new Date() - 48*60*60*1000));

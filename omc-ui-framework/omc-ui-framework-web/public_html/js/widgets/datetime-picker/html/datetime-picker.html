@@ -64,16 +64,24 @@
                     </div>
 
                     <script type="text/html" data-bind="attr: {id: 'calendar_'+randomId}">
-                    <!--date picker -->
-                    <div class="datePicker" data-bind="attr: {id: 'datePicker_'+randomId}, ojComponent:{component: 'ojInputDate', 
-                                                                    datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
-                                                                    value: value, min: minDate, max: maxDate
-                                                                    }, 
-                                                                  event: {mouseup: calendarClicked}
-                                                                                                                                   
-                         ">
-                    </div>
+                        <!--date picker -->
+                        <div class="datePicker" data-bind="attr: {id: 'datePicker_'+randomId}, ojComponent:{component: 'ojInputDate', 
+                                                                        datePicker:{changeMonth: 'none', changeYear: 'none', daysOutsideMonth: 'hidden', numberOfMonths: 2, stepMonths: 1},
+                                                                        value: value, min: minDate, max: maxDate
+                                                                        }, 
+                                                                      event: {mouseup: calendarClicked}
 
+                             ">
+                        </div>                    
+                    </script>
+                    
+                    <!-- ko if: showCalendar -->
+                    <div data-bind="template: {name: 'calendar_'+randomId}"></div>
+                    <!-- /ko -->
+                    <!-- ko if: showAdvancedPanel -->
+                    <div data-bind="component: {name: KOCname}"></div>
+                    <!-- /ko -->
+                    
                     <!-- Apply & Cancel button -->
                     <div class="buttons">
                         <button data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton}, attr: {id: 'applyButton'}">
@@ -90,14 +98,6 @@
                     <!--ko if: showBeyondWindowLimitError-->
                     <div class="errorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
                     <!-- /ko -->
-                    </script>
-                    
-                    <!-- ko if: showCalendar -->
-                    <div data-bind="template: {name: 'calendar_'+randomId}"></div>
-                    <!-- /ko -->
-                    <!-- ko if: showAdvancedPanel -->
-                    <div data-bind="component: {name: KOCname}"></div>
-                    <!-- /ko -->                    
                 </div>
             </div> 
 

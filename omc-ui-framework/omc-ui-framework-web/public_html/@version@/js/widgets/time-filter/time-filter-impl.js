@@ -58,16 +58,6 @@ define([
             },
             owner: self
         });
-        
-
-        self.OKClick = function () {
-            console.log(self.timeFilterValue());
-            console.log(self.daysChecked());
-            console.log(self.monthsChecked());
-        }
-        self.cancelClick = function () {
-            console.log("cancel clicked");
-        }
     }
     return AdvancedViewModel;
 });
