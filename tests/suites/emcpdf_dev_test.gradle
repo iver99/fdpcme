@@ -115,7 +115,7 @@ tasks.cleanUpDB.execute()
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
-	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
+//	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
 	useRestAssured=true
 	ext.set("testType", "unit")
 }
