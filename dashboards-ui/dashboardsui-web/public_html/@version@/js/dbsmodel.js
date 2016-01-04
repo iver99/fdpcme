@@ -34,17 +34,24 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
     function createDashboardDialogModel() {
         var self = this;
         self.name = ko.observable(undefined);
+        self.nameInputed = ko.observable(undefined); //read only input text
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);
-        self.isDisabled = ko.observable(false);
+        self.isDisabled = ko.computed(function() { 
+            if (self.nameInputed() && self.nameInputed().length > 0)
+            {
+                return false;
+            }
+            return true;
+        });
         
         self.clear = function() {
             self.name(undefined);
             self.description('');
             self.timeRangeFilterValue(["ON"]);
             self.targetFilterValue(["OFF"]);
-            self.isDisabled(false);
+            //self.isDisabled(false);
         };
         
         self.isEnableTimeRange = function() {
@@ -56,11 +63,11 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             return false;
         };
         
-        self.keydown = function (d, e) {
-           if (e.keyCode === 13) {
-              $( "#cDsbDialog" ).ojDialog( "close" );
-           }
-        };
+//        self.keydown = function (d, e) {
+//           if (e.keyCode === 13) {
+//              $( "#cDsbDialog" ).ojDialog( "close" );
+//           }
+//        };
     };
         
     function confirmDialogModel(title, okLabel, message, okFunction) {
@@ -379,7 +386,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                 return;
             }
             
-            self.createDashboardModel.isDisabled(true);
+            //self.createDashboardModel.isDisabled(true);
             $( "#cDsbDialog" ).css("cursor", "progress");
             self.datasource['pagingDS'].create(_addeddb, {
                         'contentType': 'application/json',
@@ -394,14 +401,17 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                         error: function(jqXHR, textStatus, errorThrown) {
                             //console.log('Error in Create: ' + textStatus);
                             $( "#cDsbDialog" ).css("cursor", "default");
-                            self.createDashboardModel.isDisabled(false);
+                            //self.createDashboardModel.isDisabled(false);
                             var _m = null; //getNlsString('COMMON_SERVER_ERROR');
-                            if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorMessage)
+                            var _mdetail = undefined;
+                            if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
                             {
-                                 _m = jqXHR[0].responseJSON.errorMessage;
-                            }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorMessage)
+                                 _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR'); //jqXHR[0].responseJSON.errorMessage;
+                                 _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
+                            }else if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.errorCode === 10001)
                             {
-                                _m = jqXHR.responseJSON.errorMessage;
+                                _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR');
+                                _mdetail = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL');
                             }
                             else
                             {
@@ -412,7 +422,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                             {
                                 _trackObj = new oj.InvalidComponentTracker();
                                 self.tracker(_trackObj);
-                                self.createMessages.push(new oj.Message(_m));
+                                self.createMessages.push(new oj.Message(_m, _mdetail));
                                 _trackObj.showMessages();
                                 _trackObj.focusOnFirstInvalid();
                                 $( "#cDsbDialog" ).css("cursor", "default");
