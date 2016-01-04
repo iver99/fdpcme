@@ -65,6 +65,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS;
                 self.timePeriodLast30days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS;
                 self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
+                self.timePeriodToday = nls.DATETIME_PICKER_SHOW_TODAY;
                 self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
                 self.timePeriodLatest = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST;
                 self.timePeriodAdvanced = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_ADVANCED;
@@ -81,8 +82,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     "Last 7 days" : self.timePeriodLast7days,
                     "Last 30 days" : self.timePeriodLast30days,
                     "Last 90 days" : self.timePeriodLast90days,
-                    "Custom" : self.timePeriodCustom,
-                    "Latest" : self.timePeriodLatest
+                    "Latest" : self.timePeriodLatest,
+                    "Today":self.timePeriodToday,
+                    "Custom" : self.timePeriodCustom
                 };
                                 
                 self.last15minsNotToShow = ko.observable(false);
@@ -94,6 +96,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last7daysNotToShow = ko.observable(false);
                 self.last30daysNotToShow = ko.observable(false);
                 self.last90daysNotToShow = ko.observable(false);
+                self.todayNotToShow = ko.observable(false);
                 self.latestNotToShow = ko.observable(false);
                 self.advancedNotToShow = ko.observable(true);
                 
@@ -106,11 +109,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last7daysChosen = ko.observable(false);
                 self.last30daysChosen = ko.observable(false);
                 self.last90daysChosen = ko.observable(false);
+                self.todayChosen = ko.observable(false);
                 self.latestChosen = ko.observable(false);
                 self.customChosen = ko.observable(false);
                 self.advancedChosen = ko.observable(false);
                 
-                self.displayDateTimeSelection = ko.observable("inline");
                 self.hideTimeSelection = ko.observable(false);
                 
                 self.last15minsCss = ko.computed(function() {
@@ -165,6 +168,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var css = "drawer";
                     css += self.last90daysNotToShow() ? " drawerNotToShow": "";
                     css += self.last90daysChosen() ? " drawerChosen" : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.todayCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.todayNotToShow() ? " drawerNotToShow": "";
+                    css += self.todayChosen() ? " drawerChosen" : " drawerNotChosen";
                     return css;
                 }, self);
                 self.latestCss = ko.computed(function() {
@@ -305,6 +314,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.last7daysChosen(false);
                     self.last30daysChosen(false);
                     self.last90daysChosen(false);
+                    self.todayChosen(false);
                     self.latestChosen(false);
                     self.customChosen(false);
                     self.advancedChosen(false);
@@ -344,6 +354,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         case self.timePeriodLatest:
                             self.latestChosen(true);
                             break;
+                        case self.timePeriodToday:
+                            self.todayChosen(true);
+                            break;
                         case self.timePeriodCustom:
                             self.customChosen(true);
                             break;
@@ -363,6 +376,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.last7daysNotToShow(false);
                     self.last30daysNotToShow(false);
                     self.last90daysNotToShow(false);
+                    self.todayNotToShow(false);
                     self.latestNotToShow(false);
                 }
                 
@@ -394,6 +408,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             break;
                         case self.timePeriodLast90days:
                             self.last90daysNotToShow(true);
+                            break;
+                        case self.timePeriodToday:
+                            self.todayNotToShow(true);
                             break;
                         case self.timePeriodLatest:
                             self.latestNotToShow(true);
@@ -456,7 +473,6 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.timePeriodsNotToShow.subscribe(function(value) {
                             var tp = self.timePeriod();
                             if($.inArray(tp, value) >= 0) {
-                                self.displayDateTimeSelection("inline");
                                 customClick(0);
                                 self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
                             }
@@ -645,7 +661,6 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.updateRange(self.startDate(), self.endDate());
                 });
                 self.valueSubscriber.subscribe(function (value) {
-                    self.displayDateTimeSelection("inline");
                     if (self.startDate() === self.dateConverter2.format(self.value())) {
                         if (self.lastFocus() === 1) {
                             self.setMinMaxDate(self.startDateISO(), null);
@@ -792,7 +807,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                     
                     if(self.getParam(self.timeDisplay) === "short") {
-                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.timePeriod() + ": </span>";
+                        dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display: inline-block;'>" + self.timePeriod() + "</span>";
                     }else {
                         dateTimeInfo = "<span style='font-weight:bold; padding-right: 5px; display:" + self.hideRangeLabel + ";'>" + self.timePeriod() + ": </span>";
                         dateTimeInfo += start + "<span style='font-weight:bold; " + hyphenDisplay + "'> - </span>" + end;
@@ -813,16 +828,20 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         var edt = self.getParam(self.endDateTime);
                         start = new Date(sdt);
                         end = new Date(edt);
-                        dateTimeDiff = end - start;
-                        var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
-                        
-                        if (t_timePeriod && $.inArray(t_timePeriod, tpNotToShow)<0) {
-                            self.setTimePeriodChosen(t_timePeriod);
-                            var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
-                            start = range.start;
-                            end = range.end;
-                        } else {
+                        if(Math.abs(end.getTime()-new Date().getTime())>60*1000 || end.getMinutes() !== new Date().getMinutes()) {
+                            var t_timePeriod = self.timePeriodCustom;
                             customClick(0);
+                        }else {
+                            dateTimeDiff = end - start;
+                            var t_timePeriod = in_array(dateTimeDiff, self.timePeriodObject());
+                            if (t_timePeriod && $.inArray(t_timePeriod, tpNotToShow)<0) {
+                                self.setTimePeriodChosen(t_timePeriod);
+                                var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
+                                start = range.start;
+                                end = range.end;
+                            } else {
+                                customClick(0);
+                            }
                         }
                     } else if (!self.startDateTime && self.endDateTime) {
                         if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
@@ -1201,11 +1220,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.setMinMaxDate(null, null);
                         curDate = new Date();
                         if($(event.target).text() === self.timePeriodLatest) {
-                            self.displayDateTimeSelection("none");
                            start = curDate;
                            end = curDate;
+                        }else if($(event.target).text() === self.timePeriodToday) { //set time range from mid-night to current point
+                            start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
+                            end = curDate;
                         }else {
-                            self.displayDateTimeSelection("inline");
                             start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
                             //calculate timezone difference to solve issues caused by daylight saving.
                             var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
@@ -1236,7 +1256,6 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.showAdvancedPanel(false);
                         self.showRightPanel(true);
                         self.showCalendar(true);
-                        self.displayDateTimeSelection("inline");
                     }
 
                     self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
