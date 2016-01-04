@@ -180,7 +180,7 @@ define([
                         self.currentWidget(null);
                     }
                     self.confirmBtnDisabled(true);
-                };
+                }
                 
                 // Get widget data to be shown in current page
                 function fetchWidgetsForCurrentPage(allWidgets) {
@@ -189,7 +189,7 @@ define([
                         loadWidgetScreenshot(allWidgets[i]);
                         curPageWidgets.push(allWidgets[i]);
                     }
-                };
+                }
                 
                 // Get available widgets to be searched from
                 function getAvailableWidgets() {
@@ -219,13 +219,13 @@ define([
                         }
                     }
                     return availWidgets;
-                };
+                }
                 
                 // Refresh pagination button status
                 function refreshNaviButton() {
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
+                }
                 
                 // Return search result of type ahead search
                 self.searchFilterFunc = function (arr, value) {
@@ -335,7 +335,7 @@ define([
 
                         return ajaxCallDfd;
                     }
-                };
+                }
                 
                 function getWidgetGroups() {
                     var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
@@ -365,7 +365,7 @@ define([
                             },
                             async: true
                         });
-                };
+                }
                 
                 function refreshPageData() {
                     curPage = 1;
@@ -379,7 +379,7 @@ define([
                     self.searchText("");
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
+                }
                 
                 // Refresh widget/widget group data and UI displaying
                 function refreshWidgets() {
@@ -408,7 +408,7 @@ define([
                     .fail(function(xhr, textStatus, errorThrown){
                         oj.Logger.error("Failed to fetch widget groups.");
                     });
-                };
+                }
                 
                 // Load widgets from ajax call result data
                 function loadWidgets(data) {
@@ -436,7 +436,7 @@ define([
                             }
                         }
                     }
-                };
+                }
                 
                 function loadWidgetScreenshot(widget) {
                     if (!widget.isScreenshotLoaded) {
@@ -477,7 +477,7 @@ define([
                             async: true
                         });  
                     }
-                };
+                }
                 
                 // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
@@ -505,7 +505,7 @@ define([
                         }
                     }
                     return targetWidgetGroupArray;
-                };
+                }
                 
                 // Calculate the time difference between current date and the last modification date
                 function getLastModificationTimeString(lastModifiedDate) {
@@ -558,7 +558,7 @@ define([
                     }
                     
                     return result;
-                };
+                }
                 
             }
             
