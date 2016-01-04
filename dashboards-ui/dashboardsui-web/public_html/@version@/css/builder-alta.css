@@ -7,33 +7,6 @@ and open the template in the editor.
     Created on : 2014-8-29, 14:51:26
     Author     : guobaochen
 */
-@font-face {
-  font-family: 'FaFont';
-  src: url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format('woff2'),
-       url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format('woff');
-  font-weight: normal;
-  font-style: normal; 
-}
-
-.fa-icon-font {
-  font-family: FaFont;
-  font-size: 1.34rem;
-  display: inline-block;
-  font-weight: normal;
-  speak: none;
-  font-style: normal;
-  font-variant: normal;
-  text-transform: none;
-  text-align: center;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; 
-}
-
-.fa-icon-font-16 {
-    font-size: 16px;
-}
 
 @font-face {
     font-family: 'FaFont';
