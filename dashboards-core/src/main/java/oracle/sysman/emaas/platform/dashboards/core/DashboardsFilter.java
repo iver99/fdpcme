@@ -29,6 +29,7 @@ public class DashboardsFilter
 	private List<String> includedTypes;
 	private List<String> includedApps;
 	private List<String> includedOwners;
+	private Boolean includedFavorites;
 
 	public DashboardsFilter()
 	{
@@ -56,6 +57,14 @@ public class DashboardsFilter
 	public List<String> getIncludedApps()
 	{
 		return includedApps;
+	}
+
+	/**
+	 * @return the includedFavorites
+	 */
+	public Boolean getIncludedFavorites()
+	{
+		return includedFavorites;
 	}
 
 	/**
@@ -151,6 +160,15 @@ public class DashboardsFilter
 	}
 
 	/**
+	 * @param includedFavorites
+	 *            the includedFavorites to set
+	 */
+	public void setIncludedFavorites(Boolean includedFavorites)
+	{
+		this.includedFavorites = includedFavorites;
+	}
+
+	/**
 	 * @param includedOwners
 	 *            the includedOwners to set
 	 */
@@ -167,8 +185,8 @@ public class DashboardsFilter
 		String[] splitedOwners = owners.split(",");
 		includedOwners = new ArrayList<String>();
 		for (String o : splitedOwners) {
-			if ("Oracle".equals(o) || "Others".equals(o)) {
-				includedOwners.add(o);
+			if ("Oracle".equals(o) || "Others".equals(o) || "Me".equals(o) || "Share".equals(o)) {
+				includedOwners.add(o.trim());
 			}
 		}
 	}
