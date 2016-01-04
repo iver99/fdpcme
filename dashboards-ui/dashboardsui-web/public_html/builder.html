@@ -227,7 +227,7 @@
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
                           <li data-bind="css: {'oj-disabled': editDisabled() === true}">
-                                <a id="emcpdf_dsbopts_share" data-bind="attr:{'title': dashboard.sharePublic() === true ? getNlsString('COMMON_TEXT_SHARE_TITLE') : getNlsString('COMMON_TEXT_UNSHARE_TITLE')}, 
+                                <a id="emcpdf_dsbopts_share" data-bind="attr:{'title': dashboard.sharePublic() === false ? getNlsString('COMMON_TEXT_SHARE_TITLE') : getNlsString('COMMON_TEXT_UNSHARE_TITLE')}, 
                                                    href: '', click: editDisabled() === true ? null : openShareConfirmDialog">
                                     <span class="oj-menu-item-icon oj-fwk-icon fa-icon-font fa-icon-font-16" 
                                           data-bind="css: dashboard.sharePublic() === false ? 'dbd-toolbar-icon-share': 'dbd-toolbar-icon-unshare'"></span>
