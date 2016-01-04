@@ -33,7 +33,7 @@ define({
       "COMMON_TEXT_UNSHARE_TITLE": "Stop sharing to public",
       "COMMON_TEXT_SHARE_CONFIRM_SUMMARY": "Dashbaord shared.",
       "COMMON_TEXT_SHARE_CONFIRM_DETAIL": "This dashbaord can now be viewed by others.",
-      "COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY": "Stop sharing to public",
+      "COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY": "Stop sharing to public.",
       "COMMON_TEXT_UNSHARE_CONFIRM_DETAIL": "This dashbaord can not be viewed by others.",
       "COMMON_SHARE_DAHBOARD_DIALOG_TILE": "Share Dashboard",
       "COMMON_SHARE_DAHBOARD_DIALOG_CONTENT": "Do you want to share <b>{0}</b>? This action will make the dashboard to be viewed by others.",
