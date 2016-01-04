@@ -63,6 +63,7 @@ define(['knockout',
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);
+            self.showWidgetTitle = ko.observable(true);
 
             self.isEmpty = function() {
                 return !self.editor.tiles() || self.editor.tiles().length === 0;
@@ -134,68 +135,70 @@ define(['knockout',
             
             self.showPullRightBtn = function(clientGuid, data, event) {
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
+                $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
             };
             
-            self.hidePullRightBtn = function(clientGuid, data, event) {
-                if($("#tileMenu"+clientGuid).css("display") === "none") {
-                    $("#tile"+clientGuid+" .dbd-btn-group").css("display", "none");
+            self.hidePullRightBtn = function (clientGuid, data, event) {
+                if ($("#tileMenu" + clientGuid).css("display") === "none") {
+                    $("#tile" + clientGuid + " .dbd-btn-group").css("display", "none");
+                }
+                $("#tile" + clientGuid + " .dbd-btn-editor").css("display", "none");
+            };
+            self.openInDataExplorer = function (event, ui) {
+                var tile = ko.dataFor(ui.currentTarget);
+                self.editor.configure(tile);
+            };
+            self.menuItemSelect = function (event, ui) {
+                var tile = ko.dataFor(ui.item[0]);
+                if (!tile) {
+                    oj.Logger.error("Error: could not find tile from the ui data");
+                    return;
+                }
+                switch (ui.item.attr("id")) {
+                    case "showhide-title":
+                        self.showWidgetTitle(!self.showWidgetTitle());
+                        break;   
+                    case "remove":
+                        self.editor.deleteTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
+                        $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
+                        $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
+                        self.triggerTileTimeControlSupportEvent();
+                        break;
+                    case "wider":
+                        self.editor.broadenTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_WIDER"));
+                        break;
+                    case "narrower":
+                        self.editor.narrowTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_NARROWER"));
+                        break;
+                    case "taller":
+                        self.editor.tallerTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_TALLER"));
+                        break;
+                    case "shorter":
+                        self.editor.shorterTile(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
+                        break;
+                    case "maximize":
+                        self.maximize(tile);
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
+                        $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
+                        break;
+                    case "restore":
+                        self.restore(tile);
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
+                        $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
+                        break;
                 }
             };
-            
-           self.menuItemSelect = function(event, ui) {
-               var tile = ko.dataFor(ui.item[0]);
-               if (!tile) {
-                   oj.Logger.error("Error: could not find tile from the ui data");
-                   return;
-               }
-               switch (ui.item.attr("id")) {
-                    case "configure":
-                        self.editor.configure(tile);
-                        break;
-                    case "refresh-this-widget":
-                        self.refreshThisWidget(tile);
-                        break;
-                   case "remove":
-                       self.editor.deleteTile(tile);
-                       self.show();
-                       self.notifyTileChange(tile, new Builder.TileChange("POST_DELETE"));
-                       $b.triggerEvent($b.EVENT_TILE_RESTORED, 'triggerred by tile deletion', tile);
-                       $b.triggerEvent($b.EVENT_TILE_DELETED, null, tile);
-                       self.triggerTileTimeControlSupportEvent();
-                       break;
-                   case "wider":
-                       self.editor.broadenTile(tile);
-                       self.show();
-                       self.notifyTileChange(tile, new Builder.TileChange("POST_WIDER"));
-                       break;
-                   case "narrower":
-                       self.editor.narrowTile(tile);
-                       self.show();
-                       self.notifyTileChange(tile, new Builder.TileChange("POST_NARROWER"));
-                       break;
-                   case "taller":
-                       self.editor.tallerTile(tile);                       
-                       self.show();
-                       self.notifyTileChange(tile, new Builder.TileChange("POST_TALLER"));
-                       break;
-                   case "shorter":
-                       self.editor.shorterTile(tile);
-                       self.show();
-                       self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
-                       break;
-                   case "maximize":
-                       self.maximize(tile);
-                       self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
-                       $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
-                       break;
-                   case "restore":
-                       self.restore(tile);
-                       self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
-                       $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
-                       break;
-               }
-           };
-           
+
            self.openEditTileLinkDialog = function(tile) { 
                self.tileToEdit = ko.observable(tile);
                self.linkName(tile.linkText());
@@ -221,7 +224,7 @@ define(['knockout',
            self.linkNameValidated = true;
            self.linkNameValidator = {
                'validate': function(value){
-                   if(isContentLengthValid(value, Builder.LINK_NAME_MAX_LENGTH)) {
+                   if(Builder.isContentLengthValid(value, Builder.LINK_NAME_MAX_LENGTH)) {
                        self.linkNameValidated = true;
                        return true;
                    }else {
@@ -235,7 +238,7 @@ define(['knockout',
            self.linkURLValidator = {
                'validate': function(value) {
                     if(isURL(value)) {                       
-                        if(isContentLengthValid(value, Builder.LINK_URL_MAX_LENGTH)) {
+                        if(Builder.isContentLengthValid(value, Builder.LINK_URL_MAX_LENGTH)) {
                             self.linkURLValidated = true;
                         }else {
                             self.linkURLValidated = false;
@@ -821,7 +824,7 @@ define(['knockout',
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
                     var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
-                    self.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
+                    Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
             });

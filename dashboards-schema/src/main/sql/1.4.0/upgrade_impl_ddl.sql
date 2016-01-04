@@ -57,13 +57,6 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.WIDGET_LINKED_DASHBOARD exists already, no change is needed');      
   END IF;
 
-  --add new column 'EMS_DASHBOARD.SHARE_PUBLIC'
-  SELECT COUNT(*) INTO v_count FROM user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='SHARE_PUBLIC';
-  IF v_count=0 THEN
-    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD ADD "SHARE_PUBLIC" NUMBER(1,0) DEFAULT(0) NOT NULL';
-  ELSE
-    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.SHARE_PUBLIC exists already, no change is needed');      
-  END IF;
 END;
 /
 

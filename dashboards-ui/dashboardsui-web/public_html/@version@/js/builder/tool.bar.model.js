@@ -429,7 +429,15 @@ define(['knockout',
                         success: function (result) {
                             //self.sharePublic(_shareState === true ? false : true);
                             self.dashboard.sharePublic(_shareState === true ? false : true);
-                            $("#share_cfmDialog").ojDialog("close"); 
+                            if (self.dashboard.sharePublic() === true)
+                            {
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                            else
+                            {
+                                dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
+                            }
+                            //$("#share_cfmDialog").ojDialog("close"); 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
@@ -646,8 +654,8 @@ define(['knockout',
                 prefUtil.getPreference(prefKeyHomeDashboardId, options);
             };
             self.openShareConfirmDialog = function() {
-                //self.handleShareUnshare();
-                $("#share_cfmDialog").ojDialog("open"); 
+                self.handleShareUnshare();
+                //$("#share_cfmDialog").ojDialog("open"); 
             };
             
             //self.isSystemDashboard = self.dashboard.systemDashboard();
@@ -659,7 +667,8 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
                     "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.editDisabled() === true
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": true
                 },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
@@ -668,7 +677,8 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardEditDialog,
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
                     "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
-                    "disabled": self.editDisabled() === true
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
                 },
                 {
                     "label": getNlsString('COMMON_BTN_DELETE'),
@@ -677,7 +687,8 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
                     "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
-                    "disabled": self.editDisabled() === true
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
@@ -686,7 +697,8 @@ define(['knockout',
                     "onclick": self.openDashboardDuplicateDialog,
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
-                    "disabled": false
+                    "disabled": false,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
                 },
                 {
                     "label": self.favoriteLabel,
@@ -695,7 +707,8 @@ define(['knockout',
                     "onclick": self.handleDashboardFavorites,
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": self.favoriteLabel,
-                    "disabled": false
+                    "disabled": false,
+                    "showOnMobile": true
                 },
                 {
                     "label": self.dashboardAsHomeLabel,
@@ -704,7 +717,8 @@ define(['knockout',
                     "onclick": self.handleDashboardAsHome,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": self.setAsHomeLabel,
-                    "disabled": false
+                    "disabled": false,
+                    "showOnMobile": true
                 }
             ];
             //Dashboard Options ======end=======

@@ -112,6 +112,23 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
+                    // If dashboad is single page app, success callback will be ignored
+                    if (data.type === "SINGLEPAGE") {
+                        try {
+                            var tile = data.tiles[0];
+                            var url = dfu.df_util_widget_lookup_assetRootUrl(tile["PROVIDER_NAME"], tile["PROVIDER_VERSION"], tile["PROVIDER_ASSET_ROOT"], false);
+                            
+                            if (dfu.isDevMode()) {
+                                url = dfu.getRelUrlFromFullUrl(url);
+                            }
+                            window.location = url;
+                            return ;
+                        }catch(e){
+                            oj.Logger.error(e);
+                        }
+                    }
+                    
+
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {

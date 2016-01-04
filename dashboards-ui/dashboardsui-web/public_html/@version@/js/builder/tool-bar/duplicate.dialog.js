@@ -6,10 +6,11 @@
 define(['knockout', 
         'jquery',
         'ojs/ojcore',
+        'dfutil',
         'uifwk/js/util/screenshot-util',
         'uifwk/js/util/message-util'
     ], 
-    function(ko, $, oj, ssu, msgu) {       
+    function(ko, $, oj, dfu, ssu, msgu) {       
         function DuplicateDashboardModel($b) {
             var self = this;
             var msgUtil = new msgu();
