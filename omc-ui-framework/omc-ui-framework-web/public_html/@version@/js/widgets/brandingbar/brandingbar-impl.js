@@ -385,7 +385,7 @@ define([
                             async: true
                         });  
                     }
-                };
+                }
                 
                 function receiveMessage(event)
                 {
@@ -407,7 +407,7 @@ define([
                             showMessage(data);
                         }
                     }
-                };
+                }
                 
                 function showMessage(data) {
                     if (data) {
@@ -474,7 +474,7 @@ define([
                             setTimeout(function(){removeMessage(message);}, data.removeDelayTime);
                         }
                     }
-                };
+                }
                 
                 function removeMessage(data) {
                     if (data.category === catRetryInProgress) {
@@ -512,7 +512,7 @@ define([
                         if (displayMessageCount <= maxMsgDisplayCnt)
                             self.hiddenMessagesExpanded(false);
                     }
-                };
+                }
                 
                 function removeItemByValue(obj, value)
                 {
@@ -526,7 +526,7 @@ define([
                     return obj.filter(function (val) {
                         return val[prop] !== value;
                     });
-                };
+                }
                 
                 function checkNotifications() {
                     oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
@@ -554,18 +554,18 @@ define([
                             }
                         }
                     }
-                };
+                }
                 
                 function getSubscribedAppsCallback(apps) {
                     oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
                     subscribedApps = apps;
                     refreshAppName();
-                };
+                }
                 
                 function getSubscribedApplications() {
                     oj.Logger.info("Start to get subscribed applications for branding bar.", false);
                     dfu.checkSubscribedApplications(getSubscribedAppsCallback);
-                };
+                }
                 
                 function refreshAppName() {
                     var subscribedServices = null;
@@ -585,7 +585,7 @@ define([
                         }
                     }
                     self.appName(subscribedServices);
-                };
+                }
             }
             
             return BrandingBarViewModel;

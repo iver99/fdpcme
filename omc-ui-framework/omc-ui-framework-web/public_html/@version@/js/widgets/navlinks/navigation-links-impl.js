@@ -96,7 +96,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                             }
                         }
                     }
-                };
+                }
                 
                 function checkCurrentUserRoles(authUrl) {
                     if (dfu.isDevMode()) {
@@ -118,7 +118,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                             async: true
                         });
                     }
-                };
+                }
                 
                 function checkAdminPrivileges() {
                     if (dfu.isDevMode()) {
@@ -127,7 +127,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                     else {
                         dfu.discoverUrlAsync("SecurityAuthorization", "0.1", null, checkCurrentUserRoles);
                     }
-                };
+                }
                 
                 function refreshAdminLinks() {
                     if (self.isAdmin) {
@@ -147,8 +147,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                                 self.adminLinks(discoveredAdminLinks);//show all avail admin links
                             }else{ //show app related admin link and tenant management UI and Event UI admin link only
                                 var filteredAdminLinks = [];                                
-                                for (var i=0;i <discoveredAdminLinks.length;i++ ){
-                                    var link = discoveredAdminLinks[i];
+                                for (var index=0; index<discoveredAdminLinks.length;index++ ){
+                                    var link = discoveredAdminLinks[index];
                                     if (params.app && params.app.serviceName===link.serviceName){
                                         filteredAdminLinks.push(link);
                                     }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
@@ -165,7 +165,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         }
 
                     }
-                };
+                }
                 
                 /**
                 * Discover available quick links and administration links by calling registration api
@@ -188,25 +188,25 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         if (data.cloudServices && data.cloudServices.length > 0) {
                             var cloudServices = data.cloudServices;
                             var cloudServiceList = [];
-                                for (var i = 0; i < cloudServices.length; i++) {
+                                for (var index = 0; index < cloudServices.length; index++) {
                                     if (appMap !== null)
                                         cloudServiceList.push(
-                                            {name: appMap[cloudServices[i].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[i].name].serviceDisplayName] : 
-                                                nlsStrings[appMap[cloudServices[i].name].appName], 
-                                            href: cloudServices[i].href});
+                                            {name: appMap[cloudServices[index].name].serviceDisplayName ? nlsStrings[appMap[cloudServices[index].name].serviceDisplayName] : 
+                                                nlsStrings[appMap[cloudServices[index].name].appName], 
+                                            href: cloudServices[index].href});
                                     else 
                                         cloudServiceList.push(
-                                            {name: cloudServices[i].name, 
-                                            href: cloudServices[i].href});
+                                            {name: cloudServices[index].name, 
+                                            href: cloudServices[index].href});
                                 }
                             self.cloudServices(cloudServiceList);
                         }
                         if (data.visualAnalyzers && data.visualAnalyzers.length > 0) {
                             var analyzers = data.visualAnalyzers;
                             var analyzerList = [];
-                            for (var i = 0; i < analyzers.length; i++) {
-                                var aurl = analyzers[i].href;
-                                analyzerList.push({name: analyzers[i].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
+                            for (var subindex = 0; subindex < analyzers.length; subindex++) {
+                                var aurl = analyzers[subindex].href;
+                                analyzerList.push({name: analyzers[subindex].name.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, ''), 
                                     href: aurl});
                             }
                             self.visualAnalyzers(analyzerList);
@@ -240,7 +240,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         },
                         async: true
                     });                
-                };
+                }
                 
                 function refreshLinks() {
                     dfHomeUrl = '/emsaasui/emcpdfui/welcome.html';
@@ -252,7 +252,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                         (self.adminLinks().length === 0 && self.isAdmin === true)) {
                         discoverLinks();
                     }
-                };        
+                }       
             }
             return NavigationLinksViewModel;
         });
