@@ -235,7 +235,7 @@ define({
       "COMMON_ERROR_PAGE_NO_ACCESS_NO_PERMISSION_MSG":"You don't have permissions to access to this page. Contact your Administrator.",
       "COMMON_ERROR_PAGE_NO_ACCESS_NO_SUBS_MSG__PLUS_SERVICE":"You currently don't have access to this page because you're not subscribed to {0}.",
       "COMMON_ERROR_PAGE_NO_ACCESS_NO_SUBS_MSG":"You currently don't have access to this page because you're not subscribed to the service being accessed.",
-	  
+
       "LANDING_HOME_WINDOW_TITLE": "Landing Home",
       "LANDING_HOME_WELCOME_SLOGAN": "Welcome to Oracle Management Cloud",
       "LANDING_HOME_APM": "Application Performance Monitoring",
