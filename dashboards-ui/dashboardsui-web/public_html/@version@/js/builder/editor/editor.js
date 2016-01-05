@@ -66,6 +66,28 @@ define(['knockout',
                 self.tiles.push(tile);
             };
             
+            self.showHideTitle =function(item){
+                   var showTitle;
+                    if (item.find('.dbd-icon-eye-slash').length !== 0) {
+                        showTitle = 'false';
+                    } else {
+                        showTitle = 'true';
+                    }
+                    if(showTitle==='true'){
+                        item.closest('.dbd-widget').find('.dbd-tile-header h2').css("visibility","visible");
+                        item.find('.widget-title-show').hide();
+                        item.find('.widget-title-hide').show();
+                        item.find('.fa-icon-font').removeClass('dbd-icon-eye');
+                        item.find('.fa-icon-font').addClass('dbd-icon-eye-slash');
+                    }else{
+                        item.closest('.dbd-widget').find('.dbd-tile-header h2').css("visibility","hidden");
+                        item.find('.widget-title-hide').hide();
+                        item.find('.widget-title-show').show();
+                        item.find('.fa-icon-font').removeClass('dbd-icon-eye-slash');
+                        item.find('.fa-icon-font').addClass('dbd-icon-eye');
+                    }
+            };
+            
             self.getMaximizedTile = function() {
                 if(!(self.tiles && self.tiles())) {
                     return null;

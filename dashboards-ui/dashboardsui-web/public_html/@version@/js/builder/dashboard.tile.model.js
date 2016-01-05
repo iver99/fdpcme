@@ -63,7 +63,6 @@ define(['knockout',
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);
-            self.showWidgetTitle = ko.observable(true);
 
             self.isEmpty = function() {
                 return !self.editor.tiles() || self.editor.tiles().length === 0;
@@ -150,14 +149,17 @@ define(['knockout',
             };
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
+                var item= ui.item;
                 if (!tile) {
                     oj.Logger.error("Error: could not find tile from the ui data");
                     return;
                 }
                 switch (ui.item.attr("id")) {
                     case "showhide-title":
-                        self.showWidgetTitle(!self.showWidgetTitle());
-                        break;   
+                        self.editor.showHideTitle(item);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_TITLESTATUS"));
+                        break;                          
                     case "remove":
                         self.editor.deleteTile(tile);
                         self.show();
