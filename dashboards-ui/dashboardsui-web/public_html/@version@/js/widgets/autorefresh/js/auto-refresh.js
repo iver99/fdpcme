@@ -17,7 +17,7 @@ define(['knockout', 'jquery'],
 var oldTo = params.timeRangeEnd;
 var oldFrom = params.timeRangeStart;
 var refreshCallback = params.refreshCallback;
-**/		  
+**/
                     if (oldTo && oldFrom) {
                         var duration = oldTo.getTime() - oldFrom.getTime();
                         var newFrom = new Date(now.getTime() - duration);
@@ -29,7 +29,7 @@ var refreshCallback = params.refreshCallback;
                     }
                    model.timeRangeChange(true);
 
-                }
+                };
 
                 var intervalId = null;
                 var resetTimer = function (interval) {
@@ -40,7 +40,7 @@ var refreshCallback = params.refreshCallback;
                     if ("number" === typeof (interval) && interval > 0) {
                         intervalId = setInterval(doRefresh, interval);
                     }
-                }
+                };
 
                 me.selected = ko.observable("no");
                 me.optionChangedHandler = function (event, data) {

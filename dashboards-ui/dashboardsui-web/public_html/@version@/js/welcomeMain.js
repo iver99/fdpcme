@@ -183,7 +183,7 @@ require(['ojs/ojcore',
                     if(data.visualAnalyzers && data.visualAnalyzers.length>0) {
                         var dataExplorers = data.visualAnalyzers;
                         var dataExplorersNum = dataExplorers.length;
-                        for(var i=0; i<dataExplorersNum; i++) {
+                        for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
                             self.exploreDataLinkList.push(dataExplorers[i]);                            
