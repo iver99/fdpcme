@@ -54,40 +54,40 @@ define(['knockout',
             self.completelyHidden = ko.observable(false);
             self.maximized = ko.observable(false);
 
-            self.showTimeControl = ko.observable(false);
+//            self.showTimeControl = ko.observable(false);
             // observable variable possibly updated by other events
-            self.enableTimeControl = ko.observable(false);
-            self.computedEnableTimeControl = ko.pureComputed({
-                read: function() {
-                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
-                    return self.enableTimeControl();
-                },
-                write: function(value) {
-                    console.debug('Time control settings is set to ' + value + ' manually');
-                    self.enableTimeControl(value);
-                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
-                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
-                }
-            });
+//            self.enableTimeControl = ko.observable(false);
+//            self.computedEnableTimeControl = ko.pureComputed({
+//                read: function() {
+//                    console.debug('LeftPanel enableTimeControl is ' + self.enableTimeControl() + ', ' + (self.enableTimeControl()?'Enable':'Disable')+' time control settings accordingly');
+//                    return self.enableTimeControl();
+//                },
+//                write: function(value) {
+//                    console.debug('Time control settings is set to ' + value + ' manually');
+//                    self.enableTimeControl(value);
+//                    self.dashboard.enableTimeRange(value?'TRUE':'FALSE');
+//                    $b.triggerEvent($b.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, null);
+//                }
+//            });
 
-            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
-                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
-    //                self.showTimeControl(anyTileExists);
-            };
+//            self.dashboardTileExistsChangedHandler = function(anyTileExists) {
+//                console.debug('Received event EVENT_TILE_EXISTS_CHANGED with value of ' + anyTileExists + '. ' + (anyTileExists?'Show':'Hide') + ' time control settings accordingly');
+//    //                self.showTimeControl(anyTileExists);
+//            };
 
-            self.dashboardTileSupportTimeControlHandler = function(exists) {
-                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
-                if (self.dashboard.enableTimeRange() === 'AUTO') {
-                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
-                    self.enableTimeControl(exists);
-                }
-                else {
-                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
-                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
-                }
-                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
-                self.showTimeControl(exists);
-            };
+//            self.dashboardTileSupportTimeControlHandler = function(exists) {
+//                console.debug('Received event EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL with value of ' + exists + '. ' + (exists?'Show':'Hide') + ' time control settings accordingly');
+//                if (self.dashboard.enableTimeRange() === 'AUTO') {
+//                    console.debug('As dashboard enable time range is AUTO, '+(exists?'enable':'disable') + ' time control settings based result if tile supporting time control exists. Its value is ' + exists);
+//                    self.enableTimeControl(exists);
+//                }
+//                else {
+//                    console.debug((self.dashboard.enableTimeRange()==='TRUE'?'Enable':'Disable') + ' time control based on dashboard enableTimeRange value: ' + self.dashboard.enableTimeRange());
+//                    self.enableTimeControl(self.dashboard.enableTimeRange() === 'TRUE');
+//                }
+//                console.debug('Exists tile supporting time control? ' + exists + ' ' + (exists?'Show':'Hide') + ' time control setting accordingly');
+//                self.showTimeControl(exists);
+//            };
 
             self.initialize = function() {
                     if (self.dashboard.type() === 'SINGLEPAGE' || self.dashboard.systemDashboard()) {
@@ -100,7 +100,7 @@ define(['knockout',
                     self.initEventHandlers();
                     self.loadWidgets();
                     self.initDraggable();
-                    self.checkAndDisableLinkDraggable();
+//                    self.checkAndDisableLinkDraggable();
                     $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
                         var replacedValue = this.value.replace(/[^0-9\.]/g, '');
                         if (this.value !== replacedValue) {
@@ -115,19 +115,19 @@ define(['knockout',
             };
 
             self.initEventHandlers = function() {
-                $b.addBuilderResizeListener(self.resizeEventHandler);
+//                $b.addBuilderResizeListener(self.resizeEventHandler);
                 $b.addEventListener($b.EVENT_TILE_MAXIMIZED, self.tileMaximizedHandler);
                 $b.addEventListener($b.EVENT_TILE_RESTORED, self.tileRestoredHandler);
-                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
-                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
-                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
-                $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
+//                $b.addEventListener($b.EVENT_TILE_ADDED, self.tileAddedHandler);
+//                $b.addEventListener($b.EVENT_TILE_DELETED, self.tileDeletedHandler);
+//                $b.addEventListener($b.EVENT_TILE_EXISTS_CHANGED, self.dashboardTileExistsChangedHandler);
+//                $b.addEventListener($b.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL, self.dashboardTileSupportTimeControlHandler);
             };
 
             self.initDraggable = function() {
                 self.initWidgetDraggable();
-                self.initTextWidgetDraggable();
-                self.initWidgetLinkDraggable();
+//                self.initTextWidgetDraggable();
+//                self.initWidgetLinkDraggable();
             };
 
             self.initWidgetDraggable = function() {
@@ -146,42 +146,42 @@ define(['knockout',
                 });
             };
 
-            self.initTextWidgetDraggable = function() {
-                $("#dbd-left-panel-text").draggable({
-                    helper: "clone",
-                    handle: "#dbd-left-panel-text-handle",
-                    start: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_TEXT_START_DRAGGING, null, e, t);
-                    },
-                    drag: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_TEXT_DRAGGING, null, e, t);
-                    },
-                    stop: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_TEXT_STOP_DRAGGING, null, e, t);
-                    }
-                });
-            };
+//            self.initTextWidgetDraggable = function() {
+//                $("#dbd-left-panel-text").draggable({
+//                    helper: "clone",
+//                    handle: "#dbd-left-panel-text-handle",
+//                    start: function(e, t) {
+//                        $b.triggerEvent($b.EVENT_NEW_TEXT_START_DRAGGING, null, e, t);
+//                    },
+//                    drag: function(e, t) {
+//                        $b.triggerEvent($b.EVENT_NEW_TEXT_DRAGGING, null, e, t);
+//                    },
+//                    stop: function(e, t) {
+//                        $b.triggerEvent($b.EVENT_NEW_TEXT_STOP_DRAGGING, null, e, t);
+//                    }
+//                });
+//            };
 
-            self.initWidgetLinkDraggable = function() {
-                $("#dbd-left-panel-link").draggable({
-                    helper: "clone",
-                    handle: "#dbd-left-panel-link-handle",
-                    start: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_LINK_START_DRAGGING, null, e, t);
-                    },
-                    drag: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_LINK_DRAGGING, null, e, t);
-                    },
-                    stop: function(e, t) {
-                        $b.triggerEvent($b.EVENT_NEW_LINK_STOP_DRAGGING, null, e, t);
-                    }
-                });       
-            };
+//            self.initWidgetLinkDraggable = function() {
+//                $("#dbd-left-panel-link").draggable({
+//                    helper: "clone",
+//                    handle: "#dbd-left-panel-link-handle",
+//                    start: function(e, t) {
+//                        $b.triggerEvent($b.EVENT_NEW_LINK_START_DRAGGING, null, e, t);
+//                    },
+//                    drag: function(e, t) {
+//                        $b.triggerEvent($b.EVENT_NEW_LINK_DRAGGING, null, e, t);
+//                    },
+//                    stop: function(e, t) {
+//                        $b.triggerEvent($b.EVENT_NEW_LINK_STOP_DRAGGING, null, e, t);
+//                    }
+//                });       
+//            };
 
-            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
-                $('#dbd-left-panel').height(height - topHeight);
-                $('#left-panel-text-helper').css("width", width - 20);
-            };
+//            self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
+//                $('#dbd-left-panel').height(height - topHeight);
+//                $('#left-panel-text-helper').css("width", width - 20);
+//            };
 
             self.tileMaximizedHandler = function() {
                 self.maximized(true);
@@ -194,15 +194,15 @@ define(['knockout',
                 $b.triggerBuilderResizeEvent('hide left panel because restore');
             };
             
-            self.tileAddedHandler = function(tile) {
-                tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
-            };
+//            self.tileAddedHandler = function(tile) {
+//                tile && tile.type() === "DEFAULT" && ($("#dbd-left-panel-link").draggable("enable"));
+//            };
 
-            self.tileDeletedHandler = function(tile) {
-                if (!tile || tile.type() !== "DEFAULT")
-                    return;
-                self.checkAndDisableLinkDraggable();
-            };
+//            self.tileDeletedHandler = function(tile) {
+//                if (!tile || tile.type() !== "DEFAULT")
+//                    return;
+//                self.checkAndDisableLinkDraggable();
+//            };
 
             self.loadWidgets = function(req) {
                 new Builder.WidgetDataSource().loadWidgetData(self.page(), req&&(typeof req.term === "string")?req.term:self.keyword(), function(page, widgets, totalPages) {
@@ -271,33 +271,18 @@ define(['knockout',
                     self.searchWidgetsClicked();
                 }
             };
-             
-            self.rightPanelStatus = ko.observableArray(['shown']);
-            self.rightPanelShown = ko.observable(true);
-            self.toggleRightPanel = function() {
-                self.toggleLeftPanel();
-                self.rightPanelShown(!self.rightPanelShown());
-                self.rightPanelStatus(self.rightPanelShown() ? ['shown'] : []);
-            };
             
             self.toggleLeftPanel = function() {
                 if (!self.completelyHidden()) {
                     self.completelyHidden(true);
-                    $('#right-panel-toggler').css('right', '0');
                     $b.triggerBuilderResizeEvent('hide left panel');
                 } 
                 else {
                     self.completelyHidden(false);
-                    $('#right-panel-toggler').css('right', '282px');
                     self.initDraggable();
                     $b.triggerBuilderResizeEvent('show left panel');
                 }
             };
-
-//            self.widgetGoDataExploreHandler = function(widget) {
-//                var url = Builder.getVisualAnalyzerUrl(widget.PROVIDER_NAME(), widget.PROVIDER_VERSION());
-//                url && window.open(url + "?widgetId=" + widget.WIDGET_UNIQUE_ID());
-//            };
 
             self.widgetMouseOverHandler = function(widget) {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
@@ -333,11 +318,11 @@ define(['knockout',
                 }
             };
 
-            self.checkAndDisableLinkDraggable = function() {
-                if(!self.dashboard.isDefaultTileExist()) {
-                    $("#dbd-left-panel-link").draggable("disable");
-                }
-            };
+//            self.checkAndDisableLinkDraggable = function() {
+//                if(!self.dashboard.isDefaultTileExist()) {
+//                    $("#dbd-left-panel-link").draggable("disable");
+//                }
+//            };
         }
         
         Builder.registerModule(RightPanelModel, 'RightPanelModel');

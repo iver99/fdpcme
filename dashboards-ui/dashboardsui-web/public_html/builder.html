@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-             
+       
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -438,47 +438,7 @@
             </div>
             <!-- /ko -->
             <div id="main-container" class="oj-col stretch-height builder-main" role="main">
-
                     <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
-                        <div id="tilesLinkEditorDialogWrapper">
-                            <div style="display: none;" id="tilesLinkEditorDialog"  
-                                 data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide', rootAttributes: {style: 'min-width: 600px;'}, close: closeEditTileLinkDialog}">
-                                <div class="oj-dialog-header oj-helper-clearfix">
-                                    <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_TITLE')"></span>
-                                </div>
-                                <div class="oj-dialog-body">
-                                    <div id="link-name-editor" class="oj-form oj-md-odd-cols-2 oj-md-labels-inline">
-                                        <div class="oj-row">
-                                            <div class="oj-col">
-                                                <label for="linkName" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_NAME_LABEL')"></label>
-                                            </div>
-                                            <div class="oj-col">
-                                                <input id="linkName" 
-                                                       data-bind="valueUpdate: 'afterkeydown', 
-                                                                    ojComponent: {component: 'ojInputText', value: linkName, required: true, validators: [linkNameValidator],
-                                                                                placeholder: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_NAME_REQUIRED')}"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="link-url-editor" class="oj-form oj-md-odd-cols-2 oj-md-labels-inline">
-                                        <div class="oj-row">
-                                            <div class="oj-col">
-                                                <label for="linkUrl" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_URL_LABEL')"></label>
-                                            </div>
-                                            <div class="oj-col">
-                                                <input id="linkUrl" 
-                                                       data-bind="valueUpdate: 'afterkeydown', 
-                                                                    ojComponent: {component: 'ojInputText', value: linkUrl, required: true, validators: [linkURLValidator],
-                                                                                placeholder: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_URL_REQUIRED')}"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="oj-dialog-footer">
-                                    <button class="edit-tile-link-confirm-btn" data-bind="click: editTileLinkConfirmed, ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"></button>
-                                </div>
-                            </div>
-                        </div> 
                         <div id="global-time-control" class="oj-row fit-size-vertical-sibling" 
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none;"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
@@ -652,11 +612,11 @@
                                 </div>
                                 <!-- /ko -->
                                 <!-- ko if: type() === 'TEXT_WIDGET' -->
-                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'tile'+clientGuid}">
+<!--                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'tile'+clientGuid}">
                                     <div class="tile-drag-handle" style=" cursor: move;">
                                         <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <!-- /ko -->                                
                             </div>
                         </div>
@@ -684,169 +644,161 @@
                 </div>
                 <!-- ko stopBinding: true -->
                 <div id="dbd-left-panel" class="dbd-left-panel-show"
-                     data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()}">
-                        <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
+                        data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()}">
+                    <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
+                        <div class="oj-row">
+                            <div class="oj-col">
+                                <h3 class="dbd-left-panel-header-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTENT_LABEL')"></h3>
+                            </div>
+                        </div>
+                        <div class="dbd-left-panel-header-search">
+                            <div  class="dbd-left-panel-header-search-input">
+                                <input id="widget-search-input" type="text" name="searchInput"
+                                   data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
+                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
+                            </div>
+                            <div>
+<!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
+                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                                        icons: {start:'left-panel-dbd-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
+                                        height: 30px;
+                                        line-height: 30px;
+                                        vertical-align: middle;
+                                        text-align: center;
+                                        float: left;"> 
+                                </button>-->
+                                <button id="dbd-left-panel-header-search-btn" class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
+                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
+                                        icons: {start:'left-panel-dbd-search-icon'}}"> 
+                                </button> 
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dbd-left-panel-widgets" class="fit-size">
+                        <div class="oj-col stretch-width" data-bind="foreach: widgets">
+                            <div class="dbd-left-panel-widget" data-bind="attr: {id: 'widget-item-'+WIDGET_UNIQUE_ID()}">
+                                <div class="dbd-left-panel-widget-text"
+                                            data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
+                                    <span data-bind="text:WIDGET_NAME"></span>
+                                </div>
+                                <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
+                                                ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-12 oj-md-12">
+                                            <h2 data-bind="text:WIDGET_NAME"></h2>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-4 oj-md-4">
+                                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="height:120px;width:120px;"/>
+                                        </div>
+                                        <div class="oj-col oj-sm-8 oj-md-8">
+                                            <span data-bind="text:WIDGET_DESCRIPTION" style="color: #9e9e9e;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling">
+                        <div id="dbd-left-panel-footer-contain" style="padding-top: 10px; border-top: 1px solid #d6dfe6">
+                            <div class="oj-row" data-bind="event: {mouseover: $root.containerMouseOverHandler, mouseout: $root.containerMouseOutHandler}">
+                                <div class="oj-col oj-sm-12" style="height: 28px;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL')"></div>
+                            </div>
+                        </div>
+                        <div id="dbd-left-panel-footer-btns">
                             <div class="oj-row">
-                                <div class="oj-col">
-                                    <h3 class="dbd-left-panel-header-title" >Content</h3>
-                                </div>
-                            </div>
-                            <div class="dbd-left-panel-header-search">
-                                <div  class="dbd-left-panel-header-search-input">
-                                    <input id="widget-search-input" type="text" name="searchInput"
-                                       data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
-                                                  placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                                  ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
-                                </div>
-                                <div>
-    <!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
-                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
-                                            icons: {start:'left-panel-dbd-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
-                                            height: 30px;
-                                            line-height: 30px;
-                                            vertical-align: middle;
-                                            text-align: center;
-                                            float: left;"> 
-                                    </button>-->
-                                    <button id="dbd-left-panel-header-search-btn" class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
-                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
-                                            icons: {start:'left-panel-dbd-search-icon'}}"> 
-                                    </button> 
+                                <div id="dbd-left-panel-footer-pages" class="oj-col oj-sm-3 oj-md-3 oj-lg-3" 
+                                     data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES')"></div>
+                                <div class="oj-col oj-sm-9 oj-md-9 oj-lg-9">
+                                    <input id="dbd-left-panel-widgets-page-input" aria-label="page"
+                                            data-bind="ojComponent: {
+                                              component: 'ojInputNumber',
+                                              max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
+                                              displayOptions: {converterHint: 'none', validatorHint: 'notewindow', title: 'none', messages: 'notewindow'}}"/>
                                 </div>
                             </div>
                         </div>
-                        <div id="dbd-left-panel-widgets" class="fit-size">
-                            <div class="oj-col stretch-width" data-bind="foreach: widgets">
-                                <div class="dbd-left-panel-widget" data-bind="attr: {id: 'widget-item-'+WIDGET_UNIQUE_ID()}">
-                                    <div class="dbd-left-panel-widget-text"
-                                                data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                        <span data-bind="text:WIDGET_NAME"></span>
-                                    </div>
-                                    <!--<button class="oj-button-half-chrome" 
-                                            data-bind="attr: {id: 'widget-goto-'+WIDGET_UNIQUE_ID()}, click: $root.widgetGoDataExploreHandler,
-                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_BTN_LABEL'), 
-                                            display: 'icons', icons: {start:'left-panel-dbd-widget-goto-icon'}}"> 
-                                    </button>-->
-                                    <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
-                                                    ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
-                                        <div class="oj-row">
-                                            <div class="oj-col oj-sm-12 oj-md-12">
-                                                <h2 data-bind="text:WIDGET_NAME"></h2>
-                                            </div>
+                        <div id="right-container-pop" data-bind="ojComponent:{component: 'ojPopup'}">
+                            <div class="oj-row">
+                                <div class="oj-col oj-sm-12">
+                                    <h2 data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL')"></h2>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="oj-row">
+                                <div class="oj-col oj-sm-5" style="border: 1px solid #9e9e9e;;text-align:center;">
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-6" style="text-align:center;">
+                                            <h1 style="margin-top:25px;margin-bottom:5px;height:30px;color:#0572CE;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_VALUE1')"></h1>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL1')"></div>
                                         </div>
-                                        <hr>
-                                        <div class="oj-row">
-                                            <div class="oj-col oj-sm-4 oj-md-4">
-                                                <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="height:120px;width:120px;"/>
+                                        <div class="oj-col oj-sm-6">
+                                            <div id="gauge2"
+                                                    data-bind="ojComponent: {
+                                                      component: 'ojStatusMeterGauge', 
+                                                      min: 0, 
+                                                      max: 100, 
+                                                      value: 60,
+                                                      color: '#0572CE',
+                                                      orientation: 'circular',
+                                                      metricLabel: {rendered: 'on'},
+                                                      plotArea: {rendered: 'on'}, 
+                                                      step: 10,
+                                                      readOnly: false
+                                                     }" 
+                                                  style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;">
                                             </div>
-                                            <div class="oj-col oj-sm-8 oj-md-8">
-                                                <span data-bind="text:WIDGET_DESCRIPTION" style="color: #9e9e9e;"></span>
-                                            </div>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL2')"></div>
                                         </div>
                                     </div>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-6">
+                                            <div id="gauge3"
+                                                    data-bind="ojComponent: {
+                                                      component: 'ojStatusMeterGauge', 
+                                                      min: 0, 
+                                                      max: 100, 
+                                                      value: 25,
+                                                      color: '#0572CE',
+                                                      orientation: 'circular',
+                                                      metricLabel: {rendered: 'on'},
+                                                      plotArea: {rendered: 'on'}, 
+                                                      step: 10,
+                                                      readOnly: false
+                                                     }" 
+                                                  style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;color:blue;">
+                                            </div>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL3')"></div>
+                                        </div>
+                                        <div class="oj-col oj-sm-6">
+                                            <div id="gauge4"
+                                                    data-bind="ojComponent: {
+                                                      component: 'ojStatusMeterGauge', 
+                                                      min: 0, 
+                                                      max: 100, 
+                                                      value: 80,
+                                                      color: '#0572CE',
+                                                      orientation: 'circular',
+                                                      metricLabel: {rendered: 'on'},
+                                                      plotArea: {rendered: 'on'}, 
+                                                      step: 10,
+                                                      readOnly: false
+                                                     }" 
+                                                  style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;color:blue;">
+                                            </div>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL4')"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oj-col oj-sm-7">
+                                    <span style="color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_DESC')"></span>
                                 </div>
                             </div>
                         </div>
-                        <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling">
-                            <div id="dbd-left-panel-footer-contain" style="padding-top: 10px; border-top: 1px solid #d6dfe6">
-                                <div class="oj-row" data-bind="event: {mouseover: $root.containerMouseOverHandler, mouseout: $root.containerMouseOutHandler}">
-                                    <div class="oj-col oj-sm-12" style="height: 28px;">Container</div>
-                                </div>
-                            </div>
-                            <div id="dbd-left-panel-footer-btns">
-                                <div class="oj-row">
-                                    <div id="dbd-left-panel-footer-pages" class="oj-col oj-sm-3 oj-md-3 oj-lg-3" 
-                                         data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES')"></div>
-                                    <div class="oj-col oj-sm-9 oj-md-9 oj-lg-9">
-                                        <input id="dbd-left-panel-widgets-page-input" aria-label="page"
-                                                data-bind="ojComponent: {
-                                                  component: 'ojInputNumber',
-                                                  max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
-                                                  displayOptions: {converterHint: 'none', validatorHint: 'notewindow', title: 'none', messages: 'notewindow'}}"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="right-container-pop" data-bind="ojComponent:{component: 'ojPopup'}">
-                                <div class="oj-row">
-                                    <div class="oj-col oj-sm-12">
-                                        <h2>Container</h2>
-                                    </div>
-                                </div>
-                                <hr>
-                                <div class="oj-row">
-                                    <div class="oj-col oj-sm-5" style="border: 1px solid #9e9e9e;;text-align:center;">
-                                        <div class="oj-row">
-                                            <div class="oj-col oj-sm-6" style="text-align:center;">
-                                                <h1 style="margin-top:25px;margin-bottom:5px;height:30px;color:#0572CE;">219</h1>
-                                                <div style="white-space: nowrap;color: #9e9e9e;">Total Processes</div>
-                                            </div>
-                                            <div class="oj-col oj-sm-6">
-                                                <div id="gauge2"
-                                                        data-bind="ojComponent: {
-                                                          component: 'ojStatusMeterGauge', 
-                                                          min: 0, 
-                                                          max: 100, 
-                                                          value: 60,
-                                                          color: '#0572CE',
-                                                          orientation: 'circular',
-                                                          metricLabel: {rendered: 'on'},
-                                                          plotArea: {rendered: 'on'}, 
-                                                          step: 10,
-                                                          readOnly: false
-                                                         }" 
-                                                      style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;">
-                                                </div>
-                                                <div style="white-space: nowrap;color: #9e9e9e;">CPU Status</div>
-                                            </div>
-                                        </div>
-                                        <div class="oj-row">
-                                            <div class="oj-col oj-sm-6">
-                                                <div id="gauge3"
-                                                        data-bind="ojComponent: {
-                                                          component: 'ojStatusMeterGauge', 
-                                                          min: 0, 
-                                                          max: 100, 
-                                                          value: 25,
-                                                          color: '#0572CE',
-                                                          orientation: 'circular',
-                                                          metricLabel: {rendered: 'on'},
-                                                          plotArea: {rendered: 'on'}, 
-                                                          step: 10,
-                                                          readOnly: false
-                                                         }" 
-                                                      style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;color:blue;">
-                                                </div>
-                                                <div style="white-space: nowrap;color: #9e9e9e;">Memory Used</div>
-                                            </div>
-                                            <div class="oj-col oj-sm-6">
-                                                <div id="gauge4"
-                                                        data-bind="ojComponent: {
-                                                          component: 'ojStatusMeterGauge', 
-                                                          min: 0, 
-                                                          max: 100, 
-                                                          value: 80,
-                                                          color: '#0572CE',
-                                                          orientation: 'circular',
-                                                          metricLabel: {rendered: 'on'},
-                                                          plotArea: {rendered: 'on'}, 
-                                                          step: 10,
-                                                          readOnly: false
-                                                         }" 
-                                                      style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;color:blue;">
-                                                </div>
-                                                <div style="white-space: nowrap;color: #9e9e9e;">Disk Used</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="oj-col oj-sm-7">
-                                        <span style="color: #9e9e9e;">Group one or more content terms into a single container</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    
-                    
-                    
+                    </div>
                 </div>
                 <!-- /ko -->
                 <!--<div class="oj-row stretch-height tile-container" id="tileContainer"  
