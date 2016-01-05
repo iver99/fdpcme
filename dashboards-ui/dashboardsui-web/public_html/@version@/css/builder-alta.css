@@ -256,10 +256,12 @@ body, html {
 
 .dbd-toolbar-icon-share:before, .fa-users:before {
   content: "\f0c0";
+  padding-bottom: 3px;
 } 
 
 .dbd-toolbar-icon-unshare:before, .fa-user:before {
   content: "\f007";
+  padding-bottom: 3px;
 }
 
 .fa-star:before {
