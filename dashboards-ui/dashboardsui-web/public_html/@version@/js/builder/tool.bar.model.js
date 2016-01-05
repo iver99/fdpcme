@@ -431,10 +431,16 @@ define(['knockout',
                             self.dashboard.sharePublic(_shareState === true ? false : true);
                             if (self.dashboard.sharePublic() === true)
                             {
+                                self.sharePublicLabel(unshareDashboardLabel);
+                                self.sharePublicTitle(unshareDashboardTitle);
+                                self.cssSharePublic(cssUnshareDashboard);
                                 dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
                             }
                             else
                             {
+                                self.sharePublicLabel(shareDashboardLabel);
+                                self.sharePublicTitle(shareDashboardTitle);
+                                self.cssSharePublic(cssShareDashboard);
                                 dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
                             }
                             //$("#share_cfmDialog").ojDialog("close"); 
@@ -458,6 +464,15 @@ define(['knockout',
             var cssRemoveDsbAsHome = "dbd-toolbar-icon-home-outline";
             var cssAddFavorite = "fa-star dbd-toolbar-fa-icon";
             var cssRemoveFavorite = "fa-star-o dbd-toolbar-fa-icon";
+            var shareDashboardLabel = getNlsString('COMMON_TEXT_SHARE');
+            var unshareDashboardLabel = getNlsString('COMMON_TEXT_UNSHARE');
+            var shareDashboardTitle = getNlsString('COMMON_TEXT_SHARE_TITLE');
+            var unshareDashboardTitle = getNlsString('COMMON_TEXT_UNSHARE_TITLE');
+            var cssShareDashboard = "dbd-toolbar-icon-share dbd-toolbar-fa-icon dbd-toolbar-fa-icon-16";
+            var cssUnshareDashboard = "dbd-toolbar-icon-unshare dbd-toolbar-fa-icon";
+            self.sharePublicLabel = ko.observable(self.dashboard.sharePublic() === false ? shareDashboardLabel : unshareDashboardLabel);
+            self.sharePublicTitle = ko.observable(self.dashboard.sharePublic() === false ? shareDashboardTitle : unshareDashboardTitle);
+            self.cssSharePublic = ko.observable(self.dashboard.sharePublic() === false ? cssShareDashboard : cssUnshareDashboard);
             self.dashboardsAsHomeIcon = ko.observable(cssSetDsbAsHome);
             self.favoritesIcon = ko.observable(cssAddFavorite);
             self.isSystemDashboard = self.dashboard.systemDashboard();
@@ -668,7 +683,8 @@ define(['knockout',
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
                     "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": true
+                    "showOnMobile": true,
+                    "endOfGroup": false
                 },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
@@ -678,17 +694,19 @@ define(['knockout',
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
                     "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": true
                 },
                 {
-                    "label": getNlsString('COMMON_BTN_DELETE'),
+                    "label": self.sharePublicLabel,
                     "url": "#",
-                    "id":"emcpdf_dsbopts_delete",
-                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
-                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
+                    "id":"emcpdf_dsbopts_share",
+                    "onclick": self.editDisabled() === true ? null : self.openShareConfirmDialog,
+                    "icon": self.cssSharePublic,
+                    "title": self.sharePublicTitle,
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
@@ -698,7 +716,8 @@ define(['knockout',
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
                     "disabled": false,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
                 },
                 {
                     "label": self.favoriteLabel,
@@ -708,7 +727,8 @@ define(['knockout',
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": self.favoriteLabel,
                     "disabled": false,
-                    "showOnMobile": true
+                    "showOnMobile": true,
+                    "endOfGroup": false
                 },
                 {
                     "label": self.dashboardAsHomeLabel,
@@ -718,7 +738,19 @@ define(['knockout',
                     "icon": self.dashboardsAsHomeIcon,
                     "title": self.setAsHomeLabel,
                     "disabled": false,
-                    "showOnMobile": true
+                    "showOnMobile": true,
+                    "endOfGroup": self.editDisabled() === false
+                },
+                {
+                    "label": getNlsString('COMMON_BTN_DELETE'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_delete",
+                    "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
+                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
+                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
                 }
             ];
             //Dashboard Options ======end=======

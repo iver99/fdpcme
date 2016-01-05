@@ -284,6 +284,10 @@ body, html {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.dbd-toolbar-fa-icon-16 {
+    font-size: 1.06rem;
+}
+
 .builder-toolbar-button-text {
   color: rgb(0, 0, 0);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

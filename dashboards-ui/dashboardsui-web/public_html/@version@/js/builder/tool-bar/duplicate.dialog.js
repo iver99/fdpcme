@@ -124,7 +124,7 @@ define(['knockout',
                         $('#duplicateDsbDialog').ojDialog('close');
                         error && error.errorMessage() && dfu.showMessage({type: 'error', 
                             summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_DUPLICATING'), 
-                            detail: '', removeDelayTime: 5000});
+                            detail: ''});
                     }
                 };
                 var dbdJs = ko.mapping.toJS(newDashboard, {
