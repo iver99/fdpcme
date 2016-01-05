@@ -14,6 +14,7 @@ define({
       "COMMON_BTN_SAVE": "Save",
       "COMMON_BTN_EDIT": "Edit",
       "COMMON_BTN_DELETE": "Delete",
+      "COMMON_BTN_PRINT": "Print",
       "COMMON_BTN_ADD": "Add",
       "COMMON_BTN_SEARCH": "Search",
       "COMMON_TEXT_YES": "Yes",

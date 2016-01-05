@@ -34,7 +34,7 @@ and open the template in the editor.
 } 
 
 .fa-icon-font-16 {
-    font-size: 16px;
+    font-size: 16px !important;
 } 
 
 body, html {
@@ -207,8 +207,8 @@ body, html {
   margin-right: -40px;
 }*/
 
-.dbd-toolbar-icon-add-widget:before {
-  content: url(../images/func_plus_16_ena.png);
+.dbd-toolbar-icon-add-widget:before,.fa-plus:before {
+  content: "\f067";
 }
 
 .dbd-toolbar-icon-save:before {
@@ -219,16 +219,16 @@ body, html {
   content: url(../images/func_gear_16_ena.png);
 }
 
-.dbd-toolbar-icon-edit:before {
-  content: url(../images/func_edit_16_ena.png);
+.dbd-toolbar-icon-edit:before,.fa-pencil:before {
+  content: "\f040";
 }
 
-.dbd-toolbar-icon-duplicate:before {
-  content: url(../images/func_papers_16_ena.png);
+.dbd-toolbar-icon-duplicate:before,.fa-files-o:before {
+  content: "\f0c5";
 }
 
-.dbd-toolbar-icon-delete:before {
-  content: url(../images/func_trashcan_16_ena.png);
+.dbd-toolbar-icon-delete:before,.fa-trash-o:before {
+  content: "\f014";
 }
 
 .dbd-toolbar-icon-add-widget-disabled:before {
@@ -262,6 +262,10 @@ body, html {
 .dbd-toolbar-icon-unshare:before, .fa-user:before {
   content: "\f007";
   padding-bottom: 3px;
+}
+
+.dbd-toolbar-icon-print:before, .fa-print:before {
+  content: "\f02f";
 }
 
 .fa-star:before {
@@ -920,3 +924,21 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-icon-eye-slash:before{
     content:"\f070";
 }
+
+@media print {
+    .no-print {
+        display:none !important;
+    }
+    
+    #tiles-col-container{
+        /*width: auto !important;*/
+        height: auto !important;
+        overflow-y: visible !important;
+    }
+    
+    @page {
+        /*size:landscape;*/
+        /*margin: 23cm;*/
+    }
+}
+

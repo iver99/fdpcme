@@ -18,7 +18,7 @@
         <div class="loadingIndicator" id="loading">Loading</div>
         <div id="globalBody" style="display: none;">
             <!-- ko stopBinding: true -->
-            <header id="headerWrapper" role="banner">
+            <header id="headerWrapper" role="banner" class="no-print">
                 <div data-bind="component: {
                         name: 'df-oracle-branding-bar',
                         params: brandingbarParams
@@ -217,30 +217,30 @@
                         
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
                             <!-- ko if: !disabled  -->
-                                <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
+                            <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
                                     <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
-                                        <span class="oj-menu-item-icon oj-fwk-icon" data-bind="css: icon"></span>
-                                        <span data-bind="text: label"></span></a>
-                                </li>
+                                        <span class="oj-menu-item-icon oj-fwk-icon fa-icon-font fa-icon-font-16" data-bind="css: icon"></span>
+                                    <span data-bind="text: label"></span></a>
+                            </li>
                                 <!-- ko if: endOfGroup  -->
                                 <li></li>
-                                <!-- /ko -->
+                            <!-- /ko -->
                             <!-- /ko -->
                         </script>
 
-                        <ul id="dashboardOptsMenu" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
+                        <ul id="dashboardOptsMenu" class="no-print" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
                         </ul>
                         
-                        <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
+                        <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome no-print"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
-                                class='oj-button oj-default oj-button-half-chrome'
+                                class='oj-button oj-default oj-button-half-chrome no-print'
                                 data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
                                     menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
