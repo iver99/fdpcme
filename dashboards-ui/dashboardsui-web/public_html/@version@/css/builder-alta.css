@@ -243,6 +243,23 @@ body, html {
   content: url(../images/func_trashcan_16_dis.png);
 }
 
+.dbd-toolbar-icon-share:before, .fa-users:before {
+  content: "\f0c0";
+} 
+
+.dbd-toolbar-icon-unshare:before, .fa-user:before {
+  content: "\f007";
+}
+
+/*
+.dbd-toolbar-icon-share-disabled:before {
+  content: url(../images/func_unlock_16_dis.png);
+}
+
+.dbd-toolbar-icon-unshare-disabled:before {
+  content: url(../images/func_lock_16_dis.png);
+}
+*/
 .builder-toolbar-button-text {
   color: rgb(0, 0, 0);
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

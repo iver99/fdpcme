@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-
+             
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -198,7 +198,7 @@
                         <!-- Duplicate Dashboard dialog end -->
                         
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
-                            <li data-bind="css: {'oj-disabled': disabled}">
+                            <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
                                 <a data-bind="attr:{'id':id}, href: url, click: onclick">
                                     <span class="oj-menu-item-icon oj-fwk-icon" data-bind="css: icon"></span>
                                     <span data-bind="text: label"></span></a>
@@ -208,13 +208,21 @@
                         <ul id="dashboardOptsMenu" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
+                          <li data-bind="css: {'oj-disabled': editDisabled() === true}">
+                                <a id="emcpdf_dsbopts_share" data-bind="attr:{'title': dashboard.sharePublic() === true ? getNlsString('COMMON_TEXT_SHARE_TITLE') : getNlsString('COMMON_TEXT_UNSHARE_TITLE')}, 
+                                                   href: '', click: editDisabled() === true ? null : openShareConfirmDialog">
+                                    <span class="oj-menu-item-icon oj-fwk-icon fa-icon-font fa-icon-font-16" 
+                                          data-bind="css: dashboard.sharePublic() === false ? 'dbd-toolbar-icon-share': 'dbd-toolbar-icon-unshare'"></span>
+                                    
+                                    <span data-bind="text: dashboard.sharePublic() === false ? getNlsString('COMMON_TEXT_SHARE') : getNlsString('COMMON_TEXT_UNSHARE')"></span></a>
+                          </li>
                         </ul>
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'dbd-toolbar-icon-save'}
-                            }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true">
+                            }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome'
@@ -250,8 +258,7 @@
                                  <br/><span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_DETAIL')"></span><br/>
                     </div>-->
                 </div>
-                
-                <!-- edit Dashboard dilog start -->
+                    <!-- edit Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -714,7 +721,7 @@
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text: title,style:{visibility : $root.showWidgetTitle()==true ? '':'hidden'}"></h2>
                                           <!-- /ko -->                                          
-                                          <div class="dbd-pull-right" style="display: flex">
+                                          <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome" tabindex="0"
                                                           data-bind="

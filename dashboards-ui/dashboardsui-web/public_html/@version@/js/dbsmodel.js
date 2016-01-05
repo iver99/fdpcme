@@ -153,6 +153,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.welcomeDialogModel = new welcomeDialogModel(self.prefUtil, showWelcome);
         
         //dashboards
+        self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
         self.typeFilter = ko.observable(filter['types']);
         self.serviceFilter = ko.observable(filter['appTypes']);

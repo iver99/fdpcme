@@ -56,6 +56,7 @@ BEGIN
   ELSE
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_TILE.WIDGET_LINKED_DASHBOARD exists already, no change is needed');      
   END IF;
+
 END;
 /
 

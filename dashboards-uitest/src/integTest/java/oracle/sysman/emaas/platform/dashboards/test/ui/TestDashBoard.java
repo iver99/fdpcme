@@ -118,9 +118,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		webd.takeScreenShot();
-	}
-	
-	
+	}	
 	
 	@Test(dependsOnMethods = { "testModifyDashBoard" })
 	public void testNavigateWidget() throws Exception
@@ -239,8 +237,7 @@ public class TestDashBoard extends LoginAndLogout{
 		
 		webd.takeScreenShot();
 					
-	}
-	
+	}	
 
 	@Test(dependsOnMethods = { "testHomepage" })
 	public void testUserMenu() throws Exception
@@ -279,269 +276,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 	
-	@Test
-	public void testHomeLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testHomeLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Home link
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/welcome.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	
-	@Test
-	public void testDashBoardHomeLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testDashBoardHomeLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//dashboardHome link
-		webd.click(DashBoardPageId.DashBoardHomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	
-	@Test
-	public void testITALink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testITALink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//IT Analytics link,check checkbox
-		webd.click(DashBoardPageId.ITALinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcpdfui/home.html?filter=ita");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);		
-	}
-	
-	@Test
-	public void testLALink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testLALink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Log Analytics link
-		webd.click(DashBoardPageId.LALinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emlacore/html/log-analytics-search.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	
-	@Test
-	public void testAPMLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testAPMLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//APM link
-		webd.click(DashBoardPageId.APMLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"apmUi/index.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	
-	@Test
-	public void testLogLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testLogLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Log link
-		webd.click(DashBoardPageId.LOGLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emlacore/html/log-analytics-search.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	
-	/*@Test
-	public void testAWRLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testAWRLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//AWR Analytics link		
-		webd.click(DashBoardPageId.AWRALinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
 
-	
-	@Test
-	public void testFlexLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testFlexLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Flex link
-		webd.click(DashBoardPageId.FlexLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/db-awrviewer-war/html/db-awr-analytics.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-*/
-	@Test
-	public void testTargetLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testTargetLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Target link
-		webd.click(DashBoardPageId.TargetLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		String sub_str = url.substring(url.indexOf("emsaasui")+9);
-		Assert.assertEquals(sub_str.substring(0,23),"emcta/ta/analytics.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	/*
-	@Test
-	public void testSoftwareLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testSoftwareLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Customer Software link
-		webd.click(DashBoardPageId.CustomLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"tenantmgmt/services/customersoftware");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	
-	@Test
-	public void testAdminLink() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testAdminLink");
-		
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//IT Analytics Administration link
-		webd.click(DashBoardPageId.ITA_Admin_LinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/warehouseadmin/html/admin-sources.html");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	*/
-	@Test
-	public void testEMPCDF_812_1() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_812");
-		
-		//check ita box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		//check la box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		//signout menu
-		webd.click(DashBoardPageId.MenuBtnID);
-		webd.click(DashBoardPageId.SignOutID);
-		
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_812");
-		
-		//check ita box
-		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).isSelected());
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		//check la box
-		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).isSelected());
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		//check ita box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		//check la box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.LA_BoxID)).click();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-	}
-	
-	//https://slc05mwm.us.oracle.com:4443/emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG
-	@Test
-	public void testEMPCDF_832_1() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testEMPCDF_832");
-		
-		String url = webd.getWebDriver().getCurrentUrl();
-		webd.getLogger().info("current url = "+url);
-		
-		webd.takeScreenShot();
-		webd.getWebDriver().navigate().to(url.substring(0,url.indexOf("emsaasui"))+"emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-                webd.takeScreenShot();
-		webd.click("//*[@id='errorMain']/div[2]/button");
-                webd.getLogger().info("ok button is clicked");
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		
-        //login(this.getClass().getName()+"."+Thread.currentThread().getStackTrace()[1].getMethodName()+"-relogin","sso.welcome");
-        //DashBoardUtils.loadWebDriverOnly(webd);
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-        //webd.getLogger().info("welcome page is being loaded, going to to verify...");
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		DashBoardUtils.clickGVButton();
-		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.WelcomeID),"Welcome to Oracle Management Cloud");
-		webd.getLogger().info("welcome page is verified successfully");
-                Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
-		webd.takeScreenShot();
-		webd.getLogger().info("complete testing in testEMPCDF_832");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-	}
-	
 	@Test
 	public void testCreateLVDashBoard() throws Exception
 	{
@@ -643,7 +378,5 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID),"IT Analytics");
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
 		
-	}
-	
-
+	}	
 }
