@@ -90,11 +90,11 @@ require(['ojs/ojcore',
                     appId: self.appId,
                     isAdmin: true
                 };
-            };
+            }
 
             function getNlsString(key, args) {
                 return oj.Translations.getTranslatedString(key, args);
-            };
+            }
             
             function TitleViewModel(){
                var self = this;
@@ -113,7 +113,7 @@ require(['ojs/ojcore',
                 self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 self.gsID = "em_home_gs";
                 self.videoID = "em_home_videos";
-                self.getStartedUrl = self.baseUrl + self.gsID;;
+                self.getStartedUrl = self.baseUrl + self.gsID;
                 self.videosUrl = self.baseUrl + self.videoID;
                 self.communityUrl = "http://cloud.oracle.com/management";
                 
@@ -199,7 +199,7 @@ require(['ojs/ojcore',
                     landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
                     landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
                     self.landingHomeUrls = landingHomeUrls;
-                };
+                }
                 self.getServiceUrls();
                                 
                 self.openAPM = function() {

@@ -64,7 +64,7 @@ requirejs.config({
     waitSeconds: 60
 });
 
-var dashboardsViewModle = undefined;
+//var dashboardsViewModle = undefined;
 
 /**
  * A top-level require call executed by the Application.
@@ -135,7 +135,7 @@ require(['dbs/dbsmodel',
                self.homeTitle = dfu_model.generateWindowTitle(getNlsString("DBS_HOME_TITLE_HOME"), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
            }
             //dashboardsViewModle = new model.ViewModel();
-            headerViewModel = new HeaderViewModel();
+            var headerViewModel = new HeaderViewModel();
             var titleVM = new TitleViewModel();
 
             $(document).ready(function() {
@@ -147,7 +147,7 @@ require(['dbs/dbsmodel',
 
                 var predataModel = new model.PredataModel();
                 function init() {
-                    dashboardsViewModle = new model.ViewModel(predataModel);
+                    var dashboardsViewModle = new model.ViewModel(predataModel);
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
                     
@@ -167,12 +167,12 @@ function truncateString(str, length) {
         return str.substring(0, _tlocation) + "...";
     }
     return str;
-};
+}
 
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
-};
+}
 
 function getDateString(isoString) {
     //console.log(isoString);
@@ -186,5 +186,5 @@ function getDateString(isoString) {
         }
     }
     return "";
-};
+}
 
