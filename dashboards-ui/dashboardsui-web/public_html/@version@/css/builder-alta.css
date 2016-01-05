@@ -51,6 +51,16 @@ body, html {
     top: 0px;
 }
 
+.builder-main {
+    padding-left: 0; 
+    padding-right: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
 .stretch-width {
   width: 100%;
 }
@@ -81,8 +91,12 @@ body, html {
 }
 
 #tiles-col-container {
+  flex: 1;
+  -webkit-flex: 1;
   padding-left: 0px;
   padding-right: 0px;
+  overflow-x: hidden; 
+  overflow-y: auto;
 }
 
 .dbd-tile {
@@ -572,11 +586,19 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 #dbd-left-panel {
     height: 1000px;
-    position: absolute;
+    /* position: absolute; */
     right: 0;
     top: 0;
     border-left: 1px solid #d6dfe6;
     background: #fff;
+}
+
+#right-panel-toggler {
+    margin-top: 2px; 
+    right: 282px; 
+    z-index: 999; 
+    max-width: 30px; 
+    padding-left: 5px;    
 }
 
 #right-panel-toggler .oj-button {
