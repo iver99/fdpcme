@@ -146,12 +146,12 @@ define(['knockout',
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
                 Builder.duplicateDashboard(dashboardJSON, function(data) {
-                	succCallback && succCallback(data);
+                    succCallback && succCallback(data);
                 }, function(error) {
                     errorCallback && errorCallback(error);
                 });
             };
-        };
+        }
         
         return {"DuplicateDashboardModel": DuplicateDashboardModel};
     }

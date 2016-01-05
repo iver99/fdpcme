@@ -84,7 +84,7 @@ define(['knockout',
 //              $( "#cDsbDialog" ).ojDialog( "close" );
 //           }
 //        };
-        };
+        }
         
         return {"EditDashboardDialogModel": EditDashboardDialogModel};
     }
