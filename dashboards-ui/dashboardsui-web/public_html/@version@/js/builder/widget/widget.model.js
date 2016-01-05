@@ -5,8 +5,9 @@
  */
 
 define(['jquery',
+        'ojs/ojcore',
         'dfutil',
-        'builder/builder.core'], function($, dfu) {
+        'builder/builder.core'], function($, oj, dfu) {
     function WidgetDataSource() {
         var self = this;
         var DEFAULT_WIDGET_PAGE_SIZE = 20;
