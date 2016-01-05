@@ -454,14 +454,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var today = new Date(new Date().toDateString());
                     if(!minDate) {
                         if(self.customTimeBack) {
-                            minDate = oj.IntlConverterUtils.dateToLocalIso(new Date(today - self.customTimeBack));
+                            minDate = oj.IntlConverterUtils.dateToLocalIso(new Date(today - self.customTimeBack)).slice(0, 10);
                         }else {
                             minDate = null;
                         }
                     }
                     
                     if(!maxDate) {
-                        maxDate = oj.IntlConverterUtils.dateToLocalIso(today);
+                        maxDate = oj.IntlConverterUtils.dateToLocalIso(today).slice(0, 10);
                     }
                     
                     self.minDate(minDate);
@@ -1079,6 +1079,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }else {
                             self.displayDateTimeSelection("inline");
                             start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
+                            //calculate timezone difference to solve issues caused by daylight saving.
+                            var timezoneDiffInMillis = (curDate.getTimezoneOffset() - start.getTimezoneOffset()) * 60 * 1000;
+                            start = new Date(start.getTime() - timezoneDiffInMillis);
                             end = curDate;
                             if(self.adjustLastX) {
                                 var adjustedTime = self.adjustLastX(start, end);
