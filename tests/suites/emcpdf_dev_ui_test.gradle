@@ -29,11 +29,13 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	classpath group: "com.oracle.omc.omctf.testsdk", name: "commontasks", version: "${omctfVersion}"
     }
 }
 apply from: 'setup.gradle'
 
 apply plugin: 'TestInfraPlugin'
+apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"commontasks
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -52,9 +54,7 @@ dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils-integ-tests', version: "${REPO_BID}"){
 	exclude('module':'groovy')
     }
-    testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
-
-testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
+    testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
          testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")

@@ -29,11 +29,12 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	classpath group: "com.oracle.omc.omctf.testsdk", name: "commontasks", version: "${omctfVersion}"
     }
 }
 
-
 apply plugin: 'TestInfraPlugin'
+apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"commontasks")
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -52,9 +53,7 @@ dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils-integ-tests', version: "${REPO_BID}"){
 	exclude('module':'groovy')
     }
-    testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
-
-testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
+        testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
          testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
@@ -76,47 +75,14 @@ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', versio
     }
 }
  
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_ui_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-            }
-        }
-    }
-    useWebdriver = true
-    useRestAssured = true
-}
-
-task DEVUiTest(type:EMTest,dependsOn: small_deploy_3n_block){
+task DEVUiTest(type:EMTest,dependsOn: omcSetup){
   	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")
 }
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,DEVUiTest])
-}
 
-
-
-task emcpdf_dev_ui_test_3n(dependsOn: [DEVUiTest, small_deploy_3n_cleanup])
+omcTeardown.mustRunAfter(DEVUiTest)
+task emcpdf_dev_ui_test_3n(dependsOn: [DEVUiTest,omcTeardown])
 

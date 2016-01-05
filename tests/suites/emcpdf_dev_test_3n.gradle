@@ -29,10 +29,12 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	classpath group: "com.oracle.omc.omctf.testsdk", name: "commontasks", version: "${omctfVersion}"
     }
 }
 
 apply plugin: 'TestInfraPlugin'
+apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"commontasks")
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -51,7 +53,6 @@ dependencies {
 	testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core-integ-tests', version: "${REPO_BID}"){
 		exclude('module':'groovy')
 	}
-	testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
   testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
         testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
         testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
@@ -71,24 +72,7 @@ dependencies {
 	}
 }
  
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_dev_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-            }
-        }
-    }
-    useWebdriver = true
-    useRestAssured = true
-}
-
-task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
+task DEVTest(type:EMTest,dependsOn: omcSetup){
 
   	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest.class"
@@ -99,20 +83,5 @@ task DEVTest(type:EMTest,dependsOn: small_deploy_3n_block){
 	ext.set("testType", "unit")
 }
 
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,DEVTest])
-}
-
-task emcpdf_dev_test_3n (dependsOn: [DEVTest, small_deploy_3n_cleanup])
+omcTeardown.mustRunAfter(DEVTest)
+task emcpdf_dev_test_3n (dependsOn: [DEVTest,omcTeardown])
