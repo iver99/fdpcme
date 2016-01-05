@@ -258,7 +258,7 @@ define(['knockout',
                     self.dashboardName = name;
                     self.dashboardDescription = description;
                     self.widgets = [];
-                };
+                }
 
                 var summaryData = new dashboardSummary(name, description);
                 if (tilesViewModel) {
