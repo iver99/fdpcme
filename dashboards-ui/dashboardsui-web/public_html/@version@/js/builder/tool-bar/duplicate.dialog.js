@@ -7,13 +7,11 @@ define(['knockout',
         'jquery',
         'ojs/ojcore',
         'dfutil',
-        'uifwk/js/util/screenshot-util',
-        'uifwk/js/util/message-util'
+        'uifwk/js/util/screenshot-util'
     ], 
-    function(ko, $, oj, dfu, ssu, msgu) {       
+    function(ko, $, oj, dfu, ssu) {       
         function DuplicateDashboardModel($b) {
             var self = this;
-            var msgUtil = new msgu();
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.tracker = ko.observable();
             self.errorMessages = ko.observableArray([]);
@@ -124,7 +122,7 @@ define(['knockout',
                     }
                     else {
                         $('#duplicateDsbDialog').ojDialog('close');
-                        error && error.errorMessage() && msgUtil.showMessage({type: 'error', 
+                        error && error.errorMessage() && dfu.showMessage({type: 'error', 
                             summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_DUPLICATING'), 
                             detail: '', removeDelayTime: 5000});
                     }
