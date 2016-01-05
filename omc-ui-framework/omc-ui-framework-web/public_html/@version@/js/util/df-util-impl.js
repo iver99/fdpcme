@@ -722,7 +722,15 @@ define([
                     setTimeout(function(){showSessionTimeoutWarningDialog(warningDialogId);}, waitTimeBeforeWarning);
                 }
             };
-
+            
+            self.getPreferencesUrl=function(){
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"preferences"); 
+                }else{
+                    return '/sso.static/dashboards.preferences';
+                }
+            }; 
+            
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
                 if (window.intervalToExtendCurrentUserSession)
