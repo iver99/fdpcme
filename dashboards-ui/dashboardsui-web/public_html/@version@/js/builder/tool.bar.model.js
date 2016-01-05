@@ -683,7 +683,7 @@ define(['knockout',
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
                     "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": true,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
                     "endOfGroup": false
                 },
                 {
@@ -705,7 +705,7 @@ define(['knockout',
                     "icon": self.cssSharePublic,
                     "title": self.sharePublicTitle,
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "showOnMobile": true,
                     "endOfGroup": false
                 },
                 {
@@ -749,7 +749,7 @@ define(['knockout',
                     "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
                     "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "showOnMobile": true,
                     "endOfGroup": false
                 }
             ];
