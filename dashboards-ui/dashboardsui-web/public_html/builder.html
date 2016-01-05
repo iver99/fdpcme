@@ -622,7 +622,8 @@
                         </div>
                         </div>
                 </div>                
-                <div id="right-panel-toggler" data-bind="visible: !dashboard.systemDashboard() && showRightPanelToggler()">
+                
+                <div id="right-panel-toggler" data-bind="visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler()">
                     <div id="" data-bind="ojComponent: {component: 'ojButtonset', checked: rightPanelStatus}" 
                          class="oj-buttonset oj-component oj-component-initnode" 
                          role="toolbar">
@@ -644,7 +645,7 @@
                 </div>
                 <!-- ko stopBinding: true -->
                 <div id="dbd-left-panel" class="dbd-left-panel-show"
-                        data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()}">
+                        data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()}, visible: $root.isMobileDevice !== 'true'">
                     <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
                         <div class="oj-row">
                             <div class="oj-col">

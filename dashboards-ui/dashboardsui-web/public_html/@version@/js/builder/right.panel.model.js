@@ -6,12 +6,13 @@
 define(['knockout', 
         'jquery',
         'dfutil',
+        'mobileutil',
         'ojs/ojcore',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ], 
-    function(ko, $, dfu, oj) {
+    function(ko, $, dfu, mbu, oj) {
         function ResizableView($b) {
             var self = this;
             
@@ -46,6 +47,8 @@ define(['knockout',
             self.dashboard = $b.dashboard;
             $b.registerObject(this, 'RightPanelModel');
 
+            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+            
             self.keyword = ko.observable('');
             self.page = ko.observable(1);
             self.widgets = ko.observableArray([]);
