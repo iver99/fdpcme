@@ -275,6 +275,7 @@ body, html {
   content: "\f006"; }
 
 .dbd-toolbar-fa-icon {
+    width: 16px;
     font-family: FaFont;
     font-size: 1.24rem;
     display: inline-block;
