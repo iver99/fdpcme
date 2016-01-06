@@ -726,7 +726,7 @@ define(['knockout',
                     "onclick": self.editDisabled() === true ? "" : function(data,event){
                             window.print();
                         },
-                    "icon": "fa-icon-font dbd-toolbar-icon-print",
+                    "icon": "dbd-toolbar-icon-print",
                     "title": getNlsString('COMMON_BTN_PRINT'),
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": true,

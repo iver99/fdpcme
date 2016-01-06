@@ -223,12 +223,12 @@ body, html {
   content: "\f040";
 }
 
-.dbd-toolbar-icon-duplicate:before,.fa-files-o:before {
-  content: "\f0c5";
+.dbd-toolbar-icon-duplicate:before {
+  content: url(../images/func_papers_16_ena.png);
 }
 
-.dbd-toolbar-icon-delete:before,.fa-trash-o:before {
-  content: "\f014";
+.dbd-toolbar-icon-delete:before {
+  content: url(../images/func_trashcan_16_ena.png);
 }
 
 .dbd-toolbar-icon-add-widget-disabled:before {
