@@ -720,6 +720,19 @@ define(['knockout',
                     "endOfGroup": false
                 },
                 {
+                    "label": getNlsString('COMMON_BTN_PRINT'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_print",
+                    "onclick": self.editDisabled() === true ? "" : function(data,event){
+                            window.print();
+                        },
+                    "icon": "fa-icon-font dbd-toolbar-icon-print",
+                    "title": getNlsString('COMMON_BTN_PRINT'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": true,
+                    "endOfGroup": false
+                },
+                {
                     "label": self.favoriteLabel,
                     "url": "#",
                     "id":"emcpdf_dsbopts_favorites",
@@ -751,18 +764,6 @@ define(['knockout',
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": true,
                     "endOfGroup": false
-                },
-                {
-                    "label": getNlsString('COMMON_BTN_PRINT'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_print",
-                    "onclick": self.editDisabled() === true ? "" : function(data,event){
-                            window.print();
-                        },
-                    "icon": "fa-icon-font dbd-toolbar-icon-print",
-                    "title": getNlsString('COMMON_BTN_PRINT'),
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": true
                 }
             ];
             //Dashboard Options ======end=======
