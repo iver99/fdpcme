@@ -222,7 +222,7 @@
                                         <span class="oj-menu-item-icon oj-fwk-icon fa-icon-font fa-icon-font-16" data-bind="css: icon"></span>
                                     <span data-bind="text: label"></span></a>
                             </li>
-                                <!-- ko if: endOfGroup  -->
+                                <!-- ko if: $data.endOfGroup  -->
                                 <li></li>
                             <!-- /ko -->
                             <!-- /ko -->
@@ -732,7 +732,7 @@
                                             data-bind="ojComponent: {
                                               component: 'ojInputNumber',
                                               max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
-                                              displayOptions: {converterHint: 'none', validatorHint: 'notewindow', title: 'none', messages: 'notewindow'}}"/>
+                                              displayOptions: {converterHint: 'none', validatorHint: 'none', title: 'none', messages: 'none'}}"/>
                                 </div>
                             </div>
                         </div>
