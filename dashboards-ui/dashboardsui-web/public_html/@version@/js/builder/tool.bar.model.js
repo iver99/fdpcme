@@ -677,7 +677,7 @@ define(['knockout',
                     "url": "#",
                     "id":"emcpdf_dsbopts_add",
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
+                    "icon":"dbd-toolbar-icon-add-widget",
                     "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
@@ -688,7 +688,7 @@ define(['knockout',
                     "url": "#",
                     "id":"emcpdf_dsbopts_edit",
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardEditDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
+                    "icon": "dbd-toolbar-icon-edit",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
@@ -743,11 +743,23 @@ define(['knockout',
                     "url": "#",
                     "id":"emcpdf_dsbopts_delete",
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
+                    "icon":"dbd-toolbar-icon-delete",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": true,
                     "endOfGroup": false
+                },
+                {
+                    "label": getNlsString('COMMON_BTN_PRINT'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_print",
+                    "onclick": self.editDisabled() === true ? "" : function(data,event){
+                            window.print();
+                        },
+                    "icon": "fa-icon-font dbd-toolbar-icon-print",
+                    "title": getNlsString('COMMON_BTN_PRINT'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": true
                 }
             ];
             //Dashboard Options ======end=======

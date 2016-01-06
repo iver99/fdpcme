@@ -5,6 +5,18 @@ define(['knockout', 'jquery'],
             var self = this;
             
             /**
+             * Generate a GUID string
+             * 
+             * @returns {String}
+             */ 
+            self.getGuid = function() {
+                function S4() {
+                   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+                }
+                return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+            };
+            
+            /**
              * Show a page level message in branding bar
              * 
              * @param {Object} message message to be shown on UI, supported properties include:
@@ -14,12 +26,35 @@ define(['knockout', 'jquery'],
              *          removeDelayTime: Number, Optional. Delay time (in milliseconds) for the message to be closed automatically from common message UI. 
              *                           If not specified, it will not be closed automatically by default.
              * 
-             * @returns 
+             * @returns {String} message id
              */ 
             self.showMessage = function(message) {
+                var messageId = null;
                 if (message && typeof(message) === "object") {
                     message.tag = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
+                    if (message.id) {
+                        messageId = message.id;
+                    }
+                    else {
+                        messageId = self.getGuid();
+                        message.id = messageId;
+                    }
                     window.postMessage(message, window.location.href);
+                }
+                return messageId;
+            };
+            
+            /**
+             * Remove a message by given message id
+             * 
+             * @param {String} messageId message id of the message to be removed.
+             * 
+             * @returns 
+             */ 
+            self.removeMessage = function(messageId) {
+                if (messageId) {
+                    var messageObj = {id: messageId, tag: 'EMAAS_SHOW_PAGE_LEVEL_MESSAGE', action: 'remove'};
+                    window.postMessage(messageObj, window.location.href);
                 }
             };
             
