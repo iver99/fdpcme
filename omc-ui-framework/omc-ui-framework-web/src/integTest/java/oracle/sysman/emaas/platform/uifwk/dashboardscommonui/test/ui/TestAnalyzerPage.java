@@ -15,12 +15,121 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.annotations.BeforeClass;
 
 /**
  * @author shangwan
  */
 public class TestAnalyzerPage extends CommonUIUtils
 {
+	@BeforeClass
+	public static void initValue()
+	{
+		//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
+		CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+	}
+	
+	@Test
+	public void testLogAnalyzerPage() throws Exception
+	{
+		try
+		{
+			CommonUIUtils.commonUITestLog("This is to test Log Analyzer Page");
+	
+			String testName = this.getClass().getName() + ".testLogAnalyzerPage";
+			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+			//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
+			//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+			Thread.sleep(5000);
+			
+			//login
+			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,"?appId=LogAnalytics",sTenantId,sSsoUserName,sSsoPassword);
+			webdriver.getLogger().info("Assert that common UI login was successfuly");
+			Assert.assertTrue(bLoginSuccessful);
+	
+			verifyPageContent(webdriver, "Log Analytics");
+	
+			//click the compass icon
+			webdriver.getLogger().info("Click the Application navigator icon");
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+	
+			verifyMenu(webdriver, isLAAdmin);
+	
+			//click the compass icon again
+			Thread.sleep(10000);
+	
+			webdriver.getLogger().info("Click the Application navigator icon again");
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+			Thread.sleep(5000);
+			webdriver.getLogger().info("Verify the Links menu disappeared");
+			Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
+			
+			//Open a widget
+			openWidget(webdriver,true);
+	
+			//logout
+			webdriver.getLogger().info("Logout");
+			CommonUIUtils.logoutCommonUI(webdriver);			
+			
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}			
+	}
+	
+	@Test
+	public void testTargetAnalyzerPage() throws Exception
+	{
+		try
+		{
+			CommonUIUtils.commonUITestLog("This is to test Target Analyzer Page");
+			
+			String testName = this.getClass().getName() + ".testTargetAnalyzerPage";
+			WebDriver webdriver = WebDriverUtils.initWebDriver(testName);
+			//CommonUIUtils.getAppName(sTenantId,sSsoUserName);
+			//CommonUIUtils.getRoles(sTenantId,sSsoUserName);
+			Thread.sleep(5000);
+			
+			//login
+			Boolean bLoginSuccessful = CommonUIUtils.loginCommonUI(webdriver,"?appId=ITAnalytics",sTenantId,sSsoUserName,sSsoPassword);
+			webdriver.getLogger().info("Assert that common UI login was successfuly");
+			Assert.assertTrue(bLoginSuccessful);
+	
+			verifyPageContent(webdriver, "IT Analytics");
+	
+			//click the compass icon
+			webdriver.getLogger().info("Click the Application navigator icon");
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+	
+			verifyMenu(webdriver, isITAAdmin);
+	
+			//click the compass icon again
+			Thread.sleep(10000);
+	
+			webdriver.getLogger().info("Click the Application navigator icon again");
+			webdriver.click(UIControls.sCompassIcon);
+			webdriver.takeScreenShot();
+			Thread.sleep(5000);
+			webdriver.getLogger().info("Verify the Links menu disappeared");
+			Assert.assertEquals(webdriver.getAttribute(UIControls.sLinksMenu + "@style"), "display: none;");
+			
+			//Open a widget
+			openWidget(webdriver,true);
+	
+			//logout
+			webdriver.getLogger().info("Logout");
+			CommonUIUtils.logoutCommonUI(webdriver);			
+			
+		}
+		catch (Exception ex) {
+			Assert.fail(ex.getLocalizedMessage());
+		}			
+	}
+	
+	/*
 	@Test
 	public void testLogAnalyzerPage_withAllPara_Admin() throws Exception
 	{
@@ -718,5 +827,5 @@ public class TestAnalyzerPage extends CommonUIUtils
 			webdriver.getLogger().info("Logout");
 			CommonUIUtils.logoutCommonUI(webdriver);
 		}
-
+*/
 }

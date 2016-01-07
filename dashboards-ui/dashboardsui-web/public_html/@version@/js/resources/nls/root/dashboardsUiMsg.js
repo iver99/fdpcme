@@ -5,7 +5,6 @@
  */
 
 define({
-  "root": {
 //      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
 //      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
       "DBS_HOME_TITLE_HOME": "Home",
@@ -24,6 +23,10 @@ define({
       "COMMON_TEXT_ERROR": "Error",
       "COMMON_REQUIRE_ERROR": "{0} is required",
       "COMMON_SERVER_ERROR": "Error on accessing server",
+      "COMMON_DASHBAORD_SAME_NAME_ERROR": "Name already exists.",
+      "COMMON_DASHBAORD_SAME_NAME_ERROR_DETAIL": "Provide a unique name for this dashboard.",
+      "COMMON_EDIT_DASHBOARD_DIALOG_TITLE": "Edit Dashboard",
+      "COMMON_DELETE_DASHBOARD_MSG": "Delete <b>{0}</b>? This action cannot be undone.",
       "DBS_HOME_SEARCH_ARIA_LABEL": "Search for a Dashboard",
       "DBS_HOME_SEARCH_PLACE_HODE": "Search",
       "DBS_HOME_SEARCH_BTN_LABEL": "Search",
@@ -101,9 +104,16 @@ define({
       "DBS_BUILDER_NAME_EDIT": "Double click to edit name",
       "DBS_BUILDER_SAME_NAME_EXISTS_ERROR": "Dashboard with the same name exists already",
       "DBS_BUILDER_REQUIRE_NAME": "Name is required",
-      "DBS_BUILDER_BTN_ADD_WIDGET": "Add Widgets",
+      "DBS_BUILDER_BTN_OPTIONS": "Options",
+      "DBS_BUILDER_BTN_DUPLICATE": "Duplicate",
+      "DBS_BUILDER_BTN_DUPLICATE_TITLE": "Duplicate dashboard",
+      "DBS_BUILDER_DUPLICATE_DIALOG_TITLE": "Duplicate Dashboard",
+      "DBS_BUILDER_BTN_EDIT_TITLE": "Edit dashboard",
+      "DBS_BUILDER_BTN_DELETE_TITLE": "Delete dashboard",
+      "DBS_BUILDER_BTN_ADD_WIDGET": "Add widgets",
       "DBS_BUILDER_BTN_ADD": "Add",
       "DBS_BUILDER_BTN_ADD_TEXT": "Add Text",
+      "DBS_BUILDER_BTN_TOGGLE_MODE": "Toggle Mode",
       "DBS_BUILDER_TEXT_WIDGET_SAMPLE": "Sample Text",
       "DBS_BUILDER_TEXT_WIDGET_LINK_DIALOG_TITLE": "Add Hyperlink",
       "DBS_BUILDER_TEXT_WIDGET_RENAME": "Rename",
@@ -115,7 +125,7 @@ define({
       "DBS_BUILDER_BTN_ADD_HINT_TITLE": "Your dashboard has no data to display",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1": "Add one or more widgets to see data in the dashboard",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1": "Click ",
-      "DBS_BUILDER_BTN_ADD_HINT_ADD_LINK": "Add",
+      "DBS_BUILDER_BTN_ADD_HINT_ADD_LINK": "Options->Add",
       "DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2": " to get started",
       "DBS_BUILDER_BTN_SAVE_DASHBOARD": "Save Dashboard",
       "DBS_BUILDER_SETTINGS": "Settings",
@@ -173,7 +183,7 @@ define({
       "DBS_BUILDER_CHANGE_URL_TITLE": "Change URL",
       "DBS_BUILDER_TILE_ACTIONS": "Configure widget",
       "DBS_BUILDER_TILE_REFRESH": "Refresh",
-      "DBS_BUILDER_TILE_DELETE": "Delete",
+      "DBS_BUILDER_TILE_REMOVE": "Remove",
       "DBS_BUILDER_TILE_WIDER": "Wider",
       "DBS_BUILDER_TILE_NARROWER": "Narrower",
       "DBS_BUILDER_TILE_TALLER": "Taller",
@@ -188,7 +198,10 @@ define({
       "DBS_BUILDER_AUTOREFRESH_1MIN":"1 Minute",
       "DBS_BUILDER_AUTOREFRESH_15MIN":"15 Minutes",
       "DBS_BUILDER_MSG_CHANGES_SAVED": "Changes on the dashboard have been saved successfully.",
-      "DBS_BUILDER_MSG_ERROR_IN_SAVING": "Error occurred when saving the dashboard. Check console log or server log for details",
+      "DBS_BUILDER_MSG_ERROR_IN_SAVING": "Error occurred when saving the dashboard. Check console log or server log for details.",
+      "DBS_BUILDER_MSG_ERROR_IN_DUPLICATING": "Error occurred when duplicating the dashboard. Check console log or server log for details.",
+      "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_SUMMARY": "Dashboard name already exists.",
+      "DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_DETAIL": "Provide a unique name.",
       
       
       "TEXT_WIDGET_IFRAME_HINT":"Please change the URL and click \"Change\" to apply: ",
@@ -231,19 +244,12 @@ define({
       "LANDING_HOME_SELECT": "Select",
       "LANDING_HOME_ITA_DB_RESOURCE": "Resource Analytics - Database",
       "LANDING_HOME_ITA_MIDDLEWARE_PERFORMANCE": "Performance Analytics - Middleware",
-      "LANDING_HOME_ITA_MIDDLEWARE_DATASOURCE_PERFORMANCE": "Performance Analytics - Middleware Datasource",
       "LANDING_HOME_ITA_MIDDLEWARE_RESOURCE": "Resource Analytics - Middleware",
-      "LANDING_HOME_ITA_SEARCH": "Data Explorer - Search",
-      "LANDING_HOME_ITA_ANALYZE":"Data Explorer - Analyze",
-      "LANDING_HOME_ITA_AWR": "Data Explorer - AWR",
       "LANDING_HOME_DASHBOARDS": "Dashboards",
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
-      "LANDING_HOME_DATA_EXPLORERS_SEARCH": "Search",
-      "LANDING_HOME_DATA_EXPLORERS_ANALYZE": "Analyze",
-      "LANDING_HOME_DATA_EXPLORERS_AWR": "AWR",
-      "LANDING_HOME_DATA_EXPLORERS_LOG_ANALYTICS": "Log Analytics",
+      "LANDING_HOME_DATA_EXPLORER": "Data Explorer - ",
       
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",
@@ -260,7 +266,5 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
-      
-}
 });
 

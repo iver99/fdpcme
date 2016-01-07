@@ -34,6 +34,7 @@ requirejs.config({
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
+        'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -56,7 +57,7 @@ requirejs.config({
     config: {
         ojL10n: {
             merge: {
-                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
+                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsUiMsg'
             }
         }
     },
@@ -141,12 +142,8 @@ require(['dbs/dbsmodel',
                 ko.applyBindings(titleVM,$("title")[0]);
                 //Caution: need below line to enable KO binding, otherwise KOC inside headerWrapper doesn't work
                 ko.applyBindings(headerViewModel, document.getElementById('headerWrapper'));
-//                ko.applyBindings({navLinksNeedRefresh: headerViewModel.navLinksNeedRefresh}, document.getElementById('links_menu'));
                 $("#loading").hide();
-//                ko.applyBindings(new HeaderViewModel(), document.getElementById('headerWrapper'));
                 $('#globalBody').show();
-                // Setup bindings for the header and footer then display everything
-                //ko.applyBindings(new FooterViewModel(), document.getElementById('footerWrapper'));
 
                 var predataModel = new model.PredataModel();
                 function init() {
@@ -154,12 +151,6 @@ require(['dbs/dbsmodel',
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
                     
-
-                    //window.addEventListener('message', childMessageListener, false);
-                    //window.name = 'dashboardhome';
-
-                    //if (window.parent && window.parent.updateOnePageHeight)
-                    //    window.parent.updateOnePageHeight('2000px');
                 }
                 predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
 
@@ -167,61 +158,6 @@ require(['dbs/dbsmodel',
         }
 );
             
-/**
- * listener on messages from child page
- * @param {type} builderData
- * @returns {undefined} */
-/*
-function childMessageListener(builderData) {
-    //console.log(builderData);
-    var _o = JSON.parse(builderData);
-    //var _did = _o.dashboardId;
-    //_o.dashboardId = 0;
-    if (_o.eventType && _o.eventType === 'SAVE') {
-        dashboardsViewModle.updateDashboard(_o);
-    }
-//    else if (_o.eventType && _o.dashboardId && _o.eventType === 'ADD_TO_FAVORITES') {
-//        dashboardsViewModle.addToFavorites(parseInt(_o.dashboardId));
-//    }
-//    else if (_o.eventType && _o.dashboardId && _o.eventType === 'REMOVE_FROM_FAVORITES') {
-//        dashboardsViewModle.removeFromFavorites(parseInt(_o.dashboardId));
-//    }
-    
-};
-*/
-/**
-*  Callback method to be invokced by child builder page to get dashboard data
-
- * @param {type} dashboardid
- * @returns {dashboarInfoCallBack.Anonym$0} */
-/*
-function dashboarDataCallBack(dashboardid) {
-    var dashboard = dashboardsViewModle.getDashboard(dashboardid);
-    // TODO: put code to retrieve dashboard data, and update code to add 'real' dashboard/widgets data below
-    if (dashboard) {
-        return {
-            dashboardId: dashboard.id,
-            dashboardName: dashboard.name, 
-            dashboardDescription: dashboard.description, 
-            showTimeSlider: String(dashboard.includeTimeRangeFilter),   
-//            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
-            type: dashboard.type,//(dashboard.type === 1) ? "onePage" : "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
-            widgets: dashboard.widgets
-        };
-    }
-    else // provide the default dashboard
-        return {
-            dashboardId: dashboardid,
-            dashboardName: "Weblogic", 
-            dashboardDescription: "Dashboards for weblogic server management", 
-            showTimeSlider: "false",     // to keep consistent with existing code in builder page, put exactly the same STRING "true" for true boolean value, and "false" for false
-            type: "normal",  // IMPORTANT: "normal" for common builder page, and "onePage" for special new dashboard type
-            widgets: [
-                {title: "CPU Load"},
-                {title: "Error Reports"}
-            ]};
-};*/
-
 function truncateString(str, length) {
     if (str && length > 0 && str.length > length)
     {

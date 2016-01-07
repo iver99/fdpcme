@@ -404,7 +404,7 @@ a:hover {
     .emaas-appheader-message-table-cell {
         display: table-cell;
     }
-    .emaas-appheader-message-icon-clear:hover {
+    .emaas-appheader-message-icon-clear {
         cursor: pointer;
     }
     .emaas-warn-msg-table-cell {

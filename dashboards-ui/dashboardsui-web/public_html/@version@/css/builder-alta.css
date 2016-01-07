@@ -88,7 +88,7 @@ body, html {
 }
 
 #builder-dbd-name .dbd-display-area {
-  width: 800px;
+  width: 600px;
 }
 
 #builder-dbd-name .dbd-display-hover-area {
@@ -173,10 +173,10 @@ body, html {
   width: auto;
 }
 
-#builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
+/*#builder-dbd-description .dbd-display-hover-area:hover .dbd-display-area-text {
   padding-right: 40px;
   margin-right: -40px;
-}
+}*/
 
 .dbd-toolbar-icon-add-widget:before {
   content: url(../images/func_plus_16_ena.png);
@@ -184,6 +184,34 @@ body, html {
 
 .dbd-toolbar-icon-save:before {
   content: url(../images/func_floppy_16_ena.png);
+}
+
+.dbd-toolbar-icon-options:before {
+  content: url(../images/func_gear_16_ena.png);
+}
+
+.dbd-toolbar-icon-edit:before {
+  content: url(../images/func_edit_16_ena.png);
+}
+
+.dbd-toolbar-icon-duplicate:before {
+  content: url(../images/func_papers_16_ena.png);
+}
+
+.dbd-toolbar-icon-delete:before {
+  content: url(../images/func_trashcan_16_ena.png);
+}
+
+.dbd-toolbar-icon-add-widget-disabled:before {
+  content: url(../images/func_plus_16_dis.png);
+}
+
+.dbd-toolbar-icon-edit-disabled:before {
+  content: url(../images/func_edit_16_dis.png);
+}
+
+.dbd-toolbar-icon-delete-disabled:before {
+  content: url(../images/func_trashcan_16_dis.png);
 }
 
 .builder-toolbar-button-text {
@@ -214,7 +242,8 @@ body, html {
 }
 
 .dbd-display-area:not(.dbd-edit-disabled) .dbd-display-hover-area:hover .dbd-display-area-editor-btn {
-  display: inline;
+  /*display: inline;*/
+  display: none;
 }
 
 .dbd-tile-no-display {
@@ -297,7 +326,19 @@ body, html {
 }
 
 .dbd-tile-action span.oj-button-icon:before {
-  content: url('../images/func_threebullets_16_ena.png');
+  content: url('../images/func_threebullets_black_16_ena.png');
+}
+
+.dbd-tile-action.oj-hover span.oj-button-icon:before {
+    content: url('../images/func_threebullets_blue_16_ena.png');
+}
+
+.dbd-tile-action.oj-hover.oj-selected span.oj-button-icon:before {
+    content: url('../images/func_threebullets_16_ena.png');
+}
+
+.dbd-tile-action.oj-selected span.oj-button-icon:before {
+    content: url('../images/func_threebullets_white_16_ena.png');
 }
 
 .dbd-tile-maximized .dbd-tile-header {
@@ -326,6 +367,14 @@ body, html {
   vertical-align: middle;
 }
 
+.dbd-widget[ismobile="false"] .dbd-btn-group {
+    display: none;
+}
+
+.dbd-widget[ismobile="false"]:hover .dbd-btn-group {
+    display: inline-block;
+}
+
 .dbd-tile-header h2.dbd-tile-title {
   height: 2.34rem;
   line-height: 2.34rem;
@@ -351,6 +400,10 @@ body, html {
   float: right;
   display: block;
   margin-bottom: 1px;
+  width: 44px;
+  height: 32px;
+  min-width: 46px;
+  min-height: 32px;
 }
 
 .dbd-tile-element {
@@ -571,8 +624,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 
 .dbd-left-panel-img-pop {
     display: none;
-    height:120px; 
-    width: 120px; 
+    height:180px; 
+    width: 400px; 
     z-index: 40;
 }
 
