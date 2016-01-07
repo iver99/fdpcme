@@ -29,12 +29,26 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-	classpath group: "com.oracle.omc.omctf.testsdk", name: "commontasks", version: "${omctfVersion}"
+	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
     }
 }
 
 apply plugin: 'TestInfraPlugin'
-apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"commontasks")
+// Uncomment once EMDI-6096 is fixed
+// apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"omctf_commontasks")
+/** Start of WA for EMDI-6096 */
+def getAbsoluteFilePath(artifactNameToSearch) {
+    absPath=""
+    buildscript.configurations.classpath.resolve().each {
+        String absolutePath=it.getAbsolutePath();
+        if(absolutePath.contains(artifactNameToSearch)){
+            absPath=absolutePath
+        }
+    }
+    return absPath
+}
+apply from: getAbsoluteFilePath("omctf_commontasks")
+/** End of WA for EMDI-6096 */
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
