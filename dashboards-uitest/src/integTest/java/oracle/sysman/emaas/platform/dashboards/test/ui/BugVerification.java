@@ -34,7 +34,7 @@ public class BugVerification extends LoginAndLogout{
 		webd.getLogger().info("start to test in testEMPCDF_812");
 		
 		//check ita box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID)).click();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check la box
@@ -49,7 +49,7 @@ public class BugVerification extends LoginAndLogout{
 		webd.getLogger().info("start to test in testEMPCDF_812");
 		
 		//check ita box
-		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).isSelected());
+		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID)).isSelected());
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check la box
@@ -57,7 +57,7 @@ public class BugVerification extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check ita box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID)).click();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check la box

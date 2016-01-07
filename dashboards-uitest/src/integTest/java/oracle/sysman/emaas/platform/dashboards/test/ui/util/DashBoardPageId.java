@@ -36,20 +36,29 @@ public class DashBoardPageId {
 	public static final String closeBtnID = "/html/body/div[1]/div[2]/div/div[3]/div/span";//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span"; // ";";
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
+	public static final String DashboardTableID = "dtabhomesc";
+	
+	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
-	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";
-	public static final String Database_Resource_Planning_ID = "//div[@aria-dashboard='3']";
-	public static final String Garbage_Collection_Overhead_ID = "//div[@aria-dashboard='4']";
-	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";
+	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
+	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
+	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";	
+	public static final String Middleware_Performance_Analytics_ID = "//div[@aria-dashboard='4']";
+	public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
+	public static final String Database_Resource_Analytics_ID = "//div[@aria-dashboard='3']";
+	public static final String Middleware_Resource_Analytics_ID = "//div[@aria-dashboard='18']";
+	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";	
 	public static final String Database_Configuration_and_Storage_By_Version_ID = "//div[@aria-dashboard='6']";
-	public static final String WebLogic_Servers_by_JDK_Version_ID = "//div[@aria-dashboard='7']";
+	public static final String Enterprise_OverView_ID = "//div[@aria-dashboard='1']";
+	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";	
 	public static final String Top_25_Databases_by_Resource_Consumption_ID = "//div[@aria-dashboard='8']";
 	public static final String Top_25_WebLogic_Servers_by_Heap_Usage_ID = "//div[@aria-dashboard='9']";
 	public static final String Top_25_WebLogic_Servers_by_Load_ID = "//div[@aria-dashboard='10']";
-	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
-	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
-	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
-	
+	public static final String WebLogic_Servers_by_JDK_Version_ID = "//div[@aria-dashboard='7']";
+	public static final String Database_Operations_ID = "//div[@aria-dashboard='15']";
+	public static final String Host_Operations_ID = "//div[@aria-dashboard='16']";
+	public static final String Middleware_Operations_ID = "//div[@aria-dashboard='17']";
+		
 	public static final String SortDropListID = "//*[@id='ojChoiceId_sortcb_selected']";//ojChoiceId_sortcb";//ojChoiceId_sortcb_selected";//sortcb";
 	public static final String Access_Date_ID = "/html/body/div/div/div/ul/li[2]/div";
 	
@@ -81,11 +90,12 @@ public class DashBoardPageId {
 	public static final String ITA_Admin_LinkID ="/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
 	
 	//check box
-	public static final String ITA_Check_BoxID = "itaopt";
+	public static final String ITA_BoxID = "itaopt";
 	public static final String LA_BoxID = "laopt";
 	public static final String APM_BoxID = "apmopt";
 	public static final String Oracle_BoxID = "oracleopt";
 	public static final String Other_BoxID = "otheropt";
+	public static final String Share_BoxID = "shareopt";
 	
 	//id of dashboard name /html/body/div[2]/div/div/div/div/div/span/h1 /html/body/div[2]/div/div/div/div[2]/div/span/span,/html/body/div[3]/div/div/div/div/div/span/h1;/html/body/div[2]/div/div/div/div[2]/div/span/span
 	public static final String DashboardNameID = "/html/body/div[*]/div/div/div/div/div/span/h1";
@@ -98,12 +108,17 @@ public class DashBoardPageId {
 	public static final String InfoBtnID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 	public static final String RmBtnID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
 	
+	//Explore Data
+	public static final String ExploreDataBtnID = "exploreDataBtn";
+	public static final String ExploreDataMenu_Log_ID = "ui-id-3";
+	public static final String ExploreDataMenu_Analyze_ID = "ui-id-4";
+	public static final String ExploreDataMenu_Search_ID = "ui-id-5";
+	
 	//help id and about id
 	public static final String MenuBtnID = "menubutton";
 	public static final String HelpID = "emcpdf_oba_help";
 	public static final String AboutID = "emcpdf_oba_about";
 	public static final String SignOutID = "emcpdf_oba_logout";
-	public static final String ExploreDataBtnID = "exploreDataBtn";
 	public static final String HelpContentID = "get_started";//task
 	public static final String AboutContentID = "/html/body/div[1]/div[2]/div/div[4]/div[2]/div[2]/p[2]";
 	public static final String AboutCloseID = "okButton";
