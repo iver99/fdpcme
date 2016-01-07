@@ -27,17 +27,6 @@ a:hover {
     display: inline-block;
 }
 
-/*.fa-link:before {
-  content: "\f0c1"; 
-}
-
-.fa-star:before {
-  content: "\f005"; }
-
-.fa-history:before {
-  content: "\f1da"; 
-}*/
-
 .fa-cogs:before {
   content: "\f085"; }
 
@@ -52,14 +41,12 @@ a:hover {
 
 .fa-notification:before {
   content: "\f0a2"; 
-  /*color: #0CA3D1;*/
   color: #454545;
   font-size: larger;
 }
 
 .fa-compass:before {
   content: "\f14e"; 
-  /*color: #0CA3D1;*/
   color: #454545;
   font-size: larger;
 }
@@ -123,7 +110,6 @@ a:hover {
         text-align:left; 
     }
     .headerMenuItem {
-        /*width: 300px;*/
         display: inline-block;
         vertical-align: top;
     }
@@ -138,7 +124,6 @@ a:hover {
         text-align:left; 
     }
     .headerMenuItem {
-        /*width: 300px;*/
         display: inline-block;
         vertical-align: top;
     }
@@ -154,7 +139,6 @@ a:hover {
     }
         
     .headerMenuItem {
-        /*width: 300px;*/
         display: inline-block;
         margin-top: 30px;
         vertical-align: top;
@@ -164,15 +148,7 @@ a:hover {
         margin-top: 0px;
     }
 }
-/*#iconLink{
-    background-color: #ed813e;
-}
-#iconStar{
-    background-color: #5a68ad;
-}
-#iconHistory{
-    background-color: #3caf85;
-}*/
+
 #iconCogs{
     background-color: #3caf85;
 }
@@ -299,127 +275,93 @@ a:hover {
   cursor: default;
 }
 
-/*@media screen and (max-width: 1023px) {*/
-    .emaas-appheader-lite .emaas-appheader-seperator {
-        display: none;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-oneline {
-        display: none;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-twoline {
-        display: block;
-        padding-top: 2px;
-    }
-    .emaas-appheader-toolbar{
-        height:44px;
-    }
-    .emaas-appheader-toolbar-button {
-        height:44px;
-        line-height: 44px;
-    }
-    .emaas-appheader-toolbar-button-icon {
-        width:32px;
-        height:32px;
-        vertical-align: middle;
-    }
-    .fa-notification:before {
-        font-size:xx-large;
-    }
-    .fa-compass:before {
-        font-size:xx-large;
-    }
-/*}*/
-/*@media screen and (min-width: 1024px) {
-    .emaas-appheader-lite .emaas-appheader-seperator {
-        display: inline-block;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-oneline {
-        display: inline-block;
-        padding-left: 10px;
-    }
-    .emaas-appheader-lite .emaas-appheader-appname-twoline {
-        display: none;
-    }
-    .emaas-appheader-toolbar-button {
-        height:27px;
-        line-height: 27px;
-    }
-    .emaas-appheader-toolbar-button-icon {
-        width:24px;
-        height:24px;
-    }
-}*/
+.emaas-appheader-lite .emaas-appheader-seperator {
+    display: none;
+}
+.emaas-appheader-lite .emaas-appheader-appname-oneline {
+    display: none;
+}
+.emaas-appheader-lite .emaas-appheader-appname-twoline {
+    display: block;
+    padding-top: 2px;
+}
+.emaas-appheader-toolbar{
+    height:44px;
+}
+.emaas-appheader-toolbar-button {
+    height:44px;
+    line-height: 44px;
+}
+.emaas-appheader-toolbar-button-icon {
+    width:32px;
+    height:32px;
+    vertical-align: middle;
+}
+.fa-notification:before {
+    font-size:xx-large;
+}
+.fa-compass:before {
+    font-size:xx-large;
+}
 
 .emaas-appheader-message-box {
-        padding-left: 30px;
-        min-height: 36px;
-        vertical-align: middle;
-        line-height: 36px;
-        overflow: hidden;
-    }
-    .emaas-appheader-message-box-error {
-        background-color: #FFDFDF;
-        border-bottom: 1px #ffc5c5; 
-    }
-    .emaas-appheader-message-box-warn {
-        background-color: #FFEACA; 
-        border-bottom: 1px #ffe0b0; 
-    }
-    .emaas-appheader-message-box-confirm {
-        background-color: #D6F1DE;
-        border-bottom: 1px #c3ebcf;
-    }
-    .emaas-appheader-message-box-info {
-        background-color: #D9EDF8;
-        border-bottom: 1px #bfe4f8; 
-    }
-    .emaas-appheader-message-box-tool {
-        background-color: #f0f0f0;
-        border-bottom: 1px #c4ced7; 
-    }
-    .emaas-appheader-message {
-        font-size:14px;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: bold;
-        color: #333333;
-        text-align: left;
-        /*padding-left:10px;*/
-    }
-    .emaas-appheader-message-summary {
-        font-weight: bold;
-    }
-    .emaas-appheader-message-detail {
-        font-weight: normal;
-        padding-left:10px;
-    }
-    .emaas-appheader-message-icon{
-        vertical-align: middle;
-        height:16px;
-        width:16px;
-    }
-    .emaas-appheader-message-textbox {
-        padding-left:10px;
-        line-height: 20px;
-    }
-    .emaas-appheader-message-table-cell {
-        display: table-cell;
-    }
-    .emaas-appheader-message-icon-clear {
-        cursor: pointer;
-    }
-    .emaas-warn-msg-table-cell {
-        display:table-cell;
-        vertical-align: top;
-    }
-/*    .emaas-appheader-message-icon-error:before{
-        content:url("../images/stat_error_16.png")
-    }
-    .emaas-appheader-message-icon-warn:before{
-        content:url("../images/stat_warn_16.png")
-    }
-    .emaas-appheader-message-icon-confirm:before{
-        content:url("../images/stat_confirm_16.png")
-    }
-    .emaas-appheader-message-icon-info:before{
-        content:url("../images/stat_info_16.png")
-    }*/
+    padding-left: 30px;
+    min-height: 36px;
+    vertical-align: middle;
+    line-height: 36px;
+    overflow: hidden;
+}
+.emaas-appheader-message-box-error {
+    background-color: #FFDFDF;
+    border-bottom: 1px #ffc5c5; 
+}
+.emaas-appheader-message-box-warn {
+    background-color: #FFEACA; 
+    border-bottom: 1px #ffe0b0; 
+}
+.emaas-appheader-message-box-confirm {
+    background-color: #D6F1DE;
+    border-bottom: 1px #c3ebcf;
+}
+.emaas-appheader-message-box-info {
+    background-color: #D9EDF8;
+    border-bottom: 1px #bfe4f8; 
+}
+.emaas-appheader-message-box-tool {
+    background-color: #f0f0f0;
+    border-bottom: 1px #c4ced7; 
+}
+.emaas-appheader-message {
+    font-size:14px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    color: #333333;
+    text-align: left;
+}
+.emaas-appheader-message-summary {
+    font-weight: bold;
+}
+.emaas-appheader-message-detail {
+    font-weight: normal;
+    padding-left:10px;
+}
+.emaas-appheader-message-icon{
+    vertical-align: middle;
+    height:16px;
+    width:16px;
+}
+.emaas-appheader-message-textbox {
+    padding-left:10px;
+    line-height: 20px;
+    font-size: 0;
+}
+.emaas-appheader-message-table-cell {
+    display: table-cell;
+}
+.emaas-appheader-message-icon-clear {
+    cursor: pointer;
+}
+.emaas-warn-msg-table-cell {
+    display:table-cell;
+    vertical-align: top;
+}

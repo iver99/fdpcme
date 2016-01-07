@@ -10,9 +10,10 @@ define(['knockout',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
+        'uifwk/js/util/preference-util',
         'builder/builder.core'
     ], 
-    function(ko, $, dfu, ssu, oj, ed, dd) {
+    function(ko, $, dfu, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         
@@ -430,10 +431,16 @@ define(['knockout',
                             self.dashboard.sharePublic(_shareState === true ? false : true);
                             if (self.dashboard.sharePublic() === true)
                             {
+                                self.sharePublicLabel(unshareDashboardLabel);
+                                self.sharePublicTitle(unshareDashboardTitle);
+                                self.cssSharePublic(cssUnshareDashboard);
                                 dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_SHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_SHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
                             }
                             else
                             {
+                                self.sharePublicLabel(shareDashboardLabel);
+                                self.sharePublicTitle(shareDashboardTitle);
+                                self.cssSharePublic(cssShareDashboard);
                                 dfu.showMessage({type: 'confirm', summary: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_SUMMARY'), detail: getNlsString('COMMON_TEXT_UNSHARE_CONFIRM_DETAIL'), removeDelayTime: 5000});
                             }
                             //$("#share_cfmDialog").ojDialog("close"); 
@@ -447,19 +454,220 @@ define(['knockout',
             self.initialize();
 
             //Dashboard Options ======start=======
+            var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
+            var addFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_ADD');
+            var removeFavoriteLabel = getNlsString('DBS_BUILDER_BTN_FAVORITES_REMOVE');
+            var setAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_SET');
+            var removeAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_REMOVE');
+            var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+            var cssSetDsbAsHome = "dbd-toolbar-icon-home";
+            var cssRemoveDsbAsHome = "dbd-toolbar-icon-home-outline";
+            var cssAddFavorite = "fa-star dbd-toolbar-fa-icon";
+            var cssRemoveFavorite = "fa-star-o dbd-toolbar-fa-icon";
+            var shareDashboardLabel = getNlsString('COMMON_TEXT_SHARE');
+            var unshareDashboardLabel = getNlsString('COMMON_TEXT_UNSHARE');
+            var shareDashboardTitle = getNlsString('COMMON_TEXT_SHARE_TITLE');
+            var unshareDashboardTitle = getNlsString('COMMON_TEXT_UNSHARE_TITLE');
+            var cssShareDashboard = "dbd-toolbar-icon-share dbd-toolbar-fa-icon dbd-toolbar-fa-icon-16";
+            var cssUnshareDashboard = "dbd-toolbar-icon-unshare dbd-toolbar-fa-icon";
+            self.sharePublicLabel = ko.observable(self.dashboard.sharePublic() === false ? shareDashboardLabel : unshareDashboardLabel);
+            self.sharePublicTitle = ko.observable(self.dashboard.sharePublic() === false ? shareDashboardTitle : unshareDashboardTitle);
+            self.cssSharePublic = ko.observable(self.dashboard.sharePublic() === false ? cssShareDashboard : cssUnshareDashboard);
+            self.dashboardsAsHomeIcon = ko.observable(cssSetDsbAsHome);
+            self.favoritesIcon = ko.observable(cssAddFavorite);
+            self.isSystemDashboard = self.dashboard.systemDashboard();
+            self.favoriteLabel = ko.observable(addFavoriteLabel);
+            self.dashboardAsHomeLabel = ko.observable(setAsHomeLabel);
+            self.isFavoriteDashboard = false;
+            self.isHomeDashboard = false;
+            self.hasAnotherDashboardSetAsHome = false;
+            
+            //Check dashboard favorites
+            checkDashboardFavorites();
+            
+            //Check home dashboard preferences
+            checkDashboardAsHomeSettings();
+            
             self.openDashboardEditDialog = function() {
                 self.editDashboardDialogModel.open();
             };
             self.openDashboardDuplicateDialog = function() {
-                //TODO: open duplicate dialog
                 $('#duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
-                //TODO: open delete confirmation dialog
                 $( "#dbs_cfmDialog" ).ojDialog( "open" ); 
                 $('#dbs_dcbtn').focus();
             };
+            self.addDashboardToFavorites = function() {
+                function succCallback(data) {
+                    dfu.showMessage({
+                            type: 'confirm',
+                            summary: getNlsString('DBS_BUILDER_MSG_ADD_FAVORITE_SUCC', self.dashboard.name()),
+                            detail: '',
+                            removeDelayTime: 5000
+                    });
+                    self.favoriteLabel(removeFavoriteLabel);
+                    self.favoritesIcon(cssRemoveFavorite);
+                    self.isFavoriteDashboard = true;
+                };
+                function errorCallback(jqXHR, textStatus, errorThrown) {
+                    dfu.showMessage({
+                            type: 'error',
+                            summary: getNlsString('DBS_BUILDER_MSG_ADD_FAVORITE_FAIL'),
+                            detail: ''
+                    });
+                };
+                Builder.addDashboardToFavorites(self.dashboard.id(), succCallback, errorCallback);
+            };
+            self.removeDashboardFromFavorites = function() {
+                function succCallback(data) {
+                    dfu.showMessage({
+                            type: 'confirm',
+                            summary: getNlsString('DBS_BUILDER_MSG_REMOVE_FAVORITE_SUCC', self.dashboard.name()),
+                            detail: '',
+                            removeDelayTime: 5000
+                    });
+                    self.favoriteLabel(addFavoriteLabel);
+                    self.favoritesIcon(cssAddFavorite);
+                    self.isFavoriteDashboard = false;
+                };
+                function errorCallback(jqXHR, textStatus, errorThrown) {
+                    dfu.showMessage({
+                            type: 'error',
+                            summary: getNlsString('DBS_BUILDER_MSG_REMOVE_FAVORITE_FAIL'),
+                            detail: ''
+                    });
+                };
+                Builder.removeDashboardFromFavorites(self.dashboard.id(), succCallback, errorCallback);
+            };
+            self.handleDashboardFavorites = function() {
+                if (self.isFavoriteDashboard) {
+                    self.removeDashboardFromFavorites();
+                }
+                else {
+                    self.addDashboardToFavorites();
+                }
+            };
+            self.setAsHomeConfirmed = function() {
+                self.setDashboardAsHome();
+                $("#setAsHomeCfmDialog").ojDialog("close"); 
+            };
+            self.setAsHomeCancelled = function() {
+                $("#setAsHomeCfmDialog").ojDialog("close"); 
+            };
+            self.setDashboardAsHome = function() {
+                function succCallback(data) {
+                    dfu.showMessage({
+                            type: 'confirm',
+                            summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_SUCC', self.dashboard.name()),
+                            detail: '',
+                            removeDelayTime: 5000
+                    });
+                    self.dashboardAsHomeLabel(removeAsHomeLabel);
+                    self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
+                    self.isHomeDashboard = true;
+                    self.hasAnotherDashboardSetAsHome = false;
+                };
+                function errorCallback(jqXHR, textStatus, errorThrown) {
+                    dfu.showMessage({
+                            type: 'error',
+                            summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_FAIL'),
+                            detail: ''
+                    });
+                };
+                var options = {
+                    success: succCallback,
+                    error: errorCallback
+                };
+                prefUtil.setPreference(prefKeyHomeDashboardId, self.dashboard.id(), options);
+            };
+            self.removeDashboardAsHome = function() {
+                function succCallback(data) {
+                    dfu.showMessage({
+                            type: 'confirm',
+                            summary: getNlsString('DBS_BUILDER_MSG_REMOVE_AS_HOME_SUCC', self.dashboard.name()),
+                            detail: '',
+                            removeDelayTime: 5000
+                    });
+                    self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardsAsHomeIcon(cssSetDsbAsHome);
+                    self.isHomeDashboard = false;
+                    self.hasAnotherDashboardSetAsHome = false;
+                };
+                function errorCallback(jqXHR, textStatus, errorThrown) {
+                    dfu.showMessage({
+                            type: 'error',
+                            summary: getNlsString('DBS_BUILDER_MSG_REMOVE_AS_HOME_FAIL'),
+                            detail: ''
+                    });
+                };
+                var options = {
+                    success: succCallback,
+                    error: errorCallback
+                };
+                prefUtil.removePreference(prefKeyHomeDashboardId, options);
+            };
+            self.handleDashboardAsHome = function() {
+                if (self.isHomeDashboard) {
+                    self.removeDashboardAsHome();
+                }
+                else {
+                    if (self.hasAnotherDashboardSetAsHome) {
+                        $("#setAsHomeCfmDialog").ojDialog("open"); 
+                        $("#btnCancelSetAsHome").focus();
+                    }
+                    else {
+                        self.setDashboardAsHome();
+                    }
+                }
+            };
             
+            function checkDashboardFavorites() {
+                function succCallback(data) {
+                    if (data && data.isFavorite === true) {
+                        self.favoriteLabel(removeFavoriteLabel);
+                        self.favoritesIcon(cssRemoveFavorite);
+                        self.isFavoriteDashboard = true;
+                    }
+                    else {
+                        self.favoriteLabel(addFavoriteLabel);
+                        self.favoritesIcon(cssAddFavorite);
+                        self.isFavoriteDashboard = false;
+                    }
+                };
+                function errorCallback(jqXHR, textStatus, errorThrown) {
+                    self.favoriteLabel(addFavoriteLabel);
+                    self.favoritesIcon(cssAddFavorite);
+                    self.isFavoriteDashboard = false;
+                };
+                Builder.checkDashboardFavorites(self.dashboard.id(), succCallback, errorCallback);
+            };
+            function checkDashboardAsHomeSettings() {
+                function succCallback(data) {
+                    if (data && data.value === (self.dashboard.id()+"")) {
+                        self.dashboardAsHomeLabel(removeAsHomeLabel);
+                        self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
+                        self.isHomeDashboard = true;
+                    }
+                    else {
+                        self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardsAsHomeIcon(cssSetDsbAsHome);
+                        self.isHomeDashboard = false;
+                        self.hasAnotherDashboardSetAsHome = true;
+                    }
+                };
+                function errorCallback(jqXHR, textStatus, errorThrown) {
+                    self.dashboardAsHomeLabel(setAsHomeLabel);
+                    self.dashboardsAsHomeIcon(cssSetDsbAsHome);
+                    self.isHomeDashboard = false;
+                    self.hasAnotherDashboardSetAsHome = false;
+                };
+                var options = {
+                    success: succCallback,
+                    error: errorCallback
+                };
+                prefUtil.getPreference(prefKeyHomeDashboardId, options);
+            };
             self.openShareConfirmDialog = function() {
                 self.handleShareUnshare();
                 //$("#share_cfmDialog").ojDialog("open"); 
@@ -472,20 +680,33 @@ define(['knockout',
                     "url": "#",
                     "id":"emcpdf_dsbopts_add",
                     "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-add-widget-disabled" : "dbd-toolbar-icon-add-widget",
-                    "title": getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
+                    "icon":"dbd-toolbar-icon-add-widget",
+                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": true
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
                 },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_edit",
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardEditDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-edit-disabled" : "dbd-toolbar-icon-edit",
-                    "title": getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
+                    "icon": "dbd-toolbar-icon-edit",
+                    "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": true
+                },
+                {
+                    "label": self.sharePublicLabel,
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_share",
+                    "onclick": self.editDisabled() === true ? null : self.openShareConfirmDialog,
+                    "icon": self.cssSharePublic,
+                    "title": "",//self.sharePublicTitle,
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": true,
+                    "endOfGroup": false
                 },
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
@@ -493,19 +714,56 @@ define(['knockout',
                     "id":"emcpdf_dsbopts_duplicate",
                     "onclick": self.openDashboardDuplicateDialog,
                     "icon": "dbd-toolbar-icon-duplicate",
-                    "title": getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
+                    "title": "",//getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
                     "disabled": false,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true"
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
+                    "endOfGroup": false
+                },
+                {
+                    "label": getNlsString('COMMON_BTN_PRINT'),
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_print",
+                    "onclick": self.editDisabled() === true ? "" : function(data,event){
+                            window.print();
+                        },
+                    "icon": "dbd-toolbar-icon-print",
+                    "title": getNlsString('COMMON_BTN_PRINT'),
+                    "disabled": self.editDisabled() === true,
+                    "showOnMobile": true,
+                    "endOfGroup": false
+                },
+                {
+                    "label": self.favoriteLabel,
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_favorites",
+                    "onclick": self.handleDashboardFavorites,
+                    "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
+                    "title": "", //self.favoriteLabel,
+                    "disabled": false,
+                    "showOnMobile": true,
+                    "endOfGroup": false
+                },
+                {
+                    "label": self.dashboardAsHomeLabel,
+                    "url": "#",
+                    "id":"emcpdf_dsbopts_home",
+                    "onclick": self.handleDashboardAsHome,
+                    "icon": self.dashboardsAsHomeIcon,
+                    "title": "", //self.setAsHomeLabel,
+                    "disabled": false,
+                    "showOnMobile": true,
+                    "endOfGroup": self.editDisabled() === false
                 },
                 {
                     "label": getNlsString('COMMON_BTN_DELETE'),
                     "url": "#",
                     "id":"emcpdf_dsbopts_delete",
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
-                    "icon": self.editDisabled() === true ? "dbd-toolbar-icon-delete-disabled" : "dbd-toolbar-icon-delete",
-                    "title": getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
+                    "icon":"dbd-toolbar-icon-delete",
+                    "title": "", //getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),
                     "disabled": self.editDisabled() === true,
-                    "showOnMobile": true
+                    "showOnMobile": true,
+                    "endOfGroup": false
                 }
             ];
             //Dashboard Options ======end=======

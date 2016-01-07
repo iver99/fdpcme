@@ -553,7 +553,14 @@ dependencies {
 
     providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
     providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
-    
+   
+ providedCompile(group: 'commons-codec', name:'commons-codec', version:'1.6') { transitive = false }
+    providedCompile(group: 'org.apache.commons', name:'commons-lang3', version:'3.1') { transitive = false }
+    providedCompile(group: 'commons-logging', name:'commons-logging', version:'1.1.1') { transitive = false }
+    providedCompile(group: 'org.apache.httpcomponents', name:'httpclient', version:'4.3.1') { transitive = false }
+        providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
+        providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
+  
     providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1'){ transitive = false }
     providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){ transitive = false }
     providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
