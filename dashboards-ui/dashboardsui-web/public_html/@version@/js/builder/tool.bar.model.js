@@ -461,7 +461,7 @@ define(['knockout',
             var removeAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_REMOVE');
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             var cssSetDsbAsHome = "dbd-toolbar-icon-home";
-            var cssRemoveDsbAsHome = "dbd-toolbar-icon-home-outline";
+            var cssRemoveDsbAsHome = "dbd-toolbar-icon-home";
             var cssAddFavorite = "fa-star dbd-toolbar-fa-icon";
             var cssRemoveFavorite = "fa-star-o dbd-toolbar-fa-icon";
             var shareDashboardLabel = getNlsString('COMMON_TEXT_SHARE');
