@@ -723,6 +723,7 @@
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
                                                             </a>
                                                         </li>
+                                                        <!-- EMCPDF-1131: this should be changed in next sprint
                                                         <li id="divider"></li>
                                                         <li id="resize">
                                                             <a href="#">
@@ -731,7 +732,8 @@
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESIZE')"></span>
                                                             </a>
-                                                            <ul>                                                              
+                                                            <ul>
+                                                        -->
                                                                 <li id="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
@@ -776,8 +778,10 @@
                                                                             <img src="@version@/images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESTORE')"></span></a>
                                                                 </li>
+                                                            <!--
                                                             </ul>
                                                         </li>
+                                                        -->
                                                     </ul>
                                                 </div>
                                             </div>
