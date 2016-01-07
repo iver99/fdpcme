@@ -29,12 +29,10 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-	classpath group: "com.oracle.omc.omctf.testsdk", name: "commontasks", version: "${omctfVersion}"
     }
 }
 
 apply plugin: 'TestInfraPlugin'
-apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"commontasks")
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -54,6 +52,8 @@ dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
 }
+ testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
+
 
 configurations {
 restAssured.exclude module: 'groovy'
@@ -64,15 +64,47 @@ task copyDependencies(type: Copy) {
     from configurations.lrgConfig
     into System.env.T_WORK
 }
-
-task QATest(type:EMTest,dependsOn: omcSetup){ 
-    include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
-    include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
-    include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
-    include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestDateTimePicker.class"
+task small_deploy_3n_block(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_uifwk_test_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'setupEmaasSmallDeploy')
+                    }
+                }
+        //      'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSanityTests')
+            }
+        }
+    }
     useWebdriver = true
-    useRestAssured=true
+    useRestAssured = true
 }
 
-omcTeardown.mustRunAfter(QATest)
-task emcpdf_uifwk_test_3n (dependsOn: [QATest,omcTeardown])
+     task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestAnalyzerPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestDashboardPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/dashboardscommonui/test/ui/TestOtherPage.class"
+	include "oracle/sysman/emaas/platform/uifwk/timepicker/test/ui/TestDateTimePicker.class"
+        useWebdriver = true
+	useRestAssured=true
+}
+task small_deploy_3n_cleanup(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'logCollectionAndPostCleanup')
+                    }
+                }
+            }
+        }
+    }
+ mustRunAfter ([small_deploy_3n_block,QATest])
+}
+
+
+task emcpdf_uifwk_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])

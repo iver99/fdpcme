@@ -30,8 +30,7 @@ buildscript {
         }
     }
     dependencies {
-	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true  
-	classpath group: "com.oracle.omc.omctf.testsdk", name: "commontasks", version: "${omctfVersion}"	
+   classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true  
   }
 
 }
@@ -45,7 +44,6 @@ repositories {
 }
 
 apply plugin: 'TestInfraPlugin'
-apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"commontasks")
 apply plugin: 'groovy'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
@@ -68,15 +66,33 @@ testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-uitest-inte
 {
 exclude('module':'groovy')
 }
+testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
 configurations{
 restAssured.exclude module:'groovy'
 }
 }
   
 
+/* Setup EMaaS Small Deployment */
+task small_deploy_3n_block(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'setupEmaasSmallDeploy')
+                    }
+                }
+            }
+        }
+    }
+    useWebdriver = true
+    useRestAssured = true
+}
 //This are 1 test blocks to run testng tests.
 //sample1 for the package oracle/sysman/test/logan
-task e2e (type: EMTest, dependsOn: omcSetup){
+task e2e (type: EMTest, dependsOn: small_deploy_3n_block){
 options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
@@ -89,5 +105,22 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
 
 }
 
-omcTeardown.mustRunAfter(e2e)
-task emcpdf_dashboard_uitest_3n (dependsOn:[e2e,omcTeardown])
+/* Cleanup EMaaS Small Deployment */
+/* Note: Make sure this block is added after defining task my_test_task or else you see a failure saying my_test_task doesn't exist. */
+task small_deploy_3n_cleanup(type: EMTest) {
+    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
+    options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
+        test('name': 'emaas_setup_small_deploy') {
+            classes([:]) {
+                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
+                    methods([:]) {
+                        'include' ('name': 'logCollectionAndPostCleanup')
+                    }
+                }
+            }
+        }
+    }
+    mustRunAfter ([small_deploy_3n_block,e2e])
+}
+
+task emcpdf_dashboard_uitest_3n (dependsOn:[e2e, small_deploy_3n_cleanup])
