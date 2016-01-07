@@ -91,6 +91,7 @@ require(['ojs/ojcore',
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
+//                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
                     callbackAfterApply: function (start, end, tp) {
