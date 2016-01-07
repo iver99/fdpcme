@@ -728,7 +728,7 @@ define(['knockout',
                         },
                     "icon": "dbd-toolbar-icon-print",
                     "title": getNlsString('COMMON_BTN_PRINT'),
-                    "disabled": self.editDisabled() === true,
+                    "disabled": false,
                     "showOnMobile": true,
                     "endOfGroup": false
                 },
