@@ -158,6 +158,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.typeFilter = ko.observable(filter['types']);
         self.serviceFilter = ko.observable(filter['appTypes']);
         self.creatorFilter = ko.observable(filter['owners']);
+        self.favoritesFilter = ko.observable(filter['favoritesOnly']===true ? ['favoritesOnly'] : null);
         self.showServiceFilter = ko.observable(predata.getShowServiceFilter());
         self.showLaServiceFilter = ko.observable(predata.getShowLaService());
         self.showApmSrviceFilter = ko.observable(predata.getShowApmService());
@@ -193,7 +194,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         });
         
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
-                                                   filter['types'], filter['appTypes'], filter['owners']);
+                                                   filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
                     if (_event['data'])
@@ -552,7 +553,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             {
                 self.dsFactory.types = _value;
                 self._forceSearch();
-                self.saveDashbordsFilter(_value, self.serviceFilter(), self.creatorFilter());
+                self.saveDashbordsFilter(_value, self.serviceFilter(), self.creatorFilter(), self.favoritesFilter());
             }
         };
         
@@ -562,7 +563,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             {
                 self.dsFactory.appTypes = _value;
                 self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), _value, self.creatorFilter());
+                self.saveDashbordsFilter(self.typeFilter(), _value, self.creatorFilter(), self.favoritesFilter());
             }
         };
         
@@ -572,11 +573,21 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             {
                 self.dsFactory.owners = _value;
                 self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), _value);
+                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), _value, self.favoritesFilter());
             }
         };
         
-        self.saveDashbordsFilter = function (typeFilter, serviceFilter, creatorFilter)
+        self.handleFavoritesFilterChanged = function (event, data) {
+            var _option = data.option, _value = data.value;
+            if ( _option === "value" )
+            {
+                self.dsFactory.favoritesOnly = _value && _value.length > 0 ? true : false;
+                self._forceSearch();
+                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), self.creatorFilter(), _value);
+            }
+        };
+        
+        self.saveDashbordsFilter = function (typeFilter, serviceFilter, creatorFilter, favoritesFilter)
         {
             var _filter = {};
             if (typeFilter !== undefined && typeFilter.length > 0)
@@ -590,6 +601,10 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             if (creatorFilter !== undefined && creatorFilter.length > 0)
             {
                 _filter.owners = creatorFilter;
+            }
+            if (favoritesFilter !== undefined && favoritesFilter !== null && favoritesFilter.length > 0)
+            {
+                _filter.favoritesOnly = true;
             }
             self.prefUtil.setPreference(DASHBOARDS_FILTER_PREF_KEY, JSON.stringify(_filter));
         };
@@ -705,6 +720,10 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.getIsIta = function () {
             return (getUrlParam("filter") === "ita" ? true : false);
         };
+        
+        self.showFavoritesOnly = function () {
+            return (getUrlParam("filter") === "favorites" ? true : false);
+        };
                     
         self.getShowLaService = function() {
             if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0) return true;
@@ -741,9 +760,13 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                     _appTypes.push("ITAnalytics");
                 }
             }
+            if (self.showFavoritesOnly() === true) {
+                filter['favoritesOnly'] = true;
+            }
             return {types: (filter['types'] === undefined ? [] : filter['types']), 
                 appTypes: _appTypes, 
-                owners: (filter['owners'] === undefined ? [] : filter['owners'])};
+                owners: (filter['owners'] === undefined ? [] : filter['owners']),
+                favoritesOnly: (filter['favoritesOnly'] === undefined ? false : filter['favoritesOnly'])};
         };
         
         self.getDashboardsFilterPref = function () {
