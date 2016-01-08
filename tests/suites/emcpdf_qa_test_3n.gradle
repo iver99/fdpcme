@@ -29,10 +29,26 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
     }
 }
 
 apply plugin: 'TestInfraPlugin'
+// Uncomment once EMDI-6096 is fixed
+// apply from: getSingleFileInConfiguration(project.buildscript.configurations.classpath,"omctf_commontasks")
+/** Start of WA for EMDI-6096 */
+def getAbsoluteFilePath(artifactNameToSearch) {
+    absPath=""
+    buildscript.configurations.classpath.resolve().each {
+        String absolutePath=it.getAbsolutePath();
+        if(absolutePath.contains(artifactNameToSearch)){
+            absPath=absolutePath
+        }
+    }
+    return absPath
+}
+apply from: getAbsoluteFilePath("omctf_commontasks")
+/** End of WA for EMDI-6096 */
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -51,8 +67,6 @@ dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web-integ-tests', version: "${REPO_BID}") {
 	exclude('module':'groovy')
 }
- testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
-
  testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
@@ -76,24 +90,7 @@ restAssured.exclude module: 'groovy'
 }
 }
 
-task small_deploy_3n_block(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemcpdf_qa_test_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'setupEmaasSmallDeploy')
-                    }
-                }
-            }
-        }
-    }
-    useWebdriver = true
-    useRestAssured = true
-}
-
-     task QATest(type:EMTest,dependsOn: small_deploy_3n_block){ 
+task QATest(type:EMTest,dependsOn: omcSetup) { 
 	include "oracle/sysman/emaas/platform/dashboards/test/dashboard/*"
 	include "oracle/sysman/emaas/platform/dashboards/test/common/*"
 	include "oracle/sysman/emaas/platform/dashboards/logging/*"
@@ -105,22 +102,7 @@ task small_deploy_3n_block(type: EMTest) {
 	useRestAssured=true
 	ext.set("testType", "integration")
 }
-task small_deploy_3n_cleanup(type: EMTest) {
-    onlyIf {!System.env.SMALLDEPLOY_IGNORESETUP}
-    options.suiteXmlBuilder().suite('name': 'lrgemctas_uitsts_3n') {
-        test('name': 'emaas_setup_small_deploy') {
-            classes([:]) {
-                'class'('name': 'oracle.sysman.test.emaas.integ.EmaasSmallDeploy3n') {
-                    methods([:]) {
-                        'include' ('name': 'logCollectionAndPostCleanup')
-                    }
-                }
-            }
-        }
-    }
- mustRunAfter ([small_deploy_3n_block,QATest])
-}
 
-
-task emcpdf_qa_test_3n (dependsOn: [QATest, small_deploy_3n_cleanup])
+omcTeardown.mustRunAfter(QATest)
+task emcpdf_qa_test_3n (dependsOn: [QATest, omcTeardown])
 
