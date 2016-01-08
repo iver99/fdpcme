@@ -21,6 +21,7 @@ define(['knockout',
             self.cssHeight = ko.observable(0);
             self.linkText = ko.observable('');
             self.linkUrl = ko.observable('');
+            self.hideTitle = ko.observable("false");
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
@@ -37,6 +38,14 @@ define(['knockout',
             self.displayHeight = function() {
                 return self.height * Builder.DEFAULT_HEIGHT;
             };
+            
+            if (Array.isArray(data.tileParameters)) {
+                $.each(data.tileParameters, function (i, parameter) {
+                    if (parameter.name === "hideTitle") {
+                        self.hideTitle(parameter.value);
+                    }
+                });
+            }
         }
         
         function TextTileItem(data) {

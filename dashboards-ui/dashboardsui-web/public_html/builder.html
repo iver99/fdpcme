@@ -681,11 +681,11 @@
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
-                                            <h2 class="dbd-tile-title"><a data-bind="text: title, attr: {href: linkedDashboard}"></a></h2>
+                                            <h2 class="dbd-tile-title"><a data-bind="text: text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
                                           <!-- /ko -->
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
-                                            <h2 class="dbd-tile-title" data-bind="text: title"></h2>
-                                          <!-- /ko -->                                          
+                                            <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title"></h2>
+                                          <!-- /ko -->
                                           <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
                                               <div class="dbd-btn-editor">                 
                                                   <button class="oj-button-half-chrome" tabindex="0"
@@ -696,7 +696,7 @@
                                                                 component:'ojButton', 
                                                                 icons: {start:'dbd-title-edit'}, 
                                                                 label: ''
-                                                        }"></button>                            
+                                                        }"></button>
                                               </div>
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
@@ -714,12 +714,11 @@
                                                         <li id="showhide-title">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-eye-slash"></i>
+                                                                    <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
                                                                 </span>
-                                                                <span class='widget-title-show'data-bind="text: getNlsString('DBS_BUILDER_TILE_SHOW')" style="display: none"></span>
-                                                                <span class='widget-title-hide' data-bind="text: getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
+                                                                <span data-bind="text: hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
                                                             </a>
-                                                        </li>                                                      
+                                                        </li>
                                                         <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
