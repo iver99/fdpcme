@@ -55,7 +55,7 @@ define(['knockout',
             }
             
             function showConfirmLeaveDialog(event) {
-                var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_SUMMARY');
+                var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT');
                 
                 if (event && $b.isDashboardUpdated() === true)
                 {
@@ -63,8 +63,9 @@ define(['knockout',
                 }
                 if ($b.isDashboardUpdated() === true)
                 {
-                    $( "#cfmleaveDialog" ).ojDialog( "open" );
-                    $( '#cfmleavecbtn' ).focus();
+                    //$( "#cfmleaveDialog" ).ojDialog( "open" );
+                    //$( '#cfmleavecbtn' ).focus();
+                    $( '#dashboard-screenshot' ).focus();
                     return _msg;
                 }
             };
@@ -303,10 +304,10 @@ define(['knockout',
                 $("html").css("overflow", "hidden");
             };
             
-            self.handleDashboardNotSave = function() {
-                self.isUpdated(false);
-                $( "#cfmleaveDialog" ).ojDialog( "close" );    
-            };
+//            self.handleDashboardNotSave = function() {
+//                self.isUpdated(false);
+//                $( "#cfmleaveDialog" ).ojDialog( "close" );    
+//            };
 
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
@@ -345,10 +346,10 @@ define(['knockout',
 //                    window.opener.childMessageListener(jsonValue);
 //                }
                 self.handleSaveUpdateToServer(function() {
-                    if ($( "#cfmleaveDialog" ).ojDialog( "isOpen" ) === true )
-                    {
-                        $( "#cfmleaveDialog" ).ojDialog( "close" );
-                    }
+//                    if ($( "#cfmleaveDialog" ).ojDialog( "isOpen" ) === true )
+//                    {
+//                        $( "#cfmleaveDialog" ).ojDialog( "close" );
+//                    }
                     dfu.showMessage({
                             type: 'confirm',
                             summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
