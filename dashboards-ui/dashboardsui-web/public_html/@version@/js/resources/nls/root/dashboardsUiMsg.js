@@ -253,6 +253,10 @@ define({
       "DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG":"Sorry, you must specify a valid dashboard id to open a dashboard.",
       "DBS_ERROR_PAGE_NOT_FOUND_NO_SUBS_MSG":"Sorry, the page you have requested either doesn't exist or you do not have access to it. Reason: \"No service is subscribed\"",
       "DBS_ERROR_ORA_EMSAAS_USERNAME_AND_TENANTNAME_INVALID": "Error: failed to retrieve user or tenant.",
+      "DBS_ERROR_HOME_PAGE_NOT_FOUND_MSG":"The dashboard which you have set as Home page no longer exists or you don't have access to it.",
+      "DBS_ERROR_TEXT_CLICK": "Click",
+      "DBS_ERROR_TEXT_HERE": "here",
+      "DBS_ERROR_TEXT_GO_HOME_PAGE": "to go to the default Home page",
       "DBS_ERROR_URL": "Requested URL is: ",
       "DBS_ERROR_BTN_SIGN_OUT": "Sign Out",
       
