@@ -6,19 +6,21 @@
 define(['knockout', 
         'jquery',
         'dfutil',
+        'idfbcutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
         'builder/tool-bar/duplicate.dialog',
         'builder/builder.core'
     ], 
-    function(ko, $, dfu, ssu, oj, ed, dd) {
+    function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         
         function ToolBarModel($b) {
             var self = this;
             self.dashboard = $b.dashboard;
+            self.isUpdated = $b.isDashboardUpdated;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.currentUser = dfu.getUserName();
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b.dashboard, self);
@@ -51,7 +53,23 @@ define(['knockout',
                     self.tilesViewModel.show();
                 };
             }
-
+            
+            function showConfirmLeaveDialog(event) {
+                var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_SUMMARY');
+                
+                if (event && $b.isDashboardUpdated() === true)
+                {
+                    event.returnValue = _msg;
+                }
+                if ($b.isDashboardUpdated() === true)
+                {
+                    $( "#cfmleaveDialog" ).ojDialog( "open" );
+                    $( '#cfmleavecbtn' ).focus();
+                    return _msg;
+                }
+            };
+            $(window).bind("beforeunload", showConfirmLeaveDialog);
+            
             self.includeTimeRangeFilter = ko.pureComputed({
                 read: function() {
                     if (self.dashboard.enableTimeRange()) {
@@ -284,6 +302,11 @@ define(['knockout',
                 $("body").css("overflow", "hidden");
                 $("html").css("overflow", "hidden");
             };
+            
+            self.handleDashboardNotSave = function() {
+                self.isUpdated(false);
+                $( "#cfmleaveDialog" ).ojDialog( "close" );    
+            };
 
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
@@ -322,6 +345,10 @@ define(['knockout',
 //                    window.opener.childMessageListener(jsonValue);
 //                }
                 self.handleSaveUpdateToServer(function() {
+                    if ($( "#cfmleaveDialog" ).ojDialog( "isOpen" ) === true )
+                    {
+                        $( "#cfmleaveDialog" ).ojDialog( "close" );
+                    }
                     dfu.showMessage({
                             type: 'confirm',
                             summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
