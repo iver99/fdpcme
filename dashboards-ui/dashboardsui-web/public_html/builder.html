@@ -232,6 +232,11 @@
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
                         </ul>
+                        <div style="position: absolute;overflow: hidden;left: -9999px;top: -9999px;height: 1px;width: 1px;">
+                            <span class="dbd-toolbar-icon-duplicate"></span>
+                            <span class="dbd-toolbar-icon-home"></span>
+                            <span class="dbd-toolbar-icon-delete"></span>
+                        </div>
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome no-print"
                                 data-bind="click: handleDashboardSave, ojComponent: {
