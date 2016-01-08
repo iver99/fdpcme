@@ -234,6 +234,7 @@ public class TestHomePage extends LoginAndLogout{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testLALink");
 		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 		DashBoardUtils.clickExploreDataButton();
 		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Log_ID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -252,6 +253,7 @@ public class TestHomePage extends LoginAndLogout{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testTargetLink");
 		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 		DashBoardUtils.clickExploreDataButton();
 		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Search_ID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -271,6 +273,7 @@ public class TestHomePage extends LoginAndLogout{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testAWRLink");
 		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 		DashBoardUtils.clickExploreDataButton();
 		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Analyze_ID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);

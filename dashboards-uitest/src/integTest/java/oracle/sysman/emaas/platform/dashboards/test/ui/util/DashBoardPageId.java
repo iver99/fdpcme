@@ -67,7 +67,7 @@ public class DashBoardPageId {
 	public static final String SearchDSBoxID = "sinput";
 	
 	//link/html/body/div[3]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a
-	public static final String HomeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a";
+	public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";//"/html/body/div[*]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a";
 	//dashboard home link
 	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
 	//IT Analytics link
@@ -151,7 +151,8 @@ public class DashBoardPageId {
 	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
 	
 	//time picker /html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button
-	public static final String TimePickerID = "/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
+	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
+	public static final String CustomDateTimeID = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[11]";
 	public static final String ApplyBtnID = "applyButton";
 	public static final String CancelBtnID = "cancelButton";
 	public static final String DateID1 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/table/tbody/tr[4]/td[2]/a";

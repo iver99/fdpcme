@@ -57,9 +57,9 @@ public class DashBoardUtils {
 	{
 		driver=webDriver;
 		waitForMilliSeconds(10000);
-		if(driver.isElementPresent(DashBoardPageId.OverviewCloseID))  closeOverviewPage();
+		if(doesWebElementExist(DashBoardPageId.OverviewCloseID))  closeOverviewPage();
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		Assert.assertFalse(driver.isElementPresent(DashBoardPageId.OverviewCloseID));
+		Assert.assertFalse(doesWebElementExist(DashBoardPageId.OverviewCloseID));
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		driver.takeScreenShot();
 	}
@@ -388,12 +388,17 @@ public class DashBoardUtils {
 	{
 		WebElement Box = driver.getWebDriver().findElement(By.xpath(DashBoardPageId.TimePickerID));//*[@id='oj-listbox-drop']"));//));
 		Box.click();
-		
+		driver.takeScreenShot();
+		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		driver.click(DashBoardPageId.CustomDateTimeID);
+		driver.takeScreenShot();
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		driver.click(DashBoardPageId.DateID1);
+		driver.takeScreenShot();
 		//driver.click(DashBoardPageId.DateID2);
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		driver.click(DashBoardPageId.ApplyBtnID);
+		driver.takeScreenShot();
 	}
 
 	
