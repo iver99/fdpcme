@@ -37,7 +37,6 @@ public class DashBoardUtils {
     	Assert.assertFalse(driver.isElementPresent(DashBoardPageId.Host_Health_Summary_ID));    	
 		Assert.assertFalse(driver.isElementPresent(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertFalse(driver.isElementPresent(DashBoardPageId.Middleware_Performance_Analytics_ID));
-		Assert.assertFalse(driver.isElementPresent(DashBoardPageId.Middleware_Datasource_Performance_Analytics_ID));
 		Assert.assertFalse(driver.isElementPresent(DashBoardPageId.Database_Resource_Analytics_ID));
 		Assert.assertFalse(driver.isElementPresent(DashBoardPageId.Middleware_Resource_Analytics_ID));
 		Assert.assertFalse(driver.isElementPresent(DashBoardPageId.WebLogic_Health_Summary_ID));
@@ -301,21 +300,22 @@ public class DashBoardUtils {
 		
 		TileManager tg = new TileManager(driver);
 		
-	    //tg.tileOpen();
-		//tg.tileDelete();
+	    tg.tileOpen();
+		tg.tileDelete();
 		//save dashboard
-		//clickSaveButton();
-		//tg.tileOpen();
-		//tg.tileMaximize();
-		//tg.tileOpen();
-//		tg.tileRestore();
-//		tg.tileOpen();
-//		tg.tileWider();
-//		tg.tileOpen();
-//		tg.tileNarrower();
-//		tg.tileOpen();
-//		tg.tileRefresh();
-		
+		clickSaveButton();
+		tg.tileOpen();
+		tg.tileMaximize();
+		tg.tileOpen();
+		tg.tileRestore();
+		tg.tileOpen();
+		tg.tileWider();
+		tg.tileOpen();
+		tg.tileNarrower();
+		tg.tileOpen();
+		tg.tileTaller();
+		tg.tileOpen();
+		tg.tileShorter();		
 	}
 	
 	
@@ -462,11 +462,7 @@ public class DashBoardUtils {
 			driver.getLogger().info("after enabled 2");
 			clickCloseButton();
 			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-	}
-		
-		
-	
-	
+	}	
 		
 	public static void saveWidget() throws Exception
 	{
@@ -567,13 +563,13 @@ public class DashBoardUtils {
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.LOGLinkID)).getText(),"Log");
 		//AWR Analytics link
 		driver.takeScreenShot();
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AWRALinkID)).getText(),"Analyze");
-		//Flex link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.FlexLinkID)).getText(),"AWR");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AnalyzeLinkID)).getText(),"Analyze");
+//		//Flex link
+//		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.FlexLinkID)).getText(),"AWR");
 		//Target link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.TargetLinkID)).getText(),"Search");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.SearchLinkID)).getText(),"Search");
 		//Customer Software link
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.CustomLinkID)).getText(),"Agents");
+		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.AgentsLinkID)).getText(),"Agents");
 		//IT Analytics Administration link
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.ITA_Admin_LinkID)).getText(),"IT Analytics Administration");
 	}
@@ -602,7 +598,6 @@ public class DashBoardUtils {
     	Assert.assertTrue(driver.isElementPresent(DashBoardPageId.Host_Health_Summary_ID));    	
 		Assert.assertTrue(driver.isElementPresent(DashBoardPageId.Database_Performance_Analytics_ID));
 		Assert.assertTrue(driver.isElementPresent(DashBoardPageId.Middleware_Performance_Analytics_ID));
-		Assert.assertTrue(driver.isElementPresent(DashBoardPageId.Middleware_Datasource_Performance_Analytics_ID));
 		Assert.assertTrue(driver.isElementPresent(DashBoardPageId.Database_Resource_Analytics_ID));
 		Assert.assertTrue(driver.isElementPresent(DashBoardPageId.Middleware_Resource_Analytics_ID));
 		Assert.assertTrue(driver.isElementPresent(DashBoardPageId.WebLogic_Health_Summary_ID));
@@ -618,7 +613,6 @@ public class DashBoardUtils {
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.Host_Health_Summary_ID)).getAttribute("aria-label"),"Host Health Summary");
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.Database_Performance_Analytics_ID)).getAttribute("aria-label"),"Performance Analytics: Database");
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.Middleware_Performance_Analytics_ID)).getAttribute("aria-label"),"Performance Analytics: Middleware");
-		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.Middleware_Datasource_Performance_Analytics_ID)).getAttribute("aria-label"),"Performance Analytics: Middleware Datasource");
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.Database_Resource_Analytics_ID)).getAttribute("aria-label"),"Resource Analytics: Database");
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.Middleware_Resource_Analytics_ID)).getAttribute("aria-label"),"Resource Analytics: Middleware");
 		Assert.assertEquals(driver.getWebDriver().findElement(By.xpath(DashBoardPageId.WebLogic_Health_Summary_ID)).getAttribute("aria-label"),"WebLogic Health Summary");

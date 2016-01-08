@@ -99,9 +99,9 @@ public class TestDateTimePicker extends CommonUIUtils
 		driver.getLogger().info("Click the DateTimePicker Componment");
 		driver.click(UIControls.sTimeRangeBtn_1);
 		driver.takeScreenShot();
-		Thread.sleep(5000);
-		driver.getLogger().info("Verify the Pick Panel displayed");
-		Assert.assertTrue(driver.isElementPresent(UIControls.sPickPanel));
+//		Thread.sleep(5000);
+//		driver.getLogger().info("Verify the Pick Panel displayed");
+//		Assert.assertTrue(driver.isElementPresent(UIControls.sPickPanel));
 
 		//click time period button
 		Thread.sleep(5000);
@@ -110,31 +110,31 @@ public class TestDateTimePicker extends CommonUIUtils
 		driver.takeScreenShot();
 
 		//verify the date time range is changed to 15 minutes
-		Thread.sleep(5000);
-		driver.getLogger().info("Verify the "+period+" is selected");
-		Assert.assertEquals(driver.getText(UIControls.sTimePeriod), period);
+//		Thread.sleep(5000);
+//		driver.getLogger().info("Verify the "+period+" is selected");
+//		Assert.assertEquals(driver.getText(UIControls.sTimePeriod), period);
 
 		//get the start date time and end date time after click the time period
-		driver.getLogger().info("get the start date time and end date time after click the time period");
-		sStartDate=driver.getValue(UIControls.sStartDateInput);
-		sStartTime=driver.getValue(UIControls.sStartTimeInput);
-
-		sEndDate=driver.getValue(UIControls.sEndDateInput);
-		sEndTime=driver.getValue(UIControls.sEndTimeInput);
-		driver.getLogger().info(sStartDate+" " +sStartTime+"  "+sEndDate+" "+sEndTime);
-		//convert string to datetime "MM/dd/yyyy hh:mm a"
-		driver.getLogger().info("convert string to datetime 'MM/dd/yyyy hh:mm a'");
-		dTmpStart = fmt1.parse(sStartDate+" "+sStartTime);
-		dTmpEnd = fmt1.parse(sEndDate+" "+sEndTime);
-
-		//verify if the date is today or yesterday
-		String sTmpStartDay=TestDateTimePicker.verifyDate(sStartDate+" "+sStartTime);
-		String sTmpEndDay=TestDateTimePicker.verifyDate(sEndDate+" "+sEndTime);
-		driver.getLogger().info(sTmpStartDay+" " +sTmpEndDay);
+//		driver.getLogger().info("get the start date time and end date time after click the time period");
+//		sStartDate=driver.getValue(UIControls.sStartDateInput);
+//		sStartTime=driver.getValue(UIControls.sStartTimeInput);
+//
+//		sEndDate=driver.getValue(UIControls.sEndDateInput);
+//		sEndTime=driver.getValue(UIControls.sEndTimeInput);
+//		driver.getLogger().info(sStartDate+" " +sStartTime+"  "+sEndDate+" "+sEndTime);
+//		//convert string to datetime "MM/dd/yyyy hh:mm a"
+//		driver.getLogger().info("convert string to datetime 'MM/dd/yyyy hh:mm a'");
+//		dTmpStart = fmt1.parse(sStartDate+" "+sStartTime);
+//		dTmpEnd = fmt1.parse(sEndDate+" "+sEndTime);
+//
+//		//verify if the date is today or yesterday
+//		String sTmpStartDay=TestDateTimePicker.verifyDate(sStartDate+" "+sStartTime);
+//		String sTmpEndDay=TestDateTimePicker.verifyDate(sEndDate+" "+sEndTime);
+//		driver.getLogger().info(sTmpStartDay+" " +sTmpEndDay);
 		//click Apply button
-		Thread.sleep(5000);
-		driver.getLogger().info("Click Apply button");
-		driver.click(UIControls.sApplyBtn);
+//		Thread.sleep(5000);
+//		driver.getLogger().info("Click Apply button");
+//		driver.click(UIControls.sApplyBtn);
 		//verify the date time is set
 		Thread.sleep(5000);
 		driver.takeScreenShot();
@@ -156,12 +156,12 @@ public class TestDateTimePicker extends CommonUIUtils
 			driver.getLogger().info("sEndTime: "+sEndTime);
 		}
 
-		if (sTmpStartDay.equals(sTmpEndDay)&&sTmpStartDay.equals("Today")){
-			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sStartTime+" - "+sEndTime);
-		}
-		else{
-			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sStartTime+" - "+sTmpEndDay+" "+sEndTime);
-		}
+//		if (sTmpStartDay.equals(sTmpEndDay)&&sTmpStartDay.equals("Today")){
+//			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sStartTime+" - "+sEndTime);
+//		}
+//		else{
+//			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sStartTime+" - "+sTmpEndDay+" "+sEndTime);
+//		}
 		//verify the result in label
 		driver.getLogger().info("Verify the result in label");
 		driver.getLogger().info("dateformat: "+ fmt2.format(dTmpStart));
@@ -525,9 +525,9 @@ public class TestDateTimePicker extends CommonUIUtils
 		webdriver.getLogger().info("Click the DateTimePicker Componment");
 		webdriver.click(UIControls.sTimeRangeBtn_1);
 		webdriver.takeScreenShot();
-		Thread.sleep(5000);
-		webdriver.getLogger().info("Verify the Pick Panel displayed");
-		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPickPanel));
+//		Thread.sleep(5000);
+//		webdriver.getLogger().info("Verify the Pick Panel displayed");
+//		Assert.assertTrue(webdriver.isElementPresent(UIControls.sPickPanel));
 
 		//click Latest button
 		Thread.sleep(5000);
@@ -536,14 +536,14 @@ public class TestDateTimePicker extends CommonUIUtils
 		webdriver.takeScreenShot();
 
 		//verify the date time range is changed to time period
-		Thread.sleep(5000);
-		webdriver.getLogger().info("Verify the Latest is selected");
-		Assert.assertEquals(webdriver.getText(UIControls.sTimePeriod), "Latest");		
+//		Thread.sleep(5000);
+//		webdriver.getLogger().info("Verify the Latest is selected");
+//		Assert.assertEquals(webdriver.getText(UIControls.sTimePeriod), "Latest");		
 
 		//click Apply button
-		Thread.sleep(5000);
-		webdriver.getLogger().info("Click Apply button");
-		webdriver.click(UIControls.sApplyBtn);
+//		Thread.sleep(5000);
+//		webdriver.getLogger().info("Click Apply button");
+//		webdriver.click(UIControls.sApplyBtn);
 		//verify the date time is set
 		Thread.sleep(5000);
 		webdriver.takeScreenShot();

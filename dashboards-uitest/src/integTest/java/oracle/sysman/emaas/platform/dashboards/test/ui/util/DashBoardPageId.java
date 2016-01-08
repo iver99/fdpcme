@@ -44,7 +44,7 @@ public class DashBoardPageId {
 	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
 	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";	
 	public static final String Middleware_Performance_Analytics_ID = "//div[@aria-dashboard='4']";
-	public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
+	//public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
 	public static final String Database_Resource_Analytics_ID = "//div[@aria-dashboard='3']";
 	public static final String Middleware_Resource_Analytics_ID = "//div[@aria-dashboard='18']";
 	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";	
@@ -66,26 +66,29 @@ public class DashBoardPageId {
 	//search
 	public static final String SearchDSBoxID = "sinput";
 	
-	//link/html/body/div[3]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a
-	public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";//"/html/body/div[*]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a";
+	//Branding Bar links
+	//Home Link
+	public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
 	//dashboard home link
-	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
+	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[2]/a";
+	//My Favorites link
+	public static final String MyFavoritesLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
 	//IT Analytics link
 	public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
-	//Log Analytics link/html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a /html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a
+	//Log Analytics link
 	public static final String LALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
-	//APM link /html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a
+	//APM link
 	public static final String APMLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
 	//Log link
 	public static final String LOGLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
 	//AWR Analytics link
-	public static final String AWRALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
-	//Flex link
-	public static final String FlexLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
-	//Target link
-	public static final String TargetLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";//"/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[5]/a";
-	//Customer Software link
-	public static final String CustomLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[2]/a";
+	//public static final String AWRALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+	//Analyze link
+	public static final String AnalyzeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+	//Search link
+	public static final String SearchLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
+	//Agents link
+	public static final String AgentsLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[2]/a";
 	//IT Analytics Administration link
 	public static final String ITA_Admin_LinkID ="/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
 	
@@ -141,16 +144,18 @@ public class DashBoardPageId {
 	
 	//tile operation
 	public static final String TileTitle = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[*]/h2";
-	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div/button";///html/body/div[*]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div/button";//";///html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
-	public static final String EditTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
-	public static final String RefreshTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
-	public static final String DeleteTileID = "/html/body/div[1]/div/ul/li[3]/a/span[2]";
-	public static final String WiderTileID = "/html/body/div[1]/div/ul/li[4]/a/span[2]";
-	public static final String NarrowerTileID = "/html/body/div[1]/div/ul/li[5]/a/span[2]";
-	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[6]/a/span[2]";
-	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
+	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div[2]/button";
+	public static final String OpenTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div[1]/button";
+	public static final String HideTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
+	public static final String RemoveTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
+	public static final String WiderTileID = "/html/body/div[1]/div/ul/li[3]/a/span[2]";
+	public static final String NarrowerTileID = "/html/body/div[1]/div/ul/li[4]/a/span[2]";
+	public static final String TallerTileID = "/html/body/div[1]/div/ul/li[5]/a/span[2]";
+	public static final String ShorterTileID = "/html/body/div[1]/div/ul/li[6]/a/span[2]";
+	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
+	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
 	
-	//time picker /html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button
+	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
 	public static final String CustomDateTimeID = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[11]";
 	public static final String ApplyBtnID = "applyButton";
