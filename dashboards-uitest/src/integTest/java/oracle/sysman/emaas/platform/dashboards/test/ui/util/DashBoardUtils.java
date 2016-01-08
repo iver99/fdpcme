@@ -301,20 +301,20 @@ public class DashBoardUtils {
 		
 		TileManager tg = new TileManager(driver);
 		
-	    tg.tileOpen();
-		tg.tileDelete();
+	    //tg.tileOpen();
+		//tg.tileDelete();
 		//save dashboard
-		clickSaveButton();
-		tg.tileOpen();
-		tg.tileMaximize();
-		tg.tileOpen();
-		tg.tileRestore();
-		tg.tileOpen();
-		tg.tileWider();
-		tg.tileOpen();
-		tg.tileNarrower();
-		tg.tileOpen();
-		tg.tileRefresh();
+		//clickSaveButton();
+		//tg.tileOpen();
+		//tg.tileMaximize();
+		//tg.tileOpen();
+//		tg.tileRestore();
+//		tg.tileOpen();
+//		tg.tileWider();
+//		tg.tileOpen();
+//		tg.tileNarrower();
+//		tg.tileOpen();
+//		tg.tileRefresh();
 		
 	}
 	
