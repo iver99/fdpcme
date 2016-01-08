@@ -350,6 +350,7 @@ define(['knockout',
 //                    {
 //                        $( "#cfmleaveDialog" ).ojDialog( "close" );
 //                    }
+                    self.isUpdated(false);
                     dfu.showMessage({
                             type: 'confirm',
                             summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
