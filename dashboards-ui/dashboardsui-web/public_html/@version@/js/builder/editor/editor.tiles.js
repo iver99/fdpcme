@@ -41,7 +41,7 @@ define(['knockout',
             
             if (Array.isArray(data.tileParameters)) {
                 $.each(data.tileParameters, function (i, parameter) {
-                    if (parameter.name === "hideTitle") {
+                    if (parameter.name === "DF_HIDE_TITLE") {
                         self.hideTitle(parameter.value);
                     }
                 });
