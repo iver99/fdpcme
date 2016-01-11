@@ -267,8 +267,9 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 
                 function checkDashboardAsHomeSettings() {
                     function succCallback(data) {
-                        if (data && data.value) {
-                            dfHomeUrl = "/emsaasui/emcpdfui/builder.html?dashboardId="+data.value;
+                        var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
+                        if (homeDashboardId) {
+                            dfHomeUrl = "/emsaasui/emcpdfui/builder.html?dashboardId=" + homeDashboardId;
                         }
                         else {
                             dfHomeUrl = null;
@@ -281,7 +282,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                         success: succCallback,
                         error: errorCallback
                     };
-                    prefUtil.getPreference(prefKeyHomeDashboardId, options);
+                    prefUtil.getAllPreferences(options);
                 };
                 
                 function refreshLinks() {
