@@ -1,13 +1,10 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 define(['knockout', 
         'jquery',
-        'ojs/ojcore'
+        'ojs/ojcore',
+        'dfutil'
     ], 
-    function(ko, $, oj) {
+    function(ko, $, oj, dfu) {
         function EditDashboardDialogModel(dsb, tbModel) {
             var self = this;
             self.dashboard = dsb;
@@ -51,18 +48,35 @@ define(['knockout',
             self.save = function() {
                 if (self.nameValidated() === false) 
                     return;
-                self.dashboard.name(self.name());
-                self.tbModel.dashboardName(self.name());
-                if (self.dashboard.description)
-                {
-                    self.dashboard.description(self.description());
+                
+                var url = "/sso.static/dashboards.service/";
+                if (dfu.isDevMode()) {
+                        url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
                 }
-                else
-                {
-                    self.dashboard.description = ko.observable(self.description()); 
-                }
-                self.tbModel.dashboardDescription(self.description());
-                $( "#cDsbDialog" ).ojDialog( "close" ); 
+                dfu.ajaxWithRetry(url + self.dashboard.id() + "/quickUpdate", {
+                        type: 'PUT',
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify({name: self.name(), description: self.description()}),
+                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        success: function (result) {
+                            self.dashboard.name(self.name());
+                            self.tbModel.dashboardName(self.name());
+                            if (self.dashboard.description)
+                            {
+                                self.dashboard.description(self.description());
+                            }
+                            else
+                            {
+                                self.dashboard.description = ko.observable(self.description());
+                            }
+                            self.tbModel.dashboardDescription(self.description());
+                            $("#cDsbDialog").ojDialog("close"); 
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                        }
+                    });
             };
 
             self.clear = function() {
@@ -78,12 +92,6 @@ define(['knockout',
                 }
                 return false;
             };
-        
-//        self.keydown = function (d, e) {
-//           if (e.keyCode === 13) {
-//              $( "#cDsbDialog" ).ojDialog( "close" );
-//           }
-//        };
         }
         
         return {"EditDashboardDialogModel": EditDashboardDialogModel};

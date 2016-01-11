@@ -1,13 +1,3 @@
-/**
- * @preserve Copyright (c) 2014, Oracle and/or its affiliates.
- * All rights reserved.
- */
-
-/**
- * @preserve Copyright 2013 jQuery Foundation and other contributors
- * Released under the MIT license.
- * http://jquery.org/license
- */
 requirejs.config({
 //    urlArgs: "v=1.0",
 //    //Set up module mapping
@@ -33,7 +23,6 @@ requirejs.config({
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
-        'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -82,7 +71,7 @@ require(['knockout',
     'uifwk/js/util/usertenant-util',
     'uifwk/js/util/message-util',
     'uifwk/js/util/df-util',
-    'prefutil',
+    'uifwk/js/util/preference-util',
     'ojs/ojknockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',

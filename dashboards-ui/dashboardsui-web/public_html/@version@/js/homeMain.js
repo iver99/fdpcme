@@ -10,10 +10,11 @@
  */
 requirejs.config({
     //Set up module mapping
-//    map: {
-//        '*': 
+    map: {
+        '*': 
 //            {'df-util': '/emsaasui/uifwk/libs/@version@/js/uifwk/js/util/df-util'}
-//    },
+              {'prefutil':'uifwk/js/util/preference-util'}
+    },
     // Path mappings for the logical module names
     paths: {
         'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',

@@ -34,7 +34,7 @@ and open the template in the editor.
 } 
 
 .fa-icon-font-16 {
-    font-size: 16px;
+    font-size: 16px !important;
 } 
 
 body, html {
@@ -207,8 +207,8 @@ body, html {
   margin-right: -40px;
 }*/
 
-.dbd-toolbar-icon-add-widget:before {
-  content: url(../images/func_plus_16_ena.png);
+.dbd-toolbar-icon-add-widget:before,.fa-plus:before {
+  content: "\f067";
 }
 
 .dbd-toolbar-icon-save:before {
@@ -219,8 +219,8 @@ body, html {
   content: url(../images/func_gear_16_ena.png);
 }
 
-.dbd-toolbar-icon-edit:before {
-  content: url(../images/func_edit_16_ena.png);
+.dbd-toolbar-icon-edit:before,.fa-pencil:before {
+  content: "\f040";
 }
 
 .dbd-toolbar-icon-duplicate:before {
@@ -241,6 +241,58 @@ body, html {
 
 .dbd-toolbar-icon-delete-disabled:before {
   content: url(../images/func_trashcan_16_dis.png);
+}
+.dbd-toolbar-icon-home:before {
+   content: url(../images/func_home_16_ena.png);
+}
+ 
+ .dbd-toolbar-icon-home-outline:before {
+   content: url(../images/remove_home_16.png);
+}
+ 
+ .dbd-toolbar-icon-favorites:before {
+   content: url(../images/func_star_16_ena.png);
+ }
+
+.dbd-toolbar-icon-share:before, .fa-users:before {
+  content: "\f0c0";
+  padding-bottom: 3px;
+} 
+
+.dbd-toolbar-icon-unshare:before, .fa-user:before {
+  content: "\f007";
+  padding-bottom: 3px;
+}
+
+.dbd-toolbar-icon-print:before, .fa-print:before {
+  content: "\f02f";
+}
+
+.fa-star:before {
+  content: "\f005"; }
+
+.fa-star-o:before {
+  content: "\f006"; }
+
+.dbd-toolbar-fa-icon {
+    width: 16px;
+    font-family: FaFont;
+    font-size: 1.24rem;
+    display: inline-block;
+    font-weight: normal;
+    speak: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-align: center;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.dbd-toolbar-fa-icon-16 {
+    font-size: 1.06rem;
 }
 
 .builder-toolbar-button-text {
@@ -316,14 +368,15 @@ body, html {
   padding: 1px 8px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  /*border-left: 1px solid;*/
-  /*border-right: 1px solid;*/
+  border-left: 1px solid;
+  border-right: 1px solid;
   border-bottom: 0px;
   border-color: #ddd;
   font-size: 14px;
-  /*border-top: 1px solid #D8D6D6 !important;*/
+  border-top: 1px solid #D8D6D6 !important;
   height: 32px;
   border-radius: 0;
+  margin-right: -2px;
 }
 
 #widget-area.dbd-support-transition .dbd-widget:not(.dbd-tile-in-dragging), 
@@ -475,11 +528,11 @@ body, html {
 }
 
 .dbd-tile-element {
-  /* border: 1px solid #d6dfe6; */
+  border: 1px solid #d6dfe6; 
   overflow: auto;
   /*height: 220px;*/
   clear: right;
-  /*border-top:0px;*/
+  border-top:0px;
   background-color: white;
   border-radius: 0;
 }
@@ -872,3 +925,21 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-icon-eye-slash:before{
     content:"\f070";
 }
+
+@media print {
+    .no-print {
+        display:none !important;
+    }
+    
+    #tiles-col-container{
+        /*width: auto !important;*/
+        height: auto !important;
+        overflow-y: visible !important;
+    }
+    
+    @page {
+        /*size:landscape;*/
+        /*margin: 23cm;*/
+    }
+}
+

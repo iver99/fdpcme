@@ -63,7 +63,6 @@ define(['knockout',
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);
-            self.showWidgetTitle = ko.observable(true);
 
             self.isEmpty = function() {
                 return !self.editor.tiles() || self.editor.tiles().length === 0;
@@ -156,8 +155,10 @@ define(['knockout',
                 }
                 switch (ui.item.attr("id")) {
                     case "showhide-title":
-                        self.showWidgetTitle(!self.showWidgetTitle());
-                        break;   
+                        self.editor.showHideTitle(tile);
+                        self.show();
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
+                        break;                      
                     case "remove":
                         self.editor.deleteTile(tile);
                         self.show();

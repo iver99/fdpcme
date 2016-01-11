@@ -66,6 +66,15 @@ define(['knockout',
                 self.tiles.push(tile);
             };
             
+            self.showHideTitle =function(tile){
+                if(tile.hideTitle() === "false") {
+                    tile.hideTitle("true");
+                }else{
+                    tile.hideTitle("false");
+                }
+                tile.setParameter("DF_HIDE_TITLE",tile.hideTitle());
+            };
+            
             self.getMaximizedTile = function() {
                 if(!(self.tiles && self.tiles())) {
                     return null;

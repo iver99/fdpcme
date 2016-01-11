@@ -29,6 +29,7 @@ public class CommonSecurityException extends DashboardException
 	public static final String NOT_SUPPORT_CREATE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_CREATE_SYSTEM_DASHBOARD_ERROR";
 	public static final String NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_UPDATE_SYSTEM_DASHBOARD_ERROR";
 	public static final String NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR = "NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR";
+	public static final String DASHBOARD_ACTION_REQUIRE_OWNER = "DASHBOARD_ACTION_REQUIRE_OWNER";
 
 	/**
 	 * Constructs a new <code>CommonSecurityException</code> with the specified detail message.
