@@ -509,14 +509,14 @@ define(['knockout',
                     self.favoriteLabel(removeFavoriteLabel);
                     self.favoritesIcon(cssRemoveFavorite);
                     self.isFavoriteDashboard = true;
-                };
+                }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     dfu.showMessage({
                             type: 'error',
                             summary: getNlsString('DBS_BUILDER_MSG_ADD_FAVORITE_FAIL'),
                             detail: ''
                     });
-                };
+                }
                 Builder.addDashboardToFavorites(self.dashboard.id(), succCallback, errorCallback);
             };
             self.removeDashboardFromFavorites = function() {
@@ -530,14 +530,14 @@ define(['knockout',
                     self.favoriteLabel(addFavoriteLabel);
                     self.favoritesIcon(cssAddFavorite);
                     self.isFavoriteDashboard = false;
-                };
+                }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     dfu.showMessage({
                             type: 'error',
                             summary: getNlsString('DBS_BUILDER_MSG_REMOVE_FAVORITE_FAIL'),
                             detail: ''
                     });
-                };
+                }
                 Builder.removeDashboardFromFavorites(self.dashboard.id(), succCallback, errorCallback);
             };
             self.handleDashboardFavorites = function() {
@@ -567,14 +567,14 @@ define(['knockout',
                     self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                     self.isHomeDashboard = true;
                     self.hasAnotherDashboardSetAsHome = false;
-                };
+                }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     dfu.showMessage({
                             type: 'error',
                             summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_FAIL'),
                             detail: ''
                     });
-                };
+                }
                 var options = {
                     success: succCallback,
                     error: errorCallback
@@ -593,14 +593,14 @@ define(['knockout',
                     self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
-                };
+                }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     dfu.showMessage({
                             type: 'error',
                             summary: getNlsString('DBS_BUILDER_MSG_REMOVE_AS_HOME_FAIL'),
                             detail: ''
                     });
-                };
+                }
                 var options = {
                     success: succCallback,
                     error: errorCallback
@@ -634,14 +634,14 @@ define(['knockout',
                         self.favoritesIcon(cssAddFavorite);
                         self.isFavoriteDashboard = false;
                     }
-                };
+                }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.favoriteLabel(addFavoriteLabel);
                     self.favoritesIcon(cssAddFavorite);
                     self.isFavoriteDashboard = false;
-                };
+                }
                 Builder.checkDashboardFavorites(self.dashboard.id(), succCallback, errorCallback);
-            };
+            }
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {
                     var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
@@ -662,19 +662,19 @@ define(['knockout',
                         self.isHomeDashboard = false;
                         self.hasAnotherDashboardSetAsHome = false;
                     }
-                };
+                }
                 function errorCallback(jqXHR, textStatus, errorThrown) {
                     self.dashboardAsHomeLabel(setAsHomeLabel);
                     self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                     self.isHomeDashboard = false;
                     self.hasAnotherDashboardSetAsHome = false;
-                };
+                }
                 var options = {
                     success: succCallback,
                     error: errorCallback
                 };
                 prefUtil.getAllPreferences(options);
-            };
+            }
             self.openShareConfirmDialog = function() {
                 self.handleShareUnshare();
                 //$("#share_cfmDialog").ojDialog("open"); 

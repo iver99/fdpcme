@@ -300,7 +300,7 @@ define(['knockout',
              * Display message
              */
             self.showMessage = function(messageObj) {
-            	return msgUtil.showMessage(messageObj);
+                return msgUtil.showMessage(messageObj);
             };
             
             /**
