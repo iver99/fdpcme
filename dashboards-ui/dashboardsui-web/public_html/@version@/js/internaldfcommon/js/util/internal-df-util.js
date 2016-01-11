@@ -132,7 +132,7 @@ define(['knockout',
              * @returns {Array} quickLinks
              */
             self.discoverQuickLinks = function() {
-            	var regInfo = self.getRegistrationInfo();
+                var regInfo = self.getRegistrationInfo();
                 if (regInfo && regInfo.quickLinks){
                     return regInfo.quickLinks;
                 }

@@ -173,10 +173,11 @@ require(['ojs/ojcore',
                 
                 function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
+                    var i;
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
-                        for(var i=0; i<cloudServicesNum; i++) {
+                        for(i=0; i<cloudServicesNum; i++) {
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
                     }
