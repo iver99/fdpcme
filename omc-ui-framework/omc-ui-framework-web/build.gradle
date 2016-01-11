@@ -43,7 +43,10 @@ dependencies {
 
 task cleanJs(type:Delete) {
 	delete fileTree(dir: stagingDir)
-        delete fileTree(dir: compiledDir)
+        delete fileTree(dir: compiledDir)	
+}
+
+project.task("cleanCompassCss")<<{
 }
 
 task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
@@ -71,6 +74,7 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
        //this is here because of gradle bug, the old @version@ directory remains
        delete stagingDir+'/@version@'
        delete stagingDir+'/libs/@version@'
+       delete webRootSourceDir+'/@version@/css'
     }
 }
 
@@ -250,12 +254,12 @@ compass {
     gemPath = file('build/.jruby/gems')
     gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
     gems = []
-    if(project.hasProperty("devMode")){
-	cssDir file('build/staging/public_html/@version@/css')
-    }
-    else{
-	cssDir file('build/staging/public_html/'+versionPathElement+'/css')
-    }
+    //if(project.hasProperty("devMode")){
+	cssDir file('public_html/@version@/css')
+    //}
+    //else{
+//	cssDir file('public_html/'+versionPathElement+'/css')
+  //  }
     sassDir file ('public_html/scss')
     debugInfo false // Defaults to true,
                     // set to false to remove debug info from generated css file
@@ -410,6 +414,10 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
 	include "**/*"
     }
     into stagingDir
+    
+    doLast {
+        delete 'public_html/@version@/css'
+    }  
 }
 
 if(project.hasProperty("devMode")){
