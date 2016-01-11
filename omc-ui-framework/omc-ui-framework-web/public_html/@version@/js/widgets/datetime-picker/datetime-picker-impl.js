@@ -1244,8 +1244,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 self.renderDateRange = function (startRange, endRange) {
+                    var calendarId;
                     if ($(self.panelId + " #datePicker_" + self.randomId).children()[0]) {
-                        var calendarId = $(self.panelId + " #datePicker_" + self.randomId).children()[0].id;
+                        calendarId = $(self.panelId + " #datePicker_" + self.randomId).children()[0].id;
                     } else {
                         return;
                     }
@@ -1293,10 +1294,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.lastFocus(1);
 
                 self.calendarClicked = function (data, event) {
-                    if ($(event.target).hasClass("oj-datepicker-prev-icon") || $(event.target).hasClass("oj-datepicker-next-icon")
-                            || $(event.target).hasClass("oj-datepicker-title") || $(event.target).hasClass("oj-datepicker-header") ||
-                            $(event.target).hasClass("oj-datepicker-group") || $(event.target).hasClass("oj-datepicker-other-month") || 
-                            $(event.target).hasClass("oj-disabled")) {
+                    if ($(event.target).hasClass("oj-datepicker-prev-icon") || $(event.target).hasClass("oj-datepicker-next-icon")|| $(event.target).hasClass("oj-datepicker-title") || $(event.target).hasClass("oj-datepicker-header") ||$(event.target).hasClass("oj-datepicker-group") || $(event.target).hasClass("oj-datepicker-other-month") || $(event.target).hasClass("oj-disabled")) {
                         self.random1(new Date().getTime());
                     } else {
                         self.random(new Date().getTime());

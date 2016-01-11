@@ -38,9 +38,7 @@ requirejs.config({
             merge: {
                // 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
-        }
-	,
-        text: {
+        },text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
               // remote server allows CORS

@@ -519,7 +519,7 @@ define([
                     return obj.filter(function (val) {
                         return val !== value;
                     });
-                };
+                }
                 
                 function removeItemByPropertyValue(obj, prop, value)
                 {
