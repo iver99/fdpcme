@@ -709,27 +709,27 @@ define(['knockout',
                     "endOfGroup": false
                 },
                 {
-                    "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_duplicate",
-                    "onclick": self.openDashboardDuplicateDialog,
-                    "icon": "dbd-toolbar-icon-duplicate",
-                    "title": "",//getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
-                    "disabled": false,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-                    "endOfGroup": false
-                },
-                {
                     "label": getNlsString('COMMON_BTN_PRINT'),
                     "url": "#",
-                    "id":"emcpdf_dsbopts_print",
-                    "onclick": self.editDisabled() === true ? "" : function(data,event){
-                            window.print();
-                        },
+                    "id": "emcpdf_dsbopts_print",
+                    "onclick": self.editDisabled() === true ? "" : function (data, event) {
+                        window.print();
+                    },
                     "icon": "dbd-toolbar-icon-print",
                     "title": getNlsString('COMMON_BTN_PRINT'),
                     "disabled": false,
                     "showOnMobile": true,
+                    "endOfGroup": false
+                },
+                {
+                    "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
+                    "url": "#",
+                    "id": "emcpdf_dsbopts_duplicate",
+                    "onclick": self.openDashboardDuplicateDialog,
+                    "icon": "dbd-toolbar-icon-duplicate",
+                    "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
+                    "disabled": false,
+                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
                     "endOfGroup": false
                 },
                 {
