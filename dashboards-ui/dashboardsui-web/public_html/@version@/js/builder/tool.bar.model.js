@@ -673,16 +673,23 @@ define(['knockout',
             };
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {
-                    if (data && data.value === (self.dashboard.id()+"")) {
+                    var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
+                    if (homeDashboardId && homeDashboardId === (self.dashboard.id()+"")) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
                         self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                         self.isHomeDashboard = true;
+                    }
+                    else if (homeDashboardId){
+                        self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardsAsHomeIcon(cssSetDsbAsHome);
+                        self.isHomeDashboard = false;
+                        self.hasAnotherDashboardSetAsHome = true;
                     }
                     else {
                         self.dashboardAsHomeLabel(setAsHomeLabel);
                         self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                         self.isHomeDashboard = false;
-                        self.hasAnotherDashboardSetAsHome = true;
+                        self.hasAnotherDashboardSetAsHome = false;
                     }
                 };
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -695,7 +702,7 @@ define(['knockout',
                     success: succCallback,
                     error: errorCallback
                 };
-                prefUtil.getPreference(prefKeyHomeDashboardId, options);
+                prefUtil.getAllPreferences(options);
             };
             self.openShareConfirmDialog = function() {
                 self.handleShareUnshare();
