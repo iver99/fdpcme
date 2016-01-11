@@ -6,6 +6,7 @@
 define(['knockout', 
         'jquery',
         'dfutil',
+        'idfbcutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
         'builder/tool-bar/edit.dialog',
@@ -13,13 +14,14 @@ define(['knockout',
         'uifwk/js/util/preference-util',
         'builder/builder.core'
     ], 
-    function(ko, $, dfu, ssu, oj, ed, dd, pfu) {
+    function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         
         function ToolBarModel($b) {
             var self = this;
             self.dashboard = $b.dashboard;
+            self.isUpdated = $b.isDashboardUpdated;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.currentUser = dfu.getUserName();
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b.dashboard, self);
@@ -52,7 +54,24 @@ define(['knockout',
                     self.tilesViewModel.show();
                 };
             }
-
+            
+            function showConfirmLeaveDialog(event) {
+                var _msg = getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT');
+                
+                if (event && $b.isDashboardUpdated() === true)
+                {
+                    event.returnValue = _msg;
+                }
+                if ($b.isDashboardUpdated() === true)
+                {
+                    //$( "#cfmleaveDialog" ).ojDialog( "open" );
+                    //$( '#cfmleavecbtn' ).focus();
+                    $( '#dashboard-screenshot' ).focus();
+                    return _msg;
+                }
+            };
+            $(window).bind("beforeunload", showConfirmLeaveDialog);
+            
             self.includeTimeRangeFilter = ko.pureComputed({
                 read: function() {
                     if (self.dashboard.enableTimeRange()) {
@@ -285,6 +304,11 @@ define(['knockout',
                 $("body").css("overflow", "hidden");
                 $("html").css("overflow", "hidden");
             };
+            
+//            self.handleDashboardNotSave = function() {
+//                self.isUpdated(false);
+//                $( "#cfmleaveDialog" ).ojDialog( "close" );    
+//            };
 
             self.handleDashboardSave = function() {
                 if (self.isNameUnderEdit()) {
@@ -318,6 +342,11 @@ define(['knockout',
 
             self.handleSaveUpdateDashboard = function(outputData) {
                 self.handleSaveUpdateToServer(function() {
+//                    if ($( "#cfmleaveDialog" ).ojDialog( "isOpen" ) === true )
+//                    {
+//                        $( "#cfmleaveDialog" ).ojDialog( "close" );
+//                    }
+                    self.isUpdated(false);
                     dfu.showMessage({
                             type: 'confirm',
                             summary: getNlsString('DBS_BUILDER_MSG_CHANGES_SAVED'),
@@ -458,7 +487,7 @@ define(['knockout',
             var removeAsHomeLabel = getNlsString('DBS_BUILDER_BTN_HOME_REMOVE');
             var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
             var cssSetDsbAsHome = "dbd-toolbar-icon-home";
-            var cssRemoveDsbAsHome = "dbd-toolbar-icon-home-outline";
+            var cssRemoveDsbAsHome = "dbd-toolbar-icon-home";
             var cssAddFavorite = "fa-star dbd-toolbar-fa-icon";
             var cssRemoveFavorite = "fa-star-o dbd-toolbar-fa-icon";
             var shareDashboardLabel = getNlsString('COMMON_TEXT_SHARE');
@@ -641,16 +670,23 @@ define(['knockout',
             };
             function checkDashboardAsHomeSettings() {
                 function succCallback(data) {
-                    if (data && data.value === (self.dashboard.id()+"")) {
+                    var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
+                    if (homeDashboardId && homeDashboardId === (self.dashboard.id()+"")) {
                         self.dashboardAsHomeLabel(removeAsHomeLabel);
                         self.dashboardsAsHomeIcon(cssRemoveDsbAsHome);
                         self.isHomeDashboard = true;
+                    }
+                    else if (homeDashboardId){
+                        self.dashboardAsHomeLabel(setAsHomeLabel);
+                        self.dashboardsAsHomeIcon(cssSetDsbAsHome);
+                        self.isHomeDashboard = false;
+                        self.hasAnotherDashboardSetAsHome = true;
                     }
                     else {
                         self.dashboardAsHomeLabel(setAsHomeLabel);
                         self.dashboardsAsHomeIcon(cssSetDsbAsHome);
                         self.isHomeDashboard = false;
-                        self.hasAnotherDashboardSetAsHome = true;
+                        self.hasAnotherDashboardSetAsHome = false;
                     }
                 };
                 function errorCallback(jqXHR, textStatus, errorThrown) {
@@ -663,7 +699,7 @@ define(['knockout',
                     success: succCallback,
                     error: errorCallback
                 };
-                prefUtil.getPreference(prefKeyHomeDashboardId, options);
+                prefUtil.getAllPreferences(options);
             };
             self.openShareConfirmDialog = function() {
                 self.handleShareUnshare();
@@ -706,12 +742,25 @@ define(['knockout',
                     "endOfGroup": false
                 },
                 {
+                    "label": getNlsString('COMMON_BTN_PRINT'),
+                    "url": "#",
+                    "id": "emcpdf_dsbopts_print",
+                    "onclick": self.editDisabled() === true ? "" : function (data, event) {
+                        window.print();
+                    },
+                    "icon": "dbd-toolbar-icon-print",
+                    "title": getNlsString('COMMON_BTN_PRINT'),
+                    "disabled": false,
+                    "showOnMobile": true,
+                    "endOfGroup": false
+                },
+                {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
-                    "id":"emcpdf_dsbopts_duplicate",
+                    "id": "emcpdf_dsbopts_duplicate",
                     "onclick": self.openDashboardDuplicateDialog,
                     "icon": "dbd-toolbar-icon-duplicate",
-                    "title": "",//getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
+                    "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
                     "disabled": false,
                     "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
                     "endOfGroup": false
@@ -748,18 +797,6 @@ define(['knockout',
                     "disabled": self.editDisabled() === true,
                     "showOnMobile": true,
                     "endOfGroup": false
-                },
-                {
-                    "label": getNlsString('COMMON_BTN_PRINT'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_print",
-                    "onclick": self.editDisabled() === true ? "" : function(data,event){
-                            window.print();
-                        },
-                    "icon": "fa-icon-font dbd-toolbar-icon-print",
-                    "title": getNlsString('COMMON_BTN_PRINT'),
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": true
                 }
             ];
             //Dashboard Options ======end=======

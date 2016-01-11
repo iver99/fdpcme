@@ -65,6 +65,7 @@ define(['knockout',
          * @param {String} status: name of status
          * Event NAME:
          * PRE_REFRESH: Before refresh starts
+         * POST_HIDE_TITLE: After title of tile is Hidden
          * POST_DELETE: After tile is deleted
          * POST_WIDER: After tile is wider
          * POST_NARROWER: After tile is narrower

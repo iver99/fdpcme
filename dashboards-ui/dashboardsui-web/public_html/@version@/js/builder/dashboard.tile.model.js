@@ -161,17 +161,16 @@ define(['knockout',
             };
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
-                var item= ui.item;
                 if (!tile) {
                     oj.Logger.error("Error: could not find tile from the ui data");
                     return;
                 }
                 switch (ui.item.attr("id")) {
                     case "showhide-title":
-                        self.editor.showHideTitle(item);
+                        self.editor.showHideTitle(tile);
                         self.show();
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_TITLESTATUS"));
-                        break;                          
+                        self.notifyTileChange(tile, new Builder.TileChange("POST_HIDE_TITLE"));
+                        break;                      
                     case "remove":
                         self.editor.deleteTile(tile);
                         self.show();
@@ -211,6 +210,8 @@ define(['knockout',
                         $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
                         break;
                 }
+                
+                $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
             };
 
 //           self.openEditTileLinkDialog = function(tile) { 
@@ -582,6 +583,7 @@ define(['knockout',
                 dragStartRow = null;
                 self.previousDragCell = null;
                 tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
+                $b.triggerEvent($b.EVENT_TILE_MOVE_STOPED, null);
             };
             
             self.onNewWidgetDragging = function(e, u) {

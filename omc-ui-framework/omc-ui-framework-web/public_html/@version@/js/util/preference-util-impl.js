@@ -13,6 +13,18 @@ function($, ajaxUtilModel)
         this.requestHeader = requestHeader;
     };
     
+    PreferenceUtility.prototype.getPreferenceValue = function(prefArray, key) {
+        if (prefArray && key) {
+            var arr = undefined;
+            arr = $.grep(prefArray, function(pref) {
+                if (pref !== undefined && pref['key'] === key) return true;
+                return false;
+            });
+            if (arr !== undefined && arr.length > 0) return arr[0]['value'];
+        }
+        return undefined;
+    };
+    
     PreferenceUtility.prototype.getPreference = function(key, options) {
         var self = this, _options = options || {}, _async = (_options['async'] === false) ? false : true;
         var _ajax = ajaxUtil.ajaxWithRetry({
