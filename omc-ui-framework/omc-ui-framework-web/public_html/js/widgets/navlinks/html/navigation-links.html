@@ -6,15 +6,21 @@
             </div>
         </div>
         <div class="headerMenuText">
-            <div class="oj-row" style="font-weight: bolder; font-size: medium;"></div>
-            <div class="oj-row" style="font-weight: bold">
+            <!--<div class="oj-row" style="font-weight: bolder; font-size: medium;"></div>-->
+            <div class="oj-row">
                 <a data-bind="attr: {href: 'javascript: this.click()'}, click: openHome, text: homeLinkLabel"></a>
             </div>
-            <div class="oj-row" style="font-weight: bold">
+            <div class="oj-row">
                 <a data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboardHome, text: dashboardLinkLabel"></a>
             </div>
+            <div class="oj-row">
+                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openMyFavorites, text: favoritesLabel"></a>
+            </div>
+            <div class="oj-row">
+                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openWelcomePage, text: welcomeLabel"></a>
+            </div>
             <!-- ko foreach: homeLinks -->
-            <div class="oj-row" style="font-weight: bold">
+            <div class="oj-row">
             	<a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a>
            	</div>
             <!-- /ko -->
@@ -29,7 +35,7 @@
         <div class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: cloudServicesLabel"></div>
             <!-- ko foreach: cloudServices -->
-            <div class="oj-row" style="font-weight: bold"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
+            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>
@@ -42,7 +48,7 @@
         <div class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: visualAnalyzersLabel"></div>
             <!-- ko foreach: visualAnalyzers -->
-            <div class="oj-row" style="font-weight: bold"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
+            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>
@@ -56,7 +62,7 @@
         <div class="headerMenuText">
             <div class="oj-row" style="font-weight: bolder; font-size: medium;" data-bind="text: administrationLabel"></div>
             <!-- ko foreach: adminLinks -->
-            <div class="oj-row" style="font-weight: bold"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
+            <div class="oj-row"><a data-bind="attr: {href: 'javascript: this.click()'}, click: $parent.openLink, text: $parent.truncateString($data.name, 35)"></a></div>
             <!-- /ko -->
         </div>
     </div>

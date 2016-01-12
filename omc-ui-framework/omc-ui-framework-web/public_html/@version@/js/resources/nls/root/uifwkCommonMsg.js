@@ -23,6 +23,8 @@ define({
       "BRANDING_BAR_NAV_DASHBOARDS_LABEL": "Dashboards",
       "BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL": "Cloud Services",
       "BRANDING_BAR_NAV_HOME_LABEL": "Home",
+      "BRANDING_BAR_NAV_FAVORITES_LABEL": "My Favorites",
+      "BRANDING_BAR_NAV_WELCOME_LABEL": "Welcome",
       "BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL": "Visual Analyzers",
       "BRANDING_BAR_NAV_EXPLORE_DATA_LABEL": "Explore Data",
       "BRANDING_BAR_NAV_ADMIN_LABEL": "Administration",
@@ -80,6 +82,7 @@ define({
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later or contact Oracle Support Services if it persists.",
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
+       "DATETIME_PICKER_DROP_DOWN": "Drop Down",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 minutes",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 minutes",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 minutes",

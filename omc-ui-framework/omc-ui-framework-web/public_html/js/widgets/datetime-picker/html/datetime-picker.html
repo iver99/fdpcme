@@ -8,27 +8,29 @@
             <label for="dropdown" id="dropdownLabel" style="font-weight: bold; font-size: 14px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <button class="dropdown" style="margin-left: 7px;" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl" aria-label="Pick datetime">
                 <div data-bind="html: dateTimeInfo" style="width: auto; display: inline-block"></div>
-                <img data-bind="attr: {id: 'panelArrow_'+randomId}" alt="dropdown" src="/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg"/>
+                <img data-bind="attr: {id: 'panelArrow_'+randomId, alt: dropDownAlt}" src="/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg"/>
             </button>            
 
-            <div class="panel" style="display:none" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas, rootAttributes: {style: 'height:387px; width: 630px;'}}, attr: {id: 'panel_'+randomId}"> 
+            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas, /*rootAttributes: {style: 'height:387px; width: 630px;'}*/}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
-                <div class="drawers" data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins, css: last15minsCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins, css: last30minsCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins, css: last60minsCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours, css: last4hoursCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours, css: last6hoursCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day, css: last1dayCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days, css: last7daysCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days, css: last30daysCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days, css: last90daysCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss"></a>
-                    <a href="#" class="drawer"  data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom"></a>
+                <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
+                <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
+                    <a href="#" data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins, css: last15minsCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins, css: last30minsCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins, css: last60minsCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours, css: last4hoursCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours, css: last6hoursCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day, css: last1dayCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days, css: last7daysCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days, css: last30daysCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days, css: last90daysCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss"></a>
+                </div>
                 </div>
 
                 <!-- right of panel-->
-                <div class="pickerPanel">
+                <div class="pickerPanel" data-bind="visible: showCalendar">
 
                     <!--date and time info above picker -->
                     <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">

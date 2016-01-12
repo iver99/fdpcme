@@ -93,11 +93,11 @@ require(['knockout',
     'dfutil',
     'loggingutil',
     'idfbcutil',
+    'ojs/ojcore',
     'ojs/ojchart',
     'ojs/ojcomponents',
     'ojs/ojvalidation',    
     'ojs/ojdatetimepicker',
-    'ojs/ojcore',
     'jqueryui',
     'ojs/ojmodel',
     'ojs/ojknockout',
@@ -121,7 +121,7 @@ require(['knockout',
     'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead'
 ],
-    function(ko, $, dfu, _emJETCustomLogger,idfbcutil) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, _emJETCustomLogger,idfbcutil, oj) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger()
         var logReceiver = dfu.getLogUrl();

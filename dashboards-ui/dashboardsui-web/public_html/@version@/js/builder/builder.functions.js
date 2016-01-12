@@ -112,6 +112,23 @@ define(['knockout',
                 dataType: "json",
                 headers: getDefaultHeaders(),
                 success: function(data) {
+                    // If dashboad is single page app, success callback will be ignored
+                    if (data.type === "SINGLEPAGE") {
+                        try {
+                            var tile = data.tiles[0];
+                            var url = dfu.df_util_widget_lookup_assetRootUrl(tile["PROVIDER_NAME"], tile["PROVIDER_VERSION"], tile["PROVIDER_ASSET_ROOT"], false);
+                            
+                            if (dfu.isDevMode()) {
+                                url = dfu.getRelUrlFromFullUrl(url);
+                            }
+                            window.location = url;
+                            return ;
+                        }catch(e){
+                            oj.Logger.error(e);
+                        }
+                    }
+                    
+
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
@@ -157,7 +174,7 @@ define(['knockout',
             if (!name)
                 return false;
             var exists = false;
-            var url = getBaseUrl() + "?queryString=" + name + "&limit=50&offset=0";
+            var url = getBaseUrl() + "?queryString=" + name + "&limit=50&offset=0&owners=Me";
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -248,59 +265,60 @@ define(['knockout',
             });
         }
         Builder.registerFunction(fetchDashboardScreenshot, 'fetchDashboardScreenshot');
+        
+        function checkDashboardFavorites(dashboardId, succCallBack, errorCallBack) {
+            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+            dfu.ajaxWithRetry(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        Builder.registerFunction(checkDashboardFavorites, 'checkDashboardFavorites');
 
-    //        function loadIsFavorite(dashboardId, succCallBack, errorCallBack) {
-    //            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-    //            dfu.ajaxWithRetry(url, {
-    //                type: 'get',
-    //                dataType: "json",
-    //                headers: getDefaultHeaders(),
-    //                success: function(data) {
-    //                    if (succCallBack)
-    //                        succCallBack(data.isFavorite);
-    //                },
-    //                error: function(e) {
-    //                    if (errorCallBack)
-    //                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-    //                }
-    //            });
-    //        }
+        function addDashboardToFavorites(dashboardId, succCallBack, errorCallBack) {
+            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
+            dfu.ajaxWithRetry(url, {
+                type: 'post',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        Builder.registerFunction(addDashboardToFavorites, 'addDashboardToFavorites');
 
-    //        function setAsFavorite(dashboardId, succCallBack, errorCallBack) {
-    //            var url = dfu.buildFullUrl(getBaseUrl(), "favorites/" + dashboardId);
-    //            dfu.ajaxWithRetry(url, {
-    //                type: 'post',
-    //                dataType: "json",
-    //                headers: getDefaultHeaders(),
-    //                success: function() {
-    //                    if (succCallBack)
-    //                        succCallBack();
-    //                },
-    //                error: function(e) {
-    //                    oj.Logger.error("Error to set dashboard as favorite: "+e.responseText);
-    //                    if (errorCallBack)
-    //                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-    //                }
-    //            });
-    //        }
-
-    //        function removeFromFavorite(dashboardId, succCallBack, errorCallBack) {
-    //            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
-    //            dfu.ajaxWithRetry(url, {
-    //                type: 'delete',
-    //                dataType: "json",
-    //                headers: getDefaultHeaders(),
-    //                success: function() {
-    //                    if (succCallBack)
-    //                        succCallBack();
-    //                },
-    //                error: function(e) {
-    //                    oj.Logger.error("Error to remove the dashboard: "+e.responseText);
-    //                    if (errorCallBack)
-    //                        errorCallBack(ko.mapping.fromJSON(e.responseText));
-    //                }
-    //            });
-    //        }
+        function removeDashboardFromFavorites(dashboardId, succCallBack, errorCallBack) {
+            var url = dfu.buildFullUrl(getBaseUrl() , "favorites/" + dashboardId);
+            dfu.ajaxWithRetry(url, {
+                type: 'delete',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        Builder.registerFunction(removeDashboardFromFavorites, 'removeDashboardFromFavorites');
 
         function registerComponent(kocName, viewModel, template) {
             if (!ko.components.isRegistered(kocName)) {
