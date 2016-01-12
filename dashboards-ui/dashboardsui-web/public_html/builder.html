@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-
+        
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -355,6 +355,24 @@
                         </div>
                     </div>
                     <!-- delete dilog end -->
+                     <!-- confirm leave dilog start ->
+                    <div style="display:none" id="cfmleaveDialog"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_TITLE')"></span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <p data-bind="html: getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT')"></p>
+                        </div>
+                        <div class="oj-dialog-footer">
+                            <button id="cfmleavecbtn" data-bind="click: handleDashboardSave, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                            <button data-bind="click: handleDashboardNotSave, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DISCARD'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                        </div>
+                    </div>
+                    <- confirm leave dilog end -->
                     
 <!--                <div style="display:none;" id="parent-message-dialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
