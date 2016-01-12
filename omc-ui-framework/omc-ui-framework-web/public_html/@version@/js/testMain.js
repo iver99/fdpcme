@@ -119,6 +119,7 @@ require(['knockout',
             * @returns {parameter value}
             */
             function getUrlParam(name){
+                /* globals location */
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
                 return results === null ? "" : results[1];                
             }
@@ -141,6 +142,7 @@ require(['knockout',
                 //Add widget dialog
                 var widgetSelectorDialogId = 'sampleWidgetSelectorDialog';
                 var widgetArray = [];
+                 /* globals screen */
                 var screenWidth = screen.availWidth;
                 var widgetBoxWidth = 362;
                 var widgetsContainerPaddingWidth = (screenWidth - widgetBoxWidth*4)/2;
