@@ -30,6 +30,64 @@ import java.util.Calendar;
 public class TestDateTimePicker extends CommonUIUtils
 {
 	private static String verifyDate(String time) throws ParseException {
+		SimpleDateFormat format = new java.text.SimpleDateFormat("MMM d, yyyy hh:mm a");
+		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat format2 = new SimpleDateFormat("MMM d, yyyy");
+		if(time==null ||"".equals(time)){
+			return "";
+		}
+		Date date = null;
+		try {
+			date = format.parse(time);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		Calendar current = Calendar.getInstance();
+		Calendar today = Calendar.getInstance();    //today
+		today.set(Calendar.YEAR, current.get(Calendar.YEAR));
+		today.set(Calendar.MONTH, current.get(Calendar.MONTH));
+		today.set(Calendar.DAY_OF_MONTH,current.get(Calendar.DAY_OF_MONTH));
+
+		today.set( Calendar.HOUR_OF_DAY, 0);
+		today.set( Calendar.MINUTE, 0);
+		today.set(Calendar.SECOND, 0);
+
+		Calendar yesterday = Calendar.getInstance();    //yesterday
+
+		yesterday.set(Calendar.YEAR, current.get(Calendar.YEAR));
+		yesterday.set(Calendar.MONTH, current.get(Calendar.MONTH));
+		yesterday.set(Calendar.DAY_OF_MONTH,current.get(Calendar.DAY_OF_MONTH)-1);
+		yesterday.set( Calendar.HOUR_OF_DAY, 0);
+		yesterday.set( Calendar.MINUTE, 0);
+		yesterday.set(Calendar.SECOND, 0);
+
+		current.setTime(date);
+
+		if(current.after(today)){
+			return "Today";
+		}
+		else if(current.before(today) && current.after(yesterday)){
+			return "Yesterday";
+		}
+		else{
+			//return format2.format(format1.parse(time.substring(0, 10)));
+			String[] sTmpDay = time.split(",");
+			//String sTemp = sTmpDay[0];
+			if (sTmpDay[0].length() == 5){
+				return time.substring(0,11);
+			}
+			else
+			{
+				return time.substring(0,12);
+			}
+			
+			//int index = time.indexOf("-")+1;
+			//return time.substring(index, time.length());
+		}
+	}
+	
+	private static String verifyDate_custom(String time) throws ParseException {
 		SimpleDateFormat format = new java.text.SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
 		SimpleDateFormat format2 = new SimpleDateFormat("MMM d, yyyy");
@@ -72,6 +130,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		}
 		else{
 			return format2.format(format1.parse(time.substring(0, 10)));
+			//return time.substring(0,11);
 			//int index = time.indexOf("-")+1;
 			//return time.substring(index, time.length());
 		}
@@ -87,6 +146,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		String sEndTime = null;
 		SimpleDateFormat fmt1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 		SimpleDateFormat fmt2 = new SimpleDateFormat("MMM d, yyyy h:mm a");
+		SimpleDateFormat fmt3 = new SimpleDateFormat("h:mm a");
 		Date dTmpStart = new Date();
 		Date dTmpEnd = new Date();
 		//Verify the component displayed
@@ -127,34 +187,98 @@ public class TestDateTimePicker extends CommonUIUtils
 //		dTmpStart = fmt1.parse(sStartDate+" "+sStartTime);
 //		dTmpEnd = fmt1.parse(sEndDate+" "+sEndTime);
 //
-//		//verify if the date is today or yesterday
-//		String sTmpStartDay=TestDateTimePicker.verifyDate(sStartDate+" "+sStartTime);
-//		String sTmpEndDay=TestDateTimePicker.verifyDate(sEndDate+" "+sEndTime);
+
 //		driver.getLogger().info(sTmpStartDay+" " +sTmpEndDay);
 		//click Apply button
 //		Thread.sleep(5000);
 //		driver.getLogger().info("Click Apply button");
 //		driver.click(UIControls.sApplyBtn);
 		//verify the date time is set
-		Thread.sleep(5000);
-		driver.takeScreenShot();
+//		Thread.sleep(5000);
+//		driver.takeScreenShot();
 
 		driver.getLogger().info("Verify the component is existed");
 		Assert.assertTrue(driver.isElementPresent(UIControls.sTimeRangeBtn_1_new));
 
 		driver.getLogger().info("Verify the result");
+		//verify the result in label
+//		Assert.assertEquals(fmt2.format(dTmpStart),driver.getText(UIControls.sStartText));
+//		Assert.assertEquals(fmt2.format(dTmpEnd),driver.getText(UIControls.sEndText));
+		driver.getLogger().info("Verify the result in label");		
+		String sTmpStartDateTime = driver.getText(UIControls.sStartText);
+		String sTmpEndDateTime = driver.getText(UIControls.sEndText);
+		dTmpStart = fmt2.parse(sTmpStartDateTime);
+		dTmpEnd = fmt2.parse(sTmpEndDateTime);
+		
+		driver.getLogger().info("sStartText: "+ sTmpStartDateTime);
+		driver.getLogger().info("sEndText: "+ sTmpEndDateTime);
+		
+		long lTimeRange = dTmpEnd.getTime()-dTmpStart.getTime();
+		
+		//verify the time range is expected
+		switch(period)
+		{
+			case "Last 15 minutes":
+				Assert.assertEquals(lTimeRange/(60*1000),15);
+				break;
+			case "Last 30 minutes":
+				Assert.assertEquals(lTimeRange/(60*1000),30);
+				break;
+			case "Last 60 minutes":
+				Assert.assertEquals(lTimeRange/(60*1000),60);
+				break;
+			case "Last 4 hours":
+				Assert.assertEquals(lTimeRange/(60*60*1000),4);
+				break;
+			case "Last 6 hours":
+				Assert.assertEquals(lTimeRange/(60*60*1000),6);
+				break;
+			case "Last 1 day":
+				Assert.assertEquals(lTimeRange/(24*60*60*1000),1);
+				break;
+			case "Last 7 days":
+				Assert.assertEquals(lTimeRange/(24*60*60*1000),7);
+				break;
+			case "Last 30 days":
+				Assert.assertEquals(lTimeRange/(24*60*60*1000),30);
+				break;
+			case "Last 90 day":
+				Assert.assertEquals(lTimeRange/(24*60*60*1000),90);
+				break;
+		}
+		
 		//verify the result in time range
 		driver.getLogger().info("Verify the result in componment");
 		driver.getLogger().info(driver.getText(UIControls.sTimeRangeBtn_1_new));
 		sDateTime = driver.getText(UIControls.sTimeRangeBtn_1_new);
-		if (sStartTime.startsWith("0")){
-			sStartTime = sStartTime.substring(1);
-			driver.getLogger().info("sStartTime: "+sStartTime);
+		//verify if the date is today or yesterday
+		String sTmpStartDay=TestDateTimePicker.verifyDate(sTmpStartDateTime);
+		driver.getLogger().info("StartDay: "+sTmpStartDay);
+		String sTmpEndDay=TestDateTimePicker.verifyDate(sTmpEndDateTime);
+		driver.getLogger().info("EndDay: "+sTmpEndDay);
+		//get the start time & end time
+		String sTmpStartTime = fmt3.format(dTmpStart);
+		driver.getLogger().info("StartTime: "+sTmpStartTime);
+		String sTmpEndTime = fmt3.format(dTmpEnd);
+		driver.getLogger().info("EndTime: "+sTmpEndTime);
+		
+		if (sTmpStartDay.equals(sTmpEndDay)&&sTmpStartDay.equals("Today")){
+			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sTmpStartTime+" - "+sTmpEndTime);
 		}
-		if (sEndTime.startsWith("0")){
-			sEndTime = sEndTime.substring(1);
-			driver.getLogger().info("sEndTime: "+sEndTime);
+		else{
+			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sTmpStartTime+" - "+sTmpEndDay+" "+sTmpEndTime);
 		}
+
+		//Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sTmpStartTime+" - "+sTmpEndDay+" "+sTmpEndTime);		
+		
+//		if (sStartTime.startsWith("0")){
+//			sStartTime = sStartTime.substring(1);
+//			driver.getLogger().info("sStartTime: "+sStartTime);
+//		}
+//		if (sEndTime.startsWith("0")){
+//			sEndTime = sEndTime.substring(1);
+//			driver.getLogger().info("sEndTime: "+sEndTime);
+//		}
 
 //		if (sTmpStartDay.equals(sTmpEndDay)&&sTmpStartDay.equals("Today")){
 //			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sStartTime+" - "+sEndTime);
@@ -162,14 +286,6 @@ public class TestDateTimePicker extends CommonUIUtils
 //		else{
 //			Assert.assertEquals(sDateTime, period+": "+sTmpStartDay+" "+sStartTime+" - "+sTmpEndDay+" "+sEndTime);
 //		}
-		//verify the result in label
-		driver.getLogger().info("Verify the result in label");
-		driver.getLogger().info("dateformat: "+ fmt2.format(dTmpStart));
-		driver.getLogger().info("sStartText: "+ driver.getText(UIControls.sStartText));
-		driver.getLogger().info("dateformat: "+ fmt2.format(dTmpEnd));
-		driver.getLogger().info("sStartText: "+ driver.getText(UIControls.sEndText));
-		Assert.assertEquals(fmt2.format(dTmpStart),driver.getText(UIControls.sStartText));
-		Assert.assertEquals(fmt2.format(dTmpEnd),driver.getText(UIControls.sEndText));
 
 		//verify the second component value is not changed
 		Assert.assertEquals(sDateTime_2,driver.getText(UIControls.sTimeRangeBtn_2_new));
@@ -408,12 +524,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		Thread.sleep(5000);
 		webdriver.getLogger().info("Click button: Custom");
 		webdriver.click(UIControls.sLastCustomBtn);
-		webdriver.takeScreenShot();
-
-		//verify the date time range is changed to time period
-		Thread.sleep(5000);
-		webdriver.getLogger().info("Verify the Custom is selected");
-		Assert.assertEquals(webdriver.getText(UIControls.sTimePeriod), "Custom");
+		webdriver.takeScreenShot();		
 
 		//set wrong start date time and end date time
 		webdriver.clear(UIControls.sStartDateInput);
@@ -436,6 +547,11 @@ public class TestDateTimePicker extends CommonUIUtils
 		webdriver.sendKeys(UIControls.sEndDateInput, "10/12/2015");
 		webdriver.clear(UIControls.sEndTimeInput);
 		webdriver.sendKeys(UIControls.sEndTimeInput, "09:54 AM");
+		
+		//verify the date time range is changed to time period
+		Thread.sleep(5000);
+		webdriver.getLogger().info("Verify the Custom is selected");
+		Assert.assertEquals(webdriver.getText(UIControls.sTimePeriod), "Custom");
 
 		//get the start date time and end date time after click the time period
 		webdriver.getLogger().info("get the start date time and end date time after click the time period");
@@ -451,8 +567,8 @@ public class TestDateTimePicker extends CommonUIUtils
 		dTmpEnd = fmt1.parse(sEndDate+" "+sEndTime);
 
 		//verify if the date is today or yesterday
-		String sTmpStartDay=TestDateTimePicker.verifyDate(sStartDate+" "+sStartTime);
-		String sTmpEndDay=TestDateTimePicker.verifyDate(sEndDate+" "+sEndTime);
+		String sTmpStartDay=TestDateTimePicker.verifyDate_custom(sStartDate+" "+sStartTime);
+		String sTmpEndDay=TestDateTimePicker.verifyDate_custom(sEndDate+" "+sEndTime);
 		webdriver.getLogger().info(sTmpStartDay+" " +sTmpEndDay);
 
 
