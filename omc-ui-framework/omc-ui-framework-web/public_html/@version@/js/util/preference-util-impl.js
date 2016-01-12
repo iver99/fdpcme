@@ -8,7 +8,8 @@ function($, ajaxUtilModel)
      * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
      * All rights reserved.
      */
-    PreferenceUtility = function(prefRestApiUrl, requestHeader) {
+
+    var PreferenceUtility = function(prefRestApiUrl, requestHeader) {
         this.prefRestApiUrl = prefRestApiUrl;
         this.requestHeader = requestHeader;
     };

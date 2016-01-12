@@ -209,7 +209,7 @@ define([
                         availWidgets = widgetArray;
                     }
                     else {
-                        for (i = 0; i < widgetArray.length; i++) {
+                        for (var i = 0; i < widgetArray.length; i++) {
                             var widget = widgetArray[i];
                             if (widget.PROVIDER_NAME === providerName &&
                                     widget.PROVIDER_VERSION === providerVersion &&

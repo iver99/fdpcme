@@ -155,8 +155,9 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 function refreshAdminLinks() {
                     if (self.isAdmin) {
                         if (params.app){
+                            var link;
                             for (var i = 0; i < discoveredAdminLinks.length; i++) {
-                                var link = discoveredAdminLinks[i];
+                                 link = discoveredAdminLinks[i];
                                 if (
                                     // let's use relative url for customer software for admin link
                                     (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName && 
@@ -171,7 +172,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                             }else{ //show app related admin link and tenant management UI and Event UI admin link only
                                 var filteredAdminLinks = [];                                
                                 for (var index=0; index<discoveredAdminLinks.length;index++ ){
-                                    var link = discoveredAdminLinks[index];
+                                    link = discoveredAdminLinks[index];
                                     if (params.app && params.app.serviceName===link.serviceName){
                                         filteredAdminLinks.push(link);
                                     }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
@@ -274,16 +275,16 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                         else {
                             dfHomeUrl = null;
                         }
-                    };
+                    }
                     function errorCallback(jqXHR, textStatus, errorThrown) {
                         dfHomeUrl = null;
-                    };
+                    }
                     var options = {
                         success: succCallback,
                         error: errorCallback
                     };
                     prefUtil.getAllPreferences(options);
-                };
+                }
                 
                 function refreshLinks() {
                     dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';

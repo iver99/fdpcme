@@ -778,6 +778,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     start = new Date(curDate - 15 * 60 * 1000);
                     end = new Date();
                     var tpNotToShow = self.getParam(self.timePeriodsNotToShow);
+                    var range;
 
                     if(self.startDateTime && self.endDateTime) {
                         //users input start date and end date
@@ -790,7 +791,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         
                         if (t_timePeriod && $.inArray(t_timePeriod, tpNotToShow)<0) {
                             self.setTimePeriodChosen(t_timePeriod);
-                            var range = self.setTimePeriodToLastX(t_timePeriod, start, end);
+                            range = self.setTimePeriodToLastX(t_timePeriod, start, end);
                             start = range.start;
                             end = range.end;
                         } else {
@@ -799,7 +800,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     } else if (!self.startDateTime && self.endDateTime) {
                         if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                             self.setTimePeriodChosen(self.timePeriodLast15mins);
-                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                            range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
                             start = range.start;
                             end = range.end;
                         }else {
@@ -816,7 +817,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         //users input nothing
                         if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                             self.setTimePeriodChosen(self.timePeriodLast15mins);
-                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                            range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
                             start = range.start;
                             end = range.end;
                         }else{
@@ -827,7 +828,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if (start.getTime() > end.getTime()) {
                         if($.inArray(self.timePeriodLast15mins, tpNotToShow)<0) {
                             self.setTimePeriodChosen(self.timePeriodLast15mins);
-                            var range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
+                            range = self.setTimePeriodToLastX(self.timePeriodLast15mins, start, end);
                             start = range.start;
                             end = range.end;
                         }else {

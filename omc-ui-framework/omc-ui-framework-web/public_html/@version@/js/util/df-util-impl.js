@@ -20,6 +20,7 @@ define([
              * @returns {parameter value}
              */
             self.getUrlParam = function(name){
+                /* globals location */
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
                 return results === null ? "" : results[1];                
             };
@@ -742,6 +743,7 @@ define([
             
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
+                /* globals clearInterval */
                 if (window.intervalToExtendCurrentUserSession)
                     clearInterval(window.intervalToExtendCurrentUserSession);
                 window.currentUserSessionExpired = true;

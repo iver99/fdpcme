@@ -186,6 +186,7 @@ define([
                 //SSO logout handler
                 self.handleSignout = function() {
                     //Clear interval for extending user session
+                    /* globals clearInterval*/
                     if (window.intervalToExtendCurrentUserSession)
                         clearInterval(window.intervalToExtendCurrentUserSession);
                     
@@ -576,7 +577,7 @@ define([
                     else if (self.appId === 'Error')
                         subscribedApps = [];
                     if (subscribedApps && subscribedApps.length > 0) {
-                        for (i = 0; i < subscribedApps.length; i++) {
+                        for (var i = 0; i < subscribedApps.length; i++) {
                             var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
                             if (i === 0)
                                 subscribedServices = servicename;
