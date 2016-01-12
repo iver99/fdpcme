@@ -779,11 +779,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     end = new Date();
                     var tpNotToShow = self.getParam(self.timePeriodsNotToShow);
                     var range;
+                    var std;
 
                     if(self.startDateTime && self.endDateTime) {
                         //users input start date and end date
-                        var sdt = self.getParam(self.startDateTime);
                         var edt = self.getParam(self.endDateTime);
+                        sdt = self.getParam(self.startDateTime);
                         start = new Date(sdt);
                         end = new Date(edt);
                         dateTimeDiff = end - start;
@@ -810,7 +811,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         oj.Logger.warn("The user just input end time");
                     } else if (self.startDateTime && !self.endDateTime) {
                         customClick(0);
-                        var sdt = self.getParam(self.startDateTime);
+                        sdt = self.getParam(self.startDateTime);
                         start = new Date(sdt);
                         end = new Date();
                     } else {

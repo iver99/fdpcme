@@ -16,7 +16,7 @@ function($, ajaxUtilModel)
     
     PreferenceUtility.prototype.getPreferenceValue = function(prefArray, key) {
         if (prefArray && key) {
-            var arr = undefined;
+            var arr;
             arr = $.grep(prefArray, function(pref) {
                 if (pref !== undefined && pref['key'] === key) return true;
                 return false;

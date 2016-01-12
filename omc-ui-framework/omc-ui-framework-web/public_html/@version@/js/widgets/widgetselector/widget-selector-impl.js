@@ -315,22 +315,25 @@ define([
                             dfu.ajaxWithRetry({
                                 url: widgetsUrl,
                                 headers: dfu.getSavedSearchServiceRequestHeader(),
-                                success: function(data, textStatus, jqXHR) {
-                                    loadWidgets(data);
+                                success:successRetrun,
+                                error: errorRetrun,
+                                async: true
+                            });  
+                        }
+                        function successRetrun(data, textStatus, jqXHR){
+                            loadWidgets(data);
                                     loadedCnt++;
                                     if (loadedCnt === availableWidgetGroups.length) {
                                         ajaxCallDfd.resolve(data, textStatus, jqXHR);
                                     }
-                                },
-                                error: function(jqXHR, textStatus, errorThrown){
-                                    loadedCnt++;
+                        }
+                       
+                       function errorRetrun(jqXHR, textStatus, errorThrown){
+                             loadedCnt++;
                                     if (loadedCnt === availableWidgetGroups.length) {
                                         ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
                                     }
                                     oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
-                                },
-                                async: true
-                            });  
                         }
 
                         return ajaxCallDfd;
