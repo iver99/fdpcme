@@ -820,7 +820,7 @@ public class DashboardManager
 				}
 			}
 			//check dashboard name
-			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
+			if (dbd.getName() == null || "".equals(dbd.getName().trim()) || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}

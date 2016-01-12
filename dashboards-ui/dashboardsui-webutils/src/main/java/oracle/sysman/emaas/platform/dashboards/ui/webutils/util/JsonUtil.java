@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -27,6 +29,7 @@ import org.codehaus.jackson.type.JavaType;
 
 public class JsonUtil
 {
+	private static Logger logger = LogManager.getLogger(JsonUtil.class);
 
 	/**
 	 * only initial changed value
@@ -173,7 +176,7 @@ public class JsonUtil
 			return mapper.writeValueAsString(object);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			logger.error("an error occureed while getting Json string", e);
 			return null;
 		}
 	}

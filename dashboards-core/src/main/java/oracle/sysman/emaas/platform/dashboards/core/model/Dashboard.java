@@ -267,7 +267,7 @@ public class Dashboard
 	public EmsDashboard getPersistenceEntity(EmsDashboard ed) throws DashboardException
 	{
 		//check dashboard name
-		if (name == null || name.trim() == "" || name.length() > 64) {
+		if (name == null || "".equals(name.trim()) || name.length() > 64) {
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 		}
