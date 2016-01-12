@@ -261,8 +261,9 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpac
 
     doLast {
        //this is here because of gradle bug, the old @version@ directory remains
-    delete stagingDir+'/@version@'
-    delete stagingDir+'/libs/@version@'
+	    delete stagingDir+'/@version@'
+	    delete stagingDir+'/libs/@version@'
+	    delete webRootSourceDir+'/@version@/css'
     }
 }
 
@@ -504,12 +505,12 @@ compass {
     gemPath = file('build/.jruby/gems')
     gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
     gems = []
-    if(project.hasProperty("devMode")){
-	cssDir file('build/public_html/@version@/css')
-    }
-    else{
-	cssDir file('build/staging/public_html/'+versionPathElement+'/css')
-    }
+    //if(project.hasProperty("devMode")){
+	cssDir file('public_html/@version@/css')
+    //}
+    //else{
+//	cssDir file('build/staging/public_html/'+versionPathElement+'/css')
+  //  }
     sassDir file ('public_html/scss')
     debugInfo false // Defaults to true,
                     // set to false to remove debug info from generated css file
@@ -560,6 +561,10 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
 	include "**/*"
     }
     into compiledDir
+    
+    doLast {
+        delete 'public_html/@version@/css'
+    }    
 }
 
 war.archiveName "dashboardsui-web.war"
