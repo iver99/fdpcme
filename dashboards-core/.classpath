@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/integTest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboards-ee"/>
@@ -35,5 +35,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-1.0.7.jar"/>
+	<classpathentry kind="lib" path="/Users/guochen/Downloads/jmockit-1.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

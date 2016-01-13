@@ -1,17 +1,22 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import java.util.Arrays;
-
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import java.util.List;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import mockit.Expectations;
+import mockit.Mocked;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
 
 /**
  * @author guobaochen
  */
 public class TenantSubscriptionUtilTest
-{	// @formatter:off
+{ // @formatter:off
 	private static final String ENTITY_NAMING_DOMAIN = "{"
 			+ "\"total\": 12,"
 			+ "\"items\": ["
@@ -195,7 +200,7 @@ public class TenantSubscriptionUtilTest
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
 		Assert.assertEquals(Arrays.asList("APM", "LogAnalytics", "ITAnalytics"), services);
 	}
-	
+
 	@Test(groups = { "s1" })
 	public void testIsAPMServiceOnly()
 	{
@@ -203,7 +208,7 @@ public class TenantSubscriptionUtilTest
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "APM", "ITA" })));
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { null })));
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "test" })));
-		Assert.assertTrue(TenantSubscriptionUtil.isAPMServiceOnly(Arrays
-				.asList(new String[] { ApplicationEditionConverter.ApplicationOPCName.APM.toString() })));
+		Assert.assertTrue(TenantSubscriptionUtil
+				.isAPMServiceOnly(Arrays.asList(new String[] { ApplicationEditionConverter.ApplicationOPCName.APM.toString() })));
 	}
 }

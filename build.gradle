@@ -189,7 +189,7 @@ dependencies {
 	prebuild_integtest 'com.jayway.restassured:xml-path:2.3.1',
 	                   'com.jayway.restassured:rest-assured:2.3.1',
 	                   'com.jayway.restassured:rest-assured-common:2.3.1',
-	                   'org.jmockit:jmockit:1.12'
+	                   'org.jmockit:jmockit:1.19'
 }
 
 task runS1Tests(type: Exec) {
