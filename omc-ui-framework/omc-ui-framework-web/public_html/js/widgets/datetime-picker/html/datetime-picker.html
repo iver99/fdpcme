@@ -11,7 +11,7 @@
                 <img data-bind="attr: {id: 'panelArrow_'+randomId, alt: dropDownAlt}" src="/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg"/>
             </button>            
 
-            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', tail: 'simple', beforeClose: setLastDatas/*, rootAttributes: {style: 'height: 387; width: 650px;'}*/}, attr: {id: 'panel_'+randomId}"> 
+            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas/*, rootAttributes: {style: 'height: 387; width: 650px;'}*/}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
                 <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">

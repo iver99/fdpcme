@@ -28,16 +28,17 @@
 .drawers {
     width: 104px;
     float: left;
+    border: 1px solid #F0F0F0;
     /*height: 396px;*/
-    background-color: #f0f0f0;
+    background-color: #FFFFFF; /*#f0f0f0;*/
 }
 .drawer {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
-    color: #333333;
-    border-width: 1px;
+    color: #045fab; //#333333;
+/*    border-width: 0px;
     border-style: solid;
-    border-color: #dfe4e7;
+    border-color: #FFFFFF; //#dfe4e7;*/
     padding-left: 8px;
     padding-top: 10px; //11px;
     padding-bottom: 3px;
@@ -47,13 +48,14 @@
 }
 
 .drawerNotChosen {
-    background-color:  #f0f0f0 !important;
-    font-weight: normal !important;
+    background-color:  #FFFFFF; /*#f0f0f0 !important;*/
+    /*font-weight: normal !important;*/
 }
 
 .drawerChosen {
-    background-color:  #ffffff !important;
-    font-weight: bold !important;
+    background-color:  #E4F0FA; /*#ffffff !important;*/
+    /*font-weight: bold !important;*/
+    border-left: 3px solid #0572ce;
 }
 
 .drawerNotToShow {
