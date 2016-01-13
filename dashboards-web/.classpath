@@ -15,7 +15,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-core-1.17.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-json-1.17.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-multipart-1.17.1.jar"/>
@@ -44,5 +43,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-webutils"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/javax.ws.rs-api-2.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-1.0.7.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
