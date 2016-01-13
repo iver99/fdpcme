@@ -779,7 +779,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     end = new Date();
                     var tpNotToShow = self.getParam(self.timePeriodsNotToShow);
                     var range;
-                    var std;
+                    var sdt;
 
                     if(self.startDateTime && self.endDateTime) {
                         //users input start date and end date
