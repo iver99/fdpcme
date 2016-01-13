@@ -994,6 +994,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             if(self.init === true) {
                                customClick(0); 
                             }else {
+                                self.setTimePeriodChosen(self.timePeriodCustom);
                                 customClick(1);
                             }
                             self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
@@ -1032,6 +1033,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if (data.option === "value" && !self.selectByDrawer()) {
                         self.setFocusOnInput(eleId);
                         self.lastFocus(0);
+                        self.setTimePeriodChosen(self.timePeriodCustom);
                         customClick(1);
                     }
                     timeValidate();

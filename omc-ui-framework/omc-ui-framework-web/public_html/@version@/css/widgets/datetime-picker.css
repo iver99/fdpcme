@@ -15,7 +15,7 @@
 }
 .panel {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     color: #333333;
     background-color: #ffffff;
     border-width: 1px;
@@ -34,14 +34,14 @@
 }
 .drawer {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     color: #045fab; //#333333;
 /*    border-width: 0px;
     border-style: solid;
     border-color: #FFFFFF; //#dfe4e7;*/
     padding-left: 8px;
-    padding-top: 10px; //11px;
-    padding-bottom: 3px;
+    padding-top: 7px;
+    padding-bottom: 6px;
     height: 18px; //20px;
     width: 94px;
     display: block;
