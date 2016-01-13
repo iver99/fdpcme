@@ -306,6 +306,21 @@ define([
                     else {
                         var ajaxCallDfd = $.Deferred();
                         var loadedCnt = 0;
+                        var successRetrun = function (data, textStatus, jqXHR) {
+                            loadWidgets(data);
+                            loadedCnt++;
+                            if (loadedCnt === availableWidgetGroups.length) {
+                                ajaxCallDfd.resolve(data, textStatus, jqXHR);
+                            }
+                        };
+                        var errorRetrun = function (jqXHR, textStatus, errorThrown) {
+                            loadedCnt++;
+                            if (loadedCnt === availableWidgetGroups.length) {
+                                ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
+                            }
+                            oj.Logger.error('Error when fetching widgets by URL: ' + widgetsUrl + '.');
+                        };
+
                         for (var i = 0; i < availableWidgetGroups.length; i++) {
                             //Get widgets by widget group id
                             widgetsUrl = widgetsUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
@@ -315,27 +330,11 @@ define([
                             dfu.ajaxWithRetry({
                                 url: widgetsUrl,
                                 headers: dfu.getSavedSearchServiceRequestHeader(),
-                                success:successRetrun,
+                                success: successRetrun,
                                 error: errorRetrun,
                                 async: true
-                            });  
+                            });
                         }
-                        function successRetrun(data, textStatus, jqXHR){
-                            loadWidgets(data);
-                                    loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.resolve(data, textStatus, jqXHR);
-                                    }
-                        }
-                       
-                       function errorRetrun(jqXHR, textStatus, errorThrown){
-                             loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
-                                    }
-                                    oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
-                        }
-
                         return ajaxCallDfd;
                     }
                 }
