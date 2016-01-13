@@ -11,7 +11,7 @@
                 <img data-bind="attr: {id: 'panelArrow_'+randomId, alt: dropDownAlt}" src="/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg"/>
             </button>            
 
-            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', beforeClose: setLastDatas, /*rootAttributes: {style: 'height:387px; width: 630px;'}*/}, attr: {id: 'panel_'+randomId}"> 
+            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', tail: 'simple', beforeClose: setLastDatas/*, rootAttributes: {style: 'height: 387; width: 650px;'}*/}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
                 <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
@@ -27,13 +27,16 @@
                     <a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodToday, css: todayCss"></a>
                     <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss"></a>
                     <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodAdvanced, css: advancedCss"></a>
                 </div>
                 </div>
 
                 <!-- right of panel-->
-                <div class="pickerPanel" data-bind="visible: showRightPanel">
+                <div class="pickerPanel" data-bind="visible: showRightPanel, attr: {id: 'pickerPanel_'+randomId}">
 
+                    <span style="display: inline-block; float: right;" data-bind="click: timeFilterControl, visible: enableTimeFilter">
+                        <img data-bind="attr: {id: 'timeFilterIcon_'+randomId, alt: timeFilterAlt}" src="/emsaasui/uifwk/@version@/images/widgets/func_gear_16_ena.png"/>
+                    </span>
+                    
                     <!--date and time info above picker -->
                     <div class="pickerTop" data-bind="attr: {style: pickerTopCss}">
                         <!-- date and time above the canlendar -->
@@ -79,9 +82,6 @@
                     <!-- ko if: showCalendar -->
                     <div data-bind="template: {name: 'calendar_'+randomId}"></div>
                     <!-- /ko -->
-                    <!-- ko if: showAdvancedPanel -->
-                    <div data-bind="component: {name: KOCname}"></div>
-                    <!-- /ko -->
                     
                     <!-- Apply & Cancel button -->
                     <div class="buttons">
@@ -99,6 +99,13 @@
                     <!--ko if: showBeyondWindowLimitError-->
                     <div class="errorMsg" data-bind="text: beyondWindowLimitErrorMsg"></div>
                     <!-- /ko -->
+                    
+                    <!-- pop up for time filter-->
+                    <div style="display: none; width: 560px; height: 433px; margin: auto; border: 1px solid #f0f0f0;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'timeFilter_'+randomId}">
+                        <!-- ko if: enableTimeFilter -->
+                        <div style="padding-top: 50px;" data-bind="component: {name: 'time-filter'}"></div>
+                        <!-- /ko -->
+                    </div>
                 </div>
             </div> 
 

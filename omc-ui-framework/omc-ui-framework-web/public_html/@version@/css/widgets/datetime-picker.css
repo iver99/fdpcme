@@ -68,7 +68,7 @@
 }
 
 .pickerPanel {
-    width: 510px;
+    width: 550px; //510px;
     height: 423px; //387px;
     float: right;
     padding-top: 10px;
