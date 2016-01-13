@@ -41,6 +41,7 @@ requirejs.config({
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
+        'uiutil':'internaldfcommon/js/util/ui-util',
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',

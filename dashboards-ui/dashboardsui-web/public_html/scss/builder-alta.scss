@@ -52,13 +52,9 @@ body, html {
 }
 
 .builder-main {
-    padding-left: 0; 
+    padding-left: 0;
     padding-right: 0;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
+    position: relative;
 }
 
 .stretch-width {
@@ -91,12 +87,11 @@ body, html {
 }
 
 #tiles-col-container {
-  flex: 1;
-  -webkit-flex: 1;
   padding-left: 0px;
   padding-right: 0px;
   overflow-x: hidden; 
-  overflow-y: auto;
+  overflow-y: scroll;
+  position: relative;
 }
 
 .dbd-tile {
@@ -627,14 +622,16 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     top: 0;
     border-left: 1px solid #d6dfe6;
     background: #fff;
+    position: absolute;
 }
 
 #right-panel-toggler {
-    margin-top: 2px; 
-    right: 282px; 
-    z-index: 999; 
-    max-width: 30px; 
-    padding-left: 5px;    
+    margin-top: 2px;
+    right: 282px;
+    z-index: 999;
+    max-width: 30px;
+    padding-left: 5px;
+    position: absolute;
 }
 
 #right-panel-toggler .oj-button {
@@ -762,7 +759,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     width: 100%; 
     height: auto; 
     overflow-x: hidden; 
-    overflow-y: auto; 
+    overflow-y: hidden; 
     position: relative;
 }
 

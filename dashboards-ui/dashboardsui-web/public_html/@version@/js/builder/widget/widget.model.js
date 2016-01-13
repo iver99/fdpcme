@@ -12,6 +12,8 @@ define(['jquery',
         var self = this;
         var DEFAULT_WIDGET_PAGE_SIZE = 20;
 
+        self.widgetPageSize = DEFAULT_WIDGET_PAGE_SIZE;
+        
         self.loadWidgetData = function(page, keyword, successCallback) {
             initialize(page);
             loadWidgets(keyword);
@@ -61,10 +63,10 @@ define(['jquery',
                 !lcKeyword && (widget = data[i]);
                 widget && self.widget.push(widget);
             }
-            self.widget.length && (self.totalPages = Math.ceil(self.widget.length / DEFAULT_WIDGET_PAGE_SIZE));
+            self.widget.length && (self.totalPages = Math.ceil(self.widget.length / self.widgetPageSize));
             self.page > self.totalPages && (self.page = self.totalPages);
             self.page < 1 && (self.page = 1);
-            self.widget = self.widget.slice((self.page - 1) * DEFAULT_WIDGET_PAGE_SIZE, self.page * DEFAULT_WIDGET_PAGE_SIZE);
+            self.widget = self.widget.slice((self.page - 1) * self.widgetPageSize, self.page * self.widgetPageSize);
         }
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");

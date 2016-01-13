@@ -7,6 +7,7 @@ define(['knockout',
         'ojs/ojcore',
         'knockout.mapping',
         'dfutil',
+        'uiutil',
         'uifwk/js/util/df-util',
         'mobileutil',
         'jquery',
@@ -22,7 +23,7 @@ define(['knockout',
         'ckeditor'
     ],
     
-    function(ko, oj, km, dfu, dfumodel, mbu, $)
+    function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)
     {
         ko.mapping = km;
         
@@ -36,6 +37,7 @@ define(['knockout',
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+            self.scrollbarWidth = uiutil.getScrollbarWidth();
             
             widgetAreaContainer = $('#widget-area');
             

@@ -7,12 +7,13 @@ define(['knockout',
         'jquery',
         'dfutil',
         'mobileutil',
+        'uiutil',
         'ojs/ojcore',
         'jqueryui',
         'builder/builder.core',
         'builder/widget/widget.model'
     ], 
-    function(ko, $, dfu, mbu, oj) {
+    function(ko, $, dfu, mbu, uiutil, oj) {
         function ResizableView($b) {
             var self = this;
             
@@ -48,6 +49,7 @@ define(['knockout',
             $b.registerObject(this, 'RightPanelModel');
 
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
+            self.scrollbarWidth = uiutil.getScrollbarWidth();
             
             self.keyword = ko.observable('');
             self.page = ko.observable(1);
@@ -206,22 +208,76 @@ define(['knockout',
 //                    return;
 //                self.checkAndDisableLinkDraggable();
 //            };
-
-            self.loadWidgets = function(req) {
-                new Builder.WidgetDataSource().loadWidgetData(self.page(), req&&(typeof req.term === "string")?req.term:self.keyword(), function(page, widgets, totalPages) {
-                    self.widgets([]);
-                    if (widgets && widgets.length > 0) {
-                        for (var i = 0; i < widgets.length; i++) {
-                            if (!widgets[i].WIDGET_DESCRIPTION)
-                                widgets[i].WIDGET_DESCRIPTION = null;
-                            var wgt = ko.mapping.fromJS(widgets[i]);
-                            self.getWidgetScreenshot(wgt);
-                            self.widgets.push(wgt);
-                        }
-                    }
-                    totalPages !== self.totalPages() && self.totalPages(totalPages);
-                    self.initWidgetDraggable();
+            var AUTO_PAGE_NAV = 1;
+            var widgetListHeight = ko.observable(0);
+            var pageSizeLastTime = 0;
+            // try using MutationObserver to detect widget list height change.
+            // if MutationObserver is not availbe, register builder resize listener.
+            if (typeof window.MutationObserver !== 'undefined') {
+                var widgetListHeightChangeObserver = new MutationObserver(function () {
+                    widgetListHeight($("#dbd-left-panel-widgets").height());
                 });
+                widgetListHeightChangeObserver.observe($("#dbd-left-panel-widgets")[0], {
+                    attributes: true,
+                    attributeFilter: ['style']
+                });
+            } else {
+                $b.addBuilderResizeListener(function () {
+                    widgetListHeight($("#dbd-left-panel-widgets").height());
+                });
+            }
+            // for delay notification.
+            widgetListHeight.extend({rateLimit: 500, method: 'notifyWhenChangesStop '});
+            widgetListHeight.subscribe(function () {
+                console.log("loaded");
+                self.loadWidgets(null, AUTO_PAGE_NAV);
+            });
+
+            self.loadWidgets = function(req, behavior) {
+                
+                // page size is calculated by widget list container height
+                // so that scroll bar will never display in the drawer panel
+                var pageSize = Math.floor(widgetListHeight() / 30);
+                // widget list won't be loaded if the panel height is even not
+                // enough for 1 item to display.
+                if (pageSize < 1) {
+                    return;
+                }
+                
+                var pageIndex = self.page();
+                
+                // in order to keep the items a user sees in the new page size
+                // when he or she resize the widget list panel, 
+                // set behavior with the value of AUTO_PAGE_NAV.
+                if ((behavior & AUTO_PAGE_NAV) && pageSizeLastTime > 0) {
+                    pageIndex = Math.ceil(((self.page() - 1) * pageSizeLastTime + 1) / pageSize);
+                }
+                self.page(pageIndex);
+                
+                pageSizeLastTime = pageSize;
+                
+                var widgetDS = new Builder.WidgetDataSource();
+                
+                widgetDS.widgetPageSize = pageSize;
+                
+                widgetDS.loadWidgetData(
+                    pageIndex,
+                    req && (typeof req.term === "string") ? req.term : self.keyword(),
+                    function (page, widgets, totalPages) {
+                        self.widgets([]);
+                        if (widgets && widgets.length > 0) {
+                            for (var i = 0; i < widgets.length; i++) {
+                                if (!widgets[i].WIDGET_DESCRIPTION)
+                                    widgets[i].WIDGET_DESCRIPTION = null;
+                                var wgt = ko.mapping.fromJS(widgets[i]);
+                                self.getWidgetScreenshot(wgt);
+                                self.widgets.push(wgt);
+                            }
+                        }
+                        totalPages !== self.totalPages() && self.totalPages(totalPages);
+                        self.initWidgetDraggable();
+                    }
+                );
             };
 
             self.getWidgetScreenshot = function(wgt) {

@@ -477,8 +477,8 @@
             <!-- /ko -->
             <div id="main-container" class="oj-col stretch-height builder-main" role="main">
                     <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
-                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling" 
-                             style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none;"
+                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling df-computed-content-width" 
+                             style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                             <div class="oj-col oj-sm-12 oj-md-7">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
@@ -508,7 +508,7 @@
                         </div>
                         <!-- /ko -->
                         <div style="padding-left: 10px;">
-                        <div id="tiles-wrapper" class="fit-size" style="width: 100%; float: left; position: relative; height: auto;">
+                        <div id="tiles-wrapper" class="fit-size df-computed-content-width" style="width: 80%; float: left; position: relative; height: auto;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
                             <div id="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
@@ -663,7 +663,13 @@
                         </div>
                 </div>                
                 
-                <div id="right-panel-toggler" data-bind="visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler()">
+                <div id="right-panel-toggler" data-bind="
+                        visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler(),
+                        style: {
+                            right: rightPanelShown() ? 
+                                (282 + $root.scrollbarWidth) + 'px' : 
+                                $root.scrollbarWidth + 'px'
+                        }">
                     <div id="" data-bind="ojComponent: {component: 'ojButtonset', checked: rightPanelStatus}" 
                          class="oj-buttonset oj-component oj-component-initnode" 
                          role="toolbar">
@@ -685,7 +691,9 @@
                 </div>
                 <!-- ko stopBinding: true -->
                 <div id="dbd-left-panel" class="dbd-left-panel-show"
-                        data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()}, visible: $root.isMobileDevice !== 'true'">
+                        data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
+                                        style: {right: $root.scrollbarWidth + 'px'},
+                                        visible: $root.isMobileDevice !== 'true'">
                     <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
                         <div class="oj-row">
                             <div class="oj-col">
