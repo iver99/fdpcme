@@ -33,7 +33,8 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-1.0.7.jar"/>
-	<classpathentry kind="lib" path="/Users/guochen/Downloads/jmockit-1.19.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jmockit-1.19.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/json-path-2.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
