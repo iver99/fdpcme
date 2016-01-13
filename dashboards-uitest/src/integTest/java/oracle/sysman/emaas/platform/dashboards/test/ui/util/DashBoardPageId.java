@@ -148,12 +148,12 @@ public class DashBoardPageId {
 	public static final String OpenTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div[1]/button";
 	public static final String HideTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
 	public static final String RemoveTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
-	public static final String WiderTileID = "/html/body/div[1]/div/ul/li[3]/a/span[2]";
-	public static final String NarrowerTileID = "/html/body/div[1]/div/ul/li[4]/a/span[2]";
-	public static final String TallerTileID = "/html/body/div[1]/div/ul/li[5]/a/span[2]";
-	public static final String ShorterTileID = "/html/body/div[1]/div/ul/li[6]/a/span[2]";
-	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
-	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
+	public static final String WiderTileID = "/html/body/div[1]/div/ul/li[4]/a/span[2]";
+	public static final String NarrowerTileID = "/html/body/div[1]/div/ul/li[5]/a/span[2]";
+	public static final String TallerTileID = "/html/body/div[1]/div/ul/li[6]/a/span[2]";
+	public static final String ShorterTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
+	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
+	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[9]/a/span[2]";
 	
 	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"

@@ -13,12 +13,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
 import java.util.Set;
 import org.testng.Assert;
 
-/**
- *  @version
- *  @author  charles.c.chen
- *  @since   release specific (what release of product did this appear in)
- */
-
 public class TestHomePage extends LoginAndLogout{
 
 	public void initTest(String testName) throws Exception
@@ -33,8 +27,7 @@ public class TestHomePage extends LoginAndLogout{
 		DashBoardUtils.resetCheckBox(DashBoardPageId.Oracle_BoxID);
 		DashBoardUtils.resetCheckBox(DashBoardPageId.Other_BoxID);
 		DashBoardUtils.resetCheckBox(DashBoardPageId.Share_BoxID);		
-	}
-	
+	}	
 	
 	@Test
 	public void verify_allOOB_GridView() throws Exception
