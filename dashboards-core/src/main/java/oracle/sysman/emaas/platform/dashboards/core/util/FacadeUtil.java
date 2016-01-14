@@ -10,10 +10,6 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
@@ -33,15 +29,13 @@ public class FacadeUtil
 		result.setApplicationType(dsb.getApplicationType());
 		result.setCreationDate(dsb.getCreationDate());
 
-		List<EmsDashboardTile> dashboardTileList = new ArrayList<EmsDashboardTile>();
-		EmsDashboardTile emsDashboardTile;
-		Iterator<EmsDashboardTile> iterator = dsb.getDashboardTileList().iterator();
-		while(iterator.hasNext()) {
-			emsDashboardTile = cloneEmsDashboardTile(iterator.next());
-			dashboardTileList.add(emsDashboardTile);
+		if (dsb.getDashboardTileList() != null) {
+			for (EmsDashboardTile tile : dsb.getDashboardTileList()) {
+				EmsDashboardTile emsDashboardTile = FacadeUtil.cloneEmsDashboardTile(tile);
+				result.addEmsDashboardTile(emsDashboardTile);
+			}
 		}
-		result.setDashboardTileList(dashboardTileList);
-		
+
 		result.setDeleted(dsb.getDeleted());
 		result.setDescription(dsb.getDescription());
 		result.setEnableRefresh(dsb.getEnableRefresh());
@@ -63,9 +57,9 @@ public class FacadeUtil
 	{
 		EmsDashboardFavorite result = new EmsDashboardFavorite();
 		result.setCreationDate(df.getCreationDate());
-		result.setDashboard(cloneEmsDashboard(df.getDashboard()));
+		result.setDashboard(FacadeUtil.cloneEmsDashboard(df.getDashboard()));
 		result.setUserName(df.getUserName());
-		
+
 		return null;
 	}
 
@@ -75,7 +69,7 @@ public class FacadeUtil
 		result.setAccessDate(dla.getAccessDate());
 		result.setAccessedBy(dla.getAccessedBy());
 		result.setDashboardId(dla.getDashboardId());
-		
+
 		return result;
 	}
 
@@ -84,58 +78,58 @@ public class FacadeUtil
 		EmsDashboardTile result = new EmsDashboardTile();
 		result.setColumn(dt.getColumn());
 		result.setCreationDate(dt.getCreationDate());
-		result.setDashboard(cloneEmsDashboard(dt.getDashboard()));
-		
-		List<EmsDashboardTileParams> dashboardTileParamsList = new ArrayList<EmsDashboardTileParams>();
-		EmsDashboardTileParams emsDashboardTileParams;
-		for(int i=0; i<dt.getDashboardTileParamsList().size(); i++) {
-			emsDashboardTileParams = cloneEmsDashboardTileParams(dt.getDashboardTileParamsList().get(i));
-			dashboardTileParamsList.add(emsDashboardTileParams);
-		}		
-		result.setDashboardTileParamsList(dashboardTileParamsList);
-		
+		result.setDashboard(FacadeUtil.cloneEmsDashboard(dt.getDashboard()));
+
+		if (dt.getDashboardTileParamsList() != null) {
+			for (EmsDashboardTileParams tp : dt.getDashboardTileParamsList()) {
+				EmsDashboardTileParams emsDashboardTileParams = FacadeUtil.cloneEmsDashboardTileParams(tp);
+				result.addEmsDashboardTileParams(emsDashboardTileParams);
+			}
+		}
+		//result.setDashboardTileParamsList(dashboardTileParamsList);
+
 		result.setHeight(dt.getHeight());
 		result.setIsMaximized(dt.getIsMaximized());
-	    result.setLastModificationDate(dt.getLastModificationDate());
-	    result.setLastModifiedBy(dt.getLastModifiedBy());
-	    result.setOwner(dt.getOwner());
-	    result.setPosition(dt.getPosition());
-	    result.setProviderAssetRoot(dt.getProviderAssetRoot());
-	    result.setProviderName(dt.getProviderName());
-	    result.setProviderVersion(dt.getProviderVersion());
-	    result.setRow(dt.getRow());
-	    result.setTitle(dt.getTitle());
-	    result.setType(dt.getType());
-	    result.setWidgetCreationTime(dt.getWidgetCreationTime());
-	    result.setWidgetDescription(dt.getWidgetDescription());
-	    result.setWidgetGroupName(dt.getWidgetGroupName());
-	    result.setWidgetHistogram(dt.getWidgetHistogram());
-	    result.setWidgetIcon(dt.getWidgetIcon());
-	    result.setWidgetKocName(dt.getWidgetKocName());
-	    result.setWidgetLinkedDashboard(dt.getWidgetLinkedDashboard());
-	    result.setWidgetName(dt.getWidgetName());
-	    result.setWidgetOwner(dt.getWidgetOwner());
-	    result.setWidgetSource(dt.getWidgetSource());
-	    result.setWidgetSupportTimeControl(dt.getWidgetSupportTimeControl());
-	    result.setWidgetTemplate(dt.getWidgetTemplate());
-	    result.setWidgetUniqueId(dt.getWidgetUniqueId());
-	    result.setWidgetViewmode(dt.getWidgetViewmode());
-	    result.setWidth(dt.getWidth());
-	    
+		result.setLastModificationDate(dt.getLastModificationDate());
+		result.setLastModifiedBy(dt.getLastModifiedBy());
+		result.setOwner(dt.getOwner());
+		result.setPosition(dt.getPosition());
+		result.setProviderAssetRoot(dt.getProviderAssetRoot());
+		result.setProviderName(dt.getProviderName());
+		result.setProviderVersion(dt.getProviderVersion());
+		result.setRow(dt.getRow());
+		result.setTitle(dt.getTitle());
+		result.setType(dt.getType());
+		result.setWidgetCreationTime(dt.getWidgetCreationTime());
+		result.setWidgetDescription(dt.getWidgetDescription());
+		result.setWidgetGroupName(dt.getWidgetGroupName());
+		result.setWidgetHistogram(dt.getWidgetHistogram());
+		result.setWidgetIcon(dt.getWidgetIcon());
+		result.setWidgetKocName(dt.getWidgetKocName());
+		result.setWidgetLinkedDashboard(dt.getWidgetLinkedDashboard());
+		result.setWidgetName(dt.getWidgetName());
+		result.setWidgetOwner(dt.getWidgetOwner());
+		result.setWidgetSource(dt.getWidgetSource());
+		result.setWidgetSupportTimeControl(dt.getWidgetSupportTimeControl());
+		result.setWidgetTemplate(dt.getWidgetTemplate());
+		result.setWidgetUniqueId(dt.getWidgetUniqueId());
+		result.setWidgetViewmode(dt.getWidgetViewmode());
+		result.setWidth(dt.getWidth());
+
 		return result;
 	}
 
 	public static EmsDashboardTileParams cloneEmsDashboardTileParams(EmsDashboardTileParams tp)
 	{
 		EmsDashboardTileParams result = new EmsDashboardTileParams();
-		result.setDashboardTile(cloneEmsDashboardTile(tp.getDashboardTile()));
+		result.setDashboardTile(FacadeUtil.cloneEmsDashboardTile(tp.getDashboardTile()));
 		result.setIsSystem(tp.getIsSystem());
 		result.setParamName(tp.getParamName());
 		result.setParamType(tp.getParamType());
 		result.setParamValueNum(tp.getParamValueNum());
 		result.setParamValueStr(tp.getParamValueStr());
 		result.setParamValueTimestamp(tp.getParamValueTimestamp());
-		
+
 		return result;
 	}
 
@@ -145,7 +139,7 @@ public class FacadeUtil
 		result.setPrefKey(p.getPrefKey());
 		result.setPrefValue(p.getPrefValue());
 		result.setUserName(p.getUserName());
-		
+
 		return result;
 	}
 
