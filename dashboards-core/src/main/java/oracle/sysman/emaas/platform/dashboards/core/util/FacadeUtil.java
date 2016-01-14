@@ -24,6 +24,9 @@ public class FacadeUtil
 {
 	public static EmsDashboard cloneEmsDashboard(EmsDashboard dsb)
 	{
+		if (dsb == null) {
+			return null;
+		}
 
 		EmsDashboard result = new EmsDashboard();
 		result.setApplicationType(dsb.getApplicationType());
@@ -55,6 +58,10 @@ public class FacadeUtil
 
 	public static EmsDashboardFavorite cloneEmsDashboardFavorite(EmsDashboardFavorite df)
 	{
+		if (df == null) {
+			return null;
+		}
+
 		EmsDashboardFavorite result = new EmsDashboardFavorite();
 		result.setCreationDate(df.getCreationDate());
 		result.setDashboard(FacadeUtil.cloneEmsDashboard(df.getDashboard()));
@@ -65,6 +72,10 @@ public class FacadeUtil
 
 	public static EmsDashboardLastAccess cloneEmsDashboardLastAccess(EmsDashboardLastAccess dla)
 	{
+		if (dla == null) {
+			return null;
+		}
+
 		EmsDashboardLastAccess result = new EmsDashboardLastAccess();
 		result.setAccessDate(dla.getAccessDate());
 		result.setAccessedBy(dla.getAccessedBy());
@@ -75,6 +86,10 @@ public class FacadeUtil
 
 	public static EmsDashboardTile cloneEmsDashboardTile(EmsDashboardTile dt)
 	{
+		if (dt == null) {
+			return null;
+		}
+
 		EmsDashboardTile result = new EmsDashboardTile();
 		result.setColumn(dt.getColumn());
 		result.setCreationDate(dt.getCreationDate());
@@ -121,6 +136,10 @@ public class FacadeUtil
 
 	public static EmsDashboardTileParams cloneEmsDashboardTileParams(EmsDashboardTileParams tp)
 	{
+		if (tp == null) {
+			return null;
+		}
+
 		EmsDashboardTileParams result = new EmsDashboardTileParams();
 		result.setDashboardTile(FacadeUtil.cloneEmsDashboardTile(tp.getDashboardTile()));
 		result.setIsSystem(tp.getIsSystem());
@@ -135,6 +154,9 @@ public class FacadeUtil
 
 	public static EmsPreference cloneEmsPreference(EmsPreference p)
 	{
+		if (p == null) {
+			return null;
+		}
 		EmsPreference result = new EmsPreference();
 		result.setPrefKey(p.getPrefKey());
 		result.setPrefValue(p.getPrefValue());
