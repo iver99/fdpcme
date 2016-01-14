@@ -1,6 +1,7 @@
 <style>
     .tf-wrapper {
         padding-left: 10px;
+        padding-right: 10px;
         padding-bottom: 5px;
         font-size: 14px;
     }
@@ -21,8 +22,8 @@
 <div class="tf-wrapper">
     <!-- time filter start-->
     <div class="oj-row tf-row">
-       <span data-bind="text: timeFilterLabel" class="tf-label"></span>
-       <input type="text" data-bind="ojComponent: {component: 'ojInputText', value: timeFilterValue}">
+       <span class="oj-col oj-sm-2 oj-md-2 tf-label" data-bind="text: timeFilterLabel"></span>
+       <input class="oj-col oj-sm-10 oj-md-10" type="text" data-bind="ojComponent: {component: 'ojInputText', value: timeFilterValue}">
     </div>
 
     <div class="oj-row tf-row tf-hint">

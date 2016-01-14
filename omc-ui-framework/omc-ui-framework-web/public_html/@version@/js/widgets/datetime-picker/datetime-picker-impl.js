@@ -645,8 +645,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.leftDrawerHeight = ko.computed(function() {
                     if(self.showRightPanel() === true) {
-//                        return "397px";
-                        return "433px";
+                        return "412px";
                     }else {
                         return "auto";
                     }
@@ -1380,6 +1379,16 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }else {
                         $(self.timeFilterId).ojPopup("open", "#pickerPanel_"+self.randomId, {"my": "start center", "at": "end center"});
                     }
+                }
+                
+                self.hoverOnDrawer = function(data, event) {
+                    if(!$(event.target).hasClass("drawerChosen")) {
+                        $(event.target).addClass("drawerHover");
+                    }
+                }
+                
+                self.hoverOutDrawer = function(data, event) {
+                    $(event.target).removeClass("drawerHover");
                 }
                 
                 self.initialize();

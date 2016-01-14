@@ -15,18 +15,18 @@
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
                 <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
-                    <a href="#" data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins, css: last15minsCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins, css: last30minsCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins, css: last60minsCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours, css: last4hoursCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours, css: last6hoursCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day, css: last1dayCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days, css: last7daysCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days, css: last30daysCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days, css: last90daysCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodToday, css: todayCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss"></a>
-                    <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer0_'+randomId}, text: timePeriodLast15mins, css: last15minsCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer1_'+randomId}, text: timePeriodLast30mins, css: last30minsCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer2_'+randomId}, text: timePeriodLast60mins, css: last60minsCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer3_'+randomId}, text: timePeriodLast4hours, css: last4hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours, css: last6hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day, css: last1dayCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days, css: last7daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days, css: last30daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days, css: last90daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodToday, css: todayCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                 </div>
                 </div>
 
@@ -101,7 +101,7 @@
                     <!-- /ko -->
                     
                     <!-- pop up for time filter-->
-                    <div style="display: none; width: 560px; height: 433px; margin: auto; border: 1px solid #f0f0f0;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'timeFilter_'+randomId}">
+                    <div style="display: none; width: 560px; height: 412px; margin: auto; border: 1px solid #f0f0f0;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'timeFilter_'+randomId}">
                         <!-- ko if: enableTimeFilter -->
                         <div style="padding-top: 50px;" data-bind="component: {name: 'time-filter'}"></div>
                         <!-- /ko -->
