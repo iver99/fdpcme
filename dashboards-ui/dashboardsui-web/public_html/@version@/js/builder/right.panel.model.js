@@ -366,7 +366,7 @@ define(['knockout',
                 if (!$('#right-container-pop').ojPopup("isOpen")) {
                    $('#right-container-pop').ojPopup("open", $('#dbd-left-panel-footer-contain'), 
                    {
-                       my : "end bottom", at : "start bottom"
+                       my : "end bottom", at : "start-25 bottom"
                    });
                 }
             };
