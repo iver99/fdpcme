@@ -185,8 +185,8 @@ public class TenantSubscriptionUtilTest
 		link.withRel("");
 	}
 
-	@Test
-	public void testGetTenantSubscribedServices(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient)
+	@Test(groups = { "s2" })
+	public void testGetTenantSubscribedServices_S2(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient)
 	{
 		new Expectations() {
 			{
@@ -198,7 +198,7 @@ public class TenantSubscriptionUtilTest
 			}
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
-		Assert.assertEquals(Arrays.asList("APM", "LogAnalytics", "ITAnalytics"), services);
+		Assert.assertEquals(services, Arrays.asList("APM", "LogAnalytics", "ITAnalytics"));
 	}
 
 	@Test(groups = { "s1" })
