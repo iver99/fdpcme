@@ -1261,13 +1261,6 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.applyClick = function () {                                        
                     self.timeFilter = ko.observable(null);
-                    if(self.enableTimeFilter()) {
-                        self.timeFilter({
-                            timeFilterValue: self.tfInstance.timeFilterValue(), //self.KOCvmInstance.timeFilterValue(),
-                            daysChecked: self.tfInstance.daysChecked(), //self.KOCvmInstance.daysChecked(),
-                            monthsChecked: self.tfInstance.monthsChecked() //self.KOCvmInstance.monthsChecked()
-                        });
-                    }
                     
                     self.lastStartDate(self.startDate());
                     self.lastEndDate(self.endDate());
@@ -1287,6 +1280,37 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     
                     $(self.panelId).ojPopup("close");
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
+                    
+                    //if time filter is enabled, pass time info in JSON format.
+                    if(self.enableTimeFilter()) {
+                        var hourOfDay = [];
+                        var hourRangesOfDay = self.tfInstance.timeFilterValue().split(",");
+                        for(var i=0; i<hourRangesOfDay.length; i++) {
+                            var hourRange = hourRangesOfDay[i].split("-");
+                            if(hourRange.length !== 2) {
+                                console.error("wrong input for time filter!");
+                                return;
+                            }
+                            var hourRangeStart = parseInt(hourRange[0].trim());
+                            var hourRangeEnd = parseInt(hourRange[1].trim());
+                            for(var j=hourRangeStart; j<=hourRangeEnd; j++) {
+                                hourOfDay.push(j);
+                            }
+                        }
+                        self.timeFilter({
+                            "STARTTIME": new Date(start),
+                            "ENDTIME": new Date(end),
+                            "DAYOFMONTH": [],    
+                            "DAYOFWEEK": self.tfInstance.daysChecked(),      
+                            "HOUROFDAY": hourOfDay,
+                            "MONTHOFQUARTER": [],
+                            "MONTHOFYEAR": self.tfInstance.monthsChecked(),    
+                            "QUARTEROFYEAR": [],  
+                            "WEEKOFERA": [],         
+                            "YEAROFERA": []
+                        });
+                    }
+                    
                     if (self.callbackAfterApply) {
                         $.ajax({
                             url: "/emsaasui/uifwk/empty.html",

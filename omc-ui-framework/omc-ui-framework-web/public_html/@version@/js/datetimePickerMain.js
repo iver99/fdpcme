@@ -106,6 +106,7 @@ require(['ojs/ojcore',
                         console.log(end);
                         console.log(tp);
                         console.log(tf);
+                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         self.start(self.dateTimeConverter1.format(appliedStart));

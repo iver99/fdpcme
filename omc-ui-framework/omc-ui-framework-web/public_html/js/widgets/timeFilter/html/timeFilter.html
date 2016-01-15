@@ -44,7 +44,12 @@
             <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: daysChecked}">
                 <div data-bind="foreach: daysFilterOptions">
                     <div class="oj-col oj-sm-6 oj-md-6" style="padding-left: 0px;">
-                    <input type="checkbox" data-bind="attr: {id: $data}, value: $index">
+                    <!-- ko if: $index() === 0 -->
+                    <input type="checkbox" data-bind="attr: {id: $data}, value: $index()+7">
+                    <!-- /ko -->
+                    <!-- ko if: $index() !== 0 -->
+                    <input type="checkbox" data-bind="attr: {id: $data}, value: $index()">
+                    <!-- /ko -->
                     <label data-bind="text: $data, attr: {for: $data}"></label>
                     </div>
                 </div>
@@ -66,7 +71,7 @@
             <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: monthsChecked}">
                 <div data-bind="foreach: monthsFilterOptions">
                     <div class="oj-col oj-sm-4 oj-md-4" style="padding-left: 0px;">
-                        <input type="checkbox" data-bind="attr: {id: $data}, value: $index">
+                        <input type="checkbox" data-bind="attr: {id: $data}, value: ($index()+1)">
                         <label data-bind="text: $data, attr: {for: $data}"></label>
                     </div>
                 </div>

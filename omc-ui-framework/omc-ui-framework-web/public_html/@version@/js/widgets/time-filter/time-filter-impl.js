@@ -16,8 +16,8 @@ define([
         self.daysFilterOptions = oj.LocaleData.getDayNames("wide");
         self.monthsFilterOptions = oj.LocaleData.getMonthNames("wide");
 
-        self.daysArray = [0, 1, 2, 3, 4, 5, 6];
-        self.monthsArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        self.daysArray = [1, 2, 3, 4, 5, 6, 7];
+        self.monthsArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
         self.timeFilterValue = ko.observable('');
         self.daysChecked = ko.observableArray(self.daysArray);
