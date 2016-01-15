@@ -218,13 +218,17 @@
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
                             <!-- ko if: !disabled  -->
                             <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
-                                    <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
+                                    <a data-bind="attr:{'title': title}, href: url, click: onclick">
                                         <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
-                                    <span data-bind="text: label"></span></a>
-                            </li>
+                                        <span data-bind="text: label"></span>
+                                    </a>
+                                    <!-- ko if: $data.subItems -->
+                                    <ul data-bind="template: {name: 'dsbOptsMenuItemTemplate', foreach: subItems}"></ul>
+                                    <!-- /ko -->
+                                </li>
                                 <!-- ko if: endOfGroup  -->
-                                <li></li>
-                            <!-- /ko -->
+                                    <li></li>
+                                <!-- /ko -->
                             <!-- /ko -->
                         </script>
 
@@ -668,13 +672,6 @@
                                <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                             </div>
-                            <div class="oj-col oj-sm-12 oj-md-5" data-bind="visible: dashboard.enableRefresh">
-                                <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>
-                                <!--div data-bind="component: {name: 'df-auto-refresh', params: autoRefreshParams}" style="float:right;padding-right: 10px"></div-->
-                                <!--df-auto-refresh params="autoRefreshParams"></df-auto-refresh-->
-                            </div>
-                            <!--div class="oj-col oj-sm-4"></div-->
-
                         </div>
 
                         <!-- ko if:$root.isEmpty() -->

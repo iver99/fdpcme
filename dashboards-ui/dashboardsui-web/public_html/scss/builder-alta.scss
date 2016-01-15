@@ -223,6 +223,15 @@ body, html {
   content: "\f040";
 }
 
+.dbd-toolbar-icon-refresh:before,.fa-refresh:before {
+  content: "\f021";
+}
+
+.fa-check:before {
+    content:"\f00c";
+    color: #0572ce;
+}
+
 .dbd-toolbar-icon-duplicate:before {
   content: url(../images/func_papers_16_ena.png);
 }
