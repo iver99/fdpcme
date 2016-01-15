@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
@@ -13,11 +14,10 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 //import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParamsPK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 public class DashboardServiceFacade
 {
@@ -48,10 +48,21 @@ public class DashboardServiceFacade
 		return em.find(EmsDashboard.class, dashboardId);
 	}
 
-	/** <code>select o from EmsDashboardFavorite o</code> */
-	public List<EmsDashboardFavorite> getEmsDashboardFavoriteFindAll()
+	public EmsDashboard getEmsDashboardByName(String name, String owner)
 	{
-		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
+		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
+		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), owner, new Integer(0) };
+		Query query = em.createQuery(jpql);
+		for (int i = 1; i <= params.length; i++) {
+			query.setParameter(i, params[i - 1]);
+		}
+		return (EmsDashboard) query.getSingleResult();
+	}
+
+	public EmsDashboardFavorite getEmsDashboardFavoriteByPK(Long dashboardId, String username)
+	{
+		EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(username, dashboardId);
+		return em.find(EmsDashboardFavorite.class, edfpk);
 	}
 
 	/** <code>select o from EmsDashboard o</code> */
@@ -60,28 +71,34 @@ public class DashboardServiceFacade
 		return em.createNamedQuery("EmsDashboard.findAll", EmsDashboard.class).getResultList();
 	}
 
-	/** <code>select o from EmsDashboardLastAccess o</code> */
-	public List<EmsDashboardLastAccess> getEmsDashboardLastAccessFindAll()
+	public EmsDashboardLastAccess getEmsDashboardLastAccessByPK(Long dashboardId, String username)
 	{
-		return em.createNamedQuery("EmsDashboardLastAccess.findAll", EmsDashboardLastAccess.class).getResultList();
+		EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(username, dashboardId);
+		return em.find(EmsDashboardLastAccess.class, edlapk);
 	}
 
-	/** <code>select o from EmsDashboardTile o</code> */
-	public List<EmsDashboardTile> getEmsDashboardTileFindAll()
-	{
-		return em.createNamedQuery("EmsDashboardTile.findAll", EmsDashboardTile.class).getResultList();
-	}
-
-	/** <code>select o from EmsDashboardTileParams o</code> */
-	public List<EmsDashboardTileParams> getEmsDashboardTileParamsFindAll()
-	{
-		return em.createNamedQuery("EmsDashboardTileParams.findAll", EmsDashboardTileParams.class).getResultList();
-	}
+	//	/** <code>select o from EmsDashboardLastAccess o</code> */
+	//	public List<EmsDashboardLastAccess> getEmsDashboardLastAccessFindAll()
+	//	{
+	//		return em.createNamedQuery("EmsDashboardLastAccess.findAll", EmsDashboardLastAccess.class).getResultList();
+	//	}
 
 	public EmsPreference getEmsPreference(String username, String prefKey)
 	{
 		return em.find(EmsPreference.class, new EmsPreferencePK(prefKey, username));
 	}
+
+	//	/** <code>select o from EmsDashboardTile o</code> */
+	//	public List<EmsDashboardTile> getEmsDashboardTileFindAll()
+	//	{
+	//		return em.createNamedQuery("EmsDashboardTile.findAll", EmsDashboardTile.class).getResultList();
+	//	}
+
+	//	/** <code>select o from EmsDashboardTileParams o</code> */
+	//	public List<EmsDashboardTileParams> getEmsDashboardTileParamsFindAll()
+	//	{
+	//		return em.createNamedQuery("EmsDashboardTileParams.findAll", EmsDashboardTileParams.class).getResultList();
+	//	}
 
 	/** <code>select o from EmsPreference o</code> */
 	public List<EmsPreference> getEmsPreferenceFindAll(String username)
@@ -93,6 +110,17 @@ public class DashboardServiceFacade
 	public EntityManager getEntityManager()
 	{
 		return em;
+	}
+
+	/** <code>select o from EmsDashboardFavorite o</code> */
+	@SuppressWarnings("unchecked")
+	public List<EmsDashboard> getFavoriteEmsDashboards(String username)
+	{
+		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
+				+ username + "' and d.deleted = ?1";
+		Query query = em.createQuery(hql);
+		query.setParameter(1, new Integer(0));
+		return query.getResultList();
 	}
 
 	public EmsDashboard mergeEmsDashboard(EmsDashboard emsDashboard)
@@ -218,21 +246,21 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
-	public void removeEmsDashboardTile(EmsDashboardTile emsDashboardTile)
-	{
-		emsDashboardTile = em.find(EmsDashboardTile.class, emsDashboardTile.getTileId());
-		em.remove(emsDashboardTile);
-		commitTransaction();
-	}
+	//	public void removeEmsDashboardTile(EmsDashboardTile emsDashboardTile)
+	//	{
+	//		emsDashboardTile = em.find(EmsDashboardTile.class, emsDashboardTile.getTileId());
+	//		em.remove(emsDashboardTile);
+	//		commitTransaction();
+	//	}
 
-	public void removeEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams)
-	{
-		emsDashboardTileParams = em.find(EmsDashboardTileParams.class,
-				new EmsDashboardTileParamsPK(emsDashboardTileParams.getParamName(), emsDashboardTileParams.getDashboardTile()
-						.getTileId()));
-		em.remove(emsDashboardTileParams);
-		commitTransaction();
-	}
+	//	public void removeEmsDashboardTileParams(EmsDashboardTileParams emsDashboardTileParams)
+	//	{
+	//		emsDashboardTileParams = em.find(EmsDashboardTileParams.class,
+	//				new EmsDashboardTileParamsPK(emsDashboardTileParams.getParamName(), emsDashboardTileParams.getDashboardTile()
+	//						.getTileId()));
+	//		em.remove(emsDashboardTileParams);
+	//		commitTransaction();
+	//	}
 
 	public void removeEmsPreference(EmsPreference emsPreference)
 	{
