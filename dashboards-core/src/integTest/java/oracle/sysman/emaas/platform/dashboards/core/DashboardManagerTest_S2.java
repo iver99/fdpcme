@@ -98,7 +98,7 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(expectedExceptions = DashboardException.class, groups = {"s2"})
-	public void testCreateDashboardSameNameSameUserSameTenant() throws DashboardException
+	public void testCreateDashboardSameNameSameUserSameTenant_S2() throws DashboardException
 	{
 		Dashboard dbd1 = null;
 		Dashboard dbd2 = null;

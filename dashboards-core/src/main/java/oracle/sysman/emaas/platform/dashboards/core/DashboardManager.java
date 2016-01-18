@@ -29,7 +29,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 
 import org.apache.commons.lang3.StringEscapeUtils;
