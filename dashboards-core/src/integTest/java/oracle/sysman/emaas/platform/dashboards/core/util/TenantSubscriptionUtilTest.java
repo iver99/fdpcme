@@ -6,6 +6,7 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
@@ -16,7 +17,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.
  * @author guobaochen
  */
 public class TenantSubscriptionUtilTest
-{ // @formatter:off
+{
+	// @formatter:off
 	private static final String ENTITY_NAMING_DOMAIN = "{"
 			+ "\"total\": 12,"
 			+ "\"items\": ["
@@ -178,18 +180,17 @@ public class TenantSubscriptionUtilTest
 			+ "}";
 	// @formatter:on
 
-	private static final Link link = new Link();
-
-	static {
-		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
-		link.withRel("");
-	}
-
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices_S2(@Mocked RegistryLookupUtil anyUtil, @Mocked final RestClient anyClient)
 	{
+		final Link link = new Link();
+
+		link.withHref("http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains");
+		link.withRel("");
 		new Expectations() {
 			{
+				Deencapsulation.setField(TenantSubscriptionUtil.class, "IS_TEST_ENV", null);
+
 				RegistryLookupUtil.getServiceInternalLink(anyString, anyString, anyString, anyString);
 				result = link;
 
@@ -205,10 +206,10 @@ public class TenantSubscriptionUtilTest
 	public void testIsAPMServiceOnly()
 	{
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(null));
-		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "APM", "ITA" })));
+		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList("APM", "ITA")));
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { null })));
-		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "test" })));
+		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList("test")));
 		Assert.assertTrue(TenantSubscriptionUtil
-				.isAPMServiceOnly(Arrays.asList(new String[] { ApplicationEditionConverter.ApplicationOPCName.APM.toString() })));
+				.isAPMServiceOnly(Arrays.asList(ApplicationEditionConverter.ApplicationOPCName.APM.toString())));
 	}
 }
