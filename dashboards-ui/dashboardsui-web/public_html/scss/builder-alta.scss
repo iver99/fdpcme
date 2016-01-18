@@ -945,9 +945,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         height: auto !important;
         overflow-y: visible !important;
     }
-    
+    .dbd-widget {
+        page-break-before: always;
+    }
     @page {
-        /*size:landscape;*/
+        size: A3 landscape;
         /*margin: 23cm;*/
     }
 }
