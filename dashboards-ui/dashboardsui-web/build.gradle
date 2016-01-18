@@ -547,13 +547,14 @@ task restDoc {
 }
 
 sourceSets {
-    test{
-            java {
-                    srcDirs = ['src/test/java']
+        test{
+                java {
+                        srcDirs = ['src/integTest/java']
                 }
-                resources.srcDirs = ['src/test/java']
+                resources.srcDirs = ['src/integTest/java']
         }
 }
+
 
 //copy files without any convert when -PdevMode enabled
 task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory,unpackFontFromArtifactory,compileSass]){
@@ -565,6 +566,14 @@ task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJ
     doLast {
         delete 'public_html/@version@/css'
     }    
+}
+test {
+        useTestNG()
+        {
+                //We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+                //if you wish to run ALL tests within this projet - remove following.
+                includeGroups 's1' ,'s2'
+        }
 }
 
 war.archiveName "dashboardsui-web.war"
