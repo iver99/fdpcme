@@ -29,10 +29,12 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-    }
+	classpath group:"com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "1.0+", transitive: true
+	}
 }
 apply from: 'setup.gradle'
 apply plugin: 'TestInfraPlugin'
+apply plugin: 'DevInfraPlugin'
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************
  *                   END OF TEST-INFRA-BLOCK
@@ -74,11 +76,12 @@ dependencies {
 }
 
 
+task DeployDFAPI(type: Exec) {
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args '-p',  project.properties['emdi.GIT_VIEW_ROOT'] +'/dashboards-ee/', 'appServerDeploy'
+}
 
-task DeployDFAPI(type:Exec) {
 
-        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ee/', 'appServerDeploy'
-        }
 task PropsCopy(type: Copy,dependsOn: DeployDFAPI) {
    from '/net/slc07ctj/scratch/emaas/setuplogs/'
    into '../../oracle/work/'
