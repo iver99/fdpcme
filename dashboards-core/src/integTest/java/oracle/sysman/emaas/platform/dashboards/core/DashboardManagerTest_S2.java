@@ -353,7 +353,7 @@ public class DashboardManagerTest_S2
 		}
 	}
 
-	//@Test(groups = {"s2"})
+	@Test(groups = {"s2"})
 	public void testDeleteDashboard_S2() throws DashboardException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
@@ -509,7 +509,7 @@ public class DashboardManagerTest_S2
 			}
 		}
 
-	//@Test(groups = {"s2"})
+	@Test(groups = {"s2"})
 	public void testGetDashboardByName_S2() throws DashboardException
 	{
 		DashboardManager dm = DashboardManager.getInstance();
