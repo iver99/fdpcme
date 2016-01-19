@@ -1,15 +1,25 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import mockit.Verifications;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
 
@@ -211,5 +221,28 @@ public class TenantSubscriptionUtilTest
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList("test")));
 		Assert.assertTrue(TenantSubscriptionUtil
 				.isAPMServiceOnly(Arrays.asList(ApplicationEditionConverter.ApplicationOPCName.APM.toString())));
+	}
+
+	@Test(groups = { "s2" })
+	public void testRestClientGet_S2(@Mocked final DefaultClientConfig anyClientConfig, @Mocked final Client anyClient,
+			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
+			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
+			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder) throws Exception
+	{
+		new NonStrictExpectations() {
+			{
+				new DefaultClientConfig();
+				Client.create(anyClientConfig);
+			}
+		};
+		new TenantSubscriptionUtil.RestClient().get("http://test.link.com", "emaastesttenant1");
+		new Verifications() {
+			{
+				RegistrationManager.getInstance().getAuthorizationToken();
+				UriBuilder.fromUri(anyString).build();
+				anyClient.resource(anyUri).header(anyString, any);
+				anyBuilder.get(String.class);
+			}
+		};
 	}
 }
