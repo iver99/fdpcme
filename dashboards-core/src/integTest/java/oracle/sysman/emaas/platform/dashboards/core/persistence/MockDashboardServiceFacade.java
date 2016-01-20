@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import mockit.Mock;
 import mockit.MockUp;
@@ -285,6 +284,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public EntityManager getEntityManager()
 	{
 		System.out.println("[MockDashboardServiceFacade] getEntityManager called");
+		//return null;
+		return new MockEntityManager();
+		/*
 		return new MockUp<EntityManager>() {
 
 			@Mock
@@ -330,7 +332,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 				throw new RuntimeException("Unspported mock call. Please change your case.");
 			}
 
-		}.getMockInstance();
+		}.getMockInstance();*/
 		//return null;
 	}
 

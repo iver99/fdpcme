@@ -242,22 +242,6 @@ public class DashboardServiceFacadeTest_S2
 	//private static final String CURRENT_USER = "SYSMAN";
 	private static final long TENANT_ID = 100L;
 
-	public void getEmsDashboardLastAccessByPK()
-	{
-		EntityManager em = null;
-		try {
-			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
-			EmsDashboardLastAccess rd = dashboardServiceFacade.getEmsDashboardLastAccessByPK(d.getDashboardId(),
-					a.getAccessedBy());
-			DashboardServiceFacadeTest_S2.assertEmsDashboardLastAccess(rd);
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -338,6 +322,7 @@ public class DashboardServiceFacadeTest_S2
 		testGetEmsDashboardById();
 		testGetEmsDashboardFindAll();
 		testMergeEmsDashboard();
+		testGetEmsDashboardLastAccessByPK();
 		testPrefecence();
 
 	}
@@ -378,17 +363,6 @@ public class DashboardServiceFacadeTest_S2
 		}
 	}
 
-	//	/**
-	//	 * Test method for
-	//	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardFavoriteFindAll()}.
-	//	 */
-	//	public void testGetEmsDashboardFavoriteFindAll()
-	//	{
-	//		for (EmsDashboardFavorite emsdashboardfavorite : dashboardServiceFacade.getEmsDashboardFavoriteFindAll()) {
-	//			DashboardServiceFacadeTest.assertEmsDashboardFavorite(emsdashboardfavorite);
-	//		}
-	//	}
-
 	/**
 	 * Test method for
 	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardFindAll()}.
@@ -401,6 +375,33 @@ public class DashboardServiceFacadeTest_S2
 			for (EmsDashboard emsdashboard : dashboardServiceFacade.getEmsDashboardFindAll()) {
 				DashboardServiceFacadeTest_S2.assertEmsDashboard(emsdashboard);
 			}
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	//	/**
+	//	 * Test method for
+	//	 * {@link oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade#getEmsDashboardFavoriteFindAll()}.
+	//	 */
+	//	public void testGetEmsDashboardFavoriteFindAll()
+	//	{
+	//		for (EmsDashboardFavorite emsdashboardfavorite : dashboardServiceFacade.getEmsDashboardFavoriteFindAll()) {
+	//			DashboardServiceFacadeTest.assertEmsDashboardFavorite(emsdashboardfavorite);
+	//		}
+	//	}
+
+	public void testGetEmsDashboardLastAccessByPK()
+	{
+		EntityManager em = null;
+		try {
+			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
+			EmsDashboardLastAccess rd = dashboardServiceFacade.getEmsDashboardLastAccessByPK(d.getDashboardId(),
+					a.getAccessedBy());
+			DashboardServiceFacadeTest_S2.assertEmsDashboardLastAccess(rd);
 		}
 		finally {
 			if (em != null) {
