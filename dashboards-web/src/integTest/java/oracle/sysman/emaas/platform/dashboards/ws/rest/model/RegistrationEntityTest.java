@@ -49,7 +49,7 @@ public class RegistrationEntityTest {
         new NonStrictExpectations() {
             {
                 tenantContext.getCurrentTenant();
-                returns("tenantName","tenantName");
+                returns("tenantName", "tenantName");
 
                 final String APM_SERVICENAME = "APM";
                 final String LA_SERVICENAME = "LogAnalytics";
@@ -59,7 +59,7 @@ public class RegistrationEntityTest {
                 apps.add(LA_SERVICENAME);
                 apps.add(ITA_SERVICENAME);
 
-                tenantSubscriptionUtil.getTenantSubscribedServices("tenantName");
+                tenantSubscriptionUtil.getTenantSubscribedServices(anyString);
                 result = apps;
             }
         };
@@ -70,7 +70,7 @@ public class RegistrationEntityTest {
         Assert.assertNull(registrationEntity.getSessionExpiryTime());
         registrationEntity = new RegistrationEntity("201217");
 
-        Assert.assertEquals(registrationEntity.getSessionExpiryTime(),"201217");
+        Assert.assertEquals(registrationEntity.getSessionExpiryTime(), "201217");
     }
 
     @Test
@@ -84,30 +84,31 @@ public class RegistrationEntityTest {
     }
 
     @Test
-    public void testGetHomeLinks(@Mocked final LookupClient lookupClient,@Mocked final InstanceInfo instanceInfo,@Mocked final Link link) throws Exception {
+    public void testGetHomeLinks(@Mocked final LookupClient lookupClient, @Mocked final InstanceInfo instanceInfo, @Mocked final Link link,@Mocked final LinkEntity linkEntity) throws Exception {
         new Expectations() {
             {
                 instanceInfo.getVersion();
-                returns(registrationEntity.NAME_DASHBOARD_UI_VERSION,registrationEntity.NAME_DASHBOARD_UI_VERSION);
+                returns(registrationEntity.NAME_DASHBOARD_UI_VERSION, registrationEntity.NAME_DASHBOARD_UI_VERSION);
 
                 instanceInfo.getServiceName();
-                result = registrationEntity.NAME_DASHBOARD_UI_SERVICENAME;
+                returns(registrationEntity.NAME_DASHBOARD_UI_SERVICENAME, registrationEntity.APM_SERVICENAME);
 
                 link.getRel();
-                result = "rel";
+                returns("relPrefix/sampleHostName", "relPrefix/sampleHostName");
 
                 link.getHref();
-                result = "href";
+                returns("https://sampleHost:port", "https://sampleHost:port");
+
+                linkEntity.getHref();
+                result = "http://sampleHost:port";
 
                 ArrayList<Link> linkArrayList = new ArrayList<Link>();
+                linkArrayList.add(link);
                 linkArrayList.add(link);
                 instanceInfo.getLinksWithRelPrefix(anyString);
                 result = linkArrayList;
 
-                instanceInfo.getLinksWithRelPrefix(anyString);
-                times = 1;
-
-                registryLookupUtil.getLinksWithRelPrefix(anyString,withAny(new SanitizedInstanceInfo()));
+                registryLookupUtil.getLinksWithRelPrefix(anyString, withAny(new SanitizedInstanceInfo()));
                 result = linkArrayList;
 
                 ArrayList<InstanceInfo> infoArrayList = new ArrayList<InstanceInfo>();
@@ -117,6 +118,19 @@ public class RegistrationEntityTest {
             }
         };
         Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
+
+        new Expectations(){
+            {
+                instanceInfo.getServiceName();
+                result = "ApmUI";
+
+                tenantContext.getCurrentTenant();
+                returns("tenantName",null);
+
+            }
+        };
+        Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
+
     }
 
 
