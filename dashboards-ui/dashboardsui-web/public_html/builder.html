@@ -696,7 +696,7 @@
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
-                                            <h2 class="dbd-tile-title"><a data-bind="text: text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
+                                            <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
                                           <!-- /ko -->
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title"></h2>

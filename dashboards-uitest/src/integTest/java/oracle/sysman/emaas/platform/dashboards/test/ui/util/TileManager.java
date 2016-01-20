@@ -51,19 +51,29 @@ public class TileManager {
 	}
 	
 	
-	public void tileEdit() throws Exception
-	{
-		driver.click(DashBoardPageId.EditTileID);
-	}
+//	public void tileEdit() throws Exception
+//	{
+//		driver.click(DashBoardPageId.EditTileID);
+//	}
 	
 	public void tileDelete() throws Exception
 	{
-		driver.click(DashBoardPageId.DeleteTileID);
+		driver.click(DashBoardPageId.RemoveTileID);
 	}
 	
-	public void tileRefresh() throws Exception
+//	public void tileRefresh() throws Exception
+//	{
+//		driver.click(DashBoardPageId.RefreshTileID);
+//	}
+	
+	public void tileTaller() throws Exception
 	{
-		driver.click(DashBoardPageId.RefreshTileID);
+		driver.click(DashBoardPageId.TallerTileID);
+	}
+	
+	public void tileShorter() throws Exception
+	{
+		driver.click(DashBoardPageId.ShorterTileID);
 	}
 	
 	public void tileMaximize() throws Exception

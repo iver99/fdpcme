@@ -18,7 +18,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
-// sourc directories where font files are copied
+// source directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
