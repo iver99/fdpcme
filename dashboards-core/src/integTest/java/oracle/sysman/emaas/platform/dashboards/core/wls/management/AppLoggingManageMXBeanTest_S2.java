@@ -13,8 +13,6 @@ package oracle.sysman.emaas.platform.dashboards.core.wls.management;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -26,8 +24,6 @@ import org.testng.annotations.Test;
 @Test(groups = { "s2" })
 public class AppLoggingManageMXBeanTest_S2
 {
-	private static final Logger logger = LogManager.getLogger(AppLoggingManageMXBeanTest_S2.class);
-
 	@BeforeClass
 	public void beforeClass() throws URISyntaxException
 	{
