@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.core.util;
+package oracle.sysman.emaas.platform.dashboards.ui.webutils.util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,15 +12,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import mockit.Deencapsulation;
-import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogContext;
-import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogDirection;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.LogUtil.InteractionLogDirection;
 
 public class LogUtilTest
 {
-
 	@Test(groups = { "s2" })
 	public void testGetLoggerUpdateTime_S2(@Mocked final LogManager anyLogManager, @Mocked final LoggerContext anyLoggerContext,
 			@Mocked final Configuration anyConfiguration, @Mocked final LoggerConfig anyLoggerConfig)
@@ -48,35 +45,35 @@ public class LogUtilTest
 		Assert.assertEquals(time, testTime);
 	}
 
-	@Test(groups = { "s2" })
-	public void testInitializeLoggersUpdateTime_S2(@Mocked final LogManager anyLogManager,
-			@Mocked final LoggerContext anyLoggerContext, @Mocked final Configuration anyConfiguration,
-			@Mocked final LoggerConfig anyLoggerConfig)
-	{
-		new Expectations(LogUtil.class) {
-			{
-				LogManager.getContext(false);
-				anyLoggerContext.getConfiguration();
-				result = anyConfiguration;
-				anyConfiguration.getLoggers();
-				result = new Delegate<Map<String, LoggerConfig>>() {
-					@SuppressWarnings("unused")
-					Map<String, LoggerConfig> getLoggers()
-					{
-						Map<String, LoggerConfig> map = new HashMap<String, LoggerConfig>();
-						map.put("test logger 1", anyLoggerConfig);
-						map.put("test logger 2", anyLoggerConfig);
-						return map;
-					}
-				};
-				LogUtil.setLoggerUpdateTime(anyConfiguration, anyLoggerConfig, anyLong);
-				times = 2;
-				anyLoggerContext.updateLoggers();
-				times = 2;
-			}
-		};
-		LogUtil.initializeLoggersUpdateTime();
-	}
+	//	@Test(groups = { "s2" })
+	//	public void testInitializeLoggersUpdateTime_S2(@Mocked final LogManager anyLogManager,
+	//			@Mocked final LoggerContext anyLoggerContext, @Mocked final Configuration anyConfiguration,
+	//			@Mocked final LoggerConfig anyLoggerConfig)
+	//	{
+	//		new Expectations(LogUtil.class) {
+	//			{
+	//				LogManager.getContext(false);
+	//				anyLoggerContext.getConfiguration();
+	//				result = anyConfiguration;
+	//				anyConfiguration.getLoggers();
+	//				result = new Delegate<Map<String, LoggerConfig>>() {
+	//					@SuppressWarnings("unused")
+	//					Map<String, LoggerConfig> getLoggers()
+	//					{
+	//						Map<String, LoggerConfig> map = new HashMap<String, LoggerConfig>();
+	//						map.put("test logger 1", anyLoggerConfig);
+	//						map.put("test logger 2", anyLoggerConfig);
+	//						return map;
+	//					}
+	//				};
+	//				LogUtil.setLoggerUpdateTime(anyConfiguration, anyLoggerConfig, anyLong);
+	//				times = 2;
+	//				anyLoggerContext.updateLoggers();
+	//				times = 2;
+	//			}
+	//		};
+	//		LogUtil.initializeLoggersUpdateTime();
+	//	}
 
 	@Test(groups = { "s2" })
 	public void testSetLoggerUpdateTime_S2(@Mocked final LoggerContext anyLoggerContext,
@@ -109,12 +106,11 @@ public class LogUtilTest
 	{
 		String tenantId = "emaastesttenant1";
 		String serviceInvoked = "ApmUI";
-		String direction = InteractionLogDirection.IN.getValue();
-		InteractionLogContext ilc = new InteractionLogContext(tenantId, serviceInvoked, direction);
-		LogUtil.setInteractionLogThreadContext(ilc);
+		InteractionLogDirection direction = InteractionLogDirection.IN;
+		LogUtil.setInteractionLogThreadContext(tenantId, serviceInvoked, direction);
 		Assert.assertEquals(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_TENANTID), tenantId);
 		Assert.assertEquals(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_SERVICE_INVOKED), serviceInvoked);
-		Assert.assertEquals(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_DIRECTION), direction);
+		Assert.assertEquals(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_DIRECTION), direction.getValue());
 		LogUtil.clearInteractionLogContext();
 		Assert.assertNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_TENANTID));
 		Assert.assertNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_SERVICE_INVOKED));
