@@ -12,6 +12,8 @@ import mockit.Deencapsulation;
 import mockit.Delegate;
 import mockit.Expectations;
 import mockit.Injectable;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.Builder;
@@ -39,19 +41,19 @@ public class RegistryLookupUtilTest
 		Link lk3 = new Link();
 		lk3.withRel("Test 3");
 		links.add(lk3);
-		//		SanitizedInstanceInfo sii = new MockUp<SanitizedInstanceInfo>() {
-		//			@Mock
-		//			List<Link> getLinks()
-		//			{
-		//				return links;
-		//			}
-		//		}.getMockInstance();
+		SanitizedInstanceInfo sii = new MockUp<SanitizedInstanceInfo>() {
+			@Mock
+			List<Link> getLinks()
+			{
+				return links;
+			}
+		}.getMockInstance();
 
-		//		List<Link> rtn = RegistryLookupUtil.getLinksWithRelPrefix("Test", sii);
-		//		Assert.assertEquals(rtn.size(), 2);
-		//		Assert.assertTrue(rtn.contains(lk1));
-		//		Assert.assertFalse(rtn.contains(lk2));
-		//		Assert.assertTrue(rtn.contains(lk3));
+		List<Link> rtn = RegistryLookupUtil.getLinksWithRelPrefix("Test", sii);
+		Assert.assertEquals(rtn.size(), 2);
+		Assert.assertTrue(rtn.contains(lk1));
+		Assert.assertFalse(rtn.contains(lk2));
+		Assert.assertTrue(rtn.contains(lk3));
 	}
 
 	@Test(groups = { "s2" })
@@ -280,6 +282,53 @@ public class RegistryLookupUtilTest
 		Link lk = RegistryLookupUtil.getServiceExternalLinkWithRelPrefix("LoganService", "0.1", "logan", "emaastesttenant1");
 		Assert.assertEquals(lk.getHref(), testHref);
 		Assert.assertEquals(lk.getRel(), testRel);
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetServiceInternalLink(@Mocked final Builder anyBuilder, @Mocked final InstanceInfo anyInstanceInfo,
+			@Mocked final LookupManager anyLockupManager, @Mocked final LookupClient anyClient,
+			@Mocked final InstanceQuery anyInstanceQuery) throws Exception
+	{
+		final String serviceName = "ApmUI";
+		final String version = "0.1";
+		new Expectations() {
+			{
+				InstanceInfo.Builder.newBuilder().withServiceName(withEqual(serviceName)).withVersion(withEqual(version)).build();
+				result = anyInstanceInfo;
+
+				new InstanceQuery((InstanceInfo) any);
+				LookupManager.getInstance();
+				result = anyLockupManager;
+				anyLockupManager.getLookupClient();
+				result = anyClient;
+				anyClient.lookup((InstanceQuery) any);
+				result = new Delegate<List<InstanceInfo>>() {
+					@SuppressWarnings("unused")
+					List<InstanceInfo> lookup(InstanceQuery query)
+					{
+						List<InstanceInfo> list = new ArrayList<InstanceInfo>();
+						for (int i = 0; i < 3; i++) {
+							list.add(anyInstanceInfo);
+						}
+						return list;
+					}
+				};
+				Link lkAPM = new Link();
+				lkAPM.withHref("http://den00hvb.us.oracle.com:7028/emsaasui/apmUi/index.html");
+				lkAPM.withRel("home");
+				Link lkITA = new Link();
+				lkITA.withHref(
+						"http://den00hvb.us.oracle.com:7019/emsaasui/emcitas/worksheet/html/displaying/worksheet-list.html");
+				lkITA.withRel("home");
+				Link lkLA = new Link();
+				lkLA.withHref("http://den00yse.us.oracle.com:7004/emsaasui/emlacore/resources/");
+				lkLA.withRel("loganService");
+				anyInstanceInfo.getLinksWithProtocol(anyString, anyString);
+				returns(Arrays.asList(lkAPM), Arrays.asList(lkITA), Arrays.asList(lkLA));
+			}
+		};
+		Link lk = RegistryLookupUtil.getServiceInternalLink(serviceName, version, "home", null);
+		Assert.assertEquals(lk.getHref(), "http://den00hvb.us.oracle.com:7028/emsaasui/apmUi/index.html");
 	}
 
 	@Test(groups = { "s2" })

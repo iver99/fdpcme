@@ -45,36 +45,6 @@ public class LogUtilTest
 		Assert.assertEquals(time, testTime);
 	}
 
-	//	@Test(groups = { "s2" })
-	//	public void testInitializeLoggersUpdateTime_S2(@Mocked final LogManager anyLogManager,
-	//			@Mocked final LoggerContext anyLoggerContext, @Mocked final Configuration anyConfiguration,
-	//			@Mocked final LoggerConfig anyLoggerConfig)
-	//	{
-	//		new Expectations(LogUtil.class) {
-	//			{
-	//				LogManager.getContext(false);
-	//				anyLoggerContext.getConfiguration();
-	//				result = anyConfiguration;
-	//				anyConfiguration.getLoggers();
-	//				result = new Delegate<Map<String, LoggerConfig>>() {
-	//					@SuppressWarnings("unused")
-	//					Map<String, LoggerConfig> getLoggers()
-	//					{
-	//						Map<String, LoggerConfig> map = new HashMap<String, LoggerConfig>();
-	//						map.put("test logger 1", anyLoggerConfig);
-	//						map.put("test logger 2", anyLoggerConfig);
-	//						return map;
-	//					}
-	//				};
-	//				LogUtil.setLoggerUpdateTime(anyConfiguration, anyLoggerConfig, anyLong);
-	//				times = 2;
-	//				anyLoggerContext.updateLoggers();
-	//				times = 2;
-	//			}
-	//		};
-	//		LogUtil.initializeLoggersUpdateTime();
-	//	}
-
 	@Test(groups = { "s2" })
 	public void testSetLoggerUpdateTime_S2(@Mocked final LoggerContext anyLoggerContext,
 			@Mocked final Configuration anyConfiguration, @Mocked final LoggerConfig anyLoggerConfig)
