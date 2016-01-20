@@ -25,40 +25,7 @@ public class TestDashBoard extends LoginAndLogout{
 	{
 		login(this.getClass().getName()+"."+testName);
 		DashBoardUtils.loadWebDriver(webd);
-	}
-	
-	
-	@Test
-	public void testHomepage() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testHomePage");	
-		//DashBoardUtils.checkBrandingBarLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
-		
-		DashBoardUtils.clickGVButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Application_Performance_Monitoring_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Performance_Analytics_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Resource_Planning_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Garbage_Collection_Overhead_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Host_Inventory_By_Platform_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Configuration_and_Storage_By_Version_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.WebLogic_Servers_by_JDK_Version_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_Databases_by_Resource_Consumption_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Heap_Usage_ID));
-		Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Top_25_WebLogic_Servers_by_Load_ID));
-		
-		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Database_Health_Summary_ID));
-		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.WebLogic_Health_Summary_ID));
-		//Assert.assertTrue(DashBoardUtils.doesWebElementExistByXPath(DashBoardPageId.Host_Health_Summary_ID));
-		//sort func
-		DashBoardUtils.clickToSortByLastAccessed();
-		//check box
-		//DashBoardUtils.clickCheckBox();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
+	}		
 	
 	@Test
 	public void testCreateDashBoard() throws Exception
@@ -239,8 +206,8 @@ public class TestDashBoard extends LoginAndLogout{
 					
 	}	
 
-	@Test(dependsOnMethods = { "testHomepage" })
-	public void testUserMenu() throws Exception
+	@Test
+	public void testDeleteOOB() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		webd.getLogger().info("start to test in testUserMenu");
@@ -255,27 +222,8 @@ public class TestDashBoard extends LoginAndLogout{
 		webd.click(DashBoardPageId.InfoBtnID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
-		Assert.assertFalse(removeButton.isEnabled());
-		
-		webd.click(DashBoardPageId.MenuBtnID);
-		//about menu
-		webd.click(DashBoardPageId.AboutID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		Assert.assertEquals(webd.getWebDriver().findElement(By.xpath(DashBoardPageId.AboutContentID)).getText(),"Warning: Unauthorized access is strictly prohibited.");
-		webd.click(DashBoardPageId.AboutCloseID);
-		
-		//help menu
-		//webd.click(DashBoardPageId.MenuBtnID);
-		//webd.click(DashBoardPageId.HelpID);
-		//DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Assert.assertEquals(webd.getWebDriver().findElement(By.xpath(DashBoardPageId.HelpContentID)).getText(),"Get Started");
-		
-		//signout menu
-		//webd.click(DashBoardPageId.MenuBtnID);
-		//webd.click(DashBoardPageId.SignOutID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	
+		Assert.assertFalse(removeButton.isEnabled());		
+	}	
 
 	@Test
 	public void testCreateLVDashBoard() throws Exception
@@ -378,5 +326,5 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_ITALinkID),"IT Analytics");
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
 		
-	}	
+	}
 }

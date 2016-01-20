@@ -292,7 +292,7 @@ define({
       "LANDING_HOME_DASHBOARDS_DESC": "Build custom dashboards using out-of-the-box widgets or your own visualization of data",
       "LANDING_HOME_DATA_EXPLORERS": "Data Explorers",
       "LANDING_HOME_DATA_EXPLORERS_DESC": "Search, analyze, and visualize data",
-      "LANDING_HOME_DATA_EXPLORER": "Data Explorer - ",
+      "LANDING_HOME_DATA_EXPLORER": "Data Explorer",
       
       "LANDING_HOME_LEARN_MORE": "Learn More",
       "LANDING_HOME_GET_STARTED_LINK": "How to get started",

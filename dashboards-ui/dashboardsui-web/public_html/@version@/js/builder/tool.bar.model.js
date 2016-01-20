@@ -799,11 +799,11 @@ define(['knockout',
                     "label": getNlsString('COMMON_BTN_PRINT'),
                     "url": "#",
                     "id": "emcpdf_dsbopts_print",
-                    "onclick": self.editDisabled() === true ? "" : function (data, event) {
+                    "onclick": function (data, event) {
                         window.print();
                     },
                     "icon": "dbd-toolbar-icon-print",
-                    "title": getNlsString('COMMON_BTN_PRINT'),
+                    "title": "",//getNlsString('COMMON_BTN_PRINT'),
                     "disabled": false,
                     "showOnMobile": true,
                     "endOfGroup": false
