@@ -167,7 +167,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId) throws DashboardException
+			@PathParam("id") long dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
