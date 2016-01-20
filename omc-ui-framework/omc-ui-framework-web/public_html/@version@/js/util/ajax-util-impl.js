@@ -87,7 +87,7 @@ define([
                                 removeMessage(messageId);
 
                                 //Set new retry message to be shown on UI
-                                messageId = getGuid();
+                                messageId = messageUtil.getGuid();
                                 var summaryMsg = nls.BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY;
                                 var detailMsg = null;
                                 //Show retry message detail
@@ -127,7 +127,7 @@ define([
                                     errorDetailMsg = messageUtil.formatMessage(errorDetailMsg);
                                 }
                                 messageObj = {
-                                    id: getGuid(), 
+                                    id: messageUtil.getGuid(), 
                                     action: 'show', 
                                     type: "error", 
                                     category: 'retry_fail',
@@ -250,20 +250,7 @@ define([
                 
                 return retryOptions;
             };
-            
-            /**
-             * Generate a GUID string
-             * 
-             * @returns {String}
-             */ 
-            function getGuid() {
-                function S4() {
-                   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-                }
-                
-                return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-            };
-            
+                        
             function isValidShowMessageOption(messageOption) {
                 return messageOption === "none" || messageOption === "summary" || 
                         messageOption === "all";

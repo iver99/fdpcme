@@ -8,6 +8,35 @@ and open the template in the editor.
     Author     : guobaochen
 */
 
+@font-face {
+    font-family: 'FaFont';
+    src: url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff2") format('woff2'),
+        url("../../libs/@version@/css/font-awesome/fonts/fontawesome-webfont.woff") format('woff');
+    font-weight: normal;
+    font-style: normal;
+} 
+
+
+.fa-icon-font {
+  font-family: FaFont;
+  font-size: 1.34rem;
+  display: inline-block;
+  font-weight: normal;
+  speak: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: center;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} 
+
+.fa-icon-font-16 {
+    font-size: 16px !important;
+} 
+
 body, html {
   width: 100%;
   padding: 0;
@@ -178,8 +207,8 @@ body, html {
   margin-right: -40px;
 }*/
 
-.dbd-toolbar-icon-add-widget:before {
-  content: url(../images/func_plus_16_ena.png);
+.dbd-toolbar-icon-add-widget:before,.fa-plus:before {
+  content: "\f067";
 }
 
 .dbd-toolbar-icon-save:before {
@@ -190,8 +219,8 @@ body, html {
   content: url(../images/func_gear_16_ena.png);
 }
 
-.dbd-toolbar-icon-edit:before {
-  content: url(../images/func_edit_16_ena.png);
+.dbd-toolbar-icon-edit:before,.fa-pencil:before {
+  content: "\f040";
 }
 
 .dbd-toolbar-icon-duplicate:before {
@@ -212,6 +241,58 @@ body, html {
 
 .dbd-toolbar-icon-delete-disabled:before {
   content: url(../images/func_trashcan_16_dis.png);
+}
+.dbd-toolbar-icon-home:before {
+   content: url(../images/func_home_16_ena.png);
+}
+ 
+ .dbd-toolbar-icon-home-outline:before {
+   content: url(../images/remove_home_16.png);
+}
+ 
+ .dbd-toolbar-icon-favorites:before {
+   content: url(../images/func_star_16_ena.png);
+ }
+
+.dbd-toolbar-icon-share:before, .fa-users:before {
+  content: "\f0c0";
+  padding-bottom: 3px;
+} 
+
+.dbd-toolbar-icon-unshare:before, .fa-user:before {
+  content: "\f007";
+  padding-bottom: 3px;
+}
+
+.dbd-toolbar-icon-print:before, .fa-print:before {
+  content: "\f02f";
+}
+
+.fa-star:before {
+  content: "\f005"; }
+
+.fa-star-o:before {
+  content: "\f006"; }
+
+.dbd-toolbar-fa-icon {
+    width: 16px;
+    font-family: FaFont;
+    font-size: 1.24rem;
+    display: inline-block;
+    font-weight: normal;
+    speak: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-align: center;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.dbd-toolbar-fa-icon-16 {
+    font-size: 1.06rem;
 }
 
 .builder-toolbar-button-text {
@@ -294,6 +375,8 @@ body, html {
   font-size: 14px;
   border-top: 1px solid #D8D6D6 !important;
   height: 32px;
+  border-radius: 0;
+  margin-right: -2px;
 }
 
 #widget-area.dbd-support-transition .dbd-widget:not(.dbd-tile-in-dragging), 
@@ -325,8 +408,12 @@ body, html {
     width: 100%;
 }
 
+.dbd-tile-action span.oj-button-icon{
+    margin-left: -2px !important;
+}
+
 .dbd-tile-action span.oj-button-icon:before {
-  content: url('../images/func_threebullets_black_16_ena.png');
+  content: url('../images/func_threebullets_16_ena.png');
 }
 
 .dbd-tile-action.oj-hover span.oj-button-icon:before {
@@ -340,6 +427,18 @@ body, html {
 .dbd-tile-action.oj-selected span.oj-button-icon:before {
     content: url('../images/func_threebullets_white_16_ena.png');
 }
+
+.dbd-btn-editor .dbd-title-edit:before{
+    content: url('../images/func_arrowbox_16_ena.png');
+}
+
+.dbd-btn-editor .oj-hover .dbd-title-edit:before{
+    content: url('../images/func_arrowbox_16_ena_blue.png');
+}
+.dbd-btn-editor .oj-active .dbd-title-edit:before{
+    content: url('../images/func_arrowbox_16_ena_white.png');
+}
+
 
 .dbd-tile-maximized .dbd-tile-header {
   cursor: default;
@@ -365,6 +464,10 @@ body, html {
   position: relative;
   display: inline-block;
   vertical-align: middle;
+}
+
+.dbd-widget[ismobile="false"] .dbd-btn-editor {
+    display: none;
 }
 
 .dbd-widget[ismobile="false"] .dbd-btn-group {
@@ -393,26 +496,45 @@ body, html {
   -webkit-margin-start: 0px;
   -webkit-margin-end: 0px;
   margin: 0px;
-  margin-right: -48px;
+  /* margin-right: -48px; */
+  display: inline-block;
 }
 
 .dbd-tile-header .dbd-tile-action {
   float: right;
   display: block;
   margin-bottom: 1px;
-  width: 44px;
+  width: 20px;
   height: 32px;
-  min-width: 46px;
+  min-width: 36px;
   min-height: 32px;
+  border-radius: 0;
+}
+
+.dbd-tile-header .dbd-btn-editor button{
+  float: right;
+  display: block;
+  margin-bottom: 1px;
+  width: 20px;
+  height: 32px;
+  min-width: 36px;
+  min-height: 32px;
+  border-radius: 0;
+}
+
+.dbd-tile-header .dbd-btn-editor .dbd-title-edit{
+    margin-left: 10px !important;
+    margin-right: -5px !important;
 }
 
 .dbd-tile-element {
   border: 1px solid #d6dfe6; 
-  overflow: auto;   
+  overflow: auto;
   /*height: 220px;*/
   clear: right;
   border-top:0px;
-  background-color: white
+  background-color: white;
+  border-radius: 0;
 }
 
 .dbd-one-page .dbd-tile-element {
@@ -776,3 +898,50 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-tile-to-be-occupuied {
     border: 1px dashed black;
 }
+
+.dbd-icon-resize{
+    line-height: 12px;
+    margin-right: 3px;
+}
+.dbd-icon-resize:before{
+    content: "\f065"; 
+}
+.dbd-icon-remove{
+    line-height: 12px;
+    margin-right: 3px;
+}
+.dbd-icon-remove:before{
+   content: "\f00d";  
+}
+.dbd-icon-eye{
+    line-height: 12px;
+}
+.dbd-icon-eye:before{
+    content: "\f06e";
+}
+.dbd-icon-eye-slash{
+     line-height: 12px;
+}
+.dbd-icon-eye-slash:before{
+    content:"\f070";
+}
+
+@media print {
+    .no-print {
+        display:none !important;
+    }
+    
+    #tiles-col-container{
+        /*width: auto !important;*/
+        height: auto !important;
+        overflow-y: visible !important;
+    }
+    .dbd-widget {
+        page-break-before: always;
+    }
+    @page {
+        size: A3 landscape;
+        /*margin: 23cm;*/
+    }
+}
+

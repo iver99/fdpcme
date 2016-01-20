@@ -288,6 +288,7 @@ public class RegistryLookupUtil
 		List<Link> protocoledLinks = new ArrayList<Link>();
 		for (Link link : links) {
 			try {
+				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})", protocol, relPrefix, link.getRel(), link.getHref());
 				URI uri = URI.create(link.getHref());
 				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null && link.getRel().indexOf(relPrefix) == 0) {
 					protocoledLinks.add(link);
@@ -308,7 +309,10 @@ public class RegistryLookupUtil
 		logger.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
-		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
+		if (!StringUtil.isEmpty(version))
+			builder = builder.withVersion(version);
+		InstanceInfo info = builder.build();
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
 		try {
@@ -318,9 +322,11 @@ public class RegistryLookupUtil
 				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
 				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
 				if (ins == null) {
-					logger.error(
-							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+					logger.warn(
+							"retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
+					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+					itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
@@ -411,11 +417,11 @@ public class RegistryLookupUtil
 						}
 						if (sanitizedInstance != null) {
 							if (prefixMatch) {
-								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("https", rel,
+								links = RegistryLookupUtil.getLinksWithRelPrefixWithProtocol("http", rel,
 										sanitizedInstance.getLinks());
 							}
 							else {
-								links = RegistryLookupUtil.getLinksWithProtocol("https", sanitizedInstance.getLinks(rel));
+								links = RegistryLookupUtil.getLinksWithProtocol("http", sanitizedInstance.getLinks(rel));
 							}
 
 						}

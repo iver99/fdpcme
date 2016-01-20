@@ -136,3 +136,5 @@ tmp/
 work/
 
 .chef
+/dashboards-ui/dashboardsui-web/public_html/@version@/css/
+/omc-ui-framework/omc-ui-framework-web/public_html/@version@/css/

@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-            
+
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -18,7 +18,7 @@
         <div class="loadingIndicator" id="loading">Loading</div>
         <div id="globalBody" style="display: none;">
             <!-- ko stopBinding: true -->
-            <header id="headerWrapper" role="banner">
+            <header id="headerWrapper" role="banner" class="no-print">
                 <div data-bind="component: {
                         name: 'df-oracle-branding-bar',
                         params: brandingbarParams
@@ -139,6 +139,24 @@
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
                         </button>-->
+                        <!-- set as home confirm dilog start -->
+                        <div style="display:none" id="setAsHomeCfmDialog"
+                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                            <div class="oj-dialog-header oj-helper-clearfix">
+                                <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_SET_AS_HOME_DIALOG_TITLE')"></span>
+                            </div>
+                            <div class="oj-dialog-body">
+                                <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
+                            </div>
+                            <div class="oj-dialog-footer">
+                                <button data-bind="click: setAsHomeConfirmed, 
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                                <button id="btnCancelSetAsHome" data-bind="click: setAsHomeCancelled, 
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                            </div>
+                        </div>
+                        <!-- set as home confirm dilog end -->
                         <!-- Duplicate Dashboard dialog start -->
                         <div style="display:none" id="duplicateDsbDialog"
                              data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', 
@@ -198,26 +216,36 @@
                         <!-- Duplicate Dashboard dialog end -->
                         
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
-                            <li data-bind="css: {'oj-disabled': disabled}">
-                                <a data-bind="attr:{'id':id}, href: url, click: onclick">
-                                    <span class="oj-menu-item-icon oj-fwk-icon" data-bind="css: icon"></span>
+                            <!-- ko if: !disabled  -->
+                            <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
+                                    <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
+                                        <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                                     <span data-bind="text: label"></span></a>
                             </li>
+                                <!-- ko if: endOfGroup  -->
+                                <li></li>
+                            <!-- /ko -->
+                            <!-- /ko -->
                         </script>
 
-                        <ul id="dashboardOptsMenu" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
+                        <ul id="dashboardOptsMenu" class="no-print" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
                         </ul>
+                        <div style="position: absolute;overflow: hidden;left: -9999px;top: -9999px;height: 1px;width: 1px;">
+                            <span class="dbd-toolbar-icon-duplicate"></span>
+                            <span class="dbd-toolbar-icon-home"></span>
+                            <span class="dbd-toolbar-icon-delete"></span>
+                        </div>
                         
-                        <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome"
+                        <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome no-print"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'dbd-toolbar-icon-save'}
-                            }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true">
+                            }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
-                                class='oj-button oj-default oj-button-half-chrome'
+                                class='oj-button oj-default oj-button-half-chrome no-print'
                                 data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
                                     menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
@@ -250,8 +278,7 @@
                                  <br/><span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_DETAIL')"></span><br/>
                     </div>-->
                 </div>
-                
-                <!-- edit Dashboard dilog start -->
+                    <!-- edit Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -652,98 +679,113 @@
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
-                                        <div class="dbd-tile-header tile-drag-handle">
+                                        <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
-                                            <h2 class="dbd-tile-title"><a data-bind="text: title, attr: {href: linkedDashboard}"></a></h2>
+                                            <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
                                           <!-- /ko -->
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
-                                            <h2 class="dbd-tile-title" data-bind="text: title"></h2>
+                                            <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title"></h2>
                                           <!-- /ko -->
-                                            <div class="dbd-pull-right">
+                                          <div class="dbd-pull-right" style="display: flex" data-bind="visible: $root.isMobileDevice !== 'true'">
+                                              <div class="dbd-btn-editor">                 
+                                                  <button class="oj-button-half-chrome" tabindex="0"
+                                                          data-bind="
+                                                             attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
+                                                             click:$root.openInDataExplorer,
+                                                             ojComponent: {
+                                                                component:'ojButton', 
+                                                                icons: {start:'dbd-title-edit'}, 
+                                                                label: ''
+                                                        }"></button>
+                                              </div>
                                                 <div class="dbd-btn-group">
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
-                                                       ojComponent: {component: 'ojButton', 
-                                                                     label: '', 
-                                                                     menu: '#tileMenu' + clientGuid}">
+                                                                       ojComponent: {component: 'ojButton', 
+                                                                                     label: '', 
+                                                                                     menu: '#tileMenu' + clientGuid}">
                                                         <img src="@version@/images/func_threebullets_16_ena.png" alt="Edit"/>
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
-                                                       ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
-                                                        <li id="configure">
+                                                        ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
+                                                        <li id="showhide-title">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_arrowbox_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_CFG')}"/>
+                                                                    <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
                                                                 </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_CFG')"></span>
-                                                            </a>
-                                                        </li>
-                                                        <li id="refresh-this-widget">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_refresh_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_REFRESH')}"/>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REFRESH')"></span>
+                                                                <span data-bind="text: hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
                                                             </a>
                                                         </li>
                                                         <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_x_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_DELETE')}"/>
+                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
                                                                 </span>
                                                                 <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
                                                             </a>
                                                         </li>
-                                                        <li id="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
+                                                        <!-- EMCPDF-1131: this should be changed in next sprint
+                                                        <li id="resize">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
+                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-resize"></i>
                                                                 </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
+                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESIZE')"></span>
                                                             </a>
+                                                            <ul>
+                                                        -->
+                                                        <li id="divider"></li> 
+                                                                <li id="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
+                                                                    </a>
+                                                                </li>
+                                                                <li id="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
+                                                                    </a>
+                                                                </li>
+                                                                <li id="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
+                                                                    </a>
+                                                                </li>
+                                                                <li id="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
+                                                                        </span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
+                                                                    </a>
+                                                                </li>
+                                                                <li id="maximize" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')"></span></a>
+                                                                </li>
+                                                                <li id="restore" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
+                                                                    <a href="#">
+                                                                        <span class="oj-menu-item-icon demo-icon-font">
+                                                                            <img src="@version@/images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
+                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESTORE')"></span></a>
+                                                                </li>
+                                                            <!--
+                                                            </ul>
                                                         </li>
-                                                        <li id="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
-                                                            </a>
-                                                        </li>
-                                                        <li id="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
-                                                            </a>
-                                                        </li>
-                                                        <li id="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
-                                                                </a>
-                                                        </li>
-                                                        <li id="maximize" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')"></span></a>
-                                                        </li>
-                                                        <li id="restore" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <img src="@version@/images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESTORE')"></span></a>
-                                                        </li>
-                                                        <!--<li id="changeUrl">
-                                                          <a href="#" data-bind="click: $root.changeUrl"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Change URL</a>
-                                                        </li>-->
+                                                        -->
                                                     </ul>
                                                 </div>
                                             </div>
