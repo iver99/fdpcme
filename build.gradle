@@ -181,30 +181,25 @@ dependencies {
 			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
 }
 
-task runS1Tests(dependsOn: allprojects.s1tests) {
-    doLast {
- 
-        logger.debug "Overall Failure Count: ${project.failedTestCount}"
-        if (project.failedTestCount != 0)
-        {
-            def err = "S1 tests had errors.  Build Aborted"
-        }
-    
-}
+task runS1Tests(type: Exec) {
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpdf_dev_test'
+    if (project.hasProperty('BuildID')) {
+        args "-PREPO_BID=${BuildID}"
+    }
+    finalizedBy "print_results"
 }
 runS1Tests.enabled = !project.disableBuildTests
 
-task runS2Tests(dependsOn: allprojects.s2tests) {
-    doLast {
+task runS2Tests(type: Exec) {
+    executable project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args 'do_lrg', '-Plrgs=emcpdf_web_unit_test'
+    if (project.hasProperty('BuildID')) {
+        args "-PREPO_BID=${BuildID}"
+    }
+    finalizedBy "print_results"
+} 
 
-        logger.debug "Overall Failure Count: ${project.failedTestCount}"
-        if (project.failedTestCount != 0)
-        {
-            def err = "S2 tests had errors.  Build Aborted"
-        }
-    
-}
-}
 runS2Tests.enabled = !project.disableBuildTests
 runS2Tests.mustRunAfter runS1Tests
 
@@ -250,6 +245,7 @@ buildscript {
 	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'
 		classpath group: 'com.oracle.emaas.emdi', name: 'GAVPlugin', version: '1.0.0+'
 
+		classpath 'org.gradle.plugins:gradle-compass:1.0.10.1'
 	}  
 }
 

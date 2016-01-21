@@ -51,6 +51,8 @@ public class EmsDashboard implements Serializable
 	private Integer enableRefresh;
 	@Column(name = "IS_SYSTEM", nullable = false)
 	private Integer isSystem;
+	@Column(name = "SHARE_PUBLIC", nullable = false)
+	private Integer sharePublic;
 
 	@Column(name = "APPLICATION_TYPE")
 	private Integer applicationType;
@@ -85,8 +87,8 @@ public class EmsDashboard implements Serializable
 	}
 
 	public EmsDashboard(Date creationDate, Long dashboardId, Long deleted, String description, Integer enableTimeRange,
-			Integer enableRefresh, Integer isSystem, Date lastModificationDate, String lastModifiedBy, String name, String owner,
-			String screenShot, Integer type, Integer applicationType)
+			Integer enableRefresh, Integer isSystem, Integer sharePublic, Date lastModificationDate, String lastModifiedBy,
+			String name, String owner, String screenShot, Integer type, Integer applicationType)
 	{
 		this.creationDate = creationDate;
 		this.dashboardId = dashboardId;
@@ -95,6 +97,7 @@ public class EmsDashboard implements Serializable
 		this.enableTimeRange = enableTimeRange;
 		this.enableRefresh = enableRefresh;
 		this.isSystem = isSystem;
+		this.sharePublic = sharePublic;
 		this.lastModificationDate = lastModificationDate;
 		this.lastModifiedBy = lastModifiedBy;
 		this.name = name;
@@ -187,6 +190,14 @@ public class EmsDashboard implements Serializable
 		return screenShot;
 	}
 
+	/**
+	 * @return the sharePublic
+	 */
+	public Integer getSharePublic()
+	{
+		return sharePublic;
+	}
+
 	public Long getTenantId()
 	{
 		return tenantId;
@@ -273,6 +284,15 @@ public class EmsDashboard implements Serializable
 		this.screenShot = screenShot;
 	}
 
+	/**
+	 * @param sharePublic
+	 *            the sharePublic to set
+	 */
+	public void setSharePublic(Integer sharePublic)
+	{
+		this.sharePublic = sharePublic;
+	}
+
 	public void setTenantId(Long tenantId)
 	{
 		this.tenantId = tenantId;
@@ -282,4 +302,5 @@ public class EmsDashboard implements Serializable
 	{
 		this.type = type;
 	}
+
 }

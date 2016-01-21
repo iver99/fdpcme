@@ -23,6 +23,8 @@ define({
       "BRANDING_BAR_NAV_DASHBOARDS_LABEL": "Dashboards",
       "BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL": "Cloud Services",
       "BRANDING_BAR_NAV_HOME_LABEL": "Home",
+      "BRANDING_BAR_NAV_FAVORITES_LABEL": "My Favorites",
+      "BRANDING_BAR_NAV_WELCOME_LABEL": "Welcome",
       "BRANDING_BAR_NAV_VISUAL_ANALYZER_LABEL": "Visual Analyzers",
       "BRANDING_BAR_NAV_EXPLORE_DATA_LABEL": "Explore Data",
       "BRANDING_BAR_NAV_ADMIN_LABEL": "Administration",

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 apply plugin: 'war'
+apply plugin: 'compass'
 apply from: 'test.gradle'
 
 jsversion = project.ext.getServiceVersion('OMC-UI-Framework')
@@ -17,7 +18,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
-// sourc directories where font files are copied
+// source directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
@@ -27,12 +28,28 @@ def webRootSourceDir = 'public_html'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-task cleanJs(type:Delete) {
-	delete fileTree(dir: stagingDir)
-        delete fileTree(dir: compiledDir)
+configurations{
+	compass
 }
 
-task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
+dependencies {
+        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.2-19410', ext: 'war'){ transitive = false }	
+        compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
+        compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
+	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
+
+	compass (group: 'org.jruby', name: 'jruby-complete', version: '1.7.3')	
+}
+
+task cleanJs(type:Delete) {
+	delete fileTree(dir: stagingDir)
+        delete fileTree(dir: compiledDir)	
+}
+
+project.task("cleanCompassCss")<<{
+}
+
+task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
     from (webRootSourceDir) {
         include "**/*"
             eachFile {
@@ -57,6 +74,7 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs]) {
        //this is here because of gradle bug, the old @version@ directory remains
        delete stagingDir+'/@version@'
        delete stagingDir+'/libs/@version@'
+       delete webRootSourceDir+'/@version@/css'
     }
 }
 
@@ -229,6 +247,30 @@ javascript.source.cachedjs.js.files.eachWithIndex { File jsFile, idx ->
 
 task individualMinify(dependsOn: [copyJsSource, tasks.matching { Task task -> task.name.startsWith("dominify")}]){}
 
+compass {
+    // We package the gems into the .jar file (see compass dependencies)
+    // so that http proxy issues do not affect us.  To enable this, 
+    // we also build our own plugin for use.
+    gemPath = file('build/.jruby/gems')
+    gemJars = ['compass-gems:compass-gems:1.0.1']
+    gems = []
+    //if(project.hasProperty("devMode")){
+	cssDir file('public_html/@version@/css')
+    //}
+    //else{
+//	cssDir file('public_html/'+versionPathElement+'/css')
+  //  }
+    sassDir file ('public_html/scss')
+    debugInfo false // Defaults to true,
+                    // set to false to remove debug info from generated css file
+    noLineComments true
+    force true
+}
+
+compileSass {
+     jvmArgs '-Xmx2048M'
+}
+
 task jsHint(type:com.eriwen.gradle.js.tasks.JsHintTask){
         source = javascript.source.jshint.js.files
         dest = file(buildDir.absolutePath+'/jshint.out')
@@ -367,11 +409,15 @@ war.archiveName "omc-ui-framework-web.war"
 copyJsSource.dependsOn unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory
 
 //copy files without minify when -PdevMode enabled
-task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory]){
+task copyDevJs(type:Copy, dependsOn: [cleanJs, unpackJETFromArtifactory, unpackJSLibFromArtifactory, unpackFontFromArtifactory,compileSass]){
     from(webRootSourceDir) {
 	include "**/*"
     }
     into stagingDir
+    
+    doLast {
+        delete 'public_html/@version@/css'
+    }  
 }
 
 if(project.hasProperty("devMode")){
@@ -384,6 +430,7 @@ else
 }
 
 war {
+    if(project.hasProperty("devMode")){
 	from(stagingDir) {
 	    include '**/*'
 	    exclude '**/*.orig.js','**/*.map'
@@ -394,8 +441,22 @@ war {
 		include '**/*.properties'
 		into('WEB-INF/classes') 
 	}
+    }
+    else
+    {
+	from(stagingDir) {
+	    include '**/*'
+	    exclude '**/*.orig.js','**/*.map','**/scss'
+	    into('/')
+	}
 
-	rootSpec.exclude("**/*.zip")
+	from('src/main/java') { 
+		include '**/*.properties'
+		into('WEB-INF/classes') 
+	}
+    }
+
+	//rootSpec.exclude("**/*.zip")
 }
 
 //task buildDFCommonLibZip(type: Zip){
@@ -405,13 +466,6 @@ war {
 //	into 'uifwk'
 //}
 
-dependencies {
-        compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.2-19410', ext: 'war'){ transitive = false }	
-    compile(group: 'files', name: 'canvg', version: '1.3', ext: 'zip'){ transitive = false }
-    compile(group: 'releases.download', name: 'html2canvas', version: '0.4.0', ext: 'js'){ transitive = false }
-	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
-	
-}
 check.dependsOn integTestJar
 
 publishing.publications {

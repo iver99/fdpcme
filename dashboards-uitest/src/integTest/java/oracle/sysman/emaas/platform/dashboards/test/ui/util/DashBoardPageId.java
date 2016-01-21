@@ -17,9 +17,14 @@ public class DashBoardPageId {
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
 	public static final String DashBoardDescBoxID = "dbsHDpIn";
 	public static final String DashOKButtonID = "createDsb";
-	public static final String WidgetAddButtonID = "add-widget-button";
+	public static final String DashSaveButtonID = "createDsb-2";
+	//public static final String WidgetAddButtonID = "add-widget-button";
+	public static final String OptionsID = "dashboardOptsBtn";
 	public static final String DashBoardSaveID = "dashboard-screenshot";
-	public static final String WidgetAddButton = "//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
+	public static final String WidgetAddButton = "emcpdf_dsbopts_add";//"//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
+	public static final String DashboardEdit="//*[@id='emcpdf_dsbopts_edit']";
+	public static final String DashboardDuplicate="//*[@id='emcpdf_dsbopts_duplicate']";
+	public static final String DashboardDelete="//*[@id='emcpdf_dsbopts_delete']";
 	public static final String WidgetDialogCloseButtonID = "div[15]/div[3]/div/span";
 	public static final String DashBoardID = "//div[@class='oj-panel dbs-summary-container']";// and @aria-dashboard='1127']";
 	public static final String ElementID = "//*[@id=\"dtabhomesc\"]/div[1]";
@@ -31,20 +36,29 @@ public class DashBoardPageId {
 	public static final String closeBtnID = "/html/body/div[1]/div[2]/div/div[3]/div/span";//div[contains(@id,'ojDialogWrapper-ui-id') and @class='oj-dialog oj-component oj-draggable']/div[3]/div/span"; // ";";
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
+	public static final String DashboardTableID = "dtabhomesc";
+	
+	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
-	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";
-	public static final String Database_Resource_Planning_ID = "//div[@aria-dashboard='3']";
-	public static final String Garbage_Collection_Overhead_ID = "//div[@aria-dashboard='4']";
-	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";
+	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
+	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
+	public static final String Database_Performance_Analytics_ID = "//div[@aria-dashboard='2']";	
+	public static final String Middleware_Performance_Analytics_ID = "//div[@aria-dashboard='4']";
+	//public static final String Middleware_Datasource_Performance_Analytics_ID = "//div[@aria-dashboard='19']";
+	public static final String Database_Resource_Analytics_ID = "//div[@aria-dashboard='3']";
+	public static final String Middleware_Resource_Analytics_ID = "//div[@aria-dashboard='18']";
+	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";	
 	public static final String Database_Configuration_and_Storage_By_Version_ID = "//div[@aria-dashboard='6']";
-	public static final String WebLogic_Servers_by_JDK_Version_ID = "//div[@aria-dashboard='7']";
+	public static final String Enterprise_OverView_ID = "//div[@aria-dashboard='1']";
+	public static final String Host_Inventory_By_Platform_ID = "//div[@aria-dashboard='5']";	
 	public static final String Top_25_Databases_by_Resource_Consumption_ID = "//div[@aria-dashboard='8']";
 	public static final String Top_25_WebLogic_Servers_by_Heap_Usage_ID = "//div[@aria-dashboard='9']";
 	public static final String Top_25_WebLogic_Servers_by_Load_ID = "//div[@aria-dashboard='10']";
-	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
-	public static final String WebLogic_Health_Summary_ID = "//div[@aria-dashboard='12']";
-	public static final String Host_Health_Summary_ID = "//div[@aria-dashboard='13']";
-	
+	public static final String WebLogic_Servers_by_JDK_Version_ID = "//div[@aria-dashboard='7']";
+	public static final String Database_Operations_ID = "//div[@aria-dashboard='15']";
+	public static final String Host_Operations_ID = "//div[@aria-dashboard='16']";
+	public static final String Middleware_Operations_ID = "//div[@aria-dashboard='17']";
+		
 	public static final String SortDropListID = "//*[@id='ojChoiceId_sortcb_selected']";//ojChoiceId_sortcb";//ojChoiceId_sortcb_selected";//sortcb";
 	public static final String Access_Date_ID = "/html/body/div/div/div/ul/li[2]/div";
 	
@@ -52,35 +66,39 @@ public class DashBoardPageId {
 	//search
 	public static final String SearchDSBoxID = "sinput";
 	
-	//link/html/body/div[3]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a
-	public static final String HomeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div/div[2]/div[2]/a";
+	//Branding Bar links
+	//Home Link
+	public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
 	//dashboard home link
-	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
+	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[2]/a";
+	//My Favorites link
+	public static final String MyFavoritesLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
 	//IT Analytics link
 	public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
-	//Log Analytics link/html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a /html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a
+	//Log Analytics link
 	public static final String LALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
-	//APM link /html/body/div[3]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a
+	//APM link
 	public static final String APMLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
 	//Log link
 	public static final String LOGLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
 	//AWR Analytics link
-	public static final String AWRALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
-	//Flex link
-	public static final String FlexLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
-	//Target link
-	public static final String TargetLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";//"/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[5]/a";
-	//Customer Software link
-	public static final String CustomLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[2]/a";
+	//public static final String AWRALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+	//Analyze link
+	public static final String AnalyzeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+	//Search link
+	public static final String SearchLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
+	//Agents link
+	public static final String AgentsLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[2]/a";
 	//IT Analytics Administration link
 	public static final String ITA_Admin_LinkID ="/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
 	
 	//check box
-	public static final String ITA_Check_BoxID = "itaopt";
+	public static final String ITA_BoxID = "itaopt";
 	public static final String LA_BoxID = "laopt";
 	public static final String APM_BoxID = "apmopt";
 	public static final String Oracle_BoxID = "oracleopt";
 	public static final String Other_BoxID = "otheropt";
+	public static final String Share_BoxID = "shareopt";
 	
 	//id of dashboard name /html/body/div[2]/div/div/div/div/div/span/h1 /html/body/div[2]/div/div/div/div[2]/div/span/span,/html/body/div[3]/div/div/div/div/div/span/h1;/html/body/div[2]/div/div/div/div[2]/div/span/span
 	public static final String DashboardNameID = "/html/body/div[*]/div/div/div/div/div/span/h1";
@@ -93,12 +111,17 @@ public class DashBoardPageId {
 	public static final String InfoBtnID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";//"/html/body/div[*]/div/div[1]/div/div/div[2]/div[2]/div/div[2]/div[2]/button";///html/body/div[*]/div/div/div/div/div[2]/div[3]/div/div[2]/div[2]/button";
 	public static final String RmBtnID = "/html/body/div[1]/div/div/div[1]/div/div/div[2]/button";//"/html/body/div/div/div/div/div/div/div[2]/button";
 	
+	//Explore Data
+	public static final String ExploreDataBtnID = "exploreDataBtn";
+	public static final String ExploreDataMenu_Log_ID = "ui-id-3";
+	public static final String ExploreDataMenu_Analyze_ID = "ui-id-4";
+	public static final String ExploreDataMenu_Search_ID = "ui-id-5";
+	
 	//help id and about id
 	public static final String MenuBtnID = "menubutton";
 	public static final String HelpID = "emcpdf_oba_help";
 	public static final String AboutID = "emcpdf_oba_about";
 	public static final String SignOutID = "emcpdf_oba_logout";
-	public static final String ExploreDataBtnID = "exploreDataBtn";
 	public static final String HelpContentID = "get_started";//task
 	public static final String AboutContentID = "/html/body/div[1]/div[2]/div/div[4]/div[2]/div[2]/p[2]";
 	public static final String AboutCloseID = "okButton";
@@ -121,17 +144,20 @@ public class DashBoardPageId {
 	
 	//tile operation
 	public static final String TileTitle = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[*]/h2";
-	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div/button";///html/body/div[*]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[1]/div/div/button";//";///html/body/div[3]/div[2]/div/div/div[2]/div[1]/div[1]/div/div/button";
-	public static final String EditTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
-	public static final String RefreshTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
-	public static final String DeleteTileID = "/html/body/div[1]/div/ul/li[3]/a/span[2]";
+	public static final String ConfigTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div[2]/button";
+	public static final String OpenTileID = "/html/body/div[*]/div[2]/div[2]/div[*]/div/div[2]/div[*]/div/div[1]/div/div[1]/button";
+	public static final String HideTileID = "/html/body/div[1]/div/ul/li[1]/a/span[2]";
+	public static final String RemoveTileID = "/html/body/div[1]/div/ul/li[2]/a/span[2]";
 	public static final String WiderTileID = "/html/body/div[1]/div/ul/li[4]/a/span[2]";
 	public static final String NarrowerTileID = "/html/body/div[1]/div/ul/li[5]/a/span[2]";
-	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[6]/a/span[2]";
-	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
+	public static final String TallerTileID = "/html/body/div[1]/div/ul/li[6]/a/span[2]";
+	public static final String ShorterTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
+	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
+	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[9]/a/span[2]";
 	
-	//time picker /html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/button
-	public static final String TimePickerID = "/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
+	//time picker
+	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
+	public static final String CustomDateTimeID = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[11]";
 	public static final String ApplyBtnID = "applyButton";
 	public static final String CancelBtnID = "cancelButton";
 	public static final String DateID1 = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[2]/div/div/div[1]/table/tbody/tr[4]/td[2]/a";
