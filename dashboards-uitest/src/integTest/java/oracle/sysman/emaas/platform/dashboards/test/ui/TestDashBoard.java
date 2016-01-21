@@ -330,7 +330,7 @@ public class TestDashBoard extends LoginAndLogout{
       
        //saring dashbaord    
 		       
-		       @Test
+		       @Test(dependsOnMethods = { "testCreateDashBoard" })
 		       		public void testshareddashboard() throws Exception
 		       		{
 		       			this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
