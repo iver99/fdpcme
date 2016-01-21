@@ -18,13 +18,12 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.TenantSubscriptionUtil;
 
-import org.apache.logging.log4j.Logger;
 import org.testng.annotations.Test;
 
 public class DashboardsUiCORSFilterTest
 {
 	@SuppressWarnings("unchecked")
-	@Test
+	@Test(groups = { "s2" })
 	public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest request,
 			@Mocked final HttpServletResponse response, @Mocked final TenantSubscriptionUtil tenantUtil, 
 			@Mocked final RegistryLookupUtil lookupUtil) throws Exception

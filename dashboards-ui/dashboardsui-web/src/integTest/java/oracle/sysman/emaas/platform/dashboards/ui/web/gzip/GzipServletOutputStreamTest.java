@@ -9,7 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class GzipServletOutputStreamTest {
-  @Test
+  @Test(groups = { "s1" })
   public void testClose(@Mocked final HttpServletResponse response) throws Exception {
 	  GzipServletOutputStream os = new GzipServletOutputStream(response);
 	  

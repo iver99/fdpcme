@@ -11,7 +11,7 @@ import mockit.Verifications;
 import org.testng.annotations.Test;
 
 public class GzipFilterTest {
-  @Test
+  @Test(groups = { "s2" })
   public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest request,
 			@Mocked final HttpServletResponse response) throws Exception {
 	  GzipFilter filter = new GzipFilter();
