@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  *
  */
 public class ClickjackingFilterTest {
-	@Test
+	@Test(groups = { "s2" })
 	public void testDoFilter(@Mocked final FilterConfig filterConfig, @Mocked final FilterChain chain,
 			@Mocked final HttpServletRequest request, @Mocked final HttpServletResponse response) throws Exception {
 		ClickjackingFilter filter = new ClickjackingFilter();

@@ -16,7 +16,6 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.logging.log4j.core.util.Charsets;
@@ -24,7 +23,7 @@ import org.testng.annotations.Test;
 
 public class HomePageFilterTest
 {
-	@Test
+	@Test(groups = { "s2" })
 	public void testDoFilter(@Mocked final FilterChain chain, @Mocked final HttpServletRequest request,
 			@Mocked final HttpServletResponse response, @Mocked final LookupManager lookupManager,
 			@Mocked final CloseableHttpClient httpClient, @Mocked final RegistryLookupUtil anyUtil) throws Exception
@@ -38,23 +37,6 @@ public class HomePageFilterTest
 		link.withHref("http://xxxx/naming/entitynaming/v1/domains");
 		final InputStream is = new ByteArrayInputStream(testString.getBytes(Charsets.UTF_8));
 
-		final CloseableHttpResponse mockResponse = new MockCloseableHttpResponse(is);
-		/*new MockUp<CloseableHttpResponse>() {
-			@Mock
-			HttpEntity getEntity() {
-				BasicHttpEntity entity = new BasicHttpEntity();
-				entity.setContent(is);
-				return entity;
-			}
-
-			@Mock
-			StatusLine getStatusLine() {
-				ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
-			    StatusLine statusline = new BasicStatusLine(protocolVersion, HttpStatus.SC_BAD_REQUEST, "400");
-			    return statusline;
-			}
-		}.getMockInstance();*/
-
 		new NonStrictExpectations() {
 			{
 				// authorization
@@ -66,7 +48,7 @@ public class HomePageFilterTest
 				result = link;
 
 				httpClient.execute((HttpUriRequest) any);
-				result = mockResponse;
+				result = new MockCloseableHttpResponse(is);
 
 				request.getRequestURL();
 				result = homeUrl;
