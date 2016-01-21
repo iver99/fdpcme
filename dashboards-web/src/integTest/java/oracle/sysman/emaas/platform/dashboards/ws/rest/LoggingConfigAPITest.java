@@ -43,7 +43,7 @@ public class LoggingConfigAPITest {
         Assert.assertNull(loggingConfigAPI.changeSpecificLoggerLevel("tenantIdParam", "userTenant", "", new JSONObject()));
     }
 
-    @Test //TODO
+    @Test
     public void testChangeSpecificLoggerLevelwithIOException() throws Exception {
 
         new MockUp<JsonUtil>() {
