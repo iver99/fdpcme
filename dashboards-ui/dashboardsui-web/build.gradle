@@ -70,6 +70,7 @@ dependencies {
 	compile(group: 'com.oracle.oraclejet', name: 'oraclejet', version: '1.1.2-19410', ext: 'war'){ transitive = false }
 	compile(group: 'CKSource', name: 'ckeditor_full', version: '4.5.1', ext: 'zip'){transitive = false}
 	compile(group: 'com.font-awesome', name: 'font-awesome', version: '4.3.0', ext: 'zip') {transitive = false }
+        compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
     
 	ftpAntTask('org.apache.ant:ant-commons-net:12.1.2-0-0') {
 	        module('commons-net:commons-net:1.4.1') {
