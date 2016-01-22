@@ -311,7 +311,7 @@ public class DashboardManager
 			return null;
 		}
 		String currentUser = UserContext.getCurrentUser();
-		String jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 or d.sharePublic = 1) and d.deleted = ?3";
+		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
 		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
 		EntityManager em = null;
 		try {
@@ -754,7 +754,7 @@ public class DashboardManager
 						maxResults, dbdList);
 				return pd;*/
 	}
-	
+
 	/**
 	 * Removes a dashboard from favorite list
 	 *

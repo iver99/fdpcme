@@ -328,7 +328,8 @@ public class TestDashBoard extends LoginAndLogout{
 		
 	}
 
-       //sharing dashbaord after cretion of dashbaord
+      
+                //sharing dashbaord after cretion of dashbaord
 		       
 		       @Test(dependsOnMethods = { "testCreateDashBoard" })
 		       		public void testshareddashboard() throws Exception
@@ -352,7 +353,11 @@ public class TestDashBoard extends LoginAndLogout{
 		       			
 		       			DashBoardUtils.navigateWidget(parentWindow);
 		       			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-		       			//Click on sharing dashbaord
+		       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		       			
+		       			DashBoardUtils.navigateWidget(parentWindow);
+		       			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+                                        //sharing dashbaord
 		       			DashBoardUtils.sharedashboard();
 		       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 							
@@ -362,9 +367,9 @@ public class TestDashBoard extends LoginAndLogout{
 
                      //Stopping sharing dashbaord
 	     
-	                                      @Test(dependsOnMethods = { "testshareddashboard" })
-	                                           public void teststopsharing() throws Exception
-					       		{
+	          @Test(dependsOnMethods = { "testshareddashboard" })
+	                public void teststopsharing() throws Exception
+			     		{
 					       			this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 					       			webd.getLogger().info("start to test in teststopsharing");
 					       			
@@ -392,4 +397,5 @@ public class TestDashBoard extends LoginAndLogout{
 					                       DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
 					       	}
 	 
+	
 }

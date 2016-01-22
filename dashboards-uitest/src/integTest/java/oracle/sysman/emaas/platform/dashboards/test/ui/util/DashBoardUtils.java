@@ -657,8 +657,10 @@ public class DashBoardUtils {
 		return we.getText();
 	}
 
-     //Sharing and stopping dashbaord     
-        public static void sharedashboard() throws Exception
+
+
+              //Sharing and stopping dashbaord     
+         public static void sharedashboard() throws Exception
 		{
 			driver.click(DashBoardPageId.option);
 			driver.click(DashBoardPageId.dashboardshare);

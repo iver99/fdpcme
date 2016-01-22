@@ -13,7 +13,7 @@ define(['knockout',
             this.MODE_MAX_COLUMNS = 8;
             this.editable = true;
             this.POSITION_TYPE = Builder.EDITOR_POS_BASED_ON_ROW_COLUMN;
-        };
+        }
         NormalEditorMode.prototype = {
             constructor: NormalEditorMode,
             getModeWidth : function(tile) {
@@ -77,7 +77,7 @@ define(['knockout',
             this.MODE_MAX_COLUMNS = 2;
             this.editable = false;
             this.POSITION_TYPE = Builder.EDITOR_POS_FIND_SUITABLE_SPACE;
-        };
+        }
         TabletEditorMode.prototype = new NormalEditorMode();
         TabletEditorMode.prototype.constructor = TabletEditorMode;
         TabletEditorMode.prototype.resetModeWidth = function(tile) {

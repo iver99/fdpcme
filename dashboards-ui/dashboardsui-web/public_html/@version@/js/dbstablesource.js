@@ -7,7 +7,7 @@ define(['ojs/ojcore', 'jquery', 'knockout', 'ojs/ojdatacollection-common'],
  * All rights reserved.
  */
 
-DashboardArrayTableSource = function(data, options)
+var DashboardArrayTableSource = function(data, options)
 {
     DashboardArrayTableSource.superclass.constructor.call(this, data, options); 
 };

@@ -31,7 +31,7 @@ define(['jquery',
                 }
             });
             return deferred.promise();
-        };
+        }
         Builder.registerFunction(fireDashboardItemChangeEventTo, 'fireDashboardItemChangeEventTo');
         
         function fireDashboardItemChangeEvent(tiles, dashboardItemChangeEvent){
@@ -53,7 +53,7 @@ define(['jquery',
                     oj.Logger.log("One or more widgets failed to refresh: "+ex);
                 });   
             }
-        };
+        }
         Builder.registerFunction(fireDashboardItemChangeEvent, 'fireDashboardItemChangeEvent');
     }
 );
