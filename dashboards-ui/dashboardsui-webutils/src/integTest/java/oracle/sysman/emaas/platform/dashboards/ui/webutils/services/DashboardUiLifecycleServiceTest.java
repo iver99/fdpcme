@@ -8,16 +8,15 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.webutils.services;
+package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
 import java.util.List;
 
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManager;
-import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
-import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
+import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -27,21 +26,21 @@ import weblogic.application.ApplicationLifecycleEvent;
 /**
  * @author aduan
  */
-public class DashboardApiLifecycleServiceTest
+public class DashboardUiLifecycleServiceTest
 {
-	private final DashboardApiLifecycleService apils = new DashboardApiLifecycleService();
+	private final DashboardUiLifecycleService uils = new DashboardUiLifecycleService();
 
 	@SuppressWarnings("unchecked")
 	@Test(groups = { "s2" })
 	public void testNewLifecycleInstance()
 	{
-		List<ApplicationServiceManager> registeredServices = (List<ApplicationServiceManager>) Deencapsulation.getField(apils,
+		List<ApplicationServiceManager> registeredServices = (List<ApplicationServiceManager>) Deencapsulation.getField(uils,
 				"registeredServices");
 		Assert.assertNotNull(registeredServices);
 		Assert.assertTrue(registeredServices.size() == 4);
 
 		Assert.assertEquals(AbstractApplicationLifecycleService.APPLICATION_LOGGER_SUBSYSTEM,
-				"oracle.sysman.emaas.platform.dashboards");
+				"oracle.sysman.emaas.platform.dashboards.ui");
 		AbstractApplicationLifecycleService aals = new AbstractApplicationLifecycleService(registeredServices.get(0),
 				registeredServices.get(1));
 		List<ApplicationServiceManager> absRegisteredServices = (List<ApplicationServiceManager>) Deencapsulation.getField(aals,
@@ -72,7 +71,7 @@ public class DashboardApiLifecycleServiceTest
 					result = null;
 				}
 			};
-			apils.postStart(evt);
+			uils.postStart(evt);
 
 			new Expectations() {
 				{
@@ -81,7 +80,7 @@ public class DashboardApiLifecycleServiceTest
 					result = new Exception();
 				}
 			};
-			apils.postStart(evt);
+			uils.postStart(evt);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -110,7 +109,7 @@ public class DashboardApiLifecycleServiceTest
 					result = null;
 				}
 			};
-			apils.postStop(evt);
+			uils.postStop(evt);
 
 			new Expectations() {
 				{
@@ -119,7 +118,7 @@ public class DashboardApiLifecycleServiceTest
 					result = new Exception();
 				}
 			};
-			apils.postStop(evt);
+			uils.postStop(evt);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -148,7 +147,7 @@ public class DashboardApiLifecycleServiceTest
 					result = null;
 				}
 			};
-			apils.preStart(evt);
+			uils.preStart(evt);
 
 			new Expectations() {
 				{
@@ -157,7 +156,7 @@ public class DashboardApiLifecycleServiceTest
 					result = new Exception();
 				}
 			};
-			apils.preStart(evt);
+			uils.preStart(evt);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -167,7 +166,7 @@ public class DashboardApiLifecycleServiceTest
 	@Test(groups = { "s2" })
 	public void testPreStop(@Mocked final AvailabilityServiceManager asm, @Mocked final LoggingServiceManager lsm,
 			@Mocked final EMTargetInitializer emti, @Mocked final RegistryServiceManager rsm,
-			@Mocked final ApplicationLifecycleEvent evt, @Mocked final PersistenceManager pm)
+			@Mocked final ApplicationLifecycleEvent evt)
 	{
 		try {
 			new Expectations() {
@@ -184,11 +183,9 @@ public class DashboardApiLifecycleServiceTest
 					rsm.preStop((ApplicationLifecycleEvent) any);
 					times = 1;
 					result = null;
-					PersistenceManager.getInstance().closeEntityManagerFactory();
-					result = null;
 				}
 			};
-			apils.preStop(evt);
+			uils.preStop(evt);
 
 			new Expectations() {
 				{
@@ -197,7 +194,7 @@ public class DashboardApiLifecycleServiceTest
 					result = new Exception();
 				}
 			};
-			apils.preStop(evt);
+			uils.preStop(evt);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

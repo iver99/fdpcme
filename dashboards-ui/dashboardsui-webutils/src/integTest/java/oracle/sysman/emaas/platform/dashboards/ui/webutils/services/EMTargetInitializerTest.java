@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.webutils.services;
+package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
 
 import java.lang.management.ManagementFactory;
 
@@ -21,7 +21,7 @@ import javax.naming.InitialContext;
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
-import oracle.sysman.emaas.platform.dashboards.targetmodel.services.JMXUtil;
+import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.JMXUtil;
 
 import org.testng.Assert;
 import org.testng.AssertJUnit;
@@ -37,7 +37,7 @@ public class EMTargetInitializerTest
 	@Test(groups = { "s1" })
 	public void testGetName()
 	{
-		AssertJUnit.assertEquals(emti.getName(), "Dashboard API Target Initializer");
+		AssertJUnit.assertEquals(emti.getName(), "Dashboard UI Target Initializer");
 	}
 
 	@Test(groups = { "s2" })
@@ -50,7 +50,7 @@ public class EMTargetInitializerTest
 		new Expectations() {
 			{
 				InitialContext.doLookup(anyString);
-				result = "Dashboard-API";
+				result = "Dashboard-UI";
 				times = 1;
 				ManagementFactory.getPlatformMBeanServer();
 				result = anyMbs;

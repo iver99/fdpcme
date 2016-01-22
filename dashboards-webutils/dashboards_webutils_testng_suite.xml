@@ -13,7 +13,6 @@
 		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.LoggingServiceManagerTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.PropertyReaderTest" />
 		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManagerTest" />
-		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleServiceTest" />
 		</classes>
 	</test> <!-- Test -->
 </suite> <!-- Suite -->
