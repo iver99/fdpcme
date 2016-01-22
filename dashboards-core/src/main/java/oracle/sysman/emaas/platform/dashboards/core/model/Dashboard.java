@@ -112,6 +112,7 @@ public class Dashboard
 		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
+		to.setSharePublic(DataFormatUtils.integer2Boolean(from.getSharePublic()));
 		to.setLastModificationDate(from.getLastModificationDate());
 		to.setLastModifiedBy(from.getLastModifiedBy());
 		to.setName(from.getName());
@@ -152,6 +153,8 @@ public class Dashboard
 	@JsonProperty("systemDashboard")
 	private Boolean isSystem;
 
+	private Boolean sharePublic;
+
 	@JsonProperty("lastModifiedOn")
 	private Date lastModificationDate;
 
@@ -180,6 +183,7 @@ public class Dashboard
 		enableRefresh = Dashboard.DASHBOARD_ENABLE_REFRESH_DEFAULT;
 		deleted = DASHBOARD_DELETED_DEFAULT;
 		isSystem = Boolean.FALSE;
+		sharePublic = Boolean.FALSE;
 	}
 
 	public Tile addTile(Tile tile)
@@ -275,6 +279,7 @@ public class Dashboard
 		Integer isEnableTimeRange = enableTimeRange == null ? null : enableTimeRange.getValue();
 		Integer isEnableRefresh = DataFormatUtils.boolean2Integer(enableRefresh);
 		Integer isIsSystem = DataFormatUtils.boolean2Integer(isSystem);
+		Integer isShare = DataFormatUtils.boolean2Integer(sharePublic);
 		Integer dashboardType = DataFormatUtils.dashboardTypeString2Integer(type);
 		Integer appType = appicationType == null ? null : appicationType.getValue();
 		String htmlEcodedName = StringEscapeUtils.escapeHtml4(name);
@@ -282,7 +287,7 @@ public class Dashboard
 
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh, isIsSystem,
-					lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
+					isShare, lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
 			if (tileList != null) {
 				for (Tile tile : tileList) {
 					EmsDashboardTile edt = tile.getPersistenceEntity(null);
@@ -306,6 +311,7 @@ public class Dashboard
 			ed.setName(htmlEcodedName);
 			ed.setScreenShot(screenShot);
 			ed.setApplicationType(appType);
+			ed.setSharePublic(isShare);
 			if (ed.getType() != null && dashboardType != null && !dashboardType.equals(ed.getType())) {
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
@@ -324,6 +330,14 @@ public class Dashboard
 	public String getScreenShotHref()
 	{
 		return screenShotHref;
+	}
+
+	/**
+	 * @return the sharePublic
+	 */
+	public Boolean getSharePublic()
+	{
+		return sharePublic;
 	}
 
 	public List<Tile> getTileList()
@@ -420,6 +434,15 @@ public class Dashboard
 	public void setScreenShotHref(String screenShotHref)
 	{
 		this.screenShotHref = screenShotHref;
+	}
+
+	/**
+	 * @param sharePublic
+	 *            the sharePublic to set
+	 */
+	public void setSharePublic(Boolean sharePublic)
+	{
+		this.sharePublic = sharePublic;
 	}
 
 	public void setTileList(List<Tile> emsDashboardTileList)

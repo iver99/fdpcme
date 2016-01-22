@@ -634,13 +634,22 @@ define([
              *          removeDelayTime: Number, Optional. Delay time (in milliseconds) for the message to be closed automatically from common message UI. 
              *                           If not specified, it will not be closed automatically by default.
              * 
-             * @returns 
+             * @returns {String} message id
              */ 
             self.showMessage = function(message) {
+                var messageId = null;
                 if (message && typeof(message) === "object") {
                     message.tag = "EMAAS_SHOW_PAGE_LEVEL_MESSAGE";
+                    if (message.id) {
+                        messageId = message.id;
+                    }
+                    else {
+                        messageId = self.getGuid();
+                        message.id = messageId;
+                    }
                     window.postMessage(message, window.location.href);
                 }
+                return messageId;
             };
             
             /**
@@ -723,7 +732,15 @@ define([
                     setTimeout(function(){showSessionTimeoutWarningDialog(warningDialogId);}, waitTimeBeforeWarning);
                 }
             };
-
+            
+            self.getPreferencesUrl=function(){
+                if (self.isDevMode()){
+                    return self.buildFullUrl(self.getDevData().dfRestApiEndPoint,"preferences"); 
+                }else{
+                    return '/sso.static/dashboards.preferences';
+                }
+            }; 
+            
             function showSessionTimeoutWarningDialog(warningDialogId) {
                 //Clear interval for extending user session
                 if (window.intervalToExtendCurrentUserSession)

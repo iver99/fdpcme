@@ -38,25 +38,25 @@ public class UIControls
 	public static final String sApplyBtn = "//*[@id='applyButton']";
 	public static final String sCancelBtn = "//*[@id='cancelButton']";
 
-	public static final String sLast15MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[1]";
-	public static final String sLast30MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[2]";
-	public static final String sLast60MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[3]";
-	public static final String sLast4HourBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[4]";
-	public static final String sLast6HourBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[5]";
-	public static final String sLast1DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[6]";
-	public static final String sLast7DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[7]";
-	public static final String sLast30DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[8]";
-	public static final String sLast90DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[9]";
-	public static final String sLatestBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[10]";
-	public static final String sLastCustomBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/a[11]";
+	public static final String sLast15MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[1]";
+	public static final String sLast30MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[2]";
+	public static final String sLast60MinBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[3]";
+	public static final String sLast4HourBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[4]";
+	public static final String sLast6HourBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[5]";
+	public static final String sLast1DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[6]";
+	public static final String sLast7DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[7]";
+	public static final String sLast30DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[8]";
+	public static final String sLast90DayBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[9]";
+	public static final String sLatestBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[10]";
+	public static final String sLastCustomBtn = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[11]";
 	//End: Button
 
 	//Begin: Icon
-	public static final String sStartTimeSelectIcon = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[2]/div/div/span/span";
-	public static final String sEndTimeSelectIcon = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div[5]/div/div/span/span";
+	public static final String sStartTimeSelectIcon = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[2]/div/div/span/span";
+	public static final String sEndTimeSelectIcon = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[5]/div/div/span/span";
 	//End: Icon
 
 	//Begin: Components
-	public static final String sPickPanel = "/html/body/div[1]/div/div/div[1]/div";
+	public static final String sPickPanel = "/html/body/div[1]/div/div/div[1]/div/div[2]";
 	//End: Components
 }

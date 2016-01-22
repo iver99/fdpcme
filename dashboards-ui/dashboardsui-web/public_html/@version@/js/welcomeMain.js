@@ -188,10 +188,16 @@ require(['ojs/ojcore',
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
                             self.exploreDataLinkList.push(dataExplorers[i]);                            
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
-                            //change name of data explorer in ITA starting with "Data Explorer - "
-                            if(dataExplorers[i].serviceName === "EmcitasApplications" || dataExplorers[i].serviceName === "TargetAnalytics") {
-                                self.exploreDataInITA.push(dataExplorers[i]);
+                            //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
+                            if(dataExplorers[i].serviceName === "EmcitasApplications") {                             
+                                self.exploreDataInITA.push({href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
+                            }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
+                                self.exploreDataInITA.push({href: dataExplorers[i].href, name: self.dataExplorer, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
                             }
+                            //change name of data explorer in ITA starting with "Data Explorer - "
+//                            if(dataExplorers[i].serviceName === "EmcitasApplications" || dataExplorers[i].serviceName === "TargetAnalytics") {
+//                                self.exploreDataInITA.push(dataExplorers[i]);
+//                            }
                         }
                     }
                     landingHomeUrls["DB_perf"] = self.getITAVerticalAppUrl("verticalApplication.db-perf");

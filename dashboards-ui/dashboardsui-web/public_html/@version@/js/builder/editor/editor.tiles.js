@@ -21,11 +21,12 @@ define(['knockout',
             self.cssHeight = ko.observable(0);
             self.linkText = ko.observable('');
             self.linkUrl = ko.observable('');
+            self.hideTitle = ko.observable("false");
             self.cssStyle = ko.computed(function() {
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
             self.widgetCssStyle = ko.computed(function() {
-                return "width: " + (self.cssWidth()-22) + "px; height: " + (self.cssHeight()-35-20) + "px;";
+                return "width: " + (self.cssWidth()-20) + "px; height: " + (self.cssHeight()-35-20) + "px;";
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
@@ -37,6 +38,14 @@ define(['knockout',
             self.displayHeight = function() {
                 return self.height * Builder.DEFAULT_HEIGHT;
             };
+            
+            if (Array.isArray(data.tileParameters)) {
+                $.each(data.tileParameters, function (i, parameter) {
+                    if (parameter.name === "DF_HIDE_TITLE") {
+                        self.hideTitle(parameter.value);
+                    }
+                });
+            }
         }
         
         function TextTileItem(data) {

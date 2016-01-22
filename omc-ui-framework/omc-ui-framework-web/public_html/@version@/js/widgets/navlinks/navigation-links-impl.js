@@ -1,8 +1,9 @@
-define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
-        function (ko, $, dfumodel, oj) {
+define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/util/preference-util'],
+        function (ko, $, dfumodel, oj, pfu) {
             function NavigationLinksViewModel(params) {
                 var self = this;
                 var dfHomeUrl = null;
+                var dfWelcomeUrl = null;
                 var dfDashboardsUrl = null;
                 var userName = $.isFunction(params.userName) ? params.userName() : params.userName;
                 var tenantName = $.isFunction(params.tenantName) ? params.tenantName() : params.tenantName;
@@ -12,6 +13,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
                 var discoveredAdminLinks = [];
                 var discoveredSecAuthUrl = null;
+                var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
+                var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
                 self.isAdmin = false;
                 self.isAdminLinksVisible = ko.observable(self.isAdmin);
                 
@@ -21,6 +24,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 self.homeLinkLabel = nlsStrings.BRANDING_BAR_NAV_HOME_LABEL;
                 self.cloudServicesLabel = nlsStrings.BRANDING_BAR_NAV_CLOUD_SERVICES_LABEL;
                 self.dashboardLinkLabel = nlsStrings.BRANDING_BAR_NAV_DASHBOARDS_LABEL;
+                self.welcomeLabel = nlsStrings.BRANDING_BAR_NAV_WELCOME_LABEL;
+                self.favoritesLabel = nlsStrings.BRANDING_BAR_NAV_FAVORITES_LABEL;
                 
                 self.homeLinks = ko.observableArray();
                 self.cloudServices = ko.observableArray();
@@ -44,6 +49,8 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                 refreshListener.subscribe(function (value) {
                     if (value.needRefresh){
                         refreshLinks();
+                        //Check home settings
+                        checkDashboardAsHomeSettings();
                         params.navLinksNeedRefresh(false);
                     }
                 });
@@ -73,6 +80,22 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                     oj.Logger.info('Trying to open Home page by URL: ' + dfHomeUrl);
                     if(dfHomeUrl) {
                         window.location.href = dfHomeUrl;
+                    }
+                    else if (dfWelcomeUrl){
+                        window.location.href = dfWelcomeUrl;
+                    }
+                };
+                
+                self.openMyFavorites = function() {
+                    var favoritesUrl = '/emsaasui/emcpdfui/home.html?filter=favorites';
+                    oj.Logger.info('Trying to open my favorites by URL: ' + favoritesUrl);
+                    window.location.href = favoritesUrl;
+                };
+                
+                self.openWelcomePage = function() {
+                    oj.Logger.info('Trying to open welcome page by URL: ' + dfWelcomeUrl);
+                    if(dfWelcomeUrl) {
+                        window.location.href = dfWelcomeUrl;
                     }
                 };
                 
@@ -242,9 +265,29 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore'],
                     });                
                 };
                 
+                function checkDashboardAsHomeSettings() {
+                    function succCallback(data) {
+                        var homeDashboardId = prefUtil.getPreferenceValue(data, prefKeyHomeDashboardId);
+                        if (homeDashboardId) {
+                            dfHomeUrl = "/emsaasui/emcpdfui/builder.html?dashboardId=" + homeDashboardId;
+                        }
+                        else {
+                            dfHomeUrl = null;
+                        }
+                    };
+                    function errorCallback(jqXHR, textStatus, errorThrown) {
+                        dfHomeUrl = null;
+                    };
+                    var options = {
+                        success: succCallback,
+                        error: errorCallback
+                    };
+                    prefUtil.getAllPreferences(options);
+                };
+                
                 function refreshLinks() {
-                    dfHomeUrl = '/emsaasui/emcpdfui/welcome.html';
                     dfDashboardsUrl = '/emsaasui/emcpdfui/home.html';
+                    dfWelcomeUrl = '/emsaasui/emcpdfui/welcome.html';
                     
                     //Fetch available cloud services, visual analyzers and administration links
                     if (self.cloudServices().length === 0 || 

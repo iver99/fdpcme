@@ -29,7 +29,8 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-    }
+	classpath group:"com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "1.0+", transitive: true    
+	}
 }
 apply from: 'setup.gradle'
 
@@ -75,13 +76,11 @@ dependencies {
     }
 }
  
+task DeployDFUI(type: Exec) {
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args '-p',  project.properties['emdi.GIT_VIEW_ROOT'] +'/dashboards-ui/dashboardsui-ee/', 'appServerDeploy'
+}
 
-
-
-task DeployDFUI(type:Exec) {
-
-        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ui/dashboardsui-ee/', 'appServerDeploy'
-        }
 task PropsCopy(type: Copy,dependsOn: DeployDFUI) {
    from '/net/slc07ctj/scratch/emaas/setuplogs/'
    into '../../oracle/work/'

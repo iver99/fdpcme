@@ -65,6 +65,7 @@ define(['knockout',
          * @param {String} status: name of status
          * Event NAME:
          * PRE_REFRESH: Before refresh starts
+         * POST_HIDE_TITLE: After title of tile is Hidden
          * POST_DELETE: After tile is deleted
          * POST_WIDER: After tile is wider
          * POST_NARROWER: After tile is narrower
@@ -132,7 +133,7 @@ define(['knockout',
             for (var p in kowidget)
                 self[p] = kowidget[p];
 
-            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, isContentLengthValid);            
+            Builder.initializeTextTileAfterLoad(mode, $b, self, funcShow, deleteTextCallback, Builder.isContentLengthValid);            
         }
         Builder.registerModule(DashboardTextTile, 'DashboardTextTile');
 
@@ -170,7 +171,7 @@ define(['knockout',
             }
 
 
-            initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targetContext, loadImmediately);
+            Builder.initializeTileAfterLoad(mode, dashboard, self, timeSelectorModel, targetContext, loadImmediately);
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
@@ -182,8 +183,9 @@ define(['knockout',
             Builder.registerComponent(tile.WIDGET_KOC_NAME(), tile.WIDGET_VIEWMODEL(), tile.WIDGET_TEMPLATE());
             tile.shouldHide = ko.observable(false);            
             tile.toBeOccupied = ko.observable(false);
+            var _currentUser = dfu.getUserName();
             tile.editDisabled = ko.computed(function() { //to do
-                return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
+                return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
             tile.params = {
                 show: funcShow,
@@ -210,8 +212,9 @@ define(['knockout',
             tile.shouldHide = ko.observable(false);            
             tile.toBeOccupied = ko.observable(false);
 
-            tile.editDisabled = ko.computed(function() {
-                return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard();
+            var _currentUser = dfu.getUserName();
+            tile.editDisabled = ko.computed(function() { //to do
+                return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
             tile.widerEnabled = ko.computed(function() {
                 return tile.width() < mode.MODE_MAX_COLUMNS;

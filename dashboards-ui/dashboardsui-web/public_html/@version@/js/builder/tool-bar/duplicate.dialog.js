@@ -6,9 +6,10 @@
 define(['knockout', 
         'jquery',
         'ojs/ojcore',
+        'dfutil',
         'uifwk/js/util/screenshot-util'
     ], 
-    function(ko, $, oj, ssu) {       
+    function(ko, $, oj, dfu, ssu) {       
         function DuplicateDashboardModel($b) {
             var self = this;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
@@ -110,7 +111,7 @@ define(['knockout',
                 };
                 var errorCallback = function(error) {
                     var errorCode = error && $.isFunction(error.errorCode) ? error.errorCode() : error.errorCode;
-                    if (errorCode === 10002)
+                    if (errorCode === 10001)
                     {
                         var trackObj = ko.utils.unwrapObservable(self.tracker);
                         self.errorMessages.push(new oj.Message(getNlsString('DBS_BUILDER_MSG_ERROR_NAME_DUPLICATED_SUMMARY'),
@@ -123,7 +124,7 @@ define(['knockout',
                         $('#duplicateDsbDialog').ojDialog('close');
                         error && error.errorMessage() && dfu.showMessage({type: 'error', 
                             summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_DUPLICATING'), 
-                            detail: '', removeDelayTime: 5000});
+                            detail: ''});
                     }
                 };
                 var dbdJs = ko.mapping.toJS(newDashboard, {
