@@ -576,7 +576,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 if(params.hideMainLabel && params.hideMainLabel === true) {
                     self.hideMainLabel = "none";
                 }else{
-                    self.hideMainLabel = "inline-block";
+//                    self.hideMainLabel = "inline-block";
+                    self.hideMainLabel = "table-cell";
                 }
                 
                 if(params.hideRangeLabel && params.hideRangeLabel === true) {
@@ -1185,6 +1186,15 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', '/emsaasui/uifwk/@version@/images/widgets/pull-up.jpg');
                     }
                 };
+                
+                self.isEnterPressed = function(data, event) {
+                    var keyCode = event.which ? event.which : event.keyCode;
+                    if(keyCode === 13) {
+                        return true;
+                    }else {
+                        return false;
+                    }
+                }
 
                 /**
                  * set everyting to original state if not applied
