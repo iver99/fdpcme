@@ -185,7 +185,7 @@ public class DashBoardPageId {
 	public static final String Welcome_ITALinkID ="/html/body/div[2]/div/div[2]/ul/li[3]/div/div/div[2]/div[1]";
 	public static final String Welcome_DataExp = "/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
    
-       //Sharing&stooping dashbaord
+       //Sharing and stoping dashbaord
         public static final String option="dashboardOptsBtn";
 	public static final String dashboardshare="emcpdf_dsbopts_share";
 	public static final String stopshare_btn="//a[@id='emcpdf_dsbopts_share']/span[2]";
