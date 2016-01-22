@@ -23,7 +23,9 @@ public class DashBoardPageId {
 	public static final String DashBoardSaveID = "dashboard-screenshot";
 	//public static final String WidgetAddButton = "emcpdf_dsbopts_add";//"//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
 	public static final String WidgetAddButton="//*[@id='ui-id-2']/span[2]";
-	public static final String DashboardEdit="//*[@id='emcpdf_dsbopts_edit']";
+	//public static final String DashboardEdit="//*[@id='emcpdf_dsbopts_edit']";
+	public static final String DashboardEdit="//*[@id='ui-id-3']/span[2];
+
 	public static final String DashboardDuplicate="//*[@id='emcpdf_dsbopts_duplicate']";
 	public static final String DashboardDelete="//*[@id='emcpdf_dsbopts_delete']";
 	public static final String WidgetDialogCloseButtonID = "div[15]/div[3]/div/span";
