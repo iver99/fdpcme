@@ -328,7 +328,7 @@ public class TestDashBoard extends LoginAndLogout{
 		
 	}
       
-                //saring dashbaord    
+                //sharing dashbaord after cretion of dashbaord
 		       
 		       @Test(dependsOnMethods = { "testCreateDashBoard" })
 		       		public void testshareddashboard() throws Exception
@@ -359,7 +359,7 @@ public class TestDashBoard extends LoginAndLogout{
 		                       DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
 		       	}
 
-                     //Stop sharing dashbaord 
+                     //Stopping sharing dashbaord
 	     
 	          @Test(dependsOnMethods = { "testshareddashboard" })
 	                public void teststopsharing() throws Exception
