@@ -198,6 +198,8 @@ define(['knockout',
                         $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
                         break;
                 }
+                
+                $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
             };
 
            self.openEditTileLinkDialog = function(tile) { 
@@ -569,6 +571,7 @@ define(['knockout',
                 dragStartRow = null;
                 self.previousDragCell = null;
                 tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
+                $b.triggerEvent($b.EVENT_TILE_MOVE_STOPED, null);
             };
             
             self.onNewWidgetDragging = function(e, u) {

@@ -174,7 +174,7 @@ define(['knockout',
             if (!name)
                 return false;
             var exists = false;
-            var url = getBaseUrl() + "?queryString=" + name + "&limit=50&offset=0";
+            var url = getBaseUrl() + "?queryString=" + name + "&limit=50&offset=0&owners=Me";
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",

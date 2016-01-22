@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-
+        
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -218,13 +218,17 @@
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
                             <!-- ko if: !disabled  -->
                             <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
-                                    <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
+                                    <a data-bind="attr:{'title': title}, href: url, click: onclick">
                                         <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
-                                    <span data-bind="text: label"></span></a>
-                            </li>
+                                        <span data-bind="text: label"></span>
+                                    </a>
+                                    <!-- ko if: $data.subItems -->
+                                    <ul data-bind="template: {name: 'dsbOptsMenuItemTemplate', foreach: subItems}"></ul>
+                                    <!-- /ko -->
+                                </li>
                                 <!-- ko if: endOfGroup  -->
-                                <li></li>
-                            <!-- /ko -->
+                                    <li></li>
+                                <!-- /ko -->
                             <!-- /ko -->
                         </script>
 
@@ -241,12 +245,12 @@
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome no-print"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
-                                        icons: {start: 'dbd-toolbar-icon-save'}
+                                        icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome no-print'
-                                data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
+                                data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
@@ -355,6 +359,24 @@
                         </div>
                     </div>
                     <!-- delete dilog end -->
+                     <!-- confirm leave dilog start ->
+                    <div style="display:none" id="cfmleaveDialog"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_TITLE')"></span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <p data-bind="html: getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT')"></p>
+                        </div>
+                        <div class="oj-dialog-footer">
+                            <button id="cfmleavecbtn" data-bind="click: handleDashboardSave, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                            <button data-bind="click: handleDashboardNotSave, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DISCARD'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                        </div>
+                    </div>
+                    <- confirm leave dilog end -->
                     
 <!--                <div style="display:none;" id="parent-message-dialog"
                     data-bind="ojComponent:{component: 'ojDialog', 
@@ -650,13 +672,6 @@
                                <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                             </div>
-                            <div class="oj-col oj-sm-12 oj-md-5" data-bind="visible: dashboard.enableRefresh">
-                                <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 10px"></df-auto-refresh>
-                                <!--div data-bind="component: {name: 'df-auto-refresh', params: autoRefreshParams}" style="float:right;padding-right: 10px"></div-->
-                                <!--df-auto-refresh params="autoRefreshParams"></df-auto-refresh-->
-                            </div>
-                            <!--div class="oj-col oj-sm-4"></div-->
-
                         </div>
 
                         <!-- ko if:$root.isEmpty() -->
@@ -681,7 +696,7 @@
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 10px;">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
-                                            <h2 class="dbd-tile-title"><a data-bind="text: text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
+                                            <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
                                           <!-- /ko -->
                                           <!-- ko if: !$root.dashboard.systemDashboard() || !linkedDashboard || linkedDashboard() === '#'-->
                                             <h2 class="dbd-tile-title" data-bind="text:hideTitle() === 'true' ? '': title"></h2>
@@ -694,7 +709,7 @@
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
                                                                 component:'ojButton', 
-                                                                icons: {start:'dbd-title-edit'}, 
+                                                                icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
                                                                 label: ''
                                                         }"></button>
                                               </div>
@@ -703,8 +718,8 @@
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        ojComponent: {component: 'ojButton', 
                                                                                      label: '', 
+                                                                                     icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
                                                                                      menu: '#tileMenu' + clientGuid}">
-                                                        <img src="@version@/images/func_threebullets_16_ena.png" alt="Edit"/>
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
