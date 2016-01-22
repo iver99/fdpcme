@@ -77,6 +77,6 @@ public class AppLoggingManageMXBean implements IAppLoggingManageMXBean
 			lc.setLevel(Level.FATAL);
 		}
 		ctx.updateLoggers();
-		sysLogger.info("Logging MXBean sets the log level to {}" + lc.getLevel().name());
+		sysLogger.info("Logging MXBean sets the log level to {}", lc.getLevel().name());
 	}
 }

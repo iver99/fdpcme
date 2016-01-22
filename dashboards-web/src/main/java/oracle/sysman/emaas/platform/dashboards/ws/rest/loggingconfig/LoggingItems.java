@@ -10,10 +10,10 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.loggingconfig;
 
+import org.apache.logging.log4j.core.config.LoggerConfig;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.logging.log4j.core.config.LoggerConfig;
 
 /**
  * @author guobaochen
@@ -59,6 +59,11 @@ public class LoggingItems
 	public void setItems(List<LoggingItem> items)
 	{
 		this.items = items;
+        if( items != null) {
+            this.total = items.size();
+        }else{
+            this.total = 0;
+        }
 	}
 
 	/**

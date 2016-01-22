@@ -29,7 +29,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -781,8 +780,9 @@ public class DashboardManager
 			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			EmsDashboardFavorite edf = dsf.getEmsDashboardFavoriteByPK(dashboardId, currentUser);
 			if (edf != null) {
 				dsf.removeEmsDashboardFavorite(edf);
 			}
@@ -820,7 +820,7 @@ public class DashboardManager
 				}
 			}
 			//check dashboard name
-			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
+			if (dbd.getName() == null || "".equals(dbd.getName().trim()) || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}

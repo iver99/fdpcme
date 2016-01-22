@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
 import mockit.Mock;
 import mockit.MockUp;
@@ -36,31 +35,23 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	{
 
 		private final String username;
-		private boolean checkUser = false;
 		private final Long dashboardId;
-		private boolean checkDashboardId = false;
 
 		public EmsDashboardFavoriteSelector(String username, Long dashboardId)
 		{
 			this.username = username;
-			if (username != null) {
-				checkUser = true;
-			}
 			this.dashboardId = dashboardId;
-			if (dashboardId != null) {
-				checkDashboardId = true;
-			}
 		}
 
 		@Override
 		public boolean selectEntity(EmsDashboardFavorite entity)
 		{
-			if (checkDashboardId) {
+			if (dashboardId != null) {
 				if (entity.getDashboard() == null || !entity.getDashboard().getDashboardId().equals(dashboardId)) {
 					return false;
 				}
 			}
-			if (checkUser) {
+			if (username != null) {
 				if (!entity.getUserName().equals(username)) {
 					return false;
 				}
@@ -107,8 +98,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		private boolean checkId = false;
 		private final String username;
 		private boolean checkUser = false;
+		private final Boolean notSoftDeleted;
 
-		public EmsDashboardSelector(Long dashboardId, String dashboardName, String username)
+		public EmsDashboardSelector(Long dashboardId, String dashboardName, String username, Boolean notSoftDeleted)
 		{
 			this.dashboardName = dashboardName;
 			if (this.dashboardName != null) {
@@ -123,6 +115,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 			if (this.username != null) {
 				checkUser = true;
 			}
+			this.notSoftDeleted = notSoftDeleted;
 		}
 
 		@Override
@@ -136,6 +129,18 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 			}
 			if (checkUser && !entity.getOwner().equals(username)) {
 				return false;
+			}
+			if (notSoftDeleted != null) {
+				if (notSoftDeleted) {
+					if (entity.getDeleted() != null && entity.getDeleted() > 0) {
+						return false;
+					}
+				}
+				else {
+					if (entity.getDeleted() == null || entity.getDeleted() == 0L) {
+						return false;
+					}
+				}
 			}
 			return true;
 		}
@@ -208,7 +213,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public EmsDashboard getEmsDashboardById(Long dashboardId)
 	{
 		System.out.println("[MockDashboardServiceFacade] getEmsDashboardById called");
-		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(dashboardId, null, null));
+		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(dashboardId, null, null, null));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
 
@@ -216,7 +221,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public EmsDashboard getEmsDashboardByName(String name, String owner)
 	{
 		System.out.println("[MockDashboardServiceFacade] getEmsDashboardByName called");
-		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, owner));
+		List<EmsDashboard> ps = this.localFind(EmsDashboard.class, new EmsDashboardSelector(null, name, owner, true));
 		return ps.isEmpty() ? null : ps.get(0);
 	}
 
@@ -279,6 +284,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public EntityManager getEntityManager()
 	{
 		System.out.println("[MockDashboardServiceFacade] getEntityManager called");
+		//return null;
+		return new MockEntityManager();
+		/*
 		return new MockUp<EntityManager>() {
 
 			@Mock
@@ -324,7 +332,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 				throw new RuntimeException("Unspported mock call. Please change your case.");
 			}
 
-		}.getMockInstance();
+		}.getMockInstance();*/
 		//return null;
 	}
 
@@ -353,7 +361,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		if (emsDashboard.getLastModificationDate() == null) {
 			emsDashboard.setLastModificationDate(new Date());
 		}
-		return this.localMerge(emsDashboard, new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null));
+		return this.localMerge(emsDashboard, new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
 	}
 
 	@Mock
@@ -451,7 +459,7 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
 		System.out.println("[MockDashboardServiceFacade] mergeEmsDashboardFavorite called");
-		this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null));
+		this.localRemove(emsDashboard.getClass(), new EmsDashboardSelector(emsDashboard.getDashboardId(), null, null, null));
 	}
 
 	@Mock
