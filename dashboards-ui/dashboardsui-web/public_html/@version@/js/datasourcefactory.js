@@ -11,7 +11,7 @@ function(dm, dc, dp, oj, ko, $)
  */
 
 
-    DatasourceFactory = function(dashbaordsUrl, sortBy, types, appTypes, owners, favoritesOnly) {
+    var DatasourceFactory = function(dashbaordsUrl, sortBy, types, appTypes, owners, favoritesOnly) {
         var self = this;
         self.dashbaordsUrl = dashbaordsUrl;
         self.sortBy = sortBy;

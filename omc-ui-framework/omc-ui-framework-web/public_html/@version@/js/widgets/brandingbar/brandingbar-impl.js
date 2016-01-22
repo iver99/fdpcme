@@ -186,6 +186,7 @@ define([
                 //SSO logout handler
                 self.handleSignout = function() {
                     //Clear interval for extending user session
+                    /* globals clearInterval*/
                     if (window.intervalToExtendCurrentUserSession)
                         clearInterval(window.intervalToExtendCurrentUserSession);
                     
@@ -385,7 +386,7 @@ define([
                             async: true
                         });  
                     }
-                };
+                }
                 
                 function receiveMessage(event)
                 {
@@ -407,7 +408,7 @@ define([
                             showMessage(data);
                         }
                     }
-                };
+                }
                 
                 function showMessage(data) {
                     if (data) {
@@ -474,7 +475,7 @@ define([
                             setTimeout(function(){removeMessage(message);}, data.removeDelayTime);
                         }
                     }
-                };
+                }
                 
                 function removeMessage(data) {
                     if (data.category === catRetryInProgress) {
@@ -512,21 +513,21 @@ define([
                         if (displayMessageCount <= maxMsgDisplayCnt)
                             self.hiddenMessagesExpanded(false);
                     }
-                };
+                }
                 
                 function removeItemByValue(obj, value)
                 {
                     return obj.filter(function (val) {
                         return val !== value;
                     });
-                };
+                }
                 
                 function removeItemByPropertyValue(obj, prop, value)
                 {
                     return obj.filter(function (val) {
                         return val[prop] !== value;
                     });
-                };
+                }
                 
                 function checkNotifications() {
                     oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
@@ -554,18 +555,18 @@ define([
                             }
                         }
                     }
-                };
+                }
                 
                 function getSubscribedAppsCallback(apps) {
                     oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
                     subscribedApps = apps;
                     refreshAppName();
-                };
+                }
                 
                 function getSubscribedApplications() {
                     oj.Logger.info("Start to get subscribed applications for branding bar.", false);
                     dfu.checkSubscribedApplications(getSubscribedAppsCallback);
-                };
+                }
                 
                 function refreshAppName() {
                     var subscribedServices = null;
@@ -576,7 +577,7 @@ define([
                     else if (self.appId === 'Error')
                         subscribedApps = [];
                     if (subscribedApps && subscribedApps.length > 0) {
-                        for (i = 0; i < subscribedApps.length; i++) {
+                        for (var i = 0; i < subscribedApps.length; i++) {
                             var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
                             if (i === 0)
                                 subscribedServices = servicename;
@@ -585,7 +586,7 @@ define([
                         }
                     }
                     self.appName(subscribedServices);
-                };
+                }
             }
             
             return BrandingBarViewModel;

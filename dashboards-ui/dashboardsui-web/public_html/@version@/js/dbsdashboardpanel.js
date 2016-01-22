@@ -36,8 +36,7 @@ ko.bindingHandlers.dbsDashboardPanel = {
     }
 };
 
-var TITLE_MAX_LENGTH = 34, 
-    TAB_INDEX_ATTR = "tabindex";
+var TITLE_MAX_LENGTH = 34;
 
 $.widget('dbs.dbsDashboardPanel',
 {
@@ -69,7 +68,7 @@ $.widget('dbs.dbsDashboardPanel',
         
         active: false,
         
-        _activate: function(event, callback) {
+        _activate: function(event) {
             var self = this;
             if (self.active === false)
             {
@@ -95,7 +94,7 @@ $.widget('dbs.dbsDashboardPanel',
             }
         },
         
-        _deactivate: function(event, callback) {
+        _deactivate: function(event) {
             var self = this;
             if (self.active === true)
             {
@@ -186,7 +185,7 @@ $.widget('dbs.dbsDashboardPanel',
                                   .addClass(self.classNames['headerTitle'])
                                   .text(_title);
             self.headerElement.append(self.titleElement); 
-            var _name = self.options['dashboard'].name;
+            _name = self.options['dashboard'].name;
             if ( _name &&  _name.length > TITLE_MAX_LENGTH)
             {
                 //self.headerElement.attr("dbstooltip", self.options['dashboard'].name);
