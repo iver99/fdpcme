@@ -657,16 +657,16 @@ public class DashBoardUtils {
 		return we.getText();
 	}
      
-   public static void sharedashboard() throws Exception
+         public static void sharedashboard() throws Exception
 		{
 			driver.click(DashBoardPageId.option);
 			driver.click(DashBoardPageId.dashboardshare);
-	}
+          	}
 	
 	
-public static void sharestopping() throws Exception
+          public static void sharestopping() throws Exception
 		{
 			driver.click(DashBoardPageId.option);
 			driver.click(DashBoardPageId.stopshare_btn);
-	}
+         	}
 }
