@@ -21,17 +21,25 @@
     border-width: 1px;
     border-style: solid;
     border-color: #dfe4e7;
-    border-radius: 2px;
+    /*border-radius: 2px;*/
     /*height: 396px;*/
     /*width: 630px;*/
 }
 .drawers {
     width: 104px;
-    float: left;
-    border: 1px solid #F0F0F0;
+    /*float: left;*/
+    /*border: 1px solid #F0F0F0;*/
     /*height: 396px;*/
     background-color: #FFFFFF; /*#f0f0f0;*/
 }
+
+.float-left {
+    float: left;
+}
+.float-right {
+    float: right;
+}
+
 .drawer {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -52,15 +60,26 @@
     /*font-weight: normal !important;*/
 }
 
-.drawerChosen {
+.leftDrawerChosen {
     background-color:  #E4F0FA; /*#ffffff !important;*/
     /*font-weight: bold !important;*/
     border-left: 3px solid #0572ce;
 }
 
-.drawerHover {
+.leftDrawerHover {
     background-color: #ebeced; //#F0F0F0;
     border-left: 3px solid #85bbe7;
+}
+
+.rightDrawerChosen {
+    background-color:  #E4F0FA; /*#ffffff !important;*/
+    /*font-weight: bold !important;*/
+    border-right: 3px solid #0572ce;
+}
+
+.rightDrawerHover {
+    background-color: #ebeced; //#F0F0F0;
+    border-right: 3px solid #85bbe7;
 }
 
 .drawerNotToShow {
@@ -77,10 +96,28 @@
 .pickerPanel {
     width: 550px; //510px;
     height: 402px;
-    float: right;
+    /*float: right;*/
     padding-top: 10px;
+    /*padding-left: 10px;*/
+    margin-top: -1px;
+    
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #333333;
+    background-color: #ffffff;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dfe4e7;
+}
+
+.picker-panel-padding-right {
     padding-right: 10px;
 }
+
+.picker-panel-padding-left {
+    padding-left: 10px;
+}
+
 .chosenDate {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;

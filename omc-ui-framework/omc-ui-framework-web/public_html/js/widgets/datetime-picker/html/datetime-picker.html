@@ -31,9 +31,10 @@
                 </div>
 
                 <!-- right of panel-->
-                <div class="pickerPanel" data-bind="visible: showRightPanel, attr: {id: 'pickerPanel_'+randomId}">
+                <!--<div class="pickerPanel" data-bind="visible: showRightPanel, attr: {id: 'pickerPanel_'+randomId}">-->
+                <div class="pickerPanel" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'pickerPanel_'+randomId}, css: pickerPanelCss">
 
-                    <span style="display: inline-block; float: right;" data-bind="click: timeFilterControl, visible: enableTimeFilter">
+                    <span style="display: inline-block;" data-bind="click: timeFilterControl, visible: enableTimeFilter, css: timeFilterIconCss">
                         <img data-bind="attr: {id: 'timeFilterIcon_'+randomId, alt: timeFilterAlt}" src="/emsaasui/uifwk/@version@/images/widgets/func_gear_16_ena.png"/>
                     </span>
                     
@@ -80,7 +81,7 @@
                     </script>
                     
                     <!-- ko if: showCalendar -->
-                    <div data-bind="template: {name: 'calendar_'+randomId}"></div>
+                    <div style="display: inline-block; padding: 0px 10px;" data-bind="template: {name: 'calendar_'+randomId}"></div>
                     <!-- /ko -->
                     
                     <!-- Apply & Cancel button -->
@@ -101,7 +102,7 @@
                     <!-- /ko -->
                     
                     <!-- pop up for time filter-->
-                    <div style="display: none; width: 560px; height: 412px; margin: auto; border: 1px solid #f0f0f0;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'timeFilter_'+randomId}">
+                    <div style="display: none; width: 560px; height: 412px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}">
                         <!-- ko if: enableTimeFilter -->
                         <div style="padding-top: 50px;" data-bind="component: {name: 'time-filter'}"></div>
                         <!-- /ko -->

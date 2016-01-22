@@ -80,6 +80,7 @@ require(['ojs/ojcore',
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
                 var end = new Date();
                 var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
+                self.floatPosition = "left";
                 var tf = new timeFilter();
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
                 
@@ -101,6 +102,7 @@ require(['ojs/ojcore',
 //                    KOCadvanced: {KOCname: 'time-filter', 
 //                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
 //                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
+                    dtpickerPosition: self.floatPosition,
                     callbackAfterApply: function (start, end, tp, tf) {
                         console.log(start);
                         console.log(end);

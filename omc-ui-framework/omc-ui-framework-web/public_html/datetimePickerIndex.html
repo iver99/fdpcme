@@ -37,9 +37,10 @@
                 <span id="end" data-bind="text: end"></span>
             </div>
             <div id="timeFilterValue" style="padding: 15px;"></div>
-            <div data-bind="component: {name: 'date-time-picker', params: timeParams1}"></div>
+            <!--<div data-bind="component: {name: 'date-time-picker', params: timeParams1}"></div>-->
+            <div data-bind="component: {name: 'date-time-picker', params: timeParams1}, style: {'float': floatPosition, 'padding-right': '10px'}"></div>
             <!--<button data-bind="click: changeOption">click</button>-->
-                
+
             <div id="chartContainer">
                 <div id="lineChart" data-bind="ojComponent: {
                     component: 'ojChart', 

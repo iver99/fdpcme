@@ -40,10 +40,33 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.randomId = new Date().getTime(); 
                 }
                 
+                //set the position of drawers and pickerPanel according to date/time picker's position
+                if(params.dtpickerPosition && params.dtpickerPosition === "right") {
+                    self.drawerChosen = "rightDrawerChosen";
+                    self.drawerHover = "rightDrawerHover";
+                    self.timeFilterIconCss = "float-left";
+                    self.pickerPanelCss = "picker-panel-padding-left";
+                    //the position of panel popup relative to dropdown button
+                    self.panelPosition = {"my": "end top+16", "at": "end  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
+                    self.pickerPanelPosition = {"my": "end top", "at": "start top", "collision": "none", "of": "#drawers_"+self.randomId};
+                    self.timeFilterPosition = {"my": "end center", "at": "start center", "collision": "none"};
+                }else {     
+                    self.drawerChosen = "leftDrawerChosen";
+                    self.drawerHover = "leftDrawerHover";
+                    self.timeFilterIconCss = "float-right";
+                    self.pickerPanelCss = "picker-panel-padding-right";
+                    //the position of panel popup relative to dropdown button
+                    self.panelPosition = {"my": "start top+16", "at": "start  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
+                    self.pickerPanelPosition = {"my": "start top", "at": "end top", "collision": "none", "of": "#drawers_"+self.randomId};
+                    self.timeFilterPosition = {"my": "start center", "at": "end center", "collision": "none"};
+                }
+
+                
                 self.tfInstance = new timeFilter();
                 self.enableTimeFilter = ko.observable();
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
                 self.panelId = "#panel_" + self.randomId;
+                self.pickerPanelId = "#pickerPanel_" + self.randomId;
                 self.timeFilterId = "#timeFilter_" + self.randomId;
 
                 var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
@@ -121,72 +144,72 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last15minsCss = ko.computed(function() {
                     var css = "drawer"; 
                     css += self.last15minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last15minsChosen() ? " drawerChosen" : "";
+                    css += self.last15minsChosen() ? (" "+self.drawerChosen) : "";
                     return css;
                 }, self);
                 self.last30minsCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last30minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last30minsChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last30minsChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last60minsCss = ko.computed(function() {
                     var css = "drawer"; 
                     css += self.last60minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last60minsChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last60minsChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last4hoursCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last4hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last4hoursChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last4hoursChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last6hoursCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last6hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last6hoursChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last6hoursChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);                
                 self.last1dayCss = ko.computed(function() {
                     var css = "drawer";
                     css  += self.last1dayNotToShow() ? " drawerNotToShow": "";
-                    css += self.last1dayChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last1dayChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last7daysCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last7daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last7daysChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last7daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last30daysCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last30daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last30daysChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last30daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last90daysCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last90daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last90daysChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.last90daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.todayCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.todayNotToShow() ? " drawerNotToShow": "";
-                    css += self.todayChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.todayChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.latestCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.latestNotToShow() ? " drawerNotToShow" : "";
-                    css += self.latestChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.latestChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.customCss = ko.computed(function() {
                     var css = "drawer";
-                    css += self.customChosen() ? " drawerChosen" : " drawerNotChosen";
+                    css += self.customChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 
@@ -519,7 +542,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 if(params.adjustLastX && typeof params.adjustLastX === "function") {
                     self.adjustLastX = params.adjustLastX;
                 }
-
+                
                 /**
                  * restrict date range accroding to current date, customTimeBack, startDateISO and endDateISO
                  * @param {type} minDate
@@ -923,18 +946,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.isCustomBeyondWindowLimit();
                     }                    
                 };
-
+                
                 self.setFocusOnInput = function (idToFocus) {
                     var id;
-                    var ele = $(self.panelId + " .input-focus");
+                    var ele = $(self.pickerPanelId + " .input-focus");
                     if (ele.length > 0) {
                         id = ele[0].id;
-                        $(self.panelId + " #" + id).removeClass("input-focus");
+                        $(self.pickerPanelId + " #" + id).removeClass("input-focus");
                     }
                     if (idToFocus) {
                         if ((idToFocus === "divStartTime_" + self.randomId && !self.startTimeError()) || (idToFocus === "divEndTime_" + self.randomId && !self.endTimeError())
                                 || idToFocus === "inputStartDate_" + self.randomId || idToFocus === "inputEndDate_" + self.randomId) {
-                            $(self.panelId + " #" + idToFocus).addClass("input-focus");
+                            $(self.pickerPanelId + " #" + idToFocus).addClass("input-focus");
                         }
                     }
                 };
@@ -1000,8 +1023,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             self.updateRange(self.startDate(), self.endDate());
                         }
                         timeValidate();
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
+                        if (self.pickerPanelId) {
+                            $(self.pickerPanelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
                         }
                     } catch (e) {
                         if (value === 1) {
@@ -1010,8 +1033,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             self.endDateError(true);
                         }
                         $(event.target).addClass("input-error");
-                        if (self.panelId) {
-                            $(self.panelId + " #applyButton").ojButton({"disabled": true});
+                        if (self.pickerPanelId) {
+                            $(self.pickerPanelId + " #applyButton").ojButton({"disabled": true});
                         }
                     }
                 };
@@ -1036,8 +1059,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         customClick(1);
                     }
                     timeValidate();
-                    if (self.panelId) {
-                        $(self.panelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
+                    if (self.pickerPanelId) {
+                        $(self.pickerPanelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
                     }
                 };
                 
@@ -1054,8 +1077,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if (data.value === null || data.value.length === 0 || data.value.length === 1) {
                         self.setErrorBorderForTime(event.target);
                     }
-                    if (self.panelId) {
-                        $(self.panelId + " #applyButton").ojButton({"disabled": true});
+                    if (self.pickerPanelId) {
+                        $(self.pickerPanelId + " #applyButton").ojButton({"disabled": true});
                     }
                 };
                 
@@ -1117,22 +1140,22 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var monthDiff, clickNumber = 0;
                     var regExp = new RegExp(/\d{4}/);
 
-                    $(self.panelId + " .oj-datepicker-year").each(function () {
+                    $(self.pickerPanelId + " .oj-datepicker-year").each(function () {
                         var year = $(this).text();
                         curYears.push(Number(year.match(regExp)[0]));
                     });
-                    $(self.panelId + " .oj-datepicker-month").each(function () {
+                    $(self.pickerPanelId + " .oj-datepicker-month").each(function () {
                         curMonths.push(self.monthObject()[$(this).text()]);
                     });
                     monthDiff = (Number(startYear) - Number(curYears[0])) * 12 + (Number(startMonth) - Number(curMonths[0]));
                     if (monthDiff <= 0) {
                         while (clickNumber < Math.abs(monthDiff)) {
-                            $(self.panelId + " .oj-datepicker-prev-icon").click();
+                            $(self.pickerPanelId + " .oj-datepicker-prev-icon").click();
                             clickNumber++;
                         }
                     } else {
                         while (clickNumber < monthDiff) {
-                            $(self.panelId + " .oj-datepicker-next-icon").click();
+                            $(self.pickerPanelId + " .oj-datepicker-next-icon").click();
                             clickNumber++;
                         }
                     }
@@ -1146,7 +1169,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                     if ($(self.panelId).ojPopup('isOpen')) {
                         $(self.panelId).ojPopup('close');
-                    } else {
+                    } else {                                                
                         if(self.timePeriod() === self.timePeriodCustom) {
                             self.showRightPanel(true);
                         }else {
@@ -1158,11 +1181,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.toStartMonth(new Date(self.startDate()).getFullYear(), new Date(self.startDate()).getMonth() + 1);
                         self.updateRange(self.startDate(), self.endDate());
 
-                        $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId);
-                        //override popup's style
-                        $(self.panelId+"_wrapper"+" .oj-popup-content").css("padding", "0px");
-                        $(self.panelId+"_wrapper"+" .oj-popup").css("border", "0px");
-//                        $("#panel").slideDown();
+                        $(self.panelId).ojPopup('open', self.wrapperId + ' #dropDown_' + self.randomId, self.panelPosition);
                         $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', '/emsaasui/uifwk/@version@/images/widgets/pull-up.jpg');
                     }
                 };
@@ -1240,6 +1259,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         setTimeout(function() {self.applyClick()}, 0);
                     }else {
                         self.showRightPanel(true);
+                        $("#pickerPanel_"+self.randomId).ojPopup("open", "#dateTimePicker_"+self.randomId+" .drawers", self.pickerPanelPosition);
                         self.showCalendar(true);
                     }
 
@@ -1335,10 +1355,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     $(self.panelId).ojPopup("close");
                     return;
                 };
-
+                
                 self.renderDateRange = function (startRange, endRange) {
-                    if ($(self.panelId + " #datePicker_" + self.randomId).children()[0]) {
-                        var calendarId = $(self.panelId + " #datePicker_" + self.randomId).children()[0].id;
+                    if ($(self.pickerPanelId + " #datePicker_" + self.randomId).children()[0]) {
+                        var calendarId = $(self.pickerPanelId + " #datePicker_" + self.randomId).children()[0].id;
                     } else {
                         return;
                     }
@@ -1349,22 +1369,22 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var curMonth, curDay, curDate;
                     var regExp = new RegExp(/\d{4}/);
 
-                    $(self.panelId + " .oj-datepicker-year").each(function () {
+                    $(self.pickerPanelId + " .oj-datepicker-year").each(function () {
                         var year = $(this).text();
                         curYears.push(Number(year.match(regExp)[0]));
                     });
-                    $(self.panelId + " .oj-datepicker-month").each(function () {
+                    $(self.pickerPanelId + " .oj-datepicker-month").each(function () {
                         tmpMonths.push(self.monthObject()[$(this).text()]);
                     });
 
                     for (var i = 0; i < 2; i++) {
                         for (var j = 0; j < 6; j++) {
                             for (var k = 0; k < 7; k++) {
-                                var ele = $(self.panelId + " #oj-dp-" + uuid + "-" + j + "-" + k + "-0" + "-" + i);
+                                var ele = $(self.pickerPanelId + " #oj-dp-" + uuid + "-" + j + "-" + k + "-0" + "-" + i);
                                 ele.removeClass("date-selected");
                                 if (ele.hasClass("oj-datepicker-current-day")) {
                                     ele.removeClass("oj-datepicker-current-day");
-                                    $(self.panelId + " #oj-dp-" + uuid + "-" + j + "-" + k + "-0" + "-" + i + " a").removeClass("oj-selected");
+                                    $(self.pickerPanelId + " #oj-dp-" + uuid + "-" + j + "-" + k + "-0" + "-" + i + " a").removeClass("oj-selected");
                                 }
                                 curDay = ele.text();
 
@@ -1401,18 +1421,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if($(self.timeFilterId).ojPopup("isOpen")) {
                         $(self.timeFilterId).ojPopup("close");
                     }else {
-                        $(self.timeFilterId).ojPopup("open", "#pickerPanel_"+self.randomId, {"my": "start center", "at": "end center"});
+                        $(self.timeFilterId).ojPopup("open", "#pickerPanel_"+self.randomId, self.timeFilterPosition);
                     }
                 }
                 
                 self.hoverOnDrawer = function(data, event) {
-                    if(!$(event.target).hasClass("drawerChosen")) {
-                        $(event.target).addClass("drawerHover");
+                    if(!$(event.target).hasClass(self.drawerChosen)) {
+                        $(event.target).addClass(self.drawerHover);
                     }
                 }
                 
                 self.hoverOutDrawer = function(data, event) {
-                    $(event.target).removeClass("drawerHover");
+                    $(event.target).removeClass(self.drawerHover);
                 }
                 
                 self.initialize();
