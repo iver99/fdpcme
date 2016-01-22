@@ -29,7 +29,8 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
-    }
+	classpath group:"com.oracle.emaas.emdi", name: "DevInfraPlugin", version: "1.0+", transitive: true    
+	}
 }
 apply from: 'setup.gradle'
 
@@ -52,9 +53,7 @@ dependencies {
     testConfig (group: 'com.oracle.emaas.emcpdf.test', name: 'dashboardsui-webutils-integ-tests', version: "${REPO_BID}"){
 	exclude('module':'groovy')
     }
-    testConfig group: 'com.oracle.emdi.test', name: 'emaas_smalldeployment', version: "${integDeployVersion}"
-
-testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
+	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-core', version: "${REPO_BID}")
         testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-entities', version: "${REPO_BID}")
          testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-webutils', version: "${REPO_BID}")
@@ -77,13 +76,11 @@ testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'dashboards-web', versio
     }
 }
  
+task DeployDFUI(type: Exec) {
+    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
+    args '-p',  project.properties['emdi.GIT_VIEW_ROOT'] +'/dashboards-ui/dashboardsui-ee/', 'appServerDeploy'
+}
 
-
-
-task DeployDFUI(type:Exec) {
-
-        commandLine 'gradle', '-p', getGitRoot()+'/dashboards-ui/dashboardsui-ee/', 'appServerDeploy'
-        }
 task PropsCopy(type: Copy,dependsOn: DeployDFUI) {
    from '/net/slc07ctj/scratch/emaas/setuplogs/'
    into '../../oracle/work/'

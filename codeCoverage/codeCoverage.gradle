@@ -1,3 +1,4 @@
+/* Copyright (c) 2015 Oracle and/or its affiliates. All rights reserved.*/
 /*
  QATools Code Coverage Gradle script.
 
@@ -5,9 +6,10 @@
  when in a multi-project build it should always be included (apply from)
  from the MAIN build.gradle.
 
-
+  Different tasks usage can be referred here in wiki https://confluence.oraclecorp.com/confluence/display/EMS/How+to+setup+a+Code+Coverage+for+your+Gradle+project+in+EMSaaS
 
 Date        User        Change
+11/03/2015  kganapat    L0 test coverage report supported
 07/27/2015  lechever    Added LRG's automatic configuration (EMTest tasks)
 07/28/2015  lechever    Fixed circular dependency issue.
                         Removed findbugs and java.target sonar properties
@@ -18,32 +20,30 @@ Date        User        Change
 println "Code Coverage: Applying codeCoverage.gradle... (#V: Tue Jul 28 2015#)"
 println "Code Coverage: Project name is $rootProject.name"
 
-def ccVersion = '1.0.1'
+def ccVersion = '1.0.2'
 
 task printCcVersion << {
-  println "Code Coverage: Version ${ccVersion}"
+    println "Code Coverage: Version ${ccVersion}"
 }
 
 def serversInfo = [
-  '3node': [
-    'slc05mwm.us.oracle.com': 8090
-  ]
+    '3node': [
+        'slc07pud.us.oracle.com': [8080],
+    ]
 ]
 
 def remoteServers = serversInfo["3node"]
 
 // Get T_WORK path
 if (System.env.T_WORK) {
-  def tWork = new File(System.env.T_WORK)
-
-  if (tWork.isDirectory())
-    rootProject.ext.set("T_WORK", tWork.toString())
+    def tWork = new File(System.env.T_WORK)
+    if (tWork.isDirectory())
+        rootProject.ext.set("T_WORK", tWork.toString())
 } 
 else if (System.env.REPO_ROOT) {
-  def tWork = new File(System.env.REPO_ROOT, "/oracle/work")
-
-  if (tWork.isDirectory()) 
-    rootProject.ext.set("T_WORK", tWork.toString())
+    def tWork = new File(System.env.REPO_ROOT, "/oracle/work")
+    if (tWork.isDirectory()) 
+        rootProject.ext.set("T_WORK", tWork.toString())
 }
 
 // Loads sonar configuration
@@ -51,19 +51,97 @@ def loadCCConfiguration() {
     def ccEnv = hasProperty('cc') ? cc : 'test'
     project.ext.set("ccEnv",ccEnv)
     if (ccEnv == 'test') {
-      ext.ccSonarHost     = 'http://emaassonar.us.oracle.com:9000/sonar'
-      ext.ccSonarDB       = 'jdbc:oracle:thin:@emaassonar.us.oracle.com:1521:sonarq'
-      ext.ccSonarLogin    = 'sonar'
-      ext.ccSonarPassword = 'sonar'
-      ext.ccSonarJdbcDriver =  "oracle.jdbc.driver.OracleDriver"
+        ext.ccSonarHost     = 'http://emaassonar.us.oracle.com:9000/sonar'
+        ext.ccSonarDB       = 'jdbc:oracle:thin:@emaassonar.us.oracle.com:1521:sonarq'
+        ext.ccSonarLogin    = 'sonar'
+        ext.ccSonarPassword = 'sonar'
+        ext.ccSonarJdbcDriver =  "oracle.jdbc.driver.OracleDriver"
     }
     else {
-      ext.ccSonarHost     = 'http://slc07dsz.us.oracle.com:9000'
-      ext.ccSonarDB       = 'jdbc:mysql://slc07dsz.us.oracle.com:3306/sonar'
-      ext.ccSonarLogin    = 'sonarusername'
-      ext.ccSonarPassword = 'sonarpassword' 
-      ext.ccSonarJdbcDriver =  "com.mysql.jdbc.Driver"
-   }
+        ext.ccSonarHost     = 'http://slc07dsz.us.oracle.com:9000'
+        ext.ccSonarDB       = 'jdbc:mysql://slc07dsz.us.oracle.com:3306/sonar'
+        ext.ccSonarLogin    = 'sonarusername'
+        ext.ccSonarPassword = 'sonarpassword' 
+        ext.ccSonarJdbcDriver =  "com.mysql.jdbc.Driver"
+    }
+
+    def enable_cc_flag = hasProperty('ENABLE_CC') ? ENABLE_CC : "0"
+
+    project.ext.set("ENABLE_CC", enable_cc_flag)
+
+    def PPLLevelParam = hasProperty('PplLevel') ? PplLevel : "Null"
+
+    def saas_version_param = hasProperty('SaasVersion') ? SaasVersion : "Null"
+
+    def branchNameParam = hasProperty('BranchName') ? BranchName : "Null"
+
+    def repoNameParam = hasProperty('RepoName') ? RepoName : "Null"
+
+    def buildIdParam = hasProperty('BuildId') ? BuildId : "Null"
+
+    def commitIdParam = hasProperty('CommitId') ? CommitId : "Null"
+
+    def projectDescParm = hasProperty('emdi.GIT_PROJECT_NAME') ? project.property('emdi.GIT_PROJECT_NAME') : "Null";
+
+    project.ext.set("projDesc", projectDescParm)
+
+    //Construct projectKey
+
+    def projectKey = "Null"
+
+    /* 
+     * In all the cases at hudson, all the param values will always be passed
+     * without fail. It is just that in deloper hudson job case, if dev does 
+     * build with ENABLE_CC=1 and doesn't give a value for SaasVersion, then its
+     * values will be received as empty string. Only in case of local CC run 
+     * made by developer (as they do currently) , this condition will be true 
+     * and use projectKey in older format. In case of build flow, none of these 
+     * values will Null
+     */
+    if (PPLLevelParam == 'Null' || saas_version_param == 'Null' || repoNameParam == 'Null' ) {
+        projectKey = "com.oracle.emaas.${rootProject.name}"
+    }
+    else {
+        projectKey =  "JavaCC_" + repoNameParam + "_" + saas_version_param + "_" + PPLLevelParam
+    }
+    project.ext.set("projectKey",projectKey)
+
+    //Construct projectVersion
+
+    def projVersion = "Null"
+
+    if (commitIdParam == 'Null' || buildIdParam == 'Null') {
+        projVersion = project.ext.branch_cc+":"+project.ext.commit_cc
+    } 
+    else {
+        projVersion = buildIdParam + ":" + commitIdParam
+    }
+    project.ext.set("projVersion", projVersion)
+
+    //Construct projectName
+    def projName = "Null"
+
+    if ( repoNameParam == 'Null') {
+        projName = "EMaaS:JavaCC:"+rootProject.name
+    }
+    else {
+        projName = "EMaaS:JavaCC:" + repoNameParam + ":" + saas_version_param
+    }
+
+    project.ext.set("projName", projName)
+   
+    if ("$ENABLE_CC" == "1") {
+        println "PPLLevelParam-${PPLLevelParam}"
+        println "saas_version_param-${saas_version_param}"
+        println "branchNameParam-${branchNameParam}"
+        println "repoNameParam-${repoNameParam}"
+        println "buildIdParam-${buildIdParam}"
+        println "commitIdParam-${commitIdParam}"
+        println "projectKey-${projectKey}"
+        println "projVersion-${projVersion}"
+        println "projName-${projName}"
+        println("projectDescParm:" + projectDescParm);
+    }
 }
 
 /*
@@ -77,534 +155,507 @@ def loadCCConfiguration() {
 TaskCollection emTasks = project.tasks.matching({it.ext.has("testType")})
 
 if (emTasks) {
-  println "Code Coverage: This is an LRG gradle file with code coverage enabled tests"
+    println "Code Coverage: This is an LRG gradle file with code coverage enabled tests"
+    emTasks.all { emTask ->
+        if (emTask.ext.has("testType")) {
+            // Each EMTest task has a preCC and a postCC task created for it
+            def preTaskName  = "preCC_${emTask.name}"
+            def postTaskName = "postCC_${emTask.name}"
 
-  emTasks.all { emTask ->
-    if (emTask.ext.has("testType")) {
+            // Create the preCC task
+            tasks.create(name: preTaskName) {
+                println "Code Coverage: Created code coverage task ${name}"
 
-      // Each EMTest task has a preCC and a postCC task created for it
-      def preTaskName  = "preCC_${emTask.name}"
-      def postTaskName = "postCC_${emTask.name}"
-
-      // Create the preCC task
-      tasks.create(name: preTaskName) {
-        println "Code Coverage: Created code coverage task ${name}"
-
-        if (emTask.ext.testType == "unit") {
-          ext.set("testType","unit")
-          emTask.jacoco {
-            destinationFile = file("$buildDir/test.exec")
-          }
-        }
-        else {
-          ext.set("testType","integration")
-          emTask.jacoco {
-            destinationFile = file("$buildDir/integTest.exec")
-          }
-        }
-
-        // make sure preCC runs before small setup task
-        mustRunAfter project.tasks.matching {
-          it.name.startsWith("small_deploy") && ! it.name.contains("cleanup")
-        }
-
-        doLast {
-          // default is integration test unless specified
-          if (! ext.has("testType")) {
-            ext.set("testType", "integration")
-          }
-
-          println "Code Coverage: Running pre code coverage task ${name} / ${ext.testType}"
-          ant {
-            taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask", classpath: configurations.jacocoAnt.asPath)
-
-            remoteServers.each{ host ->
-              def remoteServersPorts = host.value;
-
-              remoteServersPorts.each { port ->
-                println "Code Coverage: server ${host.key}:$port"
-                try{
-                  dump(address: "${host.key}", port: "${port}", dump: "false", reset: "true")
+                if (emTask.ext.testType == "unit") {
+                    ext.set("testType","unit")
+                    emTask.jacoco {
+                        destinationFile = file("$buildDir/test.exec")
+                    }
                 }
-                catch (e) {
-                  println "Code Coverage: EXCEPTION $e on localhost"
+                else {
+                    ext.set("testType","integration")
+                    emTask.jacoco {
+                        destinationFile = file("$buildDir/integTest.exec")
+                    }
+               }
+
+               // make sure preCC runs before small setup task
+               mustRunAfter project.tasks.matching {
+                    it.name.startsWith("small_deploy") && ! it.name.contains("cleanup")
                 }
-              }
-            }
-          }
-        }
-      }
-      // create a dependency from preCC task for this EMTest
-      println "Code Coverage: Create dependency ${emTask.name} -> ${preTaskName}"
-      emTask.dependsOn(preTaskName)
 
-      // Create the postCC task
-      tasks.create(name: postTaskName) {
-        println "Code Coverage: Created code coverage task ${name}"
+                doLast {
+                    // default is integration test unless specified
+                    if (! ext.has("testType")) {
+                        ext.set("testType", "integration")
+                    }
 
-        if (emTask.ext.testType == "unit") {
-          ext.set("testType","unit")
-        }
-        else {
-          ext.set("testType","integration")
-        }
-
-        doLast {
-          if (remoteServers == null ){
-            println "Code Coverage: Unknown RemoteServer for project $rootProject.name , could not retrieve code Coverage data."
-            return
-          }
-
-          // set the file name to be used by jacoco dump task
-          if (ext.has("testType")) {
-            def execFolder = "${buildDir}/jacoco"
-
-            if (rootProject.ext.has("T_WORK")) {
-              def tWork = new File(rootProject.ext.T_WORK)
-              if (tWork.isDirectory()) {
-                execFolder = tWork.toString()
-              }
-            }
-
-            if (ext.testType == "unit") {
-              ext.set("ccFile", "${execFolder}/test.exec")
-            }
-            else {
-              ext.set("ccFile", "${execFolder}/integTest.exec")
-            }
-          }
-          else {
-            ext.set("testType", "integration")
-            ext.set("ccFile", "integTest.exec")
-          }
-
-          println "Code Coverage: Running post code coverage task ${name} / ${ext.testType} / ${ext.ccFile}"
-
-          ant {
-            taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask", classpath: configurations.jacocoAnt.asPath)
-
-            remoteServers.each{ host ->
-              def remoteServersPorts = host.value;
-
-              remoteServersPorts.each { port ->
-                println "Code Coverage: server ${host.key}:$port"
-                try{
-                  dump(address: "${host.key}", port: "${port}", dump: "true", destfile: "${ext.ccFile}", append: "true", reset: "true")
+                    println "Code Coverage: Running pre code coverage task ${name} / ${ext.testType}"
+                    ant {
+                        taskdef(name:"dump", 
+                                classname: "org.jacoco.ant.DumpTask",
+                                 classpath: configurations.jacocoAnt.asPath)
+                        remoteServers.each{ host ->
+                            def remoteServersPorts = host.value;
+                            remoteServersPorts.each { port ->
+                                println "Code Coverage: server ${host.key}:$port"
+                                try {
+                                        dump(address: "${host.key}", port: "${port}", dump: "false", reset: "true")
+                                } catch (e) {
+                                    println "Code Coverage: EXCEPTION $e on localhost"
+                                }
+                            }
+                        }
+                    }
                 }
-                catch (e) {
-                  println "Code Coverage: EXCEPTION $e on localhost"
-                }
-              }
             }
-          }
-        }
-      }
+            // create a dependency from preCC task for this EMTest
+            println "Code Coverage: Create dependency ${emTask.name} -> ${preTaskName}"
+            emTask.dependsOn(preTaskName)
 
-      // make sure postCC runs right after the EMTest task
-      println "Code Coverage: finalize ${emTask.name} with ${postTaskName}"
-      emTask.finalizedBy(postTaskName)
+            // Create the postCC task
+            tasks.create(name: postTaskName) {
+                println "Code Coverage: Created code coverage task ${name}"
+                if (emTask.ext.testType == "unit") {
+                    ext.set("testType","unit")
+                }
+                else {
+                    ext.set("testType","integration")
+                }
+
+                doLast {
+                    if (remoteServers == null ){
+                        println "Code Coverage: Unknown RemoteServer for project $rootProject.name , could not retrieve code Coverage data."
+                        return
+                    }
+
+                    // set the file name to be used by jacoco dump task
+                    if (ext.has("testType")) {
+                        def execFolder = "${buildDir}/jacoco"
+
+                        if (rootProject.ext.has("T_WORK")) {
+                            def tWork = new File(rootProject.ext.T_WORK)
+                            if (tWork.isDirectory()) {
+                                execFolder = tWork.toString()
+                            }
+                        }
+
+                        if (ext.testType == "unit") {
+                            ext.set("ccFile", "${execFolder}/test.exec")
+                        }
+                        else {
+                            ext.set("ccFile", "${execFolder}/integTest.exec")
+                        }
+                    }
+                    else {
+                        ext.set("testType", "integration")
+                        ext.set("ccFile", "integTest.exec")
+                    }
+
+                    println "Code Coverage: Running post code coverage task ${name} / ${ext.testType} / ${ext.ccFile}"
+
+                    ant {
+                        taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask", classpath: configurations.jacocoAnt.asPath)
+
+                        remoteServers.each{ host ->
+                            def remoteServersPorts = host.value;
+                            remoteServersPorts.each { port ->
+                                println "Code Coverage: server ${host.key}:$port"
+                                try {
+                                    dump(address: "${host.key}", port: "${port}", dump: "true", destfile: "${ext.ccFile}", append: "true", reset: "true")
+                                } catch (e) {
+                                    println "Code Coverage: EXCEPTION $e on localhost"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // make sure postCC runs right after the EMTest task
+            println "Code Coverage: finalize ${emTask.name} with ${postTaskName}"
+            emTask.finalizedBy(postTaskName)
+        }
     }
-  }
 }
 else {
-  /*
-    Do normal cc setup, this is most probably a project's build.gradle
-  */
+    /*
+        Do normal cc setup, this is most probably a project's build.gradle
+    */
 
-  // Load configuration settings from settings.groovy, mostly settings used to
-  // define the Sonar server to use.
+    // Get git branch and commit values, as they will be used in the sonar report
+    def branch=System.getenv("GIT_BRANCH")
+    def commit=System.getenv("GIT_COMMIT")
+    def reponame = rootProject.name
+    println "Code Coverage: Repo name '$reponame'"
 
-  loadCCConfiguration()
+    // Get the git branch and commit number to use them as version in the sonar report
+    task setGitInfo(){
+        if(System.getenv("GIT_BRANCH") == null || System.getenv("GIT_BRANCH").contains("Null")){
+            branch="git rev-parse --abbrev-ref HEAD".execute().text.trim()
+            commit="git rev-parse --short HEAD".execute().text
+        }
 
-  // Apply sonar-runner plugin to upload coverage data to a sonar server
-  apply plugin: 'sonar-runner'
-
-  // Get git branch and commit values, as they will be used in the sonar report
-  def branch=System.getenv("GIT_BRANCH")
-  def commit=System.getenv("GIT_COMMIT")
-  def reponame = rootProject.name
-  println "Code Coverage: Repo name '$reponame'"
-
-  // Get the git branch and commit number to use them as version in the sonar report
-  task setGitInfo(){
-    if(System.getenv("GIT_BRANCH") == null || System.getenv("GIT_BRANCH").contains("Null")){
-      branch="git rev-parse --abbrev-ref HEAD".execute().text.trim()
-      commit="git rev-parse --short HEAD".execute().text
+        branch=branch.replaceAll("\\/","_")
+        commit=commit.take(7)
+        project.ext.set("branch_cc", branch)
+        project.ext.set("commit_cc", commit)
     }
 
-    branch=branch.replaceAll("\\/","_")
-    commit=commit.take(7)
-    project.ext.set("branch_cc", branch)
-    project.ext.set("commit_cc", commit)
-  }
+    // Load configuration settings from settings.groovy, mostly settings used to
+    // define the Sonar server to use.
 
-  // Set Sonar general properties to the project
-  sonarRunner {
-    def version=project.ext.branch_cc+":"+project.ext.commit_cc
-    sonarProperties {
-      property "sonar.projectKey", "com.oracle.emaas.$reponame"
-      property "sonar.projectName", "EMaaS:$reponame"
-      property "sonar.projectVersion", "${version}"
-      property "sonar.host.url", "$ccSonarHost"
-      property "sonar.jdbc.url", "$ccSonarDB"
-      property "sonar.jdbc.driverClassName", "$ccSonarJdbcDriver"
-      property "sonar.jdbc.username", "$ccSonarLogin"
-      property "sonar.jdbc.password", "$ccSonarPassword"
-      property "sonar.login", "emaas"
-      property "sonar.password", "emaas"
-      property "sonar.jacoco.reportMissing.force.zero", "true"
-      property "sonar.supportSourceFileDuplications", "true"
-    }
-  }
+    loadCCConfiguration()
 
-  //
-  // Tasks and settings applied to all projects in the build.
-  //
-  allprojects {
-    // Set Sonar properties common to all projects in the build
+    // Apply sonar-runner plugin to upload coverage data to a sonar server
+    apply plugin: 'sonar-runner'
+
+    // Set Sonar general properties to the project
     sonarRunner {
-      sonarProperties {
-        property "sonar.junit.reportsPath", "${buildDir}/test-results"
-        property "sonar.language", "java"
-        property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.jacoco.reportPath", "${buildDir}/jacoco/test.exec"
-        property "sonar.jacoco.itReportPath" , "${buildDir}/jacoco/integTest.exec"
-        property "sonar.sourceEncoding", "UTF-8"
+        sonarProperties {
+            property "sonar.projectKey", "$projectKey"
+            property "sonar.projectName", "$projName"
+            property "sonar.projectVersion", "$projVersion"
+            property "sonar.projectDescription", "$projDesc"
+            property "sonar.host.url", "$ccSonarHost"
+            property "sonar.jdbc.url", "$ccSonarDB"
+            property "sonar.jdbc.driverClassName", "$ccSonarJdbcDriver"
+            property "sonar.jdbc.username", "$ccSonarLogin"
+            property "sonar.jdbc.password", "$ccSonarPassword"
+            property "sonar.login", "emaas"
+            property "sonar.password", "emaas"
+            property "sonar.jacoco.reportMissing.force.zero", "true"
+            property "sonar.supportSourceFileDuplications", "true"
+        }
+    }
+
+    //
+    // Tasks and settings applied to all projects in the build.
+    //
+    allprojects {
+        // Set Sonar properties common to all projects in the build
+        sonarRunner {
+            sonarProperties {
+                property "sonar.junit.reportsPath", "${buildDir}/test-results"
+                property "sonar.language", "java"
+                property "sonar.java.coveragePlugin", "jacoco"
+                property "sonar.jacoco.reportPath", "${buildDir}/jacoco/test.exec"
+                property "sonar.jacoco.itReportPath" , "${buildDir}/jacoco/integTest.exec"
+                property "sonar.sourceEncoding", "UTF-8"
         //property "sonar.exclusions", "**/IntervalTimeUnit.java,**/ImportCategorySet.java"
-      }
+        }
     }
 
     apply plugin: 'jacoco'
 
     afterEvaluate {
-      // some tasks apply only to projects with java plugin applied.
-      if (project.plugins.hasPlugin('java')) {
-     /*   project.jacoco {
-          toolVersion = "0.7.2.201409121644"
-        }*/
+        // some tasks apply only to projects with java plugin applied.
+        if (project.plugins.hasPlugin('java')) {
 
-        jacocoTestReport {
-          executionData = fileTree(dir: "${buildDir}/jacoco", include: '**/*.exec')
+            jacocoTestReport {
+                executionData = fileTree(dir: "${buildDir}/jacoco", include: '**/*.exec')
 
-          reports {
-            xml.enabled true
-            csv.enabled true
-            html.destination "${buildDir}/reports/jacoco"
-          }
+                reports {
+                    xml.enabled true
+                    csv.enabled true
+                    html.destination "${buildDir}/reports/jacoco"
+                }
+            }
+           
+            // Iterate on tasks of type test for this project
+            project.tasks.withType(Test) { task ->
+                def execName = 'test.exec'
+
+        if ((task.name != 'test') && !task.name.toLowerCase().contains("s1") && !task.name.toLowerCase().contains("s2")) {
+          execName = 'integTest.exec'
         }
-        // ccWrapper.finalizedBy jacocoTestReport
-        // Iterate on tasks of type test for this project
-        project.tasks.withType(Test) { task ->
-          def execName = 'test.exec'
 
-          task.jacoco {
-            destinationFile = file("${buildDir}/jacoco/" + execName)
-          }
+                task.jacoco {
+                    destinationFile = file("${buildDir}/jacoco/" + execName)
+                }
+            }
         }
-      }
-
-      // Remove sonar dependency on build/test so an existing report can be uploaded
-      // without rebuilding the code and running tests.
-      if (project.plugins.hasPlugin('sonar-runner')) {
-        tasks.sonarRunner.dependsOn = []
-      }
+        if (project.plugins.hasPlugin('sonar-runner')) {
+            tasks.sonarRunner.dependsOn = []
+        }
     }
-  } // end of allprojects
+} // end of allprojects
 
-  // Remote coverage utils: tasks and settings required to do remote
-  // codecoverage, mostly on WLSs running on different machines for different
-  // projects.
-
-  // Retrieves JaCoCo CC data from a remote WLS machine (jacoco agent must be
-  // running in the remote machine)
-  task dumpRemoteCC << {
+// Remote coverage utils: tasks and settings required to do remote
+// codecoverage, mostly on WLSs running on different machines for different
+// projects.
+// Retrieves JaCoCo CC data from a remote WLS machine (jacoco agent must be
+// running in the remote machine)
+task dumpRemoteCC << {
     if (remoteServers == null ){
-      println "Code Coverage: Unknown RemoteServer for project $rootProject.name , could not retrieve code Coverage data."
-      return
+        println "Code Coverage: Unknown RemoteServer for project $rootProject.name , could not retrieve code Coverage data."
+        return
     }
     ant {
-      taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask",classpath: configurations.jacocoAnt.asPath)
+        taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask",classpath: configurations.jacocoAnt.asPath)
+        println "Code Coverage: Dumping $rootProject.name CC data from remote agent."
+        remoteServers.each{ host ->
+            def remoteServersPorts = host.value;
+            remoteServersPorts.each { port ->
+                println "Code Coverage: server ${host.key}:$port"
+                try{
+                    dump(address:"${host.key}", port:"${port}", dump:"true", destfile:"${buildDir}/jacoco/integTest.exec")
+                }
+                catch (e){
+                    println "Code Coverage: EXCEPTION $e on ${host.key}"
+                }
 
-      println "Code Coverage: Dumping $rootProject.name CC data from remote agent."
-
-      remoteServers.each{ host ->
-        def remoteServersPorts = host.value;
-
-        remoteServersPorts.each { port ->
-          println "Code Coverage: server ${host.key}:$port"
-          try{
-            dump(address:"${host.key}", port:"${port}", dump:"true", destfile:"${buildDir}/jacoco/integTest.exec")
-          }
-          catch (e){
-            println "Code Coverage: EXCEPTION $e on ${host.key}"
-          }
+            }
 
         }
-
-      }
     }
-  }
+}
 
-  task resetRemoteCC << {
+task resetRemoteCC << {
     if (remoteServers == null ){
-      println "Code Coverage: Unknown RemoteServer for project ${rootProject.name}, could not retrieve data."
-      return
+        println "Code Coverage: Unknown RemoteServer for project ${rootProject.name}, could not retrieve data."
+        return
     }
     ant {
-      taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask",classpath: configurations.jacocoAnt.asPath)
-
-      println "Code Coverage: Reseting data on remote agent."
-
-      remoteServers.each{ host ->
-        def remoteServersPorts = host.value;
-
-        remoteServersPorts.each { port ->
-          println "Code Coverage: server ${host.key}:$port"
-          try{
-            dump(address:"${host.key}", port:"${port}", dump:"false",reset: "true")
-          }
-          catch (e){
-            println "Code Coverage: EXCEPTION $e on ${host.key}"
-          }
+        taskdef(name:"dump", classname: "org.jacoco.ant.DumpTask",classpath: configurations.jacocoAnt.asPath)
+        println "Code Coverage: Reseting data on remote agent."
+        remoteServers.each{ host ->
+            def remoteServersPorts = host.value;
+            remoteServersPorts.each { port ->
+                println "Code Coverage: server ${host.key}:$port"
+                try {
+                    dump(address:"${host.key}", port:"${port}", dump:"false",reset: "true")
+                }
+                catch (e){
+                    println "Code Coverage: EXCEPTION $e on ${host.key}"
+                }
+            }
         }
-      }
     }
-  }
+}
 
-  project.tasks.withType(JacocoMerge) { task ->
+project.tasks.withType(JacocoMerge) { task ->
     task.destPath = new File(project.getBuildDir(), "/jacoco/${task.name}.exec")
-  }
+}
 
 
-  /*
+/*
     This task is used when a unified jacoco report is required. It gathers all
     execution data and sourceSets into a single collection. Jacoco generates a
     single report containing all existing jacoco data in every project.
-  */
-  task configureCCoverageDataModel << {
-      def coverageTask = project.getTasksByName('ccGlobal', false).iterator().next()
-      def Set<File> sourceDirectories = new HashSet<File>();
-      def Set<File> classDirectories  = new HashSet<File>();
-      def Set<File> executionData     = new HashSet<File>();
+*/
+task configureCCoverageDataModel << {
+    def coverageTask = project.getTasksByName('ccGlobal', false).iterator().next()
+    def Set<File> sourceDirectories = new HashSet<File>();
+    def Set<File> classDirectories  = new HashSet<File>();
+    def Set<File> executionData     = new HashSet<File>();
 
-      project.subprojects.each { Project p ->
-          if (p.hasProperty('sourceSets')) {
-              for ( s in p.sourceSets) {
-                  if (s.name.startsWith('test')) {
-                      continue;
-                  }
+    project.subprojects.each { Project p ->
+        if (p.hasProperty('sourceSets')) {
+            for ( s in p.sourceSets) {
+                if (s.name.startsWith('test')) {
+                    continue;
+                }
+                def javaFiles = s.allJava
+                if (!javaFiles.empty) {
+                    sourceDirectories.add(s.java.files)
+                    classDirectories.add(s.output.files)
+                }
+            }
+        }
 
-                  def javaFiles = s.allJava
+        // Gather jacoco execution data files
+        if (p.getPlugins().hasPlugin('jacoco')) {
+            for ( t in p.tasks ) {
+                println "Task name: ${t.name}"
+                JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
 
-                  if (!javaFiles.empty) {
-                      sourceDirectories.add(s.java.files)
-                      classDirectories.add(s.output.files)
-                  }
-              }
-          }
+                if (jacoco != null) {
+                    File execFile= t.jacoco.destinationFile
 
-          // Gather jacoco execution data files
-          if (p.getPlugins().hasPlugin('jacoco')) {
-              for ( t in p.tasks ) {
-                  JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
+                    if (execFile.exists()) {
+                        executionData.add(t.jacoco.destinationFile)
+                    }
+                }
+            }
+        }
 
-                  if (jacoco != null) {
-                      File execFile= t.jacoco.destinationFile
+    }// End loop on subprojects
 
-                      if (execFile.exists()) {
-                          executionData.add(t.jacoco.destinationFile)
-                      }
-                  }
-              }
-          }
+    // Configure the coverage report class
+    coverageTask.setClassDirectories    project.files(classDirectories)
+    coverageTask.setSourceDirectories   project.files(sourceDirectories)
+    coverageTask.setExecutionData       project.files(executionData)
+}
 
-      }// End loop on subprojects
-
-      // Configure the coverage report class
-      coverageTask.setClassDirectories    project.files(classDirectories)
-      coverageTask.setSourceDirectories   project.files(sourceDirectories)
-      coverageTask.setExecutionData       project.files(executionData)
-  }
-
-  task ccGlobal(type: JacocoReport, dependsOn: configureCCoverageDataModel) {
-      description = "Generates code coverage report based on all existing tests"
-      println "Code Coverage: Using CC Sonar server: $ccSonarHost"
-  }
+task ccGlobal(type: JacocoReport, dependsOn: configureCCoverageDataModel) {
+    description = "Generates code coverage report based on all existing tests"
+    println "Code Coverage: Using CC Sonar server: $ccSonarHost"
+}
 
 
-  //
-  // Task used to merge different jacoco exec files into a single exec file
-  //
-  task mergeUnitTestCoverageData << {
+//
+// Task used to merge different jacoco exec files into a single exec file
+//
+task mergeUnitTestCoverageData << {
     def mergeTask = project.getTasksByName('mergeDataUnitTest', false).iterator().next()
     def Set<File> jacocoExecFiles = new HashSet<File>()
 
     allprojects.each { Project p ->
-      if (p.hasProperty('buildDir')) 
-      {
-        def jacocoFolder = new File(p.buildDir, "jacoco")
-
-        if (jacocoFolder.isDirectory()) 
-        {
-          jacocoFolder.listFiles().each { f ->
-            def fileName = f.getName()
-
-            if (f.isFile() && fileName.endsWith('.exec'))
-            {
-              if (fileName == 'test.exec')
-              {
-                jacocoExecFiles.add(f)
-              }
+        if (p.hasProperty('buildDir'))  {
+            def jacocoFolder = new File(p.buildDir, "jacoco")
+            if (jacocoFolder.isDirectory())  {
+                jacocoFolder.listFiles().each { f ->
+                    def fileName = f.getName()
+                    if (f.isFile() && fileName.endsWith('.exec')) {
+                        if (fileName == 'test.exec') {
+                            jacocoExecFiles.add(f)
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-
-
-
-    // look in other paths as T_WORK and T_WORK/jacoco/ for .exec files
-    Set<String> lookoutPaths = new HashSet<String>()
-
-    if (rootProject.has("T_WORK")) {
-      lookoutPaths << rootProject.ext.T_WORK
-      lookoutPaths << "${rootProject.ext.T_WORK}/jacoco"
-    }
-
-    lookoutPaths.each { path ->
-      def jacocoPath = new File(path)
-
-      if (jacocoPath.isDirectory()) 
-      {
-        println "Code Coverage: looking in ${path} for unit exec files"
-
-        jacocoPath.listFiles().each { f ->
-          def fileName = f.getName()
-
-          if (f.isFile() && fileName.endsWith(".exec") && fileName == 'test.exec')
-          {
-            jacocoExecFiles.add(f)
-            println "Code Coverage: Added ${fileName}"
-          }
-        }
-      }
-    }
-
-    mergeTask.setExecutionData project.files(jacocoExecFiles)
-  }
-
-  //
-  // Task used to merge different jacoco exec files into a single exec file
-  //
-  task mergeIntegTestCoverageData << {
-    def mergeTask = project.getTasksByName('mergeDataIntegTest', false).iterator().next()
-    def Set<File> jacocoExecFiles = new HashSet<File>()
-
-    allprojects.each { Project p ->
-      if (p.hasProperty('buildDir')) 
-      {
-        def jacocoFolder = new File(p.buildDir, "jacoco")
-
-        if (jacocoFolder.isDirectory()) 
-        {
-          jacocoFolder.listFiles().each { f ->
-            def fileName = f.getName()
-
-            if (f.isFile() && fileName.endsWith('.exec'))
-            {
-              if (fileName != 'test.exec')
-              {
-                jacocoExecFiles.add(f)
-              }
-            }
-          }
-        }
-      }
     }
 
     // look in other paths as T_WORK and T_WORK/jacoco/ for .exec files
     Set<String> lookoutPaths = new HashSet<String>()
 
     if (rootProject.has("T_WORK")) {
-      lookoutPaths << rootProject.ext.T_WORK
-      lookoutPaths << "${rootProject.ext.T_WORK}/jacoco"
+        lookoutPaths << rootProject.ext.T_WORK
+        lookoutPaths << "${rootProject.ext.T_WORK}/jacoco"
     }
 
     lookoutPaths.each { path ->
-      def jacocoPath = new File(path)
+        def jacocoPath = new File(path)
+        if (jacocoPath.isDirectory())  {
+            println "Code Coverage: looking in ${path} for unit exec files"
+            jacocoPath.listFiles().each { f ->
+                def fileName = f.getName()
 
-      if (jacocoPath.isDirectory()) 
-      {
-        println "Code Coverage: looking in ${path} for integ exec files"
-
-        jacocoPath.listFiles().each { f ->
-          def fileName = f.getName()
-
-          if (f.isFile() && fileName.endsWith(".exec") && fileName != 'test.exec')
-          {
-            jacocoExecFiles.add(f)
-            println "Code Coverage: Added ${fileName}"
-          }
+                if (f.isFile() && fileName.endsWith(".exec") && fileName == 'test.exec') {
+                    jacocoExecFiles.add(f)
+                    println "Code Coverage: Added ${fileName}"
+                }
+            }
         }
-      }
     }
+
     mergeTask.setExecutionData project.files(jacocoExecFiles)
   }
 
-  // Merge all test.exec into a single test.exec file
-  task mergeDataUnitTest(type: JacocoMerge , dependsOn: mergeUnitTestCoverageData) {
-    destinationFile =  file("${rootProject.buildDir}/jacoco/test.exec")
-  }
+    //
+    // Task used to merge different jacoco exec files into a single exec file
+    //
+    task mergeIntegTestCoverageData << {
+        def mergeTask = project.getTasksByName('mergeDataIntegTest', false).iterator().next()
+        def Set<File> jacocoExecFiles = new HashSet<File>()
 
-  // Merge all integTest.exec into a single integTest.exec file
-  task mergeDataIntegTest(type: JacocoMerge, dependsOn: mergeIntegTestCoverageData) {
-    destinationFile = file("${rootProject.buildDir}/jacoco/integTest.exec")
-  }
-
-  //
-  // Task to copy unit tests (test.exec) and integration tests (integTest.exec)  merged exec files 
-  // into every subproject using jacoco, this allows Sonar to report codeCoverage from projects 
-  // excercising other project's code.
-  //
-  task copyMergedFile << {
-    def mergeUnitTestTask  = project.getTasksByName('mergeDataUnitTest', false).iterator().next()
-    def mergeIntegTestTask = project.getTasksByName('mergeDataIntegTest', false).iterator().next()
-
-    // Iterate on all projects with jacoco plugin to get the jacoco destination
-    // folder and overwrite any test|integTest.exec with merged versions.
-    allprojects.each { Project p ->
-      if (p.getPlugins().hasPlugin('jacoco')) {
-        def destFolder = null
-
-        for ( t in p.tasks ) {
-          JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
-
-          if (jacoco != null) {
-            File execFile = t.jacoco.destinationFile
-            destFolder = execFile.getParentFile()
-          }
+        allprojects.each { Project p ->
+            if (p.hasProperty('buildDir'))  {
+                def jacocoFolder = new File(p.buildDir, "jacoco")
+                if (jacocoFolder.isDirectory())  {
+                    jacocoFolder.listFiles().each { f ->
+                        def fileName = f.getName()
+                        if (f.isFile() && fileName.endsWith('.exec')) {
+                            if (fileName != 'test.exec') {
+                                jacocoExecFiles.add(f)
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        if (destFolder == null) {
-          destFolder = new File("${p.buildDir}/jacoco")
-          if (!destFolder.exists())
-            destFolder.mkdirs()
+        // look in other paths as T_WORK and T_WORK/jacoco/ for .exec files
+        Set<String> lookoutPaths = new HashSet<String>()
+        if (rootProject.has("T_WORK")) {
+            lookoutPaths << rootProject.ext.T_WORK
+            lookoutPaths << "${rootProject.ext.T_WORK}/jacoco"
         }
 
-        // Copy both unit and integ tests into the destination folder
-        ant.copy(file: mergeUnitTestTask.destinationFile,  todir: destFolder, overwrite: 'true')
-        ant.copy(file: mergeIntegTestTask.destinationFile, todir: destFolder, overwrite: 'true')
-      }
+        lookoutPaths.each { path ->
+            def jacocoPath = new File(path)
+
+            if (jacocoPath.isDirectory())  {
+                println "Code Coverage: looking in ${path} for integ exec files"
+
+                jacocoPath.listFiles().each { f ->
+                    def fileName = f.getName()
+
+                    if (f.isFile() && fileName.endsWith(".exec") && fileName != 'test.exec') {
+                        jacocoExecFiles.add(f)
+                        println "Code Coverage: Added ${fileName}"
+                    }
+                }
+            }
+        }
+        mergeTask.setExecutionData project.files(jacocoExecFiles)
     }
-  }
 
-  // Wrapper task that merges test.exec and integTest.exec separately.
-  task mergeData(dependsOn: [mergeDataUnitTest, mergeDataIntegTest]) << {
-    println "Code Coverage: Merged code coverage data"
-  }
+    // Merge all test.exec into a single test.exec file
+    task mergeDataUnitTest(type: JacocoMerge , dependsOn: mergeUnitTestCoverageData) {
+        destinationFile =  file("${rootProject.buildDir}/jacoco/test.exec")
+    }
 
-  mergeData.finalizedBy copyMergedFile
+    // Merge all integTest.exec into a single integTest.exec file
+    task mergeDataIntegTest(type: JacocoMerge, dependsOn: mergeIntegTestCoverageData) {
+        destinationFile = file("${rootProject.buildDir}/jacoco/integTest.exec")
+    }
 
-  /* Code Coverage Report Generator Final steps wrapper */
-  task ccWrapper(dependsOn: ['mergeData'])
+    //
+    // Task to copy unit tests (test.exec) and integration tests (integTest.exec)  merged exec files 
+    // into every subproject using jacoco, this allows Sonar to report codeCoverage from projects 
+    // excercising other project's code.
+    //
+    task copyMergedFile << {
+        def mergeUnitTestTask  = project.getTasksByName('mergeDataUnitTest', false).iterator().next()
+        def mergeIntegTestTask = project.getTasksByName('mergeDataIntegTest', false).iterator().next()
+
+        // Iterate on all projects with jacoco plugin to get the jacoco destination
+        // folder and overwrite any test|integTest.exec with merged versions.
+        allprojects.each { Project p ->
+            if (p.getPlugins().hasPlugin('jacoco')) {
+                def destFolder = null
+
+                for ( t in p.tasks ) {
+                    JacocoTaskExtension jacoco = t.getConvention().findByType(JacocoTaskExtension.class)
+
+                    if (jacoco != null) {
+                        File execFile = t.jacoco.destinationFile
+                        destFolder = execFile.getParentFile()
+                    }
+                }
+
+                if (destFolder == null) {
+                    destFolder = new File("${p.buildDir}/jacoco")
+                    if (!destFolder.exists())
+                        destFolder.mkdirs()
+                }
+
+                // Copy both unit and integ tests into the destination folder
+                ant.copy(file: mergeUnitTestTask.destinationFile,  todir: destFolder, overwrite: 'true')
+                ant.copy(file: mergeIntegTestTask.destinationFile, todir: destFolder, overwrite: 'true')
+            }
+        }
+    }
+
+    // Wrapper task that merges test.exec and integTest.exec separately.
+    task mergeData(dependsOn: [mergeDataUnitTest, mergeDataIntegTest]) << {
+        println "Code Coverage: Merged code coverage data"
+    }
+    afterEvaluate {
+        tasks.sonarRunner.dependsOn = [tasks.mergeData]
+    }
+    mergeData.finalizedBy copyMergedFile
+
+    /* Code Coverage Report Generator Final steps wrapper */
+    task publishCodeCoverage{
+        if ("$ENABLE_CC" == "1") {
+            println "ENV ENABLE_CC is $ENABLE_CC. Running mergeData & sonarRunner" 
+            dependsOn tasks.sonarRunner
+        }
+        else {
+            println "ENV ENABLE_CC is $ENABLE_CC. Do Nothing..." 
+        }
+    }
 }
