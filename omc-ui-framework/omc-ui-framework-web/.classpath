@@ -7,6 +7,7 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/rest-assured-common-2.3.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/json-path-2.3.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/testng-6.8.8.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-2.0.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-2.0.0-20160114205138.jar"/>
+	<classpathentry kind="lib" path="/scratch/aduan/workspace/dsbsprint40/emcpdf/dependencies/artifactory/emsaas-qatool-jet-utility-1.0.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

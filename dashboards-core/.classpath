@@ -32,9 +32,9 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.0.0.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jmockit-1.19.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/json-path-2.3.1.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-2.0.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-2.0.0-20160114205138.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="dashboards-webutils" parallel="tests">
+	<test name="dashboards webutils">
+		<classes>
+		<class name="oracle.sysman.emaas.platform.dashboards.webutils.timer.AvailabilityNotificationTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.targetmodel.services.DashboardStatusTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.targetmodel.services.JMXUtilTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.AvailabilityServiceManagerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.DashboardApiLifecycleServiceTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.EMTargetInitializerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.EMTargetMXBeanTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.LoggingServiceManagerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.PropertyReaderTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManagerTest" />
+		    <class name="oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleServiceTest" />
+		</classes>
+	</test> <!-- Test -->
+</suite> <!-- Suite -->
