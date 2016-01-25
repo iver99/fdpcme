@@ -127,22 +127,33 @@ public class RegistrationEntity
 		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		String tenantName = TenantContext.getCurrentTenant();
 		for (String app : subscribedApps) {
-			if (APM_SERVICENAME.equals(app)) {
-				Link l = RegistryLookupUtil.getServiceExternalLink(APM_SERVICENAME, APM_VERSION, APM_HOME_LINK, tenantName);
-				LinkEntity le = new LinkEntity(ApplicationOPCName.APM.toString(), l.getHref(), APM_SERVICENAME, APM_VERSION);
-				le = replaceWithVanityUrl(le, tenantName, APM_SERVICENAME);
-				list.add(le);
-			}
-			else if (LA_SERVICENAME.equals(app)) {
-				Link l = RegistryLookupUtil.getServiceExternalLink(LA_SERVICENAME, LA_VERSION, LA_HOME_LINK, tenantName);
-				LinkEntity le = new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), l.getHref(), LA_SERVICENAME,
-						LA_VERSION);
-				le = replaceWithVanityUrl(le, tenantName, LA_SERVICENAME);
-				list.add(le);
-			}
-			else if (ITA_SERVICENAME.equals(app)) {
-				list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, ITA_VERSION)); //version is hard coded now
+			try {
+				if (APM_SERVICENAME.equals(app)) {
+					Link l = RegistryLookupUtil.getServiceExternalLink(APM_SERVICENAME, APM_VERSION, APM_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					LinkEntity le = new LinkEntity(ApplicationOPCName.APM.toString(), l.getHref(), APM_SERVICENAME, APM_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, APM_SERVICENAME);
+					list.add(le);
+				}
+				else if (LA_SERVICENAME.equals(app)) {
+					Link l = RegistryLookupUtil.getServiceExternalLink(LA_SERVICENAME, LA_VERSION, LA_HOME_LINK, tenantName);
+					if (l == null) {
+						throw new Exception("Link for " + app + "return null");
+					}
+					LinkEntity le = new LinkEntity(ApplicationOPCName.LogAnalytics.toString(), l.getHref(), LA_SERVICENAME,
+							LA_VERSION);
+					le = replaceWithVanityUrl(le, tenantName, LA_SERVICENAME);
+					list.add(le);
+				}
+				else if (ITA_SERVICENAME.equals(app)) {
+					list.add(new LinkEntity(ApplicationOPCName.ITAnalytics.toString(), ITA_URL, ITA_SERVICENAME, ITA_VERSION)); //version is hard coded now
 
+				}
+			}
+			catch (Exception e) {
+				_logger.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
 		return list;

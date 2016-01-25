@@ -122,6 +122,8 @@ public class RegistryLookup
 			System.out.println("GET details of endpoint");
 			System.out.println("											");
 
+			System.out.println("											");
+			System.out.println("cases 1 : with all parameters");
 			Response res = RestAssured
 					.given()
 					.log()
@@ -138,6 +140,26 @@ public class RegistryLookup
 			Assert.assertEquals(res.jsonPath().get("serviceName"), "Dashboard-UI");
 			Assert.assertEquals(res.jsonPath().get("version"), "0.1");
 			Assert.assertNotNull(res.jsonPath().get("href"));
+
+			System.out.println("											");
+			System.out.println("cases 2 : no version");
+			System.out.println("											");
+
+			Response res1 = RestAssured
+					.given()
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			System.out.println(res1.asString());
+
+			Assert.assertEquals(res1.jsonPath().get("serviceName"), "Dashboard-UI");
+			Assert.assertEquals(res1.jsonPath().get("version"), "");
+			Assert.assertNotNull(res1.jsonPath().get("href"));
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -173,29 +195,10 @@ public class RegistryLookup
 			System.out.println(res.asString());
 
 			Assert.assertEquals(res.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=, version=0.1");
+			Assert.assertEquals(res.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=, version=0.1");			
 
 			System.out.println("											");
-			System.out.println("Negative cases 2 : no version");
-			System.out.println("											");
-
-			Response res1 = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=");
-
-			System.out.println("											");
-			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 404);
-			System.out.println(res1.asString());
-
-			Assert.assertEquals(res1.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=Dashboard-UI, version=");
-
-			System.out.println("											");
-			System.out.println("Negative cases 3 : wrong serviceName");
+			System.out.println("Negative cases 2 : wrong serviceName");
 			System.out.println("											");
 
 			Response res2 = RestAssured
@@ -214,7 +217,7 @@ public class RegistryLookup
 			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=abc, version=0.1");
 
 			System.out.println("											");
-			System.out.println("Negative cases 4 : wrong version");
+			System.out.println("Negative cases 3 : wrong version");
 			System.out.println("											");
 
 			Response res3 = RestAssured

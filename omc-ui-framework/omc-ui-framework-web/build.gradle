@@ -18,7 +18,7 @@ def File sourceWebappDir = new File(project.projectDir, 'public_html')
 def File sourceJetDestDir = new File(sourceWebappDir, 'libs/@version@/js/oraclejet')
 def File sourceJsCanvgDestDir = new File(sourceWebappDir, 'libs/@version@/js/canvg')
 def File sourceJsCanvasDesDir = new File(sourceWebappDir, 'libs/@version@/js/html2canvas')
-// sourc directories where font files are copied
+// source directories where font files are copied
 def File sourceFontDestDir = new File(sourceWebappDir, 'libs/@version@/css/font-awesome')
 
 def stagingDir = buildDir.absolutePath+'/staging/public_html'
@@ -74,7 +74,7 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs,compileSass]) {
        //this is here because of gradle bug, the old @version@ directory remains
        delete stagingDir+'/@version@'
        delete stagingDir+'/libs/@version@'
-       delete webRootSourceDir+'/@version@/css'
+       //delete webRootSourceDir+'/@version@/css'
     }
 }
 
@@ -252,7 +252,7 @@ compass {
     // so that http proxy issues do not affect us.  To enable this, 
     // we also build our own plugin for use.
     gemPath = file('build/.jruby/gems')
-    gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
+    gemJars = ['compass-gems:compass-gems:1.0.1']
     gems = []
     //if(project.hasProperty("devMode")){
 	cssDir file('public_html/@version@/css')
