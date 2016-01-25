@@ -1224,6 +1224,16 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', '/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg');
                 };
 
+                self.hoverOnDrawer = function(data, event) {
+                    if(!$(event.target).hasClass(self.drawerChosen)) {
+                        $(event.target).addClass(self.drawerHover);
+                    }
+                }
+                
+                self.hoverOutDrawer = function(data, event) {
+                    $(event.target).removeClass(self.drawerHover);
+                }
+
                 //select time period
                 self.chooseTimePeriod = function (data, event) {
                     self.setFocusOnInput("inputStartDate_" + self.randomId);
@@ -1264,6 +1274,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.selectByDrawer(true);
                         
                         self.timePeriod(event.target.innerHTML);
+                        self.hoverOutDrawer(data, event); //remove hover style when ele is clicked for firefox
                         self.setTimePeriodChosen(self.timePeriod());
                     
                         setTimeout(function() {self.applyClick()}, 0);
@@ -1433,16 +1444,6 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }else {
                         $(self.timeFilterId).ojPopup("open", "#pickerPanel_"+self.randomId, self.timeFilterPosition);
                     }
-                }
-                
-                self.hoverOnDrawer = function(data, event) {
-                    if(!$(event.target).hasClass(self.drawerChosen)) {
-                        $(event.target).addClass(self.drawerHover);
-                    }
-                }
-                
-                self.hoverOutDrawer = function(data, event) {
-                    $(event.target).removeClass(self.drawerHover);
                 }
                 
                 self.initialize();
