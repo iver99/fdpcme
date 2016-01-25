@@ -78,6 +78,10 @@
     text-decoration: none;
 }
 
+.drawers a:active {
+    font-weight: normal;
+}
+
 .pickerPanel {
     width: 550px; //510px;
     height: 402px;
