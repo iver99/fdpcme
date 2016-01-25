@@ -8,7 +8,7 @@
  * $$Revision: $$
  */
 
-package oracle.sysman.emaas.platform.dashboards.ui.webutils.services;
+package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
 import java.lang.management.ManagementFactory;
 
@@ -32,7 +32,7 @@ public class LoggingServiceManagerTest
 	@Test(groups = { "s1" })
 	public void testGetName()
 	{
-		AssertJUnit.assertEquals(lsm.getName(), "Dashboard UI Service API Logging Service");
+		AssertJUnit.assertEquals(lsm.getName(), "OMC UI Framework Service API Logging Service");
 	}
 
 	@Test(groups = { "s2" })
