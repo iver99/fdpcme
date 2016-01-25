@@ -206,7 +206,7 @@ public class TestDashBoard extends LoginAndLogout{
 					
 	}	
 
-	@Test
+	/*@Test
 	public void testDeleteOOB() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -223,7 +223,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
 		Assert.assertFalse(removeButton.isEnabled());		
-	}	
+	}*/	
 
 	@Test
 	public void testCreateLVDashBoard() throws Exception
