@@ -370,31 +370,31 @@ public class TestDashBoard extends LoginAndLogout{
 	          @Test(dependsOnMethods = { "testshareddashboard" })
 	                public void teststopsharing() throws Exception
 			     		{
-					       			this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-					       			webd.getLogger().info("start to test in teststopsharing");
+			       			this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+			       			webd.getLogger().info("start to test in teststopsharing");
 					       			
-					       			DashBoardUtils.clickGVButton();
-					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-					       			
-					       			String parentWindow = webd.getWebDriver().getWindowHandle();
+				       			DashBoardUtils.clickGVButton();
+				       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+				       			
+			       			String parentWindow = webd.getWebDriver().getWindowHandle();
 					       			//open dashboard	
-					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+			       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 					       			//DashBoardUtils.clickToSortByLastAccessed();
-					       			DashBoardUtils.searchDashBoard("AAA_testDashboard");
-					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-					       			webd.takeScreenShot();
-					       			DashBoardUtils.clickDashBoard();
+			       			DashBoardUtils.searchDashBoard("AAA_testDashboard");
+			       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+			       			webd.takeScreenShot();
+		        			DashBoardUtils.clickDashBoard();
 					       			
-					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+			       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 					       			
-					       			DashBoardUtils.navigateWidget(parentWindow);
-					       			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
-                                                                 //stopp sharing dashbaord
+			       			DashBoardUtils.navigateWidget(parentWindow);
+			       			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+                                                   //stopp sharing dashbaord
 					       			DashBoardUtils.sharestopping();
-					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+			       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 										
-								DashBoardUtils.navigateWidget(parentWindow);
-					                       DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+							DashBoardUtils.navigateWidget(parentWindow);
+			                       DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
 					       	}
 	 
 	
