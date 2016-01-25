@@ -21,9 +21,9 @@ define(['knockout',
             self.onResizeFitSize = function(width, height, leftWidth, topHeight) {
                 self.rebuildElementSet(),
                 self.$list.each(function() {
-                    var elem = $(this)
-                    , v_siblings = elem.siblings(".fit-size-vertical-sibling:visible")
-                    , h = 0;
+                    var elem = $(this),
+                        v_siblings = elem.siblings(".fit-size-vertical-sibling:visible"),
+                        h = 0;
                     if (v_siblings && v_siblings.length > 0) {
                         for (var i = 0; i < v_siblings.length; i++) {
                             h += $(v_siblings[i]).outerHeight();

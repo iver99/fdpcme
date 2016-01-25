@@ -76,7 +76,7 @@ define(['jquery',
                             resize_ctx.drawImage(canvas, 0, 0, swidth, sheight, 0, 0, target_width, target_height);
                             var data = resize_canvas.toDataURL("image/jpeg", quality);
                             nodesToRemove.forEach(function(pair) {
-                            	pair.parent.removeChild(pair.child);
+                                pair.parent.removeChild(pair.child);
                             });
                             nodesToRecover.forEach(function(pair) {
                                 pair.parent.appendChild(pair.child);
@@ -173,7 +173,7 @@ define(['jquery',
             };
         }
         
-        return new ScreenShotUtils;
+        return new ScreenShotUtils();
     }
 );
 

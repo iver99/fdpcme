@@ -141,7 +141,7 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
                 //TODO: Change to use callServiceManager.
                 //TODO: Why not get tenantId from cookie?
                 //TODO: Should global be false?
-                var headers = undefined;
+                var headers;
                 if (dfu.isDevMode()){
                     headers = {"Authorization":"Basic " + btoa(dfu.getDevData().wlsAuth)};
                 }
@@ -207,13 +207,13 @@ define(['ojs/ojcore', 'uifwk/js/util/ajax-util', 'uifwk/js/util/df-util'],
                 var tenantName = logOwner.substring(0, logOwner.indexOf('.'));
                 dfu = new dfumodel(userName, tenantName);
 
-                if (maxInterval != undefined) {
+                if (maxInterval !== undefined) {
                     logsCacheMaxInterval = maxInterval;
                 }
-                if (frequency != undefined) {
+                if (frequency !== undefined) {
                     logsCacheFrequency = frequency;
                 }
-                if (limit != undefined) {
+                if (limit !== undefined) {
                     logsCacheLimit = limit;
                 }
 

@@ -38,7 +38,7 @@ define(['jquery',
                 },
                 async: false
             });
-        };
+        }
 
         function filterWidgetsData(data, keyword){
             var lcKeyword = $.trim(keyword) ? $.trim(keyword).toLowerCase() : null;
@@ -68,6 +68,6 @@ define(['jquery',
         widget.row = null;
         widget.content = null;
         return widget;
-    };
+    }
     Builder.registerFunction(createTextWidget, 'createTextWidget');
 });

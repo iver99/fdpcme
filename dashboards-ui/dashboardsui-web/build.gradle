@@ -503,7 +503,7 @@ compass {
     // so that http proxy issues do not affect us.  To enable this, 
     // we also build our own plugin for use.
     gemPath = file('build/.jruby/gems')
-    gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
+    gemJars = ['compass-gems:compass-gems:1.0.1']
     gems = []
     //if(project.hasProperty("devMode")){
 	cssDir file('public_html/@version@/css')

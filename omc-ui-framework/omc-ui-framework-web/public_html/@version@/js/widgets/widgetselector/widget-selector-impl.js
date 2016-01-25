@@ -180,7 +180,7 @@ define([
                         self.currentWidget(null);
                     }
                     self.confirmBtnDisabled(true);
-                };
+                }
                 
                 // Get widget data to be shown in current page
                 function fetchWidgetsForCurrentPage(allWidgets) {
@@ -189,7 +189,7 @@ define([
                         loadWidgetScreenshot(allWidgets[i]);
                         curPageWidgets.push(allWidgets[i]);
                     }
-                };
+                }
                 
                 // Get available widgets to be searched from
                 function getAvailableWidgets() {
@@ -209,7 +209,7 @@ define([
                         availWidgets = widgetArray;
                     }
                     else {
-                        for (i = 0; i < widgetArray.length; i++) {
+                        for (var i = 0; i < widgetArray.length; i++) {
                             var widget = widgetArray[i];
                             if (widget.PROVIDER_NAME === providerName &&
                                     widget.PROVIDER_VERSION === providerVersion &&
@@ -219,13 +219,13 @@ define([
                         }
                     }
                     return availWidgets;
-                };
+                }
                 
                 // Refresh pagination button status
                 function refreshNaviButton() {
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
+                }
                 
                 // Return search result of type ahead search
                 self.searchFilterFunc = function (arr, value) {
@@ -306,6 +306,21 @@ define([
                     else {
                         var ajaxCallDfd = $.Deferred();
                         var loadedCnt = 0;
+                        var successRetrun = function (data, textStatus, jqXHR) {
+                            loadWidgets(data);
+                            loadedCnt++;
+                            if (loadedCnt === availableWidgetGroups.length) {
+                                ajaxCallDfd.resolve(data, textStatus, jqXHR);
+                            }
+                        };
+                        var errorRetrun = function (jqXHR, textStatus, errorThrown) {
+                            loadedCnt++;
+                            if (loadedCnt === availableWidgetGroups.length) {
+                                ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
+                            }
+                            oj.Logger.error('Error when fetching widgets by URL: ' + widgetsUrl + '.');
+                        };
+
                         for (var i = 0; i < availableWidgetGroups.length; i++) {
                             //Get widgets by widget group id
                             widgetsUrl = widgetsUrl + "?widgetGroupId=" + availableWidgetGroups[i].WIDGET_GROUP_ID;
@@ -315,27 +330,14 @@ define([
                             dfu.ajaxWithRetry({
                                 url: widgetsUrl,
                                 headers: dfu.getSavedSearchServiceRequestHeader(),
-                                success: function(data, textStatus, jqXHR) {
-                                    loadWidgets(data);
-                                    loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.resolve(data, textStatus, jqXHR);
-                                    }
-                                },
-                                error: function(jqXHR, textStatus, errorThrown){
-                                    loadedCnt++;
-                                    if (loadedCnt === availableWidgetGroups.length) {
-                                        ajaxCallDfd.reject(jqXHR, textStatus, errorThrown);
-                                    }
-                                    oj.Logger.error('Error when fetching widgets by URL: '+widgetsUrl+'.');
-                                },
+                                success: successRetrun,
+                                error: errorRetrun,
                                 async: true
-                            });  
+                            });
                         }
-
                         return ajaxCallDfd;
                     }
-                };
+                }
                 
                 function getWidgetGroups() {
                     var widgetgroupsUrl = '/sso.static/savedsearch.widgetgroups';
@@ -365,7 +367,7 @@ define([
                             },
                             async: true
                         });
-                };
+                }
                 
                 function refreshPageData() {
                     curPage = 1;
@@ -379,7 +381,7 @@ define([
                     self.searchText("");
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
-                };
+                }
                 
                 // Refresh widget/widget group data and UI displaying
                 function refreshWidgets() {
@@ -408,7 +410,7 @@ define([
                     .fail(function(xhr, textStatus, errorThrown){
                         oj.Logger.error("Failed to fetch widget groups.");
                     });
-                };
+                }
                 
                 // Load widgets from ajax call result data
                 function loadWidgets(data) {
@@ -436,7 +438,7 @@ define([
                             }
                         }
                     }
-                };
+                }
                 
                 function loadWidgetScreenshot(widget) {
                     if (!widget.isScreenshotLoaded) {
@@ -477,7 +479,7 @@ define([
                             async: true
                         });  
                     }
-                };
+                }
                 
                 // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
@@ -505,7 +507,7 @@ define([
                         }
                     }
                     return targetWidgetGroupArray;
-                };
+                }
                 
                 // Calculate the time difference between current date and the last modification date
                 function getLastModificationTimeString(lastModifiedDate) {
@@ -558,7 +560,7 @@ define([
                     }
                     
                     return result;
-                };
+                }
                 
             }
             

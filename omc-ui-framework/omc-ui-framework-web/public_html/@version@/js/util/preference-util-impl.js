@@ -8,14 +8,15 @@ function($, ajaxUtilModel)
      * @preserve Copyright (c) 2015, Oracle and/or its affiliates.
      * All rights reserved.
      */
-    PreferenceUtility = function(prefRestApiUrl, requestHeader) {
+
+    var PreferenceUtility = function(prefRestApiUrl, requestHeader) {
         this.prefRestApiUrl = prefRestApiUrl;
         this.requestHeader = requestHeader;
     };
     
     PreferenceUtility.prototype.getPreferenceValue = function(prefArray, key) {
         if (prefArray && key) {
-            var arr = undefined;
+            var arr;
             arr = $.grep(prefArray, function(pref) {
                 if (pref !== undefined && pref['key'] === key) return true;
                 return false;
