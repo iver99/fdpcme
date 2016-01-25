@@ -241,7 +241,7 @@ require(['knockout',
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                 tilesViewModel.initialize();
                 ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                var rightPanelModel = new Builder.RightPanelModel($b);
+                var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
                 ko.applyBindings(rightPanelModel, $('#dbd-left-panel')[0]);
                 rightPanelModel.initialize();
                 new Builder.ResizableView($b);
