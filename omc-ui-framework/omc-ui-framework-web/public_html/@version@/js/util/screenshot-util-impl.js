@@ -151,6 +151,8 @@ define(['jquery',
                             var resize_canvas = document.createElement('canvas');
                             var target_width = src_width * resizing_ratio;
                             var target_height = src_height * resizing_ratio;
+                            resize_canvas.setAttribute('height', target_height + 'px');
+                            resize_canvas.setAttribute('width', target_width + 'px');
 //                            window.DEV_MODE && console.debug("Capturing screenshot. Expecteds size [" + target_width + "x" + target_height + "]. Page size [" + canvas.width + "x" + canvas.height + "] (captured size [" + swidth + "x" + sheight + "]).");
                             var resize_ctx = resize_canvas.getContext('2d');
                             resize_ctx.drawImage(canvas, src_left, src_top, src_width, src_height, 0, 0, target_width, target_height);
