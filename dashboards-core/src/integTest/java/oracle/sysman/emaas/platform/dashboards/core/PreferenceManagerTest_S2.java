@@ -23,7 +23,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 /**
  * @author wenjzhu
@@ -78,14 +77,14 @@ public class PreferenceManagerTest_S2
 		pm.savePreference(p3, TENANT_ID_1);
 	}
 
-	@Test(groups = { "s2" })
+	//@Test(groups = { "s2" })
 	public void testGetPreference() throws DashboardException
 	{
 		Preference p = pm.getPreferenceByKey("p2", TENANT_ID);
 		Assert.assertEquals(p.getKey(), "p2");
 	}
 
-	@Test(groups = { "s2" })
+	//@Test(groups = { "s2" })
 	public void testGetPreferenceWithTenant() throws DashboardException
 	{
 		List<Preference> tps = pm.listPreferences(TENANT_ID);
@@ -98,14 +97,14 @@ public class PreferenceManagerTest_S2
 		Assert.assertEquals(p.getKey(), "p2");
 	}
 
-	@Test(groups = { "s2" })
+	//@Test(groups = { "s2" })
 	public void testListPreferences()
 	{
 		List<Preference> ps = pm.listPreferences(TENANT_ID);
 		Assert.assertEquals(ps.size() >= 1, true);
 	}
 
-	@Test(groups = { "s2" })
+	//@Test(groups = { "s2" })
 	public void testRemovePreference() throws DashboardException
 	{
 		pm.removePreference("p1", TENANT_ID);
@@ -113,7 +112,7 @@ public class PreferenceManagerTest_S2
 		Assert.assertEquals(ps.size() == 1, true);
 	}
 
-	@Test(groups = { "s2" })
+	//@Test(groups = { "s2" })
 	public void testUpdatePreference() throws DashboardException
 	{
 		Preference p = pm.getPreferenceByKey("p2", TENANT_ID);

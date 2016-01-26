@@ -18,7 +18,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 /**
  * @author wenjzhu
@@ -315,7 +314,7 @@ public class DashboardServiceFacadeTest_S2
 		}
 	}
 
-	@Test(groups = { "s2" })
+	//@Test(groups = { "s2" })
 	public void testAll()
 	{
 		testGetEmsDashboardFavoriteByPK();
