@@ -37,6 +37,10 @@ and open the template in the editor.
     font-size: 16px !important;
 } 
 
+.fa-icon-font-18 {
+    font-size: 18px !important;
+}
+
 body, html {
   width: 100%;
   padding: 0;
@@ -215,6 +219,10 @@ body, html {
   padding-right: 40px;
   margin-right: -40px;
 }*/
+
+.fa-question-circle:before {
+    content: "\f059";
+}
 
 .dbd-toolbar-icon-add-widget:before,.fa-plus:before {
   content: "\f067";
@@ -615,6 +623,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
   padding: 0;
 }
 
+.drawer-icon-btn {
+    width: 32px;
+}
+
 #dbd-left-panel {
     height: 1000px;
     /* position: absolute; */
@@ -653,9 +665,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-bottom: 1px solid #c4ced7 !important;
 }
 
-#right-panel-toggler .oj-button.oj-selected {
+.drawer-icon-btn.drawer-selected {
+    background-image: none;
     background-color: white;
-    border-color: #c4ced7
+    border-color: #c4ced7;
+    .oj-button-icon {
+        color: #0572ce;
+    }
 }
 
 #right-panel-toggler .oj-button.oj-selected .oj-button-label {

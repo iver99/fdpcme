@@ -670,23 +670,22 @@
                                 (282 + $root.scrollbarWidth) + 'px' : 
                                 $root.scrollbarWidth + 'px'
                         }">
-                    <div id="" data-bind="ojComponent: {component: 'ojButtonset', checked: rightPanelStatus}" 
-                         class="oj-buttonset oj-component oj-component-initnode" 
-                         role="toolbar">
-                        <label for="toggle-right-panel-btn"></label>
-                        <input type="checkbox" id="toggle-right-panel-btn" value="shown" style="display: block;"
-                               data-bind="ojComponent: {
+                    <button type="checkbox" id="toggle-right-panel-btn" class="drawer-icon-btn oj-buttonset-first" style="display: block;"
+                                data-bind="ojComponent: {
                                     checked: rightPanelShown,
                                     component:'ojButton', 
                                     display: 'icons', 
-                                    icons: {start:'oj-icon right-panel-toggler-icon-toggle'}, 
+                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'}, 
                                     label: getNlsString(rightPanelShown() ? 'DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL' : 'DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL')
-                               }, click: toggleRightPanel"/>
-                    </div>
-                    <button id="right-panel-help-btn" data-bind="ojComponent: {
+                                }, 
+                                click: toggleRightPanel,
+                                css: {
+                                    'drawer-selected': rightPanelShown()
+                                }"/></button>                    
+                    <button id="right-panel-help-btn" class="drawer-icon-btn" data-bind="ojComponent: {
                         component:'ojButton', 
                         display: 'icons', 
-                        icons: {start:'oj-icon right-panel-toggler-icon-help'}, 
+                        icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'}, 
                         label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>
                 </div>
                 <!-- ko stopBinding: true -->

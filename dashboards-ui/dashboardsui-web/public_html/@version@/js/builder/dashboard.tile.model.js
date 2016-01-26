@@ -85,12 +85,10 @@ define(['knockout',
                 $('#dashboardBuilderAddWidgetDialog').ojDialog('open');
             };
              
-            self.rightPanelStatus = ko.observableArray(['shown']);
             self.rightPanelShown = ko.observable(self.isEmpty());
             self.toggleRightPanel = function() {
                 $b.getRightPanelModel().toggleLeftPanel();
                 self.rightPanelShown(!self.rightPanelShown());
-                self.rightPanelStatus(self.rightPanelShown() ? ['shown'] : []);
             };
             
 //            self.appendTextTile = function () {
