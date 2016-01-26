@@ -46,7 +46,8 @@ public class DashboardManagerTest_S2
 		TenantContext.setCurrentTenant("TenantOPC1");
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	//(groups = { "s2" })
 	public void testCreateDashboardDifUserSameNameSameTenant_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -78,7 +79,8 @@ public class DashboardManagerTest_S2
 		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	////(groups = { "s2" })
 	public void testCreateDashboardSameNameDifTenant_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -135,7 +137,8 @@ public class DashboardManagerTest_S2
 		}
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	////(groups = { "s2" })
 	public void testCreateSimpleDashboard_S2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
@@ -166,7 +169,8 @@ public class DashboardManagerTest_S2
 		dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	////(groups = { "s2" })
 	public void testCreateUpdateDashboard_S2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
@@ -329,7 +333,8 @@ public class DashboardManagerTest_S2
 		dm.deleteDashboard(dbd.getDashboardId(), true, tenantId1);
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	////(groups = { "s2" })
 	public void testCreateUpdateSystemDashboard_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -364,7 +369,8 @@ public class DashboardManagerTest_S2
 		}
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	////(groups = { "s2" })
 	public void testDeleteDashboard_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -466,7 +472,8 @@ public class DashboardManagerTest_S2
 		}
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	//(groups = { "s2" })
 	public void testFavoriteDashboards_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -522,7 +529,8 @@ public class DashboardManagerTest_S2
 		}
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	//(groups = { "s2" })
 	public void testGetDashboardByName_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -572,7 +580,8 @@ public class DashboardManagerTest_S2
 		}
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	//(groups = { "s2" })
 	public void testGetDashboardId_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -620,7 +629,8 @@ public class DashboardManagerTest_S2
 		}
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	//(groups = { "s2" })
 	public void testGetUpdateLastAccessDate_S2() throws DashboardException, InterruptedException
 	{
 		loadMockBeforeMethod();
@@ -682,7 +692,8 @@ public class DashboardManagerTest_S2
 		dm.listDashboards("key", null, null, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
 	}
 
-	//@Test(groups = {"s2"})
+	@Test
+	//(groups = { "s2" })
 	public void testSetDashboardIncludeTimeControl_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
