@@ -638,7 +638,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 #right-panel-toggler {
-    margin-top: 2px;
+    margin-top: 5px;
     right: 282px;
     z-index: 999;
     max-width: 30px;
@@ -812,6 +812,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-left-panel-widget {
     width: 245px; 
     height: 30px;
+}
+
+.dbd-left-panel-widget:hover {
+    font-weight: bold;
 }
 
 .dbd-left-panel-widget-text {

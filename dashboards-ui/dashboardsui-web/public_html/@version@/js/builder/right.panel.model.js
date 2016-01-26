@@ -351,7 +351,7 @@ define(['knockout',
                 if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
                    $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-item-'+widget.WIDGET_UNIQUE_ID()), 
                    {
-                       my : "end center", at : "start-35 center"
+                       my : "end center", at : "start-10 center"
                    });
                }
             };
