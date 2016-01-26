@@ -30,8 +30,7 @@ requirejs.config({
             merge: {
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsUiMsg'
             }
-        }
-        ,
+        },
         text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
@@ -71,7 +70,7 @@ function(ko, $, dfu, oj)
             appId: self.appId,
             isAdmin: false
         };
-    };
+    }
     
     function ErrorPageModel() {
         var self = this;
@@ -126,7 +125,7 @@ function(ko, $, dfu, oj)
                 window.location.href = logoutUrl;
             }
         };
-    };
+    }
     
     $(document).ready(function() {
         ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]);

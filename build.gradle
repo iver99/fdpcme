@@ -239,7 +239,7 @@ buildscript {
 
 	dependencies {  
 		classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.5'  
-		classpath 'com.oracle.emaas.emdi:DevInfraPlugin:1.0.+'
+		classpath group: 'com.oracle.emaas.emdi', name: 'DevInfraPlugin', version: "${devinfraVersion}", transitive: true
 		classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
 
 	        classpath group: 'com.oracle.emaas.emdi', name: 'JSPlugin', version:'1.0+'

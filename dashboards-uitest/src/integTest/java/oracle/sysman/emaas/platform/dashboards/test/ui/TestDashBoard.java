@@ -327,4 +327,67 @@ public class TestDashBoard extends LoginAndLogout{
 		Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.Welcome_DataExp),"Data Explorers");
 		
 	}
+      
+                //sharing dashbaord after cretion of dashbaord
+		       
+		       @Test(dependsOnMethods = { "testCreateDashBoard" })
+		       		public void testshareddashboard() throws Exception
+		       		{
+		       			this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+		       			webd.getLogger().info("start to test in testshareddashboard");
+		       			
+		       			DashBoardUtils.clickGVButton();
+		       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		       			
+		       			String parentWindow = webd.getWebDriver().getWindowHandle();
+		       			//open dashboard	
+		       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		       			//DashBoardUtils.clickToSortByLastAccessed();
+		       			DashBoardUtils.searchDashBoard("AAA_testDashboard");
+		       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		       			webd.takeScreenShot();
+		       			DashBoardUtils.clickDashBoard();
+		       			
+		       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		       			
+		       			DashBoardUtils.navigateWidget(parentWindow);
+		       			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+		       			DashBoardUtils.sharedashboard();
+		       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+							
+					DashBoardUtils.navigateWidget(parentWindow);
+		                       DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+		       	}
+
+                     //Stopping sharing dashbaord
+	     
+	          @Test(dependsOnMethods = { "testshareddashboard" })
+	                public void teststopsharing() throws Exception
+					       		{
+					       			this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+					       			webd.getLogger().info("start to test in teststopsharing");
+					       			
+					       			DashBoardUtils.clickGVButton();
+					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+					       			
+					       			String parentWindow = webd.getWebDriver().getWindowHandle();
+					       			//open dashboard	
+					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+					       			//DashBoardUtils.clickToSortByLastAccessed();
+					       			DashBoardUtils.searchDashBoard("AAA_testDashboard");
+					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+					       			webd.takeScreenShot();
+					       			DashBoardUtils.clickDashBoard();
+					       			
+					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+					       			
+					       			DashBoardUtils.navigateWidget(parentWindow);
+					       			DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+					       			DashBoardUtils.sharestopping();
+					       			DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+										
+								DashBoardUtils.navigateWidget(parentWindow);
+					                       DashBoardUtils.waitForMilliSeconds(2*DashBoardPageId.Delaytime_long);
+					       	}
+	
 }

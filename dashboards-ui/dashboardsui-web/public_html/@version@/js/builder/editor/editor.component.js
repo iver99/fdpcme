@@ -11,7 +11,7 @@ define(['knockout',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ], 
-    function(ko, $, oj, dfu, dtm) {
+    function(ko, $, oj, dfu) {
         function Cell(row, column) {
             var self = this;
             

@@ -277,6 +277,9 @@ body, html {
         .oj-button-menu-dropdown-icon{
             display: none;
         }
+        .oj-button-text{
+            margin-right: 0.857rem;
+        }
         .dbd-toolbar-icon-option{
             height: 30px;
             &:before{
@@ -915,7 +918,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }*/
 
 .dbd-tile-to-be-occupuied {
-    border: 1px dashed black;
+    border: 2px solid #F0CAC4;
 }
 
 .dbd-icon-resize{

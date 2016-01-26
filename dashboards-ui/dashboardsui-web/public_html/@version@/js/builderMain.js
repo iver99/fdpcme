@@ -73,8 +73,7 @@ requirejs.config({
             merge: {
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsUiMsg'
             }
-        }
-        ,
+        },
         text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
@@ -124,7 +123,7 @@ require(['knockout',
 ],
     function(ko, $, dfu, _emJETCustomLogger,idfbcutil, oj) // this callback gets executed when all required modules are loaded
     {
-        var logger = new _emJETCustomLogger()
+        var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
@@ -177,7 +176,7 @@ require(['knockout',
                 $b.triggerBuilderResizeEvent('header wrapper bar height changed');
                 self.headerHeight = height;
             });
-        };
+        }
 
         var dsbId = dfu.getUrlParam("dashboardId");
         if (dsbId) {
@@ -186,7 +185,7 @@ require(['knockout',
         var isInteger = /^([0-9]+)$/.test(dsbId);
         if (!isInteger){
            oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-           location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
+           window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
         }            
 
         Builder.initializeFromCookie();
@@ -265,7 +264,7 @@ require(['knockout',
                 console.log(e.errorMessage());
                 if (e.errorCode && e.errorCode() === 20001) {
                     oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                    window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
                 }
             });
         });
@@ -279,9 +278,9 @@ function updateOnePageHeight(event) {
         console.log('one page tile height is set to ' + event.data.height);
         oj.Logger.log('one page tile height is set to ' + event.data.height);
     }
-};
+}
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
-};
+}
 window.addEventListener("message", updateOnePageHeight, false);
