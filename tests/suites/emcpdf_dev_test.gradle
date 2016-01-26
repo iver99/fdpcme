@@ -124,3 +124,8 @@ tasks.cleanUpDB.execute()
 
 
 task emcpdf_dev_test(dependsOn: DEVTest)
+
+if (new File("codeCoverage.gradle").exists()) {
+apply from: "../../codeCoverage/codeCoverage.gradle"
+}
+

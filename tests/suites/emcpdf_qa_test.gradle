@@ -84,7 +84,7 @@ restAssured.exclude module: 'groovy'
 
 
 task PropsCopy(type: Copy) {
-   from '/net/slc07ctj/scratch/emaas/setuplogs/'
+   from '/net/den00zyr/scratch/emaas/setuplogs/'
    into '../../oracle/work/'
     include '*.log'
   sleep( 300000)
