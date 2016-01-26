@@ -1038,34 +1038,68 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     .other-nav {
         min-width: 150px;
         max-width: 200px;
-        .oj-tabs-gen-a{
-            .tabs-name{
-                min-width: 100px;
-                max-width: 140px;
-                overflow: hidden;
-                margin-right: 5px;
-            }
-            .tabs-remove{
-                min-width: 14px;
-                max-width: 14px;
-                float: right;
-                /*            margin-top: 9px;
-                            float: right;*/
-            }
-        }   
+        .oj-tabs-gen-div{
+            margin-bottom: 1px;
+            .oj-tabs-gen-a{
+                .tabs-name{
+                    min-width: 100px;
+                    max-width: 140px;
+                    overflow: hidden;
+                    margin-right: 5px;
+                }
+                .tabs-remove{
+                    min-width: 14px;
+                    max-width: 14px;
+                    float: right;
+                    color: #878c90;
+                    padding-right:0;
+                    /*            margin-top: 9px;
+                                float: right;*/
+                }
+            }  
+        }
+    }
+    .other-nav.oj-selected{
+        border-color: #3caf85;
     }
     #dbd-set-name{
         min-width: 220px;
         max-width:300px;
+        background-color: #3caf85;
         a{
             min-width: 220px;
             max-width:300px;
-                span{
-                margin-left: 10%;
+            span{
+                min-width: 100px;
+                max-width: 170px;
+                overflow: hidden;
+                margin-left: 8%;
+                color: white!important;
+                font-weight: bold;
+                font-size: 15px;
             }
             .tabs-gear{
-                float: right
+                float: right;
+                color: white;
+                margin-left: 5px;
+                margin-top: 2px;
             }
+        }
+    }
+    #add-nav{
+        border-width: 0 !important;
+        background-color: #F6F6F6 !important;
+        .oj-tabs-gen-div{
+            border: 0;
+            border-bottom: solid 1px #d6dfe6;
+            .dbd-icon-add{
+                color: #878c90;
+            }
+        }
+    }
+    #add-nav.oj-selected{
+        .oj-tabs-gen-div {
+            border:0;
         }
     }
 }

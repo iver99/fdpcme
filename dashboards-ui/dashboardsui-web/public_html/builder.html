@@ -35,6 +35,11 @@
                             <div class="tabs-gear">
                                 <i class="fa-icon-font fa-icon-font-14 dbd-icon-gear"></i>
                             </div>
+<!--                            <button id="tabs-gear-creator"
+                                    data-bind="ojComponent: {component: 'ojButton', 
+                                            icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
+                                    menu: '#myMenu'}">
+                            </button>-->
                         </li>
                         <li class="other-nav">
                             <span class="tabs-name">shenjie_test</span>
@@ -48,19 +53,41 @@
                                 <i class="fa-icon-font fa-icon-font-14 dbd-icon-remove"></i>
                             </div>
                         </li>
-                        <li id="add-nav"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
+                        <li id="add-nav" class="oj-disabled"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
                     </ul>
                     <!-- tab contents -->
-                    <div>
-                        <p></p>
+                    <div class="dbd-info">
+
                     </div>
-                    <div>
-                        <p></p>
+                    <div class="dbd-info">
+
                     </div>
-                    <div>
-                        <p></p>
-                    </div>
-                </div>
+                    <div class="dbd-info">
+
+                    </div>       
+                </div> 
+                
+                <!-- To handle menu item selection, use a select listener as shown, not a click listener. -->
+                <ul id="myMenu" style="display:none" 
+                    data-bind="ojComponent: {component: 'ojMenu'}">
+                    <li id="save">
+                        <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Save</a>
+                    </li>
+                    <li id="print" class="oj-disabled">
+                        <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-chat-icon-24"></span>Print...</a>
+                    </li>
+                    <li id="zoom">
+                        <a href="#">Zoom</a>
+                        <ul>
+                            <li id="zoomin">
+                                <a href="#"><span class="oj-menu-item-icon oj-fwk-icon oj-fwk-icon-arrow-n"></span>Zoom In</a>
+                            </li>
+                            <li id="zoomout">
+                                <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-bookmark-icon-16"></span>Zoom Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
                     
             <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
