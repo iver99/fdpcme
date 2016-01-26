@@ -238,7 +238,8 @@ require(['knockout',
                 ko.virtualElements.allowedBindings.stopBinding = true;
 
                 ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
-                ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
+                ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);  
+                ko.applyBindings(null, document.getElementById('dbd-set-tabs'));
                 tilesViewModel.initialize();
                 ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
                 var rightPanelModel = new Builder.RightPanelModel($b);
