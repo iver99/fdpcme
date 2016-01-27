@@ -656,6 +656,9 @@ public class DashBoardUtils {
 		WebElement we = driver.getWebDriver().findElement(By.id(id));
 		return we.getText();
 	}
+
+
+
               //Sharing and stopping dashbaord     
          public static void sharedashboard() throws Exception
 		{
@@ -666,7 +669,8 @@ public class DashBoardUtils {
 	
           public static void sharestopping() throws Exception
 		{
-			driver.click(DashBoardPageId.option);
-			driver.click(DashBoardPageId.stopshare_btn);
+		driver.click(DashBoardPageId.option);
+		driver.click(DashBoardPageId.stopshare_btn);
          	}
+	
 }
