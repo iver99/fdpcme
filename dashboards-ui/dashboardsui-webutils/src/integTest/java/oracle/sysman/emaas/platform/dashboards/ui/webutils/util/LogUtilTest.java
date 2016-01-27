@@ -19,6 +19,66 @@ import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.LogUtil.Interact
 public class LogUtilTest
 {
 	@Test(groups = { "s2" })
+	public void testGetInteractionLogger(@Mocked final LogManager anyLogManager)
+	{
+		new Expectations() {
+			{
+				String LOGUTIL_INTERACTION_LOG_NAME = Deencapsulation.getField(LogUtil.class, "INTERACTION_LOG_NAME");
+				LogManager.getLogger(withEqual(LOGUTIL_INTERACTION_LOG_NAME));
+			}
+		};
+		LogUtil.getInteractionLogger();
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetLoggerUpdateTime_EmptyProperties_S2(@Mocked final LogManager anyLogManager,
+			@Mocked final LoggerContext anyLoggerContext, @Mocked final Configuration anyConfiguration,
+			@Mocked final LoggerConfig anyLoggerConfig)
+	{
+		new Expectations() {
+			{
+				LogManager.getContext(withEqual(false));
+				result = anyLoggerContext;
+				anyLoggerContext.getConfiguration();
+				result = anyConfiguration;
+				anyConfiguration.getProperties();
+				result = null;
+			}
+		};
+		LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+		Configuration cfg = loggerContext.getConfiguration();
+		Long time = LogUtil.getLoggerUpdateTime(cfg, new LoggerConfig());
+		Assert.assertNull(time);
+	}
+
+	@Test(groups = { "s2" })
+	public void testGetLoggerUpdateTime_EmptyTime_S2(@Mocked final LogManager anyLogManager,
+			@Mocked final LoggerContext anyLoggerContext, @Mocked final Configuration anyConfiguration,
+			@Mocked final LoggerConfig anyLoggerConfig)
+	{
+		final String testCfgName = "test config name";
+		final Map<String, String> cfgMap = new HashMap<String, String>();
+		String LOGGER_PROP_UPDATE_TIME = (String) Deencapsulation.getField(LogUtil.class, "LOGGER_PROP_UPDATE_TIME");
+		cfgMap.put(LOGGER_PROP_UPDATE_TIME + testCfgName, null);
+		new Expectations() {
+			{
+				LogManager.getContext(withEqual(false));
+				result = anyLoggerContext;
+				anyLoggerContext.getConfiguration();
+				result = anyConfiguration;
+				anyConfiguration.getProperties();
+				result = cfgMap;
+				anyLoggerConfig.getName();
+				result = testCfgName;
+			}
+		};
+		LoggerContext loggerContext = (LoggerContext) LogManager.getContext(false);
+		Configuration cfg = loggerContext.getConfiguration();
+		Long time = LogUtil.getLoggerUpdateTime(cfg, new LoggerConfig());
+		Assert.assertNull(time);
+	}
+
+	@Test(groups = { "s2" })
 	public void testGetLoggerUpdateTime_S2(@Mocked final LogManager anyLogManager, @Mocked final LoggerContext anyLoggerContext,
 			@Mocked final Configuration anyConfiguration, @Mocked final LoggerConfig anyLoggerConfig)
 	{
@@ -43,6 +103,15 @@ public class LogUtilTest
 		Configuration cfg = loggerContext.getConfiguration();
 		Long time = LogUtil.getLoggerUpdateTime(cfg, new LoggerConfig());
 		Assert.assertEquals(time, testTime);
+	}
+
+	@Test(groups = { "s2" })
+	public void testInteractionLogDirectionFromValue()
+	{
+		InteractionLogDirection il = InteractionLogDirection.fromValue(null);
+		Assert.assertEquals(InteractionLogDirection.NA, il);
+		il = InteractionLogDirection.fromValue("OUT");
+		Assert.assertEquals(InteractionLogDirection.OUT, il);
 	}
 
 	@Test(groups = { "s2" })
@@ -85,5 +154,10 @@ public class LogUtilTest
 		Assert.assertNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_TENANTID));
 		Assert.assertNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_SERVICE_INVOKED));
 		Assert.assertNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_DIRECTION));
+
+		LogUtil.setInteractionLogThreadContext(null, null, null);
+		Assert.assertNotNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_TENANTID));
+		Assert.assertNotNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_SERVICE_INVOKED));
+		Assert.assertNotNull(ThreadContext.get(LogUtil.INTERACTION_LOG_PROP_DIRECTION));
 	}
 }
