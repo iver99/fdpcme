@@ -1039,13 +1039,15 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         min-width: 150px;
         max-width: 200px;
         .oj-tabs-gen-div{
-            margin-bottom: 1px;
+            margin-bottom: 2px;
+            margin-top:-3px;
             .oj-tabs-gen-a{
                 .tabs-name{
                     min-width: 100px;
                     max-width: 140px;
                     overflow: hidden;
                     margin-right: 5px;
+                    margin-bottom: -11px;
                 }
                 .tabs-remove{
                     min-width: 14px;
@@ -1053,6 +1055,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                     float: right;
                     color: #878c90;
                     padding-right:0;
+                    padding-top:6px;
                     /*            margin-top: 9px;
                                 float: right;*/
                 }
@@ -1060,29 +1063,57 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
     }
     .other-nav.oj-selected{
-        border-color: #3caf85;
+        border-top-color: #3caf85;
+        border-left: solid 1px #c4ced7;
+        border-right:solid 1px #c4ced7;
+        .oj-tabs-gen-div{
+            border-color: transparent;
+        }
     }
     #dbd-set-name{
         min-width: 220px;
         max-width:300px;
+        height: 45px;
         background-color: #3caf85;
+        padding-right:0;
         a{
             min-width: 220px;
             max-width:300px;
-            span{
+            padding-right:0;
+            >span{
                 min-width: 100px;
-                max-width: 170px;
+                max-width: 169px;
                 overflow: hidden;
-                margin-left: 8%;
+                margin-left: 7%;
                 color: white!important;
                 font-weight: bold;
                 font-size: 15px;
+                margin-top: 9px;
             }
-            .tabs-gear{
+            #tabs-gear{
+                width: 35px;
+                background-color: #3CAF85;
+                background-image: none;
+                border-color: #3CAF85;
                 float: right;
-                color: white;
-                margin-left: 5px;
-                margin-top: 2px;
+                .dbd-icon-gear{
+                    color: white;
+                    margin-left: 4px;
+                }
+                .oj-button-text{
+                    display: none;
+                }
+                .oj-button-menu-dropdown-icon{
+                    display: none;
+                }
+                &:hover{
+                    cursor: pointer;
+                }
+            }
+            #tabs-gear.oj-selected{
+                background-color: #0572ce;
+                border-color: #0572ce;
+                background-image: none;
             }
         }
     }
@@ -1091,9 +1122,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         background-color: #F6F6F6 !important;
         .oj-tabs-gen-div{
             border: 0;
-            border-bottom: solid 1px #d6dfe6;
+            /*            border-bottom: solid 1px #d6dfe6;*/
             .dbd-icon-add{
                 color: #878c90;
+                padding-top: 8px;
             }
         }
     }

@@ -32,14 +32,14 @@
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
                             <span>Middleware Dashboards</span>
-                            <div class="tabs-gear">
+<!--                            <div class="tabs-gear">
                                 <i class="fa-icon-font fa-icon-font-14 dbd-icon-gear"></i>
-                            </div>
-<!--                            <button id="tabs-gear-creator"
+                            </div>-->
+                            <button id="tabs-gear"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
-                                    menu: '#myMenu'}">
-                            </button>-->
+                                    menu: '#tabsGearMenu'}">
+                            </button>
                         </li>
                         <li class="other-nav">
                             <span class="tabs-name">shenjie_test</span>
@@ -68,24 +68,13 @@
                 </div> 
                 
                 <!-- To handle menu item selection, use a select listener as shown, not a click listener. -->
-                <ul id="myMenu" style="display:none" 
+                <ul id="tabsGearMenu" style="display:none" 
                     data-bind="ojComponent: {component: 'ojMenu'}">
                     <li id="save">
                         <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Save</a>
                     </li>
-                    <li id="print" class="oj-disabled">
+                    <li id="print">
                         <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-chat-icon-24"></span>Print...</a>
-                    </li>
-                    <li id="zoom">
-                        <a href="#">Zoom</a>
-                        <ul>
-                            <li id="zoomin">
-                                <a href="#"><span class="oj-menu-item-icon oj-fwk-icon oj-fwk-icon-arrow-n"></span>Zoom In</a>
-                            </li>
-                            <li id="zoomout">
-                                <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-bookmark-icon-16"></span>Zoom Out</a>
-                            </li>
-                        </ul>
                     </li>
                 </ul>
             </div>
