@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jishshi on 1/20/2016.
+ * @author jishshi
+ * @since 1/20/2016.
  */
 @Test(groups = {"s2"})
 public class TenantSubscriptionsAPITest {
@@ -48,7 +49,7 @@ public class TenantSubscriptionsAPITest {
             {
                 List<String> apps = new ArrayList<>();
                 apps.add("DBD");
-                tenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+                TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
                 result = apps;
             }
         };
@@ -87,7 +88,7 @@ public class TenantSubscriptionsAPITest {
 
         new Expectations(){{
 
-            registryLookupUtil.getServiceInternalLink(anyString,anyString,anyString,null);
+            RegistryLookupUtil.getServiceInternalLink(anyString,anyString,anyString,null);
             result = link;
 
             restClient.get(anyString,anyString);
@@ -118,7 +119,7 @@ public class TenantSubscriptionsAPITest {
     public  void testSubscribedAppsEntity () throws  Exception{
         List<String> list = new ArrayList<>();
         list.add("appSample");
-        TenantSubscriptionsAPI.SubscribedAppsEntity<String> stringSubscribedAppsEntity = new TenantSubscriptionsAPI.SubscribedAppsEntity<String>(null);
+        TenantSubscriptionsAPI.SubscribedAppsEntity<String> stringSubscribedAppsEntity = new TenantSubscriptionsAPI.SubscribedAppsEntity<>(null);
         stringSubscribedAppsEntity.setApplications(null);
         Assert.assertNull(stringSubscribedAppsEntity.getApplications());
         stringSubscribedAppsEntity.setApplications(list);

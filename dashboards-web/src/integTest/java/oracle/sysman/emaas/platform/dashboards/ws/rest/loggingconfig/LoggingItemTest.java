@@ -7,7 +7,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Created by jishshi on 1/18/2016.
+ * @author jishshi
+ * @since 1/18/2016.
  */
 @Test(groups={"s1"})
 public class LoggingItemTest {
@@ -16,7 +17,7 @@ public class LoggingItemTest {
     @BeforeMethod
     public void setUp() throws Exception {
         LoggerConfig loggerConfig = new LoggerConfig();
-        Long timeStamp = new Long(122);
+        Long timeStamp = 122L;
         loggingItem = new LoggingItem( loggerConfig,timeStamp );
     }
 
@@ -37,7 +38,7 @@ public class LoggingItemTest {
     public void testGetLastUpdatedEpoch() throws Exception {
         loggingItem.setLastUpdatedEpoch(null);
         Assert.assertNull(loggingItem.getLastUpdatedEpoch());
-        Long myTimeStamp = new Long(1234);
+        Long myTimeStamp = 1234L;
         loggingItem.setLastUpdatedEpoch(myTimeStamp);
         Assert.assertEquals(loggingItem.getLastUpdatedEpoch(),myTimeStamp);
     }

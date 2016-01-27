@@ -16,13 +16,15 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
 /**
- * Created by danfjian on 2016/1/14.
+ * @author danfjian
+ * @since 2016/1/14.
  */
 @Test(groups = {"s2"})
 public class APIBaseTest {
 
     APIBase apiBase;
 
+    @SuppressWarnings("unused")
     @Mocked TenantIdProcessor tenantIdProcessor;
 
     @BeforeMethod
@@ -42,7 +44,7 @@ public class APIBaseTest {
     }
 
     @Test
-    public void testClearUserContext(@Mocked final UserContext userCtx, @Mocked final TenantContext tenantCtx) throws Exception {
+    public void testClearUserContext(@SuppressWarnings("unused") @Mocked final UserContext userCtx, @SuppressWarnings("unused")@Mocked final TenantContext tenantCtx) throws Exception {
         new Expectations() {
             {
                 UserContext.clearCurrentUser();
@@ -142,12 +144,12 @@ public class APIBaseTest {
     }
 
     @Test
-    public void testUpdateDashboardHrefCorrect(@Mocked final DashboardAPIUtil dashboardAPIUtil) throws Exception {
+    public void testUpdateDashboardHrefCorrect(@SuppressWarnings("unused")@Mocked final DashboardAPIUtil dashboardAPIUtil) throws Exception {
         Dashboard dbd = new Dashboard();
         dbd.setDashboardId(87654L);
         new Expectations() {
             {
-                dashboardAPIUtil.getExternalDashboardAPIBase(anyString);
+                DashboardAPIUtil.getExternalDashboardAPIBase(anyString);
                 result = "http://external/";
             }
         };

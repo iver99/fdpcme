@@ -9,23 +9,13 @@ import org.testng.annotations.Test;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.Principal;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.Map;
 
 /**
- * Created by jishshi on 1/21/2016.
+ * @author jishshi
+ * @since 1/21/2016.
  */
 @Test(groups = {"s2"})
 public class DashboardsCORSFilterTest {
@@ -55,9 +45,11 @@ public class DashboardsCORSFilterTest {
 
 
     @Test
-    public void testDoFilterInnerClass(@Mocked final HttpServletRequest httpServletRequest, @Mocked final HttpServletResponse httpServletResponse, @Mocked final FilterChain filterChain) throws Exception {
+    public void testDoFilterInnerClass(@SuppressWarnings("unused")@Mocked final HttpServletRequest httpServletRequest, @SuppressWarnings("unused")@Mocked final HttpServletResponse httpServletResponse, @SuppressWarnings("unused")@Mocked final FilterChain filterChain) throws Exception {
         MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
         mockHttpServletRequest.setHeader("OAM_REMOTE_USER", "tenant01.emcsadmin");
+
+       @SuppressWarnings("unused")
         Object oamHttpRequestWrapperInst = Deencapsulation.newInstance(
                 "oracle.sysman.emaas.platform.dashboards.ws.rest.DashboardsCORSFilter$OAMHttpRequestWrapper",
                 mockHttpServletRequest);
@@ -70,6 +62,7 @@ public class DashboardsCORSFilterTest {
                 httpServletRequest.getHeader("Origin");
                 returns(null,anyString);
 
+                //noinspection ResultOfMethodCallIgnored
                 file.exists();
                 result = true;
             }

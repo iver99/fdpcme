@@ -21,7 +21,8 @@ import java.util.ArrayList;
 
 
 /**
- * Created by jishshi on 1/18/2016.
+ * @author jishshi
+ * @since 1/18/2016.
  */
 @Test(groups = {"s2"})
 public class RegistrationEntityTest {
@@ -48,18 +49,18 @@ public class RegistrationEntityTest {
 
         new NonStrictExpectations() {
             {
-                tenantContext.getCurrentTenant();
+                TenantContext.getCurrentTenant();
                 returns("tenantName", "tenantName");
 
                 final String APM_SERVICENAME = "APM";
                 final String LA_SERVICENAME = "LogAnalytics";
                 final String ITA_SERVICENAME = "ITAnalytics";
-                ArrayList<String> apps = new ArrayList<String>();
+                ArrayList<String> apps = new ArrayList<>();
                 apps.add(APM_SERVICENAME);
                 apps.add(LA_SERVICENAME);
                 apps.add(ITA_SERVICENAME);
 
-                tenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+                TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
                 result = apps;
             }
         };
@@ -88,10 +89,10 @@ public class RegistrationEntityTest {
         new Expectations() {
             {
                 instanceInfo.getVersion();
-                returns(registrationEntity.NAME_DASHBOARD_UI_VERSION, registrationEntity.NAME_DASHBOARD_UI_VERSION);
+                returns(RegistrationEntity.NAME_DASHBOARD_UI_VERSION, RegistrationEntity.NAME_DASHBOARD_UI_VERSION);
 
                 instanceInfo.getServiceName();
-                returns(registrationEntity.NAME_DASHBOARD_UI_SERVICENAME, registrationEntity.APM_SERVICENAME);
+                returns(RegistrationEntity.NAME_DASHBOARD_UI_SERVICENAME, RegistrationEntity.APM_SERVICENAME);
 
                 link.getRel();
                 returns("relPrefix/sampleHostName", "relPrefix/sampleHostName");
@@ -102,16 +103,16 @@ public class RegistrationEntityTest {
                 linkEntity.getHref();
                 result = "http://sampleHost:port";
 
-                ArrayList<Link> linkArrayList = new ArrayList<Link>();
+                ArrayList<Link> linkArrayList = new ArrayList<>();
                 linkArrayList.add(link);
                 linkArrayList.add(link);
                 instanceInfo.getLinksWithRelPrefix(anyString);
                 result = linkArrayList;
 
-                registryLookupUtil.getLinksWithRelPrefix(anyString, withAny(new SanitizedInstanceInfo()));
+                RegistryLookupUtil.getLinksWithRelPrefix(anyString, withAny(new SanitizedInstanceInfo()));
                 result = linkArrayList;
 
-                ArrayList<InstanceInfo> infoArrayList = new ArrayList<InstanceInfo>();
+                ArrayList<InstanceInfo> infoArrayList = new ArrayList<>();
                 infoArrayList.add(instanceInfo);
                 lookupClient.getInstancesWithLinkRelPrefix(anyString);
                 result = infoArrayList;
@@ -124,8 +125,8 @@ public class RegistrationEntityTest {
                 instanceInfo.getServiceName();
                 result = "ApmUI";
 
-                tenantContext.getCurrentTenant();
-                returns("tenantName",null);
+                TenantContext.getCurrentTenant();
+                returns("tenantName",withNull());
 
             }
         };

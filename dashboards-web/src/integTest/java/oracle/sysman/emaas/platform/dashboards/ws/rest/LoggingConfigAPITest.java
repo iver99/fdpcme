@@ -17,7 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jishshi on 1/20/2016.
+ * @author jishshi
+ * @since 1/20/2016.
  */
 @Test(groups = {"s2"})
 public class LoggingConfigAPITest {
@@ -59,7 +60,7 @@ public class LoggingConfigAPITest {
     @Test
     public void testChangeSpecificLoggerLevel(@Mocked final Level level, @Mocked final DefaultConfiguration configuration) throws Exception {
 
-        final String loggerName = new String("loggerName");
+        final String loggerName = "loggerName";
         new Expectations() {
             {
 
@@ -69,11 +70,11 @@ public class LoggingConfigAPITest {
                 apiBase.getJsonUtil().fromJson(anyString, UpdatedLoggerLevel.class);
                 result = updatedLoggerLevel;
 
-                level.getLevel(anyString);
+                Level.getLevel(anyString);
                 result = level;
 
 
-                Map<String,LoggerConfig> loggers = new HashMap<String,LoggerConfig>();
+                Map<String,LoggerConfig> loggers = new HashMap<>();
                 loggers.put(loggerName,new LoggerConfig(loggerName, level, true));
 
                 configuration.getLoggers();
@@ -95,11 +96,11 @@ public class LoggingConfigAPITest {
 
     @Test
     public void testGetAllLoggerLevels(@Mocked final Level level, @Mocked final DefaultConfiguration configuration) throws Exception {
-        final String loggerName = new String("loggerName");
+        final String loggerName = "loggerName";
         new Expectations() {
             {
 
-                Map<String,LoggerConfig> loggers = new HashMap<String,LoggerConfig>();
+                Map<String,LoggerConfig> loggers = new HashMap<>();
                 loggers.put(loggerName,new LoggerConfig(loggerName, level, true));
 
                 configuration.getLoggers();

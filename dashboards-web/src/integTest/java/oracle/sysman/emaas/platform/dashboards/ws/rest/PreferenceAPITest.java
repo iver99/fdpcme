@@ -18,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jishshi on 1/20/2016.
+ * @author jishshi
+ * @since 1/20/2016.
  */
 @Test(groups = {"s2"})
 public class PreferenceAPITest {
@@ -36,9 +37,10 @@ public class PreferenceAPITest {
         preferenceAPI = new PreferenceAPI();
 
         new NonStrictExpectations() {{
-            dashboardAPIUtil.getExternalPreferenceAPIBase(anyString);
+            DashboardAPIUtil.getExternalPreferenceAPIBase(anyString);
             result = anyString;
 
+            //noinspection ResultOfMethodCallIgnored
             jsonObject.toString();
             result = anyString;
         }};
@@ -55,7 +57,7 @@ public class PreferenceAPITest {
     @Test
     public void testDeleteAllPreferenceByKey1(@Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
         new Expectations() {{
-            tenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
+            TenantIdProcessor.getInternalTenantIdFromOpcTenantId(anyString);
             result = anyLong;
 
             preferenceManager.removeAllPreferences(anyLong);
@@ -75,7 +77,7 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testDeletePreferenceByKey1(@Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
+    public void testDeletePreferenceByKey1(@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
         new Expectations() {{
             preferenceManager.removePreference(anyString, anyLong);
             result = null;
@@ -94,7 +96,7 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testQueryPreferenceByKey1(@Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
+    public void testQueryPreferenceByKey1(@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
         new Expectations() {{
             preferenceManager.getPreferenceByKey(anyString, anyLong);
             result = null;
@@ -113,7 +115,7 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testQueryPreferences1(@Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
+    public void testQueryPreferences1(@Mocked final PreferenceManager preferenceManager,@SuppressWarnings("unused") @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
         new Expectations() {{
             List<Preference> ps = new ArrayList<>();
             ps.add(new Preference());
@@ -134,7 +136,7 @@ public class PreferenceAPITest {
     }
 
     @Test
-    public void testUpdatePreference1(@Mocked final Preference preference, @Mocked final APIBase apiBase, @Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
+    public void testUpdatePreference1(@Mocked final Preference preference, @Mocked final APIBase apiBase,@SuppressWarnings("unused") @Mocked final PreferenceManager preferenceManager, @Mocked final TenantIdProcessor tenantIdProcessor) throws Exception {
         new Expectations() {{
             apiBase.getJsonUtil().fromJson(anyString, Preference.class);
             result = preference;

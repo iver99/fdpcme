@@ -3,22 +3,19 @@ package oracle.sysman.emaas.platform.dashboards.ws.rest;
 import mockit.*;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emaas.platform.dashboards.core.util.EndpointEntity;
-import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Created by jishshi on 1/20/2016.
+ * @author jishshi
+ * @since 1/20/2016.
  */
 @Test(groups = {"s2"})
 public class RegistryLookupAPITest {
 
     RegistryLookupAPI registryLookupAPI;
-
-    @Mocked
-    JsonUtil jsonUtil;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -54,7 +51,7 @@ public class RegistryLookupAPITest {
         //Test 200 valid endpoint
         String validUserTenant = "userTenant.userName";
         new Expectations() {{
-            registryLookupUtil.getServiceExternalEndPointEntity(anyString, anyString, anyString);
+            RegistryLookupUtil.getServiceExternalEndPointEntity(anyString, anyString, anyString);
             result = withAny(new EndpointEntity(anyString, anyString, anyString));
         }};
         Assert.assertEquals(registryLookupAPI.getRegistryLink("tenantIdParam", validUserTenant, "refer", "serviceName", "version").getStatus(), 200);
@@ -88,7 +85,7 @@ public class RegistryLookupAPITest {
         //Test 200 valid endpoint
         String validUserTenant = "userTenant.userName";
         new Expectations() {{
-            registryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
+            RegistryLookupUtil.getServiceExternalLink(anyString, anyString, anyString, anyString);
             result = withAny(new Link());
         }};
 
@@ -141,7 +138,7 @@ public class RegistryLookupAPITest {
         //Test 200 valid endpoint
         String validUserTenant = "userTenant.userName";
         new Expectations() {{
-            registryLookupUtil.getServiceExternalLinkWithRelPrefix(anyString, anyString, anyString, anyString);
+            RegistryLookupUtil.getServiceExternalLinkWithRelPrefix(anyString, anyString, anyString, anyString);
             result = withAny(new Link());
         }};
 

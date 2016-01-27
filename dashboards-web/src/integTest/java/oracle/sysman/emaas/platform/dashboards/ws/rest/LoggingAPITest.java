@@ -11,7 +11,8 @@ import org.testng.annotations.Test;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by jishshi on 1/20/2016.
+ * @author jishshi
+ * @since 1/20/2016.
  */
 @Test(groups = {"s2"})
 public class LoggingAPITest {
@@ -74,7 +75,7 @@ public class LoggingAPITest {
 
         new MockUp<JSONObject>() {
             @Mock
-            public String getString(String key) throws JSONException {
+            public String getString(@SuppressWarnings("unused") String key) throws JSONException {
                 throw new JSONException("jsonObject getString");
             }
         };
@@ -92,13 +93,10 @@ public class LoggingAPITest {
                 throw new JSONException("jsonObject getString");
             }
             @Mock
-            public JSONObject getJSONObject(String key) throws JSONException {
+            public JSONObject getJSONObject(@SuppressWarnings("unused") String key) throws JSONException {
                 return new JSONObject();
             }
 
-            public JSONArray getJSONArray(String key) throws JSONException {
-                return new JSONArray();
-            }
         };
 
 

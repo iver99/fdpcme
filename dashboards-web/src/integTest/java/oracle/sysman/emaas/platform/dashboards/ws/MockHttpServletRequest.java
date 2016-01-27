@@ -12,7 +12,8 @@ import java.security.Principal;
 import java.util.*;
 
 /**
- * Created by danfjian on 2016/1/22.
+ * @author danfjian
+ * @since 2016/1/22.
  */
 public class MockHttpServletRequest implements HttpServletRequest {
     @Override

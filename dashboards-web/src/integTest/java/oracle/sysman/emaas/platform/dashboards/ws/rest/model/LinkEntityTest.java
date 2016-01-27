@@ -5,7 +5,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Created by jishshi on 1/18/2016.
+ * @author jishshi
+ * @since 1/18/2016.
  */
 
 @Test(groups={"s1"})

@@ -6,7 +6,8 @@ import org.testng.annotations.Test;
 import java.util.Set;
 
 /**
- * Created by jishshi on 1/20/2016.
+ * @author jishshi
+ * @since 1/20/2016.
  */
 @Test(groups = {"s1"})
 public class DashboardsApplicationTest {

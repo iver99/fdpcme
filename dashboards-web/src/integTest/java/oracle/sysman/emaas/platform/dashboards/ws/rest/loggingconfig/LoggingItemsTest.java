@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jishshi on 1/18/2016.
+ * @author jishshi
+ * @since 1/18/2016.
  */
 @Test(groups={"s1"})
 public class LoggingItemsTest {
@@ -34,7 +35,7 @@ public class LoggingItemsTest {
     public void testGetItems() throws Exception {
         Assert.assertNull(loggingItems.getItems());
 
-        List<LoggingItem> list = new  ArrayList<LoggingItem>();
+        List<LoggingItem> list = new ArrayList<>();
         list.add(loggingItem);
         list.add(loggingItem);
         loggingItems.setItems(list);
@@ -45,7 +46,7 @@ public class LoggingItemsTest {
     public void testGetTotal() throws Exception {
         Assert.assertEquals(loggingItems.getTotal(),0);
 
-        List<LoggingItem> list = new  ArrayList<LoggingItem>();
+        List<LoggingItem> list = new ArrayList<>();
         list.add(loggingItem);
         list.add(loggingItem);
         loggingItems.setItems(list);
@@ -59,11 +60,11 @@ public class LoggingItemsTest {
     @Test
     public void testAddLoggerConfig() throws Exception {
         loggingItems.setItems(null);
-        loggingItems.addLoggerConfig(new LoggerConfig(),new Long(123));
+        loggingItems.addLoggerConfig(new LoggerConfig(), 123L);
         Assert.assertEquals(loggingItems.getTotal(),1);
-        loggingItems.addLoggerConfig(new LoggerConfig(),new Long(123));
+        loggingItems.addLoggerConfig(new LoggerConfig(), 123L);
         Assert.assertEquals(loggingItems.getTotal(),2);
-        loggingItems.addLoggerConfig(null,new Long(123));
+        loggingItems.addLoggerConfig(null, 123L);
         Assert.assertEquals(loggingItems.getTotal(),2);
 
     }

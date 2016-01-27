@@ -7,11 +7,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Created by jishshi on 1/18/2016.
+ * @author jishshi
+ * @since 1/18/2016.
  */
+@Test(groups = {"s1"})
 public class DashboardAPIUtilTest {
 
-    private static final String TENANT_NAME = "emaastesttenant1";
     DashboardAPIUtil dashboardAPIUtil;
 
     @Mocked
@@ -24,13 +25,11 @@ public class DashboardAPIUtilTest {
 
     @Test
     public void testGetExternalDashboardAPIBase() throws Exception {
-        Assert.assertNull(dashboardAPIUtil.getExternalDashboardAPIBase(null));
-//        Assert.assertNotNull(DashboardAPIUtil.getExternalDashboardAPIBase(TENANT_NAME));
+        Assert.assertNull(DashboardAPIUtil.getExternalDashboardAPIBase(null));
     }
 
     @Test
     public void testGetExternalPreferenceAPIBase() throws Exception {
-        Assert.assertNull(dashboardAPIUtil.getExternalPreferenceAPIBase(null));
-//        Assert.assertNotNull(DashboardAPIUtil.getExternalPreferenceAPIBase(TENANT_NAME));
+        Assert.assertNull(DashboardAPIUtil.getExternalPreferenceAPIBase(null));
     }
 }

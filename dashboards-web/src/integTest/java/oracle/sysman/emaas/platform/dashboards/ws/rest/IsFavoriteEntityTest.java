@@ -5,7 +5,8 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
 /**
- * Created by Troy on 2016/1/21.
+ * @author Troy
+ * @since 2016/1/21.
  */
 @Test(groups={"s1"})
 public class IsFavoriteEntityTest {
@@ -13,7 +14,7 @@ public class IsFavoriteEntityTest {
     @Test
     public void testGetIsFavorite() throws Exception {
         isFavoriteEntity.setIsFavorite(true);
-        assertEquals(isFavoriteEntity.getIsFavorite(), new Boolean(true));
+        assertEquals(isFavoriteEntity.getIsFavorite(), Boolean.TRUE);
     }
 
     @Test

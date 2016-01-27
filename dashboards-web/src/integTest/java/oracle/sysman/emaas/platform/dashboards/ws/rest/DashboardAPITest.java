@@ -18,14 +18,16 @@ import org.testng.annotations.Test;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import static mockit.Deencapsulation.invoke;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
 /**
- * Created by danfjian on 2016/1/14.
+ * @author danfjian
+ * @since 2016/1/14.
  */
 @Test(groups = {"s2"})
 public class DashboardAPITest {
@@ -35,8 +37,6 @@ public class DashboardAPITest {
     APIBase mockedAPIBase;
     @Mocked
     DashboardManager mockedDashboardManager;
-    @Mocked
-    DashboardAPIUtil mockedDashboardAPIUtil;
 
     DashboardAPI dashboardAPI = new DashboardAPI();
 
@@ -78,7 +78,7 @@ public class DashboardAPITest {
     }
 
     @Test
-    public void testCreateDashboardWithDashboardException(@Mocked final JsonUtil jsonUtil) throws IOException, DashboardException {
+    public void testCreateDashboardWithDashboardException(@SuppressWarnings("unused")@Mocked final JsonUtil jsonUtil) throws IOException, DashboardException {
         new Expectations() {
             {
                 mockedDashboardManager.saveNewDashboard(withAny(new Dashboard()), anyLong);
@@ -164,7 +164,7 @@ public class DashboardAPITest {
     }
 
     @Test
-    public void testGetDashboardBase64ScreenShot() throws Exception {
+    public void testGetDashboardBase64ScreenShot(@SuppressWarnings("unused")@Mocked DashboardAPIUtil dashboardAPIUtil) throws Exception {
         new Expectations() {
             {
                 DashboardAPIUtil.getExternalDashboardAPIBase(anyString);
@@ -302,10 +302,10 @@ public class DashboardAPITest {
     }
 
     @Test
-    public void testQueryDashboardsWithUnsupportedEncodingException(@Mocked java.net.URLDecoder urlDecoder) throws Exception {
+    public void testQueryDashboardsWithUnsupportedEncodingException(@SuppressWarnings("unused")@Mocked URLDecoder urlDecoder) throws Exception {
         new Expectations() {
             {
-                java.net.URLDecoder.decode(anyString, anyString);
+                URLDecoder.decode(anyString, anyString);
                 result = new UnsupportedEncodingException("Test Encoding");
             }
         };
@@ -393,7 +393,7 @@ public class DashboardAPITest {
     }
 
     @Test
-    public void testUpdateDashboardWithExternalBase(@Mocked DashboardAPIUtil dashboardAPIUtil) throws Exception {
+    public void testUpdateDashboardWithExternalBase(@SuppressWarnings("unused")@Mocked DashboardAPIUtil dashboardAPIUtil) throws Exception {
         new Expectations(){
             {
                 DashboardAPIUtil.getExternalDashboardAPIBase(anyString);

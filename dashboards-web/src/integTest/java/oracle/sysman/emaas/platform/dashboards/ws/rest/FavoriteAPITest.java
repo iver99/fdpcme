@@ -1,35 +1,26 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import groovy.mock.interceptor.MockProxyMetaClass;
-import kodo.conf.descriptor.CustomOrphanedKeyActionBeanDConfig;
+import mockit.Expectations;
+import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
-import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import org.testng.annotations.Test;
 
-import javax.xml.ws.Response;
-
-import static org.testng.Assert.*;
-import oracle.sysman.emaas.platform.dashboards.test.TenantSubscriptions.TenantSubscriptions;
-import mockit.Deencapsulation;
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-import mockit.Verifications;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.Assert.assertNotNull;
+
 /**
- * Created by Troy on 2016/1/21.
+ * @author Troy
+ * @since 2016/1/21.
  */
 @Test(groups={"s2"})
 public class FavoriteAPITest {
 
     private FavoriteAPI favoriteAPI = new FavoriteAPI();
-    private TenantSubscriptions tenantSubscriptions = new TenantSubscriptions();
 
     @Test
     public void testAddOneFavoriteDashboard(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
@@ -46,7 +37,7 @@ public class FavoriteAPITest {
     }
 
     @Test
-    public void test2AddOneFavoriteDashboard(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception{
+    public void test2AddOneFavoriteDashboard(@Mocked final APIBase anyAPIBase, @SuppressWarnings("unused")@Mocked final DashboardManager anyDm) throws Exception{
         new Expectations() {
             {
                 anyAPIBase.getTenantId(anyString);
@@ -57,7 +48,7 @@ public class FavoriteAPITest {
     }
 
     @Test
-    public void test3AddOneFavoriteDashboard(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception{
+    public void test3AddOneFavoriteDashboard(@Mocked final APIBase anyAPIBase, @SuppressWarnings("unused")@Mocked final DashboardManager anyDm) throws Exception{
         new Expectations() {
             {
                 anyAPIBase.getTenantId(anyString);
@@ -81,7 +72,7 @@ public class FavoriteAPITest {
         assertNotNull(favoriteAPI.deleteOneFavoriteDashboard("X-USER-IDENTITY-DOMAIN-NAME", "X-REMOTE-USER","Referer",10L));
     }
     @Test
-    public void test2DeleteOneFavoriteDashboard(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
+    public void test2DeleteOneFavoriteDashboard(@Mocked final APIBase anyAPIBase,@SuppressWarnings("unused") @Mocked final DashboardManager anyDm) throws Exception {
         new Expectations(){
             {
                 anyAPIBase.getTenantId(anyString);
@@ -91,7 +82,7 @@ public class FavoriteAPITest {
         assertNotNull(favoriteAPI.deleteOneFavoriteDashboard("X-USER-IDENTITY-DOMAIN-NAME", "X-REMOTE-USER","Referer",10L));
     }
     @Test
-    public void test3DeleteOneFavoriteDashboard(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
+    public void test3DeleteOneFavoriteDashboard(@Mocked final APIBase anyAPIBase,@SuppressWarnings("unused") @Mocked final DashboardManager anyDm) throws Exception {
         new Expectations(){
             {
                 anyAPIBase.getTenantId(anyString);
@@ -103,7 +94,7 @@ public class FavoriteAPITest {
 
     @Test
     public void testGetAllFavoriteDashboards(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
-        final List<Dashboard> list =new ArrayList<Dashboard>();
+        final List<Dashboard> list = new ArrayList<>();
         for(int i=0;i<=3;i++) list.add(new Dashboard());
         new Expectations(){
             {
@@ -118,7 +109,7 @@ public class FavoriteAPITest {
 
 
     @Test
-    public void test2GetAllFavoriteDashboards(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
+    public void test2GetAllFavoriteDashboards(@Mocked final APIBase anyAPIBase, @SuppressWarnings("unused")@Mocked final DashboardManager anyDm) throws Exception {
         new Expectations(){
             {
                 anyAPIBase.getTenantId(anyString);
@@ -129,7 +120,7 @@ public class FavoriteAPITest {
     }
 
     @Test
-    public void test3GetAllFavoriteDashboards(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
+    public void test3GetAllFavoriteDashboards(@Mocked final APIBase anyAPIBase, @SuppressWarnings("unused")@Mocked final DashboardManager anyDm) throws Exception {
         new Expectations(){
             {
                 anyAPIBase.getTenantId(anyString);
@@ -156,8 +147,7 @@ public class FavoriteAPITest {
     }
 
     @Test
-    public void test2IsFavoriteDashboard(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
-        final Long anyTenantId = 10L;
+    public void test2IsFavoriteDashboard(@Mocked final APIBase anyAPIBase, @SuppressWarnings("unused")@Mocked final DashboardManager anyDm) throws Exception {
         new Expectations(){
             {
                 anyAPIBase.getTenantId(anyString);
@@ -168,8 +158,7 @@ public class FavoriteAPITest {
     }
 
     @Test
-    public void test3IsFavoriteDashboard(@Mocked final APIBase anyAPIBase, @Mocked final DashboardManager anyDm) throws Exception {
-        final Long anyTenantId = 10L;
+    public void test3IsFavoriteDashboard(@Mocked final APIBase anyAPIBase, @SuppressWarnings("unused")@Mocked final DashboardManager anyDm) throws Exception {
         new Expectations(){
             {
                 anyAPIBase.getTenantId(anyString);
