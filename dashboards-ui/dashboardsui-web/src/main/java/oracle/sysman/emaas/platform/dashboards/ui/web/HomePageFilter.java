@@ -174,7 +174,7 @@ public class HomePageFilter implements Filter
 			bf = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 		}
 		catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage(), e);
 		}
 		StringBuffer buffer = new StringBuffer();
 		String line = "";
