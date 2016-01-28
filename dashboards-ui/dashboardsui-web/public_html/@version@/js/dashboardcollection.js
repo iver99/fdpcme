@@ -17,6 +17,7 @@ function(dfu, oj, ko, $)
         self.appTypes = _options['appTypes'] || null;
         self.owners = _options['owners'] || null;
         self.favoritesOnly = _options['favoritesOnly'];
+        self.filter = _options['filter'] || null;
         //self.url 
         var _customPagingOptions = function(response){
           var _ret = {
@@ -61,6 +62,10 @@ function(dfu, oj, ko, $)
                 if (self.favoritesOnly !== null && self.favoritesOnly === true) 
                 {
                     __url = __url + "&onlyFavorites=true";
+                }
+                if (self.filter !== null && self.filter.trim().length > 0)
+                {
+                     __url = __url + "&filter=" + self.filter.trim();
                 }
             }
             //console.log("[DashboardCollection] operation: "+ _operation +"  "+__url + " \n      Header: " + JSON.stringify(dfu.getDashboardsRequestHeader())); //return __url;
