@@ -13,11 +13,6 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
 import java.util.Set;
 import org.testng.Assert;
 
-/**
- *  @version
- *  @author siakula 
-*  @since   release specific (what release of product did this appear in)
- */
 
 public class TestDashBoard extends LoginAndLogout{
 
@@ -206,24 +201,6 @@ public class TestDashBoard extends LoginAndLogout{
 					
 	}	
 
-	@Test
-	public void testDeleteOOB() throws Exception
-	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testUserMenu");
-		
-		DashBoardUtils.clickGVButton();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		//check OOB delete protection
-		DashBoardUtils.searchDashBoard("Application Performance");
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		
-		webd.click(DashBoardPageId.InfoBtnID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		WebElement removeButton = webd.getWebDriver().findElement(By.xpath(DashBoardPageId.RmBtnID));
-		Assert.assertFalse(removeButton.isEnabled());		
-	}	
 
 	@Test
 	public void testCreateLVDashBoard() throws Exception
