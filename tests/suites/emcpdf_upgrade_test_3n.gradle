@@ -30,6 +30,16 @@ repositories {
 /******* ExtraProperties declaration ******/
 task omcUpgradeDataPopulation (type: EMTest,overwrite: true) {
     println "Customizing the UpgradeDataPopulation"
+options.suiteXmlBuilder().suite('name': 'emcpdf_upgrade_test_3n') {
+        test('name': 'DashboardUITest') {
+            classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestDashBoardDp')
+                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestHomePageDp.java')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestWidgetDp')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
+            }
+
+
 
     useWebdriver = true
     useRestAssured = true
