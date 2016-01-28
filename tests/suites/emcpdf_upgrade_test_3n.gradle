@@ -53,8 +53,8 @@ task omcUpgradeDataValidation (type: EMTest, overwrite: true) {
 options.suiteXmlBuilder().suite('name': 'emcpdf_upgrade_test_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.Dv.TestDashBoardDv')
-                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestBrandingBarDv')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DV.TestDashBoardDv')
+                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DV.TestBrandingBarDv')
                  }
 
  
