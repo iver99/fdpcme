@@ -34,7 +34,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_upgrade_test_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestDashBoardDp')
-                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestHomePageDp.java')
+                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestHomePageDp')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestWidgetDp')
 		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
             }
@@ -50,6 +50,13 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_upgrade_test_3n') {
 }
 task omcUpgradeDataValidation (type: EMTest, overwrite: true) {
     println "Overriding the UpgradeDataValidation"
+options.suiteXmlBuilder().suite('name': 'emcpdf_upgrade_test_3n') {
+        test('name': 'DashboardUITest') {
+            classes([:]) {
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.Dv.TestDashBoardDv')
+                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestBrandingBarDv')
+                 }
+
  
     useWebdriver = true
     useRestAssured = true
