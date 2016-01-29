@@ -145,7 +145,7 @@ define(['knockout',
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
-                console.log("dashboard to dup: "+dashboardJSON);
+                //console.log("dashboard to dup: "+dashboardJSON);
                 Builder.duplicateDashboard(dashboardJSON, function(data) {
                     succCallback && succCallback(data);
                 }, function(error) {
