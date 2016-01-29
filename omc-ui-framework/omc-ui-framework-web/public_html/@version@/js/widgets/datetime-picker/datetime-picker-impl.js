@@ -1369,13 +1369,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     return false;
                 };
 
-                self.cancelClick = function () {
-                    if(self.KOCvmInstance) {
-                        self.KOCvmInstance.timeFilterValue(self.lastTimeFilterValue);
-                        self.KOCvmInstance.daysChecked(self.lastDaysChecked);
-                        self.KOCvmInstance.monthsChecked(self.lastMonthsChecked);
-                    }
-                    
+                self.cancelClick = function () {                    
                     $(self.panelId).ojPopup("close");
                     return;
                 };

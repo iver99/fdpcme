@@ -709,7 +709,22 @@ define(['knockout',
                 //$("#share_cfmDialog").ojDialog("open"); 
             };
             
-            self.timeoutID = null;
+            self.intervalID = null;
+            self.setAutoRefreshOptoin = function (isEnabled, interval) {
+                if (null !== self.intervalID) {
+                    clearInterval(self.intervalID);
+                }
+                self.dashboard.enableRefresh(isEnabled);
+
+                if (isEnabled === true) {
+                    if (window.DEV_MODE) {
+                        interval = 3000;
+                    }
+                    self.intervalID = setInterval(function () {
+                        $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
+                    }, interval);
+                }
+            };
             
             //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
@@ -755,10 +770,7 @@ define(['knockout',
                             "onclick": function(data,event){
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
                                 event.stopPropagation();
-                                if( null !== self.timeoutID ){
-                                    clearTimeout(self.timeoutID);
-                                }
-                                self.dashboard.enableRefresh(false);
+                                self.setAutoRefreshOptoin(false);
                             },
                             "disabled": false,
                             "showOnMobile": true,
@@ -773,10 +785,7 @@ define(['knockout',
                             "onclick": function (data, event) {
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
                                 event.stopPropagation();
-                                self.timeoutID = setTimeout(function(){
-                                    window.location.reload(true);
-                                },300000);
-                                self.dashboard.enableRefresh(true);
+                                self.setAutoRefreshOptoin(true,300000);// 5 minutes
                             },
                              "disabled": false,
                             "showOnMobile": true,
