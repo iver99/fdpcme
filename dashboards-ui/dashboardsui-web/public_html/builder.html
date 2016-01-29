@@ -32,13 +32,10 @@
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
                             <span>Middleware Dashboards</span>
-<!--                            <div class="tabs-gear">
-                                <i class="fa-icon-font fa-icon-font-14 dbd-icon-gear"></i>
-                            </div>-->
                             <button id="tabs-gear"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
-                                    menu: '#tabsGearMenu'}">
+                                    menu: '#dbd-set-option'}">
                             </button>
                         </li>
                         <li class="other-nav">
@@ -56,25 +53,125 @@
                         <li id="add-nav" class="oj-disabled"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
                     </ul>
                     <!-- tab contents -->
-                    <div class="dbd-info">
-
+                    <div class="dbd-info">    
                     </div>
-                    <div class="dbd-info">
-
+                    <div class="dbd-info other-nav-info">
+                        <div class="dbd-info-head">
+                            <h1>Shenjie test</h1>
+                            <div class="dbd-function-set">
+                                <button class="oj-button oj-default oj-button-half-chrome no-print single-dbd-save"
+                                        data-bind="ojComponent: {
+                                        component:'ojButton', label: 'Save',
+                                        icons: {start: 'dbd-toolbar-icon-save'}
+                            }">
+                                </button>
+                                <button class="single-dbd-option"
+                                        data-bind="ojComponent: {component: 'ojButton', label: 'Options',
+                                            icons: {start:'fa-icon-font fa-icon-font-16 dbd-icon-gear'}, 
+                                    menu: '#single-dbd-option-menu'}">
+                                </button>
+                            </div>    
+                        </div>
+                        <div class="dbd-info-detail">
+                            <span>
+                                this is just a test
+                            </span>
+                        </div>
                     </div>
                     <div class="dbd-info">
 
                     </div>       
                 </div> 
-                
-                <!-- To handle menu item selection, use a select listener as shown, not a click listener. -->
-                <ul id="tabsGearMenu" style="display:none" 
+
+                <!-- This can use template binding -->
+                <ul id="dbd-set-option" style="display:none" 
                     data-bind="ojComponent: {component: 'ojMenu'}">
-                    <li id="save">
-                        <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-palette-icon-24"></span>Save</a>
+                    <li id="dbs-edit">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Edit</span>
+                        </a>
                     </li>
-                    <li id="print">
-                        <a href="#"><span class="oj-menu-item-icon demo-icon-font demo-chat-icon-24"></span>Print...</a>
+                    <li id="dbs-refresh">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 dbd-icon-refresh oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Refresh</span>
+                        </a>
+                        <ul>
+                            <li id="refresh-off">
+                                <a href="#">
+                                    <span class="fa-icon-font fa-icon-font-14 dbd-icon-check oj-menu-item-icon oj-fwk-icon"></span>
+                                    <span>Off</span>
+                                </a>
+                            </li>
+                            <li id="refresh-time">
+                                <a href="#">
+                                    <span class="fa-icon-font fa-icon-font-14 dbd-icon-check oj-menu-item-icon oj-fwk-icon"></span>
+                                    <span>On(Every 5 Minutes)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="oj-menu-divider"></li>
+                    <li id="dbs-share">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 dbd-icon-users oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Share</span>
+                        </a>
+                    </li>
+                    <li id="dbs-print">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 fa-print oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Print All</span>
+                        </a>
+                    </li>
+                    <li id="dbs-favorite">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 fa-star oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Add favorite</span>
+                        </a>
+                    </li>
+                    <li id="dbs-home">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 dbd-toolbar-icon-home oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Set as home</span>
+                        </a>
+                    </li>
+                    <li class="oj-menu-divider"></li>
+                    <li id="dbs-delete">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 dbd-toolbar-icon-delete oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Delete</span>
+                        </a>
+                    </li>
+                </ul>
+                <ul id="single-dbd-option-menu" style="display:none" 
+                    data-bind="ojComponent: {component: 'ojMenu'}">
+                    <li id="dbd-single-edit">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Edit</span>
+                        </a>
+                    </li>
+                    <li class="oj-menu-divider"></li>
+                    <li id="dbd-single-share">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 dbd-icon-users oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Share</span>
+                        </a>
+                    </li>
+                    <li id="dbd-single-print">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 fa-print oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Print</span>
+                        </a>
+                    </li>
+                    <li class="oj-menu-divider"></li>
+                     <li id="dbd-single-delete">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 dbd-toolbar-icon-delete oj-menu-item-icon oj-fwk-icon"></span>
+                            <span>Delete</span>
+                        </a>
                     </li>
                 </ul>
             </div>
