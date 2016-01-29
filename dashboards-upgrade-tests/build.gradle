@@ -11,6 +11,10 @@ clean{
   delete 'build'
 }
 
+dependencies {
+	testConfig project(':dashboards-uitest')
+}
+
 task integTestJar (type:Jar) {
     from sourceSets.integTest.output
     appendix = 'integ-tests'
