@@ -70,7 +70,7 @@ task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup
 
     //println "Overriding the UpgradeDataValidation"
        options.suiteXmlBuilder().suite('name': 'PostUpg') {
-        test('name': ''post_upg') {
+        test('name': 'post_upg') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DVdashboard.TestDashBoard')
                 //'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DV.TestBrandingBarDv')
