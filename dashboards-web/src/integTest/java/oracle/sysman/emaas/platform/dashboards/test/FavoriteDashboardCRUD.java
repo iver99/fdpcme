@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.test.favoritedashboards;
+package oracle.sysman.emaas.platform.dashboards.test;
 
 import java.util.ArrayList;
 import java.util.List;
