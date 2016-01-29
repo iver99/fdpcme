@@ -30,8 +30,8 @@ repositories {
 /******* ExtraProperties declaration ******/
 
 dependencies {
-    testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-upgrade-tests-integ-test', version: '1.0+' //'1.0+'
-    testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-test', version: '1.0+' 
+    testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-upgrade-tests-integ-tests', version: '1.0+' //'1.0+'
+    testConfig group: 'com.oracle.emaas.emcpdf.test', name:'dashboards-uitest-integ-tests', version: '1.0+' 
 }
 
 //Add data population(pre-upgrade) tests or tasks here
