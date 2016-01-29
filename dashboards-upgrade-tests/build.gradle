@@ -12,7 +12,7 @@ clean{
 }
 
 dependencies {
-	integTestCompile project(':dashboards-uitest') {transitive = true }
+	testCompile project(':dashboards-uitest') {transitive = true }
 }
 
 task integTestJar (type:Jar) {
@@ -22,6 +22,7 @@ task integTestJar (type:Jar) {
 
 
 check.dependsOn integTestJar
+build.dependsOn integTestJar
 
 publishing.publications {
     integTest(MavenPublication) {
