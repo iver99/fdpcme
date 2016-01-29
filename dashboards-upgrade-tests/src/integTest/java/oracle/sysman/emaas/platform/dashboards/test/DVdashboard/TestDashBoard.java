@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.test.DV;
+package oracle.sysman.emaas.platform.dashboards.test.DVdashboard/;
 
 import org.testng.annotations.*;
 import org.openqa.selenium.WebElement;
@@ -12,9 +12,12 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
 
 import java.util.Set;
 import org.testng.Assert;
-import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
 
-
+/**
+ *  @version
+ *  @author  charles.c.chen
+ *  @since   release specific (what release of product did this appear in)
+ */
 
 public class TestDashBoard extends LoginAndLogout{
 
@@ -24,38 +27,7 @@ public class TestDashBoard extends LoginAndLogout{
 		DashBoardUtils.loadWebDriver(webd);
 	}		
 	
-	@Test
-	public void testCreateDashBoard() throws Exception
-	{
-				
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
 		
-		webd.getLogger().info("start to test in testCreateDashBoard");
-		
-		String parentWindow = webd.getWebDriver().getWindowHandle();
-				
-		DashBoardUtils.openDBCreatePage();
-		String dbName="AAA1_testDashboard";
-		String dbDesc="AAA_testDashBoard desc";
-		DashBoardUtils.inputDashBoardInfo(dbName,dbDesc);
-		//verify input info's existence
-		//Assert.assertEquals(DashBoardUtils.getText(DashBoardPageId.DashBoardNameBoxID),"AAA_testDashboard");
-		webd.getLogger().info("Name = "+DashBoardUtils.getTextByID(DashBoardPageId.DashBoardNameBoxID));
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		DashBoardUtils.clickOKButton();		
-		
-		webd.takeScreenShot();
-		//add widget
-		DashBoardUtils.addWidget(1,parentWindow,"AAA_testDashboard","AAA_testDashBoard desc");
-				
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		
-		webd.takeScreenShot();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
-	}
-	
-	
 	@Test
 	public void testWelcomepage() throws Exception
 	{
