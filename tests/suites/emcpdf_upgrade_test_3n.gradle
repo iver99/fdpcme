@@ -45,9 +45,9 @@ task pre_upgrade (type: EMTest, dependsOn: omcSetup){
      options.suiteXmlBuilder().suite('name': 'PreUpg') {
         test('name': 'Pre_upg') {
             classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestDashBoardDp')
-                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestHomePageDp')
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestWidgetDp')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DPdashboard.TestDashBoard')
+                //'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestHomePageDp')
+		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DP.TestWidgetDp')
 		//'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')
             }
 
@@ -72,8 +72,8 @@ task post_upgrade (type: EMTest, dependsOn: [omcCloudUpgrade,omcTenantAgentSetup
        options.suiteXmlBuilder().suite('name': 'PostUpg') {
         test('name': ''post_upg') {
             classes([:]) {
-		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DV.TestDashBoardDv')
-                'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DV.TestBrandingBarDv')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DVdashboard.TestDashBoard')
+                //'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.DV.TestBrandingBarDv')
                  }
          }
   }
