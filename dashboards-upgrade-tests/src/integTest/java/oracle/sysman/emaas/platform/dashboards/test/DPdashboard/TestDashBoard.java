@@ -8,7 +8,13 @@ import org.openqa.selenium.support.ui.Select;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
-import oracle.sysman.emaas.platform.dashboards.test.util.*;
+//import oracle.sysman.emaas.platform.dashboards.test.util.*;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.WidgetAddPage;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.WidgetPageId;
+
 
 import java.util.Set;
 import org.testng.Assert;
