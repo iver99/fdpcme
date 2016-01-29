@@ -34,7 +34,7 @@ configurations{
 	compass
 }
 
-def tselVersion = '1.0' 
+def tselVersion 
 if (project.hasProperty("debugTsel"))
 {
     def user = System.getenv('USER')
