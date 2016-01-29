@@ -6,7 +6,8 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtils;
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
-
+//import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardUtil;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.DashBoardPageId;
 
 public class TestWidget extends LoginAndLogout{
 
