@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.test.DVdashboard/;
+package oracle.sysman.emaas.platform.dashboards.test.DVdashboard;
 
 import org.testng.annotations.*;
 import org.openqa.selenium.WebElement;
