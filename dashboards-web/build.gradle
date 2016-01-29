@@ -1,7 +1,7 @@
 import org.gradle.api.plugins.jetty.internal.Monitor
 
 apply plugin: 'war'
-
+apply plugin: 'eclipse-wtp'
 apply from: 'test.gradle'
 
 // Directory where the restful API doc is generated

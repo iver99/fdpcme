@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 apply plugin: 'war'
-
+apply plugin: 'eclipse-wtp'
 apply plugin: 'compass'
 
 group = 'com.oracle.emaas.emcpdf'
