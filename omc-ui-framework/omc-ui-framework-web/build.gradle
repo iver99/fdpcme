@@ -5,6 +5,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.text.SimpleDateFormat
 import java.util.Date
 
+apply plugin: 'eclipse-wtp'
 apply plugin: 'war'
 apply plugin: 'compass'
 apply from: 'test.gradle'
