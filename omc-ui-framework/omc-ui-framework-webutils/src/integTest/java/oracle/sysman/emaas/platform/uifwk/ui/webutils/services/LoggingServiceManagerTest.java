@@ -11,12 +11,16 @@
 package oracle.sysman.emaas.platform.uifwk.ui.webutils.services;
 
 import java.lang.management.ManagementFactory;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
 
 import org.testng.AssertJUnit;
@@ -29,6 +33,9 @@ public class LoggingServiceManagerTest
 {
 	LoggingServiceManager lsm = new LoggingServiceManager();
 
+	@Mocked
+	private URL _url;
+
 	@Test(groups = { "s1" })
 	public void testGetName()
 	{
@@ -38,6 +45,20 @@ public class LoggingServiceManagerTest
 	@Test(groups = { "s2" })
 	public void testStartStop(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf) throws Exception
 	{
+		new MockUp<Class<LoggingServiceManager>>() {
+			@Mock
+			public URL getResource(String path)
+			{
+				try {
+					return new URL("TestURL");
+				}
+				catch (MalformedURLException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		};
+
 		new Expectations() {
 			{
 				ManagementFactory.getPlatformMBeanServer();
@@ -52,20 +73,28 @@ public class LoggingServiceManagerTest
 	}
 
 	@Test(groups = { "s2" })
-	public void testStartStopExceptions(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf,
-			@Mocked final ObjectName anyObjName)
+	public void testStartStopExceptions(@Mocked final MBeanServer anyMbs, @Mocked final ManagementFactory anyMf)
 	{
+		new MockUp<Class<LoggingServiceManager>>() {
+			@Mock
+			public URL getResource(String path)
+			{
+				try {
+					return new URL("TestURL1");
+				}
+				catch (MalformedURLException e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		};
 		try {
-			final ObjectName objName1 = new ObjectName(LoggingServiceManager.MBEAN_NAME);
 			new Expectations() {
 				{
-					new ObjectName(LoggingServiceManager.MBEAN_NAME);
-					result = objName1;
 					ManagementFactory.getPlatformMBeanServer();
 					result = anyMbs;
-					anyMbs.registerMBean(any, objName1);
-					result = new InstanceAlreadyExistsException();
 					anyMbs.registerMBean(any, (ObjectName) any);
+					result = new InstanceAlreadyExistsException();
 					anyMbs.unregisterMBean((ObjectName) any);
 					result = new Exception();
 				}
