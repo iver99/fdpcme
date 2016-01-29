@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.test.ui;
+package oracle.sysman.emaas.platform.dashboards.test.DP;
 
 import java.util.ArrayList;
 import java.util.HashMap;
