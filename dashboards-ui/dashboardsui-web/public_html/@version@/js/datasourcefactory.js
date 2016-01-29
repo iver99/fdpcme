@@ -11,18 +11,14 @@ function(dm, dc, dp, oj, ko, $)
  */
 
 
-    var DatasourceFactory = function(dashbaordsUrl, sortBy, filter/*types, appTypes, owners, favoritesOnly*/) {
+    var DatasourceFactory = function(dashbaordsUrl, sortBy, filter) {
         var self = this;
         self.dashbaordsUrl = dashbaordsUrl;
         self.sortBy = sortBy;
         self.filter = filter;
-//        self.types = types;
-//        self.appTypes = appTypes;
-//        self.owners = owners;
-//        self.favoritesOnly = favoritesOnly;
         self.build = function(query, pageSize) {
           return (function () {
-            var _orderby = self.sortBy, _filter = self.filter,/*_types = self.types, _appTypes = self.appTypes, _owners =  self.owners, _favoritesOnly = self.favoritesOnly,*/
+            var _orderby = self.sortBy, _filter = self.filter,
                         _model = dm.DashboardModel, _pageSize = 20, _fetchSize = 60, _modelLimit = 1000;
             if (pageSize)
             {

@@ -13,10 +13,6 @@ function(dfu, oj, ko, $)
         var self = this, _options = options || {};
         self.queryString = _options['query'] || null;
         self.orderBy = _options['orderBy'] || null;
-        self.types = _options['types'] || null;
-        self.appTypes = _options['appTypes'] || null;
-        self.owners = _options['owners'] || null;
-        self.favoritesOnly = _options['favoritesOnly'];
         self.filter = _options['filter'] || null;
         //self.url 
         var _customPagingOptions = function(response){
@@ -46,22 +42,6 @@ function(dfu, oj, ko, $)
                 if (self.orderBy !== null) 
                 {
                     __url = __url + "&orderBy=" + self.orderBy;
-                }
-                if (self.types !== null && self.types.length > 0) 
-                {
-                    __url = __url + "&types=" + self.types.join(",");
-                }
-                if (self.appTypes !== null && self.appTypes.length > 0) 
-                {
-                    __url = __url + "&appTypes=" + self.appTypes.join(",");
-                }
-                if (self.owners !== null && self.owners.length > 0) 
-                {
-                    __url = __url + "&owners=" + self.owners.join(",");
-                }
-                if (self.favoritesOnly !== null && self.favoritesOnly === true) 
-                {
-                    __url = __url + "&onlyFavorites=true";
                 }
                 if (self.filter !== null && self.filter.trim().length > 0)
                 {

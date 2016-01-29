@@ -14,23 +14,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-   <script>
-window.DEV_MODE= {
-        "_comment_0":"===THIS IS USED FOR DEV PURPOSE ONLY===",
-        "_comment_1":"Change data/url to desired one that matches dev env",
-        "_comment_2":"do *NOT* push this file unless it is required change for dev env",
-        "_comment_9":"=======================================",
-        "tenant":"emaastesttenant1",
-        "user":"emcsadmin",
-        "wlsAuth":"weblogic:welcome1",
-        //default registry will provide default end points if not explicitly defined below
-        //"dfRestApiEndPoint": "http://slc09csb.us.oracle.com:7019/emcpdf/api/v1/",
-        "dfRestApiEndPoint": "http://slc04wjl.us.oracle.com:7001/emcpdf/api/v1/",
-        "ssfRestApiEndPoint": "http://slc09csb.us.oracle.com:7019/savedsearch/v1/",
-        "_comment_100":"Please add other data as required for your dev env"
-    };
- 
-</script>    
+   
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
@@ -64,18 +48,6 @@ window.DEV_MODE= {
                                                 <div data-bind="visible: filter.showServiceFilter">
                                                     <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
                                                     <div id="servicecb" aria-controls="dtabhomesc" aria-labelledby="servicecblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.serviceFilter, optionChange: null}">
-                                                    <!--span class="oj-choice-row" data-bind="visible: showApmSrviceFilter">
-                                                        <input id="apmopt" type="checkbox" name="services" value="APM">
-                                                        <label for="apmopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_APM_ABBR')"></label>
-                                                    </span>
-                                                    <span class="oj-choice-row" data-bind="visible: showItaServiceFilter">
-                                                        <input id="itaopt" type="checkbox" name="services" value="ITAnalytics">
-                                                        <label for="itaopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_ITA')"></label>
-                                                    </span>
-                                                    <span class="oj-choice-row" data-bind="visible: showLaServiceFilter">
-                                                        <input id="laopt" type="checkbox" name="services" value="LogAnalytics">
-                                                        <label for="laopt" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LA')"></label>
-                                                    </span-->
                                                         <!-- ko foreach: filter.serviceFilterItems -->
                                                         <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
                                                             <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
@@ -85,31 +57,27 @@ window.DEV_MODE= {
                                                     </div>
                                                 </div>
                                                 <br/>
-                                                <!--div>
+                                                <div>
                                                     <label id="creatorcblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_LABEL')"></label>
-                                                    <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: creatorFilter, optionChange: handleOwnerFilterChanged}">
-                                                        <span class="oj-choice-row">
-                                                            <input id="oracleopt" type="checkbox" name="creators" value="Oracle">
-                                                            <label for="oracleopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ORACLE')"></label>
+                                                    <div id="creatorcb" aria-controls="dtabhomesc" aria-labelledby="creatorcblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.creatorFilter, optionChange: null}">
+                                                        <!-- ko foreach: filter.creatorFilterItems -->
+                                                        <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
+                                                            <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
+                                                            <label data-bind="text: $data.label, attr: {for: $data.id}"></label>
                                                         </span>
-                                                        <span class="oj-choice-row">
-                                                            <input id="shareopt" type="checkbox" name="creators" value="Share">
-                                                            <label for="shareopt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_SHARE')"></label>
-                                                         </span>
-                                                        <span class="oj-choice-row">
-                                                            <input id="otheropt" type="checkbox" name="creators" value="Others">
-                                                            <label for="otheropt" data-bind="text: getNlsString('DBS_HOME_FILTER_CREATOR_ME')"></label>
-                                                        </span>
+                                                        <!-- /ko -->
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <label id="favoritescblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_FAVORITES_LABEL')"></label>
-                                                <div id="favoritescb" aria-controls="dtabhomesc" aria-labelledby="favoritescblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: favoritesFilter, optionChange: handleFavoritesFilterChanged}">
-                                                    <span class="oj-choice-row">
-                                                        <input id="myfavorites" type="checkbox" name="favorites" value="favoritesOnly">
-                                                        <label for="myfavorites" data-bind="text: getNlsString('DBS_HOME_FILTER_FAVORITES_MY')"></label>
-                                                    </span>
-                                                </div-->
+                                                <div id="favoritescb" aria-controls="dtabhomesc" aria-labelledby="favoritescblabel" data-bind="ojComponent: {component: 'ojCheckboxset', value: filter.favoritesFilter, optionChange: null}">
+                                                        <!-- ko foreach: filter.favoritesFilterItems -->
+                                                        <span class="oj-choice-row" data-bind="visible: $data.visible !== false">
+                                                            <input type="checkbox" name="services" data-bind=" attr: {value: $data.value, id: $data.id}">
+                                                            <label data-bind="text: $data.label, attr: {for: $data.id}"></label>
+                                                        </span>
+                                                        <!-- /ko -->
+                                                </div>
                                             </div>
                                             <!-- filter panel end-->
                                     </div>
@@ -430,19 +398,7 @@ window.DEV_MODE= {
                     </div>
                     </div>
                     <!-- welcome dialog end -->
-                    
-                    <div style="display:none" id="dbs_comingsoonDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',rootAttributes: { style: 'min-width: 300px; min-height:100px;'}}">
-                        <div class="oj-dialog-header oj-helper-clearfix">
-                            <!--div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" data-bind="click: comingsoonDialogModel.close, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
-                            </div-->
-                            <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_COME_SOON_DLG_INFO')"></span>
-                        </div>
-                        <div class="oj-dialog-body">
-                            <p data-bind="text: getNlsString('DBS_HOME_COME_SOON_DLG_BODY')"></p>
-                        </div>
-                    </div>                    
+                                
             </div>            
         </div>
     </body>
