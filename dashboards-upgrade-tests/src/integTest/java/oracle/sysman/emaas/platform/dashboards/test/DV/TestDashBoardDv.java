@@ -12,6 +12,8 @@ import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
 
 import java.util.Set;
 import org.testng.Assert;
+import oracle.sysman.emaas.platform.dashboards.test.ui.util.LoginAndLogout;
+
 
 
 public class TestDashBoard extends LoginAndLogout{
