@@ -43,7 +43,7 @@ define(['knockout',
             self.initialize();
         }
         
-        function RightPanelModel($b) {
+        function RightPanelModel($b, tilesViewModel) {
             var self = this;
             self.dashboard = $b.dashboard;
             $b.registerObject(this, 'RightPanelModel');
@@ -51,12 +51,14 @@ define(['knockout',
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
             
+            self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
+            
             self.keyword = ko.observable('');
             self.page = ko.observable(1);
             self.widgets = ko.observableArray([]);
             self.totalPages = ko.observable(1);
 
-            self.completelyHidden = ko.observable(false);
+            self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
             self.maximized = ko.observable(false);
 
 //            self.showTimeControl = ko.observable(false);
@@ -349,7 +351,7 @@ define(['knockout',
                 if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
                    $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-item-'+widget.WIDGET_UNIQUE_ID()), 
                    {
-                       my : "end center", at : "start-35 center"
+                       my : "end center", at : "start-10 center"
                    });
                }
             };

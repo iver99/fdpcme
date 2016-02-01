@@ -41,6 +41,10 @@ and open the template in the editor.
     font-size: 14px !important;
 }
 
+.fa-icon-font-18 {
+    font-size: 18px !important;
+}
+
 body, html {
   width: 100%;
   padding: 0;
@@ -219,6 +223,10 @@ body, html {
   padding-right: 40px;
   margin-right: -40px;
 }*/
+
+.fa-question-circle:before {
+    content: "\f059";
+}
 
 .dbd-toolbar-icon-add-widget:before,.fa-plus:before {
   content: "\f067";
@@ -619,6 +627,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
   padding: 0;
 }
 
+.drawer-icon-btn {
+    width: 32px;
+}
+
 #dbd-left-panel {
     height: 1000px;
     /* position: absolute; */
@@ -630,7 +642,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 #right-panel-toggler {
-    margin-top: 2px;
+    margin-top: 5px;
     right: 282px;
     z-index: 999;
     max-width: 30px;
@@ -657,9 +669,13 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     border-bottom: 1px solid #c4ced7 !important;
 }
 
-#right-panel-toggler .oj-button.oj-selected {
+.drawer-icon-btn.drawer-selected {
+    background-image: none;
     background-color: white;
-    border-color: #c4ced7
+    border-color: #c4ced7;
+    .oj-button-icon {
+        color: #0572ce;
+    }
 }
 
 #right-panel-toggler .oj-button.oj-selected .oj-button-label {
@@ -802,6 +818,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     height: 30px;
 }
 
+.dbd-left-panel-widget:hover {
+    font-weight: bold;
+}
+
 .dbd-left-panel-widget-text {
     /*padding-right: 35px;*/ 
     float: left; 
@@ -838,7 +858,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 #dbd-left-panel-footer {
-    height: 96px;
+    height: 56px;
 }
 
 #dbd-left-panel-footer-text {
@@ -985,7 +1005,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }*/
 
 .dbd-tile-to-be-occupuied {
-    border: 1px dashed black;
+    border: 3px solid #F0CAC4;
 }
 
 .dbd-icon-resize{

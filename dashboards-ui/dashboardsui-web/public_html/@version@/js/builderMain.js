@@ -242,7 +242,7 @@ require(['knockout',
                 ko.applyBindings(null, document.getElementById('dbd-set-tabs'));
                 tilesViewModel.initialize();
                 ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                var rightPanelModel = new Builder.RightPanelModel($b);
+                var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
                 ko.applyBindings(rightPanelModel, $('#dbd-left-panel')[0]);
                 rightPanelModel.initialize();
                 new Builder.ResizableView($b);
