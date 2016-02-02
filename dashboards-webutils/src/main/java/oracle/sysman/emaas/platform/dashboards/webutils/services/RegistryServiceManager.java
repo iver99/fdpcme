@@ -10,33 +10,23 @@
 
 package oracle.sysman.emaas.platform.dashboards.webutils.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.naming.InitialContext;
-
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InfoManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo.InstanceStatus;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
-import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.ServiceConfigBuilder;
-import oracle.sysman.emaas.platform.dashboards.webutils.services.RegistryServiceManager.UrlType;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.AbstractApplicationLifecycleService;
 import oracle.sysman.emaas.platform.dashboards.webutils.wls.lifecycle.ApplicationServiceManager;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import weblogic.application.ApplicationLifecycleEvent;
+
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.naming.InitialContext;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class RegistryServiceManager implements ApplicationServiceManager
 {
@@ -196,6 +186,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 	//	private static final String NAV_CONTEXT_ROOT = "/emcpdf";
 	private static final String NAV_API_BASE = "/emcpdf/api/v1/";
 	private static final String NAV_STATIC_DASHBOARDS = NAV_API_BASE + "dashboards";
+	private static final String NAV_STATIC_USER_OPTIONS = NAV_API_BASE + "options";
 	private static final String NAV_STATIC_PREFERENCE = NAV_API_BASE + "preferences";
 	private static final String NAV_STATIC_SUBSCRIBEDAPPS = NAV_API_BASE + "subscribedapps";
 	private static final String NAV_STATIC_LOGGING = NAV_API_BASE + "logging";
@@ -362,6 +353,14 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			if (applicationUrlHttps != null) {
 				links.add(new Link().withRel("static/dashboards.preferences").withHref(
 						applicationUrlHttps + NAV_STATIC_PREFERENCE));
+			}
+			if (applicationUrlHttps != null) {
+				links.add(new Link().withRel("static/dashboards.options").withHref(
+						applicationUrlHttps + NAV_STATIC_USER_OPTIONS));
+			}
+			if (applicationUrlHttp != null) {
+				links.add(new Link().withRel("static/dashboards.options").withHref(
+						applicationUrlHttp + NAV_STATIC_USER_OPTIONS));
 			}
 			if (applicationUrlHttp != null) {
 				links.add(new Link().withRel("static/dashboards.subscribedapps").withHref(
