@@ -120,6 +120,7 @@ require(['knockout',
     'builder/dashboard.tile.model',
     'builder/dashboard.tile.view',
     'builder/tool.bar.model',
+    'builder/dashboardset.toolbar.model',
     'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead'
 ],
@@ -179,20 +180,47 @@ require(['knockout',
                 self.headerHeight = height;
             });
         };
+        
+        function DashboardsetHeaderViewModel(){
+            var self = this;
+            self.userName = dfu.getUserName();
+            self.tenantName = dfu.getTenantName();
+            self.appId = "Dashboard";
+            self.brandingbarParams = {
+                userName: self.userName,
+                tenantName: self.tenantName,
+                appId: self.appId,
+                isAdmin:true
+            };
+        }
 
         var dsbId = dfu.getUrlParam("dashboardId");
-        if (dsbId) {
-            dsbId = decodeURIComponent(dsbId);
-        }    
-        var isInteger = /^([0-9]+)$/.test(dsbId);
-        if (!isInteger){
-           oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-           location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
-        }            
+        var isDashboardset = false;
+        if (dsbId.indexOf(',') !== -1) {
+            isDashboardset = true;
+        }
+        if (!isDashboardset) {
+            if (dsbId) {
+                dsbId = decodeURIComponent(dsbId);
+            }
+            var isInteger = /^([0-9]+)$/.test(dsbId);
+            if (!isInteger) {
+                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
+                location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
+            }
+        }        
 
         Builder.initializeFromCookie();
 
         $(document).ready(function() {
+            if (isDashboardset) {
+                var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dsbId);
+                var headerViewModel = new DashboardsetHeaderViewModel();
+                ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);    
+                ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                $("#loading").hide();
+                $('#globalBody').show();
+            } else {
             Builder.loadDashboard(dsbId, function(dashboard) {
                 var $b = new Builder.DashboardBuilder(dashboard);
                 var tilesView = new Builder.DashboardTilesView($b);
@@ -239,7 +267,6 @@ require(['knockout',
 
                 ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);  
-                ko.applyBindings(null, document.getElementById('dbd-set-tabs'));
                 tilesViewModel.initialize();
                 ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
                 var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
@@ -249,6 +276,8 @@ require(['knockout',
 
                 $("#loading").hide();
                 $('#globalBody').show();
+                $('#dbd-set-tabs').hide();
+                
                 tilesView.enableDraggable();
                 tilesViewModel.show();
 
@@ -270,6 +299,7 @@ require(['knockout',
                     location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
                 }
             });
+        }
         });
     }
 );

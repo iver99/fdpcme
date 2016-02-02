@@ -25,39 +25,36 @@
                     }">
                 </div>
             </header>
-            
+
             <div id="dbd-set-tabs">
                 <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0]}">
                     <!-- tab bar -->
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
-                            <span>Middleware Dashboards</span>
+                            <span data-bind="text:dashboardsetName"></span>
                             <button id="tabs-gear"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
                                     menu: '#dbd-set-option'}">
                             </button>
                         </li>
-                        <li class="other-nav">
-                            <span class="tabs-name">shenjie_test</span>
-                            <div class="tabs-remove">
+                         <!--ko foreach:dashboardsetItems-->
+                         <li class="other-nav" data-bind="attr: {id:'dashboard-'+$index()}">
+                            <span class="tabs-name" data-bind="text:name"></span>
+                            <div class="tabs-remove" data-bind="click:$root.removeDashboard">
                                 <i class="fa-icon-font fa-icon-font-14 dbd-icon-remove"></i>
                             </div>
                         </li>
-                        <li class="other-nav">
-                            <span class="tabs-name">shenjie_test2</span>
-                            <div class="tabs-remove">
-                                <i class="fa-icon-font fa-icon-font-14 dbd-icon-remove"></i>
-                            </div>
-                        </li>
-                        <li id="add-nav" class="oj-disabled"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
-                    </ul>
+                        <!--/ko-->    
+                        <li id="add-nav" class="oj-disabled" data-bind="click:addNewDashboard"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
+                    </ul>                   
                     <!-- tab contents -->
                     <div class="dbd-info">    
                     </div>
+                    <!--ko foreach:dashboardsetItems-->
                     <div class="dbd-info other-nav-info">
                         <div class="dbd-info-head">
-                            <h1>Shenjie test</h1>
+                            <h1 data-bind="text:name"></h1>
                             <div class="dbd-function-set">
                                 <button class="oj-button oj-default oj-button-half-chrome no-print single-dbd-save"
                                         data-bind="ojComponent: {
@@ -68,30 +65,44 @@
                                 <button class="single-dbd-option"
                                         data-bind="ojComponent: {component: 'ojButton', label: 'Options',
                                             icons: {start:'fa-icon-font fa-icon-font-16 dbd-icon-gear'}, 
-                                    menu: '#single-dbd-option-menu'}">
+                                            menu: '#single-dbd-option-menu'}">
                                 </button>
                             </div>    
                         </div>
                         <div class="dbd-info-detail">
-                            <span>
-                                this is just a test
+                            <span data-bind="text:discription">
                             </span>
                         </div>
                     </div>
-                    <div class="dbd-info">
+                    <!--/ko-->
+                    <div class="dbd-info add-info">    
 
-                    </div>       
+                    </div>
                 </div> 
 
                 <!-- This can use template binding -->
                 <ul id="dbd-set-option" style="display:none" 
                     data-bind="ojComponent: {component: 'ojMenu'}">
-                    <li id="dbs-edit">
+                    <!--ko foreach:dashboardsetMenu-->
+                    <li data-bind="attr:{'id':id}">
                         <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Edit</span>
+                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                            <span data-bind="text:label"></span>
                         </a>
+                        <!--ko if:subMenu.length!==0-->
+                        <ul>
+                            <!--ko foreach:subMenu-->
+                            <li id="refresh-off">
+                                <a href="#">
+                                    <span class="fa-icon-font fa-icon-font-14 dbd-icon-check oj-menu-item-icon oj-fwk-icon"></span>
+                                    <span>Off</span>
+                                </a>
+                            </li>
+                            <!--/ko-->
+                        </ul>
+                        <!--/ko-->
                     </li>
+                    <!--/ko-->
                     <li id="dbs-refresh">
                         <a href="#">
                             <span class="fa-icon-font fa-icon-font-14 dbd-icon-refresh oj-menu-item-icon oj-fwk-icon"></span>
