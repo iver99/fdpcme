@@ -31,7 +31,7 @@ public class UserOptionsAPI extends APIBase {
     @GET
     @Path("{id: [1-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response queryPreferences(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+    public Response queryUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
                                      @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer, @PathParam("id") Long dashboardId) {
         infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/options/{}", dashboardId);
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
@@ -54,7 +54,7 @@ public class UserOptionsAPI extends APIBase {
     @Path("{id: [1-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updatePreference(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+    public Response updateUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
                                      @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
                                      @PathParam("id") Long dashboardId, JSONObject inputJson) {
         infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/options/{}", dashboardId);
