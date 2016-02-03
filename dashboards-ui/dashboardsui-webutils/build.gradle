@@ -41,7 +41,7 @@ artifactoryPublish {
 
  
 dependencies { 
-	compile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}	
+	 compile configurations.testNG
         compile(group: 'org.apache.logging.log4j', name:'log4j-core', version:'2.0.1'){ transitive = false }
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.1'){ transitive = false }
         compile(group: 'com.oracle.adf', name: 'wls-api', version: '12.1.2-0-0'){ transitive = false }
