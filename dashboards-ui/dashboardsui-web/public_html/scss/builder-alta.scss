@@ -1144,10 +1144,15 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
             .oj-tabs-gen-div{
                 border: 0;
                 /*            border-bottom: solid 1px #d6dfe6;*/
-                .dbd-icon-add{
-                    color: #878c90;
-                    padding-top: 8px;
-                }
+                .oj-tabs-gen-a{
+                    &:hover{
+                        cursor: pointer;
+                    }
+                    .dbd-icon-add{
+                        color: #878c90;
+                        padding-top: 8px;
+                    }
+                } 
             }
         }
         #add-nav.oj-selected{

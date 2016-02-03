@@ -27,7 +27,7 @@
             </header>
 
             <div id="dbd-set-tabs">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0]}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0,'add-nav']}">
                     <!-- tab bar -->
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
@@ -46,7 +46,7 @@
                             </div>
                         </li>
                         <!--/ko-->    
-                        <li id="add-nav" class="oj-disabled" data-bind="click:addNewDashboard"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
+                        <li id="add-nav" data-bind="click:addNewDashboard"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
                     </ul>                   
                     <!-- tab contents -->
                     <div class="dbd-info">    

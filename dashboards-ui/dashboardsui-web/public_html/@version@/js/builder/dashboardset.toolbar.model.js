@@ -41,10 +41,6 @@ define(['knockout',
 
             self.addNewDashboard = function (data, event) {
                 $("#modalInputDahboardId").ojDialog("open");
-                var hightLightIndex = findSeledtedTab(self.dashboardsetItems);
-                setTimeout(function () {
-                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + hightLightIndex});
-                }, 1);
             };
             
             self.comfirmAddDashboard = function () {
@@ -57,9 +53,8 @@ define(['knockout',
                     self.dashboardsetItems.push(newDashboardItem);
                     $('#dbd-tabs-container').ojTabs("refresh");
                     var selectedIndex=findSeledtedTab(self.dashboardsetItems);
-                    setTimeout(function () {
-                        $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + selectedIndex });
-                    }, 1);
+                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + selectedIndex });
+
                     $("#modalInputDahboardId").ojDialog("close");
                 });
             };
