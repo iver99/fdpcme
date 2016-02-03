@@ -104,6 +104,7 @@ test {
 
 
 dependencies {
+	compile configurations.restAssured 
 	providedCompile project(':dashboards-entities') { transitive = false }
 	providedCompile project(':dashboards-core') { transitive = false }
         providedCompile project(':dashboards-webutils')  { transitive = false }
@@ -147,10 +148,7 @@ dependencies {
 	testCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+'){ transitive = false }
 //	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 
- 	testCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1') { transitive = false }
-        testCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1') { transitive = false }
-        testCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
-        testCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
+
 
 
 	
