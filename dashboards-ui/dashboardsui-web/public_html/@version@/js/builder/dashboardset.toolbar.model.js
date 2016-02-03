@@ -61,20 +61,27 @@ define(['knockout',
             };
             
             self.removeDashboard =function(data,event){              
-                var currentHighLight;
+                var currentClick,currentHighlight;
                 var tabsLength = self.dashboardsetItems().length;
                 ko.utils.arrayForEach(self.dashboardsetItems(), function (Items, index) {
                     if (Items === data) {
-                        currentHighLight = index;
+                        currentClick = index;
+                    }
+                    if(Items.selected())
+                    {
+                        currentHighlight=index;
                     }
                 });
                 self.dashboardsetItems.remove(data);
-                $('#dbd-tabs-container').ojTabs("refresh");
-                if (currentHighLight === (tabsLength - 1)) {
-                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + (self.dashboardsetItems().length - 1)});
-                } else {
-                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + currentHighLight});
+                if (currentClick === (tabsLength - 1) && currentClick===currentHighlight) {
+                     trunSelectedFalse(self.dashboardsetItems);
+                     currentClick=self.dashboardsetItems().length - 1;                
+                }else {
+                    currentClick=currentHighlight;
+                    trunSelectedFalse(self.dashboardsetItems);   
                 }
+                 self.dashboardsetItems()[currentClick].selected(true);
+                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + currentClick});
             };
             
             self.dashboardsetMenu =[
