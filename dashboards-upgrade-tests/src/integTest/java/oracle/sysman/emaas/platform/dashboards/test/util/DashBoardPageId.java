@@ -190,8 +190,10 @@ public class DashBoardPageId {
 
    //Sharing and stoping dashbaord
       public static final String option="dashboardOptsBtn";
-      public static final String dashboardshare="//*[@id='ui-id-5']/span[2]";
-   	public static final String stopshare_btn="//*[@id='ui-id-5']/span[2]"; 
+      //public static final String dashboardshare="//*[@id='ui-id-5']/span[2]";
+       public static final String dashboardshare="//*[@id='emcpdf_dsbopts_share']/span[2]";
+       public static final String stopshare_btn="//*[@id='emcpdf_dsbopts_share']/span[2]";
+   	//public static final String stopshare_btn="//*[@id='ui-id-5']/span[2]"; 
   
    //Duplicating Dashbaord
 
