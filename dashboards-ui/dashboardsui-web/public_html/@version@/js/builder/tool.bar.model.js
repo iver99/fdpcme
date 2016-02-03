@@ -292,6 +292,7 @@ define(['knockout',
                 return summaryData;
             };
 
+/*  functions that are declared but never used:
             self.setAncestorsOverflowVisible = function() {
                 $("#tiles-col-container").css("overflow", "visible");
                 $("body").css("overflow", "visible");
@@ -304,6 +305,7 @@ define(['knockout',
                 $("body").css("overflow", "hidden");
                 $("html").css("overflow", "hidden");
             };
+*/            
             
 //            self.handleDashboardNotSave = function() {
 //                self.isUpdated(false);

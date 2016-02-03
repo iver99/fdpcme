@@ -139,7 +139,7 @@ define(['knockout',
             };
             
             self.onBuilderResize = function(width, height, leftWidth, topHeight) {
-                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
+                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $b.findEl(".tiles-col-container").width()-25);
                 window.DEV_MODE && console.debug('widget area width is ' + widgetAreaWidth);
                 self.show();
             };
@@ -587,7 +587,7 @@ define(['knockout',
             };
             
             self.onNewWidgetDragging = function(e, u) {
-                var tcc = $("#tiles-col-container");
+                var tcc = $b.findEl(".tiles-col-container");
                 if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
                     if (self.isEmpty()) {
                         $('#tile-dragging-placeholder').hide();
@@ -619,7 +619,7 @@ define(['knockout',
             };
             
             self.onNewWidgetStopDragging = function(e, u) {
-                var tcc = $("#tiles-col-container");
+                var tcc = $b.findEl(".tiles-col-container");
                 var tile = null;                               
                 if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
                     if (self.isEmpty()) {

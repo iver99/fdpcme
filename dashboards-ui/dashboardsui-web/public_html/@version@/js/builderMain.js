@@ -194,7 +194,11 @@ require(['knockout',
 
         $(document).ready(function() {
             Builder.loadDashboard(dsbId, function(dashboard) {
-                var $b = new Builder.DashboardBuilder(dashboard);
+                
+                var $dashboardEl = $($("#dashboard-content-template").text());
+                $("#dashboards-tabs-contents").append($dashboardEl);
+                
+                var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                 var tilesView = new Builder.DashboardTilesView($b);
                 var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/); 
                 var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
@@ -241,7 +245,9 @@ require(['knockout',
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);  
                 ko.applyBindings(null, document.getElementById('dbd-set-tabs'));
                 tilesViewModel.initialize();
-                ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
+                
+                ko.applyBindings(tilesViewModel, $('#dashboards-tabs-contents .dashboard-content')[0]);      
+                
                 var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
                 ko.applyBindings(rightPanelModel, $('#dbd-left-panel')[0]);
                 rightPanelModel.initialize();

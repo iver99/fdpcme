@@ -53,10 +53,19 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
     
     window.Builder = Builder;
     
-    function DashboardBuilder(dashboard) {
+    function DashboardBuilder(dashboard, $dashboardEl) {
         var self = this;
         
         self.dashboard = dashboard;
+        
+        self.findEl = function (expr) {
+            var $foundEl = $dashboardEl.find(expr);
+            if ($foundEl.length === 0) {
+                throw (expr + " is not found in dashboard container element");
+            }
+            return $foundEl;
+        };
+        
         self.isDashboardUpdated = ko.observable(false);
         
         // module objects registration
@@ -153,7 +162,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.triggerBuilderResizeEvent = function(message) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                     - $('#head-bar-container').outerHeight()*/;
-            var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
+            var width = $(window).width();
             var panelWidth = $('#dbd-left-panel').is(":visible") ? $('#dbd-left-panel').width() : 0;
             var togglerWidth = $('#right-panel-toggler').is(":visible") ? $('#right-panel-toggler').outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;

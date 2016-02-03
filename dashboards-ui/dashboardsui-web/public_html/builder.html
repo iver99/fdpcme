@@ -625,8 +625,13 @@
                 </div>
             </div>
             <!-- /ko -->
-            <div id="main-container" class="oj-col stretch-height builder-main" role="main">
-                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
+            
+            <div id="dashboards-tabs-contents">
+                
+            </div>
+            <script id="dashboard-content-template" type="text/template">    
+            <div class="oj-col stretch-height builder-main dashboard-content" role="main">
+                    <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
                         <div id="global-time-control" class="oj-row fit-size-vertical-sibling df-computed-content-width" 
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
@@ -1011,6 +1016,8 @@
                         </div>
                     </div-->
             </div>
+            </script>
+
         </div>
     </body>
 </html>

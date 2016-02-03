@@ -94,7 +94,7 @@ body, html {
   margin: 0;
 }
 
-#tiles-col-container {
+.tiles-col-container {
   padding-left: 0px;
   padding-right: 0px;
   overflow-x: hidden; 
@@ -1040,7 +1040,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         display:none !important;
     }
     
-    #tiles-col-container{
+    .tiles-col-container{
         /*width: auto !important;*/
         height: auto !important;
         overflow-y: visible !important;
