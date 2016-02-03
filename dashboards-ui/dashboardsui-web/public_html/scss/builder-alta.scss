@@ -1162,6 +1162,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
     }
     .other-nav-info{
+        
+        border-bottom: none;
+        padding: 0;
+        
         .dbd-info-head{
             display: inline;
             margin-left:18px;

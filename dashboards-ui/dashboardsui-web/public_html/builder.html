@@ -26,7 +26,7 @@
                 </div>
             </header>
 
-            <div id="dbd-set-tabs">
+            <div id="dbd-set-tabs" data-bind="visible: isDashboardSet">
                 <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0,'add-nav']}">
                     <!-- tab bar -->
                     <ul class="dbd-tabs-nav">
@@ -53,26 +53,7 @@
                     </div>
                     <!--ko foreach:dashboardsetItems-->
                     <div class="dbd-info other-nav-info">
-                        <div class="dbd-info-head">
-                            <h1 data-bind="text:name"></h1>
-                            <div class="dbd-function-set">
-                                <button class="oj-button oj-default oj-button-half-chrome no-print single-dbd-save"
-                                        data-bind="ojComponent: {
-                                        component:'ojButton', label: 'Save',
-                                        icons: {start: 'dbd-toolbar-icon-save'}
-                            }">
-                                </button>
-                                <button class="single-dbd-option"
-                                        data-bind="ojComponent: {component: 'ojButton', label: 'Options',
-                                            icons: {start:'fa-icon-font fa-icon-font-16 dbd-icon-gear'}, 
-                                            menu: '#single-dbd-option-menu'}">
-                                </button>
-                            </div>    
-                        </div>
-                        <div class="dbd-info-detail">
-                            <span data-bind="text:discription">
-                            </span>
-                        </div>
+
                     </div>
                     <!--/ko-->
                     <div class="dbd-info add-info">    
@@ -150,35 +131,6 @@
                     </li>
                     <li class="oj-menu-divider"></li>
                     <li id="dbs-delete">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 dbd-toolbar-icon-delete oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Delete</span>
-                        </a>
-                    </li>
-                </ul>
-                <ul id="single-dbd-option-menu" style="display:none" 
-                    data-bind="ojComponent: {component: 'ojMenu'}">
-                    <li id="dbd-single-edit">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Edit</span>
-                        </a>
-                    </li>
-                    <li class="oj-menu-divider"></li>
-                    <li id="dbd-single-share">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 dbd-icon-users oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Share</span>
-                        </a>
-                    </li>
-                    <li id="dbd-single-print">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 fa-print oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Print</span>
-                        </a>
-                    </li>
-                    <li class="oj-menu-divider"></li>
-                     <li id="dbd-single-delete">
                         <a href="#">
                             <span class="fa-icon-font fa-icon-font-14 dbd-toolbar-icon-delete oj-menu-item-icon oj-fwk-icon"></span>
                             <span>Delete</span>

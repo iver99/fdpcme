@@ -3,38 +3,45 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-define(['knockout', 
-        'jquery',
-        'dfutil',
-        'idfbcutil',
-        'uifwk/js/util/screenshot-util',
-        'ojs/ojcore',
-        'builder/tool-bar/edit.dialog',
-        'builder/tool-bar/duplicate.dialog',
-        'uifwk/js/util/preference-util',
-        'builder/builder.core'
-    ], 
-    function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
+define(['knockout',
+    'jquery',
+    'dfutil',
+    'idfbcutil',
+    'uifwk/js/util/screenshot-util',
+    'ojs/ojcore',
+    'builder/tool-bar/edit.dialog',
+    'builder/tool-bar/duplicate.dialog',
+    'uifwk/js/util/preference-util',
+    'builder/builder.core'
+],
+    function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
-        
+
         function DashboardsetToolBarModel(dsbId) {
-            var self = this; 
+            var self = this;
             var dashboardsetId = dsbId.split(/[,]/);
-            var startDashboardId=Number(location.search.split(/start=/)[1]);
+            var startDashboardId = Number(location.search.split(/start=/)[1]) || Number(dashboardsetId[0]);
 
             self.dashboardsetItems = ko.observableArray();
+
+            self.selectedDashboardItem = ko.observable();
             
+            self.selectedDashboardItem.subscribe(function (selected) {
+                console.log("current selected dashboard: %o", selected);
+            });
+
             InitializeDashboardset(dashboardsetId);
-            
+
             //later reference tool.bar.model.js line35
             self.dashboardsetName = ko.observable("Middleware Dashboards");
-            
-            self.changeTab =function(data,event){
-                trunSelectedFalse(self.dashboardsetItems);
-                ko.utils.arrayForEach(self.dashboardsetItems(), function (Items, index) {
-                    if (Items === data) {
-                      Items.selected(true);
+
+            self.isDashboardSet = ko.observable(dashboardsetId.length > 1);
+
+            self.changeTab = function (data, event) {
+                ko.utils.arrayForEach(self.dashboardsetItems(), function (item, index) {
+                    if (item === data) {
+                        self.selectedDashboardItem(item);
                     }
                 });
             };
@@ -42,69 +49,66 @@ define(['knockout',
             self.addNewDashboard = function (data, event) {
                 $("#modalInputDahboardId").ojDialog("open");
             };
-            
+
             self.comfirmAddDashboard = function () {
                 var newDashboardId = document.getElementById("id-input").value;
 
                 Builder.loadDashboard(newDashboardId, function (dashboard) {
-                    trunSelectedFalse(self.dashboardsetItems);
                     var newDashboardItem = new dashboardItem(dashboard);
-                    newDashboardItem.selected(true);
                     self.dashboardsetItems.push(newDashboardItem);
+                    self.selectedDashboardItem(newDashboardItem);
                     $('#dbd-tabs-container').ojTabs("refresh");
-                    var selectedIndex=findSeledtedTab(self.dashboardsetItems);
-                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + selectedIndex });
+                    var selectedIndex = findSeledtedTab(self.dashboardsetItems);
+                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + selectedIndex});
 
                     $("#modalInputDahboardId").ojDialog("close");
                 });
             };
-            
-            self.removeDashboard =function(data,event){              
+
+            self.removeDashboard = function (data, event) {
                 var currentClick;
                 var tabsLength = self.dashboardsetItems().length;
-                var currentHighlight=findSeledtedTab(self.dashboardsetItems);
+                var currentHighlight = findSeledtedTab(self.dashboardsetItems);
                 ko.utils.arrayForEach(self.dashboardsetItems(), function (Items, index) {
                     if (Items === data) {
                         currentClick = index;
-                    }   
+                    }
                 });
                 self.dashboardsetItems.remove(data);
-                if (currentClick === (tabsLength - 1) && currentClick===currentHighlight) {
-                     trunSelectedFalse(self.dashboardsetItems);
-                     currentClick=self.dashboardsetItems().length - 1;                
-                }else {
-                    currentClick=currentHighlight;
-                    trunSelectedFalse(self.dashboardsetItems);   
+                if (currentClick === (tabsLength - 1) && currentClick === currentHighlight) {
+                    currentClick = self.dashboardsetItems().length - 1;
+                } else {
+                    currentClick = currentHighlight;
                 }
-                 self.dashboardsetItems()[currentClick].selected(true);
-                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + currentClick});
+                self.selectedDashboardItem(self.dashboardsetItems()[currentClick]);
+                $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + currentClick});
             };
-            
-            self.dashboardsetMenu =[
-               {
-                    "label":"Edit",
+
+            self.dashboardsetMenu = [
+                {
+                    "label": "Edit",
                     "url": "#",
-                    "id":"dbs-edit",
-                    "icon":"fa-pencil",
+                    "id": "dbs-edit",
+                    "icon": "fa-pencil",
                     "title": "",
                     "disabled": "",
                     "endOfGroup": false,
-                    "subMenu":[]
-                }  
+                    "subMenu": []
+                }
             ];
-            
-            self.deleteTtileDescription = function(){
+
+            self.deleteTtileDescription = function () {
                 $('.other-nav-info div').remove();
-                $('.other-nav-info').css({"height":"10px","border-bottom":"0"});
+                $('.other-nav-info').css({"height": "10px", "border-bottom": "0"});
             };
-            
+
             function InitializeDashboardset(dashboardsetId) {
                 for (var index in dashboardsetId) {
                     var singleDashboardId = dashboardsetId[index];
                     Builder.loadDashboard(singleDashboardId, function (dashboard) {
                         var singleDashboardItem = new dashboardItem(dashboard);
                         if (singleDashboardItem.dashboardId === startDashboardId) {
-                            singleDashboardItem.selected(true);
+                            self.selectedDashboardItem(singleDashboardItem);
                             self.dashboardsetItems.push(singleDashboardItem);
                             $('#dbd-tabs-container').ojTabs("refresh");
                             $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + (self.dashboardsetItems().length - 1)});
@@ -115,32 +119,20 @@ define(['knockout',
                     });
                 }
             }
-            
+
             function dashboardItem(obj) {
                 var self = this;
                 self.dashboardId = obj.id();
                 self.name = obj.name();
-                self.discription = obj.description();
-                self.selected=ko.observable(false);
+                self.discription = obj.description && obj.description();
                 self.raw = obj;
             }
-            
-           function trunSelectedFalse(obj){
-              ko.utils.arrayForEach(obj(), function (Items, index) {
-                    Items.selected(false);
-                });
-           } 
-           function findSeledtedTab(obj){
-               var index=-1;
-               ko.utils.arrayForEach(obj(), function (Items, subindex) {
-                    if(Items.selected()){
-                          index=subindex;
-                    };
-                });
-                return index;
-           }
+
+            function findSeledtedTab(obj) {
+                return self.dashboardsetItems().indexOf(self.selectedDashboardItem());
+            }
         }
-        
+
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');
         return DashboardsetToolBarModel;
     }
