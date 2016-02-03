@@ -39,7 +39,7 @@
                             </button>
                         </li>
                          <!--ko foreach:dashboardsetItems-->
-                         <li class="other-nav" data-bind="attr: {id:'dashboard-'+$index()}">
+                         <li class="other-nav" data-bind="attr: {id:'dashboard-'+$index()},click:$root.changeTab">
                             <span class="tabs-name" data-bind="text:name"></span>
                             <div class="tabs-remove" data-bind="click:$root.removeDashboard">
                                 <i class="fa-icon-font fa-icon-font-14 dbd-icon-remove"></i>
@@ -185,6 +185,19 @@
                         </a>
                     </li>
                 </ul>
+                
+                <div style="display:none" id="modalInputDahboardId" title="Input Dashboard Id" 
+                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
+                    <div class="oj-dialog-body">
+                        <label for="id-input" class="oj-label-inline">Input New Dashboard ID</label>
+                        <input id="id-input" 
+                               type="text"
+                               data-bind="ojComponent: {component: 'ojInputText'}"/>
+                    </div>
+                    <div class="oj-dialog-footer">
+                        <button id="okButton" data-bind="ojComponent: {component: 'ojButton', label: 'OK'},click:comfirmAddDashboard"> </button>
+                    </div>
+                </div>
             </div>
                     
             <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">

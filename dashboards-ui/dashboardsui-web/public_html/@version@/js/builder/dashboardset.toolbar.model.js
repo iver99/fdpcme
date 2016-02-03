@@ -29,39 +29,52 @@ define(['knockout',
             
             //later reference tool.bar.model.js line35
             self.dashboardsetName = ko.observable("Middleware Dashboards");
-
-            self.addNewDashboard = function (data, event) {
-                self.dashboardsetItems.push({
-                    "name": 'Dashboard',
-                    "discription": "New dashboard testing"
-                });
-                $('#dbd-tabs-container').ojTabs("refresh");
-                setTimeout(function () {
-                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + (self.dashboardsetItems().length - 1)});
-                }, 1);
-            }; 
             
-            self.removeDashboard =function(data,event){
-                var highlightDashboardId=$('.other-nav.oj-selected').attr('id');
-                var clickDashboardId,clickIndex;
-                var tabsLength=self.dashboardsetItems().length;
+            self.changeTab =function(data,event){
+                trunSelectedFalse(self.dashboardsetItems);
                 ko.utils.arrayForEach(self.dashboardsetItems(), function (Items, index) {
                     if (Items === data) {
-                       clickIndex=index;
-                       clickDashboardId='dashboard-'+index;
+                      Items.selected(true);
                     }
                 });
-                if(highlightDashboardId!==clickDashboardId){
-                    self.dashboardsetItems.remove(data);
-                }else{
-                    self.dashboardsetItems.remove(data);
+            };
+
+            self.addNewDashboard = function (data, event) {
+                $("#modalInputDahboardId").ojDialog("open");
+            };
+            
+            self.comfirmAddDashboard = function () {
+                var newDashboardId = document.getElementById("id-input").value;
+
+                Builder.loadDashboard(newDashboardId, function (dashboard) {
+                    trunSelectedFalse(self.dashboardsetItems);
+                    var newDashboardItem = new dashboardItem(dashboard);
+                    newDashboardItem.selected(true);
+                    self.dashboardsetItems.push(newDashboardItem);
                     $('#dbd-tabs-container').ojTabs("refresh");
-                    if(clickIndex===(tabsLength-1)){                   
-                         $("#dbd-tabs-container").ojTabs({"selected":'dashboard-'+(self.dashboardsetItems().length-1)});
-                    }else{
-                        $("#dbd-tabs-container").ojTabs({"selected":clickDashboardId});
+                    var selectedIndex=findSeledtedTab(self.dashboardsetItems);
+                    setTimeout(function () {
+                        $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + selectedIndex });
+                    }, 1);
+                    $("#modalInputDahboardId").ojDialog("close");
+                });
+            };
+            
+            self.removeDashboard =function(data,event){              
+                var currentHighLight;
+                var tabsLength = self.dashboardsetItems().length;
+                ko.utils.arrayForEach(self.dashboardsetItems(), function (Items, index) {
+                    if (Items === data) {
+                        currentHighLight = index;
                     }
-                }             
+                });
+                self.dashboardsetItems.remove(data);
+                $('#dbd-tabs-container').ojTabs("refresh");
+                if (currentHighLight === (tabsLength - 1)) {
+                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + (self.dashboardsetItems().length - 1)});
+                } else {
+                    $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + currentHighLight});
+                }
             };
             
             self.dashboardsetMenu =[
@@ -76,6 +89,11 @@ define(['knockout',
                     "subMenu":[]
                 }  
             ];
+            
+            self.deleteTtileDescription = function(){
+                $('.other-nav-info div').remove();
+                $('.other-nav-info').css({"height":"10px","border-bottom":"0"});
+            };
             
             function InitializeDashboardset(dashboardsetId) {
                 for (var index in dashboardsetId) {
@@ -103,6 +121,21 @@ define(['knockout',
                 self.selected=ko.observable(false);
                 self.raw = obj;
             }
+            
+           function trunSelectedFalse(obj){
+              ko.utils.arrayForEach(obj(), function (Items, index) {
+                    Items.selected(false);
+                });
+           } 
+           function findSeledtedTab(obj){
+               var index=-1;
+               ko.utils.arrayForEach(obj(), function (Items, subindex) {
+                    if(Items.selected()){
+                          index=subindex;
+                    };
+                });
+                return index;
+           }
         }
         
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');
