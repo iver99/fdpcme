@@ -37,6 +37,7 @@ allprojects {
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 		} 
+		mavenCentral()
 	}  
 
 	} 
@@ -151,6 +152,7 @@ dependencies {
 		
 	prebuild_log4j 'org.apache.logging.log4j:log4j-core:2.0.1',
 	               'org.apache.logging.log4j:log4j-api:2.0.1'
+	               'org.apache.logging.log4j:log4j-slf4j-impl:2.0.1'
 	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
 	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.0.0+',

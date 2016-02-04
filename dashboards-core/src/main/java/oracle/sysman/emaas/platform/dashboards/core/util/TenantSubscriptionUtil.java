@@ -18,15 +18,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
-import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
-import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
-import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
-import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogDirection;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +25,18 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.RegistrationManager;
+import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingCollection;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.AppMappingEntity;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainEntity;
+import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
+import oracle.sysman.emaas.platform.dashboards.core.util.LogUtil.InteractionLogDirection;
 
 /**
  * @author guobaochen
@@ -61,8 +64,8 @@ public class TenantSubscriptionUtil
 			}
 			else {
 				LogUtil.setInteractionLogThreadContext(tenant, url, InteractionLogDirection.OUT);
-				itrLogger
-				.info("RestClient is connecting to get response after getting authorization token from registration manager.");
+				itrLogger.info(
+						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
 			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
 					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
@@ -77,11 +80,13 @@ public class TenantSubscriptionUtil
 	private static Logger logger = LogManager.getLogger(TenantSubscriptionUtil.class);
 	private static Logger itrLogger = LogUtil.getInteractionLogger();
 
-	public static List<String> getTenantSubscribedServices(String tenant)
+	@SuppressWarnings("unchecked")
+	public static List<String> getTenantSubscribedServices(final String tenant)
 	{
 		// for junit test only
 		if (Boolean.TRUE.equals(IS_TEST_ENV)) {
-			logger.warn("In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
+			logger.warn(
+					"In test environment, the subscribed applications for are tenants are specified to \"APM\" and \"ITAnalytics\"");
 			return Arrays.asList(new String[] { "APM", "ITAnalytics" });
 		}
 
@@ -89,6 +94,23 @@ public class TenantSubscriptionUtil
 		if (tenant == null) {
 			logger.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
 			return null;
+		}
+
+		CacheManager cm = CacheManager.getInstance();
+		Tenant cacheTenant = new Tenant(tenant);
+		List<String> cachedApps;
+		try {
+			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
+		}
+		catch (Exception e1) {
+			logger.error(e1);
+			return null;
+		}
+		if (cachedApps != null) {
+			logger.debug("retrieved subscribed apps for tenant {} from cache: "
+					+ StringUtil.arrayToCommaDelimitedString(cachedApps.toArray()), tenant);
+			return cachedApps;
 		}
 		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains", null);
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
@@ -98,16 +120,15 @@ public class TenantSubscriptionUtil
 			return null;
 		}
 		logger.debug("Checking tenant (" + tenant + ") subscriptions. The entity naming href is " + domainLink.getHref());
-		String domainHref = domainLink.getHref();
-		RestClient rc = new RestClient();
-		String domainsResponse = rc.get(domainHref, tenant);
-		logger.debug("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
+		final String domainHref = domainLink.getHref();
+		final RestClient rc = new RestClient();
+		String domainsResponse = TenantSubscriptionUtil.fetchDomainLinks(tenant, cm, domainHref, rc);
 		JsonUtil ju = JsonUtil.buildNormalMapper();
 		try {
 			DomainsEntity de = ju.fromJson(domainsResponse, DomainsEntity.class);
 			if (de == null || de.getItems() == null || de.getItems().size() <= 0) {
-				logger.warn("Checking tenant (" + tenant
-						+ ") subscriptions: null/empty domains entity or domains item retrieved.");
+				logger.warn(
+						"Checking tenant (" + tenant + ") subscriptions: null/empty domains entity or domains item retrieved.");
 				return null;
 			}
 			String tenantAppUrl = null;
@@ -121,11 +142,7 @@ public class TenantSubscriptionUtil
 				logger.warn("Checking tenant (" + tenant + ") subscriptions. 'TenantApplicationMapping' not found");
 				return null;
 			}
-			String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
-			logger.debug("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is "
-					+ appMappingUrl);
-			String appMappingJson = rc.get(appMappingUrl, tenant);
-			logger.debug("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
+			String appMappingJson = TenantSubscriptionUtil.fetchTenantAppMappingUrl(tenant, cm, rc, tenantAppUrl);
 			if (appMappingJson == null || "".equals(appMappingJson)) {
 				return null;
 			}
@@ -163,8 +180,10 @@ public class TenantSubscriptionUtil
 			if (apps == null || "".equals(apps)) {
 				return null;
 			}
-			List<String> origAppsList = Arrays.asList(apps
-					.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			List<String> origAppsList = Arrays
+					.asList(apps.split(ApplicationEditionConverter.APPLICATION_EDITION_ELEMENT_DELIMINATOR));
+			cm.putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE, CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS,
+					origAppsList);
 			return origAppsList;
 
 		}
@@ -176,7 +195,8 @@ public class TenantSubscriptionUtil
 
 	public static boolean isAPMServiceOnly(List<String> services)
 	{
-		logger.debug("Checking if only APM is subscribed, checked services are {}", services == null ? null : services.toString());
+		logger.debug("Checking if only APM is subscribed, checked services are {}",
+				services == null ? null : services.toString());
 		if (services == null || services.size() != 1) {
 			return false;
 		}
@@ -197,5 +217,65 @@ public class TenantSubscriptionUtil
 				IS_TEST_ENV = true;
 			}
 		}
+	}
+
+	/**
+	 * @param tenant
+	 * @param cm
+	 * @param domainHref
+	 * @param rc
+	 * @return
+	 */
+	private static String fetchDomainLinks(final String tenant, CacheManager cm, final String domainHref, final RestClient rc)
+	{
+		String domainsResponse = null;
+		try {
+			domainsResponse = (String) cm.getCacheable(new Tenant(tenant), CacheManager.CACHES_LOOKUP_CACHE, domainHref,
+					new ICacheFetchFactory() {
+						@Override
+						public Object fetchCache(Object key) throws Exception
+						{
+							return rc.get(domainHref, tenant);
+						}
+					});
+		}
+		catch (Exception e1) {
+			logger.error(e1);
+			return null;
+		}
+
+		logger.debug("Checking tenant (" + tenant + ") subscriptions. Domains list response is " + domainsResponse);
+		return domainsResponse;
+	}
+
+	/**
+	 * @param tenant
+	 * @param cm
+	 * @param rc
+	 * @param tenantAppUrl
+	 * @return
+	 */
+	private static String fetchTenantAppMappingUrl(final String tenant, CacheManager cm, final RestClient rc, String tenantAppUrl)
+	{
+		final String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
+		logger.debug("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
+		String appMappingJson = null;
+		try {
+			appMappingJson = (String) cm.getCacheable(new Tenant(tenant), CacheManager.CACHES_LOOKUP_CACHE, appMappingUrl,
+					new ICacheFetchFactory() {
+						@Override
+						public Object fetchCache(Object key) throws Exception
+						{
+							return rc.get(appMappingUrl, tenant);
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
+
+		logger.debug("Checking tenant (" + tenant + ") subscriptions. application lookup response json is " + appMappingJson);
+		return appMappingJson;
 	}
 }
