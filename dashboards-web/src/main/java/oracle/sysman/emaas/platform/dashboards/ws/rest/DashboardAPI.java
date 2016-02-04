@@ -360,6 +360,43 @@ public class DashboardAPI extends APIBase
         }
     }
 
+    @POST
+    @Path("{id: [1-9][0-9]*}/options")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+                                      @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+                                      @PathParam("id") Long dashboardId, JSONObject inputJson) {
+        infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/{}/options/", dashboardId);
+        UserOptions userOption = null;
+        try {
+            userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
+            if (userOption != null && userOption.getAutoRefreshInterval() != null) {
+                userOption.setAutoRefreshInterval(userOption.getAutoRefreshInterval());
+            }
+        } catch (IOException e) {
+            logger.error(e.getLocalizedMessage(), e);
+            ErrorEntity error = new ErrorEntity(e);
+            return buildErrorResponse(error);
+        }
+
+        UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
+        try {
+            Long tenantId = getTenantId(tenantIdParam);
+            initializeUserContext(tenantIdParam, userTenant);
+            userOption.setDashboardId(dashboardId);//override id in comsumned json if exist;
+            userOptionsManager.saveUserOptions(userOption, tenantId);
+            return Response.ok(getJsonUtil().toJson(userOption)).build();
+        } catch (DashboardException e) {
+            return buildErrorResponse(new ErrorEntity(e));
+        } catch (BasicServiceMalfunctionException e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return buildErrorResponse(new ErrorEntity(e));
+        } finally {
+            clearUserContext();
+        }
+    }
+
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
 	@Produces(MediaType.APPLICATION_JSON)
