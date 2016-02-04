@@ -53,7 +53,7 @@ public class UserOptionsManager {
         }
     }
 
-    public void saveUserOptions(UserOptions userOptions, Long tenantId) throws DashboardException {
+    public void updateUserOptions(UserOptions userOptions, Long tenantId) throws DashboardException {
         if (userOptions == null) {
             return;
         }
@@ -76,10 +76,6 @@ public class UserOptionsManager {
                 // update
                 emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
                 dsf.mergeEmsUserOptions(emsUserOptions);
-            } else {
-                // create
-                emsUserOptions = userOptions.toEntity(null, currentUser);
-                dsf.persistEmsUserOptions(emsUserOptions);
             }
         } finally {
             if (em != null) {
