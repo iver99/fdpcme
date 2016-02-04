@@ -406,8 +406,8 @@ define(['knockout',
             self.getDisplaySizeForTiles = function() {
                 for (var i = 0; i < self.editor.tiles().length; i++) {
                     var tile = self.editor.tiles()[i];
-                    tile.cssWidth(self.getDisplayWidthForTile(tile.width()));
-                    tile.cssHeight(self.getDisplayHeightForTile(tile.height()));
+                    tile.cssWidth(self.getDisplayWidthForTile(self.editor.mode.getModeWidth(tile)));
+                    tile.cssHeight(self.getDisplayHeightForTile(self.editor.mode.getModeHeight(tile)));
                 }
             };
             
@@ -502,7 +502,7 @@ define(['knockout',
                 }
                 startTime = new Date().getTime();
                 var tile = ko.dataFor(ui.helper[0]);                
-                dragStartRow = tile.row();
+                dragStartRow = self.editor.mode.getModeRow(tile);
                 startX = tile.left();
                 startY = tile.top();
                 self.previousDragCell = new Builder.Cell(self.editor.mode.getModeRow(tile), self.editor.mode.getModeColumn(tile));
@@ -668,13 +668,13 @@ define(['knockout',
                         return;
                     
                     var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] :null;
-                    if(tileInCell && tileInCell.row() !== cell.row) {
+                    if(tileInCell && self.editor.mode.getModeRow(tileInCell) !== cell.row) {
                         return;
                     }
                     var cells = self.editor.getCellsOccupied(cell.row, cell.column, width, height);
                     var tilesToMove = self.editor.getTilesUnder(cells, tile);
                     for(var i in tilesToMove) {
-                        var rowDiff = cell.row-tilesToMove[i].row()+tile.height();
+                        var rowDiff = cell.row-self.editor.mode.getModeRow(tilesToMove[i])+self.editor.mode.getModeHeight(tile);
                         self.editor.moveTileDown(tilesToMove[i], rowDiff);
                     }
                     self.editor.updateTilePosition(tile, cell.row, cell.column);
