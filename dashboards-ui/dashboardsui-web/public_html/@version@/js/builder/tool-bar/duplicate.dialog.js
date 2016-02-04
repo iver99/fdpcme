@@ -133,7 +133,7 @@ define(['knockout',
                         'tileParameters', 'name', 'systemParameter', 
                         'value', 'content', 'linkText', "systemDashboard",
                         'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
-                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight", 
+                    'ignore': ["createdOn", "href", "owner", "modeWidth","sharePublic", "modeHeight", 
                         "lastModifiedBy", "lastModifiedOn", "tileId",
                         "modeColumn", "modeRow", "screenShotHref", 
                         "customParameters", "clientGuid", "dashboard", 
@@ -145,6 +145,7 @@ define(['knockout',
                         "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
                 var dashboardJSON = JSON.stringify(dbdJs);
+                //console.log("dashboard to dup: "+dashboardJSON);
                 Builder.duplicateDashboard(dashboardJSON, function(data) {
                     succCallback && succCallback(data);
                 }, function(error) {
