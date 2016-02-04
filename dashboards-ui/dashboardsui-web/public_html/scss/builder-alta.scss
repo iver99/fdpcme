@@ -406,6 +406,15 @@ body, html {
                         line-height 0.5s;
 }
 
+#tile-dragging-placeholder {
+    -webkit-transition: top 0.5s, 
+                        left 0.5s, 
+                        width 0.5s,
+                        height 0.5s,
+                        font-size 0.5s,
+                        line-height 0.5s;
+}
+
 .tile-dragging-placeholder {display:none; position: absolute; 
     background-color: #F0CAC4;
     border-bottom: 1px solid #F0CAC4;
@@ -1000,9 +1009,9 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     background: url(../images/func_textcolor_icon.png) no-repeat !important;
 }*/
 
-.dbd-tile-to-be-occupuied {
+/*.dbd-tile-to-be-occupuied {
     border: 3px solid #F0CAC4;
-}
+}*/
 
 .dbd-icon-resize{
     line-height: 12px;

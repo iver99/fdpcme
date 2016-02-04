@@ -501,7 +501,7 @@ define(['knockout',
                     return;
                 }
                 startTime = new Date().getTime();
-                var tile = ko.dataFor(ui.helper[0]);
+                var tile = ko.dataFor(ui.helper[0]);                
                 dragStartRow = tile.row();
                 startX = tile.left();
                 startY = tile.top();
@@ -515,21 +515,16 @@ define(['knockout',
                 if(!ui) {
                     return;
                 }
-                var tile = ko.dataFor(ui.helper[0]);                
+                var tile = ko.dataFor(ui.helper[0]);
+                self.editor.tilesGrid.unregisterTileInGrid(tile);
+                var originalRow = self.editor.mode.getModeRow(tile);
+                var originalCol = self.editor.mode.getModeColumn(tile);
+                
+                var dragStartRow = self.editor.mode.getModeRow(tile);
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
-                self.previousDragCell = cell;                
                 if(tile.content) {
                     cell.column = 0;
                 }
-                if(cell.row === self.editor.mode.getModeRow(tile) && cell.column === self.editor.mode.getModeColumn(tile)) {
-                    $('#tile-dragging-placeholder').hide();
-                    tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
-                    return;
-                }
-                $('#tile-dragging-placeholder').hide();
-                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
-                tilesToBeOccupied = self.editor.getTilesToBeOccupied(cell, tile);
-                tilesToBeOccupied && self.editor.highlightTiles(tilesToBeOccupied);
 
                 $('#tile-dragging-placeholder').css({
                     left: tile.left(),
@@ -537,6 +532,44 @@ define(['knockout',
                     width: ui.helper.width() -20,
                     height: ui.helper.height() - 20
                 }).show();
+
+                var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
+                if((self.previousDragCell) && cell.column+self.editor.mode.getModeWidth(tile) <= self.editor.mode.MODE_MAX_COLUMNS && 
+                        (!tileInCell || (tileInCell && tileInCell !== tile && self.editor.mode.getModeRow(tileInCell) === cell.row && self.editor.mode.getModeColumn(tileInCell) === cell.column))) {                                      
+                    var cellsOccupiedByTile = self.editor.getCellsOccupied(cell.row, cell.column, self.editor.mode.getModeWidth(tile), self.editor.mode.getModeHeight(tile));
+                    var tilesUnderCell = self.editor.getTilesUnder(cellsOccupiedByTile, tile);
+                    var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
+                    self.editor.draggingTile = tile;
+                    var rowDiff, iTile;
+                    for(var i in tilesUnderCell) {
+                        iTile = tilesUnderCell[i];
+                        rowDiff = cell.row - self.editor.mode.getModeRow(iTile) + self.editor.mode.getModeHeight(tile);
+                        self.editor.moveTileDown(iTile, rowDiff);
+                    }
+                    self.editor.draggingTile = null;
+                    self.editor.updateTilePosition(tile, cell.row, cell.column);
+                    
+                    rowDiff = Math.abs(cell.row - dragStartRow);
+                    for(i in tilesBelowOriginalCell) {
+                        iTile = tilesBelowOriginalCell[i];
+                        rowDiff = (rowDiff===0) ? self.editor.mode.getModeHeight(tile) : rowDiff;
+                        self.editor.moveTileUp(iTile, rowDiff);
+                    }
+                    
+                    self.editor.tilesReorder();
+                    self.showTiles();
+                    $(ui.helper).css("opacity", 0.6);
+                
+                    if(originalRow !== cell.row || originalCol !== cell.column) {
+                        $('#tile-dragging-placeholder').hide();
+                        $('#tile-dragging-placeholder').css({
+                            left: tile.left(),
+                            top: tile.top(),
+                            width: ui.helper.width() -20,
+                            height: ui.helper.height() - 20
+                        }).show();
+                    }
+                }
             };
             
             self.handleStopDragging = function(event, ui) {
@@ -546,43 +579,25 @@ define(['knockout',
                 if (!self.previousDragCell)
                     return;
                 var tile = ko.dataFor(ui.helper[0]);
-                var dragStartRow = tile.row();
+//                var dragStartRow = tile.row();
                 var cell = self.editor.getCellFromPosition(widgetAreaWidth, ui.helper.position());
                 if(tile.content) {
                     cell.column = 0;
                 }
                 ui.helper.css({left:tile.left(), top:tile.top()});
-                var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
-                if((self.previousDragCell) && cell.column+tile.width() <= self.editor.mode.MODE_MAX_COLUMNS
-                        && (!tileInCell || (tileInCell && tileInCell.row() === cell.row))) {
-                    var cellsOccupiedByTile = self.editor.getCellsOccupied(cell.row, cell.column, tile.width(), tile.height());
-                    var tilesUnderCell = self.editor.getTilesUnder(cellsOccupiedByTile, tile);
-                    var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
-                    self.editor.draggingTile = tile;
-                    for(var i in tilesUnderCell) {
-                        var iTile = tilesUnderCell[i];
-                        var rowDiff = cell.row-iTile.row()+tile.height();
-                        self.editor.moveTileDown(iTile, rowDiff);
-                    }
-                    self.editor.draggingTile = null;
-                    self.editor.updateTilePosition(tile, cell.row, cell.column);
-                    
-                    var rowDiff = Math.abs(cell.row - dragStartRow);
-                    for(var i in tilesBelowOriginalCell) {
-                        var iTile = tilesBelowOriginalCell[i];
-                        rowDiff = (rowDiff===0) ? tile.height() : rowDiff;
-                        self.editor.moveTileUp(iTile, rowDiff);
-                    }                   
-                }
+
+                self.editor.draggingTile = null;
                 self.editor.tilesReorder();
                 self.showTiles();
+                $(ui.helper).css("opacity", 1);
+                
                 $('#tile-dragging-placeholder').hide();
                 if ($(ui.helper).hasClass(draggingTileClass)) {
                     $(ui.helper).removeClass(draggingTileClass);
                 }
                 dragStartRow = null;
                 self.previousDragCell = null;
-                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
+//                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
                 $b.triggerEvent($b.EVENT_TILE_MOVE_STOPED, null);
             };
             

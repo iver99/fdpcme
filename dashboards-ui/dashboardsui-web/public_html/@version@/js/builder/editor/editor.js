@@ -299,20 +299,19 @@ define(['knockout',
                 var column = self.mode.getModeColumn(tile);
                 var nextRow = row + height;
                 var nexts = [];
-                                
-                while(self.tilesGrid.tileGrid[nextRow] && nexts.length === 0) {
-                    for(var i=0; i<width; i++) {
-                        var col = column + i;
-                        if(!self.tilesGrid.tileGrid[nextRow]) {
-                            break;
-                        }
+                
+                for(var col=column; col<column+width; col++) { //find one tile below each coloumn of this tile
+                    nextRow = row + height;
+                    while(self.tilesGrid.tileGrid[nextRow]) {
                         var tileBelow = self.tilesGrid.tileGrid[nextRow][col];
                         if(tileBelow && $.inArray(tileBelow, nexts) === -1 && tileBelow !== tile) {
                             nexts.push(tileBelow);
+                            col = self.mode.getModeColumn(tileBelow) + self.mode.getModeWidth(tileBelow) - 1;
+                            break;
                         }
+                        nextRow++;
                     }
-                    nextRow++;
-                }                
+                }
                 return nexts;
             };
 //            self.moved = [];
@@ -435,21 +434,32 @@ define(['knockout',
             
             //move tiles up if they can and remove empty rows
             self.checkToMoveTilesUp = function() {
+                var iTile, j;
                 for(var i=0; i<self.tiles().length; i++) {
-                    var iTile = self.tiles()[i];
-                    var preTile = self.tiles()[i-1];
-                    var j;
-                    if(i === 0) {
-                        j = 0;
-                    }else {
-                        j = (preTile.row() > iTile.row()) ? 0 : preTile.row();
-                    }
-                    for(; j<iTile.row(); j++) {
-                        if(self.canMoveToRow(iTile, j)) {
-                            self.updateTilePosition(iTile, j, iTile.column());
+                    iTile = self.tiles()[i];
+                    for(j=iTile.row()-1; j>=0; j--) {
+                        if(self.canMoveToRow(iTile, j)){
+                            continue;
+                        }else{
+                            self.updateTilePosition(iTile, j+1, iTile.column());
                             break;
                         }
                     }
+                    if(j == -1) {
+                        self.updateTilePosition(iTile, j+1, iTile.column());
+                    }
+//                    var preTile = self.tiles()[i-1];
+//                    if(i === 0) {
+//                        j = 0;
+//                    }else {
+//                        j = (preTile.row() > iTile.row()) ? 0 : preTile.row();
+//                    }
+//                    for(; j<iTile.row(); j++) {
+//                        if(self.canMoveToRow(iTile, j)) {
+//                            self.updateTilePosition(iTile, j, iTile.column());
+//                            break;
+//                        }
+//                    }
                 }
                 //check for empry rows
                 var rows = self.tilesGrid.size();
@@ -476,7 +486,7 @@ define(['knockout',
             };
             
             self.getCellFromPosition = function(widgetAreaWidth, position) {
-                var row = 0, height = 0;
+                var row = 0, height = 0-Builder.DEFAULT_HEIGHT / 2;
                 var grid = self.tilesGrid;
                 for (; row < grid.size(); row++) {
                     height += grid.getRowHeight(row);
