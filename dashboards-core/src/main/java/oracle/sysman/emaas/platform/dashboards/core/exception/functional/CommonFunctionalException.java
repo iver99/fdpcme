@@ -58,6 +58,9 @@ public class CommonFunctionalException extends DashboardException
 	public static final String PREFERENCE_INVALID_KEY = "PREFERENCE_INVALID_KEY";
 	public static final String PREFERENCE_INVALID_VALUE = "PREFERENCE_INVALID_VALUE";
 
+	public static final String USER_OPTIONS_INVALID_AUTO_REFRESH_INTERVAL ="USER_OPTIONS_INVALID_AUTO_REFRESH_INTERVAL";
+    public static final String USER_OPTIONS_INVALID_DASHBOARD_ID = "USER_OPTIONS_INVALID_DASHBOARD_ID" ;
+
 	/**
 	 * Constructs a new <code>CommonFunctionalException</code> with the specified detail message.
 	 */
