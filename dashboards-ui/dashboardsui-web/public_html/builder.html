@@ -733,15 +733,7 @@
                                                                 </span>
                                                                 <span data-bind="text: hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
                                                             </a>
-                                                        </li>
-                                                        <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
-                                                            </a>
-                                                        </li>
+                                                        </li>  
                                                         <!-- EMCPDF-1131: this should be changed in next sprint
                                                         <li id="resize">
                                                             <a href="#">
@@ -801,6 +793,15 @@
                                                             </ul>
                                                         </li>
                                                         -->
+                                                        <li></li> 
+                                                        <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
+                                                            <a href="#">
+                                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
+                                                                </span>
+                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
+                                                            </a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
