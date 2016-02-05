@@ -27,7 +27,7 @@
             </header>
 
             <div id="dbd-set-tabs" data-bind="visible: isDashboardSet">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0,'add-nav']}">         
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0,'add-nav'],removable:true}">         
                     <!-- tab bar -->
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
@@ -40,10 +40,7 @@
                         </li>
                          <!--ko foreach:dashboardsetItems-->
                          <li class="other-nav" data-bind="attr: {id:'dashboard-'+$index()},click:$root.changeTab">
-                            <span class="tabs-name" data-bind="text:name"></span>
-                            <div class="tabs-remove" data-bind="click:$root.removeDashboard">
-                                <i class="fa-icon-font fa-icon-font-14 dbd-icon-remove"></i>
-                            </div>
+                             <span class="tabs-name" data-bind="text:name"></span>
                         </li>
                         <!--/ko-->    
                         <li id="add-nav" data-bind="click:addNewDashboard"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
@@ -138,9 +135,9 @@
                             </div>
                         </div>
                         <div class="oj-dialog-footer">
-                            <button id="createDsb-2" data-bind="ojComponent: { 
+                            <button id="saveDsbInfo" data-bind="ojComponent: { 
                                              component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE'), 
-                                             rootAttributes: {style:'margin-right:20px'} }"></button>
+                                             rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.saveDbsDescription"></button>
                         </div>
                     </div>              
             </div>     

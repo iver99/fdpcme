@@ -18,7 +18,7 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
 
-        function DashboardsetToolBarModel(dsbId) {
+        function DashboardsetToolBarModel(dsbId) {                    
             var self = this;
             var dashboardsetId = dsbId.split(/[,]/);
             var startDashboardId = Number(location.search.split(/start=/)[1]) || Number(dashboardsetId[0]);
@@ -48,8 +48,14 @@ define(['knockout',
                        break;
                 }
             };
-
+            
             self.changeTab = function (data, event) {
+                 if (window.FocusEvent) {
+                    var mockFocusEvent = new FocusEvent("focus");
+                    $(event.target).attr("tabIndex", 0);
+                    event.target.dispatchEvent(mockFocusEvent);
+                    $(event.target).attr("tabIndex", -1);
+                }
                 ko.utils.arrayForEach(self.dashboardsetItems(), function (item, index) {
                     if (item === data) {
                         self.selectedDashboardItem(item);
@@ -75,26 +81,7 @@ define(['knockout',
                     $("#modalInputDahboardId").ojDialog("close");
                 });
             };
-
-            self.removeDashboard = function (data, event) {
-                var currentClick;
-                var tabsLength = self.dashboardsetItems().length;
-                var currentHighlight = findSeledtedTab(self.dashboardsetItems);
-                ko.utils.arrayForEach(self.dashboardsetItems(), function (Items, index) {
-                    if (Items === data) {
-                        currentClick = index;
-                    }
-                });
-                self.dashboardsetItems.remove(data);
-                if (currentClick === (tabsLength - 1) && currentClick === currentHighlight) {
-                    currentClick = self.dashboardsetItems().length - 1;
-                } else {
-                    currentClick = currentHighlight;
-                }
-                self.selectedDashboardItem(self.dashboardsetItems()[currentClick]);
-                $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + currentClick});
-            };
-            
+           
             self.dbConfigMenuClick = new dbConfigMenuClick();  
             
             self.dashboardsetMenu = [
@@ -206,7 +193,7 @@ define(['knockout',
                         } else {
                             self.dashboardsetItems.push(singleDashboardItem);
                             $('#dbd-tabs-container').ojTabs("refresh");
-                        }
+                            }
                     });
                 }
             }
@@ -226,9 +213,19 @@ define(['knockout',
             function dbConfigMenuClick (){
                 var self=this;
                 self.saveDbsDescription=function(){
-                   
+                    var self=this;
+                    var nameEdit=$('.dbs-name input').val();
+                    var descriptionEdit=$('.dbs-description textarea').val();
+                    self.dashboardsetInfo({"name":nameEdit,"description":descriptionEdit});
+                    $('#changeDashboardsetInfo').ojDialog("close");         
                 };
             };
+            
+            $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
+                 var removeTarget=   ui.tab.attr('id') ;
+                 var removeIdIndex=Number(removeTarget.slice(removeTarget.indexOf('-')+1));
+                 self.dashboardsetItems.remove(self.dashboardsetItems()[removeIdIndex]);
+            } );
         }
 
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');
