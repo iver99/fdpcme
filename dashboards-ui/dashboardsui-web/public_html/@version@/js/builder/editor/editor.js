@@ -306,7 +306,9 @@ define(['knockout',
                         var tileBelow = self.tilesGrid.tileGrid[nextRow][col];
                         if(tileBelow && $.inArray(tileBelow, nexts) === -1 && tileBelow !== tile) {
                             nexts.push(tileBelow);
-                            col = self.mode.getModeColumn(tileBelow) + self.mode.getModeWidth(tileBelow) - 1;
+                            if(nextRow === (row+height)) {
+                                col = self.mode.getModeColumn(tileBelow) + self.mode.getModeWidth(tileBelow) - 1;
+                            }
                             break;
                         }
                         nextRow++;

@@ -516,7 +516,7 @@ define(['knockout',
                     return;
                 }
                 var tile = ko.dataFor(ui.helper[0]);
-                self.editor.tilesGrid.unregisterTileInGrid(tile);
+//                self.editor.tilesGrid.unregisterTileInGrid(tile);
                 var originalRow = self.editor.mode.getModeRow(tile);
                 var originalCol = self.editor.mode.getModeColumn(tile);
                 
@@ -602,70 +602,47 @@ define(['knockout',
             };
             
             self.onNewWidgetDragging = function(e, u) {
-                var tcc = $("#tiles-col-container");
-                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                var tcc = $("#tiles-wrapper");
+                var tile = null;
+                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+
+                tile = u.helper.tile;
+                //use newly created tile to simulate helper attached to mouse
+                    if(tile) {
+                        tile.left(pos.left-tile.cssWidth()/2);
+                        tile.top(pos.top-15);
+                        $('#tile'+tile.clientGuid).css("opacity", 0.6);
+                        if(!$('#tile'+tile.clientGuid).hasClass(draggingTileClass)) {
+                            $('#tile'+tile.clientGuid).addClass(draggingTileClass);
+                        }
+                    }
+                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
                     if (self.isEmpty()) {
                         $('#tile-dragging-placeholder').hide();
                         $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area", false);
                     }
+                    $('#tile-dragging-placeholder').hide();
                     return;
-                }
-                if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area", true);
-                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
-                var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos); 
-                if (!cell) return;
-                
-                $('#tile-dragging-placeholder').hide();
-                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
-                var wgt = ko.mapping.toJS(ko.dataFor(u.helper[0]));
-                var width = Builder.getTileDefaultWidth(wgt, self.editor.mode), height = Builder.getTileDefaultHeight(wgt, self.editor.mode);
-                tilesToBeOccupied = self.editor.getTilesToBeOccupied(cell, width, height);
-                tilesToBeOccupied && self.editor.highlightTiles(tilesToBeOccupied);
-                self.previousDragCell = cell; 
-                
-                if(tilesToBeOccupied.length === 0) {
-                    $('#tile-dragging-placeholder').css({
-                        left: self.getDisplayLeftForTile(cell.column),
-                        top: self.getDisplayTopForTile(cell.row),
-                        width: self.getDisplayWidthForTile(width)-20,
-                        height: self.getDisplayHeightForTile(height)-20
-                    }).show();
-                }
-            };
-            
-            self.onNewWidgetStopDragging = function(e, u) {
-                var tcc = $("#tiles-col-container");
-                var tile = null;                               
-                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
-                    if (self.isEmpty()) {
-                        $('#tile-dragging-placeholder').hide();
-                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area (stopped dragging)", false);
-                    }
-                    if (u.helper.tile) {
-                        var idx = self.editor.tiles.indexOf(u.helper.tile);
-                        self.editor.tiles.splice(idx, 1);
-                    }
-                }
-                else {
+                }else {
                     if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
-                    var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
                     var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos); 
                     if (!cell) return;
-                    tile = u.helper.tile;
+                    if(!self.previousDragCell) self.previousDragCell = cell;
+                    if(self.previousDragCell && self.previousDragCell.row === cell.row && self.previousDragCell.column === cell.column) {
+                        return;
+                    }
                     var widget = ko.mapping.toJS(ko.dataFor(u.helper[0]));
                     var width = Builder.getTileDefaultWidth(widget, self.editor.mode), height = Builder.getTileDefaultHeight(widget, self.editor.mode);
                     if(cell.column>self.editor.mode.MODE_MAX_COLUMNS-width) {
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
-                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targetContext, false);
+                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targetContext, false);                        
                         Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targetContext);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
                     }
-                    if (!self.previousDragCell)
-                        return;
                     
                     var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] :null;
                     if(tileInCell && self.editor.mode.getModeRow(tileInCell) !== cell.row) {
@@ -681,12 +658,58 @@ define(['knockout',
 
                     self.editor.tilesReorder();
                     self.show();
+                    
+                    //restore simulated helper after show()
+                    tile.left(pos.left-tile.cssWidth()/2);
+                    tile.top(pos.top-15);
+                    $('#tile'+tile.clientGuid).css("opacity", 0.6);
+                    if(!$('#tile'+tile.clientGuid).hasClass(draggingTileClass)) {
+                        $('#tile'+tile.clientGuid).addClass(draggingTileClass);
+                    }
+   
+                    setTimeout(function() {
+                        $('#tile-dragging-placeholder').hide();
+                        $('#tile-dragging-placeholder').css({
+                            left: self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)),
+                            top: self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)),
+                            width: self.getDisplayWidthForTile(width)-20,
+                            height: self.getDisplayHeightForTile(height)-20
+                        }).show();
+                    }, 200) ;
+                    self.previousDragCell = cell;
+                    self.editor.draggingTile = tile;
                 }
                 
-                $('#tile-dragging-placeholder').hide();
+            };
+            
+            self.onNewWidgetStopDragging = function(e, u) {
+                var tcc = $("#tiles-wrapper");
+                var tile = null;
+                
+                if(u.helper.tile) {
+                    if($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass)) {
+                        $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
+                    }
+                }
+                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                    if (self.isEmpty()) {
+                        $('#tile-dragging-placeholder').hide();
+                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area (stopped dragging)", false);
+                    }
+                    if (u.helper.tile) {
+                        var idx = self.editor.tiles.indexOf(u.helper.tile);
+                        self.editor.tilesGrid.unregisterTileInGrid(u.helper.tile);
+                        self.editor.tiles.splice(idx, 1);
+                    }
+                    $('#tile-dragging-placeholder').hide();
+                }
+                self.editor.tilesReorder();
+                self.show();
+                
+                $('#tile-dragging-placeholder').hide();                
+                self.editor.draggingTile = null;
+                u.helper.tile = null;
                 self.previousDragCell = null;
-                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
-                tile && $(u.helper).hide();
                 tile && tile.WIDGET_SUPPORT_TIME_CONTROL && self.triggerTileTimeControlSupportEvent(tile.WIDGET_SUPPORT_TIME_CONTROL()?true:null);
             };
             
