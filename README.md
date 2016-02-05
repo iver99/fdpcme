@@ -9,7 +9,8 @@ The source tree layout for this repository is defined here:
 
 Repository Owner
 ----------------
-miao.yu@oracle.com
+Dev: miao.yu@oracle.com
+QA: caleb.wei@oracle.com/ shangping.wang@oracle.com
 
 
 
