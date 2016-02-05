@@ -27,16 +27,27 @@ define(['knockout',
 
             self.selectedDashboardItem = ko.observable();
             
+            self.isCreator =ko.observable(true);
+            
             self.selectedDashboardItem.subscribe(function (selected) {
                 console.log("current selected dashboard: %o", selected);
             });
 
             InitializeDashboardset(dashboardsetId);
 
-            //later reference tool.bar.model.js line35
-            self.dashboardsetName = ko.observable("Middleware Dashboards");
+            //later will receive the info from the backend
+            self.dashboardsetInfo = ko.observable({"name":"Middleware Dashboards","description":"first dashboard set","type":"Dashboard Set"});
 
             self.isDashboardSet = ko.observable(dashboardsetId.length > 1);
+            
+            self.dashboardsetConfigMenu =function(event,data){
+                var configId = data.item.attr('id');
+                switch (configId) {
+                    case 'dbs-edit':
+                       $('#changeDashboardsetInfo').ojDialog("open");             
+                       break;
+                }
+            };
 
             self.changeTab = function (data, event) {
                 ko.utils.arrayForEach(self.dashboardsetItems(), function (item, index) {
@@ -83,13 +94,93 @@ define(['knockout',
                 self.selectedDashboardItem(self.dashboardsetItems()[currentClick]);
                 $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + currentClick});
             };
-
+            
+            self.dbConfigMenuClick = new dbConfigMenuClick();  
+            
             self.dashboardsetMenu = [
                 {
                     "label": "Edit",
                     "url": "#",
                     "id": "dbs-edit",
                     "icon": "fa-pencil",
+                    "title": "",
+                    "disabled": "",
+                    "endOfGroup": false,
+                    "subMenu": []
+                },
+                {
+                    "label": "Refresh",
+                    "url": "#",
+                    "id": "dbs-refresh",
+                    "icon": "dbd-icon-refresh",
+                    "title": "",
+                    "disabled": "",
+                    "endOfGroup": true,
+                    "subMenu": [{
+                            "label": "Off",
+                            "url": "#",
+                            "id": "refresh-off",
+                            "icon": "dbd-icon-check ",
+                            "title": "",
+                            "disabled": "",
+                            "endOfGroup": false,
+                            "subMenu": []
+                        }, {
+                            "label": "On(Every 5 Minutes)",
+                            "url": "#",
+                            "id": "refresh-time",
+                            "icon": "dbd-icon-check ",
+                            "title": "",
+                            "disabled": "",
+                            "endOfGroup": false,
+                            "subMenu": []
+                        }]
+                },
+                {
+                    "label": "Share",
+                    "url": "#",
+                    "id": "dbs-share",
+                    "icon": "dbd-icon-users",
+                    "title": "",
+                    "disabled": "",
+                    "endOfGroup": false,
+                    "subMenu": []
+                },
+                {
+                    "label": "Print All",
+                    "url": "#",
+                    "id": "dbs-print",
+                    "icon": "fa-print",
+                    "title": "",
+                    "disabled": "",
+                    "endOfGroup": false,
+                    "subMenu": []
+                },
+                {
+                    "label": "Add favorite",
+                    "url": "#",
+                    "id": "dbs-favorite",
+                    "icon": "fa-star",
+                    "title": "",
+                    "disabled": "",
+                    "endOfGroup": false,
+                    "subMenu": []
+                },
+                {
+                    "label": "Set as home",
+                    "url": "#",
+                    "id": "dbs-home",
+                    "icon": "dbd-toolbar-icon-home",
+                    "title": "",
+                    "disabled": "",
+                    "endOfGroup": true,
+                    "subMenu": []
+                },
+                {
+                    "label": "Delete",
+                    "url": "#",
+                    "id": "dbs-delete",
+                    "icon": "dbd-toolbar-icon-delete",
                     "title": "",
                     "disabled": "",
                     "endOfGroup": false,
@@ -131,6 +222,13 @@ define(['knockout',
             function findSeledtedTab(obj) {
                 return self.dashboardsetItems().indexOf(self.selectedDashboardItem());
             }
+            
+            function dbConfigMenuClick (){
+                var self=this;
+                self.saveDbsDescription=function(){
+                   
+                };
+            };
         }
 
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');

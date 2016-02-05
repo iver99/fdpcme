@@ -27,11 +27,11 @@
             </header>
 
             <div id="dbd-set-tabs" data-bind="visible: isDashboardSet">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0,'add-nav']}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0,'add-nav']}">         
                     <!-- tab bar -->
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
-                            <span data-bind="text:dashboardsetName"></span>
+                            <span data-bind="text:dashboardsetInfo().name"></span>
                             <button id="tabs-gear"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
@@ -61,82 +61,7 @@
                     </div>
                 </div> 
 
-                <!-- This can use template binding -->
-                <ul id="dbd-set-option" style="display:none" 
-                    data-bind="ojComponent: {component: 'ojMenu'}">
-                    <!--ko foreach:dashboardsetMenu-->
-                    <li data-bind="attr:{'id':id}">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
-                            <span data-bind="text:label"></span>
-                        </a>
-                        <!--ko if:subMenu.length!==0-->
-                        <ul>
-                            <!--ko foreach:subMenu-->
-                            <li id="refresh-off">
-                                <a href="#">
-                                    <span class="fa-icon-font fa-icon-font-14 dbd-icon-check oj-menu-item-icon oj-fwk-icon"></span>
-                                    <span>Off</span>
-                                </a>
-                            </li>
-                            <!--/ko-->
-                        </ul>
-                        <!--/ko-->
-                    </li>
-                    <!--/ko-->
-                    <li id="dbs-refresh">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 dbd-icon-refresh oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Refresh</span>
-                        </a>
-                        <ul>
-                            <li id="refresh-off">
-                                <a href="#">
-                                    <span class="fa-icon-font fa-icon-font-14 dbd-icon-check oj-menu-item-icon oj-fwk-icon"></span>
-                                    <span>Off</span>
-                                </a>
-                            </li>
-                            <li id="refresh-time">
-                                <a href="#">
-                                    <span class="fa-icon-font fa-icon-font-14 dbd-icon-check oj-menu-item-icon oj-fwk-icon"></span>
-                                    <span>On(Every 5 Minutes)</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="oj-menu-divider"></li>
-                    <li id="dbs-share">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 dbd-icon-users oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Share</span>
-                        </a>
-                    </li>
-                    <li id="dbs-print">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 fa-print oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Print All</span>
-                        </a>
-                    </li>
-                    <li id="dbs-favorite">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 fa-star oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Add favorite</span>
-                        </a>
-                    </li>
-                    <li id="dbs-home">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 dbd-toolbar-icon-home oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Set as home</span>
-                        </a>
-                    </li>
-                    <li class="oj-menu-divider"></li>
-                    <li id="dbs-delete">
-                        <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 dbd-toolbar-icon-delete oj-menu-item-icon oj-fwk-icon"></span>
-                            <span>Delete</span>
-                        </a>
-                    </li>
-                </ul>
+               
                 
                 <div style="display:none" id="modalInputDahboardId" title="Input Dashboard Id" 
                      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
@@ -150,8 +75,76 @@
                         <button id="okButton" data-bind="ojComponent: {component: 'ojButton', label: 'OK'},click:comfirmAddDashboard"> </button>
                     </div>
                 </div>
-            </div>
-                    
+                 <ul id="dbd-set-option" style="display:none" 
+                    data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
+                    <!--ko foreach:dashboardsetMenu-->
+                    <li data-bind="attr:{'id':id}">
+                        <a href="#">
+                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                            <span data-bind="text:label"></span>
+                        </a>
+                        <!--ko if:subMenu.length!==0-->
+                        <ul>
+                            <!--ko foreach:subMenu-->
+                            <li data-bind="attr:{'id':id}">
+                                <a href="#">
+                                    <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                                    <span data-bind="text:label"></span>
+                                </a>
+                            </li>
+                            <!--/ko-->
+                        </ul>
+                        <!--/ko-->
+                    </li>
+                    <!--ko if:endOfGroup-->
+                      <li class="oj-menu-divider"></li>
+                    <!--/ko-->
+                    <!--/ko-->
+                </ul>
+                <div style="display:none" id="changeDashboardsetInfo"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:280px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <span class="oj-dialog-title">Edit Dashboard Set</span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
+                                <div class="oj-col dbs-type">
+                                    <div class="oj-col">
+                                        <h4>Type</h4>
+                                    </div>                                   
+                                    <div class="oj-col">
+                                        <label data-bind="text:dashboardsetInfo().type"></label>
+                                    </div>
+                                </div>
+                                <div class="oj-col dbs-name">
+                                    <div class="oj-col">
+                                        <h4>Name</h4>
+                                    </div>
+                                    <div class="oj-col">
+                                        <input id="dbsHNameIn"
+                                               data-bind="ojComponent: { component: 'ojInputText',value:dashboardsetInfo().name}">
+                                    </div>
+                                </div>
+                                <div class="oj-col dbs-description">
+                                    <div class="oj-col">
+                                        <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
+                                    </div>
+                                    <div class="oj-col">
+                                        <textarea id="dbsHDpIn" maxlength="256" rows="6"
+                                                  data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo().description
+                                                              }"></textarea>
+                                    </div>
+                                </div>             
+                            </div>
+                        </div>
+                        <div class="oj-dialog-footer">
+                            <button id="createDsb-2" data-bind="ojComponent: { 
+                                             component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE'), 
+                                             rootAttributes: {style:'margin-right:20px'} }"></button>
+                        </div>
+                    </div>              
+            </div>     
+            
             <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
                 <div id="builder-toolbar" aria-label="Builder toolbar" 
                        class="oj-component oj-component-initnode">
