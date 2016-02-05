@@ -600,7 +600,7 @@ define(['knockout',
 //                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
                 $b.triggerEvent($b.EVENT_TILE_MOVE_STOPED, null);
             };
-            
+           
             self.onNewWidgetDragging = function(e, u) {
                 var tcc = $("#tiles-wrapper");
                 var tile = null;
@@ -666,16 +666,17 @@ define(['knockout',
                     if(!$('#tile'+tile.clientGuid).hasClass(draggingTileClass)) {
                         $('#tile'+tile.clientGuid).addClass(draggingTileClass);
                     }
-   
+                    
+                    //move show() out of setTimeout to fix the issue that $('#tile-dragging-placeholder').hide();doesn't work in onNewWidgetStopDragging
+                    $('#tile-dragging-placeholder').show();
                     setTimeout(function() {
-                        $('#tile-dragging-placeholder').hide();
                         $('#tile-dragging-placeholder').css({
                             left: self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)),
                             top: self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)),
                             width: self.getDisplayWidthForTile(width)-20,
                             height: self.getDisplayHeightForTile(height)-20
-                        }).show();
-                    }, 200) ;
+                        });
+                    }, 200);
                     self.previousDragCell = cell;
                     self.editor.draggingTile = tile;
                 }
@@ -684,7 +685,7 @@ define(['knockout',
             
             self.onNewWidgetStopDragging = function(e, u) {
                 var tcc = $("#tiles-wrapper");
-                var tile = null;
+                var tile = null; 
                 
                 if(u.helper.tile) {
                     if($('#tile'+u.helper.tile.clientGuid).hasClass(draggingTileClass)) {
@@ -693,7 +694,6 @@ define(['knockout',
                 }
                 if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
                     if (self.isEmpty()) {
-                        $('#tile-dragging-placeholder').hide();
                         $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area (stopped dragging)", false);
                     }
                     if (u.helper.tile) {
@@ -701,12 +701,11 @@ define(['knockout',
                         self.editor.tilesGrid.unregisterTileInGrid(u.helper.tile);
                         self.editor.tiles.splice(idx, 1);
                     }
-                    $('#tile-dragging-placeholder').hide();
                 }
                 self.editor.tilesReorder();
                 self.show();
                 
-                $('#tile-dragging-placeholder').hide();                
+                $('#tile-dragging-placeholder').hide();              
                 self.editor.draggingTile = null;
                 u.helper.tile = null;
                 self.previousDragCell = null;
