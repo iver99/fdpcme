@@ -103,8 +103,8 @@ public class TenantSubscriptionUtil
 			cachedApps = (List<String>) cm.getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_SUBSCRIBED_APPS);
 		}
-		catch (Exception e1) {
-			logger.error(e1);
+		catch (Exception e) {
+			logger.error(e);
 			return null;
 		}
 		if (cachedApps != null) {
@@ -239,8 +239,8 @@ public class TenantSubscriptionUtil
 						}
 					});
 		}
-		catch (Exception e1) {
-			logger.error(e1);
+		catch (Exception e) {
+			logger.error(e);
 			return null;
 		}
 

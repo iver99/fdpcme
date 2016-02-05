@@ -21,7 +21,7 @@ public class CacheManagerTest
 		CacheConfiguration cc = cache.getCacheConfiguration();
 		long timeToIdle = cc.getTimeToIdleSeconds();
 		cc.setTimeToIdleSeconds(1);
-		Thread.sleep(1001);
+		Thread.sleep(2000);
 		value = (String) cm.getCacheable("lookupCache", new Keys("test"));
 		Assert.assertNull(value);
 		cc.setTimeToIdleSeconds(timeToIdle);
