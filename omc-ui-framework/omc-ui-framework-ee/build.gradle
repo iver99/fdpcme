@@ -51,7 +51,7 @@ def loadConfiguration() {
     def environment = hasProperty('env') ? env : 'dev'
     setProperty 'environment', environment
     
-    def configFile = file('../appServerConfig.config')
+    def configFile = file("${rootDir}/appServerConfig.config")
     def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
     setProperty 'appServerconfig', appServerconfig
 }
@@ -71,6 +71,10 @@ task appServerInit << {
 	{
         	appServer compile(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0')
 	} 
+        if (!project.hasProperty('appServerTargetName')) {
+                            project.ext.appServerTargetName = "Server-6";           // default to 'Server-6' if not specified on command line
+                        }
+
 	if (!project.hasProperty('serverHost')) { 
 		project.ext.serverHost = "$appServerconfig.serverName"; 
 	} 
@@ -104,7 +108,7 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		targets:	'Server-6',
+		targets:   appServerTargetName,
 		name:       "OMC-UI-Framework-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 
