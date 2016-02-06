@@ -11,7 +11,7 @@
                 <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
             </span>
 
-            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas/*, rootAttributes: {style: 'height: 387; width: 650px;'}*/}, attr: {id: 'panel_'+randomId}"> 
+            <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
                 <div class="drawers" data-bind="style: {height: leftDrawerHeight}">
                 <div data-bind="attr: {id: 'drawers_'+randomId}, click: chooseTimePeriod">
