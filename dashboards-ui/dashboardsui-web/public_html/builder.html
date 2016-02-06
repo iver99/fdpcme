@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.2.0/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
@@ -37,7 +37,7 @@
                                     <h1 data-bind="text: dashboardName, attr: {title: dashboardName}"></h1>
                                     <button id="builder-dbd-name-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDialogModel.open, ojComponent: {
-                                                    component:'ojButton'
+                                                    component:'ojButton', chroming: 'half'
                                         }">
                                         <img src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                     </button>
@@ -68,14 +68,14 @@
                                                attr: {placeholder: getNlsString('DBS_BUILDER_REQUIRE_NAME')}" maxlength="64">
                                 <button id="builder-dbd-name-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardName,ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half'
                                     }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
                                   <button id="builder-dbd-name-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardName, ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half'
                                     }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
@@ -95,7 +95,7 @@
                                           class="dbd-display-area-text"></span>
                                     <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDescription,ojComponent: {
-                                                    component:'ojButton'
+                                                    component:'ojButton', chroming: 'half'
                                         }">
                                         <img width="16" height="16" src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                     </button>
@@ -109,14 +109,14 @@
                                                style:'max-width:55em;'}}" maxlength="256">
                                 <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardDescription,ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half',
                                     }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
                                   <button id="builder-dbd-description-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardDescription, ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half'
                                     }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
@@ -244,13 +244,13 @@
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome no-print"
                                 data-bind="click: handleDashboardSave, ojComponent: {
-                                        component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
+                                        component:'ojButton', chroming: 'half', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome no-print'
-                                data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
+                                data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
@@ -530,7 +530,7 @@
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
-                                                                component:'ojButton', 
+                                                                component:'ojButton', chroming: 'half',
                                                                 icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
                                                                 label: ''
                                                         }"></button>
@@ -539,7 +539,7 @@
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        ojComponent: {component: 'ojButton', 
-                                                                                     label: '', 
+                                                                                     label: '', chroming: 'half',
                                                                                      icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
                                                                                      menu: '#tileMenu' + clientGuid}">
                                                     </button>
