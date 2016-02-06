@@ -16,12 +16,14 @@ define([
         self.daysFilterOptions = oj.LocaleData.getDayNames("wide");
         self.monthsFilterOptions = oj.LocaleData.getMonthNames("wide");
 
-        self.daysArray = [1, 2, 3, 4, 5, 6, 7];
-        self.monthsArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        self.daysArray = ["1", "2", "3", "4", "5", "6", "7"];
+        self.monthsArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]; //[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
         self.timeFilterValue = ko.observable('0-23');
         self.daysChecked = ko.observableArray(self.daysArray);
         self.monthsChecked = ko.observableArray(self.monthsArray);
+        
+        self.tfChangedCallback = null;
 
         self.daysOptionAllChecked = ko.computed({
             read: function() {
@@ -58,6 +60,16 @@ define([
             },
             owner: self
         });
+        
+        self.tfChangedSubscriber = ko.computed(function() {
+            return {
+                "daysChecked" : self.daysChecked(),
+                "monthsChecked" : self.monthsChecked()
+            }
+        });
+        self.tfChangedSubscriber.subscribe(function() {
+            self.tfChangedCallback && self.tfChangedCallback();
+        })
     }
     return AdvancedViewModel;
 });
