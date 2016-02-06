@@ -602,7 +602,8 @@ define(['knockout',
             };
            
             self.onNewWidgetDragging = function(e, u) {
-                var tcc = $("#tiles-wrapper");
+                var tcc = $("#tiles-col-container");
+                var rpt = $("#right-panel-toggler");
                 var tile = null;
                 var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
 
@@ -616,7 +617,7 @@ define(['knockout',
                             $('#tile'+tile.clientGuid).addClass(draggingTileClass);
                         }
                     }
-                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
                         $('#tile-dragging-placeholder').hide();
                         $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area", false);
@@ -684,7 +685,8 @@ define(['knockout',
             };
             
             self.onNewWidgetStopDragging = function(e, u) {
-                var tcc = $("#tiles-wrapper");
+                var tcc = $("#tiles-col-container");
+                var rpt = $("#right-panel-toggler");
                 var tile = null; 
                 
                 if(u.helper.tile) {
@@ -692,7 +694,7 @@ define(['knockout',
                         $('#tile'+u.helper.tile.clientGuid).removeClass(draggingTileClass);
                     }
                 }
-                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
+                if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
                         $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area (stopped dragging)", false);
                     }
