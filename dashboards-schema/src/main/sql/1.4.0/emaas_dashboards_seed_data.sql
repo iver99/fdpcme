@@ -140,7 +140,7 @@ BEGIN
     Insert into EMS_DASHBOARD_TILE (TILE_ID,DASHBOARD_ID,CREATION_DATE,LAST_MODIFICATION_DATE,LAST_MODIFIED_BY,OWNER,TITLE,HEIGHT,WIDTH,IS_MAXIMIZED,POSITION,TENANT_ID,
     WIDGET_UNIQUE_ID,WIDGET_NAME,WIDGET_DESCRIPTION,WIDGET_GROUP_NAME,WIDGET_ICON,WIDGET_HISTOGRAM,WIDGET_OWNER,WIDGET_CREATION_TIME,WIDGET_SOURCE,WIDGET_KOC_NAME,WIDGET_VIEWMODE,WIDGET_TEMPLATE,PROVIDER_NAME,PROVIDER_VERSION,PROVIDER_ASSET_ROOT) 
     values (MW_RESOURCE_DSB_TILE_ID,MW_RESOURCE_DSB_ID,SYS_EXTRACT_UTC(SYSTIMESTAMP),null,null,'Oracle','Home',220,2,0,0,'&TENANT_ID',
-    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','0.1','verticalApplication.mw-resource');
+    '0','Invisible Name','Invisible Description','Invisible Widget Group','Invisible icon','Invisible historgram','Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),0,'DF_V1_WIDGET_ONEPAGE','../emcsDependencies/widgets/onepage/js/onepageModel','../emcsDependencies/widgets/onepage/onepageTemplate.html','EmcitasApplications','1.0','verticalApplication.mw-resource');
 
     Insert into EMS_DASHBOARD_LAST_ACCESS (DASHBOARD_ID,ACCESSED_BY,ACCESS_DATE,TENANT_ID) 
     values (MW_RESOURCE_DSB_ID,'Oracle',SYS_EXTRACT_UTC(SYSTIMESTAMP),'&TENANT_ID');
@@ -187,5 +187,26 @@ WHEN OTHERS THEN
   ROLLBACK;
   DBMS_OUTPUT.PUT_LINE('Failed to update ITA OOB dashboard(MW) in Schema object: EMS_DASHBOARD for tenant: &TENANT_ID due to '||SQLERRM);   
   RAISE;
+END;
+/
+
+DECLARE
+  V_COUNT number;
+BEGIN
+
+SELECT COUNT(1) INTO V_COUNT from EMS_DASHBOARD_TILE where TENANT_ID='&TENANT_ID' AND PROVIDER_VERSION='0.1';
+IF (V_COUNT>0) THEN
+  UPDATE EMS_DASHBOARD_TILE SET PROVIDER_VERSION='1.0' WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_VERSION='0.1';
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Provider version has been upgrade from 0.1 to 1.0 for tenant: &TENANT_ID successfully! Upgraded records: '||V_COUNT);
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Provider version has been upgrade from 0.1 to 1.0 for tenant: &TENANT_ID before, no need to upgrade again');
+END IF;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade version from 0.1 to 1.0 for tenant: &TENANT_ID due to '||SQLERRM);
+    RAISE;
 END;
 /
