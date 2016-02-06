@@ -9,7 +9,7 @@ function(dfu, oj, ko, $)
  */
 
 
-    DashboardModel = function(attrs, options) {
+    var DashboardModel = function(attrs, options) {
         var self = this, _attrs = attrs, _options = options || {};
         this.screenShot = undefined;
         

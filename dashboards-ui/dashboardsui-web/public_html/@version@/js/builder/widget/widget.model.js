@@ -83,6 +83,6 @@ define(['jquery',
         widget.row = null;
         widget.content = null;
         return widget;
-    };
+    }
     Builder.registerFunction(createTextWidget, 'createTextWidget');
 });

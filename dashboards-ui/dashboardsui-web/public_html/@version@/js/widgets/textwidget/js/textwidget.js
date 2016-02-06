@@ -1,5 +1,5 @@
 define(["require", "knockout", "jquery", "ojs/ojcore"],
-        function (localrequire, ko, $, oj) {
+        function (localrequire, ko, $) {
             function getGuid() {
                 function S4() {
                     return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
@@ -11,8 +11,8 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 var self = this;
                 var TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
                 var editor;
-                var defaultContent = '<p><span style="font-family:arial,helvetica,sans-serif"><span style="font-size: 18px"><strong>' 
-                        + getNlsString("DBS_BUILDER_TEXT_WIDGET_SAMPLE") + '</strong></span></span></p>';
+                var defaultContent = '<p><span style="font-family:arial,helvetica,sans-serif"><span style="font-size: 18px"><strong>' + 
+                        getNlsString("DBS_BUILDER_TEXT_WIDGET_SAMPLE") + '</strong></span></span></p>';
                 var preHeight;
                 
                 self.showErrorMsg = ko.observable(false);
@@ -56,7 +56,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                 try {
                     lang = requirejs.s.contexts._.config.config.i18n.locale;
                 }catch(err) {
-                    lang = $("html").attr("lang") ? $("html").attr("lang") : navigator.language;
+                    lang = $("html").attr("lang") ? $("html").attr("lang") : window.navigator.language;
                 }
                 var configOptions = {
                     language: lang,
@@ -74,12 +74,12 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     linkShowAdvancedTab: false,
                     linkShowTargetTab: false
                     
-                }
-                var x,y,t;
+                };
+                var x,y;
                 self.textMouseDown = function(data, e) {
                     x = e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft;
                     y = e.clientY+document.body.scrollTop+document.documentElement.scrollTop;
-                }
+                };
                 self.textMouseUp = function(data, e) {
                     if(e.which !== 1) {
                         return;
@@ -93,7 +93,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                        elem = elem.parent();
                     }
 
-                    var tmpX  = e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft;;
+                    var tmpX  = e.clientX+document.body.scrollLeft+document.documentElement.scrollLeft;
                     var tmpY = e.clientY+document.body.scrollTop+document.documentElement.scrollTop;
                     if(x!==tmpX || y!==tmpY) {
 //                        console.log("dragged");
@@ -102,13 +102,13 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 //                        console.log("clicked");
                         self.textClicked(data, e);
                     }
-                }
+                };
                 
                 
                 
                 var delay = 300;
                 var clicks = 0;
-                var timerClickType = null, timerSetCaret = null, timerHighlight = null;
+                var timerClickType = null, timerSetCaret = null;
                 
                 function insertBreakAtPoint(e) {
                     var range, caretPosition;
@@ -139,7 +139,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
 //                            console.log("single click");
                             clicks = 0;                            
                             self.showTextEditor();
-                            timerSetCaret = setTimeout(function() {insertBreakAtPoint(e)}, 400);
+                            timerSetCaret = setTimeout(function() {insertBreakAtPoint(e);}, 400);
                         }, delay);             
                     }else {
                         clearTimeout(timerSetCaret);
@@ -148,18 +148,18 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         clicks = 0;
                         self.editTextEditor();
                     }
-                }
+                };
                 
                 self.editTextEditor = function() {
                     self.showTextEditor();
                     editor.execCommand("selectAll");
-                }
+                };
                 
                 self.showTextEditor = function () {
                     $("#textContentWrapper_" + self.randomId).hide();
                     $("#textEditorWrapper_" + self.randomId).show();                       
                     $("#textEditor_" + self.randomId).focus();
-                }
+                };
                 
                 CKEDITOR.on('dialogDefinition', function(ev) {
                     // Take the dialog name and its definition from the event data.
@@ -198,9 +198,9 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                                         $("#"+okButtonId).css("background-color", "#0572ce");
                                         $("#"+okButtonId).css("border", "1px solid #0476d3");
                                     }
-                                )
-                            };
-                        }
+                                );
+                            }
+                        };
                     }                    
                 });
                 
@@ -263,7 +263,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                             self.builder && self.builder.triggerEvent(self.builder.EVENT_TEXT_START_EDITING, null, null);
                         }
                     });
-                }
+                };
                 
                 self.deleteEditor = function() {
                     $("#textWidget_"+self.randomId).remove();
@@ -271,7 +271,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                     self.deleteTextCallback && self.deleteTextCallback(self.tile);
 //                    self.reorder && self.reorder();
                     self.show && self.show();
-                }
+                };
                 
                 self.showEditIcons = function() {
                     var textMaxWidth = 0;
@@ -293,7 +293,7 @@ define(["require", "knockout", "jquery", "ojs/ojcore"],
                         textMaxWidth = widgetContainerWidth-78;
                     }
                     $("#textContentWrapper_"+self.randomId+" #textWidgetEditBtns_"+self.randomId).css("left", textMaxWidth);
-                }
+                };
                 
                 self.loadEditor();
             }

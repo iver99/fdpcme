@@ -220,11 +220,15 @@
                             <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
                                     <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
                                         <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
-                                    <span data-bind="text: label"></span></a>
-                            </li>
-                                <!-- ko if: $data.endOfGroup  -->
-                                <li></li>
-                            <!-- /ko -->
+                                        <span data-bind="text: label"></span>
+                                    </a>
+                                    <!-- ko if: $data.subItems -->
+                                    <ul data-bind="template: {name: 'dsbOptsMenuItemTemplate', foreach: subItems}"></ul>
+                                    <!-- /ko -->
+                                </li>
+                                <!-- ko if: endOfGroup  -->
+                                    <li></li>
+                                <!-- /ko -->
                             <!-- /ko -->
                         </script>
 
@@ -241,12 +245,12 @@
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome no-print"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
-                                        icons: {start: 'dbd-toolbar-icon-save'}
+                                        icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome no-print'
-                                data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), 
+                                data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
@@ -490,9 +494,6 @@
                                <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                             </div>
-                            <div class="oj-col oj-sm-12 oj-md-5" data-bind="visible: dashboard.enableRefresh">
-                                <df-auto-refresh params="{model:timeSelectorModel}" style="float:right;padding-right: 30px"></df-auto-refresh>
-                            </div>
                         </div>
 
                         <!-- ko if:$root.isEmpty() -->
@@ -530,7 +531,7 @@
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
                                                                 component:'ojButton', 
-                                                                icons: {start:'dbd-title-edit'}, 
+                                                                icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
                                                                 label: ''
                                                         }"></button>
                                               </div>
@@ -539,8 +540,8 @@
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        ojComponent: {component: 'ojButton', 
                                                                                      label: '', 
+                                                                                     icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
                                                                                      menu: '#tileMenu' + clientGuid}">
-                                                        <img src="@version@/images/func_threebullets_16_ena.png" alt="Edit"/>
                                                     </button>
                                                     <!--to be continued: detect if tile can be edited, broaden...-->
                                                     <ul style="display:none"
@@ -554,15 +555,7 @@
                                                                 </span>
                                                                 <span data-bind="text: hideTitle() === 'true' ? getNlsString('DBS_BUILDER_TILE_SHOW'):getNlsString('DBS_BUILDER_TILE_HIDE')"></span>
                                                             </a>
-                                                        </li>
-                                                        <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
-                                                            <a href="#">
-                                                                <span class="oj-menu-item-icon demo-icon-font">
-                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
-                                                                </span>
-                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
-                                                            </a>
-                                                        </li>
+                                                        </li>  
                                                         <!-- EMCPDF-1131: this should be changed in next sprint
                                                         <li id="resize">
                                                             <a href="#">
@@ -622,6 +615,15 @@
                                                             </ul>
                                                         </li>
                                                         -->
+                                                        <li></li> 
+                                                        <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
+                                                            <a href="#">
+                                                                <span class="oj-menu-item-icon demo-icon-font">
+                                                                    <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
+                                                                </span>
+                                                                <span data-bind="text: getNlsString('DBS_BUILDER_TILE_REMOVE')"></span>
+                                                            </a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>

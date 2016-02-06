@@ -292,16 +292,16 @@ define(['knockout',
             
             self.calculateTilesRowHeight = function() {
                 var tilesRow = $('#widget-area');
-                var tilesRowSpace = parseInt(tilesRow.css('margin-top'), 0) 
-                        + parseInt(tilesRow.css('margin-bottom'), 0) 
-                        + parseInt(tilesRow.css('padding-top'), 0) 
-                        + parseInt(tilesRow.css('padding-bottom'), 0);
-                var tileSpace = parseInt($('.dbd-tile-maximized').css('margin-bottom'), 0) 
-                        + parseInt($('.dbd-tile-maximized').css('padding-bottom'), 0)
-                        + parseInt($('.dbd-tile-maximized').css('padding-top'), 0);
-                return $(window).height() - $('#headerWrapper').outerHeight() 
-                        - $('#head-bar-container').outerHeight() - $('#global-time-slider').outerHeight() 
-                        - (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
+                var tilesRowSpace = parseInt(tilesRow.css('margin-top'), 0) +  
+                        parseInt(tilesRow.css('margin-bottom'), 0) + 
+                        parseInt(tilesRow.css('padding-top'), 0) + 
+                        parseInt(tilesRow.css('padding-bottom'), 0);
+                var tileSpace = parseInt($('.dbd-tile-maximized').css('margin-bottom'), 0) + 
+                        parseInt($('.dbd-tile-maximized').css('padding-bottom'), 0) + 
+                        parseInt($('.dbd-tile-maximized').css('padding-top'), 0);
+                return $(window).height() - $('#headerWrapper').outerHeight() - 
+                       $('#head-bar-container').outerHeight() - $('#global-time-slider').outerHeight() - 
+                       (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
             };
             
             self.showMaximizedTile = function(tile, width, height) {
@@ -337,8 +337,8 @@ define(['knockout',
             };
             
             self.initializeMaximization = function() {
-            	var maximized = self.editor.getMaximizedTile();
-            	if (maximized) {
+                var maximized = self.editor.getMaximizedTile();
+                if (maximized) {
                     self.maximize(maximized);
                     $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, maximized);
                 }
@@ -423,8 +423,9 @@ define(['knockout',
                 if(!(self.editor.tiles && self.editor.tiles())) {
                     return;
                 }
+                var tile;
                 for (var i=0; i< self.editor.tiles().length; i++) {
-                    var tile = self.editor.tiles()[i];
+                    tile = self.editor.tiles()[i];
                     if(tile.isMaximized()) {
                         self.maximize(tile);
                         return;
@@ -494,7 +495,7 @@ define(['knockout',
                 self.show();
                 self.tilesView.enableMovingTransition();
             };
-            var startTime, curTime, tilesToBeOccupied, startX, startY, draggingX, draggingY;
+            var startTime, tilesToBeOccupied, startX, startY;
             self.handleStartDragging = function(event, ui) {
                 if(!ui) {
                     console.log(ui);
@@ -553,23 +554,24 @@ define(['knockout',
                 }
                 ui.helper.css({left:tile.left(), top:tile.top()});
                 var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
-                if((self.previousDragCell) && cell.column+tile.width() <= self.editor.mode.MODE_MAX_COLUMNS
-                        && (!tileInCell || (tileInCell && tileInCell.row() === cell.row))) {
+                if((self.previousDragCell) && cell.column+tile.width() <= self.editor.mode.MODE_MAX_COLUMNS && 
+                        (!tileInCell || (tileInCell && tileInCell.row() === cell.row))) {
                     var cellsOccupiedByTile = self.editor.getCellsOccupied(cell.row, cell.column, tile.width(), tile.height());
                     var tilesUnderCell = self.editor.getTilesUnder(cellsOccupiedByTile, tile);
                     var tilesBelowOriginalCell = self.editor.getTilesBelow(tile);
                     self.editor.draggingTile = tile;
+                    var rowDiff, iTile;
                     for(var i in tilesUnderCell) {
-                        var iTile = tilesUnderCell[i];
-                        var rowDiff = cell.row-iTile.row()+tile.height();
+                        iTile = tilesUnderCell[i];
+                        rowDiff = cell.row-iTile.row()+tile.height();
                         self.editor.moveTileDown(iTile, rowDiff);
                     }
                     self.editor.draggingTile = null;
                     self.editor.updateTilePosition(tile, cell.row, cell.column);
                     
-                    var rowDiff = Math.abs(cell.row - dragStartRow);
-                    for(var i in tilesBelowOriginalCell) {
-                        var iTile = tilesBelowOriginalCell[i];
+                    rowDiff = Math.abs(cell.row - dragStartRow);
+                    for(i in tilesBelowOriginalCell) {
+                        iTile = tilesBelowOriginalCell[i];
                         rowDiff = (rowDiff===0) ? tile.height() : rowDiff;
                         self.editor.moveTileUp(iTile, rowDiff);
                     }                   
@@ -820,7 +822,7 @@ define(['knockout',
             self.timeSelectorModel.viewEnd(initEnd);
             self.datetimePickerParams = {
                 startDateTime: initStart,
-                endDateTime: initEnd,	  
+                endDateTime: initEnd,
                 hideMainLabel: true,
                 callbackAfterApply: function(start, end) {
                     self.timeSelectorModel.viewStart(start);

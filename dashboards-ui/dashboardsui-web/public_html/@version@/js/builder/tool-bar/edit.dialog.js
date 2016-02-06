@@ -92,8 +92,7 @@ define(['knockout',
                 }
                 return false;
             };
-        
-        };
+        }
         
         return {"EditDashboardDialogModel": EditDashboardDialogModel};
     }

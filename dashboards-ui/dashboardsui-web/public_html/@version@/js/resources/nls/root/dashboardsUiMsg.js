@@ -231,7 +231,9 @@ define({
       "DBS_BUILDER_TILE_SHOW":"Show title",
       "DBS_BUILDER_TILE_HIDE":"Hide title",
       "DBS_BUILDER_TILE_CFG": "Edit",
-      "DBS_BUILDER_AUTOREFRESH_REFRESH":"Refresh:",
+      "DBS_BUILDER_AUTOREFRESH_REFRESH":"Auto-refresh",
+      "DBS_BUILDER_AUTOREFRESH_OFF":"Off",
+      "DBS_BUILDER_AUTOREFRESH_ON":"On (Every 5 Minutes)",
       "DBS_BUILDER_AUTOREFRESH_NONE":"None",
       "DBS_BUILDER_AUTOREFRESH_15SEC":"15 Seconds",
       "DBS_BUILDER_AUTOREFRESH_30SEC":"30 Seconds",
@@ -284,7 +286,7 @@ define({
       "COMMON_ERROR_PAGE_NO_ACCESS_NO_PERMISSION_MSG":"You don't have permissions to access to this page. Contact your Administrator.",
       "COMMON_ERROR_PAGE_NO_ACCESS_NO_SUBS_MSG__PLUS_SERVICE":"You currently don't have access to this page because you're not subscribed to {0}.",
       "COMMON_ERROR_PAGE_NO_ACCESS_NO_SUBS_MSG":"You currently don't have access to this page because you're not subscribed to the service being accessed.",
-	  
+
       "LANDING_HOME_WINDOW_TITLE": "Landing Home",
       "LANDING_HOME_WELCOME_SLOGAN": "Welcome to Oracle Management Cloud",
       "LANDING_HOME_APM": "Application Performance Monitoring",
