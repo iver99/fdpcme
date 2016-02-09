@@ -94,8 +94,8 @@ omcTeardown.mustRunAfter ([pre_upgrade,post_upgrade])
 //omcTeardown.mustRunAfter(omcUpgradeDataValidation)
 //task emaas_small_upgrade_3n (dependsOn: ['omcSetup']) {
 
-task emcpdf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown])
+task emcpdf_upgrade_test_3n (dependsOn:[pre_upgrade,post_upgrade,omcTeardown]){
 
+apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
 
-    //apply from: getAbsoluteFilePath(project.buildscript.configurations.classpath,"omctf_taskprocessor")
-
+}
