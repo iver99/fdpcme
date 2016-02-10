@@ -70,6 +70,8 @@ dependencies {
   	testConfig(group: 'com.oracle.jdbc', name: 'ojdbc6', version: '12.1.0.1.0') { transitive = false }
         testConfig(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
         testConfig(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
+        testConfig(group: 'org.apache.logging.log4j', name:'LogManager', version:'2.0.1'){ transitive = false }
+     
         testConfig(group: 'javax.transaction', name: 'javax.transaction-api', version: '1.2') { transitive = false }
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.13') { transitive = false }
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
