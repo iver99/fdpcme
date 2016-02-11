@@ -23,7 +23,7 @@ default["file_domain_create"] = "#{node["log_dir"]}/dashboardCreateDomain.py"
 default["myApplicationName"]="emaas-applications-dashboards-api"
 default["target"]="#{node["wls_adminserver_name"]}"
 
-default["SAAS_API_version"] = "0.1"
+default["SAAS_API_version"] = "1.0"
 
 default["dbhome"]="#{node["infra_dir"]}/rdbms/12.1.0" 
 default["oracle_base"] = "#{node["run_dir"]}/oracle"
