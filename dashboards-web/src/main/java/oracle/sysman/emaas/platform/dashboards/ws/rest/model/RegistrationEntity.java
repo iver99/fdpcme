@@ -63,7 +63,7 @@ public class RegistrationEntity
 	public static final String LA_HOME_LINK = "sso.search";
 	//no home link is needed
 	//	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
-	public static final String ITA_SERVICENAME = "EmcitasApplications";
+	public static final String ITA_SERVICENAME = "emcitas-ui-apps";
 	public static final String ITA_VERSION = "1.0+";
 	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
 	public static final String TA_SERVICENAME = "TargetAnalytics";

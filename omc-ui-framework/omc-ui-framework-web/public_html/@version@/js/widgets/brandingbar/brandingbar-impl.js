@@ -69,7 +69,7 @@ define([
                 appMap[appIdITAnalytics] = {
                     "appId": "ITAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_IT_ANALYTICS", 
-                    "serviceName": "EmcitasApplications",
+                    "serviceName": "emcitas-ui-apps",
                     "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_it_gs"
                 };
