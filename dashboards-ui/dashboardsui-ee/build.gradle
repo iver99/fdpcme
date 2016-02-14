@@ -57,7 +57,7 @@ def loadConfiguration() {
     def environment = hasProperty('env') ? env : 'dev'
     setProperty 'environment', environment
     
-    def configFile = file('../appServerConfig.config')
+    def configFile = file("${rootDir}/appServerConfig.config")
     def appServerconfig = new ConfigSlurper(environment).parse(configFile.toURL())
     setProperty 'appServerconfig', appServerconfig
 }
@@ -89,6 +89,9 @@ task uiappServerInit << {
 	if (!project.hasProperty('adminUserPassword')) { 
 		project.ext.adminUserPassword = "$appServerconfig.adminUserPwd"; 
 	}     
+if (!project.hasProperty('appServerTargetName')) {
+                            project.ext.wlsserver_target = "Server-6";           // default to 'Server-6' if not specified on command line
+                        }   
 
 	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
 	
@@ -111,7 +114,7 @@ task appServerDeploy{
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
 		name:       "DashboardService-UI-6",
-		targets:	'Server-6',
+		targets:	wlsserver_target,
 		adminurl:   t3URL,  
 		user:       adminUser, 
 		password:   adminUserPassword, 

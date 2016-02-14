@@ -130,15 +130,15 @@ public class TestBrandingBar extends LoginAndLogout{
 	}
 	
 	@Test
-	public void testTargetLink() throws Exception
+	public void testSearchLink() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testTargetLink");
+		webd.getLogger().info("start to test in testSearchLink");
 		
 		DashBoardUtils.clickNavigatorLink();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//Target link
-		webd.click(DashBoardPageId.TargetLinkID);
+		webd.click(DashBoardPageId.SearchLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
@@ -165,35 +165,35 @@ public class TestBrandingBar extends LoginAndLogout{
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
-
+	*/
 	
 	@Test
-	public void testFlexLink() throws Exception
+	public void testAnalyzeLink() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testFlexLink");
+		webd.getLogger().info("start to test in testAnalyzeLink");
 		
 		DashBoardUtils.clickNavigatorLink();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Flex link
-		webd.click(DashBoardPageId.FlexLinkID);
+		//Analyze link
+		webd.click(DashBoardPageId.AnalyzeLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
-		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/db-awrviewer-war/html/db-awr-analytics.html");
+		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/flex-analyzer/html/displaying/new-chart-config.html");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 	}
 
 	@Test
-	public void testSoftwareLink() throws Exception
+	public void testAgentsLink() throws Exception
 	{
 		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-		webd.getLogger().info("start to test in testSoftwareLink");
+		webd.getLogger().info("start to test in testAgentsLink");
 		
 		DashBoardUtils.clickNavigatorLink();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		//Customer Software link
-		webd.click(DashBoardPageId.CustomLinkID);
+		//Agents link
+		webd.click(DashBoardPageId.AgentsLinkID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		String url = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+url);
@@ -216,7 +216,5 @@ public class TestBrandingBar extends LoginAndLogout{
 		webd.getLogger().info("url = "+url);
 		Assert.assertEquals(url.substring(url.indexOf("emsaasui")+9),"emcitas/warehouseadmin/html/admin-sources.html");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-	}
-	*/
-	
+	}	
 }

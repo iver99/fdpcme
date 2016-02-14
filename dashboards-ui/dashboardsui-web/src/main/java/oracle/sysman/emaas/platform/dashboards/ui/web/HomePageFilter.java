@@ -56,7 +56,7 @@ public class HomePageFilter implements Filter
 	private static final String HOME_PAGE_PREFERENCE_KEY = "Dashboards.homeDashboardId";
 	private static final String AUTH_CRED_PATH = "oam/server/auth_cred_submit";
 	private static final String SERVICE_NAME = "Dashboard-API";
-	private static final String VERSION = "0.1";
+	private static final String VERSION = "1.0+";
 	private static final String PATH = "static/dashboards.preferences";
 	private static final String PATH_DASHBOARD_API = "static/dashboards.service";
 

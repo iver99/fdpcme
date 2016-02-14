@@ -122,13 +122,15 @@ public class RegistryLookup
 			System.out.println("GET details of endpoint");
 			System.out.println("											");
 
+			System.out.println("											");
+			System.out.println("cases 1 : with all parameters");
 			Response res = RestAssured
 					.given()
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=0.1");
+							.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=1.0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -136,8 +138,28 @@ public class RegistryLookup
 			System.out.println(res.asString());
 
 			Assert.assertEquals(res.jsonPath().get("serviceName"), "Dashboard-UI");
-			Assert.assertEquals(res.jsonPath().get("version"), "0.1");
+			Assert.assertEquals(res.jsonPath().get("version"), "1.0");
 			Assert.assertNotNull(res.jsonPath().get("href"));
+
+			System.out.println("											");
+			System.out.println("cases 2 : no version");
+			System.out.println("											");
+
+			Response res1 = RestAssured
+					.given()
+					.log()
+					.everything()
+					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
+							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=");
+
+			System.out.println("											");
+			System.out.println("Status code is: " + res1.getStatusCode());
+			Assert.assertTrue(res1.getStatusCode() == 200);
+			System.out.println(res1.asString());
+
+			Assert.assertEquals(res1.jsonPath().get("serviceName"), "Dashboard-UI");
+			Assert.assertEquals(res1.jsonPath().get("version"), "");
+			Assert.assertNotNull(res1.jsonPath().get("href"));
 
 			System.out.println("											");
 			System.out.println("------------------------------------------");
@@ -165,7 +187,7 @@ public class RegistryLookup
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=&version=0.1");
+							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=&version=1.0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -173,29 +195,10 @@ public class RegistryLookup
 			System.out.println(res.asString());
 
 			Assert.assertEquals(res.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=, version=0.1");
+			Assert.assertEquals(res.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=, version=1.0");			
 
 			System.out.println("											");
-			System.out.println("Negative cases 2 : no version");
-			System.out.println("											");
-
-			Response res1 = RestAssured
-					.given()
-					.log()
-					.everything()
-					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=");
-
-			System.out.println("											");
-			System.out.println("Status code is: " + res1.getStatusCode());
-			Assert.assertTrue(res1.getStatusCode() == 404);
-			System.out.println(res1.asString());
-
-			Assert.assertEquals(res1.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res1.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=Dashboard-UI, version=");
-
-			System.out.println("											");
-			System.out.println("Negative cases 3 : wrong serviceName");
+			System.out.println("Negative cases 2 : wrong serviceName");
 			System.out.println("											");
 
 			Response res2 = RestAssured
@@ -203,7 +206,7 @@ public class RegistryLookup
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=abc&version=0.1");
+							"Authorization", authToken).when().get("registry/lookup/endpoint?serviceName=abc&version=1.0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -211,10 +214,10 @@ public class RegistryLookup
 			System.out.println(res2.asString());
 
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2002);
-			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=abc, version=0.1");
+			Assert.assertEquals(res2.jsonPath().get("errorMessage"), "End Point Not Found: serviceName=abc, version=1.0");
 
 			System.out.println("											");
-			System.out.println("Negative cases 4 : wrong version");
+			System.out.println("Negative cases 3 : wrong version");
 			System.out.println("											");
 
 			Response res3 = RestAssured
@@ -257,7 +260,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=sso.home");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=1.0&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -292,7 +295,7 @@ public class RegistryLookup
 					.log()
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
-							"Authorization", authToken).when().get("registry/lookup/link?serviceName=&version=0.1&rel=sso.home");
+							"Authorization", authToken).when().get("registry/lookup/link?serviceName=&version=1.0&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -300,7 +303,7 @@ public class RegistryLookup
 			System.out.println(res.asString());
 
 			Assert.assertEquals(res.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res.jsonPath().get("errorMessage"), "Link Not Found: serviceName=, version=0.1, rel=sso.home");
+			Assert.assertEquals(res.jsonPath().get("errorMessage"), "Link Not Found: serviceName=, version=1.0, rel=sso.home");
 
 			System.out.println("											");
 
@@ -335,7 +338,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=1.0&rel=");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -344,7 +347,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2001);
 			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
-					"Link Not Found: serviceName=Dashboard-UI, version=0.1, rel=");
+					"Link Not Found: serviceName=Dashboard-UI, version=1.0, rel=");
 
 			System.out.println("											");
 
@@ -357,7 +360,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/link?serviceName=abc&version=0.1&rel=sso.home");
+							.get("registry/lookup/link?serviceName=abc&version=1.0&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -365,7 +368,7 @@ public class RegistryLookup
 			System.out.println(res3.asString());
 
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 2001);
-			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "Link Not Found: serviceName=abc, version=0.1, rel=sso.home");
+			Assert.assertEquals(res3.jsonPath().get("errorMessage"), "Link Not Found: serviceName=abc, version=1.0, rel=sso.home");
 
 			System.out.println("											");
 
@@ -400,7 +403,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=abc");
+							.get("registry/lookup/link?serviceName=Dashboard-UI&version=1.0&rel=abc");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
@@ -409,7 +412,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res5.jsonPath().get("errorCode"), 2001);
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
-					"Link Not Found: serviceName=Dashboard-UI, version=0.1, rel=abc");
+					"Link Not Found: serviceName=Dashboard-UI, version=1.0, rel=abc");
 
 			System.out.println("											");
 
@@ -437,7 +440,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=1.0&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -473,7 +476,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/linkWithRelPrefix?serviceName=&version=0.1&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=&version=1.0&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -482,7 +485,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res.jsonPath().get("errorCode"), 2003);
 			Assert.assertEquals(res.jsonPath().get("errorMessage"),
-					"Link (with rel Prefix) Not Found: serviceName=, version=0.1, rel prefix=quickLink");
+					"Link (with rel Prefix) Not Found: serviceName=, version=1.0, rel prefix=quickLink");
 
 			System.out.println("											");
 
@@ -517,7 +520,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=1.0&rel=");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -526,7 +529,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res2.jsonPath().get("errorCode"), 2003);
 			Assert.assertEquals(res2.jsonPath().get("errorMessage"),
-					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=0.1, rel prefix=");
+					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=1.0, rel prefix=");
 
 			System.out.println("											");
 
@@ -539,7 +542,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/linkWithRelPrefix?serviceName=wrong&version=0.1&rel=quickLink");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=wrong&version=1.0&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res3.getStatusCode());
@@ -548,7 +551,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res3.jsonPath().get("errorCode"), 2003);
 			Assert.assertEquals(res3.jsonPath().get("errorMessage"),
-					"Link (with rel Prefix) Not Found: serviceName=wrong, version=0.1, rel prefix=quickLink");
+					"Link (with rel Prefix) Not Found: serviceName=wrong, version=1.0, rel prefix=quickLink");
 
 			System.out.println("											");
 
@@ -583,7 +586,7 @@ public class RegistryLookup
 					.everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "X-REMOTE-USER", tenantid + "." + remoteuser,
 							"Authorization", authToken).when()
-							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=abc");
+							.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=1.0&rel=abc");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res5.getStatusCode());
@@ -592,7 +595,7 @@ public class RegistryLookup
 
 			Assert.assertEquals(res5.jsonPath().get("errorCode"), 2003);
 			Assert.assertEquals(res5.jsonPath().get("errorMessage"),
-					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=0.1, rel prefix=abc");
+					"Link (with rel Prefix) Not Found: serviceName=Dashboard-UI, version=1.0, rel prefix=abc");
 
 			System.out.println("											");
 
@@ -616,7 +619,7 @@ public class RegistryLookup
 
 			Response res = RestAssured.given().log().everything()
 					.headers("X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
-					.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=0.1");
+					.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=1.0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -630,7 +633,7 @@ public class RegistryLookup
 
 			Response res1 = RestAssured.given().log().everything()
 					.headers("X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=sso.home");
+					.get("registry/lookup/link?serviceName=Dashboard-UI&version=1.0&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -644,7 +647,7 @@ public class RegistryLookup
 
 			Response res2 = RestAssured.given().log().everything()
 					.headers("X-REMOTE-USER", tenantid + "." + remoteuser, "Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=quickLink");
+					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=1.0&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());
@@ -673,7 +676,7 @@ public class RegistryLookup
 
 			Response res = RestAssured.given().log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).when()
-					.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=0.1");
+					.get("registry/lookup/endpoint?serviceName=Dashboard-UI&version=1.0");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res.getStatusCode());
@@ -687,7 +690,7 @@ public class RegistryLookup
 
 			Response res1 = RestAssured.given().log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).when()
-					.get("registry/lookup/link?serviceName=Dashboard-UI&version=0.1&rel=sso.home");
+					.get("registry/lookup/link?serviceName=Dashboard-UI&version=1.0&rel=sso.home");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res1.getStatusCode());
@@ -701,7 +704,7 @@ public class RegistryLookup
 
 			Response res2 = RestAssured.given().log().everything()
 					.headers("X-USER-IDENTITY-DOMAIN-NAME", tenantid, "Authorization", authToken).when()
-					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=0.1&rel=quickLink");
+					.get("registry/lookup/linkWithRelPrefix?serviceName=Dashboard-UI&version=1.0&rel=quickLink");
 
 			System.out.println("											");
 			System.out.println("Status code is: " + res2.getStatusCode());

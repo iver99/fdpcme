@@ -55,6 +55,7 @@ define([
                 var appIdDashboard = "Dashboard";
                 var appIdTenantManagement = "TenantManagement";
                 var appIdError = "Error";
+                self.SERVICE_VERSION=encodeURIComponent('1.0+');
                 var appIdEventUI = "EventUI";
                 var appMap = {};
                 appMap[appIdAPM] = {
@@ -62,49 +63,49 @@ define([
                     "appName": "BRANDING_BAR_APP_NAME_APM",
                     "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
                     "serviceName": "apmUI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_apm_gs"
                 };
                 appMap[appIdITAnalytics] = {
                     "appId": "ITAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_IT_ANALYTICS", 
                     "serviceName": "EmcitasApplications",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_it_gs"
                 };
                 appMap[appIdLogAnalytics] = {
                     "appId": "LogAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_LOG_ANALYTICS", 
                     "serviceName": "LoganService",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_log_gs"
                 };
                 appMap[appIdDashboard] = {
                     "appId": "Dashboard",
                     "appName": "BRANDING_BAR_APP_NAME_DASHBOARD", 
                     "serviceName": "Dashboard-UI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_home_gs"
                 };
                 appMap[appIdTenantManagement] = {
                     "appId": "TenantManagement",
                     "appName": "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI", 
                     "serviceName": "TenantManagementUI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_home_gs"
                 };     
                 appMap[appIdError] = {
                     "appId": "Error",
                     "appName": "", 
                     "serviceName": "Error",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_home_gs"
                 };   
                 appMap[appIdEventUI] = {
                     "appId": "EventUI",
                     "appName": "", 
                     "serviceName": "EventUI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": ""
                 }; 
             

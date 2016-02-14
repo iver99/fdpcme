@@ -34,7 +34,7 @@ public class BugVerification extends LoginAndLogout{
 		webd.getLogger().info("start to test in testEMPCDF_812");
 		
 		//check ita box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID)).click();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check la box
@@ -49,7 +49,7 @@ public class BugVerification extends LoginAndLogout{
 		webd.getLogger().info("start to test in testEMPCDF_812");
 		
 		//check ita box
-		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).isSelected());
+		Assert.assertTrue(webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID)).isSelected());
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check la box
@@ -57,7 +57,7 @@ public class BugVerification extends LoginAndLogout{
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check ita box
-		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_Check_BoxID)).click();
+		webd.getWebDriver().findElement(By.id(DashBoardPageId.ITA_BoxID)).click();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		
 		//check la box
@@ -80,8 +80,9 @@ public class BugVerification extends LoginAndLogout{
 		webd.getWebDriver().navigate().to(url.substring(0,url.indexOf("emsaasui"))+"emsaasui/emcpdfui/error.html?msg=DBS_ERROR_PAGE_NOT_FOUND_MSG");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
                 webd.takeScreenShot();
-		webd.click("//*[@id='errorMain']/div[2]/button");
-                webd.getLogger().info("ok button is clicked");
+		//webd.click("//*[@id='errorMain']/div[2]/button");
+		webd.click("/html/body/div/div/div/div[3]/button");
+                webd.getLogger().info("Sing out button is clicked");
 		webd.takeScreenShot();
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());

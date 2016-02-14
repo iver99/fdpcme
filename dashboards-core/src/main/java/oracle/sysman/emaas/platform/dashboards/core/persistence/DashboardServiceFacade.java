@@ -164,6 +164,11 @@ public class DashboardServiceFacade
 
 	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
 	{
+                if (emsDashboard.getSharePublic() == null)
+                {
+                    emsDashboard.setSharePublic(0);
+                }
+                
 		em.persist(emsDashboard);
 		commitTransaction();
 		return emsDashboard;

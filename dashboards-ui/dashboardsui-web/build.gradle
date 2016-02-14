@@ -49,8 +49,6 @@ dependencies {
         compile(group: 'org.apache.logging.log4j', name:'log4j-api', version:'2.0.2'){ transitive = false }
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-lookup-client', version: '1.0.0+'){ transitive = false }
         compile(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+'){ transitive = false }
-
-    	providedCompile(group: 'org.testng', name:'testng', version:'6.8.8'){exclude module: 'hamcrest-core'}
     	providedCompile(group: 'org.codehaus.groovy', name:'groovy-all', version:'2.2.1'){ transitive = false }
    
  	providedCompile(group: 'commons-codec', name:'commons-codec', version:'1.6') { transitive = false }
@@ -60,10 +58,7 @@ dependencies {
         providedCompile(group: 'org.apache.httpcomponents', name:'httpcore', version:'4.3') { transitive = false }
         providedCompile(group: 'org.apache.httpcomponents', name:'httpmime', version:'4.3.1') { transitive = false }
   
-    	providedCompile(group: 'com.jayway.restassured', name:'json-path', version:'2.3.1'){ transitive = false }
-    	providedCompile(group: 'com.jayway.restassured', name:'xml-path', version:'2.3.1'){ transitive = false }
-    	providedCompile(group: 'com.jayway.restassured', name:'rest-assured-common', version:'2.3.1'){ transitive = false }
-    	providedCompile(group: 'com.jayway.restassured', name:'rest-assured', version:'2.3.1'){ transitive = false }
+    	
         providedCompile(group: 'javax.servlet', name:'servlet-api', version:'2.5'){ transitive = false }
         providedCompile(group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'){ transitive = false }
         
@@ -264,7 +259,7 @@ task copyJsSource(type:Copy, dependsOn:[cleanJs, unpackJETFromArtifactory, unpac
        //this is here because of gradle bug, the old @version@ directory remains
 	    delete stagingDir+'/@version@'
 	    delete stagingDir+'/libs/@version@'
-	    delete webRootSourceDir+'/@version@/css'
+	    //delete webRootSourceDir+'/@version@/css'
     }
 }
 
@@ -504,7 +499,7 @@ compass {
     // so that http proxy issues do not affect us.  To enable this, 
     // we also build our own plugin for use.
     gemPath = file('build/.jruby/gems')
-    gemJars = ['com.oracle.emcs.apmcs:compass-gems:1.0.1']
+    gemJars = ['compass-gems:compass-gems:1.0.1']
     gems = []
     //if(project.hasProperty("devMode")){
 	cssDir file('public_html/@version@/css')
