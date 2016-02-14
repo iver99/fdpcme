@@ -55,6 +55,7 @@ define([
                 var appIdDashboard = "Dashboard";
                 var appIdTenantManagement = "TenantManagement";
                 var appIdError = "Error";
+                self.SERVICE_VERSION=encodeURIComponent('1.0+');
                 var appIdEventUI = "EventUI";
                 var appMap = {};
                 appMap[appIdAPM] = {
@@ -62,49 +63,49 @@ define([
                     "appName": "BRANDING_BAR_APP_NAME_APM",
                     "serviceDisplayName": "BRANDING_BAR_CLOUD_SERVICE_NAME_APM",
                     "serviceName": "apmUI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_apm_gs"
                 };
                 appMap[appIdITAnalytics] = {
                     "appId": "ITAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_IT_ANALYTICS", 
                     "serviceName": "EmcitasApplications",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_it_gs"
                 };
                 appMap[appIdLogAnalytics] = {
                     "appId": "LogAnalytics",
                     "appName": "BRANDING_BAR_APP_NAME_LOG_ANALYTICS", 
                     "serviceName": "LoganService",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_log_gs"
                 };
                 appMap[appIdDashboard] = {
                     "appId": "Dashboard",
                     "appName": "BRANDING_BAR_APP_NAME_DASHBOARD", 
                     "serviceName": "Dashboard-UI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_home_gs"
                 };
                 appMap[appIdTenantManagement] = {
                     "appId": "TenantManagement",
                     "appName": "BRANDING_BAR_APP_NAME_TENANT_MANAGEMENT_UI", 
                     "serviceName": "TenantManagementUI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_home_gs"
                 };     
                 appMap[appIdError] = {
                     "appId": "Error",
                     "appName": "", 
                     "serviceName": "Error",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": "em_home_gs"
                 };   
                 appMap[appIdEventUI] = {
                     "appId": "EventUI",
                     "appName": "", 
                     "serviceName": "EventUI",
-                    "version": "0.1",
+                    "version": self.SERVICE_VERSION,
                     "helpTopicId": ""
                 }; 
             
@@ -186,6 +187,7 @@ define([
                 //SSO logout handler
                 self.handleSignout = function() {
                     //Clear interval for extending user session
+                    /* globals clearInterval*/
                     if (window.intervalToExtendCurrentUserSession)
                         clearInterval(window.intervalToExtendCurrentUserSession);
                     
@@ -385,7 +387,7 @@ define([
                             async: true
                         });  
                     }
-                };
+                }
                 
                 function receiveMessage(event)
                 {
@@ -407,7 +409,7 @@ define([
                             showMessage(data);
                         }
                     }
-                };
+                }
                 
                 function showMessage(data) {
                     if (data) {
@@ -474,7 +476,7 @@ define([
                             setTimeout(function(){removeMessage(message);}, data.removeDelayTime);
                         }
                     }
-                };
+                }
                 
                 function removeMessage(data) {
                     if (data.category === catRetryInProgress) {
@@ -512,21 +514,21 @@ define([
                         if (displayMessageCount <= maxMsgDisplayCnt)
                             self.hiddenMessagesExpanded(false);
                     }
-                };
+                }
                 
                 function removeItemByValue(obj, value)
                 {
                     return obj.filter(function (val) {
                         return val !== value;
                     });
-                };
+                }
                 
                 function removeItemByPropertyValue(obj, prop, value)
                 {
                     return obj.filter(function (val) {
                         return val[prop] !== value;
                     });
-                };
+                }
                 
                 function checkNotifications() {
                     oj.Logger.info("Start to check notifications for branding bar. relNotificationCheck: "+
@@ -554,18 +556,18 @@ define([
                             }
                         }
                     }
-                };
+                }
                 
                 function getSubscribedAppsCallback(apps) {
                     oj.Logger.info("Finished getting subscribed applications for branding bar.", false);
                     subscribedApps = apps;
                     refreshAppName();
-                };
+                }
                 
                 function getSubscribedApplications() {
                     oj.Logger.info("Start to get subscribed applications for branding bar.", false);
                     dfu.checkSubscribedApplications(getSubscribedAppsCallback);
-                };
+                }
                 
                 function refreshAppName() {
                     var subscribedServices = null;
@@ -576,7 +578,7 @@ define([
                     else if (self.appId === 'Error')
                         subscribedApps = [];
                     if (subscribedApps && subscribedApps.length > 0) {
-                        for (i = 0; i < subscribedApps.length; i++) {
+                        for (var i = 0; i < subscribedApps.length; i++) {
                             var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
                             if (i === 0)
                                 subscribedServices = servicename;
@@ -585,7 +587,7 @@ define([
                         }
                     }
                     self.appName(subscribedServices);
-                };
+                }
             }
             
             return BrandingBarViewModel;

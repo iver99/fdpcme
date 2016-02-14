@@ -16,14 +16,14 @@ define(['knockout',
             if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
                     return wgt.WIDGET_DEFAULT_WIDTH;
             return Builder.BUILDER_DEFAULT_TILE_WIDTH;
-        };
+        }
         Builder.registerFunction(getTileDefaultWidth, 'getTileDefaultWidth');
 
-        function getTileDefaultHeight(wgt, mode) {
+        function getTileDefaultHeight(wgt) {
             if (wgt && (typeof wgt.WIDGET_DEFAULT_HEIGHT==='number') && (wgt.WIDGET_DEFAULT_HEIGHT%1)===0 && wgt.WIDGET_DEFAULT_HEIGHT >= 1)
                     return wgt.WIDGET_DEFAULT_HEIGHT;
             return Builder.BUILDER_DEFAULT_TILE_HEIGHT;
-        };
+        }
         Builder.registerFunction(getTileDefaultHeight, 'getTileDefaultHeight');
 
         function isURL(str_url) {
@@ -39,7 +39,7 @@ define(['knockout',
     //                        + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
                 var re = new RegExp(strRegex);
                 return re.test(str_url);
-            };
+            }
         Builder.registerFunction(isURL, 'isURL');
 
         function getVisualAnalyzerUrl(pName, pVersion) {
@@ -50,14 +50,14 @@ define(['knockout',
                 }
             }
             return url;
-        };
+        }
         Builder.registerFunction(getVisualAnalyzerUrl, 'getVisualAnalyzerUrl');
 
         function encodeHtml(html) {
             var div = document.createElement('div');
             div.appendChild(document.createTextNode(html));
             return div.innerHTML;
-        };
+        }
         Builder.registerFunction(encodeHtml, 'encodeHtml');
 
         function isContentLengthValid(content, maxLength) {
@@ -65,17 +65,17 @@ define(['knockout',
                 return false;
             var encoded = encodeHtml(content);
             return encoded.length > 0 && encoded.length <= maxLength;
-        };
+        }
         Builder.registerFunction(isContentLengthValid, 'isContentLengthValid');
 
         function decodeHtml(data) {
             return data && $("<div/>").html(data).text();
-        };
+        }
         Builder.registerFunction(decodeHtml, 'decodeHtml');
 
         function getBaseUrl() {
             return dfu.getDashboardsUrl();
-        };
+        }
         Builder.registerFunction(getBaseUrl, 'getBaseUrl');
 
         function initializeFromCookie() {
@@ -84,7 +84,7 @@ define(['knockout',
                 dtm.tenantName = userTenant.tenant;
                 dtm.userTenant  =  userTenant.tenantUser;      
             }
-        };
+        }
         Builder.registerFunction(initializeFromCookie, 'initializeFromCookie');
 
         function getDefaultHeaders() {
@@ -102,7 +102,7 @@ define(['knockout',
                 headers.Authorization="Basic "+btoa(dfu.getDevData().wlsAuth);
             }
             return headers;
-        };
+        }
         Builder.registerFunction(getDefaultHeaders, 'getDefaultHeaders');
 
         function loadDashboard(dashboardId, succCallBack, errorCallBack) {
@@ -167,14 +167,14 @@ define(['knockout',
                         errorCallBack(ko.mapping.fromJSON(e.responseText));
                 }
             });
-        };
+        }
         Builder.registerFunction(loadDashboard, 'loadDashboard');
 
         function isDashboardNameExisting(name) {
             if (!name)
                 return false;
             var exists = false;
-            var url = getBaseUrl() + "?queryString=" + name + "&limit=50&offset=0";
+            var url = getBaseUrl() + "?queryString=" + name + "&limit=50&offset=0&owners=Me";
             $.ajax(url, {
                 type: 'get',
                 dataType: "json",
@@ -196,7 +196,7 @@ define(['knockout',
                 async: false
             });
             return exists;
-        };
+        }
         Builder.registerFunction(isDashboardNameExisting, 'isDashboardNameExisting');
 
         function updateDashboard(dashboardId, dashboard, succCallBack, errorCallBack) {
@@ -335,7 +335,7 @@ define(['knockout',
                return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
             }
             return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-        };
+        }
         Builder.registerFunction(getGuid, 'getGuid');
         
         function isSmallMediaQuery() {
@@ -344,7 +344,66 @@ define(['knockout',
             var smObservable = oj.ResponsiveKnockoutUtils.createMediaQueryObservable(smQuery);
             window.DEV_MODE && console.debug("Checking sm media type result: " + (smObservable&smObservable()));
             return smObservable & smObservable();
-        };
+        }
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
+        
+        function fetchDashboardOptions(dashboardId, succCallBack, errorCallBack){
+            var url = dfu.buildFullUrl(getBaseUrl(),dashboardId+"/options" );
+            dfu.ajaxWithRetry(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        
+        Builder.registerFunction(fetchDashboardOptions, 'fetchDashboardOptions');
+        
+        function updateDashboardOptions(optionsJson, succCallBack, errorCallBack){
+            var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
+            dfu.ajaxWithRetry(url, {
+                type: 'put',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                data:JSON.stringify(optionsJson),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        
+        Builder.registerFunction(updateDashboardOptions, 'updateDashboardOptions');
+        
+        function saveDashboardOptions(optionsJson, succCallBack, errorCallBack){
+            var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
+            dfu.ajaxWithRetry(url, {
+                type: 'post',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                data:JSON.stringify(optionsJson),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        
+        Builder.registerFunction(saveDashboardOptions, 'saveDashboardOptions');
     }
 );

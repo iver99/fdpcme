@@ -212,7 +212,7 @@ $.widget( "dbs.typeAheadSearch", {
                                 },
                                 error: function() {
                                     //console.log("[dbsTypeAhead] fetch failed");
-			            response(_dataSource);
+                                    response(_dataSource);
 				}
                             } );
                         };
@@ -227,7 +227,7 @@ $.widget( "dbs.typeAheadSearch", {
 
 			// Search if the value has changed, or if the user retypes the same value
 			var equalValues = this.term === this._value(),
-		            modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+                            modifierKey = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 
 			if ( !equalValues || ( equalValues && !modifierKey ) ) {
 				//this.selectedItem = null;
@@ -237,7 +237,7 @@ $.widget( "dbs.typeAheadSearch", {
 	},
 
 	search: function( value, event ) {
-		value = value != null ? value : this._value();
+		value = value !== null ? value : this._value();
 
 		// always save the actual value, not the one passed as an argument
 		this.term = this._value();
@@ -305,7 +305,7 @@ $.widget( "dbs.typeAheadSearch", {
 	_keyEvent: function( keyEvent, event ) {
             if ( !this.isMultiLine ) {
 		// prevents moving cursor to beginning/end of the text field in some browsers
-	        event.preventDefault();
+                        event.preventDefault();
             }
 	},
         

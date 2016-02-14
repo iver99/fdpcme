@@ -6,14 +6,14 @@
 requirejs.config({
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui-amd': '../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
@@ -42,7 +42,7 @@ requirejs.config({
             }
         }
     },
-    waitSeconds: 60
+    waitSeconds: 300
 });
 
 
@@ -90,11 +90,11 @@ require(['ojs/ojcore',
                     appId: self.appId,
                     isAdmin: true
                 };
-            };
+            }
 
             function getNlsString(key, args) {
                 return oj.Translations.getTranslatedString(key, args);
-            };
+            }
             
             function TitleViewModel(){
                var self = this;
@@ -113,7 +113,7 @@ require(['ojs/ojcore',
                 self.baseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";
                 self.gsID = "em_home_gs";
                 self.videoID = "em_home_videos";
-                self.getStartedUrl = self.baseUrl + self.gsID;;
+                self.getStartedUrl = self.baseUrl + self.gsID;
                 self.videosUrl = self.baseUrl + self.videoID;
                 self.communityUrl = "http://cloud.oracle.com/management";
                 
@@ -166,24 +166,25 @@ require(['ojs/ojcore',
                 //get urls of databases and middleware
                 self.getITAVerticalAppUrl = function(rel) {
                     var serviceName = "EmcitasApplications";
-                    var version = "0.1"; //TODO version upgrade to 1.0                   
+                    var version = "1.0";                   
                     var url = dfu_model.discoverUrl(serviceName, version, rel);
                     return url;
                 };
                 
                 function fetchServiceLinks(data) {
                     var landingHomeUrls = {};
+                    var i;
                     if(data.cloudServices && data.cloudServices.length>0) {
                         var cloudServices = data.cloudServices;
                         var cloudServicesNum = cloudServices.length;
-                        for(var i=0; i<cloudServicesNum; i++) {
+                        for(i=0; i<cloudServicesNum; i++) {
                             landingHomeUrls[cloudServices[i].name] = cloudServices[i].href;
                         }
                     }
                     if(data.visualAnalyzers && data.visualAnalyzers.length>0) {
                         var dataExplorers = data.visualAnalyzers;
                         var dataExplorersNum = dataExplorers.length;
-                        for(var i=0; i<dataExplorersNum; i++) {
+                        for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
                             self.exploreDataLinkList.push(dataExplorers[i]);                            
@@ -205,7 +206,7 @@ require(['ojs/ojcore',
                     landingHomeUrls["mw_perf"] = self.getITAVerticalAppUrl("verticalApplication.mw-perf");
                     landingHomeUrls["mw_resource"] = self.getITAVerticalAppUrl("verticalApplication.mw-resource");
                     self.landingHomeUrls = landingHomeUrls;
-                };
+                }
                 self.getServiceUrls();
                                 
                 self.openAPM = function() {
