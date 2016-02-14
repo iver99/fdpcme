@@ -67,7 +67,9 @@ define(['knockout',
                     if (!target.is(".ui-draggable")) {
                         target.draggable({
                             zIndex: 30,
-                            handle: ".tile-drag-handle"
+                            handle: ".tile-drag-handle",
+                            opacity: 0.6,
+                            stack: ".dbd-tile-in-dragging"
                         });
                     }
                     else

@@ -20,9 +20,9 @@ define(['knockout', 'jquery'],
              * Show a page level message in branding bar
              * 
              * @param {Object} message message to be shown on UI, supported properties include:
-             *          type:	         String, Required. Message type, should be one of "error", "warn", "confirm", "info".
-             *          summary:	 String, Required. Message summary.
-             *          detail:	         String, Optional. Message details.
+             *          type:            String, Required. Message type, should be one of "error", "warn", "confirm", "info".
+             *          summary:         String, Required. Message summary.
+             *          detail:          String, Optional. Message details.
              *          removeDelayTime: Number, Optional. Delay time (in milliseconds) for the message to be closed automatically from common message UI. 
              *                           If not specified, it will not be closed automatically by default.
              * 

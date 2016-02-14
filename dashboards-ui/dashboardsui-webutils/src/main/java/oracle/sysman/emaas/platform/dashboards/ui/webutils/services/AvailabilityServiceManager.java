@@ -41,14 +41,14 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 	private static final long PERIOD = Timer.ONE_MINUTE;
 
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
-	private static final String DASHBOARD_API_SERVICE_VERSION = "0.1";
+	private static final String DASHBOARD_API_SERVICE_VERSION = "1.0+";
 	private static final String DASHBOARD_API_SERVICE_REL = "base";
 
 	private static final String DASHBOARD_COMMON_UI_SERVICE_NAME = "OMC-UI-Framework";
-	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "0.1";
+	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "1.0+";
 
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
-	private static final String SAVED_SEARCH_SERVICE_VERSION = "0.1";
+	private static final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
 	private static final String SAVED_SEARCH_SERVICE_REL = "search";
 
 	private Timer timer;
