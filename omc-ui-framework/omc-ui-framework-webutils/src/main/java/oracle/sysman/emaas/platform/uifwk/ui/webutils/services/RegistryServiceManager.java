@@ -291,7 +291,7 @@ public class RegistryServiceManager implements ApplicationServiceManager
 			LookupManager.getInstance().initComponent(Arrays.asList(serviceProps.getProperty("serviceUrls")));
 
 			logger.info("Checking RegistryService");
-			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", null) == null) {
+			if (RegistryLookupUtil.getServiceInternalLink("RegistryService", "1.0+", "collection/instances", null) == null) {
 				setRegistrationComplete(Boolean.FALSE);
 				logger.error("Failed to found registryService. OMC-UI-Framework registration is not complete.");
 				return false;

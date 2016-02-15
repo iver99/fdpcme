@@ -22,15 +22,16 @@ requirejs.config({
     },
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'knockout.mapping': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui': '../../libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
@@ -73,8 +74,7 @@ requirejs.config({
             merge: {
                 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsUiMsg'
             }
-        }
-        ,
+        },
         text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
@@ -83,7 +83,7 @@ requirejs.config({
             }
           }
     },
-    waitSeconds: 60
+    waitSeconds: 300
 });
 
 /**
@@ -120,12 +120,13 @@ require(['knockout',
     'builder/dashboard.tile.model',
     'builder/dashboard.tile.view',
     'builder/tool.bar.model',
+    'builder/dashboardset.toolbar.model',
     'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead'
 ],
     function(ko, $, dfu, _emJETCustomLogger,idfbcutil, oj) // this callback gets executed when all required modules are loaded
     {
-        var logger = new _emJETCustomLogger()
+        var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
@@ -179,20 +180,47 @@ require(['knockout',
                 self.headerHeight = height;
             });
         };
+        
+        function DashboardsetHeaderViewModel(){
+            var self = this;
+            self.userName = dfu.getUserName();
+            self.tenantName = dfu.getTenantName();
+            self.appId = "Dashboard";
+            self.brandingbarParams = {
+                userName: self.userName,
+                tenantName: self.tenantName,
+                appId: self.appId,
+                isAdmin:true
+            };
+        }
 
         var dsbId = dfu.getUrlParam("dashboardId");
-        if (dsbId) {
-            dsbId = decodeURIComponent(dsbId);
-        }    
-        var isInteger = /^([0-9]+)$/.test(dsbId);
-        if (!isInteger){
-           oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-           location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
-        }            
+        var isDashboardset = false;
+        if (dsbId.indexOf(',') !== -1) {
+            isDashboardset = true;
+        }
+        if (!isDashboardset) {
+            if (dsbId) {
+                dsbId = decodeURIComponent(dsbId);
+            }
+            var isInteger = /^([0-9]+)$/.test(dsbId);
+            if (!isInteger) {
+                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
+                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
+            }
+        }        
 
         Builder.initializeFromCookie();
 
         $(document).ready(function() {
+            if (isDashboardset) {
+                var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dsbId);
+                var headerViewModel = new DashboardsetHeaderViewModel();
+                ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);    
+                ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                $("#loading").hide();
+                $('#globalBody').show();
+            } else {
             Builder.loadDashboard(dsbId, function(dashboard) {
                 var $b = new Builder.DashboardBuilder(dashboard);
                 var tilesView = new Builder.DashboardTilesView($b);
@@ -239,7 +267,6 @@ require(['knockout',
 
                 ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);  
-                ko.applyBindings(null, document.getElementById('dbd-set-tabs'));
                 tilesViewModel.initialize();
                 ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
                 var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
@@ -249,6 +276,8 @@ require(['knockout',
 
                 $("#loading").hide();
                 $('#globalBody').show();
+                $('#dbd-set-tabs').hide();
+                
                 tilesView.enableDraggable();
                 tilesViewModel.show();
 
@@ -267,9 +296,10 @@ require(['knockout',
                 console.log(e.errorMessage());
                 if (e.errorCode && e.errorCode() === 20001) {
                     oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                    window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
                 }
             });
+        }
         });
     }
 );
@@ -281,9 +311,9 @@ function updateOnePageHeight(event) {
         console.log('one page tile height is set to ' + event.data.height);
         oj.Logger.log('one page tile height is set to ' + event.data.height);
     }
-};
+}
 
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
-};
+}
 window.addEventListener("message", updateOnePageHeight, false);

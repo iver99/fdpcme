@@ -62,7 +62,7 @@ define(['knockout',
                   self.isBrowserCloseEvent=false;
                 });
             
-            }
+            };
         }
         
         return new InternalBrowserCloseUtility();

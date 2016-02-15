@@ -90,7 +90,7 @@ public class TenantSubscriptionUtil
 			logger.warn("This is usually unexpected: now it's trying to retrieve subscribed applications for null tenant");
 			return null;
 		}
-		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "0.1", "collection/domains", null);
+		Link domainLink = RegistryLookupUtil.getServiceInternalLink("EntityNaming", "1.0+", "collection/domains", null);
 		if (domainLink == null || domainLink.getHref() == null || "".equals(domainLink.getHref())) {
 			logger.warn(
 					"Failed to get entity naming service, or its rel (collection/domains) link is empty. Exists the retrieval of subscribed service for tenant {}",

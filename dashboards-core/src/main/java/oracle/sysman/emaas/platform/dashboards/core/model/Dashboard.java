@@ -1,11 +1,5 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -13,12 +7,13 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonValue;
+
+import java.util.*;
 
 public class Dashboard
 {
@@ -165,6 +160,8 @@ public class Dashboard
 	private String screenShot;
 
 	private String screenShotHref;
+
+	private String optionsHref;
 
 	private String href;
 
@@ -434,6 +431,14 @@ public class Dashboard
 	public void setScreenShotHref(String screenShotHref)
 	{
 		this.screenShotHref = screenShotHref;
+	}
+
+	public String getOptionsHref() {
+		return optionsHref;
+	}
+
+	public void setOptionsHref(String optionsHref) {
+		this.optionsHref = optionsHref;
 	}
 
 	/**
