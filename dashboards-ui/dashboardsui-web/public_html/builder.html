@@ -107,7 +107,7 @@
                             <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
                                 <div class="oj-col dbs-type">
                                     <div class="oj-col">
-                                        <h4>Type</h4>
+                                        <h4 data-bind="text:getNlsString('DBS_HOME_FILTER_TYPE_LABEL')"></h4>
                                     </div>                                   
                                     <div class="oj-col">
                                         <label data-bind="text:dashboardsetInfo().type"></label>
@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="oj-col dbs-name">
                                     <div class="oj-col">
-                                        <h4>Name</h4>
+                                        <h4 data-bind="text:getNlsString('DBS_HOME_CREATE_DLG_NAME')"></h4>
                                     </div>
                                     <div class="oj-col">
                                         <input id="dbsHNameIn"
@@ -139,7 +139,27 @@
                                              component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE'), 
                                              rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.saveDbsDescription"></button>
                         </div>
-                    </div>              
+                    </div> 
+                    <div style="display:none" id="deleteDashboardset"
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
+                        <div class="oj-dialog-header oj-helper-clearfix">
+                            <span class="oj-dialog-title"  data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
+                        </div>
+                        <div class="oj-dialog-body">
+                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo().name)"></p>
+                            <p>
+                              Note:Deleting the dashboard set does not delete any of the individual dashboards you created and included in the set
+                            </p>
+                        </div>     
+                        <div class="oj-dialog-footer">
+                            <button data-bind="ojComponent: { 
+                                                 component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'), 
+                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs"></button>
+                            <button data-bind="ojComponent: { 
+                                                 component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'), 
+                                                 rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
+                        </div>
+                    </div>               
             </div>     
             
             <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
