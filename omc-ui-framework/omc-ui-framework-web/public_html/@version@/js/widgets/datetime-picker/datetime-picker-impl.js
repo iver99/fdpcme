@@ -1299,6 +1299,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             $(event.target).hasClass("oj-disabled")) {
                         self.random1(new Date().getTime());
                     } else {
+                        var ele = $(event.target);
+                        var year = parseInt(ele.parent().attr("data-year"));
+                        var month = parseInt(ele.parent().attr("data-month"));
+                        var day = parseInt(ele.text());  
+                        
+                        self.value(oj.IntlConverterUtils.dateToLocalIso(new Date(year, month, day)));
                         self.random(new Date().getTime());
                         self.setTimePeriodChosen(self.timePeriodCustom);
                     }
