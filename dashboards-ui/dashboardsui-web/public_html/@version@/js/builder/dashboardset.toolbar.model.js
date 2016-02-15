@@ -26,17 +26,16 @@ define(['knockout',
             self.dashboardsetItems = ko.observableArray();
 
             self.selectedDashboardItem = ko.observable();
-            
-            self.isCreator =ko.observable(true);
-            
+                        
             self.selectedDashboardItem.subscribe(function (selected) {
-                console.log("current selected dashboard: %o", selected);
+                console.log("current selectselectedDashboardItemed dashboard: %o", selected);
             });
 
             InitializeDashboardset(dashboardsetId);
 
             //later will receive the info from the backend
             self.dashboardsetInfo = ko.observable({"name":"Middleware Dashboards","description":"first dashboard set","type":"Dashboard Set"});
+            self.dashboardsetConfig={"isCreator":true,"refresh":ko.observable(false),"refreshOffIcon":ko.observable("dbd-icon-check"),"refreshOnIcon":ko.observable("dbd-noselected"),"share":ko.observable(true),"shareLabel":ko.observable("Share"),"addFavorite":ko.observable(true),"favoriteIcon":ko.observable("fa-star"),"favoriteLabel":ko.observable("Add favorite"),"setHome":ko.observable(true),"homeLabel":ko.observable("Set as Home"),"homeIcon":ko.observable("dbd-toolbar-icon-home")};
 
             self.isDashboardSet = ko.observable(dashboardsetId.length > 1);
             
@@ -44,8 +43,31 @@ define(['knockout',
                 var configId = data.item.attr('id');
                 switch (configId) {
                     case 'dbs-edit':
-                       $('#changeDashboardsetInfo').ojDialog("open");             
-                       break;
+                        $('#changeDashboardsetInfo').ojDialog("open");
+                        break;
+                    case 'refresh-off':
+                        self.dbConfigMenuClick.refreshDbs(self);       
+                        break;
+                    case 'refresh-time':
+                        self.dbConfigMenuClick.refreshDbs(self);
+                        break;
+                    case 'dbs-share':
+                         self.dbConfigMenuClick.shareDbs(self);
+                        break;
+                    case 'dbs-print':
+                        console.log("dbs-print");
+                        break;
+                    case 'dbs-favorite' :
+                        self.dbConfigMenuClick.favoriteDbs(self);
+                        break;
+                    case 'dbs-home':
+                        self.dbConfigMenuClick.homeDbs(self);
+                        break;
+                    case 'dbs-delete':
+                        $('#deleteDashboardset').ojDialog("open");
+                        break;
+                    default:
+                        break;
                 }
             };
             
@@ -84,7 +106,7 @@ define(['knockout',
            
             self.dbConfigMenuClick = new dbConfigMenuClick();  
             
-            self.dashboardsetMenu = [
+            self.dashboardsetMenu = ko.observableArray([
                 {
                     "label": "Edit",
                     "url": "#",
@@ -107,7 +129,7 @@ define(['knockout',
                             "label": "Off",
                             "url": "#",
                             "id": "refresh-off",
-                            "icon": "dbd-icon-check ",
+                            "icon": self.dashboardsetConfig.refreshOnIcon,
                             "title": "",
                             "disabled": "",
                             "endOfGroup": false,
@@ -116,7 +138,7 @@ define(['knockout',
                             "label": "On(Every 5 Minutes)",
                             "url": "#",
                             "id": "refresh-time",
-                            "icon": "dbd-icon-check ",
+                            "icon": self.dashboardsetConfig.refreshOffIcon,
                             "title": "",
                             "disabled": "",
                             "endOfGroup": false,
@@ -124,7 +146,7 @@ define(['knockout',
                         }]
                 },
                 {
-                    "label": "Share",
+                    "label":self.dashboardsetConfig.shareLabel,
                     "url": "#",
                     "id": "dbs-share",
                     "icon": "dbd-icon-users",
@@ -144,20 +166,20 @@ define(['knockout',
                     "subMenu": []
                 },
                 {
-                    "label": "Add favorite",
+                    "label": self.dashboardsetConfig.favoriteLabel,
                     "url": "#",
                     "id": "dbs-favorite",
-                    "icon": "fa-star",
+                    "icon": self.dashboardsetConfig.favoriteIcon,
                     "title": "",
                     "disabled": "",
                     "endOfGroup": false,
                     "subMenu": []
                 },
                 {
-                    "label": "Set as home",
+                    "label": self.dashboardsetConfig.homeLabel,
                     "url": "#",
                     "id": "dbs-home",
-                    "icon": "dbd-toolbar-icon-home",
+                    "icon": self.dashboardsetConfig.homeIcon,
                     "title": "",
                     "disabled": "",
                     "endOfGroup": true,
@@ -173,7 +195,7 @@ define(['knockout',
                     "endOfGroup": false,
                     "subMenu": []
                 }
-            ];
+            ]);
 
             self.deleteTtileDescription = function () {
                 $('.other-nav-info div').remove();
@@ -218,9 +240,55 @@ define(['knockout',
                     var descriptionEdit=$('.dbs-description textarea').val();
                     self.dashboardsetInfo({"name":nameEdit,"description":descriptionEdit});
                     $('#changeDashboardsetInfo').ojDialog("close");         
+                };   
+                self.shareDbs = function(dbsToolBar){
+                    dbsToolBar.dashboardsetConfig.share(!dbsToolBar.dashboardsetConfig.share());
+                        if(dbsToolBar.dashboardsetConfig.share()){
+                           dbsToolBar.dashboardsetConfig.shareLabel("Share"); 
+                        }else{
+                           dbsToolBar.dashboardsetConfig.shareLabel("Stop Share");  
+                        }
+                };
+                self.favoriteDbs = function (dbsToolBar) {
+                    dbsToolBar.dashboardsetConfig.addFavorite(!dbsToolBar.dashboardsetConfig.addFavorite());
+                    if (dbsToolBar.dashboardsetConfig.addFavorite()) {
+                        dbsToolBar.dashboardsetConfig.favoriteIcon("fa-star");
+                        dbsToolBar.dashboardsetConfig.homeLabel("Add favorite");
+                    } else {
+                        dbsToolBar.dashboardsetConfig.favoriteIcon("fa-star-o");
+                        dbsToolBar.dashboardsetConfig.homeLabel("Remove favorite");
+                    }
+                };
+                self.homeDbs = function(dbsToolBar){
+                     dbsToolBar.dashboardsetConfig.setHome(!dbsToolBar.dashboardsetConfig.setHome());
+                        if(dbsToolBar.dashboardsetConfig.setHome()){
+                           dbsToolBar.dashboardsetConfig.homeIcon("dbd-toolbar-icon-home"); 
+                           dbsToolBar.dashboardsetConfig.homeLabel("Set as Home"); 
+                        }else{
+                           dbsToolBar.dashboardsetConfig.homeIcon("dbd-toolbar-icon-home");  
+                           dbsToolBar.dashboardsetConfig.homeLabel("Remove as Home"); 
+                        }
+                };
+                self.refreshDbs= function(dbsToolBar){
+                    dbsToolBar.dashboardsetConfig.refresh(!dbsToolBar.dashboardsetConfig.refresh());
+                    if (dbsToolBar.dashboardsetConfig.refresh()) {
+                        dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
+                        dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-noselected");
+
+                    } else {
+                        dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-noselected");
+                        dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-icon-check");
+                    }
+                };
+                self.deleteDbs = function(){
+                    //TODO:ajax to delete
+                     $('#deleteDashboardset').ojDialog("close");  
+                };
+                self.cancelDeleteDbs= function(){
+                     $('#deleteDashboardset').ojDialog("close");   
                 };
             };
-            
+        
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                  var removeTarget=   ui.tab.attr('id') ;
                  var removeIdIndex=Number(removeTarget.slice(removeTarget.indexOf('-')+1));

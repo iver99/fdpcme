@@ -1020,7 +1020,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     padding-top: 10px;
 }
 
-#dbd-left-panel-footer-pages {
+.widget-paging-desc {
     margin-top: 10px;
 }
 
@@ -1246,7 +1246,9 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
     }
 }
-
+.dbd-noselected{
+    padding-left: 14px;
+}
 .dbd-icon-add:before{
     content: "\f067";
 }

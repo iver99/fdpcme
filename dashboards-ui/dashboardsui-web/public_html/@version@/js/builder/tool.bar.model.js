@@ -17,6 +17,7 @@ define(['knockout',
     function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
+        var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
         
         function ToolBarModel($b) {
             var self = this;
@@ -47,7 +48,7 @@ define(['knockout',
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
-            self.autoRefreshInterval = ko.observable(0);
+            self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
             self.isUserOptionsExist = ko.observable(false); 
             
             if (window.DEV_MODE) { // for dev mode debug only
@@ -111,13 +112,13 @@ define(['knockout',
                     self.dashboard.id(),
                     function (data) {
                         //sucessfully get options
-                        self.autoRefreshInterval(data["autoRefreshInterval"]);
                         self.isUserOptionsExist(true);
-                        self.setAutoRefreshOptoin(self.autoRefreshInterval());
+                        self.setAutoRefreshOptoin(data["autoRefreshInterval"]);
                     },
                     function (jqXHR, textStatus, errorThrown) {
                         if(jqXHR.status === 404){
                             self.isUserOptionsExist(false);
+                            self.setAutoRefreshOptoin(DEFAULT_AUTO_REFRESH_INTERVAL);
                         }
                     });
             };
@@ -367,7 +368,9 @@ define(['knockout',
                 if (self.isUserOptionsExist()) {
                     Builder.updateDashboardOptions(optionsJson);
                 } else {
-                    Builder.saveDashboardOptions(optionsJson);
+                    Builder.saveDashboardOptions(optionsJson,function(){
+                        self.isUserOptionsExist(true);
+                    });
                 }
                 
             };
@@ -741,15 +744,14 @@ define(['knockout',
             self.intervalID = null;
             self.setAutoRefreshOptoin = function (interval) {
                 self.autoRefreshInterval(interval);
-                self.isUserOptionsExist(true);
                 if (null !== self.intervalID) {
                     clearInterval(self.intervalID);
                 }
-
-                if (window.DEV_MODE) {
-                    interval = 3000;
-                }
+                
                 if (interval) {
+                    if (window.DEV_MODE) {
+                        interval = 3000;
+                    }
                     self.intervalID = setInterval(function () {
                         $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
                     }, interval);
@@ -758,17 +760,6 @@ define(['knockout',
 
             //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
-                {
-                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_add",
-                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-                    "icon":"dbd-toolbar-icon-add-widget",
-                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-                    "endOfGroup": false
-                },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
