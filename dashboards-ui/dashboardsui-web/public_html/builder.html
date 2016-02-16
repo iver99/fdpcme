@@ -897,14 +897,17 @@
                         --> 
                         <div id="dbd-left-panel-footer-btns">
                             <div class="oj-row">
-                                <div id="dbd-left-panel-footer-pages" class="oj-col oj-sm-3 oj-md-3 oj-lg-3" 
+                                <div class="oj-col oj-sm-3 oj-md-3 oj-lg-3 widget-paging-desc" 
                                      data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES')"></div>
-                                <div class="oj-col oj-sm-9 oj-md-9 oj-lg-9">
+                                <div class="oj-col oj-sm-6 oj-md-6 oj-lg-6">
                                     <input id="dbd-left-panel-widgets-page-input" aria-label="page"
                                             data-bind="ojComponent: {
                                               component: 'ojInputNumber',
                                               max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
                                               displayOptions: {converterHint: 'none', validatorHint: 'none', title: 'none', messages: 'none'}}"/>
+                                </div>
+                                <div class="oj-col oj-sm-3 oj-md-3 oj-lg-3 widget-paging-desc">
+                                    of <span data-bind="text: totalPages">1</span>
                                 </div>
                             </div>
                         </div>
