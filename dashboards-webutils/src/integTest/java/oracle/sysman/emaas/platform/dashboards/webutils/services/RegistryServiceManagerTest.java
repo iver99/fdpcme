@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 public class RegistryServiceManagerTest
 {
 	RegistryServiceManager rsm = new RegistryServiceManager();
-
+        private final static String VERSION="1.0+";
 	@Test(groups = { "s1" })
 	public void testGetName()
 	{
@@ -82,7 +82,7 @@ public class RegistryServiceManagerTest
 			serviceProps.put("serviceUrls", "http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
 			serviceProps.put("registryUrls", "http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
 			serviceProps.put("serviceName", "Dashboard-API");
-			serviceProps.put("version", "0.1");
+			serviceProps.put("version", VERSION);
 			new Expectations() {
 				{
 					anyContext.lookup(anyString);
@@ -91,7 +91,7 @@ public class RegistryServiceManagerTest
 					result = "http://domain.hostname:port";
 					PropertyReader.loadProperty(anyString);
 					result = serviceProps;
-					RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", anyString);
+					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
 					result = new Link().withRel("collection/instances").withHref(
 							"http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
 				}
@@ -102,7 +102,7 @@ public class RegistryServiceManagerTest
 
 			new Expectations() {
 				{
-					RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", anyString);
+					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
 					result = null;
 				}
 			};
@@ -111,7 +111,7 @@ public class RegistryServiceManagerTest
 
 			new Expectations() {
 				{
-					RegistryLookupUtil.getServiceInternalLink("RegistryService", "0.1", "collection/instances", anyString);
+					RegistryLookupUtil.getServiceInternalLink("RegistryService", VERSION, "collection/instances", anyString);
 					result = new Link().withRel("collection/instances").withHref(
 							"http://den00zyr.us.oracle.com:7004/registry/servicemanager/registry/v1");
 					RegistrationManager.getInstance().getRegistrationClient().register();

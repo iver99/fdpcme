@@ -105,8 +105,9 @@ public class EmsDashboardTileTest {
 
     @Test
     public void testGetLastModificationDate() throws Exception {
-        emsDashboardTile.setLastModificationDate(new Date());
-        assertEquals(emsDashboardTile.getLastModificationDate(),new Date());
+        Date d = new Date();
+        emsDashboardTile.setLastModificationDate(d);
+        assertEquals(emsDashboardTile.getLastModificationDate(),d);
     }
 
     @Test

@@ -38,11 +38,11 @@ public class AvailabilityServiceManagerTest
 	private final RegistryServiceManager rsm = new RegistryServiceManager();
 	private final AvailabilityServiceManager asm = new AvailabilityServiceManager(rsm);
 	private final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
-	private final String DASHBOARD_API_SERVICE_VERSION = "0.1";
+	private final String DASHBOARD_API_SERVICE_VERSION = "1.0+";
 	private final String DASHBOARD_API_SERVICE_REL = "base";
 
 	private final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
-	private final String SAVED_SEARCH_SERVICE_VERSION = "0.1";
+	private final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
 	private final String SAVED_SEARCH_SERVICE_REL = "search";
 
 	@Test(groups = { "s1" })
