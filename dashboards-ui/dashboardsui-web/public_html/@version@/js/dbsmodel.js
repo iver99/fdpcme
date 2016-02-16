@@ -37,7 +37,22 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.nameInputed = ko.observable(undefined); //read only input text
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
-        self.targetFilterValue = ko.observable(["OFF"]);
+        self.targetFilterValue = ko.observable(["OFF"]);        
+        self.selectType =  ko.observable("DASHBOARDS");
+        self.singleVisible = ko.observable(true);
+        self.setVisible=ko.observable(false);
+        
+        self.dashboardtypeSelectFuc=function(){
+            if(self.selectType()==="DASHBOARDS"){
+                self.singleVisible(true);
+                self.setVisible(false);                    
+            }else{
+                self.singleVisible(false);
+                self.setVisible(true);
+            }
+            return true;
+        };
+        
         self.isDisabled = ko.computed(function() { 
             if (self.nameInputed() && self.nameInputed().length > 0)
             {
@@ -373,11 +388,11 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             //self.tracker(undefined);
             self.createMessages.removeAll();
             
-            var _addeddb = {"name": self.createDashboardModel.name(), 
+            var _addeddb = { "createType":self.createDashboardModel.selectType(),
+                            "name": self.createDashboardModel.name(), 
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
-            
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
                 //_trackObj = new oj.InvalidComponentTracker();
