@@ -10,41 +10,31 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
+import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author wenjzhu
@@ -160,6 +150,28 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 
+	}
+
+	@GET
+	@Path("{id: [1-9][0-9]*}/options")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getDashboardUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+									 @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer, @PathParam("id") Long dashboardId) {
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}/options", dashboardId);
+		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
+		try {
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			UserOptions options = userOptionsManager.getOptionsById(dashboardId, tenantId);
+			return Response.ok(getJsonUtil().toJson(options)).build();
+		} catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		} catch (BasicServiceMalfunctionException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		} finally {
+			clearUserContext();
+		}
 	}
 
 	@GET
@@ -312,6 +324,78 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
+    @PUT
+    @Path("{id: [1-9][0-9]*}/options")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+                                      @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+                                      @PathParam("id") Long dashboardId, JSONObject inputJson) {
+        infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
+        UserOptions userOption = null;
+        try {
+            userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
+            if (userOption != null && userOption.getAutoRefreshInterval() != null) {
+                userOption.setAutoRefreshInterval(userOption.getAutoRefreshInterval());
+            }
+        } catch (IOException e) {
+            logger.error(e.getLocalizedMessage(), e);
+            ErrorEntity error = new ErrorEntity(e);
+            return buildErrorResponse(error);
+        }
+
+        UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
+        try {
+            Long tenantId = getTenantId(tenantIdParam);
+            initializeUserContext(tenantIdParam, userTenant);
+            userOption.setDashboardId(dashboardId);//override id in comsumned json if exist;
+            userOptionsManager.updateUserOptions(userOption, tenantId);
+            return Response.ok(getJsonUtil().toJson(userOption)).build();
+        } catch (DashboardException e) {
+            return buildErrorResponse(new ErrorEntity(e));
+        } catch (BasicServiceMalfunctionException e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return buildErrorResponse(new ErrorEntity(e));
+        } finally {
+            clearUserContext();
+        }
+    }
+
+    @POST
+    @Path("{id: [1-9][0-9]*}/options")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+                                      @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+                                      @PathParam("id") Long dashboardId, JSONObject inputJson) {
+        infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/{}/options/", dashboardId);
+        UserOptions userOption = null;
+        try {
+            userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
+            if (userOption != null && userOption.getAutoRefreshInterval() != null) {
+                userOption.setAutoRefreshInterval(userOption.getAutoRefreshInterval());
+            }
+        } catch (IOException e) {
+            logger.error(e.getLocalizedMessage(), e);
+            ErrorEntity error = new ErrorEntity(e);
+            return buildErrorResponse(error);
+        }
+
+        UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
+        try {
+            Long tenantId = getTenantId(tenantIdParam);
+            initializeUserContext(tenantIdParam, userTenant);
+            userOption.setDashboardId(dashboardId);//override id in comsumned json if exist;
+            userOptionsManager.saveUserOptions(userOption, tenantId);
+            return Response.ok(getJsonUtil().toJson(userOption)).build();
+        } catch (DashboardException e) {
+            return buildErrorResponse(new ErrorEntity(e));
+        } catch (BasicServiceMalfunctionException e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return buildErrorResponse(new ErrorEntity(e));
+        } finally {
+            clearUserContext();
+        }
+    }
 
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
@@ -370,6 +454,7 @@ public class DashboardAPI extends APIBase
 	{
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);
+        updateDashboardOptionsHref(dbd, tenantName);
 		return dbd;
 	}
 
@@ -387,4 +472,18 @@ public class DashboardAPI extends APIBase
 		dbd.setScreenShotHref(screenShotUrl);
 		return dbd;
 	}
+
+    private Dashboard updateDashboardOptionsHref(Dashboard dbd, String tenantName)
+    {
+        if (dbd == null) {
+            return null;
+        }
+        String externalBase = DashboardAPIUtil.getExternalDashboardAPIBase(tenantName);
+        if (StringUtil.isEmpty(externalBase)) {
+            return null;
+        }
+        String optionsUrl = externalBase + (externalBase.endsWith("/") ? "" : "/") + dbd.getDashboardId() + "/options";
+        dbd.setOptionsHref(optionsUrl);
+        return dbd;
+    }
 }

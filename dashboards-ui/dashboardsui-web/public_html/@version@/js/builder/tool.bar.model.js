@@ -47,7 +47,9 @@ define(['knockout',
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
-
+            self.autoRefreshInterval = ko.observable(0);
+            self.isUserOptionsExist = ko.observable(false); 
+            
             if (window.DEV_MODE) { // for dev mode debug only
                 self.changeMode = function() {
                     self.tilesViewModel.editor.changeMode(self.tilesViewModel.editor.mode === self.tilesViewModel.tabletMode ? self.tilesViewModel.normalMode : self.tilesViewModel.tabletMode);
@@ -92,6 +94,7 @@ define(['knockout',
 
             self.initialize = function() {
                 self.initEventHandlers();
+                self.initUserOtions();
                 $('#builder-dbd-name-input').on('blur', function(evt) {
                     if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
                         self.cancelChangeDashboardName();
@@ -101,6 +104,22 @@ define(['knockout',
                 $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
                     self.handleAddWidgetTooltip();
                 });
+            };
+            
+            self.initUserOtions = function () {
+                Builder.fetchDashboardOptions(
+                    self.dashboard.id(),
+                    function (data) {
+                        //sucessfully get options
+                        self.autoRefreshInterval(data["autoRefreshInterval"]);
+                        self.isUserOptionsExist(true);
+                        self.setAutoRefreshOptoin(self.autoRefreshInterval());
+                    },
+                    function (jqXHR, textStatus, errorThrown) {
+                        if(jqXHR.status === 404){
+                            self.isUserOptionsExist(false);
+                        }
+                    });
             };
 
             self.initEventHandlers = function() {
@@ -338,6 +357,17 @@ define(['knockout',
                     self.tilesViewModel.dashboard.screenShot = ko.observable(null);
                     self.handleSaveUpdateDashboard(outputData);
                 }
+                 var optionsJson = {
+                    "dashboardId": self.dashboard.id(),
+                    "autoRefreshInterval": self.autoRefreshInterval()
+                };
+                //save user options
+                if (self.isUserOptionsExist()) {
+                    Builder.updateDashboardOptions(optionsJson);
+                } else {
+                    Builder.saveDashboardOptions(optionsJson);
+                }
+                
             };
 
             self.handleSaveUpdateDashboard = function(outputData) {
@@ -710,22 +740,23 @@ define(['knockout',
             };
             
             self.intervalID = null;
-            self.setAutoRefreshOptoin = function (isEnabled, interval) {
+            self.setAutoRefreshOptoin = function (interval) {
+                self.autoRefreshInterval(interval);
+                self.isUserOptionsExist(true);
                 if (null !== self.intervalID) {
                     clearInterval(self.intervalID);
                 }
-                self.dashboard.enableRefresh(isEnabled);
 
-                if (isEnabled === true) {
-                    if (window.DEV_MODE) {
-                        interval = 3000;
-                    }
+                if (window.DEV_MODE) {
+                    interval = 3000;
+                }
+                if (interval) {
                     self.intervalID = setInterval(function () {
                         $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
                     }, interval);
                 }
             };
-            
+
             //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
                 {
@@ -765,12 +796,14 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_OFF'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_off",
-                            "icon": self.dashboard.enableRefresh() ? "":"fa-check",
+                            "icon": ko.computed(function(){
+                              return self.autoRefreshInterval() === 0 ? "fa-check":"";  
+                            }),
                             "title": "",
                             "onclick": function(data,event){
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
                                 event.stopPropagation();
-                                self.setAutoRefreshOptoin(false);
+                                self.setAutoRefreshOptoin(0);
                             },
                             "disabled": false,
                             "showOnMobile": true,
@@ -780,12 +813,14 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_ON'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_on",
-                            "icon":  self.dashboard.enableRefresh() ? "fa-check":"",
+                            "icon":ko.computed(function(){
+                              return self.autoRefreshInterval() ? "fa-check":"";  
+                            }),
                             "title": "",
                             "onclick": function (data, event) {
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
                                 event.stopPropagation();
-                                self.setAutoRefreshOptoin(true,300000);// 5 minutes
+                                self.setAutoRefreshOptoin(300000);// 5 minutes
                             },
                              "disabled": false,
                             "showOnMobile": true,

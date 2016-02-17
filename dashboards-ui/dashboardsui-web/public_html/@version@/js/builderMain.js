@@ -81,7 +81,7 @@ requirejs.config({
             }
           }
     },
-    waitSeconds: 60
+    waitSeconds: 300
 });
 
 /**

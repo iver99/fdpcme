@@ -86,6 +86,9 @@ task appServerInit << {
 	if (!project.hasProperty('adminUserPassword')) { 
 		project.ext.adminUserPassword = "$appServerconfig.adminUserPwd"; 
 	}     
+                        if (!project.hasProperty('appServerTargetName')) {
+                            project.ext.wlsserver_target = "Server-6";           // default to 'Server-6' if not specified on command line
+                        }   
 
 	project.ext.t3URL = "t3://${serverHost}:${adminServerPost}" 
 	
@@ -107,7 +110,7 @@ task appServerDeploy{
 
 		ant.wldeploy(action:'deploy',  
 		source:     ear.archivePath, 
-		targets:	'Server-6',
+		targets:    wlsserver_target,
 		name:       "DashboardService-API-6",
 		adminurl:   t3URL,  
 		user:       adminUser, 

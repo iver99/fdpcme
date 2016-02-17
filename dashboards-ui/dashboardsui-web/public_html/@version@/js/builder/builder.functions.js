@@ -346,5 +346,64 @@ define(['knockout',
             return smObservable & smObservable();
         }
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
+        
+        function fetchDashboardOptions(dashboardId, succCallBack, errorCallBack){
+            var url = dfu.buildFullUrl(getBaseUrl(),dashboardId+"/options" );
+            dfu.ajaxWithRetry(url, {
+                type: 'get',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        
+        Builder.registerFunction(fetchDashboardOptions, 'fetchDashboardOptions');
+        
+        function updateDashboardOptions(optionsJson, succCallBack, errorCallBack){
+            var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
+            dfu.ajaxWithRetry(url, {
+                type: 'put',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                data:JSON.stringify(optionsJson),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        
+        Builder.registerFunction(updateDashboardOptions, 'updateDashboardOptions');
+        
+        function saveDashboardOptions(optionsJson, succCallBack, errorCallBack){
+            var url = dfu.buildFullUrl(getBaseUrl(),optionsJson["dashboardId"]+"/options" );
+            dfu.ajaxWithRetry(url, {
+                type: 'post',
+                dataType: "json",
+                headers: getDefaultHeaders(),
+                data:JSON.stringify(optionsJson),
+                success: function(data) {
+                    if (succCallBack)
+                        succCallBack(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (errorCallBack)
+                        errorCallBack(jqXHR, textStatus, errorThrown);
+                }
+            });
+        }
+        
+        Builder.registerFunction(saveDashboardOptions, 'saveDashboardOptions');
     }
 );

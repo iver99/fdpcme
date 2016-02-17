@@ -46,7 +46,7 @@ requirejs.config({
             }
           }
     },
-    waitSeconds: 60
+    waitSeconds: 300
 });
 
 
@@ -87,6 +87,7 @@ require(['ojs/ojcore',
                 self.initEnd = ko.observable(end);
                 self.timePeriodsNotToShow = ko.observableArray([]);
                 self.timeDisplay = ko.observable("short");
+                self.timePeriodPre = ko.observable("Last 7 days");
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
@@ -101,12 +102,13 @@ require(['ojs/ojcore',
 //                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
 //                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
                     dtpickerPosition: self.floatPosition,
+                    timePeriod: "Last 7 days", //self.timePeriodPre,
                     callbackAfterApply: function (start, end, tp, tf) {
                         console.log(start);
                         console.log(end);
                         console.log(tp);
                         console.log(tf);
-                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
+//                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         self.start(self.dateTimeConverter1.format(appliedStart));
@@ -125,7 +127,8 @@ require(['ojs/ojcore',
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
                     self.timeDisplay("long");
-                };
+                    self.timePeriodPre("Last 90 days");                    
+                }
                 
                 self.lineSeriesValues = ko.observableArray();
                 self.lineGroupsValues = ko.observableArray();
@@ -134,6 +137,7 @@ require(['ojs/ojcore',
                     var lineSeries = [];
                     var lineGroups = [];
                     var timeInterval, dateTimeDiff;
+                    var startTmp, endTmp;
 
                     var dateTimeOption = {formatType: "datetime", dateFormat: "short"};
                     self.dateTimeConverter = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
