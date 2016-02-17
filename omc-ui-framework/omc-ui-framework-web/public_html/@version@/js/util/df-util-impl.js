@@ -8,6 +8,7 @@ define([
     {
         function DashboardFrameworkUtility(userName, tenantName) {
             var self = this;
+            self.SERVICE_VERSION=encodeURIComponent('1.0+');
             var ajaxUtil = new ajaxUtilModel();
                 
             self.userName = userName;
@@ -298,7 +299,7 @@ define([
              * @returns {String}
              */
             self.discoverLogoutUrl = function() {
-                return self.discoverUrl('SecurityService', '0.1', 'sso.logout');
+                return self.discoverUrl('SecurityService', self.SERVICE_VERSION, 'sso.logout');
             };
             
             /**
@@ -307,7 +308,7 @@ define([
              * @returns 
              */
             self.discoverLogoutUrlAsync = function(callbackFunc) {
-                return self.discoverUrlAsync('SecurityService', '0.1', 'sso.logout', callbackFunc);
+                return self.discoverUrlAsync('SecurityService', self.SERVICE_VERSION, 'sso.logout', callbackFunc);
             };
 
             /**

@@ -6,11 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" type="image/png" href="/emsaasui/uifwk/images/o_logo.png" />
         <!-- This is the main css file for the default Alta theme -->
-        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.1.2/alta/oj-alta-min.css" type="text/css"/>
+        <link rel="stylesheet" href="libs/@version@/js/oraclejet/css/libs/oj/v1.2.0/alta/oj-alta-min.css" type="text/css"/>
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-        
+ 
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -37,7 +37,7 @@
                                     <h1 data-bind="text: dashboardName, attr: {title: dashboardName}"></h1>
                                     <button id="builder-dbd-name-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDialogModel.open, ojComponent: {
-                                                    component:'ojButton'
+                                                    component:'ojButton', chroming: 'half'
                                         }">
                                         <img src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                     </button>
@@ -68,14 +68,14 @@
                                                attr: {placeholder: getNlsString('DBS_BUILDER_REQUIRE_NAME')}" maxlength="64">
                                 <button id="builder-dbd-name-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardName,ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half'
                                     }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
                                   <button id="builder-dbd-name-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardName, ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half'
                                     }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
@@ -95,7 +95,7 @@
                                           class="dbd-display-area-text"></span>
                                     <button id="builder-dbd-description-editor-btn" class="oj-button oj-default oj-button-half-chrome dbd-display-area-editor-btn"
                                               data-bind="click: editDashboardDescription,ojComponent: {
-                                                    component:'ojButton'
+                                                    component:'ojButton', chroming: 'half'
                                         }">
                                         <img width="16" height="16" src="@version@/images/func_edit_16_ena.png" data-bind="attr: {alt: getNlsString('COMMON_BTN_EDIT')}"/>
                                     </button>
@@ -109,14 +109,14 @@
                                                style:'max-width:55em;'}}" maxlength="256">
                                 <button id="builder-dbd-description-ok" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:okChangeDashboardDescription,ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half',
                                     }, attr: {title: getNlsString('COMMON_BTN_OK')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-confirmation oj-fwk-icon"></span>
                                   </button>
                                   <button id="builder-dbd-description-cancel" class="oj-button oj-default oj-button-half-chrome"
                                           data-bind="click:cancelChangeDashboardDescription, ojComponent: {
-                                                component:'ojButton'
+                                                component:'ojButton', chroming: 'half'
                                     }, attr: {title: getNlsString('COMMON_BTN_CANCEL')}" tabindex="0">
                                     <span role="img"
                                         class="oj-fwk-icon-status-error oj-fwk-icon"></span>
@@ -218,7 +218,7 @@
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
                             <!-- ko if: !disabled  -->
                             <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
-                                    <a data-bind="attr:{'title': title}, href: url, click: onclick">
+                                    <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
                                         <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                                         <span data-bind="text: label"></span>
                                     </a>
@@ -244,13 +244,13 @@
                         
                         <button id="dashboard-screenshot" class="oj-button oj-default oj-button-half-chrome no-print"
                                 data-bind="click: handleDashboardSave, ojComponent: {
-                                        component:'ojButton', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
+                                        component:'ojButton', chroming: 'half', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
                             }, attr: {title: getNlsString('DBS_BUILDER_BTN_SAVE_DASHBOARD')}, visible: editDisabled() !== true && $root.tilesViewModel.isMobileDevice !== 'true'">
                         </button>
                         <button id="dashboardOptsBtn"
                                 class='oj-button oj-default oj-button-half-chrome no-print'
-                                data-bind="visible: true, ojComponent: { component: 'ojButton', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
+                                data-bind="visible: true, ojComponent: { component: 'ojButton', chroming: 'half', label: getNlsString('DBS_BUILDER_BTN_OPTIONS'), icons: {start:'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-option'},
                                     menu: '#dashboardOptsMenu'},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
@@ -479,188 +479,10 @@
                 </div>
             </div>
             <!-- /ko -->
-            <div id="main-container" class="oj-col stretch-height" style="padding-left: 0; padding-right: 0;" role="main">
-                <!-- ko stopBinding: true -->
-                <div id="dbd-left-panel" class="fit-size-horizontal-sibling" style="display: none;"
-                     data-bind="css: {'dbd-no-left-panel': completelyHidden(), 'dbd-left-panel-show': showPanel(), 'dbd-left-panel-hide': !showPanel()}">
-                    <!-- ko if: showPanel() -->
-                    <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
-                        <div class="oj-row">
-                            <div class="oj-col">
-                                <h3 class="dbd-left-panel-header-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_TITLE')"></h3>
-                                <button class="oj-button-half-chrome" data-bind="click: hideLeftPanel,
-                                    ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL'), display: 'icons', 
-                                    icons: {start:'left-panel-dbd-hide-region-icon'}}" style="margin-top: 5px;"> 
-                                </button>
-                            </div>
-                        </div>
-                        <div class="dbd-left-panel-header-search">
-                            <div  class="dbd-left-panel-header-search-input">
-                                <input id="sinput" type="text" name="searchInput"
-                                   data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
-                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
-                            </div>
-                            <div>
-<!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
-                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
-                                        icons: {start:'left-panel-dbd-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
-                                        height: 30px;
-                                        line-height: 30px;
-                                        vertical-align: middle;
-                                        text-align: center;
-                                        float: left;"> 
-                                </button>-->
-                                <button id="dbd-left-panel-header-search-btn" class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
-                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
-                                        icons: {start:'left-panel-dbd-search-icon'}}"> 
-                                </button> 
-                            </div>
-                        </div>
-                    </div>
-                    <div id="dbd-left-panel-widgets" class="fit-size">
-                        <div class="oj-col stretch-width" data-bind="foreach: widgets">
-                            <div class="dbd-left-panel-widget">
-                                <div class="dbd-left-panel-widget-text"
-                                            data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                    <span data-bind="text:WIDGET_NAME"></span>
-                                </div>
-                                <button class="oj-button-half-chrome" 
-                                        data-bind="attr: {id: 'widget-goto-'+WIDGET_UNIQUE_ID()}, click: $root.widgetGoDataExploreHandler,
-                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_BTN_LABEL'), 
-                                        display: 'icons', icons: {start:'left-panel-dbd-widget-goto-icon'}}"> 
-                                </button>
-                                <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
-                                                ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
-                                    <div class="oj-row">
-                                        <div class="oj-col oj-sm-12 oj-md-12">
-                                            <h2 data-bind="text:WIDGET_NAME"></h2>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="oj-row">
-                                        <div class="oj-col oj-sm-4 oj-md-4">
-                                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="height:120px;width:120px;"/>
-                                        </div>
-                                        <div class="oj-col oj-sm-8 oj-md-8">
-                                            <span data-bind="text:WIDGET_DESCRIPTION" style="color: #9e9e9e;"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling">
-                        <div id="dbd-left-panel-footer-text">
-                            <div class="oj-row">
-                                <div id="dbd-left-panel-text" class="oj-col oj-sm-6 oj-md-6 oj-lg-6">
-                                    <div id="dbd-left-panel-text-handle" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT')"></div>
-                                    <div id="left-panel-text-helper" class="left-panel-text-helper">
-                                        <p><span id="left-panel-text-helper-content" 
-                                                 data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_ADD_TEXT_HELPER')"><span></p>
-                                    </div>
-                                </div>
-<!--                                <div id="dbd-left-panel-link" class="oj-col oj-sm-6 oj-md-6 oj-lg-6" style="cursor: move;">
-                                    <div id="dbd-left-panel-link-handle" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK')"></div>
-                                    <div id="left-panel-link-helper" class="left-panel-link-helper">
-                                        <p><span data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DESC')"><span></p>
-                                    </div>
-                                </div>-->
-                            </div>
-                        </div>
-                        <div id="dbd-left-panel-footer-btns">
-                            <div class="oj-row">
-                                <div id="dbd-left-panel-footer-pages" class="oj-col oj-sm-3 oj-md-3 oj-lg-3" 
-                                     data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES')"></div>
-                                <div class="oj-col oj-sm-9 oj-md-9 oj-lg-9">
-                                    <input id="dbd-left-panel-widgets-page-input" aria-label="page"
-                                            data-bind="ojComponent: {
-                                              component: 'ojInputNumber',
-                                              max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
-                                              displayOptions: {converterHint: 'none', validatorHint: 'notewindow', title: 'none', messages: 'notewindow'}}"/>
-                                </div>
-                            </div>
-                            <div class="oj-row" style="margin-top: 10px;">
-                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12" data-bind="visible: showTimeControl">
-                                    <span class="oj-form-control oj-choice-row">
-                                        <input id="show-time-selector" type="checkbox" 
-                                               class="oj-checkbox-nocomp" data-bind="checked: computedEnableTimeControl"/>
-                                        <label for="show-time-selector" class="oj-checkbox-label-nocomp" 
-                                               data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SHOW_TIME_SELECTOR')"></label>
-                                    </span>
-                                </div>
-                                <div class="oj-col oj-sm-12 oj-md-12 oj-lg-12">
-                                    <span class="oj-form-control oj-choice-row">
-                                        <input id="show-referesh-control" type="checkbox" 
-                                               class="oj-checkbox-nocomp"  data-bind="checked: dashboard.enableRefresh"/>
-                                        <label for="show-referesh-control" class="oj-checkbox-label-nocomp"
-                                               data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_SHOW_REFRESH')"></label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /ko -->
-                    <!-- ko if: !showPanel() -->
-                    <button id="dbd-left-panel-show-btn" class="oj-button-half-chrome" data-bind="click: showLeftPanel,
-                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL'), display: 'icons', 
-                        icons: {start:'left-panel-dbd-show-region-icon'}}"> 
-                    </button>
-                    <!-- /ko -->
-                </div>
-                <!-- /ko -->
-                <!--<div class="oj-row stretch-height tile-container" id="tileContainer"  
-                     style="height: 1000px; position: absolute; left: 0; top: 0;">-->
-                    <!--div id='show-hide-timeslider-checkbox-container'>
-                        <div data-bind="ojComponent: {component: 'ojCheckboxset'}">
-                            <span style="display:inline-block; padding-left: 3em; padding-top: 5px;">
-                                <input id="show-timeslider" type="checkbox" value="show">
-                                <label for="show-timeslider"> Show time slider</label>
-                            </span>
-                        </div>
-                    </div-->
-                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size" style="overflow-x: hidden; overflow-y: auto;">
-                        <div id="tilesLinkEditorDialogWrapper">
-                            <div style="display: none;" id="tilesLinkEditorDialog"  
-                                 data-bind="ojComponent: {component: 'ojDialog', initialVisibility: 'hide', rootAttributes: {style: 'min-width: 600px;'}, close: closeEditTileLinkDialog}">
-                                <div class="oj-dialog-header oj-helper-clearfix">
-                                    <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_TITLE')"></span>
-                                </div>
-                                <div class="oj-dialog-body">
-                                    <div id="link-name-editor" class="oj-form oj-md-odd-cols-2 oj-md-labels-inline">
-                                        <div class="oj-row">
-                                            <div class="oj-col">
-                                                <label for="linkName" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_NAME_LABEL')"></label>
-                                            </div>
-                                            <div class="oj-col">
-                                                <input id="linkName" 
-                                                       data-bind="valueUpdate: 'afterkeydown', 
-                                                                    ojComponent: {component: 'ojInputText', value: linkName, required: true, validators: [linkNameValidator],
-                                                                                placeholder: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_NAME_REQUIRED')}"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="link-url-editor" class="oj-form oj-md-odd-cols-2 oj-md-labels-inline">
-                                        <div class="oj-row">
-                                            <div class="oj-col">
-                                                <label for="linkUrl" data-bind="text: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_DIALOG_URL_LABEL')"></label>
-                                            </div>
-                                            <div class="oj-col">
-                                                <input id="linkUrl" 
-                                                       data-bind="valueUpdate: 'afterkeydown', 
-                                                                    ojComponent: {component: 'ojInputText', value: linkUrl, required: true, validators: [linkURLValidator],
-                                                                                placeholder: getNlsString('DBS_BUILDER_EDIT_WIDGET_LINK_URL_REQUIRED')}"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="oj-dialog-footer">
-                                    <button class="edit-tile-link-confirm-btn" data-bind="click: editTileLinkConfirmed, ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"></button>
-                                </div>
-                            </div>
-                        </div> 
-                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling" 
-                             style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none;"
+            <div id="main-container" class="oj-col stretch-height builder-main" role="main">
+                    <div id="tiles-col-container" class="oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
+                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling df-computed-content-width" 
+                             style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                             <div class="oj-col oj-sm-12 oj-md-7">
                                     <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
@@ -679,15 +501,15 @@
                             <img src="@version@/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
-                            <p style="font-size: 16px;">
+                            <!--<p style="font-size: 16px;">
                                 <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_1')"></span>
                                 <a data-bind="attr: {href:'javascript: this.click()'}, click: $root.openAddWidgetDialog, text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_ADD_LINK')"></a>
                                 <span data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE2_2')"></span>
-                            </p>
+                            </p>-->
                         </div>
                         <!-- /ko -->
                         <div style="padding-left: 10px;">
-                        <div id="tiles-wrapper" class="fit-size" style="width: 100%; float: left; position: relative; height: auto;">
+                        <div id="tiles-wrapper" class="fit-size df-computed-content-width" style="width: 80%; float: left; position: relative; height: auto;">
                             <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
                             <div id="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
@@ -708,7 +530,7 @@
                                                              attr:{'id': 'editButton' + clientGuid,title: getNlsString('DBS_BUILDER_TILE_EDIT')},
                                                              click:$root.openInDataExplorer,
                                                              ojComponent: {
-                                                                component:'ojButton', 
+                                                                component:'ojButton', chroming: 'half',
                                                                 icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
                                                                 label: ''
                                                         }"></button>
@@ -717,7 +539,7 @@
                                                     <button class="oj-button-half-chrome dbd-tile-action" tabindex="0"
                                                             data-bind="attr: {'id': 'actionButton' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')},
                                                                        ojComponent: {component: 'ojButton', 
-                                                                                     label: '', 
+                                                                                     label: '', chroming: 'half',
                                                                                      icons: {start:'fa-icon-font fa-icon-font-16 dbd-tile-icon-option'},
                                                                                      menu: '#tileMenu' + clientGuid}">
                                                     </button>
@@ -832,16 +654,217 @@
                                 </div>
                                 <!-- /ko -->
                                 <!-- ko if: type() === 'TEXT_WIDGET' -->
-                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'tile'+clientGuid}">
+<!--                                <div class="dbd-widget" style="height: auto;" data-bind="attr: {style: tileDisplayClass, id: 'tile'+clientGuid}">
                                     <div class="tile-drag-handle" style=" cursor: move;">
                                         <div data-bind="component: {name: 'DF_V1_WIDGET_TEXT', params: params}"></div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <!-- /ko -->                                
                             </div>
                         </div>
                         </div>
+                </div>                
+                
+                <div id="right-panel-toggler" data-bind="
+                        visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler(),
+                        style: {
+                            right: rightPanelShown() ? 
+                                (282 + $root.scrollbarWidth) + 'px' : 
+                                $root.scrollbarWidth + 'px'
+                        }">
+                    <button type="checkbox" id="toggle-right-panel-btn" class="drawer-icon-btn oj-buttonset-first" style="display: block;"
+                                data-bind="ojComponent: {
+                                    checked: rightPanelShown,
+                                    component:'ojButton', 
+                                    display: 'icons', 
+                                    icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-pencil'}, 
+                                    label: getNlsString(rightPanelShown() ? 'DBS_BUILDER_LEFT_PANEL_BTN_HIDE_LABEL' : 'DBS_BUILDER_LEFT_PANEL_BTN_SHOW_LABEL')
+                                }, 
+                                click: toggleRightPanel,
+                                css: {
+                                    'drawer-selected': rightPanelShown()
+                                }"/></button>                    
+                    <button id="right-panel-help-btn" class="drawer-icon-btn" data-bind="ojComponent: {
+                        component:'ojButton', 
+                        display: 'icons', 
+                        icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'}, 
+                        label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>
                 </div>
+                <!-- ko stopBinding: true -->
+                <div id="dbd-left-panel" class="dbd-left-panel-show"
+                        data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
+                                        style: {right: $root.scrollbarWidth + 'px'}">
+                    <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
+                        <div class="oj-row">
+                            <div class="oj-col">
+                                <h3 class="dbd-left-panel-header-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTENT_LABEL')"></h3>
+                            </div>
+                        </div>
+                        <div class="dbd-left-panel-header-search">
+                            <div  class="dbd-left-panel-header-search-input">
+                                <input id="widget-search-input" type="text" name="searchInput"
+                                   data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
+                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                              ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
+                            </div>
+                            <div>
+<!--                                <button class="oj-button-half-chrome" data-bind="click: clearWidgetSearchInputClicked, visible: keyword,
+                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                                        icons: {start:'left-panel-dbd-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}" style="margin: 0px;
+                                        height: 30px;
+                                        line-height: 30px;
+                                        vertical-align: middle;
+                                        text-align: center;
+                                        float: left;"> 
+                                </button>-->
+                                <button id="dbd-left-panel-header-search-btn" class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
+                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
+                                        icons: {start:'left-panel-dbd-search-icon'}}"> 
+                                </button> 
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dbd-left-panel-widgets" class="fit-size">
+                        <div class="oj-col stretch-width" data-bind="foreach: widgets">
+                            <div class="dbd-left-panel-widget" data-bind="attr: {id: 'widget-item-'+WIDGET_UNIQUE_ID()}">
+                                <div class="dbd-left-panel-widget-text"
+                                            data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
+                                    <span data-bind="text:WIDGET_NAME"></span>
+                                </div>
+                                <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
+                                                ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-12 oj-md-12">
+                                            <h2 data-bind="text:WIDGET_NAME"></h2>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-4 oj-md-4">
+                                            <img data-bind="attr: {alt: WIDGET_NAME, src: WIDGET_VISUAL}" style="height:120px;width:120px;"/>
+                                        </div>
+                                        <div class="oj-col oj-sm-8 oj-md-8">
+                                            <span data-bind="text:WIDGET_DESCRIPTION" style="color: #9e9e9e;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling">
+                        <!-- hide the container menu before the function is available.
+                        <div id="dbd-left-panel-footer-contain" style="padding-top: 10px; border-top: 1px solid #d6dfe6">
+                            <div class="oj-row" data-bind="event: {mouseover: $root.containerMouseOverHandler, mouseout: $root.containerMouseOutHandler}">
+                                <div class="oj-col oj-sm-12" style="height: 28px;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL')"></div>
+                            </div>
+                        </div>
+                        --> 
+                        <div id="dbd-left-panel-footer-btns">
+                            <div class="oj-row">
+                                <div class="oj-col oj-sm-3 oj-md-3 oj-lg-3 widget-paging-desc" 
+                                     data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES')"></div>
+                                <div class="oj-col oj-sm-6 oj-md-6 oj-lg-6">
+                                    <input id="dbd-left-panel-widgets-page-input" aria-label="page"
+                                            data-bind="ojComponent: {
+                                              component: 'ojInputNumber',
+                                              max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
+                                              displayOptions: {converterHint: 'none', validatorHint: 'none', title: 'none', messages: 'none'}}"/>
+                                </div>
+                                <div class="oj-col oj-sm-3 oj-md-3 oj-lg-3 widget-paging-desc">
+                                    of <span data-bind="text: totalPages">1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="right-container-pop" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {'style': 'width: 430px; height: 240px;'}}">
+                            <div class="oj-row">
+                                <div class="oj-col oj-sm-12">
+                                    <h2 data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL')"></h2>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="oj-row">
+                                <div class="oj-col oj-sm-7" style="border: 1px solid #9e9e9e;;text-align:center;">
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-6" style="text-align:center;">
+                                            <h1 style="margin-top:25px;margin-bottom:5px;height:30px;color:#0572CE;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_VALUE1')"></h1>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL1')"></div>
+                                        </div>
+                                        <div class="oj-col oj-sm-6">
+                                            <div id="gauge2"
+                                                    data-bind="ojComponent: {
+                                                      component: 'ojStatusMeterGauge', 
+                                                      min: 0, 
+                                                      max: 100, 
+                                                      value: 60,
+                                                      color: '#0572CE',
+                                                      orientation: 'circular',
+                                                      metricLabel: {rendered: 'on'},
+                                                      plotArea: {rendered: 'on'}, 
+                                                      step: 10,
+                                                      readOnly: false
+                                                     }" 
+                                                  style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;">
+                                            </div>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL2')"></div>
+                                        </div>
+                                    </div>
+                                    <div class="oj-row">
+                                        <div class="oj-col oj-sm-6">
+                                            <div id="gauge3"
+                                                    data-bind="ojComponent: {
+                                                      component: 'ojStatusMeterGauge', 
+                                                      min: 0, 
+                                                      max: 100, 
+                                                      value: 25,
+                                                      color: '#0572CE',
+                                                      orientation: 'circular',
+                                                      metricLabel: {rendered: 'on'},
+                                                      plotArea: {rendered: 'on'}, 
+                                                      step: 10,
+                                                      readOnly: false
+                                                     }" 
+                                                  style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;color:blue;">
+                                            </div>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL3')"></div>
+                                        </div>
+                                        <div class="oj-col oj-sm-6">
+                                            <div id="gauge4"
+                                                    data-bind="ojComponent: {
+                                                      component: 'ojStatusMeterGauge', 
+                                                      min: 0, 
+                                                      max: 100, 
+                                                      value: 80,
+                                                      color: '#0572CE',
+                                                      orientation: 'circular',
+                                                      metricLabel: {rendered: 'on'},
+                                                      plotArea: {rendered: 'on'}, 
+                                                      step: 10,
+                                                      readOnly: false
+                                                     }" 
+                                                  style="margin-top:5px;margin-bottom:5px;margin-left:auto;margin-right:auto;height:50px;width:50px;color:blue;">
+                                            </div>
+                                            <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL4')"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oj-col oj-sm-5">
+                                    <span style="color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_DESC')"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+                <!--<div class="oj-row stretch-height tile-container" id="tileContainer"  
+                     style="height: 1000px; position: absolute; left: 0; top: 0;">-->
+                    <!--div id='show-hide-timeslider-checkbox-container'>
+                        <div data-bind="ojComponent: {component: 'ojCheckboxset'}">
+                            <span style="display:inline-block; padding-left: 3em; padding-top: 5px;">
+                                <input id="show-timeslider" type="checkbox" value="show">
+                                <label for="show-timeslider"> Show time slider</label>
+                            </span>
+                        </div>
+                    </div-->
             </div>
         </div>
     </body>

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-define(['builder/core/builder.event.dispatcher', 'knockout'], function(dsp, ko) {
+define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function(dsp, ko, $) {
     var Builder = {
         _modules: {},
         _funcs: {},
@@ -46,7 +46,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout'], function(dsp, ko) 
     Builder.LINK_NAME_MAX_LENGTH = 4000;
     Builder.LINK_URL_MAX_LENGTH = 4000;
     Builder.BUILDER_DEFAULT_TILE_WIDTH = 4;
-    Builder.BUILDER_DEFAULT_TILE_HEIGHT = 1;
+    Builder.BUILDER_DEFAULT_TILE_HEIGHT = 2;
     Builder.DEFAULT_HEIGHT = 161;
     Builder.EDITOR_POS_BASED_ON_ROW_COLUMN = "BASED_ON_ROW_COLUMN";
     Builder.EDITOR_POS_FIND_SUITABLE_SPACE = "FIND_SUITABLE_SPACE";
@@ -154,7 +154,9 @@ define(['builder/core/builder.event.dispatcher', 'knockout'], function(dsp, ko) 
             var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
-            var leftWidth = $('#dbd-left-panel').width();
+            var panelWidth = $('#dbd-left-panel').is(":visible") ? $('#dbd-left-panel').width() : 0;
+            var togglerWidth = $('#right-panel-toggler').is(":visible") ? $('#right-panel-toggler').outerWidth() : 0;
+            var leftWidth = panelWidth + togglerWidth;
             var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
