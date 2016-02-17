@@ -77,36 +77,9 @@ dependencies {
 }
 
 
-
-
-task PropsCopy(type: Copy,dependsOn: DeployDFAPI) {
-   from '/net/slc07ctj/scratch/emaas/setuplogs/'
-   into '../../oracle/work/'
-    include '*.log'
-}
-
 apply plugin: 'java'
 
-task logdir(type: Copy,dependsOn: PropsCopy) {
-    def logdir = new File("/var/opt/ORCLemaas/logs/dashboardsService")
-    println("logdir: "+logdir)
-	exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCLemaas/logs/dashboardsService"}
-    if( !logdir.exists() ) {
-        println("creating logdir")
- if(exec{commandLine "/usr/local/packages/aime/em/run_as_root","mkdir -p /var/opt/ORCLemaas/logs/dashboardsService"}) {
-            println("succeeded in making folder")
-           exec{commandLine "/usr/local/packages/aime/em/run_as_root","chmod -R 777 /var/opt/ORCLemaas/logs/dashboardsService"}
 
-            if(logdir.exists()) {
-                println("folder exists")
-            } else {
-                println("folder does not exist")
-            }
-        } else {
-            println("failed to make folder")
-        }
-    } 
-}
 
 
 task DEVTest(type:EMTest,dependsOn: logdir){
