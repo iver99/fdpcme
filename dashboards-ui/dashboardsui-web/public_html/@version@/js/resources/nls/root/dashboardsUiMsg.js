@@ -323,6 +323,12 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_REQUIRED": "URL is required",
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
-      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
+      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect.",
+      
+      //dashoard set message
+      "DBSSET_BUILDER_DASHBOARDSET":"Dashboard Set",
+      "DBSSET_BUILDER_EDIT_DASHBOARDSET":"Edit Dashboard Set",
+      "DBSSET_BUILDER_DELETE_WARNING":"Note:Deleting the dashboard set does not delete any of the individual dashboards you created and included in the set",
+      "DBSSET_BUILDER_PRINT_ALL":"Print All"
 });
 

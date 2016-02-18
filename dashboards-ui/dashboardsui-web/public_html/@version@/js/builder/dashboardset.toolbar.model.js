@@ -12,13 +12,14 @@ define(['knockout',
     'builder/tool-bar/edit.dialog',
     'builder/tool-bar/duplicate.dialog',
     'uifwk/js/util/preference-util',
+    'mobileutil',
     'builder/builder.core'
 ],
-    function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
+    function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
 
-        function DashboardsetToolBarModel(dsbId) {                    
+        function DashboardsetToolBarModel(dsbId) {                     
             var self = this;
             var dashboardsetId = dsbId.split(/[,]/);
             var startDashboardId = Number(location.search.split(/start=/)[1]) || Number(dashboardsetId[0]);
@@ -34,10 +35,11 @@ define(['knockout',
             InitializeDashboardset(dashboardsetId);
 
             //later will receive the info from the backend
-            self.dashboardsetInfo = ko.observable({"name":"Middleware Dashboards","description":"first dashboard set","type":"Dashboard Set"});
-            self.dashboardsetConfig={"isCreator":true,"refresh":ko.observable(false),"refreshOffIcon":ko.observable("dbd-icon-check"),"refreshOnIcon":ko.observable("dbd-noselected"),"share":ko.observable(true),"shareLabel":ko.observable("Share"),"addFavorite":ko.observable(true),"favoriteIcon":ko.observable("fa-star"),"favoriteLabel":ko.observable("Add favorite"),"setHome":ko.observable(true),"homeLabel":ko.observable("Set as Home"),"homeIcon":ko.observable("dbd-toolbar-icon-home")};
+            self.dashboardsetInfo = {"name":ko.observable("Middleware Dashboards"),"description":ko.observable("first dashboard set"),"type":getNlsString("DBSSET_BUILDER_DASHBOARDSET")};
+            self.dashboardsetConfig={"isCreator":true,"refresh":ko.observable(false),"refreshOffIcon":ko.observable("dbd-icon-check"),"refreshOnIcon":ko.observable("dbd-noselected"),"share":ko.observable(true),"shareLabel":ko.observable(getNlsString("COMMON_TEXT_SHARE")),"addFavorite":ko.observable(true),"favoriteIcon":ko.observable("fa-star"),"favoriteLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD")),"setHome":ko.observable(true),"homeLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_HOME_SET")),"homeIcon":ko.observable("dbd-toolbar-icon-home")};
 
             self.isDashboardSet = ko.observable(dashboardsetId.length > 1);
+            self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             
             self.dashboardsetConfigMenu =function(event,data){
                 var configId = data.item.attr('id');
@@ -55,7 +57,8 @@ define(['knockout',
                          self.dbConfigMenuClick.shareDbs(self);
                         break;
                     case 'dbs-print':
-                        console.log("dbs-print");
+                        //TO DO:print all the element on dashboard set
+                        window.print();
                         break;
                     case 'dbs-favorite' :
                         self.dbConfigMenuClick.favoriteDbs(self);
@@ -108,40 +111,52 @@ define(['knockout',
             
             self.dashboardsetMenu = ko.observableArray([
                 {
-                    "label": "Edit",
+                    "label": getNlsString("COMMON_BTN_EDIT"),
                     "url": "#",
                     "id": "dbs-edit",
                     "icon": "fa-pencil",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": false,
+                    "endOfGroup": false,       
+                    "showOnMobile": false,
+                    "showOnViewer":false, 
+                    "visibility":visibilityOnDifDevice(false,false),
                     "subMenu": []
                 },
                 {
-                    "label": "Refresh",
+                    "label":  getNlsString("DBS_BUILDER_TILE_REFRESH"),
                     "url": "#",
                     "id": "dbs-refresh",
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": true,
+                    "endOfGroup": true,    
+                    "showOnMobile": true,
+                    "showOnViewer":true,
+                    "visibility":visibilityOnDifDevice(true,true),
                     "subMenu": [{
-                            "label": "Off",
+                            "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",
                             "id": "refresh-off",
                             "icon": self.dashboardsetConfig.refreshOnIcon,
                             "title": "",
                             "disabled": "",
-                            "endOfGroup": false,
+                            "endOfGroup": false,    
+                            "showOnMobile": true,
+                            "showOnViewer":true,
+                            "visibility":visibilityOnDifDevice(true,true),
                             "subMenu": []
                         }, {
-                            "label": "On(Every 5 Minutes)",
+                            "label": getNlsString("DBS_BUILDER_AUTOREFRESH_ON"),
                             "url": "#",
                             "id": "refresh-time",
                             "icon": self.dashboardsetConfig.refreshOffIcon,
                             "title": "",
                             "disabled": "",
                             "endOfGroup": false,
+                            "showOnMobile": true,
+                            "showOnViewer":true,
+                            "visibility":visibilityOnDifDevice(true,true),
                             "subMenu": []
                         }]
                 },
@@ -152,17 +167,23 @@ define(['knockout',
                     "icon": "dbd-icon-users",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": false,
+                    "endOfGroup": false,    
+                    "showOnMobile": true,
+                    "showOnViewer":false,
+                    "visibility":visibilityOnDifDevice(true,false),
                     "subMenu": []
                 },
                 {
-                    "label": "Print All",
+                    "label": getNlsString("DBSSET_BUILDER_PRINT_ALL"),
                     "url": "#",
                     "id": "dbs-print",
                     "icon": "fa-print",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": false,
+                    "endOfGroup": false,         
+                    "showOnMobile": true,          
+                    "showOnViewer":true,
+                    "visibility":visibilityOnDifDevice(true,true),
                     "subMenu": []
                 },
                 {
@@ -173,6 +194,9 @@ define(['knockout',
                     "title": "",
                     "disabled": "",
                     "endOfGroup": false,
+                    "showOnMobile": true,
+                    "showOnViewer":true,
+                    "visibility":visibilityOnDifDevice(true,true),
                     "subMenu": []
                 },
                 {
@@ -183,16 +207,22 @@ define(['knockout',
                     "title": "",
                     "disabled": "",
                     "endOfGroup": true,
+                    "showOnMobile": true,
+                    "showOnViewer":true,
+                    "visibility":visibilityOnDifDevice(true,true),
                     "subMenu": []
                 },
                 {
-                    "label": "Delete",
+                    "label": getNlsString("COMMON_BTN_DELETE"),
                     "url": "#",
                     "id": "dbs-delete",
                     "icon": "dbd-toolbar-icon-delete",
                     "title": "",
                     "disabled": "",
                     "endOfGroup": false,
+                    "showOnMobile": false,
+                    "showOnViewer":false,
+                    "visibility":visibilityOnDifDevice(false,false),
                     "subMenu": []
                 }
             ]);
@@ -238,35 +268,36 @@ define(['knockout',
                     var self=this;
                     var nameEdit=$('.dbs-name input').val();
                     var descriptionEdit=$('.dbs-description textarea').val();
-                    self.dashboardsetInfo({"name":nameEdit,"description":descriptionEdit});
+                    self.dashboardsetInfo.name(nameEdit);
+                    self.dashboardsetInfo.description(descriptionEdit);
                     $('#changeDashboardsetInfo').ojDialog("close");         
                 };   
                 self.shareDbs = function(dbsToolBar){
                     dbsToolBar.dashboardsetConfig.share(!dbsToolBar.dashboardsetConfig.share());
                         if(dbsToolBar.dashboardsetConfig.share()){
-                           dbsToolBar.dashboardsetConfig.shareLabel("Share"); 
+                           dbsToolBar.dashboardsetConfig.shareLabel(getNlsString("COMMON_TEXT_SHARE")); 
                         }else{
-                           dbsToolBar.dashboardsetConfig.shareLabel("Stop Share");  
+                           dbsToolBar.dashboardsetConfig.shareLabel(getNlsString("COMMON_TEXT_UNSHARE"));  
                         }
                 };
                 self.favoriteDbs = function (dbsToolBar) {
                     dbsToolBar.dashboardsetConfig.addFavorite(!dbsToolBar.dashboardsetConfig.addFavorite());
                     if (dbsToolBar.dashboardsetConfig.addFavorite()) {
                         dbsToolBar.dashboardsetConfig.favoriteIcon("fa-star");
-                        dbsToolBar.dashboardsetConfig.homeLabel("Add favorite");
+                        dbsToolBar.dashboardsetConfig.favoriteLabel(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD"));
                     } else {
                         dbsToolBar.dashboardsetConfig.favoriteIcon("fa-star-o");
-                        dbsToolBar.dashboardsetConfig.homeLabel("Remove favorite");
+                        dbsToolBar.dashboardsetConfig.favoriteLabel(getNlsString("DBS_BUILDER_BTN_FAVORITES_REMOVE"));
                     }
                 };
                 self.homeDbs = function(dbsToolBar){
                      dbsToolBar.dashboardsetConfig.setHome(!dbsToolBar.dashboardsetConfig.setHome());
                         if(dbsToolBar.dashboardsetConfig.setHome()){
                            dbsToolBar.dashboardsetConfig.homeIcon("dbd-toolbar-icon-home"); 
-                           dbsToolBar.dashboardsetConfig.homeLabel("Set as Home"); 
+                           dbsToolBar.dashboardsetConfig.homeLabel(getNlsString("DBS_BUILDER_BTN_HOME_SET")); 
                         }else{
                            dbsToolBar.dashboardsetConfig.homeIcon("dbd-toolbar-icon-home");  
-                           dbsToolBar.dashboardsetConfig.homeLabel("Remove as Home"); 
+                           dbsToolBar.dashboardsetConfig.homeLabel(getNlsString("DBS_BUILDER_BTN_HOME_REMOVE")); 
                         }
                 };
                 self.refreshDbs= function(dbsToolBar){
@@ -288,9 +319,21 @@ define(['knockout',
                      $('#deleteDashboardset').ojDialog("close");   
                 };
             };
+            
+            function visibilityOnDifDevice(showOnMobile,showOnViewer){
+                if(self.dashboardsetConfig.isCreator){
+                    if(self.isMobileDevice==='true'){
+                        return showOnMobile;
+                    }else{
+                        return true;
+                    }
+                }else{
+                        return showOnViewer;                 
+                }
+            };
         
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
-                 var removeTarget=   ui.tab.attr('id') ;
+                 var removeTarget=ui.tab.attr('id') ;
                  var removeIdIndex=Number(removeTarget.slice(removeTarget.indexOf('-')+1));
                  self.dashboardsetItems.remove(self.dashboardsetItems()[removeIdIndex]);
             } );
