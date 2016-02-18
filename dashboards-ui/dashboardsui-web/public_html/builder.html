@@ -31,8 +31,8 @@
                     <!-- tab bar -->
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
-                            <span data-bind="text:dashboardsetInfo().name"></span>
-                            <button id="tabs-gear"
+                            <span data-bind="text:dashboardsetInfo.name"></span>
+                            <button id="tabs-gear" class="no-print"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
                                     menu: '#dbd-set-option'}">
@@ -75,9 +75,9 @@
                  <ul id="dbd-set-option" style="display:none" 
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
                     <!--ko foreach:dashboardsetMenu-->
-                    <li data-bind="attr:{'id':id}">
+                    <li data-bind="attr:{'id':id},visible: visibility">
                         <a href="#">
-                            <span class="fa-icon-font fa-icon-font-14 fa-pencil oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
+                            <span class="fa-icon-font fa-icon-font-14 oj-menu-item-icon oj-fwk-icon" data-bind="css:icon"></span>
                             <span data-bind="text:label"></span>
                         </a>
                         <!--ko if:subMenu.length!==0-->
@@ -101,7 +101,7 @@
                 <div style="display:none" id="changeDashboardsetInfo"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
-                            <span class="oj-dialog-title">Edit Dashboard Set</span>
+                            <span class="oj-dialog-title" data-bind="text:getNlsString('DBSSET_BUILDER_EDIT_DASHBOARDSET')"></span>
                         </div>
                         <div class="oj-dialog-body">
                             <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
@@ -110,7 +110,7 @@
                                         <h4 data-bind="text:getNlsString('DBS_HOME_FILTER_TYPE_LABEL')"></h4>
                                     </div>                                   
                                     <div class="oj-col">
-                                        <label data-bind="text:dashboardsetInfo().type"></label>
+                                        <label data-bind="text:dashboardsetInfo.type"></label>
                                     </div>
                                 </div>
                                 <div class="oj-col dbs-name">
@@ -119,7 +119,7 @@
                                     </div>
                                     <div class="oj-col">
                                         <input id="dbsHNameIn"
-                                               data-bind="ojComponent: { component: 'ojInputText',value:dashboardsetInfo().name}">
+                                               data-bind="ojComponent: { component: 'ojInputText',value:dashboardsetInfo.name}">
                                     </div>
                                 </div>
                                 <div class="oj-col dbs-description">
@@ -128,7 +128,7 @@
                                     </div>
                                     <div class="oj-col">
                                         <textarea id="dbsHDpIn" maxlength="256" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo().description
+                                                  data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.description
                                                               }"></textarea>
                                     </div>
                                 </div>             
@@ -146,10 +146,8 @@
                             <span class="oj-dialog-title"  data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
                         </div>
                         <div class="oj-dialog-body">
-                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo().name)"></p>
-                            <p>
-                              Note:Deleting the dashboard set does not delete any of the individual dashboards you created and included in the set
-                            </p>
+                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name)"></p>
+                            <p data-bind="html: getNlsString('DBSSET_BUILDER_DELETE_WARNING')"></p>
                         </div>     
                         <div class="oj-dialog-footer">
                             <button data-bind="ojComponent: { 

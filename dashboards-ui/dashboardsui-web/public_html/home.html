@@ -265,12 +265,33 @@
                             <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TITLE')"></span>
                         </div>
                         <div class="oj-dialog-body">
-                            <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
+                             <div class="oj-form oj-md-odd-cols-2" >                               
                                 <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
-                                    </div>
-                                    <div class="oj-col">
+                                        <span  style="color: #4f4f4f;font-size: 1rem; font-weight: bold;margin-bottom: 0.25em;"data-bind="text:getNlsString('DBS_HOME_DASHBOARDS_SET_CREATE_TYPE')"></span>
+                                </div>
+                                <div class="oj-row">
+                                       <div class="oj-col" style="margin-top: 10px;margin-bottom:10px;">                                                 
+                                           <div id="sigle-dashboard-image" class="dbs-create-type-image" data-bind="visible:createDashboardModel.singleVisible">           
+                                               <img height="110" width="110" src="" alt="single dashboard" >
+                                           </div>
+                                            <div id="dashboardset-image" class="dbs-create-type-image" data-bind="visible:createDashboardModel.setVisible" >           
+                                               <img height="110" width="110" src="" alt="dashboard  set" >
+                                           </div>
+                                       </div>
+                                       <div class="oj-col" style="padding: 10px 0px 0px 30px;">        
+                                            <span class="oj-choice-row">
+                                                        <input id="dashboardtype" type="radio" name="types" value="DASHBOARDS" checked  data-bind="checked:createDashboardModel.selectType, click:createDashboardModel.dashboardtypeSelectFuc">                                           
+                                                        <label for="" data-bind="text: getNlsString('DBS_HOME_CREATE_TYPE_DASHBOARDS')"></label>
+                                             </span>
+                                           
+                                             <span class="oj-choice-row">
+                                                        <input id="dashboardsettype" type="radio" name="types" value="DASHBOARDSET" data-bind="checked:createDashboardModel.selectType, click:createDashboardModel.dashboardtypeSelectFuc">
+                                                        <label for="" data-bind="text: getNlsString('DBS_HOME_CREATE_TYPE_DASHBOARDSET')"></label>
+                                             </span>
+                                        </div>
+                                </div>
+                                <div class="oj-row  oj-md-odd-cols-12">                                     
+                                        <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>                                   
                                         <input id="dbsHNameIn" maxlength="64" required
                                                data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: tracker, 
                                                messagesCustom: createMessages, value: createDashboardModel.name, 
@@ -279,27 +300,24 @@
                                                     pattern: '.{1,64}', 
                                                     messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
                                                     messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}}],
-                                               rootAttributes: {style:'max-width:420px;'},
+                                               rootAttributes: {style:'max-width:95%;'},
                                                translations: {'required': {
                                                         hint: '',
                                                         messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'), 
                                                         messageDetail: ''
                                                }
                                              }}">
-                                    </div>
-                                </div>
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <textarea id="dbsHDpIn" maxlength="256" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
+                                    </div>                                
+                                    <div class="oj-row">
+                                        <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>                                
+                                        <textarea id="dbsHDpIn" maxlength="95%" rows="6"
+                                                  data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:95%;'},
                                                                 invalidComponentTracker: tracker,  
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}', 
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
-                                                                       messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
+                                                                       messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}],
+                                                                         
                                             }"></textarea>
                                     </div>
                                 </div>
@@ -312,9 +330,16 @@
                                         <input id="ckbxTimeRangeFilter" type="checkbox" value="ON">
                                         <label for="ckbxTimeRangeFilter" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TIME_RANGE')"></label>
                                     </div>
-                                </div--> 
-                                                         
+                                </div-->                                                          
                             </div>
+                     
+                        <div id="createDialogFooter" class="oj-dialog-footer">
+                            <button id="createDsb" data-bind="click: confirmDashboardCreate, ojComponent: { 
+                                             component: 'ojButton', label: getNlsString('COMMON_TEXT_CREATE'), 
+                                             disabled: createDashboardModel.isDisabled, 
+                                             rootAttributes: {style:'margin-right:5px'} }"></button>
+                        </div>
+                    </div>
                         </div>
                         <div id="createDialogFooter" class="oj-dialog-footer">
                             <button id="createDsb" data-bind="click: confirmDashboardCreate, ojComponent: { 
