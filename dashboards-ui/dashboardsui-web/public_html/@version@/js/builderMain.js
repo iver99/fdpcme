@@ -276,7 +276,7 @@ require(['knockout',
                 ko.applyBindings(tilesViewModel, $('#dashboards-tabs-contents .dashboard-content')[0]);      
                 
                 var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
-                ko.applyBindings(rightPanelModel, $('#dbd-left-panel')[0]);
+                ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
                 rightPanelModel.initialize();
                 new Builder.ResizableView($b);
 

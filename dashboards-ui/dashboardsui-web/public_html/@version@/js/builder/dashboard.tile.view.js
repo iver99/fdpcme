@@ -78,13 +78,13 @@ define(['knockout',
             };
                         
             self.enableMovingTransition = function() {
-                if (!$('#widget-area').hasClass('dbd-support-transition'))
-                    $('#widget-area').addClass('dbd-support-transition');
+                if (!$b.findEl('.widget-area').hasClass('dbd-support-transition'))
+                    $b.findEl('.widget-area').addClass('dbd-support-transition');
             };
             
             self.disableMovingTransition = function() {
-                if ($('#widget-area').hasClass('dbd-support-transition'))
-                    $('#widget-area').removeClass('dbd-support-transition');
+                if ($b.findEl('.widget-area').hasClass('dbd-support-transition'))
+                    $b.findEl('.widget-area').removeClass('dbd-support-transition');
             };
             
             self.postDocumentShow = function() {
@@ -108,7 +108,7 @@ define(['knockout',
                     if (!isNaN(top) && !isNaN(left) && target.position() && target.position().left !== 0 && target.position().top !== 0) {
 //                        window.DEV_MODE && console.debug("old target position: top-" + target.css("top") + ", left-" + target.css("left"));
                         target.css("top", top - $('#headerWrapper').outerHeight() - $('#head-bar-container').outerHeight() + $b.findEl(".tiles-col-container").scrollTop());
-                        target.css("left", left - $("#dbd-left-panel").width());
+                        target.css("left", left - $b.findEl(".dbd-left-panel").width());
                         elem.cacheLeft = target.css("left");
 //                        window.DEV_MODE && console.debug("new target position: top-" + target.css("top") + ", left-" + target.css("left"));
                     }

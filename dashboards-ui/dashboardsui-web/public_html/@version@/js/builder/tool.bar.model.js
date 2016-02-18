@@ -350,7 +350,7 @@ define(['knockout',
                 outputData.eventType = "SAVE";
 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
-                    ssu.getBase64ScreenShot('#tiles-wrapper', 314, 165, 0.8, function(data) {
+                    ssu.getBase64ScreenShot($b.findEl('.tiles-wrapper'), 314, 165, 0.8, function(data) {
                         outputData.screenShot = data;
                         self.tilesViewModel.dashboard.screenShot = ko.observable(data);  
                         self.handleSaveUpdateDashboard(outputData);
@@ -465,13 +465,13 @@ define(['knockout',
 
             self.handleAddWidgetTooltip = function(hasContent) {
                 if (hasContent === true)
-                    $("#addWidgetToolTip").css("display", "none");
+                    $b.findEl(".tooltip-add-widget").css("display", "none");
                 else if (hasContent === false)
-                    $("#addWidgetToolTip").css("display", "block");
+                    $b.findEl(".tooltip-add-widget").css("display", "block");
                 else if (self.tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
-                    $("#addWidgetToolTip").css("display", "block");
+                    $b.findEl(".tooltip-add-widget").css("display", "block");
                 }else {
-                    $("#addWidgetToolTip").css("display", "none");
+                    $b.findEl(".tooltip-add-widget").css("display", "none");
                 }  
             };
             

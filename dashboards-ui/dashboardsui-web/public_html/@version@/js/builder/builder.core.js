@@ -163,8 +163,11 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();
-            var panelWidth = $('#dbd-left-panel').is(":visible") ? $('#dbd-left-panel').width() : 0;
-            var togglerWidth = $('#right-panel-toggler').is(":visible") ? $('#right-panel-toggler').outerWidth() : 0;
+            var $visibleDashboard = $("#dashboards-tabs-contents .dashboard-content:visible");
+            var $rightPanelToggler = $visibleDashboard.find('.right-panel-toggler');
+            var $dbdLeftPanel = $visibleDashboard.find('.dbd-left-panel');
+            var panelWidth = $dbdLeftPanel.is(":visible") ? $dbdLeftPanel.width() : 0;
+            var togglerWidth = $rightPanelToggler.is(":visible") ? $rightPanelToggler.outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;
             var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);

@@ -620,23 +620,17 @@
             <script id="dashboard-content-template" type="text/template">    
             <div class="oj-col stretch-height builder-main dashboard-content" role="main">
                     <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
-                        <div id="global-time-control" class="oj-row fit-size-vertical-sibling df-computed-content-width" 
+                        <div class="oj-row fit-size-vertical-sibling df-computed-content-width" 
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                             <div class="oj-col oj-sm-12 oj-md-7">
-                                    <!--select id="categorySelect" class="oj-select-arrow widget-dialog-selector"
-                                    data-bind="ojComponent: {component: 'ojSelect',
-                                                                value: categoryValue,
-                                                                optionChange: optionChangedHandler,
-                                                                rootAttributes: {style:'max-width:373px;'}}"-->
-                               <!--df-time-selector params="{model:timeSelectorModel}" ></df-time-selector-->
                                <div data-bind="visible: !dashboard.enableTimeRange || dashboard.enableTimeRange() !== 'TRUE'">&nbsp;</div>
                                <div data-bind="component: {name: 'df-datetime-picker', params: datetimePickerParams}, visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE'"></div>
                             </div>
                         </div>
 
                         <!-- ko if:$root.isEmpty() -->
-                        <div id="addWidgetToolTip" style="padding-top: 64px; text-align: center">
+                        <div class="tooltip-add-widget" style="padding-top: 64px; text-align: center">
                             <img src="@version@/images/add-widget-tooltip.png" style="width: 240px; height: 240px; margin-bottom: 30px;" data-bind="attr:{alt:oj.Translations.getTranslatedString('Add content to dashboard')}"/>
                             <p style="font-size: 24px; font-weight: bold;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TITLE')"></p>
                             <p style="font-size: 16px;" data-bind="text: getNlsString('DBS_BUILDER_BTN_ADD_HINT_TEXT_LINE1')"></p>
@@ -648,9 +642,9 @@
                         </div>
                         <!-- /ko -->
                         <div style="padding-left: 10px;">
-                        <div id="tiles-wrapper" class="fit-size df-computed-content-width" style="width: 80%; float: left; position: relative; height: auto;">
-                            <div id="tile-dragging-placeholder" class="tile-dragging-placeholder"></div>
-                            <div id="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
+                        <div class="tiles-wrapper fit-size df-computed-content-width" style="width: 80%; float: left; position: relative; height: auto;">
+                            <div class="tile-dragging-placeholder"></div>
+                            <div class="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
@@ -687,7 +681,7 @@
                                                         data-bind="attr: {'id': 'tileMenu' + clientGuid, title: getNlsString('DBS_BUILDER_TILE_ACTIONS')}, 
                                                         event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}},
                                                         ojComponent: {component: 'ojMenu', select: $root.menuItemSelect}">
-                                                        <li id="showhide-title">
+                                                        <li data-option="showhide-title">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <i class="fa-icon-font fa-icon-font-16" data-bind="css: hideTitle() === 'true' ? 'dbd-icon-eye':'dbd-icon-eye-slash'"></i>
@@ -696,7 +690,7 @@
                                                             </a>
                                                         </li>  
                                                         <!-- EMCPDF-1131: this should be changed in next sprint
-                                                        <li id="resize">
+                                                        <li data-option="resize">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <i class="fa-icon-font fa-icon-font-16 dbd-icon-resize"></i>
@@ -705,8 +699,8 @@
                                                             </a>
                                                             <ul>
                                                         -->
-                                                        <li id="divider"></li> 
-                                                                <li id="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
+                                                        <li data-option="divider"></li> 
+                                                                <li data-option="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <img src="@version@/images/func_window_wider_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_WIDER')}"/>
@@ -714,7 +708,7 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_WIDER')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li id="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                <li data-option="narrower" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !narrowerEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <img src="@version@/images/func_window_narrower_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_NARROWER')}"/>
@@ -722,7 +716,7 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_NARROWER')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li id="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                <li data-option="taller" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <img src="@version@/images/func_window_taller_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_TALLER')}"/>
@@ -730,7 +724,7 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_TALLER')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li id="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
+                                                                <li data-option="shorter" data-bind="visible: editDisabled() !== true, css: {'oj-disabled': !shorterEnabled() || !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <img src="@version@/images/func_window_shorter_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_SHORTER')}"/>
@@ -738,13 +732,13 @@
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                     </a>
                                                                 </li>
-                                                                <li id="maximize" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
+                                                                <li data-option="maximize" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <img src="@version@/images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')"></span></a>
                                                                 </li>
-                                                                <li id="restore" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
+                                                                <li data-option="restore" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
                                                                             <img src="@version@/images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
@@ -755,7 +749,7 @@
                                                         </li>
                                                         -->
                                                         <li></li> 
-                                                        <li id="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
+                                                        <li data-option="remove" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': editDisabled()}">
                                                             <a href="#">
                                                                 <span class="oj-menu-item-icon demo-icon-font">
                                                                     <i class="fa-icon-font fa-icon-font-16 dbd-icon-remove"></i>
@@ -804,14 +798,14 @@
                         </div>
                 </div>                
                 
-                <div id="right-panel-toggler" data-bind="
+                <div class="right-panel-toggler" data-bind="
                         visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler(),
                         style: {
                             right: rightPanelShown() ? 
                                 (282 + $root.scrollbarWidth) + 'px' : 
                                 $root.scrollbarWidth + 'px'
                         }">
-                    <button type="checkbox" id="toggle-right-panel-btn" class="drawer-icon-btn oj-buttonset-first" style="display: block;"
+                    <button type="checkbox" class="toggle-right-panel-btn drawer-icon-btn oj-buttonset-first" style="display: block;"
                                 data-bind="ojComponent: {
                                     checked: rightPanelShown,
                                     component:'ojButton', 
@@ -823,17 +817,17 @@
                                 css: {
                                     'drawer-selected': rightPanelShown()
                                 }"/></button>                    
-                    <button id="right-panel-help-btn" class="drawer-icon-btn" data-bind="ojComponent: {
+                    <button class="right-panel-help-btn drawer-icon-btn" data-bind="ojComponent: {
                         component:'ojButton', 
                         display: 'icons', 
                         icons: {start:'oj-button-icon fa-icon-font fa-icon-font-18 fa-question-circle'}, 
                         label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>
                 </div>
                 <!-- ko stopBinding: true -->
-                <div id="dbd-left-panel" class="dbd-left-panel-show"
+                <div class="dbd-left-panel dbd-left-panel-show"
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
-                    <div id="dbd-left-panel-header" class="fit-size-vertical-sibling">
+                    <div class="dbd-left-panel-header fit-size-vertical-sibling">
                         <div class="oj-row">
                             <div class="oj-col">
                                 <h3 class="dbd-left-panel-header-title" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTENT_LABEL')"></h3>
@@ -841,7 +835,7 @@
                         </div>
                         <div class="dbd-left-panel-header-search">
                             <div  class="dbd-left-panel-header-search-input">
-                                <input id="widget-search-input" type="text" name="searchInput"
+                                <input class="widget-search-input" type="text" name="searchInput"
                                    data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
                                               placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                               ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
@@ -856,14 +850,14 @@
                                         text-align: center;
                                         float: left;"> 
                                 </button>-->
-                                <button id="dbd-left-panel-header-search-btn" class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
+                                <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
                                         ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
                                         icons: {start:'left-panel-dbd-search-icon'}}"> 
                                 </button> 
                             </div>
                         </div>
                     </div>
-                    <div id="dbd-left-panel-widgets" class="fit-size">
+                    <div class="dbd-left-panel-widgets fit-size">
                         <div class="oj-col stretch-width" data-bind="foreach: widgets">
                             <div class="dbd-left-panel-widget" data-bind="attr: {id: 'widget-item-'+WIDGET_UNIQUE_ID()}">
                                 <div class="dbd-left-panel-widget-text"
@@ -890,20 +884,20 @@
                             </div>
                         </div>
                     </div>
-                    <div id="dbd-left-panel-footer" class="fit-size-vertical-sibling">
+                    <div class="dbd-left-panel-footer fit-size-vertical-sibling">
                         <!-- hide the container menu before the function is available.
-                        <div id="dbd-left-panel-footer-contain" style="padding-top: 10px; border-top: 1px solid #d6dfe6">
+                        <div class="dbd-left-panel-footer-contain" style="padding-top: 10px; border-top: 1px solid #d6dfe6">
                             <div class="oj-row" data-bind="event: {mouseover: $root.containerMouseOverHandler, mouseout: $root.containerMouseOutHandler}">
                                 <div class="oj-col oj-sm-12" style="height: 28px;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL')"></div>
                             </div>
                         </div>
                         --> 
-                        <div id="dbd-left-panel-footer-btns">
+                        <div class="dbd-left-panel-footer-btns">
                             <div class="oj-row">
                                 <div class="oj-col oj-sm-3 oj-md-3 oj-lg-3 widget-paging-desc" 
                                      data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_WIDGET_PAGES')"></div>
                                 <div class="oj-col oj-sm-6 oj-md-6 oj-lg-6">
-                                    <input id="dbd-left-panel-widgets-page-input" aria-label="page"
+                                    <input class="dbd-left-panel-widgets-page-input" aria-label="page"
                                             data-bind="ojComponent: {
                                               component: 'ojInputNumber',
                                               max: totalPages, min: 1, step: 1, value: page, optionChange: dashboardPageChanged,
@@ -914,7 +908,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="right-container-pop" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {'style': 'width: 430px; height: 240px;'}}">
+                        <div class="right-container-pop" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {'style': 'width: 430px; height: 240px;'}}">
                             <div class="oj-row">
                                 <div class="oj-col oj-sm-12">
                                     <h2 data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_LABEL')"></h2>
@@ -929,7 +923,7 @@
                                             <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL1')"></div>
                                         </div>
                                         <div class="oj-col oj-sm-6">
-                                            <div id="gauge2"
+                                            <div 
                                                     data-bind="ojComponent: {
                                                       component: 'ojStatusMeterGauge', 
                                                       min: 0, 
@@ -949,7 +943,7 @@
                                     </div>
                                     <div class="oj-row">
                                         <div class="oj-col oj-sm-6">
-                                            <div id="gauge3"
+                                            <div
                                                     data-bind="ojComponent: {
                                                       component: 'ojStatusMeterGauge', 
                                                       min: 0, 
@@ -967,7 +961,7 @@
                                             <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL3')"></div>
                                         </div>
                                         <div class="oj-col oj-sm-6">
-                                            <div id="gauge4"
+                                            <div
                                                     data-bind="ojComponent: {
                                                       component: 'ojStatusMeterGauge', 
                                                       min: 0, 
@@ -994,16 +988,6 @@
                     </div>
                 </div>
                 <!-- /ko -->
-                <!--<div class="oj-row stretch-height tile-container" id="tileContainer"  
-                     style="height: 1000px; position: absolute; left: 0; top: 0;">-->
-                    <!--div id='show-hide-timeslider-checkbox-container'>
-                        <div data-bind="ojComponent: {component: 'ojCheckboxset'}">
-                            <span style="display:inline-block; padding-left: 3em; padding-top: 5px;">
-                                <input id="show-timeslider" type="checkbox" value="show">
-                                <label for="show-timeslider"> Show time slider</label>
-                            </span>
-                        </div>
-                    </div-->
             </div>
             </script>
 
