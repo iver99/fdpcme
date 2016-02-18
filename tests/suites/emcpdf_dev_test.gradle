@@ -86,7 +86,7 @@ task DEVTest(type:EMTest){
 //  	include "oracle/sysman/emaas/platform/dashboards/core/persistence/DashboardServiceFacadeTest.class"
 //	include "oracle/sysman/emaas/platform/dashboards/core/PreferenceManagerTest_S2.class"
 //	include "oracle/sysman/emaas/platform/dashboards/core/DashboardManagerTest_S2.class"
-	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
+//	include "oracle/sysman/emaas/platform/dashboards/core/model/*"
 //	include "oracle/sysman/emaas/platform/dashboards/core/wls/management/*"
 	useRestAssured=true
 	ext.set("testType", "unit")
@@ -96,7 +96,6 @@ task DEVTest(type:EMTest){
 
 task emcpdf_dev_test(dependsOn: DEVTest)
 
-/*if (new File("codeCoverage.gradle").exists()) {
+if (new File("codeCoverage.gradle").exists()) {
 apply from: "../../codeCoverage/codeCoverage.gradle"
 }
-*/
