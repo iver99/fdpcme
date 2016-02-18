@@ -19,22 +19,22 @@ public class UIControls
 	public static final String sStartText = "//*[@id='start']";
 	public static final String sEndText = "//*[@id='end']";
 	public static final String sTimePeriod = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/span";
-	public static final String sErrorMsg = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[4]";
+	public static final String sErrorMsg = "/html/body/div[1]/div/div[2]/div/div/div/div[4]";//"/html/body/div[1]/div/div/div[1]/div/div[2]/div[4]";
 	//End: Text
 
 	//Begin: InputText
-	public static final String sStartDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[1]/div/input";
-	public static final String sStartTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[2]/div/div/input";
-	public static final String sEndDateInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[4]/div/input";
-	public static final String sEndTimeInput = "/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[5]/div/div/input";
+	public static final String sStartDateInput = "/html/body/div[1]/div/div[2]/div/div/div/div[1]/div/div[1]/div/input";//"/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[1]/div/input";
+	public static final String sStartTimeInput = "/html/body/div[1]/div/div[2]/div/div/div/div[1]/div/div[2]/div/div/input";//"/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[2]/div/div/input";
+	public static final String sEndDateInput = "/html/body/div[1]/div/div[2]/div/div/div/div[1]/div/div[4]/div/input";//"/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[4]/div/input";
+	public static final String sEndTimeInput = "/html/body/div[1]/div/div[2]/div/div/div/div[1]/div/div[5]/div/div/input";//"/html/body/div[1]/div/div/div[1]/div/div[2]/div[1]/div/div[5]/div/div/input";
 
 	//End: InputText
 
 	//Begin: Button
-	public static final String sTimeRangeBtn_1 = "/html/body/div[1]/div[2]/div/button";
-	public static final String sTimeRangeBtn_1_new = "/html/body/div[2]/div[2]/div/button";
-	public static final String sTimeRangeBtn_2 = "/html/body/div[1]/div[4]/div/div/button";
-	public static final String sTimeRangeBtn_2_new = "/html/body/div[2]/div[4]/div/div/button";
+	public static final String sTimeRangeBtn_1 = "/html/body/div[1]/div[3]/div/span/span";//"/html/body/div[1]/div[2]/div/button";
+	public static final String sTimeRangeBtn_1_new = "/html/body/div[2]/div[3]/div/span/span";//"/html/body/div[2]/div[2]/div/button";
+	public static final String sTimeRangeBtn_2 = "/html/body/div[1]/div[5]/div/div/span/span";//"/html/body/div[1]/div[4]/div/div/button";
+	public static final String sTimeRangeBtn_2_new = "/html/body/div[2]/div[5]/div/div/span/span";//"/html/body/div[2]/div[4]/div/div/button";
 	public static final String sApplyBtn = "//*[@id='applyButton']";
 	public static final String sCancelBtn = "//*[@id='cancelButton']";
 
