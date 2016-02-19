@@ -68,29 +68,44 @@ public class DashBoardPageId {
 	
 	//Branding Bar links
 	//Home Link
-	public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
+	//public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
+	public static final String HomeLinkID="//a[contains(text(),'Home')]";
+
 	//dashboard home link
-	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[2]/a";
+	//public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[2]/a";
+	 public static final String DashBoardHomeLinkID="//a[contains(text(),'Dashboards')]";
+
+      
 	//My Favorites link
-	public static final String MyFavoritesLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
+	//public static final String MyFavoritesLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
+        public static final String MyFavoritesLinkID="//a[contains(text(),'My Favorites')]";
 	//IT Analytics link
-	public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
+	//public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
+	 public static final String ITALinkID="//a[contains(text(),'IT Analytics')]";
 	//Log Analytics link
-	public static final String LALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
+	//public static final String LALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
+	public static final String LALinkID="//a[contains(text(),'Log Analytics')]";
 	//APM link
-	public static final String APMLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
+	//public static final String APMLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
+        public static final String APMLinkID="//a[contains(text(),'APM')]";
 	//Log link
-	public static final String LOGLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
+	//public static final String LOGLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
+	public static final String LOGLinkID="//a[contains(text(),'Log')]";
+
 	//AWR Analytics link
 	//public static final String AWRALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
 	//Analyze link
-	public static final String AnalyzeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+	//public static final String AnalyzeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+        public static final String AnalyzeLinkID="//a[contains(text(),'Analyze')]";
 	//Search link
-	public static final String SearchLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
+	//public static final String SearchLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
+	public static final String SearchLinkID="//a[contains(text(),'Search')]";
 	//Agents link
-	public static final String AgentsLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
+	//public static final String AgentsLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
+	public static final String AgentsLinkID="//a[contains(text(),'Agents')]";
 	//IT Analytics Administration link
-	public static final String ITA_Admin_LinkID ="/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[4]/a";
+	//public static final String ITA_Admin_LinkID ="/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[4]/a";
+	 public static final String ITA_Admin_LinkID="//a[contains(text(),'IT Analytics Administration')]";
 	
 	//check box
 	public static final String ITA_BoxID = "itaopt";
