@@ -37,7 +37,6 @@ allprojects {
 			username = "${artifactory_user}"  
 			password = "${artifactory_password}"  
 		} 
-		mavenCentral()
 	}  
 
 	} 
@@ -178,6 +177,7 @@ dependencies {
 			'com.sun.jersey:jersey-server:1.17.1', 
 			'com.sun.jersey:jersey-servlet:1.17.1',
 			'org.codehaus.jettison:jettison:1.3.4'
+			'coherence:coherence:12.1.2'
 	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
 			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
