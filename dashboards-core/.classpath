@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/integTest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EclipseLink"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
@@ -38,5 +39,6 @@
 	<classpathentry kind="lib" path="/Users/guochen/ssf/master/emcpssf/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="lib" path="/Users/guochen/ssf/master/emcpssf/dependencies/artifactory/json-path-2.3.1.jar"/>
 	<classpathentry kind="lib" path="/Users/guochen/Documents/ehcache-2.10.1.jar"/>
+	<classpathentry kind="lib" path="DSB_HOME/dependencies/artifactory/coherence-12.1.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

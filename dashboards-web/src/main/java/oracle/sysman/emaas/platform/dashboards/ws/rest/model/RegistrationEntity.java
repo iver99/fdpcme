@@ -10,20 +10,30 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.*;
 
 /**
  * @author miao
@@ -68,6 +78,7 @@ public class RegistrationEntity
 	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
+
 	static {
 		try {
 			//.initComponent() reads the default "looup-client.properties" file in class path
@@ -101,9 +112,24 @@ public class RegistrationEntity
 	/**
 	 * @return Administration links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 	}
 
 	/**
@@ -114,11 +140,24 @@ public class RegistrationEntity
 	//		return new String(LookupManager.getInstance().getAuthorizationToken());
 	//	}
 
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getCloudServices()
 	{
-		List<LinkEntity> list = new ArrayList<LinkEntity>();
-		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		String tenantName = TenantContext.getCurrentTenant();
+		Tenant cacheTenant = new Tenant(tenantName);
+		List<LinkEntity> list = null;
+		try {
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
+			if (list != null) {
+				return list;
+			}
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		list = new ArrayList<LinkEntity>();
+		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		for (String app : subscribedApps) {
 			try {
 				if (APM_SERVICENAME.equals(app)) {
@@ -149,6 +188,8 @@ public class RegistrationEntity
 				_logger.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
 
@@ -170,9 +211,24 @@ public class RegistrationEntity
 	/**
 	 * @return Home links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_HOME_LINK);
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return lookupLinksWithRelPrefix(NAME_HOME_LINK);
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
 	}
 
 	public String getSessionExpiryTime()
@@ -242,9 +298,24 @@ public class RegistrationEntity
 	/**
 	 * @return Visual analyzer links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
@@ -364,8 +435,8 @@ public class RegistrationEntity
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient()
-							.getSanitizedInstanceInfo(internalInstance, tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
+							tenantName);
 					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}

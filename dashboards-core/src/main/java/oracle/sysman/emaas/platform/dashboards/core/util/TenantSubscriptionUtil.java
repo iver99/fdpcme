@@ -233,7 +233,7 @@ public class TenantSubscriptionUtil
 			domainsResponse = (String) cm.getCacheable(new Tenant(tenant), CacheManager.CACHES_LOOKUP_CACHE, domainHref,
 					new ICacheFetchFactory() {
 						@Override
-						public Object fetchCache(Object key) throws Exception
+						public Object fetchCachable(Object key) throws Exception
 						{
 							return rc.get(domainHref, tenant);
 						}
@@ -255,7 +255,8 @@ public class TenantSubscriptionUtil
 	 * @param tenantAppUrl
 	 * @return
 	 */
-	private static String fetchTenantAppMappingUrl(final String tenant, CacheManager cm, final RestClient rc, String tenantAppUrl)
+	private static String fetchTenantAppMappingUrl(final String tenant, CacheManager cm, final RestClient rc,
+			String tenantAppUrl)
 	{
 		final String appMappingUrl = tenantAppUrl + "/lookups?opcTenantId=" + tenant;
 		logger.debug("Checking tenant (" + tenant + ") subscriptions. tenant application mapping lookup URL is " + appMappingUrl);
@@ -264,7 +265,7 @@ public class TenantSubscriptionUtil
 			appMappingJson = (String) cm.getCacheable(new Tenant(tenant), CacheManager.CACHES_LOOKUP_CACHE, appMappingUrl,
 					new ICacheFetchFactory() {
 						@Override
-						public Object fetchCache(Object key) throws Exception
+						public Object fetchCachable(Object key) throws Exception
 						{
 							return rc.get(appMappingUrl, tenant);
 						}

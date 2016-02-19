@@ -3,8 +3,7 @@ package oracle.sysman.emaas.platform.dashboards.core.cache;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.config.CacheConfiguration;
+import com.tangosol.net.NamedCache;
 
 public class CacheManagerTest
 {
@@ -16,24 +15,17 @@ public class CacheManagerTest
 		cm.putCacheable("lookupCache", new Keys("test"), putValue);
 		String value = (String) cm.getCacheable("lookupCache", new Keys("test"));
 		Assert.assertEquals(value, putValue);
-		net.sf.ehcache.CacheManager ecm = CacheManager.getEhCacheManager();
-		Cache cache = ecm.getCache("lookupCache");
-		CacheConfiguration cc = cache.getCacheConfiguration();
-		long timeToIdle = cc.getTimeToIdleSeconds();
-		cc.setTimeToIdleSeconds(1);
-		Thread.sleep(2000);
+		Thread.sleep(8500);
 		value = (String) cm.getCacheable("lookupCache", new Keys("test"));
 		Assert.assertNull(value);
-		cc.setTimeToIdleSeconds(timeToIdle);
 	}
 
 	@Test
-	public void testGetCacheNames()
+	public void testNotExistsCache()
 	{
 		CacheManager cm = CacheManager.getInstance();
-		String[] names = cm.getCacheNames();
-		Assert.assertEquals(names[0], "eternalCache");
-		Assert.assertEquals(names[1], "lookupCache");
+		NamedCache nc = cm.getCache("NotExistingCache");
+		Assert.assertNull(nc);
 	}
 
 	@Test
@@ -51,7 +43,7 @@ public class CacheManagerTest
 		Assert.assertNull(value);
 		value = (Integer) cm.getCacheable("eternalCache", new Keys("test"), new ICacheFetchFactory() {
 			@Override
-			public Object fetchCache(Object key) throws Exception
+			public Object fetchCachable(Object key) throws Exception
 			{
 				return cachedValue;
 			}
@@ -113,7 +105,7 @@ public class CacheManagerTest
 		Assert.assertNull(value);
 		value = (Integer) cm.getCacheable(tenant1, "eternalCache", new Keys("test"), new ICacheFetchFactory() {
 			@Override
-			public Object fetchCache(Object key) throws Exception
+			public Object fetchCachable(Object key) throws Exception
 			{
 				return cachedValue;
 			}

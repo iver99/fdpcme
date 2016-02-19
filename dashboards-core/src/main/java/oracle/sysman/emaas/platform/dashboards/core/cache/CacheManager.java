@@ -10,13 +10,13 @@
 
 package oracle.sysman.emaas.platform.dashboards.core.cache;
 
-import java.net.URL;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.Element;
+import com.tangosol.net.CacheFactory;
+import com.tangosol.net.NamedCache;
+
+import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 
 /**
  * @author guochen
@@ -26,21 +26,21 @@ public class CacheManager
 	private static final Logger logger = LogManager.getLogger(CacheManager.class);
 
 	public static final String CACHES_LOOKUP_CACHE = "lookupCache";
+
 	public static final String CACHES_ETERNAL_CACHE = "eternalCache";
 
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
-
+	public static final String LOOKUP_CACHE_KEY_EXTERNAL_LINK = "externalLink";
+	public static final String LOOKUP_CACHE_KEY_INTERNAL_LINK = "internalLink";
+	public static final String LOOKUP_CACHE_KEY_VANITY_BASE_URL = "vanityBaseUrl";
+	public static final String LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS = "cloudServiceLinks";
+	public static final String LOOKUP_CACHE_KEY_ADMIN_LINKS = "adminLinks";
+	public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
+	public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
 	private static CacheManager instance;
 
 	static {
 		instance = new CacheManager();
-	}
-
-	public static net.sf.ehcache.CacheManager getEhCacheManager()
-	{
-		URL url = CacheManager.class.getResource("/ehcache.xml");
-		net.sf.ehcache.CacheManager manager = net.sf.ehcache.CacheManager.newInstance(url);
-		return manager;
 	}
 
 	public static CacheManager getInstance()
@@ -52,7 +52,16 @@ public class CacheManager
 
 	private CacheManager()
 	{
+		logger.info("Initialization coherence!!");
 		keyGen = new DefaultKeyGenerator();
+	}
+
+	public NamedCache getCache(String cacheName)
+	{
+		if (StringUtil.isEmpty(cacheName)) {
+			return null;
+		}
+		return getInternalCache(cacheName);
 	}
 
 	public Object getCacheable(String cacheName, Keys keys) throws Exception
@@ -77,7 +86,7 @@ public class CacheManager
 
 	public Object getCacheable(Tenant tenant, String cacheName, Keys keys, ICacheFetchFactory ff) throws Exception
 	{
-		Cache cache = getInternalCache(cacheName);
+		NamedCache cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
 		}
@@ -85,21 +94,19 @@ public class CacheManager
 		if (key == null) {
 			return null;
 		}
-		Element elem = cache.get(key);
-		if (elem == null && ff != null) {
+		Object value = cache.get(key);
+		if (value == null && ff != null) {
 			logger.debug("Cache not retrieved, trying to load with fetch factory");
-			Object obj = ff.fetchCache(key);
-			if (obj != null) {
-				elem = new Element(key, obj);
-				cache.put(elem);
+			value = ff.fetchCachable(key);
+			if (value != null) {
+				cache.put(key, value);
 				logger.debug("Successfully fetched data, putting to cache");
 			}
 		}
-		if (elem == null) {
-			logger.debug("Not retrieved cache element with cache name {} and key {} for tenant {}", cacheName, key, tenant);
+		if (value == null) {
+			logger.debug("Not retrieved cache with cache name {} and key {} for tenant {}", cacheName, key, tenant);
 			return null;
 		}
-		Object value = elem.getObjectValue();
 		logger.debug("Retrieved cacheable with key={} and value={} for tenant={}", key, value, tenant);
 		return value;
 	}
@@ -114,17 +121,16 @@ public class CacheManager
 		return getCacheable(tenant, cacheName, new Keys(key), ff);
 	}
 
-	public String[] getCacheNames()
-	{
-		net.sf.ehcache.CacheManager manager = CacheManager.getEhCacheManager();
-		String[] names = manager.getCacheNames();
-		logger.debug("Retrieved all cache names: {}", (Object[]) names);
-		return names;
-	}
-
 	public Object getInternalKey(Tenant tenant, Keys keys)
 	{
 		return keyGen.generate(tenant, keys);
+	}
+
+	public Object putCache(String key, Object value)
+	{
+		NamedCache nc = CacheFactory.getCache("lookupCache");
+		nc.put(key, value);
+		return value;
 	}
 
 	public Object putCacheable(String cacheName, Keys keys, Object value)
@@ -139,7 +145,7 @@ public class CacheManager
 
 	public Object putCacheable(Tenant tenant, String cacheName, Keys keys, Object value)
 	{
-		Cache cache = getInternalCache(cacheName);
+		NamedCache cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
 		}
@@ -147,7 +153,7 @@ public class CacheManager
 		if (key == null) {
 			return null;
 		}
-		cache.put(new Element(key, value));
+		cache.put(key, value);
 		logger.debug("Cacheable with tenant={}, key={} and value={} is put to cache {}", tenant, key, value, cacheName);
 
 		return value;
@@ -165,7 +171,7 @@ public class CacheManager
 
 	public Object removeCacheable(Tenant tenant, String cacheName, Keys keys)
 	{
-		Cache cache = getInternalCache(cacheName);
+		NamedCache cache = getInternalCache(cacheName);
 		if (cache == null) {
 			return null;
 		}
@@ -189,18 +195,19 @@ public class CacheManager
 	 * @param key
 	 * @return
 	 */
-	private Cache getInternalCache(String cacheName)
+	private NamedCache getInternalCache(String cacheName)
 	{
 		if (cacheName == null) {
 			logger.warn("Not retrieved from cache for null cache name");
 			return null;
 		}
-		net.sf.ehcache.CacheManager manager = CacheManager.getEhCacheManager();
-		if (manager == null) {
-			logger.debug("Not retrieved from cache for null EhCacheManager");
-			return null;
+		NamedCache cache = null;
+		try {
+			cache = CacheFactory.getCache(cacheName);
 		}
-		Cache cache = manager.getCache(cacheName);
+		catch (IllegalArgumentException e) {
+			logger.error(e.getLocalizedMessage(), e);
+		}
 		if (cache == null) {
 			logger.debug("Not retrieved cache with cache name {}", cacheName);
 			return null;
