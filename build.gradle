@@ -153,8 +153,8 @@ dependencies {
 	               'org.apache.logging.log4j:log4j-api:2.0.1'
 	prebuild_toplink 'org.eclipse.persistence:eclipselink:2.4.2',
                          'org.eclipse.persistence:javax.persistence:2.0.5'
-	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.0.0+',
-                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
+	prebuild_servicemanager 'com.oracle.emaas.emcpsm:registry-client:1.+',
+                                'com.oracle.emaas.emcpsm:registry-lookup-client:1.+'
 	prebuild_web            'com.oracle.adf:wls-api:12.1.2-0-0',
 				'com.oracle.jdbc:ojdbc6:12.1.0.1.0',
 				'javax.transaction:javax.transaction-api:1.2',
@@ -178,7 +178,7 @@ dependencies {
 			'org.codehaus.jettison:jettison:1.3.4'
 	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
-			'com.oracle.emaas.emcpsm:registry-lookup-client:1.0.0+'
+			'com.oracle.emaas.emcpsm:registry-lookup-client:1.+'
 }
 
 task runS1Tests(type: Exec) {
@@ -218,8 +218,8 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
    into "$afDir"
-   rename(/registry-client-1.0.0-\d+.jar/, 'registry-client-1.0.0.jar')
-   rename(/registry-lookup-client-1.0.0-\d+.jar/, 'registry-lookup-client-1.0.0.jar')
+   rename(/registry-client-1.\d+.\d+-\d+.jar/, 'registry-client-1.x.jar')
+   rename(/registry-lookup-client-1.\d+.\d+-\d+.jar/, 'registry-lookup-client-1.x.jar')
 }
 
 compileJava.dependsOn preBuildCompile
