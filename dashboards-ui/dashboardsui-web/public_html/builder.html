@@ -35,12 +35,13 @@
                             <button id="tabs-gear" class="no-print"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
-                                    menu: '#dbd-set-option'}">
+                                    menu: '#dbd-set-option'
+                                }, attr: {title: getNlsString('DBSSET_BUILDER_DASHBOARDSET_OPTIONS')}">
                             </button>
                         </li>
                          <!--ko foreach:dashboardsetItems-->
                          <li class="other-nav" data-bind="attr: {id:'dashboard-'+$index()},click:$root.changeTab">
-                             <span class="tabs-name" data-bind="text:name"></span>
+                             <span class="tabs-name" data-bind="text:name"></span>                           
                         </li>
                         <!--/ko-->    
                         <li id="add-nav" data-bind="click:addNewDashboard"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
@@ -143,7 +144,7 @@
                     <div style="display:none" id="deleteDashboardset"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
-                            <span class="oj-dialog-title"  data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
+                            <span class="oj-dialog-title"  data-bind="text: getNlsString('DBSSET_BUILDER_DELETE_DASHBOARDSET')"></span>
                         </div>
                         <div class="oj-dialog-body">
                             <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name)"></p>
@@ -157,7 +158,26 @@
                                                  component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'), 
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
                         </div>
-                    </div>               
+                    </div>
+                <!--single dashboard set delete-->
+<!--                    <div style="display:none" id="deleteDashboard"
+                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
+                            <div class="oj-dialog-header oj-helper-clearfix">
+                                <span class="oj-dialog-title"  data-bind="text: getNlsString('DBS_HOME_CFM_DLG_DELETE_DSB')"></span>
+                            </div>
+                            <div class="oj-dialog-body">
+                                <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name)"></p>
+                                <p data-bind="html: getNlsString('DBSSET_BUILDER_DELETE_WARNING')"></p>
+                            </div>     
+                            <div class="oj-dialog-footer">
+                                <button data-bind="ojComponent: { 
+                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'), 
+                                                     rootAttributes: {style:'margin-right:20px'}}"></button>
+                                <button data-bind="ojComponent: { 
+                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'), 
+                                                     rootAttributes: {style:'margin-right:20px'}}"></button>
+                            </div>
+                     </div>-->
             </div>     
             
             <div id="head-bar-container" class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome" style="padding-left: 30px;">
