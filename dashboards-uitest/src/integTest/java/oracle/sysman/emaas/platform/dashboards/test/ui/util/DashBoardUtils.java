@@ -23,10 +23,37 @@ public class DashBoardUtils {
 
 	private static WebDriver driver;
 
-     	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+    public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
 	{
 		driver = webDriver;
 	}
+     	
+    public static void clickSetHome() throws Exception
+    {
+    	driver.getLogger().info("before clicking set home button");
+    	driver.click(DashBoardPageId.OptionsID);
+		driver.click(DashBoardPageId.DashboardHome);
+		driver.getLogger().info("after clicking set home button");
+		driver.takeScreenShot();
+    }
+    
+    public static void clickFavorite() throws Exception
+    {
+    	driver.getLogger().info("before clicking set favoirte button");
+    	driver.click(DashBoardPageId.OptionsID);
+		driver.click(DashBoardPageId.DashboardFavorite);
+		driver.getLogger().info("after clicking set favoirte button");
+		driver.takeScreenShot();
+    }
+    
+    public static void clickDelete() throws Exception
+    {
+    	driver.getLogger().info("before clicking Delete icon");
+    	driver.click(DashBoardPageId.OptionsID);
+		driver.click(DashBoardPageId.DashboardDelete);
+		driver.getLogger().info("after clicking Delete icon");
+		driver.takeScreenShot();
+    }
      	
     public static void noOOBCheck_GridView() throws Exception
     {
