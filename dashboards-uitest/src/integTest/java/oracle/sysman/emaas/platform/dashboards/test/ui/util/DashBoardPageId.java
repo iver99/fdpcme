@@ -25,6 +25,8 @@ public class DashBoardPageId {
 	public static final String DashboardEdit="//*[@id='emcpdf_dsbopts_edit']";
 	public static final String DashboardDuplicate="//*[@id='emcpdf_dsbopts_duplicate']";
 	public static final String DashboardDelete="//*[@id='emcpdf_dsbopts_delete']";
+	public static final String DashboardHome="//*[@id='emcpdf_dsbopts_home']";
+	public static final String DashboardFavorite="//*[@id='emcpdf_dsbopts_favorites']";
 	public static final String WidgetDialogCloseButtonID = "div[15]/div[3]/div/span";
 	public static final String DashBoardID = "//div[@class='oj-panel dbs-summary-container']";// and @aria-dashboard='1127']";
 	public static final String ElementID = "//*[@id=\"dtabhomesc\"]/div[1]";
@@ -37,6 +39,8 @@ public class DashBoardPageId {
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
 	public static final String DashboardTableID = "dtabhomesc";
+	public static final String DeleteBtn_cfmDialog = "/html/body/div[1]/div[2]/div/div[3]/button[1]";
+	public static final String DashboardSerachResult_panelID = "dtabhomesc";
 	
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
@@ -78,7 +82,7 @@ public class DashBoardPageId {
       
 	//My Favorites link
 	//public static final String MyFavoritesLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
-        public static final String MyFavoritesLinkID="//a[contains(text(),'My Favorites')]";
+    public static final String MyFavoritesLinkID="//a[contains(text(),'My Favorites')]";
 	//IT Analytics link
 	//public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
 	 public static final String ITALinkID="//a[contains(text(),'IT Analytics')]";
@@ -87,7 +91,7 @@ public class DashBoardPageId {
 	public static final String LALinkID="//a[contains(text(),'Log Analytics')]";
 	//APM link
 	//public static final String APMLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
-        public static final String APMLinkID="//a[contains(text(),'APM')]";
+    public static final String APMLinkID="//a[contains(text(),'APM')]";
 	//Log link
 	//public static final String LOGLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
 	public static final String LOGLinkID="//a[contains(text(),'Log')]";
@@ -96,7 +100,7 @@ public class DashBoardPageId {
 	//public static final String AWRALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
 	//Analyze link
 	//public static final String AnalyzeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
-        public static final String AnalyzeLinkID="//a[contains(text(),'Analyze')]";
+    public static final String AnalyzeLinkID="//a[contains(text(),'Analyze')]";
 	//Search link
 	//public static final String SearchLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
 	public static final String SearchLinkID="//a[contains(text(),'Search')]";
@@ -114,6 +118,7 @@ public class DashBoardPageId {
 	public static final String Oracle_BoxID = "oracleopt";
 	public static final String Other_BoxID = "otheropt";
 	public static final String Share_BoxID = "shareopt";
+	public static final String Favorite_BoxID = "myfavorites";
 	
 	//id of dashboard name /html/body/div[2]/div/div/div/div/div/span/h1 /html/body/div[2]/div/div/div/div[2]/div/span/span,/html/body/div[3]/div/div/div/div/div/span/h1;/html/body/div[2]/div/div/div/div[2]/div/span/span
 	public static final String DashboardNameID = "/html/body/div[*]/div/div/div/div/div/span/h1";
@@ -198,5 +203,6 @@ public class DashBoardPageId {
 	public static final String Welcome_APMLinkID = "/html/body/div[2]/div/div[2]/ul/li[1]/a/div/div[2]/div[1]";
 	public static final String Welcome_LALinkID = "/html/body/div[2]/div/div[2]/ul/li[2]/a/div/div[2]/div[1]";
 	public static final String Welcome_ITALinkID ="/html/body/div[2]/div/div[2]/ul/li[3]/div/div/div[2]/div[1]";
+	public static final String Welcome_DashboardsLinkID = "/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
 	public static final String Welcome_DataExp = "/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
 }
