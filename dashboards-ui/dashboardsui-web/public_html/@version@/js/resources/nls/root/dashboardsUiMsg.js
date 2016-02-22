@@ -329,6 +329,9 @@ define({
       "DBSSET_BUILDER_DASHBOARDSET":"Dashboard Set",
       "DBSSET_BUILDER_EDIT_DASHBOARDSET":"Edit Dashboard Set",
       "DBSSET_BUILDER_DELETE_WARNING":"Note:Deleting the dashboard set does not delete any of the individual dashboards you created and included in the set",
-      "DBSSET_BUILDER_PRINT_ALL":"Print All"
+      "DBSSET_BUILDER_PRINT_ALL":"Print All",
+      "DBSSET_BUILDER_DASHBOARDSET_OPTIONS":"Dashboard Set options",
+      "DBSSET_BUILDER_REMOVE_DASHBOARD":"Remove dashboard",
+      "DBSSET_BUILDER_DELETE_DASHBOARDSET":"Delete Dashboardset"
 });
 
