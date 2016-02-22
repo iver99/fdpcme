@@ -57,7 +57,7 @@ requirejs.config({
             }
           }
     },
-    waitSeconds: 60
+    waitSeconds: 300
 });
 
 /**
@@ -174,7 +174,7 @@ require(['knockout',
                 };
                 appMap[appIdLogAnalytics] = {
                     "providerName": "LoganService",
-                    "providerVersion": "0.1"
+                    "providerVersion": "1.0"
                 };
                 appMap[appIdDashboard] = {
                     "providerName": null,

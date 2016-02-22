@@ -471,18 +471,21 @@ public class CommonUIUtils
 			//Assert.assertFalse(driver.isElementPresent(UIControls.sCategorySelect));
 
 			//Open a widget
-			driver.getLogger().info("Select a widget and open it in the main page");
-			driver.getLogger().info("Select a widget");
-			driver.click(UIControls.sWidgetSelct);
-			Thread.sleep(5000);
-			driver.getLogger().info("Click Open button");
-			driver.click(UIControls.sAddWidgetBtn);
-			driver.takeScreenShot();
-			Thread.sleep(5000);
+			if (!driver.getAttribute(UIControls.sWidgetDiplay + "@childElementCount").equals("0"))
+			{
+				driver.getLogger().info("Select a widget and open it in the main page");
+				driver.getLogger().info("Select a widget");
+				driver.click(UIControls.sWidgetSelct);
+				Thread.sleep(5000);
+				driver.getLogger().info("Click Open button");
+				driver.click(UIControls.sAddWidgetBtn);
+				driver.takeScreenShot();
+				Thread.sleep(5000);
 
-			driver.getLogger().info("Verify the widget has been opened in main page");
-			Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
-			driver.takeScreenShot();
+				driver.getLogger().info("Verify the widget has been opened in main page");
+				Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
+				driver.takeScreenShot();
+			}
 		}
 		else
 		{

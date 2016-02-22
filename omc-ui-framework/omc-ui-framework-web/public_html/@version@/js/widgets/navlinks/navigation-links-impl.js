@@ -148,7 +148,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                         checkCurrentUserRoles(null);
                     }
                     else {
-                        dfu.discoverUrlAsync("SecurityAuthorization", "0.1", null, checkCurrentUserRoles);
+                        dfu.discoverUrlAsync("SecurityAuthorization", encodeURIComponent('1.0+'), null, checkCurrentUserRoles);
                     }
                 };
                 
