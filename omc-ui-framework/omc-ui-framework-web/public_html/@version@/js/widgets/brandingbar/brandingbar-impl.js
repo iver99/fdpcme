@@ -116,9 +116,8 @@ define([
                 self.notificationPageUrl = null;
                 self.navLinksVisible = true; //self.appId === 'Error' ? false : true; EMCPDF-992
                 
-                var appProperties = appMap[self.appId];
-                self.serviceName = appProperties['serviceName'];
-                self.serviceVersion = appProperties['version'];
+                var isAppIdNotEmpty = self.appId && $.trim(self.appId) !== "";
+                var appProperties = isAppIdNotEmpty && appMap[self.appId] ? appMap[self.appId] : {};
                 
                 var maxMsgDisplayCnt = $.isFunction(params.maxMessageDisplayCount) ? params.maxMessageDisplayCount() : 
                         (typeof(params.maxMessageDisplayCount) === "number" && params.maxMessageDisplayCount > 0 ?
@@ -221,7 +220,7 @@ define([
                 
                 //Open help link
                 var helpBaseUrl = "http://www.oracle.com/pls/topic/lookup?ctx=cloud&id=";//"http://tahiti-stage.us.oracle.com/pls/topic/lookup?ctx=cloud&id=";
-                var helpTopicId = appProperties["helpTopicId"];
+                var helpTopicId = appProperties["helpTopicId"] ? appProperties["helpTopicId"] : "em_home_gs";
                 self.openHelpLink = function() {
                     oj.Logger.info("Open help link: " + helpBaseUrl + helpTopicId);
                     window.open(helpBaseUrl + helpTopicId);
@@ -264,7 +263,7 @@ define([
                     tenantName: self.tenantName,
                     nlsStrings: nls,
                     appMap: appMap,
-                    app: appMap[self.appId],
+                    app: appProperties,
                     appDashboard: appMap[appIdDashboard],
                     appTenantManagement: appMap[appIdTenantManagement],
                     appEventUI: appMap[appIdEventUI],
@@ -572,17 +571,23 @@ define([
                     var subscribedServices = null;
                     //For app pages like LA or ITA or APM: only show name of LA or ITA or APM in Branding Bar. 
                     //Even other apps are subscribed to current tenant as well, we don't show them
-                    if (self.appId !== 'Dashboard' && self.appId !== 'Error')
-                        subscribedApps = [self.appId];
-                    else if (self.appId === 'Error')
+                    if (!isAppIdNotEmpty || self.appId === 'Dashboard' || self.appId === 'Error' || self.appId === 'EventUI') {
                         subscribedApps = [];
+                    }
+                    else {
+                        subscribedApps = [self.appId];
+                    }
+                    
                     if (subscribedApps && subscribedApps.length > 0) {
                         for (var i = 0; i < subscribedApps.length; i++) {
-                            var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
-                            if (i === 0)
-                                subscribedServices = servicename;
-                            else 
-                                subscribedServices = subscribedServices + " | " + servicename;
+                            var appProps = appMap[subscribedApps[i]];
+                            if (appProps) {
+                                var servicename = nls[appProps['appName']] ? nls[appProps['appName']] : "";
+                                if (i === 0)
+                                    subscribedServices = servicename;
+                                else 
+                                    subscribedServices = subscribedServices + " | " + servicename;
+                            }
                         }
                     }
                     self.appName(subscribedServices);

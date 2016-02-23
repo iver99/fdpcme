@@ -208,8 +208,8 @@ require(['knockout',
                     userName: userName,
                     tenantName: tenantName,
                     widgetHandler: self.addSelectedWidgetToDashboard,
-                    providerName: appMap[appId].providerName,
-                    providerVersion: appMap[appId].providerVersion,
+                    providerName: appMap[appId] ? appMap[appId].providerName: null,
+                    providerVersion: appMap[appId] ? appMap[appId].providerVersion : null,
                     autoCloseDialog: autoCloseWidgetSelector
     //                ,providerName: 'TargetAnalytics' 
     //                ,providerVersion: '1.0.5'

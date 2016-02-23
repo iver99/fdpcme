@@ -12,7 +12,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                 var appMap = params.appMap;
                 var sessionTimeoutWarnDialogId = params.sessionTimeoutWarnDialogId;
                 var discoveredAdminLinks = [];
-                var discoveredSecAuthUrl = null;
                 var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
                 var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
                 self.isAdmin = false;
@@ -34,11 +33,6 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
 
                 //Fetch links and session expiry time from server side
                 refreshLinks();
-                
-                //Check user roles to determine whether to show admin links or not
-                if (discoveredSecAuthUrl === null) {
-                    checkAdminPrivileges();
-                }
                 
                 var refreshListener = ko.computed(function(){
                     return {
@@ -106,88 +100,21 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                     }
                 };
                 
-                function determineWhetherToShowAdminLinks(data) {
-                    if (data && data.roleNames && data.roleNames.length > 0) {
-                        for (var i = 0; i < data.roleNames.length; i++) {
-                            if ("APM Administrator" === data.roleNames[i] ||
-                                "IT Analytics Administrator" === data.roleNames[i] ||
-                                "Log Analytics Administrator" === data.roleNames[i]) {
-                                self.isAdmin = true;
-                                self.isAdminLinksVisible(true);
-                                refreshAdminLinks();
-                                break;
-                            }
-                        }
-                    }
-                }
-                
-                function checkCurrentUserRoles(authUrl) {
-                    if (dfu.isDevMode()) {
-                        determineWhetherToShowAdminLinks(dfu.getDevData().userRoles);
-                    }
-                    else {
-                        discoveredSecAuthUrl = authUrl;
-                        var path = "api/v1/roles/grants/getRoles?grantee=" + tenantName + "." + userName;
-                        var secAuthRoleUrl = dfu.buildFullUrl(authUrl, path);
-                        dfu.ajaxWithRetry({
-                            url: secAuthRoleUrl,
-                            headers: dfu.getDefaultHeader(), 
-                            success: function(data, textStatus) {
-                                determineWhetherToShowAdminLinks(data);
-                            },
-                            error: function(xhr, textStatus, errorThrown){
-                                oj.Logger.error('Failed to get user roles by URL: '+ secAuthRoleUrl);
-                            },
-                            async: true
-                        });
-                    }
-                }
-                
-                function checkAdminPrivileges() {
-                    if (dfu.isDevMode()) {
-                        checkCurrentUserRoles(null);
-                    }
-                    else {
-                        dfu.discoverUrlAsync("SecurityAuthorization", "0.1", null, checkCurrentUserRoles);
-                    }
-                }
-                
                 function refreshAdminLinks() {
                     if (self.isAdmin) {
-                        if (params.app){
-                            var link;
-                            for (var i = 0; i < discoveredAdminLinks.length; i++) {
-                                 link = discoveredAdminLinks[i];
-                                if (
-                                    // let's use relative url for customer software for admin link
-                                    (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName && 
-                                        link.href.indexOf('customersoftware') !== -1) ||
-                                    // use relative url for EventUI admin links
-                                    (params.appEventUI && params.appEventUI.serviceName === link.serviceName)) {
-                                        link.href = dfu.getRelUrlFromFullUrl(link.href);
-                                }
-                            }
-                            if (params.app.appId===params.appDashboard.appId){
-                                self.adminLinks(discoveredAdminLinks);//show all avail admin links
-                            }else{ //show app related admin link and tenant management UI and Event UI admin link only
-                                var filteredAdminLinks = [];                                
-                                for (var index=0; index<discoveredAdminLinks.length;index++ ){
-                                    link = discoveredAdminLinks[index];
-                                    if (params.app && params.app.serviceName===link.serviceName){
-                                        filteredAdminLinks.push(link);
-                                    }else if (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName){
-                                        filteredAdminLinks.push(link);
-                                    }else if (params.appEventUI && params.appEventUI.serviceName === link.serviceName) {
-                                            filteredAdminLinks.push(link);
-                                    }
-                                }
-                                self.adminLinks(filteredAdminLinks);                                    
+                        var link;
+                        for (var i = 0; i < discoveredAdminLinks.length; i++) {
+                             link = discoveredAdminLinks[i];
+                            if (
+                                // let's use relative url for customer software for admin link
+                                (params.appTenantManagement && params.appTenantManagement.serviceName===link.serviceName && 
+                                    link.href.indexOf('customersoftware') !== -1) ||
+                                // use relative url for EventUI admin links
+                                (params.appEventUI && params.appEventUI.serviceName === link.serviceName)) {
+                                    link.href = dfu.getRelUrlFromFullUrl(link.href);
                             }
                         }
-                        else {
-                            oj.Logger.warn('Empty app!');
-                        }
-
+                        self.adminLinks(discoveredAdminLinks);
                     }
                 }
                 
@@ -235,9 +162,14 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                             }
                             self.visualAnalyzers(analyzerList);
                         }
-                        if (data.adminLinks && data.adminLinks.length > 0) {
-                            discoveredAdminLinks = data.adminLinks;
-                            refreshAdminLinks();
+                        //Check whether to show admin links, if discovered admin links is not null, then means user has admin privilege
+                        if (data.adminLinks) {
+                            self.isAdmin = true;
+                            self.isAdminLinksVisible(true);
+                            if (data.adminLinks.length > 0) {
+                                discoveredAdminLinks = data.adminLinks;
+                                refreshAdminLinks();
+                            }
                          }
                         
                         //Setup timer to handle session timeout
@@ -291,11 +223,7 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                     dfWelcomeUrl = '/emsaasui/emcpdfui/welcome.html';
                     
                     //Fetch available cloud services, visual analyzers and administration links
-                    if (self.cloudServices().length === 0 || 
-                        self.visualAnalyzers().length === 0 || 
-                        (self.adminLinks().length === 0 && self.isAdmin === true)) {
-                        discoverLinks();
-                    }
+                    discoverLinks();
                 }       
             }
             return NavigationLinksViewModel;
