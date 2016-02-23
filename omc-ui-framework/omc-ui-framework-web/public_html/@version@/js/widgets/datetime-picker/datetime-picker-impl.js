@@ -93,6 +93,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS;
                 self.timePeriodLast30days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS;
                 self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
+                self.timePeriodLast1year = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR;
                 self.timePeriodToday = nls.DATETIME_PICKER_SHOW_TODAY;
                 self.timePeriodCustom = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM;
                 self.timePeriodLatest = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST;
@@ -109,6 +110,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     "Last 7 days" : self.timePeriodLast7days,
                     "Last 30 days" : self.timePeriodLast30days,
                     "Last 90 days" : self.timePeriodLast90days,
+                    "Last 1 year": self.timePeriodLast1year,
                     "Latest" : self.timePeriodLatest,
                     "Today":self.timePeriodToday,
                     "Custom" : self.timePeriodCustom
@@ -123,6 +125,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last7daysNotToShow = ko.observable(false);
                 self.last30daysNotToShow = ko.observable(false);
                 self.last90daysNotToShow = ko.observable(false);
+                self.last1yearNotToShow = ko.observable(false);
                 self.todayNotToShow = ko.observable(false);
                 self.latestNotToShow = ko.observable(false);
                 
@@ -135,6 +138,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last7daysChosen = ko.observable(false);
                 self.last30daysChosen = ko.observable(false);
                 self.last90daysChosen = ko.observable(false);
+                self.last1yearChosen = ko.observable(false);
                 self.todayChosen = ko.observable(false);
                 self.latestChosen = ko.observable(false);
                 self.customChosen = ko.observable(false);
@@ -193,6 +197,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var css = "drawer";
                     css += self.last90daysNotToShow() ? " drawerNotToShow": "";
                     css += self.last90daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.last1yearCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.last1yearNotToShow() ? " drawerNotToShow": "";
+                    css += self.last1yearChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.todayCss = ko.computed(function() {
@@ -333,6 +343,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.last7daysChosen(false);
                     self.last30daysChosen(false);
                     self.last90daysChosen(false);
+                    self.last1yearChosen(false);
                     self.todayChosen(false);
                     self.latestChosen(false);
                     self.customChosen(false);
@@ -369,6 +380,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         case self.timePeriodLast90days:
                             self.last90daysChosen(true);
                             break;
+                        case self.timePeriodLast1year:
+                            self.last1yearChosen(true);
+                            break;
                         case self.timePeriodLatest:
                             self.latestChosen(true);
                             break;
@@ -391,6 +405,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.last7daysNotToShow(false);
                     self.last30daysNotToShow(false);
                     self.last90daysNotToShow(false);
+                    self.last1yearNotToShow(false);
                     self.todayNotToShow(false);
                     self.latestNotToShow(false);
                 };
@@ -423,6 +438,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             break;
                         case self.timePeriodLast90days:
                             self.last90daysNotToShow(true);
+                            break;
+                        case self.timePeriodLast1year:
+                            self.last1yearNotToShow(true);
                             break;
                         case self.timePeriodToday:
                             self.todayNotToShow(true);
@@ -612,7 +630,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }
                 
                 if(params.enableTimeFilter && params.enableTimeFilter === true) {
-                    self.enableTimeFilter(false);
+                    self.enableTimeFilter(true);
                 }
 
                 if(!ko.components.isRegistered("time-filter")) {
@@ -649,6 +667,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     tmp[self.timePeriodLast7days] = [6, 7 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast30days] = [7, 30 * 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast90days] = [8, 90 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast1year] = [9, 365 * 24 * 60 * 60 * 1000]; //do not use this to calculate last a year
                     return tmp;
                 }, self);
                 
@@ -1313,6 +1332,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }else if($(event.target).text() === self.timePeriodToday) { //set time range from mid-night to current point
                             start = new Date(curDate.getFullYear(), curDate.getMonth(), curDate.getDate());
                             end = curDate;
+                        }else if($(event.target).text() === self.timePeriodLast1year) {
+                            start = new Date(curDate.getFullYear() - 1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes());                            
+                            end = curDate;
                         }else {
                             start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
                             //calculate timezone difference to solve issues caused by daylight saving.
@@ -1479,11 +1501,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                                 var isDayInMonthsChecked = true;
                                 if(self.enableTimeFilter()){
                                     var kDay;
-                                    if(firstDayOfWeek === 0) {  ////deal with Sunday
-                                        kDay = (k===0) ? 7 : k;
-                                    }else {
-                                        kDay = ((7-firstDayOfWeek) === k) ? 7 : (k+firstDayOfWeek);
-                                    }
+//                                    if(firstDayOfWeek === 0) {  ////deal with Sunday
+//                                        kDay = (k===0) ? 7 : k;
+//                                    }else {
+//                                        kDay = ((7-firstDayOfWeek) === k) ? 7 : (k+firstDayOfWeek);
+//                                    }
+                                    kDay = (k+firstDayOfWeek)%7 + 1;
                                     isDayInDaysChecked = ($.inArray(kDay.toString(), self.tfInstance.daysChecked()) === -1) ? false : true;
                                     isDayInMonthsChecked = ($.inArray(tmpMonths[i].toString(), self.tfInstance.monthsChecked()) === -1) ? false : true;
                                 }
