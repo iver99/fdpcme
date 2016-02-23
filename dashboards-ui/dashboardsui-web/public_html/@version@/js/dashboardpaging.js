@@ -472,6 +472,18 @@ DashboardPaging.prototype.getModelFromWindow = function(id)
     return null;
 };
 
+/**
+ * Returns the confidence for the totalSize value. 
+ * @return {string} "actual" if the totalSize is the time of the fetch is an exact number 
+ *                  "estimate" if the totalSize is an estimate 
+ *                  "atLeast" if the totalSize is at least a certain number 
+ *                  "unknown" if the totalSize is unknown
+ */
+DashboardPaging.prototype.totalSizeConfidence = function()
+{ 
+  return "actual";
+};
+
 return {'DashboardPaging': DashboardPaging};
 
 });

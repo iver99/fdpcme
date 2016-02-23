@@ -241,31 +241,7 @@
 
 .oj-label-required:before{content:'*'}
 
-/*
-#ojDialogWrapper-cDsbDialog #createDialogFooter #createDsb{
-    margin-bottom: 4px; 
-    background-image: none;
-    margin-left: 6px;
-    text-shadow: none;
-
-    color: #ffffff;
-    font-weight: bold;
-    background-color: #0572ce;
-    background: linear-gradient(to bottom, #0470c9 0%, #0571cd 50%, #0479d8 100%);
-    border: 1px solid #0476d3;
-    border-radius: 2px;
-    
-    text-align: right;
-    box-shadow:none;      
-}
-
-#ojDialogWrapper-cDsbDialog #createDialogFooter #createDsb:hover{
-    background-color: #3a9aea;
-    border: 1px solid #3a9aea;  
-    background-image: none;
-}
-*/
-.oj-button.dbs-home-button {
+.oj-button.oj-button-full-chrome.dbs-home-blue-button {
     background-image: none;
     text-shadow: none;
 
@@ -280,7 +256,7 @@
     box-shadow:none;        
 }
 
-.oj-button.dbs-home-button:hover{
+.oj-button.oj-button-full-chrome.dbs-home-blue-button:hover{
     background-color: #3a9aea;
     border: 1px solid #3a9aea;  
     background-image: none;

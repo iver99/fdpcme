@@ -17,6 +17,7 @@ define(['knockout',
     function(ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
+        var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
         
         function ToolBarModel($b) {
             var self = this;
@@ -47,7 +48,9 @@ define(['knockout',
             self.dashboardDescriptionEditing = ko.observable(self.dashboardDescription());
             self.editDisabled = ko.observable(self.dashboard.type() === SINGLEPAGE_TYPE || self.dashboard.systemDashboard() || self.currentUser !== self.dashboard.owner());
             self.disableSave = ko.observable(false);
-
+            self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+            self.isUserOptionsExist = ko.observable(false); 
+            
             if (window.DEV_MODE) { // for dev mode debug only
                 self.changeMode = function() {
                     self.tilesViewModel.editor.changeMode(self.tilesViewModel.editor.mode === self.tilesViewModel.tabletMode ? self.tilesViewModel.normalMode : self.tilesViewModel.tabletMode);
@@ -92,6 +95,7 @@ define(['knockout',
 
             self.initialize = function() {
                 self.initEventHandlers();
+                self.initUserOtions();
                 $('#builder-dbd-name-input').on('blur', function(evt) {
                     if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
                         self.cancelChangeDashboardName();
@@ -101,6 +105,22 @@ define(['knockout',
                 $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
                     self.handleAddWidgetTooltip();
                 });
+            };
+            
+            self.initUserOtions = function () {
+                Builder.fetchDashboardOptions(
+                    self.dashboard.id(),
+                    function (data) {
+                        //sucessfully get options
+                        self.isUserOptionsExist(true);
+                        self.setAutoRefreshOptoin(data["autoRefreshInterval"]);
+                    },
+                    function (jqXHR, textStatus, errorThrown) {
+                        if(jqXHR.status === 404){
+                            self.isUserOptionsExist(false);
+                            self.setAutoRefreshOptoin(DEFAULT_AUTO_REFRESH_INTERVAL);
+                        }
+                    });
             };
 
             self.initEventHandlers = function() {
@@ -338,14 +358,22 @@ define(['knockout',
                     self.tilesViewModel.dashboard.screenShot = ko.observable(null);
                     self.handleSaveUpdateDashboard(outputData);
                 }
+                 var optionsJson = {
+                    "dashboardId": self.dashboard.id(),
+                    "autoRefreshInterval": self.autoRefreshInterval()
+                };
+                //save user options
+                if (self.isUserOptionsExist()) {
+                    Builder.updateDashboardOptions(optionsJson);
+                } else {
+                    Builder.saveDashboardOptions(optionsJson,function(){
+                        self.isUserOptionsExist(true);
+                    });
+                }
+                
             };
 
             self.handleSaveUpdateDashboard = function(outputData) {
-//                if (window.opener && window.opener.childMessageListener) {
-//                    var jsonValue = JSON.stringify(outputData);
-//                    console.log(jsonValue);
-//                    window.opener.childMessageListener(jsonValue);
-//                }
                 self.handleSaveUpdateToServer(function() {
 //                    if ($( "#cfmleaveDialog" ).ojDialog( "isOpen" ) === true )
 //                    {
@@ -394,7 +422,9 @@ define(['knockout',
             var addWidgetDialogId = 'dashboardBuilderAddWidgetDialog';
 
             self.addSelectedWidgetToDashboard = function(widget) {
-                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", 4, 2, widget);
+                var width = Builder.getTileDefaultWidth(widget, self.tilesViewModel.editor.mode), 
+                        height = Builder.getTileDefaultHeight(widget, self.tilesViewModel.editor.mode);
+                self.tilesViewModel.appendNewTile(widget.WIDGET_NAME, "", width, height, widget);
             };
 
             self.addWidgetDialogParams = {
@@ -710,13 +740,13 @@ define(['knockout',
             };
             
             self.intervalID = null;
-            self.setAutoRefreshOptoin = function (isEnabled, interval) {
+            self.setAutoRefreshOptoin = function (interval) {
+                self.autoRefreshInterval(interval);
                 if (null !== self.intervalID) {
                     clearInterval(self.intervalID);
                 }
-                self.dashboard.enableRefresh(isEnabled);
-
-                if (isEnabled === true) {
+                
+                if (interval) {
                     if (window.DEV_MODE) {
                         interval = 3000;
                     }
@@ -725,20 +755,9 @@ define(['knockout',
                     }, interval);
                 }
             };
-            
+
             //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
-                {
-                    "label": getNlsString('DBS_BUILDER_BTN_ADD'),
-                    "url": "#",
-                    "id":"emcpdf_dsbopts_add",
-                    "onclick": self.editDisabled() === true ? "" : self.openAddWidgetDialog,
-                    "icon":"dbd-toolbar-icon-add-widget",
-                    "title": "",//getNlsString('DBS_BUILDER_BTN_ADD_WIDGET'),
-                    "disabled": self.editDisabled() === true,
-                    "showOnMobile": $b.getDashboardTilesViewModel().isMobileDevice !== "true",
-                    "endOfGroup": false
-                },
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
@@ -765,12 +784,14 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_OFF'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_off",
-                            "icon": self.dashboard.enableRefresh() ? "":"fa-check",
+                            "icon": ko.computed(function(){
+                              return self.autoRefreshInterval() === 0 ? "fa-check":"";  
+                            }),
                             "title": "",
                             "onclick": function(data,event){
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
                                 event.stopPropagation();
-                                self.setAutoRefreshOptoin(false);
+                                self.setAutoRefreshOptoin(0);
                             },
                             "disabled": false,
                             "showOnMobile": true,
@@ -780,12 +801,14 @@ define(['knockout',
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_ON'),
                             "url": "#",
                             "id": "emcpdf_dsbopts_refresh_on",
-                            "icon":  self.dashboard.enableRefresh() ? "fa-check":"",
+                            "icon":ko.computed(function(){
+                              return self.autoRefreshInterval() ? "fa-check":"";  
+                            }),
                             "title": "",
                             "onclick": function (data, event) {
                                 $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
                                 event.stopPropagation();
-                                self.setAutoRefreshOptoin(true,300000);// 5 minutes
+                                self.setAutoRefreshOptoin(300000);// 5 minutes
                             },
                              "disabled": false,
                             "showOnMobile": true,

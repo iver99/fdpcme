@@ -73,7 +73,7 @@ function(dfu, oj, ko, $)
                 this.fetch(); //record last access on rest api
                 if (typeof url==="string"){
                    //console.log("Single Page Dashboard URL is found by: serviceName="+providerName+", version="+version+", asset root="+assetRoot); 
-                   if ("EmcitasApplications"===providerName && "0.1"===version && "flex-analyzer"===assetRoot){
+                   if ("EmcitasApplications"===providerName && version && version.indexOf('1.0') === 0 && "flex-analyzer"===assetRoot){
                        var dsbName = this.get('name');
                         url=url+"?name="+encodeURI(dsbName)+"&createdBy=oracle";
                     }

@@ -11,6 +11,7 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsAlreadyExistException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
@@ -76,6 +77,8 @@ public class UserOptionsManager {
                 // update
                 emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
                 dsf.mergeEmsUserOptions(emsUserOptions);
+            }else{
+                throw new UserOptionsNotFoundException();
             }
         } finally {
             if (em != null) {
@@ -84,4 +87,36 @@ public class UserOptionsManager {
         }
     }
 
+    public void saveUserOptions(UserOptions userOptions, Long tenantId) throws DashboardException {
+        if (userOptions == null) {
+            return;
+        }
+        EntityManager em = null;
+        boolean isExist = false;
+        try {
+            String currentUser = UserContext.getCurrentUser();
+            DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+            em = dsf.getEntityManager();
+
+            EmsUserOptions emsUserOptions = null;
+            if (userOptions.getDashboardId() != null) {
+                emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
+                if (emsUserOptions != null) {
+                    isExist = true;
+                }
+            }
+
+            if (!isExist) {
+                // create
+                emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
+                dsf.persistEmsUserOptions(emsUserOptions);
+            }else{
+                throw new UserOptionsAlreadyExistException();
+            }
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
 }

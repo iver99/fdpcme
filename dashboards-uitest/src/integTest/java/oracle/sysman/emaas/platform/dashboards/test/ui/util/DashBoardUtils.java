@@ -293,10 +293,10 @@ public class DashBoardUtils {
 		driver.takeScreenShot();
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//add autorefresh
-		clickRefreshItem();
+		//clickRefreshItem();
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//add time selector
-		clickTimePicker();
+		//clickTimePicker();
 		
 		TileManager tg = new TileManager(driver);
 		

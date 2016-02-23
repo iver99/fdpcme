@@ -45,30 +45,30 @@ public class RegistrationEntity
 
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
 	public static final String NAME_SSF_SERVICENAME = "SavedSearch";
-	public static final String NAME_SSF_VERSION = "0.1";
+	public static final String NAME_SSF_VERSION = "1.0+";
 	public static final String NAME_DASHBOARD_API_SERVICENAME = "Dashboard-API";
-	public static final String NAME_DASHBOARD_API_VERSION = "0.1";
+	public static final String NAME_DASHBOARD_API_VERSION = "1.0+";
 	public static final String NAME_QUICK_LINK = "quickLink";
 	public static final String NAME_HOME_LINK = "homeLink";
 	public static final String NAME_VISUAL_ANALYZER = "visualAnalyzer";
 	public static final String NAME_ADMIN_LINK = "administration";
 	public static final String NAME_DASHBOARD_UI_SERVICENAME = "Dashboard-UI";
-	public static final String NAME_DASHBOARD_UI_VERSION = "0.1";
+	public static final String NAME_DASHBOARD_UI_VERSION = "1.0+";
 	public static final String NAME_REGISTRY_SERVICENAME = "RegistryService";
-	public static final String NAME_REGISTRY_VERSION = "0.1";
+	public static final String NAME_REGISTRY_VERSION = "1.0+";
 	public static final String NAME_REGISTRY_REL_SSO = "sso.endpoint/virtual";
 
 	public static final String APM_SERVICENAME = "ApmUI";
-	public static final String APM_VERSION = "0.1"; //TODO change to 1.0+ at right time
+	public static final String APM_VERSION = "1.0+";
 	public static final String APM_HOME_LINK = "sso.home";
 	//	public static final String APM_URL = "/emsaasui/apmUi/index.html";
 	public static final String LA_SERVICENAME = "LoganService";
-	public static final String LA_VERSION = "0.1"; //TODO change to 1.0+ at right time
+	public static final String LA_VERSION = "1.0+";
 	public static final String LA_HOME_LINK = "sso.search";
 	//no home link is needed
 	//	public static final String LA_URL = "/emsaasui/emlacore/html/log-analytics-search.html";
 	public static final String ITA_SERVICENAME = "EmcitasApplications";
-	public static final String ITA_VERSION = "0.1"; //TODO change to 1.0+ at right time
+	public static final String ITA_VERSION = "1.0+";
 	public static final String ITA_URL = "/emsaasui/emcpdfui/home.html?filter=ita";
 	public static final String TA_SERVICENAME = "TargetAnalytics";
 	//	public static final String TA_URL = "/emsaasui/emcta/ta/analytics.html";

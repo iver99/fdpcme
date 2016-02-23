@@ -175,7 +175,7 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
-        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback, isContentLengthValid) {
+        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
             if(!tile) {
                 return;
             }
@@ -193,7 +193,7 @@ define(['knockout',
     //                reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
-                validator: isContentLengthValid,
+                validator: Builder.isContentLengthValid,
                 builder: $b
             };
 
@@ -217,13 +217,13 @@ define(['knockout',
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
             tile.widerEnabled = ko.computed(function() {
-                return tile.width() < mode.MODE_MAX_COLUMNS;
+                return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
             tile.narrowerEnabled = ko.computed(function() {
-                return tile.width() > 1;
+                return mode.getModeWidth(tile) > 1;
             });
             tile.shorterEnabled = ko.computed(function() {
-                return tile.height() > 1;
+                return mode.getModeHeight(tile) > 1;
             });
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
@@ -236,12 +236,12 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(tile.width()*3) + ' oj-sm-'+(tile.width()*3) + ' oj-lg-'+(tile.width()*3);
+                var css = 'oj-md-'+(mode.getModeWidth(tile)*3) + ' oj-sm-'+(mode.getModeWidth(tile)*3) + ' oj-lg-'+(mode.getModeWidth(tile)*3);
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
                 css += tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD() ? ' dbd-tile-linked-dashboard' : '';
-                css += tile.toBeOccupied() ? ' dbd-tile-to-be-occupuied' : '';
+//                css += tile.toBeOccupied() ? ' dbd-tile-to-be-occupuied' : '';
                 return css;
             });
             tile.linkedDashboard = ko.computed(function() {

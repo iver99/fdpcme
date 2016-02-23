@@ -21,7 +21,7 @@ default["java_home"] = "#{node["jdk_dir"]}/jdk1.7.0_51"
 default["myApplicationName"]="emaas-applications-omc-ui-framework"
 default["target"]="#{node["wls_adminserver_name"]}"
 
-default["SAAS_API_version"] = "0.1"
+default["SAAS_API_version"] = "1.0"
 default["oracle_base"] = "#{node["run_dir"]}/oracle"
 
 default["SAAS_earSelfCheck"]="emaas"

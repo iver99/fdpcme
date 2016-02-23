@@ -22,15 +22,16 @@ requirejs.config({
     },
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'knockout.mapping': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
-        'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
+        'jqueryui': '../../libs/@version@/js/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/min',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/min',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
+        'ojdnd': '../../libs/@version@/js/oraclejet/js/libs/dnd-polyfill/dnd-polyfill-1.0.0.min',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
@@ -41,6 +42,7 @@ requirejs.config({
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
+        'uiutil':'internaldfcommon/js/util/ui-util',
         'idfbcutil':'internaldfcommon/js/util/internal-df-browser-close-util',
         'd3':'../../libs/@version@/js/d3/d3.min',
         'emsaasui':'/emsaasui',
@@ -81,7 +83,7 @@ requirejs.config({
             }
           }
     },
-    waitSeconds: 60
+    waitSeconds: 300
 });
 
 /**
@@ -111,8 +113,9 @@ require(['knockout',
     'ojs/ojtree',
     'ojs/ojcheckboxset',
     'ojs/ojpopup',
+    'ojs/ojgauge',
     'builder/builder.core',
-    'builder/left.panel.model',
+    'builder/right.panel.model',
     'builder/builder.functions',
     'builder/dashboard.tile.model',
     'builder/dashboard.tile.view',
@@ -201,7 +204,7 @@ require(['knockout',
                     for (var i = 0; i < dashboard.tiles().length; i++) {
                         var tile = dashboard.tiles()[i];
                         if(tile.type() === "TEXT_WIDGET") {
-                            Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.tiles.deleteTile, Builder.isContentLengthValid);
+                            Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
                         }else {
                             Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
                         }
@@ -238,9 +241,9 @@ require(['knockout',
                 ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
                 tilesViewModel.initialize();
                 ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                var leftPanelModel = new Builder.LeftPanelModel($b);
-                ko.applyBindings(leftPanelModel, $('#dbd-left-panel')[0]);
-                leftPanelModel.initialize();
+                var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
+                ko.applyBindings(rightPanelModel, $('#dbd-left-panel')[0]);
+                rightPanelModel.initialize();
                 new Builder.ResizableView($b);
 
                 $("#loading").hide();
