@@ -25,7 +25,7 @@ define(['knockout',
             self.isUpdated = $b.isDashboardUpdated;
             self.tilesViewModel = $b.getDashboardTilesViewModel();
             self.currentUser = dfu.getUserName();
-            self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b.dashboard, self);
+            self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, self);
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
 
             if (self.dashboard.id && self.dashboard.id())
@@ -69,7 +69,7 @@ define(['knockout',
                 {
                     //$( "#cfmleaveDialog" ).ojDialog( "open" );
                     //$( '#cfmleavecbtn' ).focus();
-                    $( '#dashboard-screenshot' ).focus();
+                    $b.findEl('.dashboard-screenshot').focus();
                     return _msg;
                 }
             };
@@ -96,15 +96,15 @@ define(['knockout',
             self.initialize = function() {
                 self.initEventHandlers();
                 self.initUserOtions();
-                $('#builder-dbd-name-input').on('blur', function(evt) {
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
+                $b.findEl('.builder-dbd-name-input').on('blur', function(evt) {
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-cancel"))
                         self.cancelChangeDashboardName();
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok"))
                         self.okChangeDashboardName();
                 });
-                $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
-                    self.handleAddWidgetTooltip();
-                });
+//                $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
+//                    self.handleAddWidgetTooltip();
+//                });
             };
             
             self.initUserOtions = function () {
@@ -145,9 +145,9 @@ define(['knockout',
             }, this);
 
             self.editDashboardName = function() {
-                if (!self.editDisabled() && !$('#builder-dbd-description').hasClass('editing')) {
-                    $('#builder-dbd-name').addClass('editing');
-                    $('#builder-dbd-name-input').focus();
+                if (!self.editDisabled() && !$b.findEl('.builder-dbd-description').hasClass('editing')) {
+                    $b.findEl('.builder-dbd-name').addClass('editing');
+                    $b.findEl('.builder-dbd-name-input').focus();
                 }
             };
 
@@ -160,7 +160,7 @@ define(['knockout',
                     value = value + "";
 
                     if (value && Builder.isDashboardNameExisting(value)) {
-                        $('#builder-dbd-name-input').focus();
+                        $b.findEl('.builder-dbd-name-input').focus();
                         self.nameValidated = false;
                         throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_SAME_NAME_EXISTS_ERROR"));
                     }
@@ -184,7 +184,7 @@ define(['knockout',
             };
             
             self.handleDeleteDashboardCancelled = function() {
-                $( "#dbs_cfmDialog" ).ojDialog( "close" ); 
+                $b.findEl( ".dbs_cfmDialog" ).ojDialog( "close" ); 
             };
 
             self.handleDashboardNameInputKeyPressed = function(vm, evt) {
@@ -195,35 +195,35 @@ define(['knockout',
             };
 
             self.okChangeDashboardName = function() {
-                var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                var nameInput = oj.Components.getWidgetConstructor($b.findEl('.builder-dbd-name-input')[0]);
                 nameInput('validate');
                 if (!self.nameValidated)
                     return false;
-                if (!$('#builder-dbd-name-input')[0].value) {
-                    $('#builder-dbd-name-input').focus();
+                if (!$b.findEl('.builder-dbd-name-input')[0].value) {
+                    $b.findEl('.builder-dbd-name-input').focus();
                     return false;
                 }
                 self.dashboardName(self.dashboardNameEditing());
-                if ($('#builder-dbd-name').hasClass('editing')) {
-                    $('#builder-dbd-name').removeClass('editing');
+                if ($b.findEl('.builder-dbd-name').hasClass('editing')) {
+                    $b.findEl('.builder-dbd-name').removeClass('editing');
                 }
                 self.dashboard.name(self.dashboardName());
                 return true;
             };
 
             self.cancelChangeDashboardName = function() {
-                var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                var nameInput = oj.Components.getWidgetConstructor($b.findEl('.builder-dbd-name-input')[0]);
                 nameInput('reset');
                 self.dashboardNameEditing(self.dashboardName());
-                if ($('#builder-dbd-name').hasClass('editing')) {
-                    $('#builder-dbd-name').removeClass('editing');
+                if ($b.findEl('.builder-dbd-name').hasClass('editing')) {
+                    $b.findEl('.builder-dbd-name').removeClass('editing');
                 }
             };
 
             self.editDashboardDescription = function() {
-                if (!self.editDisabled() && !$('#builder-dbd-name').hasClass('editing')) {
-                    $('#builder-dbd-description').addClass('editing');
-                    $('#builder-dbd-description-input').focus();
+                if (!self.editDisabled() && !$b.findEl('.builder-dbd-name').hasClass('editing')) {
+                    $b.findEl('.builder-dbd-description').addClass('editing');
+                    $b.findEl('.builder-dbd-description-input').focus();
                 }
             };
 
@@ -235,13 +235,13 @@ define(['knockout',
             };
 
             self.okChangeDashboardDescription = function() {
-                if (!$('#builder-dbd-description-input')[0].value) {
-                    $('#builder-dbd-description-input').focus();
+                if (!$b.findEl('.builder-dbd-description-input')[0].value) {
+                    $b.findEl('.builder-dbd-description-input').focus();
                     return;
                 }
                 self.dashboardDescription(self.dashboardDescriptionEditing());
-                if ($('#builder-dbd-description').hasClass('editing')) {
-                    $('#builder-dbd-description').removeClass('editing');
+                if ($b.findEl('.builder-dbd-description').hasClass('editing')) {
+                    $b.findEl('.builder-dbd-description').removeClass('editing');
                 }
                 if (!self.dashboard.description)
                     self.dashboard.description = ko.observable(self.dashboardDescription());
@@ -251,31 +251,31 @@ define(['knockout',
 
             self.cancelChangeDashboardDescription = function() {
                 self.dashboardDescriptionEditing(self.dashboardDescription());
-                if ($('#builder-dbd-description').hasClass('editing')) {
-                    $('#builder-dbd-description').removeClass('editing');
+                if ($b.findEl('.builder-dbd-description').hasClass('editing')) {
+                    $b.findEl('.builder-dbd-description').removeClass('editing');
                 }
             };
 
             self.isNameUnderEdit = function() {
-                return $('#builder-dbd-name').hasClass('editing');
+                return $b.findEl('.builder-dbd-name').hasClass('editing');
             };
 
             self.isDescriptionUnderEdit = function() {
-                return $('#builder-dbd-description').hasClass('editing');
+                return $b.findEl('.builder-dbd-description').hasClass('editing');
             };
 
             self.handleSettingsDialogOpen = function() {
-                $('#settings-dialog').ojDialog('open');
+                $b.findEl('.settings-dialog').ojDialog('open');
             };
 
             self.handleSettingsDialogOKClose = function() {
-                $("#settings-dialog").ojDialog("close");
+                $b.findEl(".settings-dialog").ojDialog("close");
             };
 
             self.messageToParent = ko.observable("Text message");
 
             self.handleMessageDialogOpen = function() {
-                $("#parent-message-dialog").ojDialog("open");
+                $b.findEl(".parent-message-dialog").ojDialog("open");
             };
 
             self.handleStartEditText = function () {
@@ -553,11 +553,11 @@ define(['knockout',
                 self.editDashboardDialogModel.open();
             };
             self.openDashboardDuplicateDialog = function() {
-                $('#duplicateDsbDialog').ojDialog('open');
+                $b.findEl('.duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
-                $( "#dbs_cfmDialog" ).ojDialog( "open" ); 
-                $('#dbs_dcbtn').focus();
+                $b.findEl( ".dbs_cfmDialog" ).ojDialog( "open" ); 
+                $b.findEl('.dbs_dcbtn').focus();
             };
             self.addDashboardToFavorites = function() {
                 function succCallback(data) {
@@ -611,10 +611,10 @@ define(['knockout',
             };
             self.setAsHomeConfirmed = function() {
                 self.setDashboardAsHome();
-                $("#setAsHomeCfmDialog").ojDialog("close"); 
+                $b.findEl(".setAsHomeCfmDialog").ojDialog("close"); 
             };
             self.setAsHomeCancelled = function() {
-                $("#setAsHomeCfmDialog").ojDialog("close"); 
+                $b.findEl(".setAsHomeCfmDialog").ojDialog("close"); 
             };
             self.setDashboardAsHome = function() {
                 function succCallback(data) {
@@ -674,8 +674,8 @@ define(['knockout',
                 }
                 else {
                     if (self.hasAnotherDashboardSetAsHome) {
-                        $("#setAsHomeCfmDialog").ojDialog("open"); 
-                        $("#btnCancelSetAsHome").focus();
+                        $b.findEl(".setAsHomeCfmDialog").ojDialog("open"); 
+                        $b.fineEl(".btnCancelSetAsHome").focus();
                     }
                     else {
                         self.setDashboardAsHome();

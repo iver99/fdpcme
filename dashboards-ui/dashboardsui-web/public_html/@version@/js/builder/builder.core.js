@@ -61,7 +61,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.findEl = function (expr) {
             var $foundEl = $dashboardEl.find(expr);
             if ($foundEl.length === 0) {
-                throw (expr + " is not found in dashboard container element");
+                console.warn(expr + " is not found in dashboard container element");
             }
             return $foundEl;
         };
@@ -169,7 +169,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             var panelWidth = $dbdLeftPanel.is(":visible") ? $dbdLeftPanel.width() : 0;
             var togglerWidth = $rightPanelToggler.is(":visible") ? $rightPanelToggler.outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;
-            var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
+            var topHeight = $('#headerWrapper').outerHeight() + $visibleDashboard.find('.head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
                 self.triggerEvent(self.EVENT_ENTER_NORMAL_MODE, null, width, height, leftWidth, topHeight);

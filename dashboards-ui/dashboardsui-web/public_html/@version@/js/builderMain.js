@@ -93,9 +93,7 @@ require(['knockout',
     'jquery',
     'dfutil',
     'loggingutil',
-    'idfbcutil',
     'ojs/ojcore',
-    'ojs/ojchart',
     'ojs/ojcomponents',
     'ojs/ojvalidation',    
     'ojs/ojdatetimepicker',
@@ -106,25 +104,14 @@ require(['knockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
-    'ojs/ojpagingcontrol',
     'ojs/ojeditablevalue',
-    'ojs/internal-deps/dvt/DvtChart',
-    'ojs/ojdvt-base',
-    'ojs/ojtree',
-    'ojs/ojcheckboxset',
     'ojs/ojpopup',
-    'ojs/ojgauge',
     'builder/builder.core',
-    'builder/right.panel.model',
-    'builder/builder.functions',
-    'builder/dashboard.tile.model',
-    'builder/dashboard.tile.view',
-    'builder/tool.bar.model',
+    'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
-    'builder/integrate/builder.integrate',
-    'dashboards/dbstypeahead'
+    'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, _emJETCustomLogger,idfbcutil, oj) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, _emJETCustomLogger, oj) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
@@ -158,7 +145,7 @@ require(['knockout',
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });
 
-        function HeaderViewModel($b) {
+        function DashboardsetHeaderViewModel($b) {
             var self = this;
             self.userName = dfu.getUserName();
             self.tenantName = dfu.getTenantName();
@@ -176,136 +163,32 @@ require(['knockout',
                     self.headerHeight = height;
                 if (self.headerHeight === height)
                     return;
-                $b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                console.warn("TODO: resize the visible dashboard.")
+//                $b.triggerBuilderResizeEvent('header wrapper bar height changed');
                 self.headerHeight = height;
             });
         };
         
-        function DashboardsetHeaderViewModel(){
-            var self = this;
-            self.userName = dfu.getUserName();
-            self.tenantName = dfu.getTenantName();
-            self.appId = "Dashboard";
-            self.brandingbarParams = {
-                userName: self.userName,
-                tenantName: self.tenantName,
-                appId: self.appId,
-                isAdmin:true
-            };
-        }
-
         var dsbId = dfu.getUrlParam("dashboardId");
-        var isDashboardset = false;
-        if (dsbId.indexOf(',') !== -1) {
-            isDashboardset = true;
-        }
-        if (!isDashboardset) {
-            if (dsbId) {
-                dsbId = decodeURIComponent(dsbId);
-            }
-            var isInteger = /^([0-9]+)$/.test(dsbId);
-            if (!isInteger) {
-                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
-            }
-        }        
+        console.warn("TODO: validate valid dashboard id format");
+//                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
+//                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
+       
 
         Builder.initializeFromCookie();
 
-        $(document).ready(function() {
-            if (isDashboardset) {
-                var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dsbId);
-                var headerViewModel = new DashboardsetHeaderViewModel();
-                ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);    
-                ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
-                $("#loading").hide();
-                $('#globalBody').show();
-            } else {
-            Builder.loadDashboard(dsbId, function(dashboard) {
-                
-                var $dashboardEl = $($("#dashboard-content-template").text());
-                $("#dashboards-tabs-contents").append($dashboardEl);
-                
-                var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
-                var tilesView = new Builder.DashboardTilesView($b);
-                var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/); 
-                var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
-                var headerViewModel = new HeaderViewModel($b);
+        $(document).ready(function () {
 
-                if (dashboard.tiles && dashboard.tiles()) {
-                    for (var i = 0; i < dashboard.tiles().length; i++) {
-                        var tile = dashboard.tiles()[i];
-                        if(tile.type() === "TEXT_WIDGET") {
-                            Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
-                        }else {
-                            Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
-                        }
-                    }
-                }
+            var headerViewModel = new DashboardsetHeaderViewModel(undefined);
+            ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
-                 ko.bindingHandlers.sortableList = {
-                    init: function(element, valueAccessor) {
-                        var list = valueAccessor();
-                        tilesView.enableSortable(element, list);
-                    }
-                };
-                ko.bindingHandlers.stopBinding = {
-                    init: function() {
-                        return { controlsDescendantBindings: true};
-                    }
-                };
-                ko.bindingHandlers.enterpress = {
-                    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-                        var allBindings = allBindingsAccessor();
-                        $(element).keypress(function (event) {
-                            var keyCode = (event.which ? event.which : event.keyCode);
-                            if (keyCode === 13) {
-                                allBindings.enterpress.call(viewModel);
-                                return false;
-                            }
-                            return true;
-                        });
-                    }
-                };
-                ko.virtualElements.allowedBindings.stopBinding = true;
+            var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dsbId);
+            new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
+            
+            ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+            $("#loading").hide();
+            $('#globalBody').show();
 
-                ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
-                ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);  
-                tilesViewModel.initialize();
-                
-                ko.applyBindings(tilesViewModel, $('#dashboards-tabs-contents .dashboard-content')[0]);      
-                
-                var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
-                ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
-                rightPanelModel.initialize();
-                new Builder.ResizableView($b);
-
-                $("#loading").hide();
-                $('#globalBody').show();
-                $('#dbd-set-tabs').hide();
-                
-                tilesView.enableDraggable();
-                tilesViewModel.show();
-
-                toolBarModel.handleAddWidgetTooltip();
-                $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
-                tilesView.enableMovingTransition();
-                idfbcutil.hookupBrowserCloseEvent(function(){
-                   oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
-                });
-                /*
-                 * Code to test df_util_widget_lookup_assetRootUrl
-                var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
-                console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
-                */
-            }, function(e) {
-                console.log(e.errorMessage());
-                if (e.errorCode && e.errorCode() === 20001) {
-                    oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                    window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
-                }
-            });
-        }
         });
     }
 );

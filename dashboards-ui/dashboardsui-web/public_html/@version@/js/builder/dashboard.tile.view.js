@@ -107,7 +107,7 @@ define(['knockout',
                     var top = parseInt(target.css("top")), left = parseInt(target.css("left"));
                     if (!isNaN(top) && !isNaN(left) && target.position() && target.position().left !== 0 && target.position().top !== 0) {
 //                        window.DEV_MODE && console.debug("old target position: top-" + target.css("top") + ", left-" + target.css("left"));
-                        target.css("top", top - $('#headerWrapper').outerHeight() - $('#head-bar-container').outerHeight() + $b.findEl(".tiles-col-container").scrollTop());
+                        target.css("top", top - $('#headerWrapper').outerHeight() - $b.findEl('.head-bar-container').outerHeight() + $b.findEl(".tiles-col-container").scrollTop());
                         target.css("left", left - $b.findEl(".dbd-left-panel").width());
                         elem.cacheLeft = target.css("left");
 //                        window.DEV_MODE && console.debug("new target position: top-" + target.css("top") + ", left-" + target.css("left"));
