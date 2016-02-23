@@ -118,6 +118,7 @@ public class RegistrationEntity
 		if (!PrivilegeChecker.isAdminUser(userRoles)) {
 			return null;
 		}
+
 		List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
 		List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
 		return sortServiceLinks(filteredAdminLinks);
@@ -166,7 +167,7 @@ public class RegistrationEntity
 				_logger.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
-		return list;
+		return sortServiceLinks(list);
 	}
 
 	//	private String ssfServiceName;
@@ -189,7 +190,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getHomeLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_HOME_LINK);
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
 	}
 
 	public String getSessionExpiryTime()
@@ -261,7 +262,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
@@ -285,9 +286,8 @@ public class RegistrationEntity
 
 	private List<LinkEntity> filterAdminLinksByUserRoles(List<LinkEntity> origLinks, List<String> roleNames)
 	{
-		List<LinkEntity> resultLinks = null;
+		List<LinkEntity> resultLinks = new ArrayList<LinkEntity>();
 		if (origLinks != null && origLinks.size() != 0 && roleNames != null) {
-			resultLinks = new ArrayList<LinkEntity>();
 			for (LinkEntity le : origLinks) {
 				if (le.getServiceName().equals(APM_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_APM)) {
 					resultLinks.add(le);
@@ -465,13 +465,12 @@ public class RegistrationEntity
 
 	private List<LinkEntity> sortServiceLinks(List<LinkEntity> origLinks)
 	{
-		//		List<LinkEntity> resultLinks = null;
 		if (origLinks != null && origLinks.size() > 0) {
 			Collections.sort(origLinks, new Comparator<LinkEntity>() {
 				@Override
 				public int compare(LinkEntity linkOne, LinkEntity linkTwo)
 				{
-					return linkOne.getName().compareTo(linkTwo.getName());
+					return linkOne.getName().compareToIgnoreCase(linkTwo.getName());
 				}
 			});
 		}
