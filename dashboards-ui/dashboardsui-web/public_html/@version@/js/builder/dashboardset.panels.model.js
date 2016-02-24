@@ -40,11 +40,16 @@ define([
             }
 
             var self = this;
+            
+            var dashboardInstMap = {};
+            
+            self.selectedDashboardInst = ko.observable(null);
 
             self.showDashboard = function (dashboardId) {
                 var divId = "dashboard-" + dashboardId;
                 if ($("#" + divId).length > 0) {
                     $("#" + divId).show();
+                    self.selectedDashboardInst(dashboardInstMap[dashboardId]);
                 } else {
                     self.loadDashboard(dashboardId);
                 }
@@ -102,6 +107,12 @@ define([
 
                     ko.applyBindings(toolBarModel, $dashboardEl.find('.head-bar-container')[0]);
                     tilesViewModel.initialize();
+                    
+                    dashboardInstMap[dsbId] = {
+                        toolBarModel: toolBarModel,
+                        tilesViewModel: tilesViewModel
+                    };
+                    self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
 
@@ -112,6 +123,9 @@ define([
 
                     $("#loading").hide();
                     $('#globalBody').show();
+                    if(dashboardsetToolBarModel.isDashboardSet()){
+                       $('.dashboard-content .head-bar-container').css("background-color","white");
+                    }
 
                     tilesView.enableDraggable();
                     tilesViewModel.show();
@@ -134,7 +148,7 @@ define([
                         window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
                     }
                 });
-            }
+            };
 
             self.hideAllDashboards = function () {
                 $(".dashboard-content").hide();

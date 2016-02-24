@@ -184,7 +184,7 @@ define(['knockout',
             };
             
             self.handleDeleteDashboardCancelled = function() {
-                $b.findEl( ".dbs_cfmDialog" ).ojDialog( "close" ); 
+                $('#delete-dashboard').ojDialog( "close" ); 
             };
 
             self.handleDashboardNameInputKeyPressed = function(vm, evt) {
@@ -550,14 +550,14 @@ define(['knockout',
             checkDashboardAsHomeSettings();
             
             self.openDashboardEditDialog = function() {
-                self.editDashboardDialogModel.open();
+               $('#edit-dashboard').ojDialog("open");
             };
             self.openDashboardDuplicateDialog = function() {
                 $b.findEl('.duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
-                $b.findEl( ".dbs_cfmDialog" ).ojDialog( "open" ); 
-                $b.findEl('.dbs_dcbtn').focus();
+                $('#delete-dashboard').ojDialog( "open" ); 
+                $('#delete-dashboard').focus();
             };
             self.addDashboardToFavorites = function() {
                 function succCallback(data) {

@@ -38,7 +38,7 @@ define(['knockout',
             self.dashboardsetInfo = {"name":ko.observable("Middleware Dashboards"),"description":ko.observable("first dashboard set"),"type":getNlsString("DBSSET_BUILDER_DASHBOARDSET")};
             self.dashboardsetConfig={"isCreator":true,"refresh":ko.observable(false),"refreshOffIcon":ko.observable("dbd-icon-check"),"refreshOnIcon":ko.observable("dbd-noselected"),"share":ko.observable(true),"shareLabel":ko.observable(getNlsString("COMMON_TEXT_SHARE")),"addFavorite":ko.observable(true),"favoriteIcon":ko.observable("fa-star"),"favoriteLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD")),"setHome":ko.observable(true),"homeLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_HOME_SET")),"homeIcon":ko.observable("dbd-toolbar-icon-home")};
 
-            self.isDashboardSet = ko.observable(dashboardsetId.length > 1);
+            self.isDashboardSet = ko.observable(dashboardsetId.length > 1);            
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             
             self.dashboardsetConfigMenu =function(event,data){
@@ -336,6 +336,12 @@ define(['knockout',
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                  var removeIdIndex=findSeledtedTab(self.dashboardsetItems);
                  self.dashboardsetItems.remove(self.dashboardsetItems()[removeIdIndex]);
+                
+                if (self.dashboardsetItems().length === removeIdIndex) {
+                    self.selectedDashboardItem(self.dashboardsetItems()[removeIdIndex - 1]);             
+                } else {
+                    self.selectedDashboardItem(self.dashboardsetItems()[removeIdIndex]);
+                }
             } );
         }
 

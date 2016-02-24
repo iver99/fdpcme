@@ -183,12 +183,11 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dsbId);
-            new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
-            
+            var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
             ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+            ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
             $("#loading").hide();
-            $('#globalBody').show();
-
+            $('#globalBody').show();           
         });
     }
 );

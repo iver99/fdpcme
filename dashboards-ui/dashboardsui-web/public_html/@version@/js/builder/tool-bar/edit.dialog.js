@@ -72,7 +72,7 @@ define(['knockout',
                                 self.dashboard.description = ko.observable(self.description());
                             }
                             self.tbModel.dashboardDescription(self.description());
-                            $b.findEl(".cDsbDialog").ojDialog("close"); 
+                            $('#edit-dashboard').ojDialog("close"); 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});

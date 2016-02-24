@@ -1117,6 +1117,11 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                 border-color: transparent;
             }
         }
+        .other-nav.oj-active{
+            a{
+                background-color: transparent;
+            }
+        }
         #dbd-set-name{
             min-width: 220px;
             max-width:300px;
