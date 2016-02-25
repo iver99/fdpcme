@@ -75,7 +75,7 @@ define(['knockout',
             };
             
             self.changeTab = function (data, event) {
-                 if (window.FocusEvent) {
+                 if (window.FocusEvent && typeof(FocusEvent)==='function') {
                     var mockFocusEvent = new FocusEvent("focus");
                     $(event.target).attr("tabIndex", 0);
                     event.target.dispatchEvent(mockFocusEvent);
