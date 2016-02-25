@@ -90,6 +90,13 @@ define(['knockout',
             self.targetContext = null;
             self.customChanges = null;
             self.enableTimeRange = null;
+//            if(enableTimeRange === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
+//                self.timeRangeChange = null;
+//            }else{
+//                if (timeRangeChange instanceof DashboardTimeRangeChange){
+//                    self.timeRangeChange = timeRangeChange;
+//                }
+//            }
             if (timeRangeChange instanceof DashboardTimeRangeChange){
                 self.timeRangeChange = timeRangeChange;
             }
@@ -121,7 +128,7 @@ define(['knockout',
             }
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
-
+        
         function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
             var self = this;
             self.dashboard = $b.dashboard;
@@ -352,9 +359,13 @@ define(['knockout',
                     var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
                     if (url){
                         tile.configure = function(){
-                            var start = timeSelectorModel.viewStart().getTime();
-                            var end = timeSelectorModel.viewEnd().getTime();
-                            window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                            if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                            }else{
+                                var start = timeSelectorModel.viewStart().getTime();
+                                var end = timeSelectorModel.viewEnd().getTime();
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                            }
                         };
                     }
                 }         
