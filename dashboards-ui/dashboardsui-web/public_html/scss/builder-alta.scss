@@ -1098,8 +1098,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                 .oj-tabs-gen-a{
                     .tabs-name{
                         min-width: 100px;
-                        max-width: 130px;
-                        overflow: hidden;
                         margin-right: 5px;
                         margin-bottom: -6px;
                     }
@@ -1123,31 +1121,22 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
             }
         }
         #dbd-set-name{
-            min-width: 220px;
-            max-width:300px;
             height: 48px;
             background-color: #3caf85;
             padding-right:3px;
-            a{
-                min-width: 220px;
-                max-width:300px;
+            a{    
                 padding-right:0;
                 >span{
-                    min-width: 100px;
-                    max-width: 169px;
-                    overflow: hidden;
-                    margin-left: 7%;
+                    min-width: 180px;
                     color: white!important;
                     font-weight: bold;
                     font-size: 15px;
-                    margin-top: 9px;
                 }
                 #tabs-gear{
                     width: 35px;
                     background-color: #3CAF85;
                     background-image: none;
                     border-color: #3CAF85;
-                    float: right;
                     .dbd-icon-gear{
                         color: white;
                         margin-left: 4px;
