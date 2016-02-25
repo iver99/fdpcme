@@ -125,6 +125,9 @@ define([
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
+                    if(dashboardsetToolBarModel.isDashboardSet()){
+                       $('.dashboard-content .head-bar-container').css("background-color","white");
+                    }
 
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
                     ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);
@@ -133,10 +136,7 @@ define([
 
                     $("#loading").hide();
                     $('#globalBody').show();
-                    if(dashboardsetToolBarModel.isDashboardSet()){
-                       $('.dashboard-content .head-bar-container').css("background-color","white");
-                    }
-
+                    
                     tilesView.enableDraggable();
                     tilesViewModel.show();
 
