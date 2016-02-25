@@ -84,11 +84,12 @@ define(['knockout',
         }
         Builder.registerModule(TileChange, 'TileChange');
 
-        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange){
+        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange, enableTimeRange){
             var self = this;
             self.timeRangeChange = null;
             self.targetContext = null;
             self.customChanges = null;
+            self.enableTimeRange = null;
             if (timeRangeChange instanceof DashboardTimeRangeChange){
                 self.timeRangeChange = timeRangeChange;
             }
@@ -112,7 +113,12 @@ define(['knockout',
             }
             if (tileChange instanceof TileChange){
                 self.tileChange = tileChange;
-            }            
+            }
+            if(enableTimeRange === "TRUE") {
+                self.enableTimeRange = true;
+            }else {
+                self.enableTimeRange = false;
+            }
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
 
@@ -253,8 +259,7 @@ define(['knockout',
                 } else
                     return "#";
             });
-            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext);
-
+            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext, null, null, dashboard.enableTimeRange());
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.
