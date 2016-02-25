@@ -10,6 +10,7 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,8 +39,10 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 /**
  * @author miao
  */
-public class RegistrationEntity
+public class RegistrationEntity implements Serializable
 {
+	private static final long serialVersionUID = 7632586542760891331L;
+
 	private static final Logger logger = LogManager.getLogger(RegistrationEntity.class);
 
 	public static final String NAME_REGISTRYUTILS = "registryUrls";

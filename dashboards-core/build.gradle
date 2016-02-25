@@ -16,22 +16,17 @@ publishing.publications {
                         setGroupId('com.oracle.emaas.emcpdf.test')
     }
 }
- 
 
-   sourceSets {	
-  main {	
-     java {	
-        srcDir 'src/main/java'	
-               }	
-    resources {	
-         srcDir 'src/resources/java'	
-                }	
-         }	
-  	
+sourceSets {	
+	main {	
+		java {	
+			srcDir 'src/main/java'	
+		}	
+		resources {	
+			srcDirs = ['src/main/java', 'src/resources/java']
+		}	
+	}
  }
-
-
-
 
 artifactoryPublish {
 	 publications('integTest')
@@ -69,6 +64,7 @@ dependencies {
 	compile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2')  { transitive = false }
 	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 	compile(group: 'coherence', name: 'coherence', version: '12.1.2') {transitive=false}
+	compile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
 	testCompile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 
 }

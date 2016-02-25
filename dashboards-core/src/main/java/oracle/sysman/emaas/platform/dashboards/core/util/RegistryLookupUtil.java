@@ -317,15 +317,14 @@ public class RegistryLookupUtil
 				serviceName, version, rel, tenantName);
 
 		Tenant cacheTenant = new Tenant(tenantName);
-		Link link = null;
 		try {
-			link = (Link) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch));
-			if (link != null) {
+			if (cl != null) {
 				logger.debug(
 						"Retrieved exteral link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
-						link.getHref(), serviceName, version, rel, prefixMatch, tenantName);
-				return link;
+						cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
+				return cl.getLink();
 			}
 		}
 		catch (Exception e) {
@@ -484,6 +483,9 @@ public class RegistryLookupUtil
 	private static Link getServiceInternalLink(String serviceName, String version, String rel, boolean prefixMatch,
 			String tenantName)
 	{
+		logger.debug(
+				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
+				serviceName, version, rel, prefixMatch, tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		try {
 			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
@@ -498,9 +500,6 @@ public class RegistryLookupUtil
 		catch (Exception e) {
 			logger.error("Error to retrieve internal link from cache. Try to lookup the link", e);
 		}
-		logger.debug(
-				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
-				serviceName, version, rel, prefixMatch, tenantName);
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;

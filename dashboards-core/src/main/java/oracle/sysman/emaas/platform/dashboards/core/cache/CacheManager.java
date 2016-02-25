@@ -185,6 +185,11 @@ public class CacheManager
 		return obj;
 	}
 
+	public Object removeCacheable(Tenant tenant, String cacheName, String key)
+	{
+		return removeCacheable(tenant, cacheName, new Keys(key));
+	}
+
 	public void setKeyGenerator(KeyGenerator keyGenerator)
 	{
 		keyGen = keyGenerator;
