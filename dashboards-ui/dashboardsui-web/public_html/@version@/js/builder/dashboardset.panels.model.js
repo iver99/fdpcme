@@ -67,7 +67,17 @@ define([
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
-
+                    
+                    //change dashboard name
+                    toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
+                        var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
+                        dashboardsetToolBarModel.dashboardsetItems().filter(function isIdMatch(value) {
+                            if(value.dashboardId===currentDashboardId){
+                                value.name(dashboardName);
+                            }
+                        });
+                    });
+                                        
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
