@@ -62,11 +62,12 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             if (arguments.length === 0) {
                 return $dashboardEl;
             }
-            
+
             var $foundEl = $dashboardEl.find(expr);
             // TODO should be removed in production. Just for checking if missing 
             // elements after migrating dashboard to dashboardsets.
-            if ($foundEl.length === 0 && ([".dbd-widget", ".dbd-left-panel-widget-text"].indexOf(expr) < 0)) {
+            var whiteNameList = [".dbd-widget", ".dbd-left-panel-widget-text", ".tooltip-add-widget"];
+            if ($foundEl.length === 0 && (whiteNameList.indexOf(expr) < 0)) {
                 console.error(expr + " is not found in dashboard container element");
             }
             return $foundEl;
