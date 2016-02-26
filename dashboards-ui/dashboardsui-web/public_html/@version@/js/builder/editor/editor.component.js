@@ -349,7 +349,7 @@ define(['knockout',
                         tile.configure = function(){
                             var start = timeSelectorModel.viewStart().getTime();
                             var end = timeSelectorModel.viewEnd().getTime();
-                            window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                            window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&startTime="+start+"&endTime="+end);
                         };
                     }
                 }         
