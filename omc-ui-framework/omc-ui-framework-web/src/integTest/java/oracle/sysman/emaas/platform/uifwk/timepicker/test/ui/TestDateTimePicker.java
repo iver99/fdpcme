@@ -167,6 +167,7 @@ public class TestDateTimePicker extends CommonUIUtils
 		Thread.sleep(5000);
 		driver.getLogger().info("Click button: "+ period);
 		driver.click(uicontrol);
+		Thread.sleep(5000);
 		driver.takeScreenShot();
 
 		//verify the date time range is changed to 15 minutes
