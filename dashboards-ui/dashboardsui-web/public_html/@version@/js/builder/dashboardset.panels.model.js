@@ -67,7 +67,17 @@ define([
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
-
+                    
+                    //change dashboard name
+                    toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
+                        var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
+                        dashboardsetToolBarModel.dashboardsetItems().filter(function isIdMatch(value) {
+                            if(value.dashboardId===currentDashboardId){
+                                value.name(dashboardName);
+                            }
+                        });
+                    });
+                                        
                     if (dashboard.tiles && dashboard.tiles()) {
                         for (var i = 0; i < dashboard.tiles().length; i++) {
                             var tile = dashboard.tiles()[i];
@@ -116,6 +126,9 @@ define([
                     self.selectedDashboardInst(dashboardInstMap[dsbId]);
 
                     ko.applyBindings(tilesViewModel, $dashboardEl.find('.dashboard-content-main')[0]);
+                    if(dashboardsetToolBarModel.isDashboardSet()){
+                       $('.dashboard-content .head-bar-container').css("background-color","white");
+                    }
 
                     var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
                     ko.applyBindings(rightPanelModel, $dashboardEl.find('.dbd-left-panel')[0]);

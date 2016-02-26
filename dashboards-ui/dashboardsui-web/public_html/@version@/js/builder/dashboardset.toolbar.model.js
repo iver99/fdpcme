@@ -75,7 +75,7 @@ define(['knockout',
             };
             
             self.changeTab = function (data, event) {
-                 if (window.FocusEvent) {
+                 if (window.FocusEvent && typeof(FocusEvent)==='function') {
                     var mockFocusEvent = new FocusEvent("focus");
                     $(event.target).attr("tabIndex", 0);
                     event.target.dispatchEvent(mockFocusEvent);
@@ -254,7 +254,7 @@ define(['knockout',
             function dashboardItem(obj) {
                 var self = this;
                 self.dashboardId = obj.id();
-                self.name = obj.name();
+                self.name = ko.observable(obj.name());
                 self.discription = obj.description && obj.description();
                 self.raw = obj;
             }
@@ -314,6 +314,7 @@ define(['knockout',
                 };
                 self.deleteDbs = function(){
                     //TODO:ajax to delete
+                     window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
                      $('#deleteDashboardset').ojDialog("close");  
                 };
                 self.cancelDeleteDbs= function(){

@@ -31,7 +31,7 @@
                     <!-- tab bar -->
                     <ul class="dbd-tabs-nav">
                         <li id="dbd-set-name">
-                            <span data-bind="text:dashboardsetInfo.name"></span>
+                            <span data-bind="text:dashboardsetInfo.name()"></span>
                             <button id="tabs-gear" class="no-print"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
@@ -120,7 +120,7 @@
                                     </div>
                                     <div class="oj-col">
                                         <input id="dbsHNameIn"
-                                               data-bind="ojComponent: { component: 'ojInputText',value:dashboardsetInfo.name}">
+                                               data-bind="ojComponent: { component: 'ojInputText',value:dashboardsetInfo.name()}">
                                     </div>
                                 </div>
                                 <div class="oj-col dbs-description">
@@ -129,7 +129,7 @@
                                     </div>
                                     <div class="oj-col">
                                         <textarea id="dbsHDpIn" maxlength="256" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.description
+                                                  data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.description()
                                                               }"></textarea>
                                     </div>
                                 </div>             
@@ -147,7 +147,7 @@
                             <span class="oj-dialog-title"  data-bind="text: getNlsString('DBSSET_BUILDER_DELETE_DASHBOARDSET')"></span>
                         </div>
                         <div class="oj-dialog-body">
-                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name)"></p>
+                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name())"></p>
                             <p data-bind="html: getNlsString('DBSSET_BUILDER_DELETE_WARNING')"></p>
                         </div>     
                         <div class="oj-dialog-footer">
