@@ -26,14 +26,15 @@ define(['knockout',
     function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)
     {
         ko.mapping = km;
-        
         var draggingTileClass = 'dbd-tile-in-dragging';
-        var widgetAreaWidth = 0;
-        var widgetAreaContainer = null;
         
-        var dragStartRow = null;
+        function DashboardTilesViewModel($b) {        
         
-        function DashboardTilesViewModel($b) {
+            var widgetAreaWidth = 0;
+            var widgetAreaContainer = null;
+
+            var dragStartRow = null;
+        
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');

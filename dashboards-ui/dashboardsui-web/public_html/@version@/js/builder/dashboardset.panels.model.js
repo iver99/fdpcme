@@ -43,7 +43,7 @@ define([
             
             var dashboardInstMap = {};
             
-            self.selectedDashboardInst = ko.observable(null);
+            window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
             self.showDashboard = function (dashboardId) {
                 var divId = "dashboard-" + dashboardId;
@@ -62,7 +62,7 @@ define([
                     var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
                     $dashboardEl.attr("id", "dashboard-" + dsbId);
-
+                    
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
@@ -109,6 +109,7 @@ define([
                     tilesViewModel.initialize();
                     
                     dashboardInstMap[dsbId] = {
+                        $b: $b,
                         toolBarModel: toolBarModel,
                         tilesViewModel: tilesViewModel
                     };
@@ -124,7 +125,7 @@ define([
                     $("#loading").hide();
                     $('#globalBody').show();
                     if(dashboardsetToolBarModel.isDashboardSet()){
-                       $('.dashboard-content .head-bar-container').css("background-color","white");
+                       $b.findEl('.head-bar-container').css("background-color","white");
                     }
 
                     tilesView.enableDraggable();
@@ -136,6 +137,7 @@ define([
                     idfbcutil.hookupBrowserCloseEvent(function () {
                         oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
                     });
+                    
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                      var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');

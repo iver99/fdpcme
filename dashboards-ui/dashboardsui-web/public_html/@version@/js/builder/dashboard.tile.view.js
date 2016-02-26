@@ -32,7 +32,7 @@ define(['knockout',
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
 //                $('#tiles-col-container').css("right", leftWidth);
                 $b.findEl('.tiles-col-container').width(width);
-                $('.df-computed-content-width').width(width - leftWidth - self.scrollbarWidth);
+                $b.findEl('.df-computed-content-width').width(width - leftWidth - self.scrollbarWidth);
                 $b.findEl('.tiles-col-container').height(height - topHeight);               
 //                window.DEV_MODE && console.debug('tiles-col-container rightright set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
@@ -48,7 +48,7 @@ define(['knockout',
                     console.log("Draggable not supported for OOB dashboard");
                     return;
                 }
-                var tiles = tile ? [self.getTileElement(tile)] : $(".dbd-widget");                
+                var tiles = tile ? [self.getTileElement(tile)] : $b.findEl(".dbd-widget");                
                 for (var i = 0; i < tiles.length; i++) {
                     var target = $(tiles[i]);
                     if (target.is(".ui-draggable"))
@@ -61,7 +61,7 @@ define(['knockout',
                     console.log("Draggable not supported for OOB dashboard");
                     return;
                 }
-                var tiles = tile ? [self.getTileElement(tile)] : $(".dbd-widget");                
+                var tiles = tile ? [self.getTileElement(tile)] : $b.findEl(".dbd-widget");                
                 for (var i = 0; i < tiles.length; i++) {
                     var target = $(tiles[i]);
                     if (!target.is(".ui-draggable")) {

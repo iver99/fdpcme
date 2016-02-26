@@ -59,9 +59,15 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.dashboard = dashboard;
         
         self.findEl = function (expr) {
+            if (arguments.length === 0) {
+                return $dashboardEl;
+            }
+            
             var $foundEl = $dashboardEl.find(expr);
-            if ($foundEl.length === 0) {
-                console.warn(expr + " is not found in dashboard container element");
+            // TODO should be removed in production. Just for checking if missing 
+            // elements after migrating dashboard to dashboardsets.
+            if ($foundEl.length === 0 && ([".dbd-widget", ".dbd-left-panel-widget-text"].indexOf(expr) < 0)) {
+                console.error(expr + " is not found in dashboard container element");
             }
             return $foundEl;
         };
@@ -169,7 +175,11 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             var panelWidth = $dbdLeftPanel.is(":visible") ? $dbdLeftPanel.width() : 0;
             var togglerWidth = $rightPanelToggler.is(":visible") ? $rightPanelToggler.outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;
-            var topHeight = $('#headerWrapper').outerHeight() + $visibleDashboard.find('.head-bar-container').outerHeight();
+            var $dbdSetTabs = $('#dbd-set-tabs');
+            var tabSetHeight = $dbdSetTabs.is(":visible") ? $dbdSetTabs.height() : 0;
+            var topHeight = $('#headerWrapper').outerHeight() + 
+                    tabSetHeight + 
+                    $visibleDashboard.find('.head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
                 self.triggerEvent(self.EVENT_ENTER_NORMAL_MODE, null, width, height, leftWidth, topHeight);

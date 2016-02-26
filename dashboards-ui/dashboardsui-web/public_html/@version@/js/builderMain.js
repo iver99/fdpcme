@@ -145,7 +145,7 @@ require(['knockout',
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });
 
-        function DashboardsetHeaderViewModel($b) {
+        function DashboardsetHeaderViewModel() {
             var self = this;
             self.userName = dfu.getUserName();
             self.tenantName = dfu.getTenantName();
@@ -163,12 +163,14 @@ require(['knockout',
                     self.headerHeight = height;
                 if (self.headerHeight === height)
                     return;
-                console.warn("TODO: resize the visible dashboard.")
-//                $b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
+                if ($visibleHeaderBar.length > 0) {
+                    ko.dataFor($visibleHeaderBar[0]).$b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                }
                 self.headerHeight = height;
             });
         };
-        
+         
         var dsbId = dfu.getUrlParam("dashboardId");
         console.warn("TODO: validate valid dashboard id format");
 //                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
@@ -179,7 +181,7 @@ require(['knockout',
 
         $(document).ready(function () {
 
-            var headerViewModel = new DashboardsetHeaderViewModel(undefined);
+            var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dsbId);

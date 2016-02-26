@@ -37,7 +37,7 @@ define(['knockout',
             };
             
             self.rebuildElementSet = function() {
-                self.$list = $(".fit-size");
+                self.$list = $b.findEl(".fit-size");
             };
             
             self.initialize();
@@ -138,7 +138,7 @@ define(['knockout',
             };
 
             self.initWidgetDraggable = function() {
-                $(".dbd-left-panel-widget-text").draggable({
+                $b.findEl(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
