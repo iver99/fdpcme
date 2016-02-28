@@ -84,12 +84,13 @@ define(['knockout',
         }
         Builder.registerModule(TileChange, 'TileChange');
 
-        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange, enableTimeRange){
+        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange, timeRangeEnabled){
             var self = this;
             self.timeRangeChange = null;
             self.targetContext = null;
             self.customChanges = null;
             self.enableTimeRange = null;
+            self.timeRangeEnabled = null;
 //            if(enableTimeRange === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
 //                self.timeRangeChange = null;
 //            }else{
@@ -121,10 +122,10 @@ define(['knockout',
             if (tileChange instanceof TileChange){
                 self.tileChange = tileChange;
             }
-            if(enableTimeRange === "TRUE") {
-                self.enableTimeRange = true;
+            if(timeRangeEnabled === "TRUE") {
+                self.timeRangeEnabled = true;
             }else {
-                self.enableTimeRange = false;
+                self.timeRangeEnabled = false;
             }
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
@@ -261,7 +262,7 @@ define(['knockout',
                 if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
                     targetContext && targetContext.target && (link += '&target='+targetContext.target+'&type='+targetContext.type+'&emsite='+targetContext.emsite);
-                    timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
+                    (dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
                     return link;
                 } else
                     return "#";
