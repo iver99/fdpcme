@@ -28,6 +28,7 @@ define(['knockout',
             self.currentUser = dfu.getUserName();
             self.editDashboardDialogModel = new ed.EditDashboardDialogModel($b, self);
             self.duplicateDashboardModel = new dd.DuplicateDashboardModel($b);
+            self.toolBarGuid = Builder.getGuid();
 
             if (self.dashboard.id && self.dashboard.id())
                 self.dashboardId = self.dashboard.id();
@@ -554,7 +555,7 @@ define(['knockout',
                $('#edit-dashboard').ojDialog("open");
             };
             self.openDashboardDuplicateDialog = function() {
-                $b.findEl('.duplicateDsbDialog').ojDialog('open');
+                $('#duplicateDsbDialog').ojDialog('open');
             };
             self.openDashboardDeleteConfirmDialog = function() {
                 $('#delete-dashboard').ojDialog( "open" ); 
@@ -764,7 +765,7 @@ define(['knockout',
                 {
                     "label": getNlsString('COMMON_BTN_EDIT'),
                     "url": "#",
-                    "id":"emcpdf_dsbopts_edit",
+                    "id":"emcpdf_dsbopts_edit"+self.toolBarGuid,
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardEditDialog,
                     "icon": "dbd-toolbar-icon-edit",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_EDIT_TITLE'),
@@ -775,7 +776,7 @@ define(['knockout',
                 {
                     "label": getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
                     "url": "#",
-                    "id": "emcpdf_dsbopts_refresh",
+                    "id": "emcpdf_dsbopts_refresh"+self.toolBarGuid,
                     "onclick": "",
                     "icon": "dbd-toolbar-icon-refresh",
                     "title": "", //getNlsString('DBS_BUILDER_AUTOREFRESH_REFRESH'),
@@ -786,7 +787,7 @@ define(['knockout',
                         {
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_OFF'),
                             "url": "#",
-                            "id": "emcpdf_dsbopts_refresh_off",
+                            "id": "emcpdf_dsbopts_refresh_off"+self.toolBarGuid,
                             "icon": ko.computed(function(){
                               return self.autoRefreshInterval() === 0 ? "fa-check":"";  
                             }),
@@ -803,7 +804,7 @@ define(['knockout',
                         {
                             "label": getNlsString('DBS_BUILDER_AUTOREFRESH_ON'),
                             "url": "#",
-                            "id": "emcpdf_dsbopts_refresh_on",
+                            "id": "emcpdf_dsbopts_refresh_on"+self.toolBarGuid,
                             "icon":ko.computed(function(){
                               return self.autoRefreshInterval() ? "fa-check":"";  
                             }),
@@ -822,7 +823,7 @@ define(['knockout',
                 {
                     "label": self.sharePublicLabel,
                     "url": "#",
-                    "id":"emcpdf_dsbopts_share",
+                    "id":"emcpdf_dsbopts_share"+self.toolBarGuid,
                     "onclick": self.editDisabled() === true ? null : self.openShareConfirmDialog,
                     "icon": self.cssSharePublic,
                     "title": "",//self.sharePublicTitle,
@@ -833,7 +834,7 @@ define(['knockout',
                 {
                     "label": getNlsString('COMMON_BTN_PRINT'),
                     "url": "#",
-                    "id": "emcpdf_dsbopts_print",
+                    "id": "emcpdf_dsbopts_print"+self.toolBarGuid,
                     "onclick": function (data, event) {
                         window.print();
                     },
@@ -846,7 +847,7 @@ define(['knockout',
                 {
                     "label": getNlsString('DBS_BUILDER_BTN_DUPLICATE'),
                     "url": "#",
-                    "id": "emcpdf_dsbopts_duplicate",
+                    "id": "emcpdf_dsbopts_duplicate"+self.toolBarGuid,
                     "onclick": self.openDashboardDuplicateDialog,
                     "icon": "dbd-toolbar-icon-duplicate",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_DUPLICATE_TITLE'),
@@ -857,7 +858,7 @@ define(['knockout',
                 {
                     "label": self.favoriteLabel,
                     "url": "#",
-                    "id":"emcpdf_dsbopts_favorites",
+                    "id":"emcpdf_dsbopts_favorites"+self.toolBarGuid,
                     "onclick": self.handleDashboardFavorites,
                     "icon": self.favoritesIcon, //"dbd-toolbar-icon-favorites",
                     "title": "", //self.favoriteLabel,
@@ -868,7 +869,7 @@ define(['knockout',
                 {
                     "label": self.dashboardAsHomeLabel,
                     "url": "#",
-                    "id":"emcpdf_dsbopts_home",
+                    "id":"emcpdf_dsbopts_home"+self.toolBarGuid,
                     "onclick": self.handleDashboardAsHome,
                     "icon": self.dashboardsAsHomeIcon,
                     "title": "", //self.setAsHomeLabel,
@@ -879,7 +880,7 @@ define(['knockout',
                 {
                     "label": getNlsString('COMMON_BTN_DELETE'),
                     "url": "#",
-                    "id":"emcpdf_dsbopts_delete",
+                    "id":"emcpdf_dsbopts_delete"+self.toolBarGuid,
                     "onclick": self.editDisabled() === true ? "" : self.openDashboardDeleteConfirmDialog,
                     "icon":"dbd-toolbar-icon-delete",
                     "title": "", //getNlsString('DBS_BUILDER_BTN_DELETE_TITLE'),

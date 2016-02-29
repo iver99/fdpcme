@@ -20,8 +20,8 @@ define(['knockout',
             self.saveBtnDisabled = ko.observable(true);
             
             self.beforeOpenDialog = function(event, ui) {
-                $b.findEl(".dupDsbNameIn").ojInputText("option", "value", null);
-                $b.findEl(".dupDsbDescIn").ojTextArea("option", "value", null);
+                $("#dupDsbNameIn").ojInputText("option", "value", null);
+                $("#dupDsbDescIn").ojTextArea("option", "value", null);
                 self.saveBtnDisabled(true);
                 self.errorMessages.removeAll();
             };
@@ -59,7 +59,7 @@ define(['knockout',
                     return;
                 }
                 
-                $b.findEl( ".duplicateDsbDialog" ).css("cursor", "progress");
+                $( "#duplicateDsbDialog" ).css("cursor", "progress");
                 self.duplicateDashboard();
             };
             
@@ -104,7 +104,7 @@ define(['knockout',
             
             self.saveDuplicatedDashboardToServer = function(newDashboard) {
                 var succCallback = function(data) {
-                    $b.findEl('.duplicateDsbDialog').ojDialog('close');
+                    $('#duplicateDsbDialog').ojDialog('close');
                     if (data && data.id) {
                         window.location.href = "/emsaasui/emcpdfui/builder.html?dashboardId=" + data.id;
                     }
@@ -121,7 +121,7 @@ define(['knockout',
                         return;
                     }
                     else {
-                        $b.findEl('.duplicateDsbDialog').ojDialog('close');
+                        $('#duplicateDsbDialog').ojDialog('close');
                         error && error.errorMessage() && dfu.showMessage({type: 'error', 
                             summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_DUPLICATING'), 
                             detail: ''});
