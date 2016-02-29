@@ -50,6 +50,7 @@ define([
                 if ($("#" + divId).length > 0) {
                     $("#" + divId).show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
+                    self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
                 } else {
                     self.loadDashboard(dashboardId);
                 }
