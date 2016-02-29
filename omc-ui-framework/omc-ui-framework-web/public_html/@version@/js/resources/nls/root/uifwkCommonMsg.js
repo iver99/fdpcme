@@ -120,6 +120,10 @@ define({
       "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s).",
       "DATETIME_PICKER_SHOW_TODAY": "Today",
       "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday",
+      "DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED": "Hours excluded: ",
+      "DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED": "Days excluded: ",
+      "DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED": "Months excluded: ",
+      
       
       //time filter
       "TIME_FILTER_TIME_LABEL": "Time",

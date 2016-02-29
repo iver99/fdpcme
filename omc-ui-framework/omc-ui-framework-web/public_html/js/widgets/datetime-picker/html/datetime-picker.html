@@ -9,7 +9,18 @@
             <span class="oj-select-choice" tabindex="0"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
                 <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="html: dateTimeInfo"></span>
                 <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
+            </span> 
+            <span style="display: table-cell; vertical-align: middle;">
+            <span style="font-size: 24px; font-weight: bold;vertical-align: middle; cursor: default" tabindex ="0" 
+                  data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
+                              keypress: function(data, event) {if(isEnterPressed(data, event)) {showTimeFilterInfo()}}}, 
+                             visible: tfInfoLauncherVisible, attr: {id: 'tfInfoLauncher_'+randomId}">&nbsp;*&nbsp;</span>
             </span>
+            
+            <!-- popup for time filter info -->
+            <div style="display: none;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'tfInfo_'+randomId}">
+                <span data-bind="text: timeFilterInfo"></span>
+            </div>
 
             <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->

@@ -64,6 +64,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.tfInstance = new timeFilter();
                 self.enableTimeFilter = ko.observable(false);
+                self.tfInfoLauncherVisible = ko.observable(false);
+                self.timeFilterInfo = ko.observable();
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
                 self.panelId = "#panel_" + self.randomId;
                 self.pickerPanelId = "#pickerPanel_" + self.randomId;
@@ -82,6 +84,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 //                                    nls.DATETIME_PICKER_MONTHS_MAY, nls.DATETIME_PICKER_MONTHS_JUNE, nls.DATETIME_PICKER_MONTHS_JULY, nls.DATETIME_PICKER_MONTHS_AUGUST,
 //                                    nls.DATETIME_PICKER_MONTHS_SEPTEMBER, nls.DATETIME_PICKER_MONTHS_OCTOBER, nls.DATETIME_PICKER_MONTHS_NOVEMBER, nls.DATETIME_PICKER_MONTHS_DECEMBER];
                 self.longMonths = oj.LocaleData.getMonthNames("wide");
+                self.longDaysOfWeek = oj.LocaleData.getDayNames("wide");
                 self.dropDownAlt = nls.DATETIME_PICKER_DROP_DOWN;
                 self.timeFilterAlt = nls.DATETIME_PICKER_TIME_FILTER;
                 self.timePeriodLast15mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS;
@@ -99,6 +102,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriodLatest = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST;
                 self.today = nls.DATETIME_PICKER_SHOW_TODAY;
                 self.yesterday = nls.DATETIME_PICKER_SHOW_YESTERDAY;
+                self.tfHoursExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED;
+                self.tfDaysExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED;
+                self.tfMonthsExcludedMsg = nls.DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED;
                 
                 self.timePeriodsNlsObject = {
                     "Last 15 minutes" : self.timePeriodLast15mins,
@@ -1442,6 +1448,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             "WEEKOFERA": [],         
                             "YEAROFERA": []
                         });
+                        self.timeFilterInfo(self.generateTfTooltip(hourOfDay, self.tfInstance.daysChecked(), self.tfInstance.monthsChecked()));
                     }
                     
                     if (self.callbackAfterApply) {
@@ -1551,6 +1558,84 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         $(self.timeFilterId).ojPopup("close");
                     }else {
                         $(self.timeFilterId).ojPopup("open", "#pickerPanel_"+self.randomId, self.timeFilterPosition);
+                    }
+                }
+                
+                self.showTimeFilterInfo = function() {
+                    $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoLauncher_"+self.randomId);
+                }
+                
+                self.hideTimeFilterInfo = function() {
+                    $("#tfInfo_"+self.randomId).ojPopup("close");
+                }
+                
+                self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
+                    var i;
+                    var tfTooltip = "";
+                    if(hoursOfDay.length === 24 && daysOfWeek.length === 7 && monthsOfYear.length == 12) {
+                        self.tfInfoLauncherVisible(false);
+                        return null;
+                    }else {
+                        self.tfInfoLauncherVisible(true);
+                        //get hours excluded
+                        var hoursExcluded = [];
+                        if(hoursOfDay.length < 24) {
+                            tfTooltip += self.tfHoursExcludedMsg;
+                            for(i=0; i<24; i++) {
+                                if($.inArray(i.toString(), hoursOfDay) === -1) {
+                                    hoursExcluded.push(i);
+                                }
+                            }
+                            for(i=0; i<hoursExcluded.length; i++) {
+                                tfTooltip += hoursExcluded[i];
+                                if(i === hoursExcluded.length-1) {
+                                    tfTooltip += ".";
+                                }else {
+                                    tfTooltip += ", ";
+                                }
+                            }   
+                        }
+                        //get days excluded
+                        var excludedDays = [];
+                        if(daysOfWeek.length < 7){
+                            tfTooltip += self.tfDaysExcludedMsg;
+                            for(i=0; i<7; i++) {
+                                if($.inArray((i+1).toString(), daysOfWeek) === -1) {
+                                    excludedDays.push(i);
+                                }
+                            }
+                            for(i=0; i<excludedDays.length; i++) {
+                                var dayName = self.longDaysOfWeek[excludedDays[i]]; //need to get nls days
+                                tfTooltip += dayName;
+                                if(i === excludedDays.length-1) {
+                                    tfTooltip += ".";
+                                }else{
+                                     tfTooltip += ", ";
+                                }
+                            }
+                        }
+                        //get months excluded
+                        var excludedMonths = [];
+                        if(monthsOfYear.length < 12) {
+                            tfTooltip += self.tfMonthsExcludedMsg;
+                            for(i=0; i<12; i++) {
+                                if($.inArray((i+1).toString(), monthsOfYear) === -1) {
+                                    excludedMonths.push(i);
+                                }
+                            }
+                            for(i=0; i<excludedMonths.length; i++) {
+                                var monthName = self.longMonths[excludedMonths[i]];// need to get nls months
+                                tfTooltip += monthName;
+                                if(i === excludedMonths.length-1) {
+                                    tfTooltip += ".";
+                                }else{
+                                     tfTooltip += ",";
+                                }
+                                
+                            }
+                        }
+                        
+                        return tfTooltip;
                     }
                 }
                 
