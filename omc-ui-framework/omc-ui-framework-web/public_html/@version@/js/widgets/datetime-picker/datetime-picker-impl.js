@@ -1079,7 +1079,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }
                         timeValidate();
                         if (self.pickerPanelId) {
-                            $(self.pickerPanelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
+                            $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
                         }
                     } catch (e) {
                         if (value === 1) {
@@ -1089,7 +1089,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }
                         $(event.target).addClass("input-error");
                         if (self.pickerPanelId) {
-                            $(self.pickerPanelId + " #applyButton").ojButton({"disabled": true});
+                            $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": true});
                         }
                     }
                 };
@@ -1115,7 +1115,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                     timeValidate();
                     if (self.pickerPanelId) {
-                        $(self.pickerPanelId + " #applyButton").ojButton({"disabled": self.applyButtonDisable()});
+                        $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": self.applyButtonDisable()});
                     }
                 };
                 
@@ -1133,7 +1133,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.setErrorBorderForTime(event.target);
                     }
                     if (self.pickerPanelId) {
-                        $(self.pickerPanelId + " #applyButton").ojButton({"disabled": true});
+                        $(self.pickerPanelId + " #applyButton_"+self.randomId).ojButton({"disabled": true});
                     }
                 };
                 
