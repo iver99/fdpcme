@@ -737,12 +737,12 @@
                     </div>
                     <div class="dbd-left-panel-widgets fit-size">
                         <div class="oj-col stretch-width" data-bind="foreach: widgets">
-                            <div class="dbd-left-panel-widget" data-bind="attr: {id: 'widget-item-'+WIDGET_UNIQUE_ID()}">
+                            <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                 <div class="dbd-left-panel-widget-text"
                                             data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
                                     <span data-bind="text:WIDGET_NAME"></span>
                                 </div>
-                                <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
+                                <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(), 
                                                 ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
                                     <div class="oj-row">
                                         <div class="oj-col oj-sm-12 oj-md-12">
