@@ -1,0 +1,37 @@
+sourceSets {
+integTest {
+        java.srcDir 'src/integTest/java'
+
+    
+        compileClasspath = configurations.testConfig + configurations.webdriver + configurations.testNG
+        }
+    }
+
+clean{
+  delete 'build'
+}
+
+task integTestJar (type:Jar) {
+    from sourceSets.integTest.output
+    appendix = 'integ-tests'
+}
+
+
+check.dependsOn integTestJar
+
+publishing.publications {
+    integTest(MavenPublication) {
+                        setArtifactId(project.name + '-' + integTestJar.appendix)
+                        setGroupId('com.oracle.emaas.emcpdf.test')
+                        artifact integTestJar.archivePath
+    }
+    
+}
+
+
+
+artifactoryPublish {
+publications ('integTest')
+
+    }
+

@@ -82,7 +82,7 @@ task DeployDFUI(type: Exec) {
 }
 
 task PropsCopy(type: Copy,dependsOn: DeployDFUI) {
-   from '/net/slc07ctj/scratch/emaas/setuplogs/'
+   from '/net/slc07ctj/scratch/emga/emaas_endtoend_deploy/setuplogs/'
    into '../../oracle/work/'
     include '*.log'
 }
