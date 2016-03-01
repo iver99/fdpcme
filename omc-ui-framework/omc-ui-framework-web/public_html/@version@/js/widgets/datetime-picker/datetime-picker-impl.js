@@ -64,7 +64,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 self.tfInstance = new timeFilter();
                 self.enableTimeFilter = ko.observable(false);
-                self.tfInfoLauncherVisible = ko.observable(false);
+                self.tfInfoIndicatorVisible = ko.observable(false);
                 self.timeFilterInfo = ko.observable();
                 self.wrapperId = "#dateTimePicker_" + self.randomId;
                 self.panelId = "#panel_" + self.randomId;
@@ -1562,79 +1562,105 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }
                 
                 self.showTimeFilterInfo = function() {
-                    $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoLauncher_"+self.randomId);
+                    $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoIndicator_"+self.randomId);
+                    if ($(self.panelId).ojPopup('isOpen')) {
+                        $(self.panelId).ojPopup('close');
+                    }
                 }
                 
                 self.hideTimeFilterInfo = function() {
                     $("#tfInfo_"+self.randomId).ojPopup("close");
                 }
                 
+                self.toggleTimeFilterInfo = function() {
+                    if($("#tfInfo_"+self.randomId).ojPopup("isOpen")) {
+                        $("#tfInfo_"+self.randomId).ojPopup("close");
+                    }else {
+                        $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoIndicator_"+self.randomId);
+                        if ($(self.panelId).ojPopup('isOpen')) {
+                            $(self.panelId).ojPopup('close');
+                        }
+                    }
+                }
+                
                 self.generateTfTooltip = function(hoursOfDay, daysOfWeek, monthsOfYear) {
                     var i;
                     var tfTooltip = "";
                     if(hoursOfDay.length === 24 && daysOfWeek.length === 7 && monthsOfYear.length == 12) {
-                        self.tfInfoLauncherVisible(false);
+                        self.tfInfoIndicatorVisible(false);
                         return null;
                     }else {
-                        self.tfInfoLauncherVisible(true);
+                        $("#dateTimePicker_"+self.randomId+" .oj-select-chosen").css("padding-right", "40px");
+                        self.tfInfoIndicatorVisible(true);
                         //get hours excluded
+                        var hoursExcludedInfo = "";
                         var hoursExcluded = [];
                         if(hoursOfDay.length < 24) {
-                            tfTooltip += self.tfHoursExcludedMsg;
+                            hoursExcludedInfo += self.tfHoursExcludedMsg;
                             for(i=0; i<24; i++) {
                                 if($.inArray(i.toString(), hoursOfDay) === -1) {
                                     hoursExcluded.push(i);
                                 }
                             }
                             for(i=0; i<hoursExcluded.length; i++) {
-                                tfTooltip += hoursExcluded[i];
+                                hoursExcludedInfo += hoursExcluded[i];
                                 if(i === hoursExcluded.length-1) {
-                                    tfTooltip += ".";
+                                    hoursExcludedInfo += "";
                                 }else {
-                                    tfTooltip += ", ";
+                                    hoursExcludedInfo += ", ";
                                 }
                             }   
                         }
                         //get days excluded
+                        var daysExcludedInfo = "";
                         var excludedDays = [];
                         if(daysOfWeek.length < 7){
-                            tfTooltip += self.tfDaysExcludedMsg;
+                            daysExcludedInfo += self.tfDaysExcludedMsg;
                             for(i=0; i<7; i++) {
                                 if($.inArray((i+1).toString(), daysOfWeek) === -1) {
                                     excludedDays.push(i);
                                 }
                             }
                             for(i=0; i<excludedDays.length; i++) {
-                                var dayName = self.longDaysOfWeek[excludedDays[i]]; //need to get nls days
-                                tfTooltip += dayName;
+                                var dayName = self.longDaysOfWeek[excludedDays[i]];
+                                daysExcludedInfo += dayName;
                                 if(i === excludedDays.length-1) {
-                                    tfTooltip += ".";
+                                    daysExcludedInfo += "";
                                 }else{
-                                     tfTooltip += ", ";
+                                     daysExcludedInfo += ", ";
                                 }
                             }
                         }
                         //get months excluded
+                        var monthsExcludedInfo = "";
                         var excludedMonths = [];
                         if(monthsOfYear.length < 12) {
-                            tfTooltip += self.tfMonthsExcludedMsg;
+                            monthsExcludedInfo += self.tfMonthsExcludedMsg;
                             for(i=0; i<12; i++) {
                                 if($.inArray((i+1).toString(), monthsOfYear) === -1) {
                                     excludedMonths.push(i);
                                 }
                             }
                             for(i=0; i<excludedMonths.length; i++) {
-                                var monthName = self.longMonths[excludedMonths[i]];// need to get nls months
-                                tfTooltip += monthName;
+                                var monthName = self.longMonths[excludedMonths[i]];
+                                monthsExcludedInfo += monthName;
                                 if(i === excludedMonths.length-1) {
-                                    tfTooltip += ".";
+                                    monthsExcludedInfo += "";
                                 }else{
-                                     tfTooltip += ",";
+                                     monthsExcludedInfo += ", ";
                                 }
                                 
                             }
                         }
                         
+                        var period1="", period2="";
+                        if(((hoursExcludedInfo!=="") && (daysExcludedInfo!=="")) || ((hoursExcludedInfo!=="") && (monthsExcludedInfo!==""))) {
+                            period1 = ". ";
+                        }
+                        if((daysExcludedInfo!=="") && (monthsExcludedInfo!=="")) {
+                            period2 = ". ";
+                        }
+                        tfTooltip = hoursExcludedInfo + period1 + daysExcludedInfo + period2 + monthsExcludedInfo;                        
                         return tfTooltip;
                     }
                 }
