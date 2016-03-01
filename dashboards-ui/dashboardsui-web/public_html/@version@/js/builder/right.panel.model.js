@@ -362,6 +362,12 @@ define(['knockout',
                 }
             };
             
+            self.widgetKeyPress = function(widget, event) {
+                if (event.keyCode === 13) {
+                   tilesViewModel.appendNewTile(widget.WIDGET_NAME(), "", 4, 2, ko.toJS(widget));
+                }
+            };
+            
             self.containerMouseOverHandler = function() {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
