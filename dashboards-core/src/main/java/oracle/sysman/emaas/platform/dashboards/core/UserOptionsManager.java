@@ -11,12 +11,15 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
-import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsAlreadyExistException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.EntityManager;
 
@@ -24,6 +27,8 @@ import javax.persistence.EntityManager;
  * @author jishshi
  */
 public class UserOptionsManager {
+    private static final Logger logger = LogManager.getLogger(UserOptionsManager.class);
+
     private static final UserOptionsManager instance = new UserOptionsManager();
 
     public static UserOptionsManager getInstance() {
@@ -40,6 +45,16 @@ public class UserOptionsManager {
             String currentUser = UserContext.getCurrentUser();
             DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
             em = dsf.getEntityManager();
+
+            if (dashboardId == null || dashboardId <= 0) {
+                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+                throw new DashboardNotFoundException();
+            }
+            EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+            if (ed == null) {
+                logger.debug("Dashboard not found with the specified id {}", dashboardId);
+                throw new DashboardNotFoundException();
+            }
 
             EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, dashboardId);
             if (emsUserOptions == null) {
@@ -59,26 +74,29 @@ public class UserOptionsManager {
             return;
         }
         EntityManager em = null;
-        boolean isExist = false;
         try {
             String currentUser = UserContext.getCurrentUser();
             DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
             em = dsf.getEntityManager();
 
-            EmsUserOptions emsUserOptions = null;
-            if (userOptions.getDashboardId() != null) {
-                emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
-                if (emsUserOptions != null) {
-                    isExist = true;
-                }
+            Long dashboardId = userOptions.getDashboardId();
+            if (dashboardId == null || dashboardId <= 0) {
+                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+                throw new DashboardNotFoundException();
             }
-
-            if (isExist) {
-                // update
-                emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
-                dsf.mergeEmsUserOptions(emsUserOptions);
+            EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+            if (ed == null) {
+                logger.debug("Dashboard not found with the specified id {}", dashboardId);
+                throw new DashboardNotFoundException();
             }else{
-                throw new UserOptionsNotFoundException();
+                EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
+                if (emsUserOptions != null) {
+                    // update
+                    emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
+                    dsf.mergeEmsUserOptions(emsUserOptions);
+                }else{
+                    throw new UserOptionsNotFoundException();
+                }
             }
         } finally {
             if (em != null) {
@@ -92,27 +110,27 @@ public class UserOptionsManager {
             return;
         }
         EntityManager em = null;
-        boolean isExist = false;
         try {
             String currentUser = UserContext.getCurrentUser();
             DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
             em = dsf.getEntityManager();
 
-            EmsUserOptions emsUserOptions = null;
-            if (userOptions.getDashboardId() != null) {
-                emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
-                if (emsUserOptions != null) {
-                    isExist = true;
-                }
+            Long dashboardId = userOptions.getDashboardId();
+            if (dashboardId == null || dashboardId <= 0) {
+                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
+                throw new DashboardNotFoundException();
             }
-
-            if (!isExist) {
-                // create
+            EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+            if (ed == null) {
+                logger.debug("Dashboard not found with the specified id {}", dashboardId);
+                throw new DashboardNotFoundException();
+            }else{
+                // create or update if exists
+                EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
                 emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
                 dsf.persistEmsUserOptions(emsUserOptions);
-            }else{
-                throw new UserOptionsAlreadyExistException();
             }
+
         } finally {
             if (em != null) {
                 em.close();
