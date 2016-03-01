@@ -8,10 +8,10 @@
 	<dependent-module archiveName="omcuiframework-webutils.jar" deploy-path="/lib" handle="module:/resource/omcuiframework-webutils/omcuiframework-webutils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-lookup-client-1.0.0.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-1.0.0.jar">
+        <dependent-module archiveName="registry-lookup-client-1.x.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-lookup-client-1.x.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="registry-client-1.0.0.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-1.0.0.jar">
+        <dependent-module archiveName="registry-client-1.x.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/registry-client-1.x.jar">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="emaas-platform-tenant-sdk-0.2.jar" deploy-path="/lib" handle="module:/classpath/var/DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar">
