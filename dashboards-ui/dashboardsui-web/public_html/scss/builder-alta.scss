@@ -1120,6 +1120,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                 background-color: transparent;
             }
         }
+        //hack default sortable css
+        .other-nav.oj-tabs-tab.oj-selected.ui-sortable-handle.oj-active.ui-sortable-helper{
+            height: 49px!important;
+        }
         #dbd-set-name{
             height: 48px;
             background-color: #3caf85;
