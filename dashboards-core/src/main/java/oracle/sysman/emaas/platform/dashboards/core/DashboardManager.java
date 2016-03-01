@@ -28,10 +28,7 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccessPK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -137,16 +134,18 @@ public class DashboardManager
 			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			EmsUserOptions edf = dsf.getEmsUserOptions(currentUser, dashboardId);
 			if (edf == null) {
-				edf = new EmsDashboardFavorite(DateUtil.getCurrentUTCTime(), ed, currentUser);
-				dsf.persistEmsDashboardFavorite(edf);
+				edf = new EmsUserOptions();
+				edf.setUserName(currentUser);
+				edf.setDashboardId(dashboardId);
+				edf.setIsFavorite(1);
+				dsf.persistEmsUserOptions(edf);
 			}
-			//			else {
-			//				//				edf.setCreationDate(DateUtil.getCurrentUTCTime());
-			//				dsf.mergeEmsDashboardFavorite(edf);
-			//			}
+			else {
+				edf.setIsFavorite(1);
+				dsf.mergeEmsUserOptions(edf);
+			}
 		}
 		finally {
 			if (em != null) {
@@ -169,36 +168,42 @@ public class DashboardManager
 		if (dashboardId == null || dashboardId <= 0) {
 			return;
 		}
-		DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-		if (ed == null) {
-			throw new DashboardNotFoundException();
-		}
-		if (permanent == false && ed.getDeleted() != null && ed.getDeleted() > 0) {
-			throw new DashboardNotFoundException();
-		}
-		if (!permanent && DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
-			throw new CommonSecurityException(
-					MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR));
-		}
-		String currentUser = UserContext.getCurrentUser();
-		// user can access owned or system dashboard
-		if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
-			throw new DashboardNotFoundException();
-		}
-		if (ed.getDeleted() == null || ed.getDeleted() == 0) {
-			removeFavoriteDashboard(dashboardId, tenantId);
-		}
-		if (!permanent) {
-			ed.setDeleted(dashboardId);
-			dsf.mergeEmsDashboard(ed);
-		}
-		else {
-			EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
-			if (edla != null) {
-				dsf.removeEmsDashboardLastAccess(edla);
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null) {
+				throw new DashboardNotFoundException();
 			}
-			dsf.removeEmsDashboard(ed);
+			if (permanent == false && ed.getDeleted() != null && ed.getDeleted() > 0) {
+				throw new DashboardNotFoundException();
+			}
+			if (!permanent && DataFormatUtils.integer2Boolean(ed.getIsSystem())) {
+				throw new CommonSecurityException(
+						MessageUtils.getDefaultBundleString(CommonSecurityException.NOT_SUPPORT_DELETE_SYSTEM_DASHBOARD_ERROR));
+			}
+			String currentUser = UserContext.getCurrentUser();
+			// user can access owned or system dashboard
+			if (!currentUser.equals(ed.getOwner()) && ed.getIsSystem() != 1) {
+				throw new DashboardNotFoundException();
+			}
+			//			if (ed.getDeleted() == null || ed.getDeleted() == 0) {
+			//				removeFavoriteDashboard(dashboardId, tenantId);
+			//			}
+			if (!permanent) {
+				ed.setDeleted(dashboardId);
+				dsf.mergeEmsDashboard(ed);
+			}
+			else {
+				dsf.removeAllEmsUserOptions(dashboardId);
+				dsf.removeEmsDashboard(ed);
+			}
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
 		}
 	}
 
@@ -344,59 +349,22 @@ public class DashboardManager
 	public List<Dashboard> getFavoriteDashboards(Long tenantId)
 	{
 		String currentUser = UserContext.getCurrentUser();
-		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
-				+ currentUser + "' and d.deleted = ?1";
+		//		String hql = "select d from EmsDashboard d join EmsDashboardFavorite f on d.dashboardId = f.dashboard.dashboardId and f.userName = '"
+		//				+ currentUser + "' and d.deleted = ?1";
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			Query query = em.createQuery(hql);
-			query.setParameter(1, new Integer(0));
-			@SuppressWarnings("unchecked")
-			List<EmsDashboard> edList = query.getResultList();
+			//			Query query = em.createQuery(hql);
+			//			query.setParameter(1, new Integer(0));
+			//			@SuppressWarnings("unchecked")
+			//			List<EmsDashboard> edList = query.getResultList();
+			List<EmsDashboard> edList = dsf.getFavoriteEmsDashboards(currentUser);
 			List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 			for (EmsDashboard ed : edList) {
 				dbdList.add(Dashboard.valueOf(ed));
 			}
 			return dbdList;
-		}
-		finally {
-			if (em != null) {
-				em.close();
-			}
-		}
-	}
-
-	/**
-	 * Retrieves last access for specified dashboard
-	 *
-	 * @param dashboardId
-	 * @param tenantId
-	 * @return
-	 */
-	public EmsDashboardLastAccess getLastAccess(Long dashboardId, Long tenantId)
-	{
-		if (dashboardId == null || dashboardId <= 0) {
-			logger.debug("Last access for dashboard not found for dashboard id {} is invalid", dashboardId);
-			return null;
-		}
-		EntityManager em = null;
-		try {
-			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-			if (ed == null) {
-				logger.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
-				return null;
-			}
-			if (ed.getDeleted() != null && ed.getDeleted().equals(1)) {
-				logger.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
-				return null;
-			}
-			em = dsf.getEntityManager();
-			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
-			EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
-			return edla;
 		}
 		finally {
 			if (em != null) {
@@ -414,11 +382,35 @@ public class DashboardManager
 	 */
 	public Date getLastAccessDate(Long dashboardId, Long tenantId)
 	{
-		EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);
-		if (edla != null) {
-			return edla.getAccessDate();
+		if (dashboardId == null || dashboardId <= 0) {
+			logger.debug("Last access for dashboard not found for dashboard id {} is invalid", dashboardId);
+			return null;
 		}
-		return null;
+		EntityManager em = null;
+		try {
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			em = dsf.getEntityManager();
+			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
+			if (ed == null) {
+				logger.debug("Last access is not found for dashboard with id {} is not found", dashboardId);
+				return null;
+			}
+			if (ed.getDeleted() != null && ed.getDeleted().equals(1)) {
+				logger.debug("Last access is not found for dashboard with id {} is deleted", dashboardId);
+				return null;
+			}
+			String currentUser = UserContext.getCurrentUser();
+			EmsUserOptions options = dsf.getEmsUserOptions(currentUser, dashboardId);
+			if (options != null) {
+				return options.getAccessDate();
+			}
+			return null;
+		}
+		finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	/**
@@ -439,9 +431,8 @@ public class DashboardManager
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
-			return edf != null;
+			EmsUserOptions edf = dsf.getEmsUserOptions(currentUser, dashboardId);
+			return edf != null && edf.getIsFavorite() != null && edf.getIsFavorite().intValue() > 0;
 		}
 		finally {
 			if (em != null) {
@@ -563,23 +554,38 @@ public class DashboardManager
 		int index = 1;
 		String currentUser = UserContext.getCurrentUser();
 		List<Object> paramList = new ArrayList<Object>();
+
+		sb = new StringBuilder(" from Ems_Dashboard p  ");
+		boolean joinOptions = false;
+		if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+			joinOptions = true;
+		}
+		if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+			joinOptions = true;
+		}
+		if (joinOptions) {
+			sb.append("left join Ems_Dashboard_User_Options le on (p.dashboard_Id =le.dashboard_Id and le.user_name = ?"
+					+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+			paramList.add(currentUser);
+		}
+
 		if (apps.isEmpty()) {
 			// no subscribe apps
 			//			sb = new StringBuilder(
 			//					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
 			//							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3) ");
 			//			index = 4;
-			sb = new StringBuilder(" from Ems_Dashboard p  ");
-			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
-				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
-						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
-				paramList.add(currentUser);
-			}
-			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
-				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id =df.dashboard_Id and df.user_name = ?"
-						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
-				paramList.add(currentUser);
-			}
+
+			//			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+			//				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
+			//						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+			//				paramList.add(currentUser);
+			//			}
+			//			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+			//				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id =df.dashboard_Id and df.user_name = ?"
+			//						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
+			//				paramList.add(currentUser);
+			//			}
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
 			paramList.add(tenantId);
@@ -601,17 +607,17 @@ public class DashboardManager
 			//							+ sbApps.toString() + "))) ");
 
 			//			index = 4;
-			sb = new StringBuilder(" from Ems_Dashboard p  ");
-			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
-				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
-						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
-				paramList.add(currentUser);
-			}
-			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
-				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id = df.dashboard_Id and df.user_name = ?"
-						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
-				paramList.add(currentUser);
-			}
+			//			sb = new StringBuilder(" from Ems_Dashboard p  ");
+			//			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+			//				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
+			//						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+			//				paramList.add(currentUser);
+			//			}
+			//			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+			//				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id = df.dashboard_Id and df.user_name = ?"
+			//						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
+			//				paramList.add(currentUser);
+			//			}
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
 			paramList.add(tenantId);
@@ -620,7 +626,8 @@ public class DashboardManager
 
 		if (filter != null) {
 			if (filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
-				sb.append(" and df.user_name is not null ");
+				//sb.append(" and df.user_name is not null ");
+				sb.append(" and le.is_favorite > 0 ");
 			}
 
 			if (filter.getIncludedTypeIntegers() != null && !filter.getIncludedTypeIntegers().isEmpty()) {
@@ -777,10 +784,17 @@ public class DashboardManager
 			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
-			if (edf != null) {
-				dsf.removeEmsDashboardFavorite(edf);
+			EmsUserOptions edf = dsf.getEmsUserOptions(currentUser, dashboardId);
+			if (edf == null) {
+				edf = new EmsUserOptions();
+				edf.setUserName(currentUser);
+				edf.setDashboardId(dashboardId);
+				edf.setIsFavorite(0);
+				dsf.persistEmsUserOptions(edf);
+			}
+			else {
+				edf.setIsFavorite(0);
+				dsf.mergeEmsUserOptions(edf);
 			}
 		}
 		finally {
@@ -855,41 +869,6 @@ public class DashboardManager
 			}
 		}
 	}
-
-	//	/**
-	//	 * Removes a dashboard from favorite list
-	//	 *
-	//	 * @param dashboardId
-	//	 * @param tenantId
-	//	 * @throws DashboardNotFoundException
-	//	 */
-	//	public void removeFavoriteDashboard(Long dashboardId, Long tenantId) throws DashboardNotFoundException
-	//	{
-	//		if (dashboardId == null || dashboardId <= 0) {
-	//			throw new DashboardNotFoundException();
-	//		}
-	//		EntityManager em = null;
-	//		try {
-	//			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-	//			EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-	//			if (ed == null || ed.getDeleted() != null && ed.getDeleted() > 0) {
-	//				logger.debug("Dashboard with id {} is not found for it does not exists or is deleted already", dashboardId);
-	//				throw new DashboardNotFoundException();
-	//			}
-	//			em = dsf.getEntityManager();
-	//			String currentUser = UserContext.getCurrentUser();
-	//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-	//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
-	//			if (edf != null) {
-	//				dsf.removeEmsDashboardFavorite(edf);
-	//			}
-	//		}
-	//		finally {
-	//			if (em != null) {
-	//				em.close();
-	//			}
-	//		}
-	//	}
 
 	/**
 	 * Enables or disables the 'include time control' settings for specified dashboard
@@ -1008,22 +987,24 @@ public class DashboardManager
 			logger.debug("Last access date for dashboard is not updated: dashboard id with value {} is invalid", dashboardId);
 			return;
 		}
-		EntityManager em = null;
+		//EntityManager em = null;
 		EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
 		if (ed == null || ed.getDeleted() != null && ed.getDeleted().equals(1)) {
 			return;
 		}
-		em = dsf.getEntityManager();
+		//em = dsf.getEntityManager();
 		String currentUser = UserContext.getCurrentUser();
-		EmsDashboardLastAccessPK edlapk = new EmsDashboardLastAccessPK(currentUser, dashboardId);
-		EmsDashboardLastAccess edla = em.find(EmsDashboardLastAccess.class, edlapk);
+		EmsUserOptions edla = dsf.getEmsUserOptions(currentUser, dashboardId);
 		if (edla == null) {
-			edla = new EmsDashboardLastAccess(DateUtil.getCurrentUTCTime(), currentUser, dashboardId);
-			dsf.persistEmsDashboardLastAccess(edla);
+			edla = new EmsUserOptions();
+			edla.setUserName(currentUser);
+			edla.setDashboardId(dashboardId);
+			edla.setAccessDate(DateUtil.getCurrentUTCTime());
+			dsf.persistEmsUserOptions(edla);
 		}
 		else {
 			edla.setAccessDate(DateUtil.getCurrentUTCTime());
-			dsf.mergeEmsDashboardLastAccess(edla);
+			dsf.persistEmsUserOptions(edla);
 		}
 	}
 

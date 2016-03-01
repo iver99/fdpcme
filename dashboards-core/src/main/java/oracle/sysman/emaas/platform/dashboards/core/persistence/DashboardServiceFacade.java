@@ -1,11 +1,20 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
-import oracle.sysman.emaas.platform.dashboards.entity.*;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import java.util.List;
+import javax.persistence.Query;
+
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParamsPK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsPreferencePK;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptionsPK;
 
 //import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 //import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
@@ -39,11 +48,11 @@ public class DashboardServiceFacade
 		return em.find(EmsDashboard.class, dashboardId);
 	}
 
-	/** <code>select o from EmsDashboardFavorite o</code> */
-	public List<EmsDashboardFavorite> getEmsDashboardFavoriteFindAll()
-	{
-		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
-	}
+	//	/** <code>select o from EmsDashboardFavorite o</code> */
+	//	public List<EmsDashboardFavorite> getEmsDashboardFavoriteFindAll()
+	//	{
+	//		return em.createNamedQuery("EmsDashboardFavorite.findAll", EmsDashboardFavorite.class).getResultList();
+	//	}
 
 	/** <code>select o from EmsDashboard o</code> */
 	public List<EmsDashboard> getEmsDashboardFindAll()
@@ -51,11 +60,11 @@ public class DashboardServiceFacade
 		return em.createNamedQuery("EmsDashboard.findAll", EmsDashboard.class).getResultList();
 	}
 
-	/** <code>select o from EmsDashboardLastAccess o</code> */
-	public List<EmsDashboardLastAccess> getEmsDashboardLastAccessFindAll()
-	{
-		return em.createNamedQuery("EmsDashboardLastAccess.findAll", EmsDashboardLastAccess.class).getResultList();
-	}
+	//	/** <code>select o from EmsDashboardLastAccess o</code> */
+	//	public List<EmsDashboardLastAccess> getEmsDashboardLastAccessFindAll()
+	//	{
+	//		return em.createNamedQuery("EmsDashboardLastAccess.findAll", EmsDashboardLastAccess.class).getResultList();
+	//	}
 
 	/** <code>select o from EmsDashboardTile o</code> */
 	public List<EmsDashboardTile> getEmsDashboardTileFindAll()
@@ -81,25 +90,24 @@ public class DashboardServiceFacade
 				.getResultList();
 	}
 
-	public EmsUserOptions getEmsUserOptions(String username, Long dashboardId) {
-		return em.find(EmsUserOptions.class, new EmsUserOptionsPK(username,dashboardId));
+	public EmsUserOptions getEmsUserOptions(String username, Long dashboardId)
+	{
+		return em.find(EmsUserOptions.class, new EmsUserOptionsPK(username, dashboardId));
 	}
 
-	public EmsUserOptions persistEmsUserOptions(EmsUserOptions emsUserOptions) {
-        em.persist(emsUserOptions);
-        commitTransaction();
-        return emsUserOptions;
-	}
-
-	public EmsUserOptions mergeEmsUserOptions(EmsUserOptions emsUserOptions) {
-        EmsUserOptions entity = null;
-        entity = em.merge(emsUserOptions);
-        commitTransaction();
-        return entity;
-	}
 	public EntityManager getEntityManager()
 	{
 		return em;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<EmsDashboard> getFavoriteEmsDashboards(String username)
+	{
+		String hql = "select d from EmsDashboard d join EmsUserOptions f on d.dashboardId = f.dashboardId and f.userName = '"
+				+ username + "' and d.deleted = 0 and f.isFavorite > 0";
+		Query query = em.createQuery(hql);
+		//query.setParameter(1, new Integer(0));
+		return query.getResultList();
 	}
 
 	public EmsDashboard mergeEmsDashboard(EmsDashboard emsDashboard)
@@ -110,21 +118,21 @@ public class DashboardServiceFacade
 		return entity;
 	}
 
-	public EmsDashboardFavorite mergeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		EmsDashboardFavorite entity = null;
-		entity = em.merge(emsDashboardFavorite);
-		commitTransaction();
-		return entity;
-	}
+	//	public EmsDashboardFavorite mergeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
+	//	{
+	//		EmsDashboardFavorite entity = null;
+	//		entity = em.merge(emsDashboardFavorite);
+	//		commitTransaction();
+	//		return entity;
+	//	}
 
-	public EmsDashboardLastAccess mergeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
-	{
-		EmsDashboardLastAccess entity = null;
-		entity = em.merge(emsDashboardLastAccess);
-		commitTransaction();
-		return entity;
-	}
+	//	public EmsDashboardLastAccess mergeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
+	//	{
+	//		EmsDashboardLastAccess entity = null;
+	//		entity = em.merge(emsDashboardLastAccess);
+	//		commitTransaction();
+	//		return entity;
+	//	}
 
 	public EmsPreference mergeEmsPreference(EmsPreference emsPreference)
 	{
@@ -134,6 +142,25 @@ public class DashboardServiceFacade
 		return entity;
 	}
 
+	public EmsUserOptions mergeEmsUserOptions(EmsUserOptions emsUserOptions)
+	{
+		EmsUserOptions entity = null;
+		entity = em.merge(emsUserOptions);
+		commitTransaction();
+		return entity;
+	}
+
+	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
+	{
+		if (emsDashboard.getSharePublic() == null) {
+			emsDashboard.setSharePublic(0);
+		}
+
+		em.persist(emsDashboard);
+		commitTransaction();
+		return emsDashboard;
+	}
+
 	//	public <T> T mergeEntity(T entity)
 	//	{
 	//		entity = em.merge(entity);
@@ -141,37 +168,38 @@ public class DashboardServiceFacade
 	//		return entity;
 	//	}
 
-	public EmsDashboard persistEmsDashboard(EmsDashboard emsDashboard)
-	{
-                if (emsDashboard.getSharePublic() == null)
-                {
-                    emsDashboard.setSharePublic(0);
-                }
+	//	public EmsDashboardFavorite persistEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
+	//	{
+	//		em.persist(emsDashboardFavorite);
+	//		commitTransaction();
+	//		return emsDashboardFavorite;
+	//	}
 
-		em.persist(emsDashboard);
-		commitTransaction();
-		return emsDashboard;
-	}
-
-	public EmsDashboardFavorite persistEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		em.persist(emsDashboardFavorite);
-		commitTransaction();
-		return emsDashboardFavorite;
-	}
-
-	public EmsDashboardLastAccess persistEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
-	{
-		em.persist(emsDashboardLastAccess);
-		commitTransaction();
-		return emsDashboardLastAccess;
-	}
+	//	public EmsDashboardLastAccess persistEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
+	//	{
+	//		em.persist(emsDashboardLastAccess);
+	//		commitTransaction();
+	//		return emsDashboardLastAccess;
+	//	}
 
 	public EmsPreference persistEmsPreference(EmsPreference emsPreference)
 	{
 		em.persist(emsPreference);
 		commitTransaction();
 		return emsPreference;
+	}
+
+	public EmsUserOptions persistEmsUserOptions(EmsUserOptions emsUserOptions)
+	{
+		if (emsUserOptions.getAutoRefreshInterval() == null) {
+			emsUserOptions.setAutoRefreshInterval(0L);
+		}
+		if (emsUserOptions.getIsFavorite() == null) {
+			emsUserOptions.setIsFavorite(0);
+		}
+		em.persist(emsUserOptions);
+		commitTransaction();
+		return emsUserOptions;
 	}
 
 	//	public <T> T persistEntity(T entity)
@@ -207,6 +235,13 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
+	public void removeAllEmsUserOptions(Long dashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		em.createNamedQuery("EmsUserOptions.removeAll").setParameter("dashboardId", dashboardId).executeUpdate();
+		commitTransaction();
+	}
+
 	public void removeEmsDashboard(EmsDashboard emsDashboard)
 	{
 		emsDashboard = em.find(EmsDashboard.class, emsDashboard.getDashboardId());
@@ -214,21 +249,21 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
-	public void removeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
-	{
-		emsDashboardFavorite = em.find(EmsDashboardFavorite.class, new EmsDashboardFavoritePK(emsDashboardFavorite.getUserName(),
-				emsDashboardFavorite.getDashboard().getDashboardId()));
-		em.remove(emsDashboardFavorite);
-		commitTransaction();
-	}
+	//	public void removeEmsDashboardFavorite(EmsDashboardFavorite emsDashboardFavorite)
+	//	{
+	//		emsDashboardFavorite = em.find(EmsDashboardFavorite.class, new EmsDashboardFavoritePK(emsDashboardFavorite.getUserName(),
+	//				emsDashboardFavorite.getDashboard().getDashboardId()));
+	//		em.remove(emsDashboardFavorite);
+	//		commitTransaction();
+	//	}
 
-	public void removeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
-	{
-		emsDashboardLastAccess = em.find(EmsDashboardLastAccess.class,
-				new EmsDashboardLastAccessPK(emsDashboardLastAccess.getAccessedBy(), emsDashboardLastAccess.getDashboardId()));
-		em.remove(emsDashboardLastAccess);
-		commitTransaction();
-	}
+	//	public void removeEmsDashboardLastAccess(EmsDashboardLastAccess emsDashboardLastAccess)
+	//	{
+	//		emsDashboardLastAccess = em.find(EmsDashboardLastAccess.class,
+	//				new EmsDashboardLastAccessPK(emsDashboardLastAccess.getAccessedBy(), emsDashboardLastAccess.getDashboardId()));
+	//		em.remove(emsDashboardLastAccess);
+	//		commitTransaction();
+	//	}
 
 	public void removeEmsDashboardTile(EmsDashboardTile emsDashboardTile)
 	{
@@ -251,6 +286,14 @@ public class DashboardServiceFacade
 		emsPreference = em
 				.find(EmsPreference.class, new EmsPreferencePK(emsPreference.getPrefKey(), emsPreference.getUserName()));
 		em.remove(emsPreference);
+		commitTransaction();
+	}
+
+	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)
+	{
+		emsUserOptions = em.find(EmsUserOptions.class,
+				new EmsUserOptionsPK(emsUserOptions.getUserName(), emsUserOptions.getDashboardId()));
+		em.remove(emsUserOptions);
 		commitTransaction();
 	}
 }
