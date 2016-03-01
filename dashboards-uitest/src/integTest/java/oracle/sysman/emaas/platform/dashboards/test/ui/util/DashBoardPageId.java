@@ -42,6 +42,9 @@ public class DashBoardPageId {
 	public static final String DeleteBtn_cfmDialog = "/html/body/div[1]/div[2]/div/div[3]/button[1]";
 	public static final String DashboardSerachResult_panelID = "dtabhomesc";
 	
+	public static final String WidgetSearchInputID = "widget-search-input";
+	public static final String WidgetSearchBtnID = "dbd-left-panel-header-search-btn";
+	
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
 	public static final String Database_Health_Summary_ID = "//div[@aria-dashboard='11']";
@@ -188,7 +191,7 @@ public class DashBoardPageId {
 	public static final String ExternalLink = "/html/body/div[*]/header/div/div[1]/div[1]/div[1]/div[3]/span";
 	public static final String ExternalTargetLinkID = "/html/body/div[4]/div[3]/div/div/div[7]/div/div[2]/div[2]/div[1]/div/div[1]/span";
 	
-	//grid view and list view id             /html/body/div[2]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label/span[1]
+	//grid view and list view id
 	public static final String GridViewID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label";
 	public static final String ListViewID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label";
 	
@@ -205,6 +208,20 @@ public class DashBoardPageId {
 	public static final String Welcome_ITALinkID ="/html/body/div[2]/div/div[2]/ul/li[3]/div/div/div[2]/div[1]";
 	public static final String Welcome_DashboardsLinkID = "/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
 	public static final String Welcome_DataExp = "/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
+	public static final String Welcome_ITA_SelectID= "ojChoiceId_ITA_options_selected";
+	public static final String Welcome_DataExp_SelectID = "ojChoiceId_autogen1_selected";
+	public static final String Welcome_LearnMore_getStarted = "//a[contains(text(),'How to get started')]";
+	public static final String Welcome_LearnMore_Videos = "//a[contains(text(),'Videos')]";
+	public static final String Welcome_LearnMore_ServiceOffering = "//a[contains(text(),'Service Offerings')]";
+	public static final String Welcome_ITA_PADatabase = "/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-8";//ITA Select Item : Performance Analytics - Database
+	public static final String Welcome_ITA_PAMiddleware = "/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-9";//ITA Select Item : Performance Analytics - Middleware
+	public static final String Welcome_ITA_RADatabase = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-10";//ITA Select Item : Resource Analytics - Database
+	public static final String Welcome_ITA_RAMiddleware = "/html/body/div[1]/div/div/ul/li[5]/div";//"oj-listbox-result-label-11";//ITA Select Item : Resource Analytics - Middleware
+	public static final String Welcome_ITA_DEAnalyze = "/html/body/div[1]/div/div/ul/li[6]/div";//"oj-listbox-result-label-12";//ITA Select Item : Data Explorer - Analyze
+	public static final String Welcome_ITA_DE = "/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
+	public static final String Welcome_DataExp_Log = "/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log
+	public static final String Welcome_DataExp_Analyze = "/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-5";//Data Explorers Select Item : Analyze
+	public static final String Welcome_DataExp_Search = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search	
 
    //Sharing and stoping dashbaord
     public static final String option="dashboardOptsBtn";
