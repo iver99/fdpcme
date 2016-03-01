@@ -1590,7 +1590,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.tfInfoIndicatorVisible(false);
                         return null;
                     }else {
-                        $("#dateTimePicker_"+self.randomId+" .oj-select-chosen").css("padding-right", "40px");
+                        $("#dateTimePicker_"+self.randomId+" .oj-select-chosen").css("padding-right", "44px");
                         self.tfInfoIndicatorVisible(true);
                         //get hours excluded
                         var hoursExcludedInfo = "";
