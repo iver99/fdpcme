@@ -485,7 +485,7 @@ public class CommonUIUtils
 				driver.getLogger().info("Verify the widget has been opened in main page");
 				Assert.assertTrue(driver.isElementPresent(UIControls.sWidget));
 				driver.takeScreenShot();
-			}			
+			}
 		}
 		else
 		{

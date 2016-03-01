@@ -48,3 +48,46 @@ WHEN OTHERS THEN
   RAISE;
 END;
 /
+
+
+DECLARE
+  V_COUNT number;
+BEGIN
+
+SELECT COUNT(1) INTO V_COUNT from EMS_DASHBOARD_TILE where TENANT_ID='&TENANT_ID' AND PROVIDER_VERSION='0.1';
+IF (V_COUNT>0) THEN
+  UPDATE EMS_DASHBOARD_TILE SET PROVIDER_VERSION='1.0' WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_VERSION='0.1';
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Provider version has been upgrade from 0.1 to 1.0 for tenant: &TENANT_ID successfully! Upgraded records: '||V_COUNT);
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Provider version has been upgrade from 0.1 to 1.0 for tenant: &TENANT_ID before, no need to upgrade again');
+END IF;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade version from 0.1 to 1.0 for tenant: &TENANT_ID due to '||SQLERRM);
+    RAISE;
+END;
+/
+
+DECLARE
+  V_COUNT number;
+BEGIN
+
+SELECT COUNT(1) INTO V_COUNT from EMS_DASHBOARD_TILE where TENANT_ID='&TENANT_ID' AND PROVIDER_VERSION='1.0.5' AND PROVIDER_NAME='TargetAnalytics';
+IF (V_COUNT>0) THEN
+  UPDATE EMS_DASHBOARD_TILE SET PROVIDER_VERSION='1.0' WHERE TENANT_ID='&TENANT_ID' AND PROVIDER_VERSION='1.0.5' AND PROVIDER_NAME='TargetAnalytics';
+  COMMIT;
+  DBMS_OUTPUT.PUT_LINE('Provider version of TargetAnalytics has been upgrade from 1.0.5 to 1.0 for tenant: &TENANT_ID successfully! Upgraded records: '||V_COUNT);
+ELSE
+  DBMS_OUTPUT.PUT_LINE('Provider version of TargetAnalytics has been upgrade from 1.0.5 to 1.0 for tenant: &TENANT_ID before, no need to upgrade again');
+END IF;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    ROLLBACK;
+    DBMS_OUTPUT.PUT_LINE('Failed to upgrade version of TargetAnalytics from 1.0.5 to 1.0 for tenant: &TENANT_ID due to '||SQLERRM);
+    RAISE;
+END;
+/
