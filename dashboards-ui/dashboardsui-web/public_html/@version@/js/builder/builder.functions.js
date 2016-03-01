@@ -347,5 +347,14 @@ define(['knockout',
             return smObservable & smObservable();
         };
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
+
+        function isTimeRangeAvailInUrl() {
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            var start = dfu_model.getUrlParam("startTime") ? true : false;
+            var end = dfu_model.getUrlParam("endTime") ? true : false;
+            return start && end;
+        }
+        
+        Builder.registerFunction(isTimeRangeAvailInUrl, 'isTimeRangeAvailInUrl');
     }
 );
