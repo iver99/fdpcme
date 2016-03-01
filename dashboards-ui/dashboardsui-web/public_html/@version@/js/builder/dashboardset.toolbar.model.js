@@ -87,24 +87,39 @@ define(['knockout',
                     }
                 });
             };
+            
+            function refreshTab() {
+                $('#dbd-tabs-container').ojTabs("refresh");
+                var selectedIndex = findSeledtedTab();
+                $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + selectedIndex});
+                $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+            }
 
             self.addNewDashboard = function (data, event) {
-                $("#modalInputDahboardId").ojDialog("open");
+                var newDashboardItem = {type: "new", name: ko.observable("Dashboard"), dashboardId: Builder.getGuid()};
+                self.dashboardsetItems.push(newDashboardItem);
+                self.selectedDashboardItem(newDashboardItem);
+                refreshTab();
             };
-
-            self.comfirmAddDashboard = function () {
-                var newDashboardId = document.getElementById("id-input").value;
-
-                Builder.loadDashboard(newDashboardId, function (dashboard) {
-                        var newDashboardItem = new dashboardItem(dashboard);
-                        self.dashboardsetItems.push(newDashboardItem);
-                        self.selectedDashboardItem(newDashboardItem);
-                        $('#dbd-tabs-container').ojTabs("refresh");
-                        var selectedIndex = findSeledtedTab(self.dashboardsetItems);
-                        $("#dbd-tabs-container").ojTabs({"selected": 'dashboard-' + selectedIndex});
-                        $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
-                        $("#modalInputDahboardId").ojDialog("close");
-                    });
+            
+            /**
+             * replace the dashboard list page to the selected dashboard
+             * @param {type} dashboardGuid dashboard list page id
+             * @param {type} selectedDashboard the dashboard user picked
+             * @returns {undefined}
+             */
+            self.pickDashboard = function(dashboardPickerId, selectedDashboard) {
+                var dashboardToRemove = -1;
+                ko.utils.arrayForEach(self.dashboardsetItems(), function (item, index) {
+                    if (item.dashboardId === dashboardPickerId) {
+                        dashboardToRemove = index;
+                    }
+                });                
+                if (dashboardToRemove > -1) {
+                    self.dashboardsetItems.splice(dashboardToRemove, 1, selectedDashboard);
+                    self.selectedDashboardItem(selectedDashboard);
+                    refreshTab();
+                }
             };
                     
             self.dbConfigMenuClick = new dbConfigMenuClick();  
@@ -259,7 +274,7 @@ define(['knockout',
                 self.raw = obj;
             }
 
-            function findSeledtedTab(obj) {
+            function findSeledtedTab() {
                 return self.dashboardsetItems().indexOf(self.selectedDashboardItem());
             }
             
@@ -335,7 +350,7 @@ define(['knockout',
             };
         
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
-                 var removeIdIndex=findSeledtedTab(self.dashboardsetItems);
+                 var removeIdIndex=findSeledtedTab();
                  self.dashboardsetItems.remove(self.dashboardsetItems()[removeIdIndex]);
                 
                 if (self.dashboardsetItems().length === removeIdIndex) {

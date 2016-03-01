@@ -2,16 +2,16 @@
     <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
         <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
             <input id="sinput" type="text" name="searchInput"
-                   data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                                                  ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
-                                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
+               data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                          ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
+                          ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
             <button class="oj-button-half-chrome" data-bind="click: clearSearch, visible: showSeachClear,
-                                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
-                                                            icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
+                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
             </button>
             <button class="oj-button-half-chrome" data-bind="click: forceSearch,
-                                                            ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
-                                                            icons: {start:'dbs-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
+                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
+                    icons: {start:'dbs-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
             </button> 
         </span>
 
@@ -121,6 +121,7 @@
     </div>
     <!-- paging end -->
 
+<!-- dashboard info popup start-->
 <div id="dsbinfopop"  style="display:none; width:260px;" 
      data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', autoDismiss: 'focusLoss', initialFocus: 'none', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
     <div data-bind="with: selectedDashboard">
@@ -140,4 +141,5 @@
             <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $component.handleCloseDashboardPop"></button-->
         </div>
     </div>   
-</div> 
+</div>
+<!-- dashboard info popup end-->

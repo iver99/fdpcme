@@ -17,7 +17,8 @@ requirejs.config({
               'emcsutl/message-util': 'uifwk/js/util/message-util',
               'ajax-util': 'uifwk/js/util/ajax-util',
               'message-util': 'uifwk/js/util/message-util',
-              'df-util': 'uifwk/js/util/df-util'
+              'df-util': 'uifwk/js/util/df-util',
+              'prefutil':'uifwk/js/util/preference-util'
              }        
     },
     // Path mappings for the logical module names
@@ -40,6 +41,7 @@ requirejs.config({
         'dashboards': '.',
         'builder': './builder',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
+        'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'uiutil':'internaldfcommon/js/util/ui-util',
@@ -144,6 +146,13 @@ require(['knockout',
             viewModel: {require: './widgets/textwidget/js/textwidget'},
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });
+            
+        if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+            ko.components.register("df-oracle-dashboard-list",{
+                viewModel:{require:'/emsaasui/emcpdfui/@version@/js/dashboardhome-impl.js'},
+                template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+            });
+        }
 
         function DashboardsetHeaderViewModel() {
             var self = this;
@@ -165,7 +174,8 @@ require(['knockout',
                     return;
                 var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
                 if ($visibleHeaderBar.length > 0) {
-                    ko.dataFor($visibleHeaderBar[0]).$b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                    var $b = ko.dataFor($visibleHeaderBar[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed');
                 }
                 self.headerHeight = height;
             });
@@ -203,7 +213,35 @@ function updateOnePageHeight(event) {
     }
 }
 
+            
+function truncateString(str, length) {
+    if (str && length > 0 && str.length > length)
+    {
+        var _tlocation = str.indexOf(' ', length);
+        if ( _tlocation <= 0 )
+            _tlocation = length;
+        return str.substring(0, _tlocation) + "...";
+    }
+    return str;
+}
+
+
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 }
+
+function getDateString(isoString) {
+    //console.log(isoString);
+    if (isoString && isoString.length > 0)
+    {
+        var s = isoString.split(/[\-\.\+: TZ]/g);
+        //console.log(s);
+        if (s.length > 1)
+        {
+            return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();
+        }
+    }
+    return "";
+}
+
 window.addEventListener("message", updateOnePageHeight, false);

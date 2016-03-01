@@ -1,5 +1,4 @@
 define([
-    '/emsaasui/emcpdfui/@version@/js/dbsmodel.js',
     'text!/emsaasui/emcpdfui/dashboardhome.html',
     'jquery',
     'ojs/ojcore',
@@ -15,23 +14,18 @@ define([
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'ojs/ojpopup',
-    'dbs/dbstypeahead',
-    'dbs/dbsdashboardpanel',
+    'dashboards/dbstypeahead',
+    'dashboards/dbsdashboardpanel',
     'ojs/ojmenu',
     'ojs/ojselectcombobox',
     'ojs/ojtable'],
-        function (model, htmlString) {
+        function (htmlString) {
 
-            function MyComponentViewModel(params) {
-                // Set up properties, etc.
-                return new model.ViewModel(params);
+            function DashboardListViewModel(params) {
+                return params;
             }
-
-            // Use prototype to declare any public methods
-            MyComponentViewModel.prototype.doSomething = function () {
-            };
-
-            // Return component definition
-            return {viewModel: MyComponentViewModel, template: htmlString};
-        });
+            
+            return {viewModel: DashboardListViewModel, template: htmlString};
+        }
+);
  

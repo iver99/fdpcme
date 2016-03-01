@@ -10,6 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
+        <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
  
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
@@ -59,21 +60,7 @@
                     </div>
                 </div> 
 
-               
-                
-                <div style="display:none" id="modalInputDahboardId" title="Input Dashboard Id" 
-                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide'}">
-                    <div class="oj-dialog-body">
-                        <label for="id-input" class="oj-label-inline">Input New Dashboard ID</label>
-                        <input id="id-input" 
-                               type="text"
-                               data-bind="ojComponent: {component: 'ojInputText'}"/>
-                    </div>
-                    <div class="oj-dialog-footer">
-                        <button data-bind="ojComponent: {component: 'ojButton', label: 'OK'},click:comfirmAddDashboard"> </button>
-                    </div>
-                </div>
-                 <ul id="dbd-set-option" style="display:none" 
+                <ul id="dbd-set-option" style="display:none" 
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
                     <!--ko foreach:dashboardsetMenu-->
                     <li data-bind="attr:{'id':id},visible: visibility">
@@ -185,7 +172,7 @@
                 
             </div>
             
-            <script id="dashboard-content-template" type="text/template">    
+            <script id="dashboard-content-template" type="text/html">    
             <div class="dashboard-content">
             <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left: 30px;">
                 <div class="builder-toolbar" aria-label="Builder toolbar" 
@@ -869,7 +856,33 @@
             </div>
             </div>
             </script>
-                        
+            
+            <script id="dashboard-include-template" type="text/html">
+                <div class="dashboard-content">
+                    <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" 
+                         style="padding-left: 30px; background-color: white;">
+                        <div class="builder-toolbar" aria-label="Builder toolbar">
+                            <div class="builder-toolbar-left dbd-pull-left">
+                                <div class="builder-dbd-name">
+                                    <div class="builder-dbd-name-display-area dbd-display-area">
+                                        <span class="builder-dbd-name-display-hover-area dbd-display-hover-area">
+                                            <h1>Select a dashboard to display on this tab.</h1>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;"
+                         data-bind="component: {
+                            name: 'df-oracle-dashboard-list',
+                            params: $data
+                         }">
+
+                    </div>
+                </div>
+            </script>
+            
             <script type="text/html" id="dsbOptsMenuItemTemplate">
                 <!-- ko if: !disabled  -->
                 <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
@@ -888,6 +901,7 @@
             </script>
             
             <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
+                <!--ko if: $data.type === 'included'-->
                  <div style="display:none" id="edit-dashboard"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -1017,7 +1031,8 @@
                                                      rootAttributes: {style:'margin-right:5px'} }"></button>
                         </div>
                     </div>
-                    <!-- Duplicate Dashboard dialog end -->             
+                    <!-- Duplicate Dashboard dialog end -->     
+                <!--/ko-->
             </div> 
 </div>               
     </body>

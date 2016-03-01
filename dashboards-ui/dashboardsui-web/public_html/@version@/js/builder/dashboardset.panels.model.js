@@ -1,4 +1,5 @@
 define([
+    'dashboards/dbsmodel',
     'knockout',
     'jquery',
     'dfutil',
@@ -32,7 +33,7 @@ define([
     'builder/tool.bar.model',
     'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead'],
-    function (ko, $, dfu, _emJETCustomLogger, idfbcutil) {
+    function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil) {
 
         function DashboardsetPanelsModel(dashboardsetToolBarModel) {
             if (!dashboardsetToolBarModel) {
@@ -45,20 +46,71 @@ define([
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
-            self.showDashboard = function (dashboardId) {
+            self.showDashboard = function (dashboardItem) {
+                var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
                 if ($("#" + divId).length > 0) {
                     $("#" + divId).show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
-                    self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
+                    if (self.selectedDashboardInst().type === "included") {
+                        self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
+                    }
                 } else {
-                    self.loadDashboard(dashboardId);
+                    if (dashboardItem.type === "new") {
+                        self.includingDashboard(dashboardId);
+                    } else {
+                        self.loadDashboard(dashboardId);
+                    }
                 }
+            };
+            
+            self.includingDashboard = function (guid) {
+                var $includingEl = $($("#dashboard-include-template").text());
+                $("#dashboards-tabs-contents").append($includingEl);
+                $includingEl.attr("id", "dashboard-" + guid);
+
+                var predataModel = new model.PredataModel();
+                
+                function init() {
+                    var dashboardsViewModle = new model.ViewModel(predataModel, {owners: ['Me', 'Others']});
+                    
+                    dashboardsViewModle.handleDashboardClicked = function(event, data) {
+                        
+                        var hasDuplicatedDashboard = false;
+                        dashboardsetToolBarModel.dashboardsetItems().forEach(function(dashboardItem) {
+                            if (dashboardItem.dashboardId === data.dashboard.id) {
+                                hasDuplicatedDashboard = true;
+                                dfu.showMessage({
+                                    type: 'error',
+                                        summary: data.dashboard.name + " is already selected in this dashboardset!",
+                                        detail: ''});
+                                }
+                        });
+                        
+                        if (!hasDuplicatedDashboard) {
+                            dashboardsetToolBarModel.pickDashboard(guid, {
+                                dashboardId: data.dashboard.id,
+                                name: data.dashboard.name
+                            });
+                        }
+                    };
+                    ko.applyBindings(dashboardsViewModle, $includingEl[0]);
+                }
+                var dashboardInst = {
+                    type: "new"
+                };
+                dashboardInstMap[guid] = dashboardInst;
+                self.selectedDashboardInst(dashboardInst);
+                
+                predataModel.loadAll().then(init, init); //nomatter there is error in predata loading, initiating
             };
 
             self.loadDashboard = function (dsbId) {
                 
+                $("#loading").show();
                 Builder.loadDashboard(dsbId, function (dashboard) {
+                    
+                    $("#loading").hide();
 
                     var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
@@ -120,6 +172,7 @@ define([
                     tilesViewModel.initialize();
                     
                     dashboardInstMap[dsbId] = {
+                        type: "included",
                         $b: $b,
                         toolBarModel: toolBarModel,
                         tilesViewModel: tilesViewModel
@@ -151,13 +204,13 @@ define([
                     idfbcutil.hookupBrowserCloseEvent(function () {
                         oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
                     });
-                    
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                      var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
                      console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
                      */
                 }, function (e) {
+                    $("#loading").hide();
                     console.log(e.errorMessage());
                     if (e.errorCode && e.errorCode() === 20001) {
                         oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
@@ -172,7 +225,7 @@ define([
 
             dashboardsetToolBarModel.selectedDashboardItem.subscribe(function (dashboardItem) {
                 self.hideAllDashboards();
-                self.showDashboard(dashboardItem.dashboardId);
+                self.showDashboard(dashboardItem);
             });
         }
 

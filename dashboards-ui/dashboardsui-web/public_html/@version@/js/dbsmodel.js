@@ -10,8 +10,8 @@
  */
 
 define([
-    'dbs/datasourcefactory',
-    'dbs/dbstablesource',
+    'dashboards/datasourcefactory',
+    'dashboards/dbstablesource',
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
@@ -157,7 +157,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata) {
+    function ViewModel(predata, defaultFilters) {
         
         var self = this, showWelcome = predata.getShowWelcomePref(), filter = predata.getDashboardsFilter();
         
@@ -208,6 +208,9 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             return _spo;
         });
         
+        if (defaultFilters) {
+            $.extend(filter, defaultFilters);
+        }
         self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
                                                    filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']);
         self.datasourceCallback = function (_event) {
