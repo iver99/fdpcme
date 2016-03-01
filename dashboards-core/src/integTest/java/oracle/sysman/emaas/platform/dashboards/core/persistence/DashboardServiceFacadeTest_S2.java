@@ -16,8 +16,6 @@ import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -245,7 +243,7 @@ public class DashboardServiceFacadeTest_S2
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@BeforeMethod
+	//@BeforeMethod
 	public void setUp() throws Exception
 	{
 		//load mock
@@ -289,7 +287,7 @@ public class DashboardServiceFacadeTest_S2
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@AfterMethod
+	//@AfterMethod
 	public void tearDown() throws Exception
 	{
 		EntityManager em = null;
@@ -315,17 +313,17 @@ public class DashboardServiceFacadeTest_S2
 		}
 	}
 
-	@Test
-	//(groups = { "s2" })
-	public void testAll()
+	@Test(groups = { "s2" })
+	public void testAll() throws Exception
 	{
+		setUp();
 		testGetEmsDashboardFavoriteByPK();
 		testGetEmsDashboardById();
 		testGetEmsDashboardFindAll();
 		testMergeEmsDashboard();
 		testGetEmsDashboardLastAccessByPK();
 		testPrefecence();
-
+		tearDown();
 	}
 
 	/**
