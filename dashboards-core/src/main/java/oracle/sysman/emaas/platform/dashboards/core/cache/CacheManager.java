@@ -26,7 +26,7 @@ public class CacheManager
 	private static final Logger logger = LogManager.getLogger(CacheManager.class);
 
 	public static final String CACHES_LOOKUP_CACHE = "lookupCache";
-
+	public static final String CACHES_SCREENSHOT_CACHE = "screenshotCache";
 	public static final String CACHES_ETERNAL_CACHE = "eternalCache";
 
 	public static final String LOOKUP_CACHE_KEY_SUBSCRIBED_APPS = "subscribedApps";
@@ -37,11 +37,8 @@ public class CacheManager
 	public static final String LOOKUP_CACHE_KEY_ADMIN_LINKS = "adminLinks";
 	public static final String LOOKUP_CACHE_KEY_HOME_LINKS = "homeLinks";
 	public static final String LOOKUP_CACHE_KEY_VISUAL_ANALYZER = "visualAnalyzer";
-	private static CacheManager instance;
 
-	static {
-		instance = new CacheManager();
-	}
+	private static CacheManager instance = new CacheManager();
 
 	public static CacheManager getInstance()
 	{
@@ -52,8 +49,11 @@ public class CacheManager
 
 	private CacheManager()
 	{
-		logger.info("Initialization coherence!!");
 		keyGen = new DefaultKeyGenerator();
+		logger.info("Initialization coherence!!");
+		CacheFactory.getCache(CACHES_LOOKUP_CACHE);
+		CacheFactory.getCache(CACHES_SCREENSHOT_CACHE);
+		CacheFactory.getCache(CACHES_ETERNAL_CACHE);
 	}
 
 	public NamedCache getCache(String cacheName)

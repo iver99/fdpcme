@@ -214,9 +214,9 @@ $.widget('dbs.dbsDashboardPanel',
             _element.append(self.contentPagesEle);
         },
         
-        _setBase64ScreenShot: function(screenShot) {
+        _setBase64ScreenShot: function(screenShotUrl) {
             var self = this, _title = (self.options['dashboard']) ? self.options['dashboard'].name : '';
-            if (!screenShot || screenShot === null)
+            if (!screenShotUrl || screenShotUrl === null)
             {
                 if (self.contentPage1ImgEle) 
                 {
@@ -231,7 +231,7 @@ $.widget('dbs.dbsDashboardPanel',
                     self.contentPage1ImgEle = $("<img>").addClass(self.classNames['pageImage']).attr('alt', _title);
                     self.contentPage1Ele.append(self.contentPage1ImgEle);
                 }
-                self.contentPage1ImgEle.attr("src", screenShot);
+                self.contentPage1ImgEle.attr("src", screenShotUrl);
             }
         },
         
@@ -253,31 +253,35 @@ $.widget('dbs.dbsDashboardPanel',
                 if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'].length > 0))
                 {
                    
-              var url =  _dashboard['screenShotHref'];
-              url = dfu.getRelUrlFromFullUrl(url);
-              if (dfu.isDevMode()){
-                  url = dfu.buildFullUrl(dfu.getDashboardsUrl(),'/'+ self.options['dashboard']['id'] + '/screenshot');
-              } 
+                    var url =  _dashboard['screenShotHref'];
+                    if (!dfu.isDevMode()){
+//                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), url);
+                        url = dfu.getRelUrlFromFullUrl(url);
+                    } 
+                    
+                    // don't use base64 image data, but use the URL retrieved from dashboard directly as screenshot url
+                    self._setBase64ScreenShot(url);
+                    if(_dmodel) _dmodel['screenShot'] = url;
               
-                   dfu.ajaxWithRetry({
-                            //This will be a page which will return the base64 encoded string
-                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
-                        url: url,                   
-                        headers: dfu.getDashboardsRequestHeader(),
-                        success: function(response){
-                            var __ss = (response.screenShot ? response.screenShot : undefined);
-                            self._setBase64ScreenShot(__ss);
-                            if (_dmodel)
-                            {
-                                //_dmodel.set("screenShot", _ss);
-                                _dmodel['screenShot'] = __ss;
-                            }
-                        },
-                        error : function(jqXHR, textStatus, errorThrown) {
-                            self._setBase64ScreenShot(null);
-                            //console.log("Load image error");
-                        }
-                    });
+//                   dfu.ajaxWithRetry({
+//                            //This will be a page which will return the base64 encoded string
+//                        //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
+//                        url: url,                   
+//                        headers: dfu.getDashboardsRequestHeader(),
+//                        success: function(response){
+//                            var __ss = (response.screenShot ? response.screenShot : undefined);
+//                            self._setBase64ScreenShot(__ss);
+//                            if (_dmodel)
+//                            {
+//                                //_dmodel.set("screenShot", _ss);
+//                                _dmodel['screenShot'] = __ss;
+//                            }
+//                        },
+//                        error : function(jqXHR, textStatus, errorThrown) {
+//                            self._setBase64ScreenShot(null);
+//                            //console.log("Load image error");
+//                        }
+//                    });
                 }
                 else
                 {

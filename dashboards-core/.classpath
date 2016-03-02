@@ -37,5 +37,6 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/coherence-12.1.2.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/javax.ws.rs-api-2.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/commons-lang3-3.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
