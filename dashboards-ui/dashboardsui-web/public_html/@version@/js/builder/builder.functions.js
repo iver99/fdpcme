@@ -7,11 +7,12 @@
 define(['knockout', 
         'jquery', 
         'ojs/ojcore',
-        'dfutil',
+        'dfutil',        
         'builder/dashboard.tile.model',
+        'uifwk/js/util/df-util',
         'builder/editor/editor.tiles'
     ], 
-    function(ko, $, oj, dfu, dtm) {
+    function(ko, $, oj, dfu, dtm, dfumodel) {
         function getTileDefaultWidth(wgt, mode) {
             if (wgt && (typeof wgt.WIDGET_DEFAULT_WIDTH==='number') && (wgt.WIDGET_DEFAULT_WIDTH%1)===0 && wgt.WIDGET_DEFAULT_WIDTH >= 1 && wgt.WIDGET_DEFAULT_WIDTH <= mode.MODE_MAX_COLUMNS)
                     return wgt.WIDGET_DEFAULT_WIDTH;
@@ -346,5 +347,14 @@ define(['knockout',
             return smObservable & smObservable();
         };
         Builder.registerFunction(isSmallMediaQuery, 'isSmallMediaQuery');
+
+        function isTimeRangeAvailInUrl() {
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            var start = dfu_model.getUrlParam("startTime") ? true : false;
+            var end = dfu_model.getUrlParam("endTime") ? true : false;
+            return start && end;
+        }
+        
+        Builder.registerFunction(isTimeRangeAvailInUrl, 'isTimeRangeAvailInUrl');
     }
 );
