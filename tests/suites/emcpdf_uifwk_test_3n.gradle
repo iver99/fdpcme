@@ -29,6 +29,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true
+        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}"
 	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
     }
 }
@@ -48,6 +49,7 @@ def getAbsoluteFilePath(artifactNameToSearch) {
     return absPath
 }
 apply from: getAbsoluteFilePath("omctf_commontasks")
+apply from: getAbsoluteFilePath("omctf_taskprocessor")
 /** End of WA for EMDI-6096 */
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 /* *************************************************************************************************

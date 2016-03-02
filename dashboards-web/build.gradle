@@ -132,7 +132,7 @@ dependencies {
 	providedCompile(group: 'coherence', name: 'coherence', version: '12.1.2') {transitive=false}
 	
 	
-	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+') { transitive = false }
+	providedCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+') { transitive = false }
 	providedCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
 
 
@@ -146,7 +146,7 @@ dependencies {
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){ transitive = false }
 	testCompile(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
         testCompile(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
-	testCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+'){ transitive = false }
+	testCompile(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+'){ transitive = false }
 //	testCompile(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2'){ transitive = false }
 
 

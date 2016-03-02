@@ -68,7 +68,7 @@ testConfig(group: 'javax.servlet', name:'servlet-api', version:'2.5')  { transit
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'){ transitive = false }
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2'){ transitive = false }
         testConfig(group: 'commons-logging', name:'commons-logging', version:'1.1.1'){ transitive = false }
-        testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+'){ transitive = false }
+        testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.+'){ transitive = false }
 
 
 
@@ -81,7 +81,7 @@ restAssured.exclude module: 'groovy'
 
 
 task PropsCopy(type: Copy) {
-   from '/net/slc07ctj/scratch/emaas/setuplogs/'
+   from '/net/slc07ctj/scratch/emga/emaas_endtoend_deploy/setuplogs/'
    into '../../oracle/work/'
     include '*.log'
   sleep( 300000)
