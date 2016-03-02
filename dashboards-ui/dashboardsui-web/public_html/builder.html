@@ -27,11 +27,9 @@
                 </div>
             </header>
 
-            <div id="dbd-set-tabs" data-bind="visible: isDashboardSet" style="">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs', disabledTabs: [0,'add-nav'],removable:true,reorderable:true}">         
-                    <!-- tab bar -->
-                    <ul class="dbd-tabs-nav">
-                        <li id="dbd-set-name">
+            <div id="dbd-set-tabs" data-bind="visible: isDashboardSet">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',removable:true,reorderable:true}">
+                    <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetInfo.name()"></span>
                             <button id="tabs-gear" class="no-print"
                                     data-bind="ojComponent: {component: 'ojButton', 
@@ -39,25 +37,28 @@
                                     menu: '#dbd-set-option'
                                 }, attr: {title: getNlsString('DBSSET_BUILDER_DASHBOARDSET_OPTIONS')}">
                             </button>
-                        </li>
+                    </div>  
+                    
+                    <!-- tab bar -->
+                    <ul class="dbd-tabs-nav">
                          <!--ko foreach:dashboardsetItems-->
                          <li class="other-nav" data-bind="attr: {id:'dashboard-'+$index()},click:$root.changeTab">
                              <span class="tabs-name" data-bind="text:name"></span>                           
                         </li>
-                        <!--/ko-->    
-                        <li id="add-nav" data-bind="click:addNewDashboard"><span><i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i></span></li>
-                    </ul>                   
-                    <!-- tab contents -->
-                    <div class="dbd-info">    
+                        <!--/ko-->       
+                    </ul> 
+                    
+                    <div class="oj-tabs-facet demo-tabs-facet-flex">
+                         <span id="add-nav" data-bind="click:addNewDashboard">
+                             <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
+                         </span> 
                     </div>
+                    
+                    <!-- tab contents -->
                     <!--ko foreach:dashboardsetItems-->
                     <div class="dbd-info other-nav-info">
-
                     </div>
                     <!--/ko-->
-                    <div class="dbd-info add-info">    
-
-                    </div>
                 </div> 
 
                 <ul id="dbd-set-option" style="display:none" 

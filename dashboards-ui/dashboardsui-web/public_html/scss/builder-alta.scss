@@ -1090,6 +1090,54 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 //new dashbord set css
 #dbd-tabs-container{
+    #dbd-set-name{
+        height: 50px;
+        line-height: 50px;
+        background-color: #3caf85;
+        padding-right:3px;
+        > span{
+            color: white!important;
+            font-weight: bold;
+            font-size: 15px;
+            padding-left: 30px;
+            min-width: 180px;
+        }
+        #tabs-gear{
+            width: 35px;
+            background-color: #3CAF85;
+            background-image: none;
+            border-color: #3CAF85;
+            .dbd-icon-gear{
+                color: white;
+                margin-left: 4px;
+            }
+            .oj-button-text{
+                display: none;
+            }
+            .oj-button-menu-dropdown-icon{
+                display: none;
+            }
+            &:hover{
+                cursor: pointer;
+            }
+        }
+        #tabs-gear.oj-selected{
+            background-color: #0572ce;
+            border-color: #0572ce;
+            background-image: none;
+        }  
+    }
+    #add-nav{
+        .dbd-icon-add{
+            color: #878c90;
+            padding-top: 23px;
+            padding-left: 10px;
+        }  
+        &:hover{
+            cursor: pointer;
+        }
+    }
+  
     .dbd-tabs-nav{
         .other-nav {
             min-width: 150px;
@@ -1100,12 +1148,17 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
                         min-width: 100px;
                         margin-right: 5px;
                         margin-bottom: -6px;
+                        text-decoration: none;
                     }
                 }  
                 .oj-tabs-close-icon{
                     margin-top: 6px;
                 }
             }
+        }
+        .other-nav:first-child{
+            margin-top: 7px;
+            margin-left: 5px;
         }
         .other-nav.oj-selected{
             border-top-color: #3caf85;
@@ -1122,71 +1175,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
         //hack default sortable css
         .other-nav.oj-tabs-tab.oj-selected.ui-sortable-handle.oj-active.ui-sortable-helper{
-            height: 49px!important;
-        }
-        #dbd-set-name{
-            height: 48px;
-            background-color: #3caf85;
-            padding-right:3px;
-            a{    
-                padding-right:0;
-                >span{
-                    min-width: 180px;
-                    color: white!important;
-                    font-weight: bold;
-                    font-size: 15px;
-                }
-                #tabs-gear{
-                    width: 35px;
-                    background-color: #3CAF85;
-                    background-image: none;
-                    border-color: #3CAF85;
-                    .dbd-icon-gear{
-                        color: white;
-                        margin-left: 4px;
-                    }
-                    .oj-button-text{
-                        display: none;
-                    }
-                    .oj-button-menu-dropdown-icon{
-                        display: none;
-                    }
-                    &:hover{
-                        cursor: pointer;
-                    }
-                }
-                #tabs-gear.oj-selected{
-                    background-color: #0572ce;
-                    border-color: #0572ce;
-                    background-image: none;
-                }
-            }
-        }
-        #add-nav{
-            border-width: 0 !important;
-            background-color: #F6F6F6 !important;
-            .oj-tabs-gen-div{
-                border: 0;
-                border-bottom:0;
-                .oj-tabs-gen-a{
-                    &:hover{
-                        cursor: pointer;
-                    }
-                    .dbd-icon-add{
-                        color: #878c90;
-                        padding-top: 8px;
-                    }
-                } 
-            }
-        }
-        #add-nav.oj-selected{
-            .oj-tabs-gen-div {
-                border:0;
-            }
-        }
+            height: 51px!important;
+        }   
     }
-    .other-nav-info{
-        
+    .other-nav-info{       
         border-bottom: none;
         padding: 0;
         
@@ -1236,7 +1228,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
             }
         }
         .dbs-description{
-            padding-top: 10px;
+            padding-top: -10px;
         }
     }
 }
