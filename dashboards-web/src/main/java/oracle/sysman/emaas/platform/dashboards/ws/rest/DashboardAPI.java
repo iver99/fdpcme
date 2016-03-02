@@ -345,7 +345,7 @@ public class DashboardAPI extends APIBase
         try {
             Long tenantId = getTenantId(tenantIdParam);
             initializeUserContext(tenantIdParam, userTenant);
-            userOptionsManager.updateUserOptions(userOption, tenantId);
+            userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
             return Response.ok(getJsonUtil().toJson(userOption)).build();
         } catch (DashboardException e) {
             return buildErrorResponse(new ErrorEntity(e));
@@ -379,7 +379,7 @@ public class DashboardAPI extends APIBase
             Long tenantId = getTenantId(tenantIdParam);
             initializeUserContext(tenantIdParam, userTenant);
             userOption.setDashboardId(dashboardId);//override id in consumed json if exist;
-            userOptionsManager.saveUserOptions(userOption, tenantId);
+            userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
             return Response.ok(getJsonUtil().toJson(userOption)).build();
         } catch (DashboardException e) {
             return buildErrorResponse(new ErrorEntity(e));
