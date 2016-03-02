@@ -109,8 +109,6 @@ define([
                 
                 $("#loading").show();
                 Builder.loadDashboard(dsbId, function (dashboard) {
-                    
-                    $("#loading").hide();
 
                     var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
@@ -191,6 +189,7 @@ define([
 
                     $("#loading").hide();
                     $('#globalBody').show();
+                    $dashboardEl.css("visibility", "visible");
                     if(dashboardsetToolBarModel.isDashboardSet()){
                        $b.findEl('.head-bar-container').css("background-color","white");
                     }
@@ -204,6 +203,8 @@ define([
                     idfbcutil.hookupBrowserCloseEvent(function () {
                         oj.Logger.info("Dashboard: [id=" + dashboard.id() + ", name=" + dashboard.name() + "] is closed", true);
                     });
+                    
+                    $("#loading").hide();
                     /*
                      * Code to test df_util_widget_lookup_assetRootUrl
                      var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
