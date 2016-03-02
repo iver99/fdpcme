@@ -26,6 +26,12 @@ public class Tenant implements Serializable
 		this.tenantId = tenantId;
 	}
 
+	public Tenant(Long tenantId, String tenantName)
+	{
+		this.tenantId = tenantId;
+		this.tenantName = tenantName;
+	}
+
 	public Tenant(String tenantName)
 	{
 		this.tenantName = tenantName;
@@ -112,7 +118,20 @@ public class Tenant implements Serializable
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + tenantName != null ? "(TenantName)" + tenantName
-				: tenantId != null ? "(TenantId)" + tenantId : "null";
+		StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		if (tenantName != null) {
+			sb.append("  (TenantName)" + tenantName);
+		}
+		else {
+			sb.append("  (TenantName) null");
+		}
+		if (tenantId != null) {
+			sb.append("  (TenantId)" + tenantId);
+		}
+		else {
+			sb.append("  (TenantId) null");
+		}
+		return sb.toString();
 	}
 }

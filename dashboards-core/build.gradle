@@ -1,9 +1,13 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import java.text.SimpleDateFormat
+import java.util.Date
 
 apply plugin: 'eclipse'
 
 apply from:'test.gradle'
 
-
+dfversion = project.ext.getServiceVersion('DashboardService-API')
+def versionPathElement = dfversion + "-"+ new SimpleDateFormat("yyMMdd.HHmmss").format(new Date())
 
 publishing.publications {
     integTest(MavenPublication) {
@@ -65,10 +69,19 @@ dependencies {
 	compile(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 	compile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 	compile(group: 'coherence', name: 'coherence', version: '12.1.2') {transitive=false}
+	compile(group: 'com.sun.jersey', name: 'jersey-core', version: '1.17.1') {transitive=false}
 	compile(group: 'com.sun.jersey', name: 'jersey-client', version: '1.17.1') {transitive=false}
 	testCompile(group: 'com.oracle.emaas.emdi', name: 'em-qatool-os-webdriver', version: '1.0.7') {transitive=false}
 
 }
+
+processResources {
+    from('src/main/resources') {
+        include '*.properties', '*.xml'
+        filter(ReplaceTokens, tokens: [version : versionPathElement])
+    }
+}
+
 build.dependsOn integTestJar
 
 
@@ -80,5 +93,6 @@ sourceSets {
                 resources.srcDirs = ['src/integTest/java']
         }
 }
+
 
 
