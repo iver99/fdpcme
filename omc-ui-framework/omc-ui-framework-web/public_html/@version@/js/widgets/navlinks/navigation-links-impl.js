@@ -127,8 +127,17 @@ define(['knockout', 'jquery', 'uifwk/js/util/df-util', 'ojs/ojcore', 'uifwk/js/u
                     }
                     else {
                         discoveredSecAuthUrl = authUrl;
+                        //In big ip env, APM, LA, ITA use vanity urls and the host names are different with the SecurityAuthorization url discovered, 
+                        //which may cause CORS issue, so we need to extract the relative path and append to current host name to avoid CORS issue
+                        if (discoveredSecAuthUrl) {
+                            var index = discoveredSecAuthUrl.indexOf("/", discoveredSecAuthUrl.indexOf("://")+3);
+                            if (index > -1) {
+                                discoveredSecAuthUrl = discoveredSecAuthUrl.substring(index);
+                                discoveredSecAuthUrl = window.location.protocol + '//' + window.location.host + discoveredSecAuthUrl;
+                            }
+                        }
                         var path = "api/v1/roles/grants/getRoles?grantee=" + tenantName + "." + userName;
-                        var secAuthRoleUrl = dfu.buildFullUrl(authUrl, path);
+                        var secAuthRoleUrl = dfu.buildFullUrl(discoveredSecAuthUrl, path);
                         dfu.ajaxWithRetry({
                             url: secAuthRoleUrl,
                             headers: dfu.getDefaultHeader(), 
