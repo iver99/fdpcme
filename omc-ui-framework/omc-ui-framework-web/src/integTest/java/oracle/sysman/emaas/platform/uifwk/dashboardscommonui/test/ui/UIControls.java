@@ -62,5 +62,6 @@ public class UIControls
 	public static final String sAdmin = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[4]";
 	public static final String sWidget = "//*[@id='widgets-container']";
 	public static final String sCategorySelect = "//*[@id='ojChoiceId_categorySelect_selected']";
+	public static final String sWidgetDiplay = "/html/body/div[1]/div[2]/div/div[4]/div[1]/div[2]/ul";
 	//End: Components
 }
