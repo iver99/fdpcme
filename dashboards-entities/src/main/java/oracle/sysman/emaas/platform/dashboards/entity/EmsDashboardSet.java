@@ -36,9 +36,8 @@ public class EmsDashboardSet implements Serializable {
 
     @ManyToOne
     @Id
-    @JoinColumns({
+    @JoinColumns(value = {
             @JoinColumn(name = "DASHBOARD_SET_ID", referencedColumnName = "DASHBOARD_ID"),
-            @JoinColumn(name = "SUB_DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID"),
             @JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID")
     })
     private EmsDashboard dbdOfDashboardSet;
