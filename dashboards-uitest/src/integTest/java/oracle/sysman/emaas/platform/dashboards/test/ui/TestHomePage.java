@@ -229,7 +229,7 @@ public class TestHomePage extends LoginAndLogout{
 		
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 		DashBoardUtils.clickExploreDataButton();
-		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Log_ID);
+		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Log);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//Log Analytics link
 		//webd.click(DashBoardPageId.LALinkID);
@@ -248,7 +248,7 @@ public class TestHomePage extends LoginAndLogout{
 		
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 		DashBoardUtils.clickExploreDataButton();
-		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Search_ID);
+		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Search);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//Target link
 		//webd.click(DashBoardPageId.TargetLinkID);
@@ -268,7 +268,7 @@ public class TestHomePage extends LoginAndLogout{
 		
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);	
 		DashBoardUtils.clickExploreDataButton();
-		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Analyze_ID);
+		DashBoardUtils.clickExploreDataMenuItem(DashBoardPageId.ExploreDataMenu_Analyze);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		//AWR Analytics link		
 		//webd.click(DashBoardPageId.AWRALinkID);

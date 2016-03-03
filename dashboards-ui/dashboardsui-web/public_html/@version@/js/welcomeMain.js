@@ -187,13 +187,15 @@ require(['ojs/ojcore',
                         for(i=0; i<dataExplorersNum; i++) {
                             var originalName = dataExplorers[i].name;
                             dataExplorers[i].name = originalName.replace(/Visual Analyzer/i, '').replace(/^\s*|\s*$/g, '');
-                            self.exploreDataLinkList.push(dataExplorers[i]);                            
+                            self.exploreDataLinkList.push(dataExplorers[i]);                                                        
                             landingHomeUrls[dataExplorers[i].name] = dataExplorers[i].href;
                             //change name of data explorer in ITA to "Data Explorer - Analyze" & "Data Explorer"
                             if(dataExplorers[i].serviceName === "EmcitasApplications") {                             
                                 self.exploreDataInITA.push({href: dataExplorers[i].href, name: self.dataExplorer+" - " +dataExplorers[i].name, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
+                                landingHomeUrls[self.dataExplorer+" - " +dataExplorers[i].name] = dataExplorers[i].href;
                             }else if (dataExplorers[i].serviceName === "TargetAnalytics") {
                                 self.exploreDataInITA.push({href: dataExplorers[i].href, name: self.dataExplorer, serviceName: dataExplorers[i].serviceName, version: dataExplorers[i].version});
+                                landingHomeUrls[self.dataExplorer] = dataExplorers[i].href;
                             }
                             //change name of data explorer in ITA starting with "Data Explorer - "
 //                            if(dataExplorers[i].serviceName === "EmcitasApplications" || dataExplorers[i].serviceName === "TargetAnalytics") {

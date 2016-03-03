@@ -359,7 +359,7 @@ define(['knockout',
                 if (change instanceof Builder.TileChange){
                     tChange = change;
                 }
-                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null,tChange);
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null,tChange, self.dashboard.enableTimeRange());
                 Builder.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent); 
             };
             
@@ -847,7 +847,7 @@ define(['knockout',
                 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
+                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null, null, self.dashboard.enableTimeRange());
                     Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }
