@@ -1004,7 +1004,7 @@ public class DashboardManager
 		}
 		else {
 			edla.setAccessDate(DateUtil.getCurrentUTCTime());
-			dsf.persistEmsUserOptions(edla);
+			dsf.mergeEmsUserOptions(edla);
 		}
 	}
 
