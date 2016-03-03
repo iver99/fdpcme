@@ -41,6 +41,7 @@ public class EmsDashboard implements Serializable
 	@Column(name = "DASHBOARD_ID", nullable = false)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EmsDashboard_Id_Seq_Gen")
 	private Long dashboardId;
+
 	@Column(name = "DELETED")
 	private Long deleted;
 	@Column(name = "DESCRIPTION", length = 1280)
@@ -53,13 +54,13 @@ public class EmsDashboard implements Serializable
 	private Integer isSystem;
 	@Column(name = "SHARE_PUBLIC", nullable = false)
 	private Integer sharePublic;
-
 	@Column(name = "APPLICATION_TYPE")
 	private Integer applicationType;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATION_DATE", nullable = false)
 	private Date creationDate;
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "LAST_MODIFICATION_DATE")
 	private Date lastModificationDate;
@@ -67,9 +68,9 @@ public class EmsDashboard implements Serializable
 	private String lastModifiedBy;
 	@Column(nullable = false, length = 320)
 	private String name;
-
 	@Column(nullable = false, length = 128)
 	private String owner;
+
 	@Lob
 	@Basic(fetch = FetchType.EAGER)
 	@Column(name = "SCREEN_SHOT", columnDefinition = "CLOB NULL")
@@ -223,6 +224,15 @@ public class EmsDashboard implements Serializable
 	public void setCreationDate(Date creationDate)
 	{
 		this.creationDate = creationDate;
+	}
+
+	/**
+	 * @param dashboardId
+	 *            the dashboardId to set
+	 */
+	public void setDashboardId(Long dashboardId)
+	{
+		this.dashboardId = dashboardId;
 	}
 
 	public void setDashboardTileList(List<EmsDashboardTile> emsDashboardTileList)

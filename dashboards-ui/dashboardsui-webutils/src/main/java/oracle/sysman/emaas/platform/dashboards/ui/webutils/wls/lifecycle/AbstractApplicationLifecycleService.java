@@ -49,10 +49,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			}
 			logger.debug("Post-started 'Service Registry'");
 		}
-		catch (Throwable t) {
-			if (t instanceof VirtualMachineError) {
-				throw (VirtualMachineError) t;
-			}
+		catch (Exception t) {
 			logger.error("Service failed to post-start", t);
 			throw new ApplicationException("Service failed to post-start", t);
 		}
@@ -69,10 +66,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			}
 			logger.debug("Post-stopped 'Service Regsitry'");
 		}
-		catch (Throwable t) {
-			if (t instanceof VirtualMachineError) {
-				throw (VirtualMachineError) t;
-			}
+		catch (Exception t) {
 			logger.error("Service failed to post-stop", t);
 			throw new ApplicationException("some of the essential services failed to post-stop");
 		}
@@ -89,10 +83,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			}
 			logger.debug("Pre-started 'Service Registry'");
 		}
-		catch (Throwable t) {
-			if (t instanceof VirtualMachineError) {
-				throw (VirtualMachineError) t;
-			}
+		catch (Exception t) {
 			logger.error("Service failed to pre-start", t);
 			throw new ApplicationException("Service failed to pre-start", t);
 		}
@@ -109,10 +100,7 @@ public class AbstractApplicationLifecycleService extends ApplicationLifecycleLis
 			}
 			logger.debug("Pre-stopped 'Service Registry'");
 		}
-		catch (Throwable t) {
-			if (t instanceof VirtualMachineError) {
-				throw (VirtualMachineError) t;
-			}
+		catch (Exception t) {
 			logger.error("Service failed to pre-stop", t);
 			throw new ApplicationException("some of the essential services failed to pre-stop");
 		}

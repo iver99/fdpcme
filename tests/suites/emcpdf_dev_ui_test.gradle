@@ -70,51 +70,24 @@ dependencies {
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
         testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
 	 testConfig(group: 'com.oracle.emaas', name:'emaas-platform-tenant-sdk', version:'0.2') { transitive = false }
-
+	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+	 testConfig(group: 'com.oracle.emaas.emcpsm', name:'registry-lookup-client', version:'1.0.0+'){ transitive = false }
+	testConfig(group: 'com.oracle.emaas.emcpsm', name: 'registry-client', version: '1.0.0+')
+	testConfig(group: 'com.oracle.weblogic', name: 'wlfullclient', version: '12.1.2-0-0'){ transitive = false }
     configurations{
 	restAssured.exclude module:'groovy'
     }
 }
- 
-task DeployDFUI(type: Exec) {
-    executable = project.gradle.gradleHomeDir.absolutePath + '/bin/gradle'
-    args '-p',  project.properties['emdi.GIT_VIEW_ROOT'] +'/dashboards-ui/dashboardsui-ee/', 'appServerDeploy'
-}
-
-task PropsCopy(type: Copy,dependsOn: DeployDFUI) {
-   from '/net/slc07ctj/scratch/emga/emaas_endtoend_deploy/setuplogs/'
-   into '../../oracle/work/'
-    include '*.log'
-}
 
 apply plugin: 'java'
 
-task logdir(type: Copy,dependsOn: PropsCopy) {
-    def logdir = new File("/var/opt/ORCLemaas/logs/dashboardsService")
-    println("logdir: "+logdir)
-exec{commandLine "/usr/local/packages/aime/em/run_as_root","rm -rf /var/opt/ORCLemaas/logs/dashboardsService"}
-    if( !logdir.exists() ) {
-        println("creating logdir")
-
-         if(exec{commandLine "/usr/local/packages/aime/em/run_as_root","mkdir -p /var/opt/ORCLemaas/logs/dashboardsService"}) {
-            println("succeeded in making folder")
-           exec{commandLine "/usr/local/packages/aime/em/run_as_root","chmod -R 777 /var/opt/ORCLemaas/logs/dashboardsService"}
 
 
-            if(logdir.exists()) {
-                println("folder exists")
-            } else {
-                println("folder does not exist")
-            }
-        } else {
-            println("failed to make folder")
-        }
-    } 
-}
-
-task DEVUiTest(type:EMTest,dependsOn: logdir){
-  	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
-	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
+task DEVUiTest(type:EMTest){
+	include "oracle/sysman/emaas/platform/dashboards/ui/targetmodel/services/*"
+	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/services/*"
+//  	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/JsonUtilTest.class"
+//	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/util/TenantSubscriptionUtilTest.class"
 //	include "oracle/sysman/emaas/platform/dashboards/ui/webutils/wls/management/AppLoggingManageMXBeanTest.class"
  	useRestAssured=true
 	ext.set("testType", "unit")
