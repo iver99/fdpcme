@@ -457,7 +457,8 @@ define([
                 }
                 
                 function loadWidgetScreenshot(widget) {
-                    var url = widget.WIDGET_SCREENSHOT_HREF;
+                    var url = null;
+                    widget.WIDGET_SCREENSHOT_HREF && (url = widget.WIDGET_SCREENSHOT_HREF());
                     if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
                         loadWidgetBase64Screenshot(widget);
                         return;
