@@ -36,8 +36,9 @@ public class DataFormatUtils
 	{
 		if (Dashboard.DASHBOARD_TYPE_CODE_SINGLEPAGE.equals(type)) {
 			return Dashboard.DASHBOARD_TYPE_SINGLEPAGE;
-		}
-		else {
+		} else if(Dashboard.DASHBOARD_TYPE_CODE_SET.equals(type)){
+			return Dashboard.DASHBOARD_TYPE_SET;
+		} else {
 			return Dashboard.DASHBOARD_TYPE_NORMAL;
 		}
 	}

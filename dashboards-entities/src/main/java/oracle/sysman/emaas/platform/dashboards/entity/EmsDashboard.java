@@ -82,7 +82,10 @@ public class EmsDashboard implements Serializable
 	@OrderBy("row, column")
 	private List<EmsDashboardTile> dashboardTileList;
 
-	public EmsDashboard()
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dbdOfDashboardSet", orphanRemoval = true)
+    private List<EmsDashboardSet> dashboardSetList;
+
+    public EmsDashboard()
 	{
 	}
 
@@ -303,4 +306,11 @@ public class EmsDashboard implements Serializable
 		this.type = type;
 	}
 
+    public List<EmsDashboardSet> getDashboardSetList() {
+        return dashboardSetList;
+    }
+
+    public void setDashboardSetList(List<EmsDashboardSet> dashboardSetList) {
+        this.dashboardSetList = dashboardSetList;
+    }
 }

@@ -832,7 +832,7 @@ public class DashboardManager
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
-			if(dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
+			if(!dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
 				if (dbd.getTileList() != null) {
 					for (Tile tile : dbd.getTileList()) {
 						if (tile.getCreationDate() == null) {

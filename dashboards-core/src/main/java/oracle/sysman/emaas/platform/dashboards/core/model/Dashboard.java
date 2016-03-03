@@ -6,6 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonRes
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardSet;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
@@ -107,7 +108,6 @@ public class Dashboard
 		to.setDashboardId(from.getDashboardId());
 		to.setDeleted(from.getDeleted() == null ? null : from.getDeleted() > 0);
 		to.setDescription(from.getDescription());
-		to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 		to.setEnableRefresh(DataFormatUtils.integer2Boolean(from.getEnableRefresh()));
 		to.setIsSystem(DataFormatUtils.integer2Boolean(from.getIsSystem()));
 		to.setSharePublic(DataFormatUtils.integer2Boolean(from.getSharePublic()));
@@ -118,16 +118,24 @@ public class Dashboard
 		// by default, we'll not load screenshot for query
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
-		List<EmsDashboardTile> edtList = from.getDashboardTileList();
-		if (edtList != null) {
-			List<Tile> tileList = new ArrayList<Tile>();
-			for (EmsDashboardTile edt : edtList) {
-				Tile tile = Tile.valueOf(edt);
-				tile.setDashboard(to);
-				tileList.add(tile);
-			}
-			to.setTileList(tileList);
-		}
+        if(from.getType().equals(DASHBOARD_TYPE_SET)) {
+            List<EmsDashboardSet> emsDashboardSets = from.getDashboardSetList();
+
+        }else{
+            to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
+
+            List<EmsDashboardTile> edtList = from.getDashboardTileList();
+            if (edtList != null) {
+                List<Tile> tileList = new ArrayList<Tile>();
+                for (EmsDashboardTile edt : edtList) {
+                    Tile tile = Tile.valueOf(edt);
+                    tile.setDashboard(to);
+                    tileList.add(tile);
+                }
+                to.setTileList(tileList);
+            }
+        }
+
 		return to;
 	}
 
@@ -174,6 +182,9 @@ public class Dashboard
 
 	@JsonProperty("tiles")
 	private List<Tile> tileList;
+
+	@JsonProperty("subDashboard")
+	private List<Dashboard> subDashboards;
 
 	public Dashboard()
 	{
@@ -511,4 +522,8 @@ public class Dashboard
 			//			edt.setPosition(i);
 		}
 	}
+
+    private void updateEmsDashboardDashboardSetList(List<DashboardSet> dashboardSets, EmsDashboard ed) throws DashboardException {
+
+    }
 }
