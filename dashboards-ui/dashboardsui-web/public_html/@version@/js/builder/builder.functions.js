@@ -403,7 +403,7 @@ define(['knockout',
                         errorCallBack(jqXHR, textStatus, errorThrown);
                 }
             });
-
+        }
         function isTimeRangeAvailInUrl() {
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             var start = dfu_model.getUrlParam("startTime") ? true : false;
