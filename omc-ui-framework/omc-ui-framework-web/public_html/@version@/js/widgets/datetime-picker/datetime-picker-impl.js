@@ -1,5 +1,5 @@
-define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", 'uifwk/js/widgets/timeFilter/js/timeFilter', "ojs/ojdatetimepicker"],
-        function (ko, $, msgUtilModel, oj, nls, timeFilter) {
+define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg", "ojs/ojdatetimepicker"],
+        function (ko, $, msgUtilModel, oj, nls) {
 
             /**
              * 
@@ -34,11 +34,18 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 var start, end;
                 var timeDiff, dateTimeDiff;
 
+                self.tfInstance = {"timeFilterValue": ko.observable("0-23"), "daysChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7"]), "monthsChecked": ko.observableArray(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])};
+
                 if(params.appId) {
                     self.randomId = params.appId;
                 }else {
                     self.randomId = new Date().getTime(); 
                 }
+                
+                self.postbox = new ko.subscribable();
+                self.postbox.subscribe(function(newValue) {
+                    self.tfInstance = newValue;
+                }, null, "tfChanged");
                 
                 //set the position of drawers and pickerPanel according to date/time picker's position
                 if(params.dtpickerPosition && params.dtpickerPosition === "right") {
@@ -62,7 +69,6 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 }
 
 
-                self.tfInstance = new timeFilter();
                 self.enableTimeFilter = ko.observable(false);
                 self.tfInfoIndicatorVisible = ko.observable(false);
                 self.timeFilterInfo = ko.observable();
@@ -641,8 +647,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 if(!ko.components.isRegistered("time-filter")) {
                     ko.components.register("time-filter", {
-                        template: {require: "text!uifwk/js/widgets/timeFilter/html/timeFilter.html"},
-                        viewModel: {instance: self.tfInstance}
+                        template: {require: "text!/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html"},
+                        viewModel: {require: "/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js"}//{instance: self.tfInstance}
                     });
                 }              
                 
@@ -1391,7 +1397,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     return "";
                 };
 
-                self.applyClick = function () {                                        
+                self.applyClick = function () {
                     self.timeFilter = ko.observable(null);
                     
                     self.lastStartDate(self.startDate());
@@ -1665,8 +1671,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 }
                 
+                                
+                self.tfParams = {
+                    postbox: self.postbox,
+                    randomId: self.randomId,                    
+                    tfChangedCallback: self.updateRange
+                };
                 self.initialize();
-                self.tfInstance.tfChangedCallback = self.updateRange;
+//                self.tfInstance.tfChangedCallback = self.updateRange;
             }
             return dateTimePickerViewModel;
         });

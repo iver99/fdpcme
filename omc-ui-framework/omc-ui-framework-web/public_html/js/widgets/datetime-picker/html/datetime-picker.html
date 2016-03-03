@@ -115,7 +115,7 @@
                     <!-- pop up for time filter-->
                     <div style="display: none; width: 560px; height: 412px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}">
                         <!-- ko if: enableTimeFilter -->
-                        <div style="padding-top: 50px;" data-bind="component: {name: 'time-filter'}"></div>
+                        <div style="padding-top: 50px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
                         <!-- /ko -->
                     </div>
                 </div>
