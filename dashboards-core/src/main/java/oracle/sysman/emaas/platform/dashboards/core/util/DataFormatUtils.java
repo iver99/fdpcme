@@ -47,14 +47,15 @@ public class DataFormatUtils
 		if (type == null) { // default
 			return Dashboard.DASHBOARD_TYPE_CODE_NORMAL;
 		}
-		if (!Dashboard.DASHBOARD_TYPE_NORMAL.equals(type) && !Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(type)) {
+		if (!Dashboard.DASHBOARD_TYPE_NORMAL.equals(type) && !Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(type) && !Dashboard.DASHBOARD_TYPE_SET.equals(type)) {
 			throw new CommonFunctionalException(
 					MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_TYPE));
 		}
 		if (Dashboard.DASHBOARD_TYPE_NORMAL.equals(type)) {
 			return Dashboard.DASHBOARD_TYPE_CODE_NORMAL;
-		}
-		else {
+		} else if (Dashboard.DASHBOARD_TYPE_SET.equals(type)) {
+			return Dashboard.DASHBOARD_TYPE_CODE_SET;
+		} else {
 			return Dashboard.DASHBOARD_TYPE_CODE_SINGLEPAGE;
 		}
 	}
