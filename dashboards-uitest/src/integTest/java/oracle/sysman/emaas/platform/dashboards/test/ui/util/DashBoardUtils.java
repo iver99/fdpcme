@@ -16,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.Keys;
 
 import org.testng.Assert;
 
@@ -200,7 +201,7 @@ public class DashBoardUtils {
 		driver.getLogger().info("click Tab key 1");
 		WebElement webe = driver.getWebDriver().findElement(By.id(DashBoardPageId.WidgetSearchInputID));
 		if(driver.getWebDriver().switchTo().activeElement().equals(webe)){
-			driver.sendKeys(Keys.TAB);
+			webe.sendKeys(Keys.TAB);
 		}
 		driver.takeScreenShot();
 		driver.getLogger().info("click Tab key 2");
@@ -213,7 +214,7 @@ public class DashBoardUtils {
 
 		driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
 		driver.takeScreenShot();
-		drivergetLogger().info("add the widget into the dashboard");
+		driver.getLogger().info("add the widget into the dashboard");
 	}
 	
 //	public static  void addWidget(int i,String parentHandle,String dbname,String dbdesc) throws Exception

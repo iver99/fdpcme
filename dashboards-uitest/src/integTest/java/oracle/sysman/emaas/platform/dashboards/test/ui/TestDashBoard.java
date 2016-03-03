@@ -5,7 +5,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.Keys;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -372,7 +371,7 @@ public class TestDashBoard extends LoginAndLogout{
 		//clickTimePicker();
 		
 		//widget operation
-		TileManager tg = new TileManager(driver);
+		TileManager tg = new TileManager(webd);
 		
 	    tg.tileOpen();
 		tg.tileDelete();
