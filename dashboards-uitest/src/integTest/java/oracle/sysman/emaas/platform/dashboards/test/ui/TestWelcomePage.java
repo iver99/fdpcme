@@ -323,6 +323,8 @@ public class TestWelcomePage extends LoginAndLogout{
 		webd.click(DashBoardPageId.Welcome_ITA_SelectID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
 		webd.takeScreenShot();
+		webd.getLogger().info("Open page");
+		webd.click(DashBoardPageId.Welcome_ITA_DE);
 		String url = "emcta/ta/analytics.html";
 		String tmpurl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("url = "+tmpurl);
