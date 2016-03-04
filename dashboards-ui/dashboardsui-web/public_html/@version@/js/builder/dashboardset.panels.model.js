@@ -129,6 +129,12 @@ define([
                         dashboardsetToolBarModel.dashboardsetItems.filter(function isIdMatch(value) {
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
+                                $('#dashboardTab-'+currentDashboardId).find('.tabs-name').text(dashboardName);
+                            }
+                        });
+                        dashboardsetToolBarModel.reorderedDbsSetItems().filter(function isIdMatch(value) {
+                            if(value.dashboardId===currentDashboardId){
+                                value.name(dashboardName);                            
                             }
                         });
                     });

@@ -25,6 +25,7 @@ define(['knockout',
             var startDashboardId = Number(location.search.split(/start=/)[1]) || Number(dashboardsetId[0]);
 
             self.dashboardsetItems = [];
+            self.reorderedDbsSetItems=ko.observableArray();
 
             self.selectedDashboardItem = ko.observable();
                         
@@ -78,7 +79,8 @@ define(['knockout',
             self.addNewDashboard = function (data, event) {
                 var newDashboardItem = {type: "new", name: ko.observable("Dashboard"), dashboardId: Builder.getGuid()};
                 self.dashboardsetItems.push(newDashboardItem);
-                addNewTab(newDashboardItem.name(),newDashboardItem.dashboardId);
+                self.reorderedDbsSetItems.push(newDashboardItem);
+                addNewTab(newDashboardItem.name(),newDashboardItem.dashboardId,-1);
                 $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + newDashboardItem.dashboardId});
                 $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 self.selectedDashboardItem(newDashboardItem);
@@ -92,11 +94,13 @@ define(['knockout',
              */
             self.pickDashboard = function(dashboardPickerId, selectedDashboard) {
                 var removeResult=findRemoveTab(self.dashboardsetItems,dashboardPickerId);
+                var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId)
                 
                 if (removeResult.removeIndex > -1) {  
                     removeTargetTab(removeResult.removeItem);
-                    addNewTab(selectedDashboard.name,selectedDashboard.dashboardId); 
+                    addNewTab(selectedDashboard.name,selectedDashboard.dashboardId,reorderedResult.removeIndex); 
                     self.dashboardsetItems.splice(removeResult.removeIndex, 1, selectedDashboard);
+                    self.reorderedDbsSetItems.splice(reorderedResult.removeIndex, 1, selectedDashboard);
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
@@ -232,11 +236,13 @@ define(['knockout',
                         if (singleDashboardItem.dashboardId === startDashboardId) {
                             self.selectedDashboardItem(singleDashboardItem);
                             self.dashboardsetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(),singleDashboardItem.dashboardId);
+                            self.reorderedDbsSetItems.push(singleDashboardItem);
+                            addNewTab(singleDashboardItem.name(),singleDashboardItem.dashboardId,-1);
                             $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' +singleDashboardItem.dashboardId});
                         } else {
                             self.dashboardsetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(),singleDashboardItem.dashboardId);
+                            self.reorderedDbsSetItems.push(singleDashboardItem);
+                            addNewTab(singleDashboardItem.name(),singleDashboardItem.dashboardId,-1);
                         }
                         $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                     });
@@ -252,12 +258,12 @@ define(['knockout',
                 self.raw = obj;  
             }
             
-            function addNewTab(tabName,dashboardId) {                
+            function addNewTab(tabName,dashboardId,insertIndex) {                
                 $( "#dbd-tabs-container" ).ojTabs( "addTab", 
                          {
                            "tab" : $("<li class='other-nav' id='dashboardTab-"+dashboardId+"'><span class='tabs-name'>"+tabName+"</span></li>"),
                            "content" : $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-"+dashboardId+"'></div>"),
-                           "index":-1
+                           "index":insertIndex
                          } );
             }
             
@@ -354,10 +360,12 @@ define(['knockout',
                 var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1])||(ui.tab.attr('id').split(/dashboardTab-/)[1])
                 
                 var removeResult=findRemoveTab(self.dashboardsetItems,removeDashboardId);
+                var reorderResult=findRemoveTab(self.reorderedDbsSetItems(),removeDashboardId)
                 
                 if (removeResult.removeIndex > -1) {
                      var currentShowIndex=$('.other-nav').index(ui.tab); 
                      self.dashboardsetItems.splice(removeResult.removeIndex, 1);
+                     self.reorderedDbsSetItems.splice(reorderResult.removeIndex, 1);
                      removeTargetTab(removeResult.removeItem);
                     if (ui.tab.hasClass('oj-selected')) {
                         if (self.dashboardsetItems.length === currentShowIndex && self.dashboardsetItems.length !== 0) {
@@ -385,6 +393,19 @@ define(['knockout',
                 }
             });
             
+            $( "#dbd-tabs-container" ).on( "ojreorder", function( event, ui ) {
+                    var tempAarray = [];
+
+                    $(".other-nav").each(function () {
+                        var sortedDashboardId = Number($(this).attr('id').split(/dashboardTab-/)[1]) || $(this).attr('id').split(/dashboardTab-/)[1];
+                        ko.utils.arrayForEach(self.reorderedDbsSetItems(), function (item, index) {
+                            if (item.dashboardId === sortedDashboardId) {
+                                tempAarray.push(item);
+                            }
+                        });
+                    });
+                    self.reorderedDbsSetItems(tempAarray);                
+            });       
         }
 
         Builder.registerModule(DashboardsetToolBarModel, 'DashboardsetToolBarModel');
