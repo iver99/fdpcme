@@ -40,25 +40,14 @@
                     </div>  
                     
                     <!-- tab bar -->
-                    <ul class="dbd-tabs-nav">
-                         <!--ko foreach:dashboardsetItems-->
-                         <li class="other-nav" data-bind="attr: {id:'dashboard-'+$index()},click:$root.changeTab">
-                             <span class="tabs-name" data-bind="text:name"></span>                           
-                        </li>
-                        <!--/ko-->       
+                    <ul class="dbd-tabs-nav">                              
                     </ul> 
                     
                     <div class="oj-tabs-facet demo-tabs-facet-flex">
                          <span id="add-nav" data-bind="click:addNewDashboard">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
                          </span> 
-                    </div>
-                    
-                    <!-- tab contents -->
-                    <!--ko foreach:dashboardsetItems-->
-                    <div class="dbd-info other-nav-info">
-                    </div>
-                    <!--/ko-->
+                    </div>                                    
                 </div> 
 
                 <ul id="dbd-set-option" style="display:none" 
@@ -870,7 +859,7 @@
                                 <div class="builder-dbd-name">
                                     <div class="builder-dbd-name-display-area dbd-display-area">
                                         <span class="builder-dbd-name-display-hover-area dbd-display-hover-area">
-                                            <h1>Select a dashboard to display on this tab.</h1>
+                                            <div class="builder-dbd-select-tip" style="font-weight: normal;font-size: 14px;" data-bind="text:getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_DESC')"></div>
                                         </span>
                                     </div>
                                 </div>

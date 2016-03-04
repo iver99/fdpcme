@@ -1144,10 +1144,10 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
             .oj-tabs-gen-div{
                 margin-bottom: 4px;         
                 .oj-tabs-gen-a{
+                    min-width: 100px;
+                    margin-right: 5px;
+                    margin-bottom: -6px;
                     .tabs-name{
-                        min-width: 100px;
-                        margin-right: 5px;
-                        margin-bottom: -6px;
                         text-decoration: none;
                     }
                 }  

@@ -58,6 +58,10 @@ define([
                 } else {
                     if (dashboardItem.type === "new") {
                         self.includingDashboard(dashboardId);
+                        //new dashboard home css change:align
+                        setTimeout(function () {
+                            $($('#'+'dashboard-'+dashboardId).find('#homettbtns')).css({"float":"none","margin-left":"288px"});                            
+                    }, 2000);
                     } else {
                         self.loadDashboard(dashboardId);
                     }
@@ -77,7 +81,7 @@ define([
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
                         
                         var hasDuplicatedDashboard = false;
-                        dashboardsetToolBarModel.dashboardsetItems().forEach(function(dashboardItem) {
+                        dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
                             if (dashboardItem.dashboardId === data.dashboard.id) {
                                 hasDuplicatedDashboard = true;
                                 dfu.showMessage({
@@ -122,7 +126,7 @@ define([
                     //change dashboard name
                     toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
-                        dashboardsetToolBarModel.dashboardsetItems().filter(function isIdMatch(value) {
+                        dashboardsetToolBarModel.dashboardsetItems.filter(function isIdMatch(value) {
                             if(value.dashboardId===currentDashboardId){
                                 value.name(dashboardName);
                             }
@@ -226,7 +230,7 @@ define([
 
             dashboardsetToolBarModel.selectedDashboardItem.subscribe(function (dashboardItem) {
                 self.hideAllDashboards();
-                self.showDashboard(dashboardItem);
+                self.showDashboard(dashboardItem);                
             });
         }
 
