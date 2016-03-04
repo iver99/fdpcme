@@ -26,7 +26,7 @@ define(['knockout',
                 return "position: absolute; left: " + self.left() + "px; top: " + self.top() + "px; width: " + self.cssWidth() + "px; height: " + self.cssHeight() + "px;";
             });
             self.widgetCssStyle = ko.computed(function() {
-                return "width: " + (self.cssWidth()-20) + "px; height: " + (self.cssHeight()-35-20) + "px;";
+                return "width: " + (self.cssWidth()-10) + "px; height: " + (self.cssHeight()-35-10) + "px;";
             });
 
             ko.mapping.fromJS(data, {include: ['column', 'row', 'width', 'height']}, this);
