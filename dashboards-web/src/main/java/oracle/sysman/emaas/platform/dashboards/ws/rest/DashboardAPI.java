@@ -327,28 +327,25 @@ public class DashboardAPI extends APIBase
     @PUT
     @Path("{id: [1-9][0-9]*}/options")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-                                      @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-                                      @PathParam("id") Long dashboardId, JSONObject inputJson) {
-        infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
-        UserOptions userOption = null;
-        try {
-            userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
-            if (userOption != null && userOption.getAutoRefreshInterval() != null) {
-                userOption.setAutoRefreshInterval(userOption.getAutoRefreshInterval());
-            }
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage(), e);
-            ErrorEntity error = new ErrorEntity(e);
-            return buildErrorResponse(error);
-        }
+	public Response updateUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+									  @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+									  @PathParam("id") Long dashboardId, JSONObject inputJson) {
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
+		UserOptions userOption;
+		try {
+			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
+			userOption.setDashboardId(dashboardId);
+		} catch (IOException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			ErrorEntity error = new ErrorEntity(e);
+			return buildErrorResponse(error);
+		}
 
         UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
         try {
             Long tenantId = getTenantId(tenantIdParam);
             initializeUserContext(tenantIdParam, userTenant);
-            userOption.setDashboardId(dashboardId);//override id in comsumned json if exist;
-            userOptionsManager.updateUserOptions(userOption, tenantId);
+            userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
             return Response.ok(getJsonUtil().toJson(userOption)).build();
         } catch (DashboardException e) {
             return buildErrorResponse(new ErrorEntity(e));
@@ -368,12 +365,9 @@ public class DashboardAPI extends APIBase
                                       @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
                                       @PathParam("id") Long dashboardId, JSONObject inputJson) {
         infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/{}/options/", dashboardId);
-        UserOptions userOption = null;
+        UserOptions userOption;
         try {
             userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
-            if (userOption != null && userOption.getAutoRefreshInterval() != null) {
-                userOption.setAutoRefreshInterval(userOption.getAutoRefreshInterval());
-            }
         } catch (IOException e) {
             logger.error(e.getLocalizedMessage(), e);
             ErrorEntity error = new ErrorEntity(e);
@@ -384,8 +378,8 @@ public class DashboardAPI extends APIBase
         try {
             Long tenantId = getTenantId(tenantIdParam);
             initializeUserContext(tenantIdParam, userTenant);
-            userOption.setDashboardId(dashboardId);//override id in comsumned json if exist;
-            userOptionsManager.saveUserOptions(userOption, tenantId);
+            userOption.setDashboardId(dashboardId);//override id in consumed json if exist;
+            userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
             return Response.ok(getJsonUtil().toJson(userOption)).build();
         } catch (DashboardException e) {
             return buildErrorResponse(new ErrorEntity(e));

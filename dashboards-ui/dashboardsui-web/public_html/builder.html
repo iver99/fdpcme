@@ -729,7 +729,7 @@
                             <div class="dbd-left-panel-widget" data-bind="attr: {id: 'widget-item-'+WIDGET_UNIQUE_ID()}">
                                 <div class="dbd-left-panel-widget-text"
                                             data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                    <span data-bind="text:WIDGET_NAME"></span>
+                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress}"></span>
                                 </div>
                                 <div data-bind="attr: {id: 'widget-'+WIDGET_UNIQUE_ID()}, 
                                                 ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">

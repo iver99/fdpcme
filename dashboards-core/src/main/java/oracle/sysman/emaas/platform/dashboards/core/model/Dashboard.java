@@ -72,7 +72,7 @@ public class Dashboard
 	public static final Integer DASHBOARD_TYPE_CODE_NORMAL = Integer.valueOf(0);
 	public static final String DASHBOARD_TYPE_SINGLEPAGE = "SINGLEPAGE";
 	public static final Integer DASHBOARD_TYPE_CODE_SINGLEPAGE = Integer.valueOf(1);
-	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.AUTO;
+	public static final EnableTimeRangeState DASHBOARD_ENABLE_TIME_RANGE_DEFAULT = EnableTimeRangeState.FALSE;
 	public static final boolean DASHBOARD_ENABLE_REFRESH_DEFAULT = Boolean.FALSE;
 
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
