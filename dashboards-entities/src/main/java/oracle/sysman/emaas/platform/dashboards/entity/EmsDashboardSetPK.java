@@ -14,7 +14,6 @@ public class EmsDashboardSetPK implements Serializable {
 
     private Long subDashboardId;
 
-    private String userName;
 
     public Long getDashboardSetId() {
         return dashboardSetId;
@@ -32,20 +31,12 @@ public class EmsDashboardSetPK implements Serializable {
         this.subDashboardId = subDashboardId;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     @Override
     public boolean equals(Object other) {
         if (other instanceof EmsDashboardSetPK) {
             final EmsDashboardSetPK otherEmsDashboardSetPK = (EmsDashboardSetPK) other;
-            final boolean isEqual = otherEmsDashboardSetPK.dashboardSetId.equals(dashboardSetId)
-                    && otherEmsDashboardSetPK.userName.equals(userName) && otherEmsDashboardSetPK.subDashboardId.equals(subDashboardId);
+            final boolean isEqual = otherEmsDashboardSetPK.dashboardSetId.equals(dashboardSetId) && otherEmsDashboardSetPK.subDashboardId.equals(subDashboardId);
             return isEqual;
         }
         return false;
