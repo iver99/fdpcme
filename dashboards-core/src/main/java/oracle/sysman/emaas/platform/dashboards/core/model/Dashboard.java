@@ -6,7 +6,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonRes
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardSet;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
@@ -119,7 +119,7 @@ public class Dashboard
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
         if(from.getType().equals(DASHBOARD_TYPE_SET)) {
-            List<EmsDashboardSet> emsDashboardSets = from.getDashboardSetList();
+            List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
 
         }else{
             to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));

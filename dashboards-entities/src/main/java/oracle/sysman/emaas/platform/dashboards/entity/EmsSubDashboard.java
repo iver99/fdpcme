@@ -17,16 +17,13 @@ import java.io.Serializable;
 @IdClass(EmsDashboardSetPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)
 @TenantDiscriminatorColumn(name = "TENANT_ID", contextProperty = "tenant.id", length = 32, primaryKey = true)
-public class EmsDashboardSet implements Serializable {
+public class EmsSubDashboard implements Serializable {
 
     private static final long serialVersionUID = 8344138185588082239L;
 
     @Id
     @Column(name = "DASHBOARD_SET_ID", nullable = false, length = 256)
     private Long dashboardSetId;
-    @Id
-    @Column(name = "TENANT_ID", nullable = false, length = 128)
-    private String userName;
     @Id
     @Column(name = "SUB_DASHBOARD_ID", nullable = false, length = 256)
     private Long subDashboardId;
@@ -35,27 +32,25 @@ public class EmsDashboardSet implements Serializable {
     private Integer position;
 
     @ManyToOne
-    @Id
     @JoinColumns(value = {
-            @JoinColumn(name = "DASHBOARD_SET_ID", referencedColumnName = "DASHBOARD_ID"),
-            @JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID")
+            @JoinColumn(name = "SUB_DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID",insertable = false,updatable = false),
+            @JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID",insertable = false,updatable = false)
     })
-    private EmsDashboard dbdOfDashboardSet;
+    private EmsDashboard subDashboard;
 
-    public EmsDashboardSet() {
+    @ManyToOne
+    @JoinColumns(value = {
+            @JoinColumn(name = "DASHBOARD_SET_ID", referencedColumnName = "DASHBOARD_ID",insertable = false,updatable = false),
+            @JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID",insertable = false,updatable = false)
+    })
+    private EmsDashboard dashboardSet;
+
+    public EmsSubDashboard() {
 
     }
 
     public void setDashboardSetId(Long dashboardSetId) {
         this.dashboardSetId = dashboardSetId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public Long getSubDashboardId() {
@@ -79,11 +74,19 @@ public class EmsDashboardSet implements Serializable {
         return dashboardSetId;
     }
 
-    public EmsDashboard getDbdOfDashboardSet() {
-        return dbdOfDashboardSet;
+    public EmsDashboard getSubDashboard() {
+        return subDashboard;
     }
 
-    public void setDbdOfDashboardSet(EmsDashboard dashboard2) {
-        this.dbdOfDashboardSet = dashboard2;
+    public void setSubDashboard(EmsDashboard subDashboard) {
+        this.subDashboard = subDashboard;
+    }
+
+    public EmsDashboard getDashboardSet() {
+        return dashboardSet;
+    }
+
+    public void setDashboardSet(EmsDashboard dashboardSet) {
+        this.dashboardSet = dashboardSet;
     }
 }

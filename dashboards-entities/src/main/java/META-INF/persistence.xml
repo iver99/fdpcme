@@ -13,7 +13,7 @@
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsPreference</class>
 		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions</class>
-		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardSet</class>
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />
@@ -54,7 +54,7 @@
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite</class>
         <class>oracle.sysman.emaas.platform.dashboards.entity.EmsPreference</class>
 		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions</class>
-		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardSet</class>
+		<class>oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard</class>
 
 		<properties>
 			<property name="eclipselink.logging.exceptions" value="true" />

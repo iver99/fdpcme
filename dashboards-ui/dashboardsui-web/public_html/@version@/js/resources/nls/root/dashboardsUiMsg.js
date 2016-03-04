@@ -332,6 +332,7 @@ define({
       "DBSSET_BUILDER_PRINT_ALL":"Print All",
       "DBSSET_BUILDER_DASHBOARDSET_OPTIONS":"Dashboard Set options",
       "DBSSET_BUILDER_REMOVE_DASHBOARD":"Remove dashboard",
-      "DBSSET_BUILDER_DELETE_DASHBOARDSET":"Delete Dashboardset"
+      "DBSSET_BUILDER_DELETE_DASHBOARDSET":"Delete Dashboardset",
+      "DBSSET_BUILDER_SELECT_TIP":"Select a dashboard to display on this tab"
 });
 
