@@ -69,43 +69,8 @@ public class UserOptionsManager {
         }
     }
 
-    public void updateUserOptions(UserOptions userOptions, Long tenantId) throws DashboardException {
-        if (userOptions == null) {
-            return;
-        }
-        EntityManager em = null;
-        try {
-            String currentUser = UserContext.getCurrentUser();
-            DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-            em = dsf.getEntityManager();
 
-            Long dashboardId = userOptions.getDashboardId();
-            if (dashboardId == null || dashboardId <= 0) {
-                logger.debug("Dashboard not found for id {} is invalid", dashboardId);
-                throw new DashboardNotFoundException();
-            }
-            EmsDashboard ed = dsf.getEmsDashboardById(dashboardId);
-            if (ed == null) {
-                logger.debug("Dashboard not found with the specified id {}", dashboardId);
-                throw new DashboardNotFoundException();
-            }else{
-                EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
-                if (emsUserOptions != null) {
-                    // update
-                    emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
-                    dsf.mergeEmsUserOptions(emsUserOptions);
-                }else{
-                    throw new UserOptionsNotFoundException();
-                }
-            }
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
-    public void saveUserOptions(UserOptions userOptions, Long tenantId) throws DashboardException {
+    public void saveOrUpdateUserOptions(UserOptions userOptions, Long tenantId) throws DashboardException {
         if (userOptions == null) {
             return;
         }
@@ -127,8 +92,12 @@ public class UserOptionsManager {
             }else{
                 // create or update if exists
                 EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
-                emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
-                dsf.persistEmsUserOptions(emsUserOptions);
+                if(null == emsUserOptions){
+                    dsf.persistEmsUserOptions(emsUserOptions);
+                }else{
+                    emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
+                    dsf.mergeEmsUserOptions(emsUserOptions);
+                }
             }
 
         } finally {
