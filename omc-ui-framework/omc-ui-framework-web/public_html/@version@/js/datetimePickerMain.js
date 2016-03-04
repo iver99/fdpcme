@@ -61,11 +61,11 @@ requirejs.config({
 require(['ojs/ojcore',
     'knockout',
     'jquery',
-    'uifwk/js/widgets/timeFilter/js/timeFilter',
+//    'uifwk/js/widgets/timeFilter/js/timeFilter',
     'ojs/ojknockout',
     'ojs/ojchart'
 ],
-        function (oj, ko, $, timeFilter) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $/*, timeFilter*/) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("date-time-picker", {
                 viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
@@ -78,7 +78,7 @@ require(['ojs/ojcore',
                 var end = new Date();
                 var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
                 self.floatPosition = "left";
-                var tf = new timeFilter();
+//                var tf = new timeFilter();
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
                 
                 self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
@@ -108,7 +108,7 @@ require(['ojs/ojcore',
                         console.log(end);
                         console.log(tp);
                         console.log(tf);
-//                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
+                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         self.start(self.dateTimeConverter1.format(appliedStart));
