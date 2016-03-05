@@ -212,7 +212,7 @@ define([
                         for (i = 0; i < widgetArray.length; i++) {
                             var widget = widgetArray[i];
                             if (widget.PROVIDER_NAME === providerName &&
-                                    widget.PROVIDER_VERSION === providerVersion &&
+                    //                widget.PROVIDER_VERSION === providerVersion &&
                                     widget.WIDGET_GROUP_NAME === groupName) {
                                 availWidgets.push(widget);
                             }
@@ -493,8 +493,9 @@ define([
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    widgetProviderName === pname && widgetProviderVersion === pversion) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion */) || 
+                                    widgetProviderName === pname 
+                                /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
 //                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};
