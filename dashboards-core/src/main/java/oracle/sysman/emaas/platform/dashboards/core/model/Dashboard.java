@@ -118,9 +118,29 @@ public class Dashboard
 		// by default, we'll not load screenshot for query
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
-        if(from.getType().equals(DASHBOARD_TYPE_SET)) {
+        if(from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
+			to.setEnableTimeRange(null);
+            to.setIsSystem(null);
             List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
+			if (emsSubDashboards != null) {
+				List<Dashboard> subDashboardList = new ArrayList<>();
+				for (EmsSubDashboard esd : emsSubDashboards) {
+					EmsDashboard edbd = esd.getSubDashboard();
+                    Dashboard dbd = new Dashboard();
+                    dbd.setEnableTimeRange(null);
+                    dbd.setEnableRefresh(null);
+                    dbd.setIsSystem(null);
+                    dbd.setSharePublic(null);
 
+                    dbd.setType(DataFormatUtils.dashboardTypeInteger2String(edbd.getType()));
+                    dbd.setDashboardId(edbd.getDashboardId());
+                    dbd.setName(edbd.getName());
+                // todo
+                // updateDashboardHref(dbd, tenantName);
+                    subDashboardList.add(dbd);
+				}
+				to.setSubDashboards(subDashboardList);
+			}
         }else{
             to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 
@@ -185,6 +205,14 @@ public class Dashboard
 
 	@JsonProperty("subDashboard")
 	private List<Dashboard> subDashboards;
+
+	public List<Dashboard> getSubDashboards() {
+		return subDashboards;
+	}
+
+    public void setSubDashboards(List<Dashboard> subDashboards) {
+		this.subDashboards = subDashboards;
+	}
 
 	public Dashboard()
 	{

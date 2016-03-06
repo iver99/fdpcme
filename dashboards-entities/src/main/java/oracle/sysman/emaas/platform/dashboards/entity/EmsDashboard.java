@@ -5,23 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
@@ -84,6 +68,9 @@ public class EmsDashboard implements Serializable
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardSet", orphanRemoval = true)
     private List<EmsSubDashboard> subDashboardList;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subDashboard", orphanRemoval = true)
+    private EmsSubDashboard subDashboard;
 
     public EmsDashboard()
 	{
@@ -313,4 +300,12 @@ public class EmsDashboard implements Serializable
 	public void setSubDashboardList(List<EmsSubDashboard> subDashboardList) {
 		this.subDashboardList = subDashboardList;
 	}
+
+    public EmsSubDashboard getSubDashboard() {
+        return subDashboard;
+    }
+
+    public void setSubDashboard(EmsSubDashboard subDashboard) {
+        this.subDashboard = subDashboard;
+    }
 }

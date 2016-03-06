@@ -31,7 +31,7 @@ public class EmsSubDashboard implements Serializable {
     @Column(name = "POSITION", nullable = false)
     private Integer position;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumns(value = {
             @JoinColumn(name = "SUB_DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID",insertable = false,updatable = false),
             @JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID",insertable = false,updatable = false)
