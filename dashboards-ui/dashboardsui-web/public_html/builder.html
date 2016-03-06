@@ -28,7 +28,7 @@
             </header>
 
             <div id="dbd-set-tabs" data-bind="visible: isDashboardSet">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',removable:true,reorderable:true}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetInfo.name()"></span>
                             <button id="tabs-gear" class="no-print"
