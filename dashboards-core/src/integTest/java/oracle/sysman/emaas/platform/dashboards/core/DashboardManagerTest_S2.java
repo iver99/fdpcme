@@ -724,9 +724,7 @@ public class DashboardManagerTest_S2
 		}
 
 		filter = new DashboardsFilter();
-		filter.setIncludedFavorites(true);
-		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
-		filter.setIncludedOwnersFromString("Oracle,Others,Me,Share");
+		filter.initializeFilters("apm,ita,oracle,share,me,favorites");
 		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC, filter);
 		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC, filter);
 		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_APP_TYPE, filter);
@@ -743,12 +741,6 @@ public class DashboardManagerTest_S2
 		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER, filter);
 		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC, filter);
 
-		//		new Expectations() {
-		//			{
-		//				mockList.isEmpty();
-		//				result = true;
-		//			}
-		//		};
 		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC, filter);
 	}
 
