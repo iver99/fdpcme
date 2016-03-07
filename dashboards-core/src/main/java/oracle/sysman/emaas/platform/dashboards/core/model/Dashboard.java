@@ -3,11 +3,12 @@ package oracle.sysman.emaas.platform.dashboards.core.model;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -124,22 +125,21 @@ public class Dashboard
             List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
 			if (emsSubDashboards != null) {
 				List<Dashboard> subDashboardList = new ArrayList<>();
-				for (EmsSubDashboard esd : emsSubDashboards) {
-					EmsDashboard edbd = esd.getSubDashboard();
+                for (EmsSubDashboard esd : emsSubDashboards) {
+                    EmsDashboard edbd = esd.getSubDashboard();
                     Dashboard dbd = new Dashboard();
                     dbd.setEnableTimeRange(null);
                     dbd.setEnableRefresh(null);
                     dbd.setIsSystem(null);
                     dbd.setSharePublic(null);
 
-                    dbd.setType(DataFormatUtils.dashboardTypeInteger2String(edbd.getType()));
                     dbd.setDashboardId(edbd.getDashboardId());
                     dbd.setName(edbd.getName());
-                // todo
-                // updateDashboardHref(dbd, tenantName);
+                    // todo
+                    // updateDashboardHref(dbd, tenantName);
                     subDashboardList.add(dbd);
-				}
-				to.setSubDashboards(subDashboardList);
+                }
+                to.setSubDashboards(subDashboardList);
 			}
         }else{
             to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
@@ -203,7 +203,7 @@ public class Dashboard
 	@JsonProperty("tiles")
 	private List<Tile> tileList;
 
-	@JsonProperty("subDashboard")
+	@JsonProperty("subDashboards")
 	private List<Dashboard> subDashboards;
 
 	public List<Dashboard> getSubDashboards() {
@@ -327,13 +327,24 @@ public class Dashboard
 		if (ed == null) {
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh, isIsSystem,
 					isShare, lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
-			if (tileList != null) {
-				for (Tile tile : tileList) {
-					EmsDashboardTile edt = tile.getPersistenceEntity(null);
-					//					edt.setPosition(i++);
-					ed.addEmsDashboardTile(edt);
-				}
-			}
+
+            if (type.equals(Dashboard.DASHBOARD_TYPE_SET)){
+                if (subDashboards != null) {
+                    for (int index=0;index < subDashboards.size() ;index++ ) {
+                        Dashboard dbd = subDashboards.get(index);
+                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
+                        ed.addEmsSubDashboard(esdbd);
+                    }
+                }
+            }else{
+                if (tileList != null) {
+                    for (Tile tile : tileList) {
+                        EmsDashboardTile edt = tile.getPersistenceEntity(null);
+                        //					edt.setPosition(i++);
+                        ed.addEmsDashboardTile(edt);
+                    }
+                }
+            }
 		}
 		else {
 			ed.getScreenShot();
@@ -356,6 +367,7 @@ public class Dashboard
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
 			}
 			updateEmsDashboardTiles(tileList, ed);
+            updateEmsSubDashboards(subDashboards,ed);
 		}
 		return ed;
 	}
@@ -551,7 +563,40 @@ public class Dashboard
 		}
 	}
 
-    private void updateEmsDashboardDashboardSetList(List<DashboardSet> dashboardSets, EmsDashboard ed) throws DashboardException {
+    private void updateEmsSubDashboards(List<Dashboard> dashboards, EmsDashboard ed) throws DashboardException {
+        if (dashboards == null) {
+            throw new CommonSecurityException("sub dashboard is null");
+        }
 
+        Map<Dashboard, EmsSubDashboard> rows = new HashMap();
+        List<EmsSubDashboard> subDashboardList = ed.getSubDashboardList();
+        if (subDashboardList != null) {
+            for (int i = subDashboardList.size() - 1; i >= 0; i--) {
+                EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
+//                for (Dashboard dashboard : dashboards) {
+//                    if (dashboard.getDashboardId() != null && dashboard.getDashboardId().equals(emsSubDashboard.getSubDashboardId())) {
+//                        rows.put(dashboard, emsSubDashboard);
+//                    }
+//                }
+                ed.removeEmsSubDashboard(emsSubDashboard);
+            }
+        }
+
+        for (int index = 0; index < dashboards.size(); index++) {
+            Dashboard subDashboard = dashboards.get(index);
+            if(subDashboard.getDashboardId() != null) {
+                EmsSubDashboard emsSubDashboard;
+                if (!rows.containsKey(subDashboard)) {
+                    emsSubDashboard = new EmsSubDashboard(dashboardId, subDashboard.getDashboardId(), index);
+                    ed.addEmsSubDashboard(emsSubDashboard);
+                    rows.put(subDashboard, emsSubDashboard);
+                } else {
+                    emsSubDashboard = rows.get(subDashboard);
+                    ed.removeEmsSubDashboard(emsSubDashboard);
+                    ed.addEmsSubDashboard(emsSubDashboard);
+                    rows.put(subDashboard, emsSubDashboard);
+                }
+            }
+        }
     }
 }

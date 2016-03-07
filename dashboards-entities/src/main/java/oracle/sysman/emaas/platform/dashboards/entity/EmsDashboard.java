@@ -107,6 +107,21 @@ public class EmsDashboard implements Serializable
 		return emsDashboardTile;
 	}
 
+    public EmsSubDashboard addEmsSubDashboard(EmsSubDashboard emsSubDashboard) {
+        if(subDashboard == null){
+            subDashboardList = new ArrayList<>();
+        }
+        subDashboardList.add(emsSubDashboard);
+        emsSubDashboard.setDashboardSet(this);
+        return emsSubDashboard;
+    }
+
+    public EmsSubDashboard removeEmsSubDashboard(EmsSubDashboard emsSubDashboard) {
+        subDashboardList.remove(emsSubDashboard);
+        emsSubDashboard.setDashboardSet(null);
+        return emsSubDashboard;
+    }
+
 	public Integer getApplicationType()
 	{
 		return applicationType;
@@ -198,12 +213,9 @@ public class EmsDashboard implements Serializable
 		return type;
 	}
 
-	public EmsDashboardTile removeEmsDashboardTile(EmsDashboardTile emsDashboardTile)
-	{
-		getDashboardTileList().remove(emsDashboardTile);
-		emsDashboardTile.setDashboard(null);
-		return emsDashboardTile;
-	}
+    public EmsDashboardTile removeEmsDashboardTile(EmsDashboardTile emsDashboardTile) {
+        return null;
+    }
 
 	public void setApplicationType(Integer applicationType)
 	{

@@ -832,7 +832,9 @@ public class DashboardManager
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
-			if(!dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
+			if(dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
+//				dbd.setEnableTimeRange(null);
+			}else{
 				if (dbd.getTileList() != null) {
 					for (Tile tile : dbd.getTileList()) {
 						if (tile.getCreationDate() == null) {
@@ -946,16 +948,21 @@ public class DashboardManager
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
-			if (dbd.getTileList() != null) {
-				for (Tile tile : dbd.getTileList()) {
-					if (tile.getCreationDate() == null) {
-						tile.setCreationDate(created);
-					}
-					if (tile.getOwner() == null) {
-						tile.setOwner(currentUser);
-					}
-				}
-			}
+            if(dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
+
+
+            }else {
+                if (dbd.getTileList() != null) {
+                    for (Tile tile : dbd.getTileList()) {
+                        if (tile.getCreationDate() == null) {
+                            tile.setCreationDate(created);
+                        }
+                        if (tile.getOwner() == null) {
+                            tile.setOwner(currentUser);
+                        }
+                    }
+                }
+            }
 
 			ed = dsf.getEmsDashboardById(dbd.getDashboardId());
 			if (ed == null) {

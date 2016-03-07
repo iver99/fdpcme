@@ -49,6 +49,12 @@ public class EmsSubDashboard implements Serializable {
 
     }
 
+    public EmsSubDashboard(Long dashboardSetId, Long subDashboardId, int position) {
+        this.dashboardSetId = dashboardSetId;
+        this.subDashboardId = subDashboardId;
+        this.position = position;
+    }
+
     public void setDashboardSetId(Long dashboardSetId) {
         this.dashboardSetId = dashboardSetId;
     }
