@@ -68,7 +68,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
 //              $( "#cDsbDialog" ).ojDialog( "close" );
 //           }
 //        };
-    };
+    }
         
     function confirmDialogModel(title, okLabel, message, okFunction) {
         var self = this;
@@ -102,7 +102,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
              self.close();
            }
         };
-    }; 
+    } 
 
     function comingsoonDialogModel() {
         var self = this;
@@ -110,7 +110,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.close = function () {
             $( "#dbs_comingsoonDialog" ).ojDialog( "close" );
         };
-    };
+    }
     
     function welcomeDialogModel(prefUtil, showWel) {
         var self = this;
@@ -140,7 +140,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             $('#overviewDialog').ojDialog('close');
         };    
         
-    };
+    }
     
     function ViewModel(predata) {
         
@@ -405,7 +405,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
                             $( "#cDsbDialog" ).css("cursor", "default");
                             //self.createDashboardModel.isDisabled(false);
                             var _m = null; //getNlsString('COMMON_SERVER_ERROR');
-                            var _mdetail = undefined;
+                            var _mdetail;
                             if (jqXHR && jqXHR[0] && jqXHR[0].responseJSON && jqXHR[0].responseJSON.errorCode === 10001)
                             {
                                  _m = getNlsString('COMMON_DASHBAORD_SAME_NAME_ERROR'); //jqXHR[0].responseJSON.errorMessage;
@@ -675,7 +675,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
         self.listInfoRender = function (context) 
         {
-            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
+            var _info = $("<button data-bind=\"ojComponent: { component:'ojButton', chroming: 'half', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click', function(event) {
                         //prevent event bubble
@@ -704,7 +704,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             }
         };
         
-    };
+    }
     
     function PredataModel() {
         var self = this; 
@@ -713,7 +713,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
         var getUrlParam = function(name) {
                         //name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(window.location.search);
             return results === null ? "" : results[1];//decodeURIComponent(results[1].replace(/\+/g, " "));
         };
         
@@ -741,9 +741,9 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         };
         
         self.getShowServiceFilter = function() {
-            if (self.getShowLaService() === true 
-                    || self.getShowApmService() === true 
-                    || self.getShowItaService() === true)
+            if (self.getShowLaService() === true || 
+                    self.getShowApmService() === true || 
+                    self.getShowItaService() === true)
             {
                 return true;
             }
@@ -800,7 +800,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
         self.getPreferenceValue = function(key) {
             if (self.preferences === undefined) return undefined;
-            var arr = undefined;
+            var arr;
             arr = $.grep(self.preferences, function( pref ) {
                 if (pref !== undefined && pref['key'] === key) return true;
                 return false;
@@ -840,7 +840,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.loadAll = function() {
             return $.when(self.loadPreferences(), self.loadSubscribedApplications());
         };
-    };
+    }
     
     return {'ViewModel': ViewModel, 'PredataModel': PredataModel};
 });

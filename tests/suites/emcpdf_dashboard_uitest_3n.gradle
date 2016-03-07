@@ -93,6 +93,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')

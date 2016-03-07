@@ -22,13 +22,13 @@
                                             attr: {placeholder: searchBoxPlaceHolder, 'aria-label': searchBoxPlaceHolder},
                                             typeAheadSearch: {filterFunc: searchFilterFunc,  response: searchResponse, source: []}"/>
                             <button class="oj-button-half-chrome widget-selector-clear-button" data-bind="click: clearSearchText, visible: clearButtonVisible,
-                                ojComponent: {component: 'ojButton', label: clearButtonLabel, display: 'icons', 
+                                ojComponent: {component: 'ojButton', label: clearButtonLabel, display: 'icons', chroming: 'half',
                                 icons: {start:'widget-selector-clear-icon'}}"> 
                             </button>
                         </div>
                         <div id="widget-selector-search-icon-container">
                             <button class="oj-button-half-chrome widget-selector-search-button" data-bind="click: searchWidgets,
-                                ojComponent: {component: 'ojButton', label: searchButtonLabel, display: 'icons', 
+                                ojComponent: {component: 'ojButton', label: searchButtonLabel, display: 'icons', chroming: 'half',
                                 icons: {start:'widget-selector-search-icon'}}"> 
                             </button> 
                         </div>
@@ -82,11 +82,11 @@
                 <div style="width:840px;height:24px;">
                     <div style="float:right;height:24px;">
                         <button id="preButton" class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviPrevious, event: {keypress: naviPrevious},
-                            ojComponent: {component: 'ojButton', disabled: !naviPreBtnEnabled()},style:{opacity: naviPreBtnEnabled()?1:0.4}" >  
+                            ojComponent: {component: 'ojButton', chroming: 'half', disabled: !naviPreBtnEnabled()},style:{opacity: naviPreBtnEnabled()?1:0.4}" >  
                             <i class="fa fa-icon-font fa-chevron-left pagination-font-icon"></i>
                         </button> 
                         <button id="nextButton" class="oj-button-half-chrome widget-selector-icon-button" data-bind="click: naviNext, event: {keypress: naviNext},
-                            ojComponent: {component: 'ojButton', disabled: !naviNextBtnEnabled()},style:{opacity: naviNextBtnEnabled()?1:0.4}"> 
+                            ojComponent: {component: 'ojButton', chroming: 'half', disabled: !naviNextBtnEnabled()},style:{opacity: naviNextBtnEnabled()?1:0.4}"> 
                             <i class="fa fa-icon-font fa-chevron-right pagination-font-icon"></i>
                         </button>
                     </div>

@@ -27,7 +27,7 @@
                 <div id='emaas-appheader-menu-and-toolbar-container' data-bind="attr: {'aria-label': toolbarLabel}">
                     <script type="text/html" id="menuItemTemplate">
                         <li>
-                            <a data-bind="attr:{'id':id},href: url, click: onclick"><span data-bind="text: label"></span></a>
+                            <a data-bind="attr:{'id':id},href: url"><span data-bind="text: label"></span></a>
                             <!-- ko if: item.subNavItems -->
                             <ul data-bind="template: {name: 'menuItemTemplate', foreach: item.subNavItems, as: 'item'}">
                             </ul>
@@ -35,7 +35,7 @@
                         </li>
                     </script>
 
-                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu'}" style="display: none;">
+                    <ul id="emaasAppheaderGlobalNavMenuId" data-bind="ojComponent: {component: 'ojMenu', select: globalNavMenuItemSelect}" style="display: none;">
                       <!-- ko template: {name: 'menuItemTemplate', foreach: globalNavItems, as: 'item'} -->
                       <!-- /ko -->
                     </ul>
@@ -45,7 +45,7 @@
 			<div class="emaas-appheader-toolbar oj-toolbar-no-chrome oj-toolbar">
                             <!-- ko if: notificationVisible -->
                             <button id="notificationButton" class="oj-button-half-chrome emaas-appheader-toolbar-button"
-                                    data-bind="ojComponent: {component:'ojButton', display:'icons', 
+                                    data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
                                                 label: textNotifications, disabled: notificationDisabled,
                                                 icons: {start: 'fa-icon-font fa-notification'}}, 
                                     click: notificationMenuHandler, attr: {title: textNotifications}" role="button" tabindex="0">
@@ -53,7 +53,7 @@
                             <!-- /ko -->
                             <!-- ko if: navLinksVisible -->
                             <button id="linksButton" class="oj-button-half-chrome emaas-appheader-toolbar-button" 
-                                    data-bind="ojComponent: {component:'ojButton', display:'icons', 
+                                    data-bind="ojComponent: {component:'ojButton', display:'icons', chroming: 'half',
                                                 label: textAppNavigator, 
                                                 icons: {start: 'fa-icon-font fa-compass'}}, 
                                     click: linkMenuHandler, attr: {title: textAppNavigator}" role="button" tabindex="0">
@@ -67,7 +67,7 @@
                             
                             <button id="menubutton"
                                     class='oj-button-half-chrome emaas-appheader-toolbar-button'
-                                    data-bind="ojComponent: { component: 'ojButton', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}" tabindex="0">
+                                    data-bind="ojComponent: { component: 'ojButton', chroming: 'half', label: userName, menu: '#emaasAppheaderGlobalNavMenuId'}" tabindex="0">
                             </button>
                         </div>
                     </div>

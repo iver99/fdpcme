@@ -7,6 +7,7 @@
 define(['knockout',
         'jquery',
         'dfutil',
+        'uiutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
         'ojs/ojtree',
@@ -18,18 +19,22 @@ define(['knockout',
         'builder/builder.core'
     ],
     
-    function(ko, $, dfu, ssu, oj)
-    {            
+    function(ko, $, dfu, uiutil, ssu, oj)
+    {
+        
         function DashboardTilesView($b) {
             var self = this;
             self.dashboard = $b.dashboard;
+            self.scrollbarWidth = uiutil.getScrollbarWidth();
+            
             $b.registerObject(this, 'DashboardTilesView');
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
-                $('#tiles-col-container').css("left", leftWidth);
-                $('#tiles-col-container').width(width - leftWidth);
+//                $('#tiles-col-container').css("right", leftWidth);
+                $('#tiles-col-container').width(width);
+                $('.df-computed-content-width').width(width - leftWidth - self.scrollbarWidth);
                 $('#tiles-col-container').height(height - topHeight);               
-//                window.DEV_MODE && console.debug('tiles-col-container left set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
+//                window.DEV_MODE && console.debug('tiles-col-container rightright set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
             
             self.getTileElement = function(tile) {
@@ -62,7 +67,9 @@ define(['knockout',
                     if (!target.is(".ui-draggable")) {
                         target.draggable({
                             zIndex: 30,
-                            handle: ".tile-drag-handle"
+                            handle: ".tile-drag-handle",
+                            opacity: 0.6,
+                            stack: ".dbd-tile-in-dragging"
                         });
                     }
                     else
