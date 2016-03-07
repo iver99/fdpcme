@@ -67,7 +67,7 @@ define(['knockout',
                 newDashboardJs.subDashboards = [];
                 self.dashboardsetItems.forEach(function(item) {
                     newDashboardJs.subDashboards.push({
-                        dashboardId: item.dashboardId
+                        id: item.dashboardId
                     });
                 });
                 Builder.updateDashboard(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
@@ -206,7 +206,13 @@ define(['knockout',
                     self.reorderedDbsSetItems.push(singleDashboardItem);
                     self.selectedDashboardItem(singleDashboardItem);
                 }
-            }
+                
+                // TODO workaround for showing the dashboarset's add button.
+                setTimeout(function() {
+                    $("#dbd-tabs-container").ojTabs("refresh");
+                }, 200);
+                
+            };
 
             function dashboardItem(obj) {
 
