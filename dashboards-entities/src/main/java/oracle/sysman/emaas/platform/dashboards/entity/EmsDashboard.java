@@ -108,7 +108,7 @@ public class EmsDashboard implements Serializable
 	}
 
     public EmsSubDashboard addEmsSubDashboard(EmsSubDashboard emsSubDashboard) {
-        if(subDashboard == null){
+        if(subDashboardList == null){
             subDashboardList = new ArrayList<>();
         }
         subDashboardList.add(emsSubDashboard);

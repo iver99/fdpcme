@@ -4,6 +4,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
+import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardServiceFacade;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
@@ -126,16 +127,22 @@ public class Dashboard
 			if (emsSubDashboards != null) {
 				List<Dashboard> subDashboardList = new ArrayList<>();
                 for (EmsSubDashboard esd : emsSubDashboards) {
-                    EmsDashboard edbd = esd.getSubDashboard();
                     Dashboard dbd = new Dashboard();
                     dbd.setEnableTimeRange(null);
                     dbd.setEnableRefresh(null);
                     dbd.setIsSystem(null);
                     dbd.setSharePublic(null);
+                    dbd.setType(null);
 
-                    dbd.setDashboardId(edbd.getDashboardId());
-                    dbd.setName(edbd.getName());
-                    // todo
+                    Long subDashboardId = esd.getSubDashboardId();
+                    Long tenantId = from.getTenantId();
+                    DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+                    EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
+
+                    dbd.setDashboardId(ed.getDashboardId());
+                    dbd.setName(ed.getName());
+
+                    // // TODO: 2016/3/7
                     // updateDashboardHref(dbd, tenantName);
                     subDashboardList.add(dbd);
                 }
