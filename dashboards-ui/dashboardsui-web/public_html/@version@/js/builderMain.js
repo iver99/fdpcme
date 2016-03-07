@@ -174,7 +174,7 @@ require(['knockout',
                     return;
                 var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
                 if ($visibleHeaderBar.length > 0) {
-                    var $b = ko.dataFor($visibleHeaderBar[0]).$b;
+                    var $b = ko.dataFor($visibleHeaderBar[0]) && ko.dataFor($visibleHeaderBar[0]).$b;
                     $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed');
                 }
                 self.headerHeight = height;
@@ -194,12 +194,21 @@ require(['knockout',
             var headerViewModel = new DashboardsetHeaderViewModel();
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
-            var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dsbId);
-            var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
-            ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
-            ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
-            $("#loading").hide();
-            $('#globalBody').show();           
+            Builder.loadDashboard(dsbId, function (dashboard) {
+                var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
+                var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
+                ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
+                dashboardsetToolBarModel.initializeDashboardset();
+                $("#loading").hide();
+                $('#globalBody').show();
+            }, function(e) {
+                console.log(e.errorMessage());
+                if (e.errorCode && e.errorCode() === 20001) {
+                    oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
+                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
+                }
+            });
         });
     }
 );

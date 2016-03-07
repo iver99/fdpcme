@@ -19,10 +19,8 @@ define(['knockout',
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
 
-        function DashboardsetToolBarModel(dsbId) {                     
+        function DashboardsetToolBarModel(dashboardInst) {                     
             var self = this;
-            var dashboardsetId = dsbId.split(/[,]/);
-            var startDashboardId = Number(location.search.split(/start=/)[1]) || Number(dashboardsetId[0]);
 
             self.dashboardsetItems = [];
             self.reorderedDbsSetItems=ko.observableArray();
@@ -33,13 +31,13 @@ define(['knockout',
                 console.log("current selectselectedDashboardItemed dashboard: %o", selected);
             });
 
-            InitializeDashboardset(dashboardsetId);
+            self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");    
 
             //later will receive the info from the backend
             self.dashboardsetInfo = {"name":ko.observable("Middleware Dashboards"),"description":ko.observable("first dashboard set"),"type":getNlsString("DBSSET_BUILDER_DASHBOARDSET")};
             self.dashboardsetConfig={"isCreator":true,"refresh":ko.observable(false),"refreshOffIcon":ko.observable("dbd-icon-check"),"refreshOnIcon":ko.observable("dbd-noselected"),"share":ko.observable(true),"shareLabel":ko.observable(getNlsString("COMMON_TEXT_SHARE")),"addFavorite":ko.observable(true),"favoriteIcon":ko.observable("fa-star"),"favoriteLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD")),"setHome":ko.observable(true),"homeLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_HOME_SET")),"homeIcon":ko.observable("dbd-toolbar-icon-home")};
-
-            self.isDashboardSet = ko.observable(dashboardsetId.length > 1);            
+        
+                    
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             
             self.dashboardsetConfigMenu =function(event,data){
@@ -75,9 +73,19 @@ define(['knockout',
                 }
             };
                       
+            self.saveDashboardSet = function() {
+                var newDashboardJs = ko.toJS(dashboardInst);
+                newDashboardJs.subDashboards = [];
+                self.dashboardsetItems.forEach(function(item) {
+                    newDashboardJs.subDashboards.push({
+                        dashboardId: item.dashboardId
+                    });
+                });
+                Builder.updateDashboard(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
+            };
 
             self.addNewDashboard = function (data, event) {
-                var newDashboardItem = {type: "new", name: ko.observable("Dashboard"), dashboardId: Builder.getGuid()};
+                var newDashboardItem = new dashboardItem();
                 self.dashboardsetItems.push(newDashboardItem);
                 self.reorderedDbsSetItems.push(newDashboardItem);
                 addNewTab(newDashboardItem.name(),newDashboardItem.dashboardId,-1);
@@ -105,6 +113,7 @@ define(['knockout',
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                 }
+                self.saveDashboardSet();
             };
                     
             self.dbConfigMenuClick = new dbConfigMenuClick();  
@@ -227,35 +236,54 @@ define(['knockout',
                 }
             ]);
 
+            self.initializeDashboardset = function() {
+                var singleDashboardItem;
+                
+                var subDashboards = ko.unwrap(dashboardInst.subDashboards);
+                if (self.isDashboardSet()) {
+                    if ( subDashboards.length === 0) {
+                        subDashboards = [
+                            null
+                        ];
+                    }
+                    $.each(subDashboards, function (index, simpleDashboardInst) {
+                        singleDashboardItem = new dashboardItem(simpleDashboardInst);
 
-            function InitializeDashboardset(dashboardsetId) {
-                for (var index in dashboardsetId) {
-                    var singleDashboardId = dashboardsetId[index];
-                    Builder.loadDashboard(singleDashboardId, function (dashboard) {
-                        var singleDashboardItem = new dashboardItem(dashboard);
-                        if (singleDashboardItem.dashboardId === startDashboardId) {
+                        self.dashboardsetItems.push(singleDashboardItem);
+                        self.reorderedDbsSetItems.push(singleDashboardItem);
+                        addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1);
+
+                        // TODO temprorary pick first dashboard;
+                        if (index === 0) {
                             self.selectedDashboardItem(singleDashboardItem);
-                            self.dashboardsetItems.push(singleDashboardItem);
-                            self.reorderedDbsSetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(),singleDashboardItem.dashboardId,-1);
-                            $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' +singleDashboardItem.dashboardId});
-                        } else {
-                            self.dashboardsetItems.push(singleDashboardItem);
-                            self.reorderedDbsSetItems.push(singleDashboardItem);
-                            addNewTab(singleDashboardItem.name(),singleDashboardItem.dashboardId,-1);
+                            $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
                         }
                         $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
                     });
+
+                } else {
+                    singleDashboardItem = new dashboardItem(dashboardInst);
+                    self.dashboardsetItems.push(singleDashboardItem);
+                    self.reorderedDbsSetItems.push(singleDashboardItem);
+                    self.selectedDashboardItem(singleDashboardItem);
                 }
             }
 
             function dashboardItem(obj) {
+
                 var self = this;
-                self.dashboardId = obj.id();
-                self.name = ko.observable(obj.name());
-                self.discription = obj.description && obj.description();
-                self.type = "included";
-                self.raw = obj;  
+                if (obj) {
+                    self.dashboardId = obj.id();
+                    self.name = ko.observable(obj.name());
+                    self.discription = obj.description && obj.description();
+                    self.type = "included";
+                    self.raw = obj;
+                } else {
+                    self.type = "new";
+                    self.name = ko.observable("Dashboard");
+                    self.dashboardId = Builder.getGuid();
+                    self.raw = null;
+                }
             }
             
             function addNewTab(tabName,dashboardId,insertIndex) {                
@@ -379,6 +407,7 @@ define(['knockout',
                             self.selectedDashboardItem(self.dashboardsetItems[currentShowIndex]);
                         }
                     } 
+                    self.saveDashboardSet();
                 }              
             } );
             
@@ -390,6 +419,7 @@ define(['knockout',
                             self.selectedDashboardItem(item);
                         }
                     });
+                    self.saveDashboardSet();
                 }
             });
             
@@ -404,7 +434,8 @@ define(['knockout',
                             }
                         });
                     });
-                    self.reorderedDbsSetItems(tempAarray);                
+                    self.reorderedDbsSetItems(tempAarray);        
+                    self.saveDashboardSet();
             });       
         }
 

@@ -233,11 +233,16 @@ define([
             self.hideAllDashboards = function () {
                 $(".dashboard-content").hide();
             };
-
-            dashboardsetToolBarModel.selectedDashboardItem.subscribe(function (dashboardItem) {
+            
+            function initDashboard() {
                 self.hideAllDashboards();
-                self.showDashboard(dashboardItem);                
-            });
+                dashboardsetToolBarModel.selectedDashboardItem() && 
+                        self.showDashboard(dashboardsetToolBarModel.selectedDashboardItem());
+            }
+
+            dashboardsetToolBarModel.selectedDashboardItem.subscribe(initDashboard);
+
+            initDashboard();
         }
 
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');

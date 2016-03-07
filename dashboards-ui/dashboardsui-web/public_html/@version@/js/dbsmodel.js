@@ -38,12 +38,12 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);        
-        self.selectType =  ko.observable("DASHBOARDS");
+        self.selectType =  ko.observable("NORMAL");
         self.singleVisible = ko.observable(true);
         self.setVisible=ko.observable(false);
         
         self.dashboardtypeSelectFuc=function(){
-            if(self.selectType()==="DASHBOARDS"){
+            if(self.selectType()==="NORMAL"){
                 self.singleVisible(true);
                 self.setVisible(false);                    
             }else{
@@ -391,7 +391,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             //self.tracker(undefined);
             self.createMessages.removeAll();
             
-            var _addeddb = { "createType":self.createDashboardModel.selectType(),
+            var _addeddb = { "type":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(), 
                             "description": self.createDashboardModel.description(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
