@@ -65,7 +65,7 @@ define(['knockout',
             self.saveDashboardSet = function() {
                 var newDashboardJs = ko.toJS(dashboardInst);
                 newDashboardJs.subDashboards = [];
-                self.dashboardsetItems.forEach(function(item) {
+                self.reorderedDbsSetItems().forEach(function(item) {
                     newDashboardJs.subDashboards.push({
                         id: item.dashboardId
                     });
