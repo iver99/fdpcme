@@ -1,0 +1,105 @@
+<enunciate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xsi:noNamespaceSchemaLocation="
+
+           http://enunciate.codehaus.org/schemas/enunciate-1.29.xsd"
+
+       label="Dashboard-Framework API Documentation">
+
+       <!--api-import pattern="com.mycompany.interfaces.*" / -->
+
+       <!--api-import pattern="com.mycompany.interfaces.soap.*" / -->
+
+       
+
+       <namespaces></namespaces>
+
+ 
+
+       <services>
+
+              <soap defaultSoapSubcontext="/services/" />
+
+              <rest defaultRestSubcontext="/api/">
+
+              </rest>
+
+       </services>
+
+       <webapp disabled="true"></webapp>
+
+ 
+
+       <!-- <api-classes> -->
+
+       <!-- <include/> -->
+
+       <!-- <exclude/> -->
+
+       <!-- </api-classes> -->
+
+       <modules>
+
+              <disable-rule id="csharp.warnings" />
+
+              <disable-rule id="c.warnings" />
+
+              <disable-rule id="obj-c.warnings" />
+
+              <docs docsDir="api" title="Dashboards Framework Rest API" includeDefaultDownloads="true" includeExampleXml="true"
+
+                     disableRestMountpoint="true" copyright="copyright" forceExampleJson="true">
+
+              </docs>
+
+ 
+
+              <basic-app disabled="true" />
+
+              <c disabled="true" />
+
+              <csharp disabled="true" />
+
+              <jaxws-ri disabled="true" />
+
+              <jersey disabled="true" />
+
+              <obj-c disabled="true" />
+
+              <amf disabled="true" />
+
+              <gwt disabled="true" />
+
+              <jboss disabled="true" />
+
+              <object-c disabled="true" />
+
+              <rubby disabled="true" />
+
+              <java-client disabled="true" />
+
+              <jaxws-client disabled="true" />
+
+ 
+
+ 
+
+              <xml forceExampleJson="true" />
+
+              <jaxws-support disabled="false" />
+
+              <cxf disabled="false" enableJaxrs="true" enableJaxws="true" />
+
+              <jaxws disabled="false" />
+
+              <spring-app disabled="false" mergeWebXML="./src/main/webapp/WEB-INF/web.xml">
+
+                     <war mergeWebXML="war/WEB-INF/web.xml"/>
+
+                     <springImport uri="classpath:/servicesApplicationContext.xml" />
+
+              </spring-app>
+
+       </modules>
+
+</enunciate>
