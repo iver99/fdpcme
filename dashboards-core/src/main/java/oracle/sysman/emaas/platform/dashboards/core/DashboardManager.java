@@ -316,17 +316,18 @@ public class DashboardManager
 			return null;
 		}
 		String currentUser = UserContext.getCurrentUser();
-		String jpql = "select d from EmsDashboard d where d.name = ?1 and d.owner = ?2 and d.deleted = ?3";
-		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
+		//		String jpql = "select d from EmsDashboard d where d.name = ?1 and (d.owner = ?2 or d.sharePublic = 1) and d.deleted = ?3";
+		//		Object[] params = new Object[] { StringEscapeUtils.escapeHtml4(name), currentUser, new Integer(0) };
 		EntityManager em = null;
 		try {
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
 			em = dsf.getEntityManager();
-			Query query = em.createQuery(jpql);
-			for (int i = 1; i <= params.length; i++) {
-				query.setParameter(i, params[i - 1]);
-			}
-			EmsDashboard ed = (EmsDashboard) query.getSingleResult();
+			//			Query query = em.createQuery(jpql);
+			//			for (int i = 1; i <= params.length; i++) {
+			//				query.setParameter(i, params[i - 1]);
+			//			}
+			//			EmsDashboard ed = (EmsDashboard) query.getSingleResult();
+			EmsDashboard ed = dsf.getEmsDashboardByName(name, currentUser);
 			return Dashboard.valueOf(ed);
 		}
 		catch (NoResultException e) {
@@ -830,7 +831,7 @@ public class DashboardManager
 				}
 			}
 			//check dashboard name
-			if (dbd.getName() == null || dbd.getName().trim() == "" || dbd.getName().length() > 64) {
+			if (dbd.getName() == null || "".equals(dbd.getName().trim()) || dbd.getName().length() > 64) {
 				throw new CommonFunctionalException(
 						MessageUtils.getDefaultBundleString(CommonFunctionalException.DASHBOARD_INVALID_NAME_ERROR));
 			}

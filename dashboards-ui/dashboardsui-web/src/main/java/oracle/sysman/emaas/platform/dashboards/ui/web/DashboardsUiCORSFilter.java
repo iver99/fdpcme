@@ -162,7 +162,7 @@ public class DashboardsUiCORSFilter implements Filter
 				}
 			}
 		}
-		catch (Throwable t) {
+		catch (Exception t) {
 			logger.error(t.getLocalizedMessage(), t);
 		}
 		chain.doFilter(request, response);
