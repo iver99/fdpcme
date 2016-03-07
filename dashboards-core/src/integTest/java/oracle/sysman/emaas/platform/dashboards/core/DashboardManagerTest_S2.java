@@ -10,6 +10,7 @@ import javax.persistence.Query;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -523,6 +524,33 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
+	public void testGetDashboardBase64ScreenShotById() throws DashboardException
+	{
+		loadMockBeforeMethod();
+		Dashboard dbd1 = new Dashboard();
+		dbd1.setName("test");
+		dbd1.setScreenShot("shot");
+		dbd1.setHref("");
+		dbd1.setLastModifiedBy("sysman");
+		dbd1.setLastModificationDate(new Date());
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId1 = 11L;
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
+
+		String shot = dm.getDashboardBase64ScreenShotById(dbd1.getDashboardId(), tenantId1);
+		Assert.assertEquals(shot, "shot");
+
+		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
+		Assert.assertEquals(ds.size() > 0, true);
+		Assert.assertEquals(ds.get(0).getName(), dbd1.getName());
+		Assert.assertEquals(ds.get(0).getLastModifiedBy(), dbd1.getLastModifiedBy());
+		Assert.assertEquals(ds.get(0).getLastModificationDate(), dbd1.getLastModificationDate());
+
+		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		Assert.assertEquals(dm.isDashboardFavorite(dbd1.getDashboardId(), tenantId1), true);
+	}
+
+	@Test(groups = { "s2" })
 	public void testGetDashboardByName_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -659,8 +687,8 @@ public class DashboardManagerTest_S2
 
 	@Test(groups = "s2")
 	public void testListDashboard_S2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
-			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery) throws DashboardException,
-			InterruptedException
+			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery, @Mocked final ArrayList<?> mockList)
+			throws DashboardException, InterruptedException
 	{
 		final List<EmsDashboard> emsDashboards = new ArrayList<EmsDashboard>();
 
@@ -677,9 +705,51 @@ public class DashboardManagerTest_S2
 
 		DashboardManager dm = DashboardManager.getInstance();
 		DashboardsFilter filter = new DashboardsFilter();
+		filter.setIncludedFavorites(true);
+		filter.setIncludedAppsFromString("APM,ITAnalytics");
 		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
-		filter.setIncludedOwnersFromString("Oracle,Others");
+		filter.setIncludedOwnersFromString("Oracle,Others,Me,Share");
+		dm.listDashboards(null, null, 11L, false);
 		dm.listDashboards("key", null, null, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		dm.listDashboards("key", 3, 50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		try {
+			dm.listDashboards("key", -3, 50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		}
+		catch (CommonFunctionalException cfe) {
+		}
+		try {
+			dm.listDashboards("key", 3, -50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		}
+		catch (CommonFunctionalException cfe) {
+		}
+
+		filter = new DashboardsFilter();
+		filter.setIncludedFavorites(true);
+		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
+		filter.setIncludedOwnersFromString("Oracle,Others,Me,Share");
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_APP_TYPE, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_DEFAULT, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC, filter);
+
+		//		new Expectations() {
+		//			{
+		//				mockList.isEmpty();
+		//				result = true;
+		//			}
+		//		};
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC, filter);
 	}
 
 	@Test(groups = { "s2" })
