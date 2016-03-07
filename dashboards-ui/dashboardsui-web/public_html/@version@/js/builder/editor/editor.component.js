@@ -357,7 +357,8 @@ define(['knockout',
                 Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
 
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                    var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
+                    var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
+                    var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
                     if (url){
                         tile.configure = function(){
                             if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {

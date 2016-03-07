@@ -407,7 +407,11 @@ public class DashBoardUtils {
 		driver.click(DashBoardPageId.DashboardEdit);
 		driver.takeScreenShot();
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+		driver.getElement(DashBoardPageId.DashBoardNameBoxID).clear();
+		driver.click(DashBoardPageId.DashBoardNameBoxID);
 		driver.sendKeys(DashBoardPageId.DashBoardNameBoxID, dbName);
+		driver.getElement(DashBoardPageId.DashBoardDescBoxID).clear();
+		driver.click(DashBoardPageId.DashBoardDescBoxID);
 		driver.sendKeys(DashBoardPageId.DashBoardDescBoxID, dbDesc);
 		driver.takeScreenShot();
 		waitForMilliSeconds(DashBoardPageId.Delaytime_long);
@@ -478,7 +482,7 @@ public class DashBoardUtils {
 			}
 			else*/{
 				Assert.assertEquals(getText(DashBoardPageId.DashboardNameID),"AAA_testDashboard");
-				Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc");
+				Assert.assertEquals(getText(DashBoardPageId.DashboardDescID),"AAA_testDashBoard desc modify");
 			}
 	
 			//driver.waitForElementPresent(DashBoardPageId.WidgetAddButtonID);
@@ -597,16 +601,20 @@ public class DashBoardUtils {
 		
 		driver.takeScreenShot();
 	}
-	public static void searchDashBoard(String board) throws Exception
+	
+	public static void searchDashBoard(WebDriver wdriver, String board) throws Exception
 	{
-		driver.takeScreenShot();
-		driver.getLogger().info("go into search DashBoard");
-		driver.click(DashBoardPageId.SearchDSBoxID);
-		driver.getElement(DashBoardPageId.SearchDSBoxID).clear();
-		driver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
-		driver.click("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
+		wdriver.takeScreenShot();
+		wdriver.getLogger().info("go into search DashBoard");		
+		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+		wdriver.click(DashBoardPageId.SearchDSBoxID);
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		driver.takeScreenShot();
+		wdriver.getLogger().info("search dashboard: "+board);
+		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		wdriver.click("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		wdriver.takeScreenShot();
 		
 	}
 	public static void checkBrandingBarLink() throws Exception
@@ -719,21 +727,17 @@ public class DashBoardUtils {
 		WebElement we = driver.getWebDriver().findElement(By.id(id));
 		return we.getText();
 	}
-
-
-
-              //Sharing and stopping dashbaord     
-         public static void sharedashboard() throws Exception
-		{
-			driver.click(DashBoardPageId.option);
-			driver.click(DashBoardPageId.dashboardshare);
-          	}
+	//Sharing and stopping dashbaord
+	public static void sharedashboard() throws Exception
+	{
+		driver.click(DashBoardPageId.option);
+		driver.click(DashBoardPageId.dashboardshare);
+	}
 	
-	
-          public static void sharestopping() throws Exception
-		{
+	public static void sharestopping() throws Exception
+	{
 		driver.click(DashBoardPageId.option);
 		driver.click(DashBoardPageId.stopshare_btn);
-         	}
+	}
 	
 }
