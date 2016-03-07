@@ -334,6 +334,13 @@ define({
       "DBSSET_BUILDER_DASHBOARDSET_OPTIONS":"Dashboard Set options",
       "DBSSET_BUILDER_REMOVE_DASHBOARD":"Remove dashboard",
       "DBSSET_BUILDER_DELETE_DASHBOARDSET":"Delete Dashboardset",
-      "DBSSET_BUILDER_SELECT_TIP":"Select a dashboard to display on this tab"
+      "DBSSET_BUILDER_SELECT_TIP":"Select a dashboard to display on this tab",
+      "DBSSET_BUILDER_NAME_DESCRIPTION":"Name and Description",
+      "DBSSET_BUILDER_VISIBILITY":"Dashboard Visibility",
+      "DBSSET_BUILDER_SHARE_SETTINGS":"Share Settings",
+      "DBSSET_BUILDER_NOT_SHARED":"Not Shared (visible only to me)",
+      "DBSSET_BUILDER_SHARED":"Shared with others",
+      "DBSSET_BUILDER_DEFAULT_REFRESH":"Default Auto-refresh Value",
+      "DBSSET_BUILDER_REFRESH_TIPS":"Specify whether this dashboard refreshes automatically by default for other users.User changes to this setting are saved"
 });
 

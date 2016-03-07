@@ -1222,16 +1222,22 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 
 #changeDashboardsetInfo{
-    .oj-dialog-body{
-        .dbs-name{
-            padding-top: 10px;
-            .oj-inputtext{
-                width: 100%;
-                max-width: 100%;
-            }
+    #nameDescription{     
+        .oj-collapsible-content{
+            border:0;
         }
-        .dbs-description{
-            padding-top: -10px;
+    }
+    #shareSettings{
+        #dashboardset-refresh{
+            margin-top: 10px;
+        }
+    }
+    .edit-dbsset-title{
+        font-size: 14px;
+        background-color:#F9F9F9;
+        border:0;
+        a{
+            font-size: 14px;
         }
     }
 }
