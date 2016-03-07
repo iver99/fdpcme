@@ -120,6 +120,7 @@ define({
       "DBS_HOME_DSB_PAGE_INFO_ISSYS": "System Dashboard: ",
       "DBS_HOME_DSB_PAGE_INFO_LABEL": "Dashboard Information",
       "DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL": "Delete",
+      "DBS_HOME_SHOWHIDE_DESCRIPTION":"Show dashboard description",
       "DBS_BUILDER_LOADING": "Loading...",
       "DBS_BUILDER_NAME_EDIT": "Double click to edit name",
       "DBS_BUILDER_SAME_NAME_EXISTS_ERROR": "Dashboard with the same name exists already",

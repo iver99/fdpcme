@@ -37,22 +37,10 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.nameInputed = ko.observable(undefined); //read only input text
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
-        self.targetFilterValue = ko.observable(["OFF"]);        
-        self.selectType =  ko.observable("DASHBOARDS");
-        self.singleVisible = ko.observable(true);
-        self.setVisible=ko.observable(false);
-        
-        self.dashboardtypeSelectFuc=function(){
-            if(self.selectType()==="DASHBOARDS"){
-                self.singleVisible(true);
-                self.setVisible(false);                    
-            }else{
-                self.singleVisible(false);
-                self.setVisible(true);
-            }
-            return true;
-        };
-        
+        self.targetFilterValue = ko.observable(["OFF"]);  
+        self.selectType = ko.observable("dashboard");
+        self.showHideDescription=ko.observable(false); 
+               
         self.isDisabled = ko.computed(function() { 
             if (self.nameInputed() && self.nameInputed().length > 0)
             {
@@ -375,6 +363,10 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
+        self.cancelDashboardCreate = function(){
+            $( "#cDsbDialog" ).ojDialog( "open" );
+        };
+        
         self.confirmDashboardCreate = function()
         {
             var _trackObj = ko.utils.unwrapObservable(self.tracker), 
@@ -394,6 +386,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             var _addeddb = { "createType":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(), 
                             "description": self.createDashboardModel.description(),
+                            "showhidedescription":self.showHideDescription(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
