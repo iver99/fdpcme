@@ -39,6 +39,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);        
         self.selectType =  ko.observable("NORMAL");
+        self.showHideDescription=ko.observable(false); 
         self.singleVisible = ko.observable(true);
         self.setVisible=ko.observable(false);
         
@@ -375,6 +376,10 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
+        self.cancelDashboardCreate = function(){
+            $( "#cDsbDialog" ).ojDialog( "open" );
+        };
+        
         self.confirmDashboardCreate = function()
         {
             var _trackObj = ko.utils.unwrapObservable(self.tracker), 
@@ -394,6 +399,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             var _addeddb = { "type":self.createDashboardModel.selectType(),
                             "name": self.createDashboardModel.name(), 
                             "description": self.createDashboardModel.description(),
+//                            "showhidedescription":self.showHideDescription(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)

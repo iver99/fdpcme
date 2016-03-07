@@ -77,47 +77,61 @@
                     <!--/ko-->
                 </ul>
                 <div style="display:none" id="changeDashboardsetInfo"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:280px;'}}">
-                        <div class="oj-dialog-header oj-helper-clearfix">
-                            <span class="oj-dialog-title" data-bind="text:getNlsString('DBSSET_BUILDER_EDIT_DASHBOARDSET')"></span>
-                        </div>
-                        <div class="oj-dialog-body">
-                            <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
-                                <div class="oj-col dbs-type">
-                                    <div class="oj-col">
-                                        <h4 data-bind="text:getNlsString('DBS_HOME_FILTER_TYPE_LABEL')"></h4>
-                                    </div>                                   
-                                    <div class="oj-col">
-                                        <label data-bind="text:dashboardsetInfo.type"></label>
-                                    </div>
-                                </div>
-                                <div class="oj-col dbs-name">
-                                    <div class="oj-col">
-                                        <h4 data-bind="text:getNlsString('DBS_HOME_CREATE_DLG_NAME')"></h4>
-                                    </div>
-                                    <div class="oj-col">
-                                        <input id="dbsInfoName"
-                                               data-bind="ojComponent: { component: 'ojInputText',value:dashboardsetInfo.name()}">
-                                    </div>
-                                </div>
-                                <div class="oj-col dbs-description">
-                                    <div class="oj-col">
-                                        <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
-                                    </div>
-                                    <div class="oj-col">
-                                        <textarea maxlength="256" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.description()
+                     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:280px;'}}">
+                    <div class="oj-dialog-header oj-helper-clearfix">
+                        <span class="oj-dialog-title" data-bind="text:getNlsString('DBSSET_BUILDER_EDIT_DASHBOARDSET')"></span>
+                    </div>
+                    <div class="oj-dialog-body">
+                        <div data-bind="ojComponent: {component: 'ojAccordion'}">
+                            <div id="nameDescription" data-bind="ojComponent: {component: 'ojCollapsible', expanded:true}">
+                                <span class="edit-dbsset-title" data-bind="text:getNlsString('DBSSET_BUILDER_NAME_DESCRIPTION')"></span>
+                                <div>      
+                                     <h4 data-bind="text:getNlsString('DBS_HOME_CREATE_DLG_NAME')"></h4>
+                                     <input id="dbsInfoName" 
+                                           data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.name()}">
+                                     <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
+                                     <textarea maxlength="256" rows="5"
+                                              data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.description()
                                                               }"></textarea>
-                                    </div>
-                                </div>             
+                                </div>
                             </div>
-                        </div>
-                        <div class="oj-dialog-footer">
-                            <button id="saveDsbInfo" data-bind="ojComponent: { 
+                            <div id="shareSettings" data-bind="ojComponent: {component: 'ojCollapsible', expanded:false}">
+                                <span class="edit-dbsset-title" data-bind="text:getNlsString('DBSSET_BUILDER_SHARE_SETTINGS')"></span>
+                                <div>
+                                    <label id="mainlabelid" data-bind="text:getNlsString('DBSSET_BUILDER_VISIBILITY')"></label>
+                                    <div id="radiosetSetBasicDemoId" aria-labelledby="mainlabelid"
+                                         data-bind="ojComponent: {component: 'ojRadioset',value: dashboardsetConfig.share}" >
+                                        <span class="oj-choice-row">
+                                            <input id="share-off" type="radio" name="sharesettings" value="off">
+                                            <label data-bind="text:getNlsString('DBSSET_BUILDER_NOT_SHARED')"></label>
+                                        </span>
+                                        <span class="oj-choice-row">
+                                            <input id="share-on" type="radio" name="sharesettings" value="on">
+                                            <label data-bind="text:getNlsString('DBSSET_BUILDER_SHARED')"></label>
+                                        </span>                              
+                                    </div>      
+                                    <form id="dashboardset-refresh">
+                                        <label for="dbs-set-refresh" data-bind="text:getNlsString('DBSSET_BUILDER_DEFAULT_REFRESH')"></label>
+                                        <span data-bind="text:getNlsString('DBSSET_BUILDER_REFRESH_TIPS')"></span>
+                                        <select id="dbs-set-refresh" data-bind="ojComponent: {component: 'ojSelect',value: dashboardsetConfig.refresh,
+                                                    rootAttributes: {style:'max-width:20em'}}">
+                                            <option value="off" data-bind="text:getNlsString('DBS_BUILDER_AUTOREFRESH_OFF')"></option>
+                                            <option value="on" data-bind="text:getNlsString('DBS_BUILDER_AUTOREFRESH_ON')"></option>
+                                        </select>
+                                    </form>
+                                </div>      
+                            </div>
+                        </div>             
+                    </div>
+                    <div class="oj-dialog-footer">  
+                        <button id="saveDsbInfo" data-bind="ojComponent: { 
                                              component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE'), 
-                                             rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.saveDbsDescription"></button>
-                        </div>
-                    </div> 
+                                             rootAttributes: {style:'margin-right:10px'}},click:dbConfigMenuClick.saveDbsDescription"></button>
+                        <button id="cancelSaveDsbInfo" data-bind="ojComponent: { 
+                                             component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),                                      
+                                             rootAttributes: {style:'margin-right:30px'}},click:dbConfigMenuClick.cancelSaveDbsetInfo"></button>
+                    </div>
+                </div> 
                     <div style="display:none" id="deleteDashboardset"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
