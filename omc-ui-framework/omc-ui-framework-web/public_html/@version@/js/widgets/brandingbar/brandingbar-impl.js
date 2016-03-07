@@ -236,23 +236,35 @@ define([
                     {
                         "label": self.helpMenuLabel,
                         "url": "#",
-                        "id":"emcpdf_oba_help",
-                        "onclick": self.openHelpLink
+                        "id":"emcpdf_oba_help"
 //                        ,"subNavItems": self.subHelpMenuItems
                     },
                     {
                         "label": self.aboutMenuLabel,
                         "url": "#",
-                        "id":"emcpdf_oba_about",
-                        "onclick": self.openAboutBox
+                        "id":"emcpdf_oba_about"
                     },
                     {
                         "label": self.signOutMenuLabel,
                         "url": "#",
-                        "id":"emcpdf_oba_logout",
-                        "onclick": self.handleSignout
+                        "id":"emcpdf_oba_logout"
                     }
                 ];
+                
+                self.globalNavMenuItemSelect = function(event, ui) {
+                    var itemId = $(ui.item).children("a").attr("id");
+                    switch(itemId) {
+                        case "emcpdf_oba_help": 
+                            self.openHelpLink();
+                            break;
+                        case "emcpdf_oba_about":
+                            self.openAboutBox();
+                            break;
+                        case "emcpdf_oba_logout":
+                            self.handleSignout();
+                            break;
+                    }
+                };
                 
                 var templatePath = "/emsaasui/uifwk/js/widgets/navlinks/html/navigation-links.html";
                 var vmPath = "/emsaasui/uifwk/js/widgets/navlinks/js/navigation-links.js";

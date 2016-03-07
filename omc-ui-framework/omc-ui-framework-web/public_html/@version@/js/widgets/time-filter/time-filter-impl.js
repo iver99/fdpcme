@@ -5,8 +5,10 @@ define([
     'ojL10n!uifwk/@version@/js/resources/nls/uifwkCommonMsg',
     'ojs/ojcheckboxset'
 ], function (ko, $, oj, nls) {
-    function AdvancedViewModel() {
+    function AdvancedViewModel(params) {
         var self = this;
+        var postbox = params ? params.postbox : null;
+        self.randomId = params ? params.randomId : "";
         self.timeFilterLabel = nls.TIME_FILTER_TIME_LABEL;
         self.hintForTimeFilter = nls.TIME_FILTER_TIME_HINT;
         self.daysFilterLabel = nls.TIME_FILTER_DAYS_LABEL;
@@ -23,7 +25,7 @@ define([
         self.daysChecked = ko.observableArray(self.daysArray);
         self.monthsChecked = ko.observableArray(self.monthsArray);
         
-        self.tfChangedCallback = null;
+        self.tfChangedCallback = params ? params.tfChangedCallback : null;
 
         self.daysOptionAllChecked = ko.computed({
             read: function() {
@@ -62,7 +64,9 @@ define([
         });
         
         self.tfChangedSubscriber = ko.computed(function() {
+            postbox && postbox.notifySubscribers({"timeFilterValue": self.timeFilterValue, "daysChecked": self.daysChecked, "monthsChecked": self.monthsChecked}, "tfChanged");
             return {
+                "timeFilterValule": self.timeFilterValue(),
                 "daysChecked" : self.daysChecked(),
                 "monthsChecked" : self.monthsChecked()
             }

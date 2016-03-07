@@ -22,12 +22,11 @@ public class DashBoardPageId {
 	public static final String OptionsID = "dashboardOptsBtn";
 	public static final String DashBoardSaveID = "dashboard-screenshot";
 	public static final String WidgetAddButton = "emcpdf_dsbopts_add";//"//div[@id='ojDialogWrapper-widgetDetailsDialog']/div[5]/button";////div[18]/div[5]/button/span[text()='Add']";
-	//public static final String WidgetAddButton="//*[@id='ui-id-2']/span[2]";
 	public static final String DashboardEdit="//*[@id='emcpdf_dsbopts_edit']";
-	//public static final String DashboardEdit="//*[@id='ui-id-3']/span[2]";
-
 	public static final String DashboardDuplicate="//*[@id='emcpdf_dsbopts_duplicate']";
 	public static final String DashboardDelete="//*[@id='emcpdf_dsbopts_delete']";
+	public static final String DashboardHome="//*[@id='emcpdf_dsbopts_home']";
+	public static final String DashboardFavorite="//*[@id='emcpdf_dsbopts_favorites']";
 	public static final String WidgetDialogCloseButtonID = "div[15]/div[3]/div/span";
 	public static final String DashBoardID = "//div[@class='oj-panel dbs-summary-container']";// and @aria-dashboard='1127']";
 	public static final String ElementID = "//*[@id=\"dtabhomesc\"]/div[1]";
@@ -40,6 +39,11 @@ public class DashBoardPageId {
 	public static final String LinkID = "linksButton";
 	public static final String DashBoardLinkID = "link=All Dashboards";
 	public static final String DashboardTableID = "dtabhomesc";
+	public static final String DeleteBtn_cfmDialog = "/html/body/div[1]/div[2]/div/div[3]/button[1]";
+	public static final String DashboardSerachResult_panelID = "dtabhomesc";
+	
+	public static final String WidgetSearchInputID = "widget-search-input";
+	public static final String WidgetSearchBtnID = "dbd-left-panel-header-search-btn";
 	
 	//OOB dashboards ID
 	public static final String Application_Performance_Monitoring_ID = "//div[@aria-dashboard='14']";
@@ -71,29 +75,44 @@ public class DashBoardPageId {
 	
 	//Branding Bar links
 	//Home Link
-	public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
+	//public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
+	public static final String HomeLinkID="//a[contains(text(),'Home')]";
+
 	//dashboard home link
-	public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[2]/a";
+	//public static final String DashBoardHomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[2]/a";
+	 public static final String DashBoardHomeLinkID="//a[contains(text(),'Dashboards')]";
+
+      
 	//My Favorites link
-	public static final String MyFavoritesLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
+	//public static final String MyFavoritesLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[3]/a";
+    public static final String MyFavoritesLinkID="//a[contains(text(),'My Favorites')]";
 	//IT Analytics link
-	public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
+	//public static final String ITALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[2]/a";
+	 public static final String ITALinkID="//a[contains(text(),'IT Analytics')]";
 	//Log Analytics link
-	public static final String LALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
+	//public static final String LALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[3]/a";
+	public static final String LALinkID="//a[contains(text(),'Log Analytics')]";
 	//APM link
-	public static final String APMLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
+	//public static final String APMLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[2]/div[2]/div[4]/a";
+    public static final String APMLinkID="//a[contains(text(),'APM')]";
 	//Log link
-	public static final String LOGLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
+	//public static final String LOGLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[2]/a";
+	public static final String LOGLinkID="//a[contains(text(),'Log')]";
+
 	//AWR Analytics link
 	//public static final String AWRALinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
 	//Analyze link
-	public static final String AnalyzeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+	//public static final String AnalyzeLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[3]/a";
+    public static final String AnalyzeLinkID="//a[contains(text(),'Analyze')]";
 	//Search link
-	public static final String SearchLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
+	//public static final String SearchLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[3]/div[2]/div[4]/a";
+	public static final String SearchLinkID="//a[contains(text(),'Search')]";
 	//Agents link
-	public static final String AgentsLinkID = "/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[4]/div[2]/div[4]/a";//"/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
+	//public static final String AgentsLinkID = "/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[3]/a";
+	public static final String AgentsLinkID="//a[contains(text(),'Agents')]";
 	//IT Analytics Administration link
-	public static final String ITA_Admin_LinkID ="/html/body/div[2]/header/div/div[1]/div[3]/div/div/div[4]/div[2]/div[2]/a";///html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[4]/a";
+	//public static final String ITA_Admin_LinkID ="/html/body/div[*]/header/div/div/div[3]/div/div/div[4]/div[2]/div[4]/a";
+	 public static final String ITA_Admin_LinkID="//a[contains(text(),'IT Analytics Administration')]";
 	
 	//check box
 	public static final String ITA_BoxID = "itaopt";
@@ -102,6 +121,7 @@ public class DashBoardPageId {
 	public static final String Oracle_BoxID = "oracleopt";
 	public static final String Other_BoxID = "otheropt";
 	public static final String Share_BoxID = "shareopt";
+	public static final String Favorite_BoxID = "myfavorites";
 	
 	//id of dashboard name /html/body/div[2]/div/div/div/div/div/span/h1 /html/body/div[2]/div/div/div/div[2]/div/span/span,/html/body/div[3]/div/div/div/div/div/span/h1;/html/body/div[2]/div/div/div/div[2]/div/span/span
 	public static final String DashboardNameID = "/html/body/div[*]/div/div/div/div/div/span/h1";
@@ -116,9 +136,9 @@ public class DashBoardPageId {
 	
 	//Explore Data
 	public static final String ExploreDataBtnID = "exploreDataBtn";
-	public static final String ExploreDataMenu_Log_ID = "ui-id-3";
-	public static final String ExploreDataMenu_Analyze_ID = "ui-id-4";
-	public static final String ExploreDataMenu_Search_ID = "ui-id-5";
+	public static final String ExploreDataMenu_Log = "/html/body/div[1]/div/ul/li[1]/a";//"ui-id-3";
+	public static final String ExploreDataMenu_Analyze = "/html/body/div[1]/div/ul/li[2]/a";//"ui-id-4";
+	public static final String ExploreDataMenu_Search = "/html/body/div[1]/div/ul/li[3]/a";//"ui-id-5";
 	
 	//help id and about id
 	public static final String MenuBtnID = "menubutton";
@@ -171,7 +191,7 @@ public class DashBoardPageId {
 	public static final String ExternalLink = "/html/body/div[*]/header/div/div[1]/div[1]/div[1]/div[3]/span";
 	public static final String ExternalTargetLinkID = "/html/body/div[4]/div[3]/div/div/div[7]/div/div[2]/div[2]/div[1]/div/div[1]/span";
 	
-	//grid view and list view id             /html/body/div[2]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label/span[1]
+	//grid view and list view id
 	public static final String GridViewID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[1]/label";
 	public static final String ListViewID = "/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[2]/div[3]/span[2]/label";
 	
@@ -186,7 +206,22 @@ public class DashBoardPageId {
 	public static final String Welcome_APMLinkID = "/html/body/div[2]/div/div[2]/ul/li[1]/a/div/div[2]/div[1]";
 	public static final String Welcome_LALinkID = "/html/body/div[2]/div/div[2]/ul/li[2]/a/div/div[2]/div[1]";
 	public static final String Welcome_ITALinkID ="/html/body/div[2]/div/div[2]/ul/li[3]/div/div/div[2]/div[1]";
+	public static final String Welcome_DashboardsLinkID = "/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
 	public static final String Welcome_DataExp = "/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
+	public static final String Welcome_ITA_SelectID= "ojChoiceId_ITA_options_selected";
+	public static final String Welcome_DataExp_SelectID = "ojChoiceId_autogen1_selected";
+	public static final String Welcome_LearnMore_getStarted = "//a[contains(text(),'How to get started')]";
+	public static final String Welcome_LearnMore_Videos = "//a[contains(text(),'Videos')]";
+	public static final String Welcome_LearnMore_ServiceOffering = "//a[contains(text(),'Service Offerings')]";
+	public static final String Welcome_ITA_PADatabase = "/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-8";//ITA Select Item : Performance Analytics - Database
+	public static final String Welcome_ITA_PAMiddleware = "/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-9";//ITA Select Item : Performance Analytics - Middleware
+	public static final String Welcome_ITA_RADatabase = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-10";//ITA Select Item : Resource Analytics - Database
+	public static final String Welcome_ITA_RAMiddleware = "/html/body/div[1]/div/div/ul/li[5]/div";//"oj-listbox-result-label-11";//ITA Select Item : Resource Analytics - Middleware
+	public static final String Welcome_ITA_DEAnalyze = "/html/body/div[1]/div/div/ul/li[6]/div";//"oj-listbox-result-label-12";//ITA Select Item : Data Explorer - Analyze
+	public static final String Welcome_ITA_DE = "/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
+	public static final String Welcome_DataExp_Log = "/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log
+	public static final String Welcome_DataExp_Analyze = "/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-5";//Data Explorers Select Item : Analyze
+	public static final String Welcome_DataExp_Search = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search	
 
    //Sharing and stoping dashbaord
     public static final String option="dashboardOptsBtn";

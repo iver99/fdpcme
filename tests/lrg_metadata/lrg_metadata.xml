@@ -54,4 +54,10 @@
              <pipeline name="PRODUCT" />
          </pipelines>
      </lrg>
+  <lrg name="emcpdf_upgrade_test_3n" launcher="tests/suites/emcpdf_upgrade_test_3n.gradle" description="lrg for upgrade lrg">
+         <pipelines>
+             <pipeline name="PRODUCT" />
+         </pipelines>
+     </lrg>
+
  </lrg-metadata>
