@@ -98,7 +98,8 @@ public class DashboardManager
 	//		return rows;
 	//	}
 
-	public static final String SCREENSHOT_BASE64_PREFIX = "data:image/png;base64,";
+	public static final String SCREENSHOT_BASE64_PNG_PREFIX = "data:image/png;base64,";
+	public static final String SCREENSHOT_BASE64_JPG_PREFIX = "data:image/jpeg;base64,";
 
 	/**
 	 * Returns the singleton instance for dashboard manager
@@ -249,9 +250,11 @@ public class DashboardManager
 				logger.debug("Retrieved null screenshot base64 data from persistence layer, we use a blank screenshot then");
 				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
 			}
-			else if (!ed.getScreenShot().startsWith(SCREENSHOT_BASE64_PREFIX)) {
+			else if (!ed.getScreenShot().startsWith(SCREENSHOT_BASE64_PNG_PREFIX)
+					&& !ed.getScreenShot().startsWith(SCREENSHOT_BASE64_JPG_PREFIX)) {
 				logger.error(
 						"Retrieved an invalid screenshot base64 data that is not started with specified prefix, we use a blank screenshot then");
+				logger.debug("Th screenshot string with an invalid base64 previs is: {}", ed.getScreenShot());
 				return new ScreenshotData(BLANK_SCREENSHOT, ed.getCreationDate(), ed.getLastModificationDate());
 			}
 			return new ScreenshotData(ed.getScreenShot(), ed.getCreationDate(), ed.getLastModificationDate());

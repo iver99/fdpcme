@@ -73,7 +73,17 @@ public class ScreenshotCacheManager
 			return null;
 		}
 		String fileName = ScreenshotPathGenerator.getInstance().generateFileName(dashboardId, creation, modification);
-		final byte[] decoded = Base64.decode(screenshot.substring(DashboardManager.SCREENSHOT_BASE64_PREFIX.length()));
+		byte[] decoded = null;
+		if (screenshot.startsWith(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX)) {
+			decoded = Base64.decode(screenshot.substring(DashboardManager.SCREENSHOT_BASE64_PNG_PREFIX.length()));
+		}
+		else if (screenshot.startsWith(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX)) {
+			decoded = Base64.decode(screenshot.substring(DashboardManager.SCREENSHOT_BASE64_JPG_PREFIX.length()));
+		}
+		else {
+			logger.debug("Failed to retrieve screenshot decoded bytes as the previs isn't supported");
+			return null;
+		}
 		Binary bin = new Binary(decoded);
 		ScreenshotElement se = new ScreenshotElement(fileName, bin);
 		cm.putCacheable(tenant, CacheManager.CACHES_SCREENSHOT_CACHE, new Keys(dashboardId), se);

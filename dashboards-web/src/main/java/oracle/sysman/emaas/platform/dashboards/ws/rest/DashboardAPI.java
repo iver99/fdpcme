@@ -223,25 +223,34 @@ public class DashboardAPI extends APIBase
 					}).cacheControl(cc).build();
 				}
 				else { // invalid screenshot file name
-					logger.error("The requested screenshot file name {} for tenant={}, dashboard id={} is not the cached name",
-							fileName, TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
-					return Response.status(Status.NOT_FOUND).build();
+					if (!ScreenshotPathGenerator.getInstance().validFileName(dashboardId, fileName, se.getFileName())) {
+						logger.error("The requested screenshot file name {} for tenant={}, dashboard id={} is not a valid name",
+								fileName, TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
+						return Response.status(Status.NOT_FOUND).build();
+					}
+					logger.debug("The request screenshot file name is not equal to the file name in cache, but it is valid. "
+							+ "Try to query from database to see if screenshot is actually updated already");
 				}
 			}
 		}
 		catch (Exception e) {
-			logger.error(e);
+			logger.error("Exception when getting screenshot from cache. Continue to get from database", e);
 		}
 
 		try {
 			ScreenshotData ss = manager.getDashboardBase64ScreenShotById(dashboardId, tenantId);
 			if (ss == null || ss.getScreenshot() == null) {
-				logger.error("Does not retrieved base64 screenshot data. return 404 then");
+				logger.error("Does not retrieved base64 screenshot data");
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			final ScreenshotElement se = scm.storeBase64ScreenshotToCache(cacheTenant, dashboardId, ss);
 			if (se == null || se.getBuffer() == null) {
 				logger.debug("Does not retrieved base64 screenshot data after store to cache. return 404 then");
+				return Response.status(Status.NOT_FOUND).build();
+			}
+			if (!fileName.equals(se.getFileName())) {
+				logger.error("The requested screenshot file name {} for tenant={}, dashboard id={} does not exist", fileName,
+						TenantContext.getCurrentTenant(), dashboardId, se.getFileName());
 				return Response.status(Status.NOT_FOUND).build();
 			}
 			logger.debug("Retrieved screenshot data from persistence layer, stored to cache, and build response now.");
