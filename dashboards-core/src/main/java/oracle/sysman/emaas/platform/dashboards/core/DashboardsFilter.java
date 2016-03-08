@@ -11,8 +11,10 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 
@@ -21,6 +23,18 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
  */
 public class DashboardsFilter
 {
+	// reserved actual strings for used in query
+	private static final List<String> typeFilterStrings = Arrays.asList(new String[] { Dashboard.DASHBOARD_TYPE_NORMAL,
+			Dashboard.DASHBOARD_TYPE_SINGLEPAGE });
+	private static final List<String> appFilterStrings = Arrays.asList(new String[] { DashboardApplicationType.APM_STRING,
+			DashboardApplicationType.ITA_SRING, DashboardApplicationType.LA_STRING });
+	private static final List<String> ownerFilterStrings = Arrays.asList(new String[] { "Oracle", "Others", "Me", "Share" });
+
+	// reserved strings accepted as input filter string
+	private static final List<String> appFilterStrings_input = Arrays.asList(new String[] { "apm", "ita", "la" });
+
+	private static final String favoriteFilterString = "Favorites";
+
 	public static final String APM_PROVIDER_APMUI = "ApmUI";
 	public static final String ITA_PROVIDER_EMCI = "EmcitasApplications";
 	public static final String ITA_PROVIDER_TA = "TargetAnalytics";
@@ -33,6 +47,36 @@ public class DashboardsFilter
 
 	public DashboardsFilter()
 	{
+	}
+
+	public void addIncludedApplication(String app)
+	{
+		if (includedApps == null) {
+			includedApps = new ArrayList<String>();
+		}
+		if (appFilterStrings.contains(app.trim())) {
+			includedApps.add(app.trim());
+		}
+	}
+
+	public void addIncludedOwner(String o)
+	{
+		if (includedOwners == null) {
+			includedOwners = new ArrayList<String>();
+		}
+		if (ownerFilterStrings.contains(o.trim())) {
+			includedOwners.add(o.trim());
+		}
+	}
+
+	public void addIncludedType(String type)
+	{
+		if (includedTypes == null) {
+			includedTypes = new ArrayList<String>();
+		}
+		if (typeFilterStrings.contains(type.trim())) {
+			includedTypes.add(type.trim());
+		}
 	}
 
 	public List<DashboardApplicationType> getIncludedApplicationTypes()
@@ -138,13 +182,24 @@ public class DashboardsFilter
 		return sb.toString();
 	}
 
-	/**
-	 * @param includedApps
-	 *            the includedApps to set
-	 */
-	public void setIncludedApps(List<String> includedApps)
+	//	/**
+	//	 * @param includedApps
+	//	 *            the includedApps to set
+	//	 */
+	//	public void setIncludedApps(List<String> includedApps)
+	//	{
+	//		this.includedApps = includedApps;
+	//	}
+
+	public void initializeFilters(String filter)
 	{
-		this.includedApps = includedApps;
+		if (filter == null) {
+			return;
+		}
+		String[] filters = filter.split(",");
+		for (String s : filters) {
+			addFilter(s);
+		}
 	}
 
 	public void setIncludedAppsFromString(String appsString)
@@ -155,9 +210,18 @@ public class DashboardsFilter
 		String[] splitedApps = appsString.split(",");
 		includedApps = new ArrayList<String>();
 		for (String app : splitedApps) {
-			includedApps.add(app);
+			addIncludedApplication(app);
 		}
 	}
+
+	//	/**
+	//	 * @param includedOwners
+	//	 *            the includedOwners to set
+	//	 */
+	//	public void setIncludedOwners(List<String> includedOwners)
+	//	{
+	//		this.includedOwners = includedOwners;
+	//	}
 
 	/**
 	 * @param includedFavorites
@@ -168,14 +232,14 @@ public class DashboardsFilter
 		this.includedFavorites = includedFavorites;
 	}
 
-	/**
-	 * @param includedOwners
-	 *            the includedOwners to set
-	 */
-	public void setIncludedOwners(List<String> includedOwners)
-	{
-		this.includedOwners = includedOwners;
-	}
+	//	/**
+	//	 * @param includedTypes
+	//	 *            the includedTypes to set
+	//	 */
+	//	public void setIncludedTypes(List<String> includedTypes)
+	//	{
+	//		this.includedTypes = includedTypes;
+	//	}
 
 	public void setIncludedOwnersFromString(String owners)
 	{
@@ -185,19 +249,8 @@ public class DashboardsFilter
 		String[] splitedOwners = owners.split(",");
 		includedOwners = new ArrayList<String>();
 		for (String o : splitedOwners) {
-			if ("Oracle".equals(o) || "Others".equals(o) || "Me".equals(o) || "Share".equals(o)) {
-				includedOwners.add(o.trim());
-			}
+			addIncludedOwner(o);
 		}
-	}
-
-	/**
-	 * @param includedTypes
-	 *            the includedTypes to set
-	 */
-	public void setIncludedTypes(List<String> includedTypes)
-	{
-		this.includedTypes = includedTypes;
 	}
 
 	public void setIncludedTypesFromString(String types)
@@ -208,7 +261,47 @@ public class DashboardsFilter
 		String[] splitedTypes = types.split(",");
 		includedTypes = new ArrayList<String>();
 		for (String o : splitedTypes) {
-			includedTypes.add(o);
+			addIncludedType(o);
+		}
+	}
+
+	private void addFilter(String filter)
+	{
+		if (filter != null) {
+			String filterUpcase = filter.trim().toUpperCase();
+			if (favoriteFilterString.toUpperCase().equals(filterUpcase)) {
+				setIncludedFavorites(true);
+				return;
+			}
+
+			for (String s : typeFilterStrings) {
+				if (s.toUpperCase().equals(filterUpcase)) {
+					addIncludedType(s);
+					return;
+				}
+			}
+
+			for (int i = 0; i < appFilterStrings_input.size(); i++) {
+				String s = appFilterStrings_input.get(i);
+				if (s.toUpperCase().equals(filterUpcase)) {
+					addIncludedApplication(appFilterStrings.get(i));
+					return;
+				}
+			}
+
+			//			for (String s : appFilterStrings) {
+			//				if (s.toUpperCase().equals(filterUpcase)) {
+			//					addIncludedApplication(s);
+			//					return;
+			//				}
+			//			}
+
+			for (String s : ownerFilterStrings) {
+				if (s.toUpperCase().equals(filterUpcase)) {
+					addIncludedOwner(s);
+					return;
+				}
+			}
 		}
 	}
 
