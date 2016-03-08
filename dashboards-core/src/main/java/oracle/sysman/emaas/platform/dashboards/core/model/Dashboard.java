@@ -336,13 +336,14 @@ public class Dashboard
 					isShare, lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
 
             if (type.equals(Dashboard.DASHBOARD_TYPE_SET)){
-                if (subDashboards != null) {
-                    for (int index=0;index < subDashboards.size() ;index++ ) {
-                        Dashboard dbd = subDashboards.get(index);
-                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
-                        ed.addEmsSubDashboard(esdbd);
-                    }
-                }
+                // support create subDashboards
+    //                if (subDashboards != null) {
+    //                    for (int index=0;index < subDashboards.size() ;index++ ) {
+    //                        Dashboard dbd = subDashboards.get(index);
+    //                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
+    //                        ed.addEmsSubDashboard(esdbd);
+    //                    }
+    //                }
             }else{
                 if (tileList != null) {
                     for (Tile tile : tileList) {
@@ -373,8 +374,12 @@ public class Dashboard
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
 			}
-			updateEmsDashboardTiles(tileList, ed);
-            updateEmsSubDashboards(subDashboards,ed);
+            if (type.equals(Dashboard.DASHBOARD_TYPE_SET)){
+                updateEmsSubDashboards(subDashboards,ed);
+            }else{
+                updateEmsDashboardTiles(tileList, ed);
+            }
+
 		}
 		return ed;
 	}
