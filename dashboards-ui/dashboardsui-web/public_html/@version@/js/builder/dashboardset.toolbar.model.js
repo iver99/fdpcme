@@ -61,16 +61,37 @@ define(['knockout',
                         break;
                 }
             };
-                      
-            self.saveDashboardSet = function() {
-                var newDashboardJs = ko.toJS(dashboardInst);
-                newDashboardJs.subDashboards = [];
-                self.reorderedDbsSetItems().forEach(function(item) {
-                    newDashboardJs.subDashboards.push({
-                        id: item.dashboardId
-                    });
+
+            self.saveDashboardSet = function () {
+                var newDashboardJs = ko.mapping.toJS(dashboardInst, {
+                    // TODO make sure the properties that should be included or excluded with Guobao
+//                        'include': ['screenShot', 'description', 'height',
+//                            'isMaximized', 'title', 'type', 'width',
+//                            'tileParameters', 'name', 'systemParameter',
+//                            'tileId', 'value', 'content', 'linkText',
+//                            'WIDGET_LINKED_DASHBOARD', 'linkUrl'],
+                    'ignore': ["createdOn", "href", "owner", "modeWidth", "modeHeight",
+                        "modeColumn", "modeRow", "screenShotHref", "systemDashboard",
+                        "customParameters", "clientGuid", "dashboard",
+                        "fireDashboardItemChangeEvent", "getParameter",
+                        "maximizeEnabled", "narrowerEnabled",
+                        "onDashboardItemChangeEvent", "restoreEnabled",
+                        "setParameter", "shouldHide", "systemParameters",
+                        "tileDisplayClass", "widerEnabled", "widget",
+                        "WIDGET_DEFAULT_HEIGHT", "WIDGET_DEFAULT_WIDTH"]
                 });
-                Builder.updateDashboard(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
+                newDashboardJs.subDashboards = [];
+                self.reorderedDbsSetItems().forEach(function (item) {
+                    if (item.type !== "new") {
+                        newDashboardJs.subDashboards.push({
+                            id: item.dashboardId
+                        });
+                    }
+                });
+                ssu.getBase64ScreenShot("#globalBody", 314, 165, 0.8, function (data) {
+                    newDashboardJs.screenShot = data;
+                    Builder.updateDashboard(ko.unwrap(dashboardInst.id), JSON.stringify(newDashboardJs));
+                });
             };
 
             self.addNewDashboard = function (data, event) {

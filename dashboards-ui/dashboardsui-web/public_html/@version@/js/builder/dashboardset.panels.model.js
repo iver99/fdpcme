@@ -33,7 +33,7 @@ define([
     'builder/tool.bar.model',
     'builder/integrate/builder.integrate',
     'dashboards/dbstypeahead'],
-    function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil) {
+    function (model, ko, $, dfu, _emJETCustomLogger, idfbcutil, oj) {
 
         function DashboardsetPanelsModel(dashboardsetToolBarModel) {
             if (!dashboardsetToolBarModel) {
@@ -84,10 +84,11 @@ define([
                         dashboardsetToolBarModel.dashboardsetItems.forEach(function(dashboardItem) {
                             if (dashboardItem.dashboardId === data.dashboard.id) {
                                 hasDuplicatedDashboard = true;
-                                dfu.showMessage({
-                                    type: 'error',
-                                        summary: data.dashboard.name + " is already selected in this dashboardset!",
-                                        detail: ''});
+                                    dfu.showMessage({
+                                        type: 'warn',
+                                        summary: oj.Translations.getTranslatedString("DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD", data.dashboard.name),
+                                        detail: '',
+                                        removeDelayTime: 5000});
                                 }
                         });
                         
