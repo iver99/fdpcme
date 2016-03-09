@@ -79,6 +79,8 @@ define([
                 function init() {
                     var dashboardsViewModle = new model.ViewModel(predataModel, {owners: ['Me', 'Others']});
                     
+                    dashboardsViewModle.showExploreDataBtn(false);
+                    
                     dashboardsViewModle.handleDashboardClicked = function(event, data) {
                         
                         var hasDuplicatedDashboard = false;

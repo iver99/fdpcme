@@ -179,7 +179,8 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.showLaServiceFilter = ko.observable(predata.getShowLaService());
         self.showApmSrviceFilter = ko.observable(predata.getShowApmService());
         self.showItaServiceFilter = ko.observable(predata.getShowItaService());
-        
+        self.showExploreDataBtn= ko.observable(true);
+
         self.showSeachClear = ko.observable(false);
         self.tilesViewGrid = 'gridtview';
         self.tilesViewList = 'listview';
