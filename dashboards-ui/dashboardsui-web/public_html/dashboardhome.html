@@ -35,7 +35,7 @@
             <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
                     data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
             <button id="exploreDataBtn"
-                    data-bind="ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
+                    data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
                                                                              menu: '#exploreDataMenu', rootAttributes: {'style': 'margin-left: 8px;'}}, 
                                                                attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
             </button>

@@ -67,10 +67,8 @@ public class EmsDashboard implements Serializable
 	private List<EmsDashboardTile> dashboardTileList;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardSet", orphanRemoval = true)
-    private List<EmsSubDashboard> subDashboardList;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subDashboard", orphanRemoval = true)
-    private EmsSubDashboard subDashboard;
+	@OrderBy("position ASC")
+	private List<EmsSubDashboard> subDashboardList;
 
     public EmsDashboard()
 	{
@@ -313,11 +311,4 @@ public class EmsDashboard implements Serializable
 		this.subDashboardList = subDashboardList;
 	}
 
-    public EmsSubDashboard getSubDashboard() {
-        return subDashboard;
-    }
-
-    public void setSubDashboard(EmsSubDashboard subDashboard) {
-        this.subDashboard = subDashboard;
-    }
 }

@@ -28,9 +28,9 @@
             </header>
 
             <div id="dbd-set-tabs" data-bind="visible: isDashboardSet">
-                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
+                <div id="dbd-tabs-container" data-bind="ojComponent:{component: 'ojTabs',truncation:'progressive',removable:dashboardsetConfig.isCreator,reorderable:dashboardsetConfig.isCreator}">
                     <div id="dbd-set-name" class="oj-tabs-facet">
-                            <span data-bind="text:dashboardsetInfo.name()"></span>
+                            <span data-bind="text:dashboardsetName()"></span>
                             <button id="tabs-gear" class="no-print"
                                     data-bind="ojComponent: {component: 'ojButton', 
                                             icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
@@ -88,10 +88,10 @@
                                 <div>      
                                      <h4 data-bind="text:getNlsString('DBS_HOME_CREATE_DLG_NAME')"></h4>
                                      <input id="dbsInfoName" 
-                                           data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.name()}">
+                                           data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetName()}">
                                      <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
                                      <textarea maxlength="256" rows="5"
-                                              data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetInfo.description()
+                                              data-bind="ojComponent: {component: 'ojTextArea', rootAttributes: {style:'max-width:420px;'},value:dashboardsetDescription()
                                                               }"></textarea>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
                             <span class="oj-dialog-title"  data-bind="text: getNlsString('DBSSET_BUILDER_DELETE_DASHBOARDSET')"></span>
                         </div>
                         <div class="oj-dialog-body">
-                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name())"></p>
+                            <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetName())"></p>
                             <p data-bind="html: getNlsString('DBSSET_BUILDER_DELETE_WARNING')"></p>
                         </div>     
                         <div class="oj-dialog-footer">

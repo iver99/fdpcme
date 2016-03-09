@@ -31,12 +31,42 @@ define(['knockout',
                 console.log("current selectselectedDashboardItemed dashboard: %o", selected);
             });
 
-            self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");    
+            self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
+            self.dashboardsetId=ko.unwrap(dashboardInst.id());
+            
 
-            //later will receive the info from the backend
-            self.dashboardsetInfo = {"name":ko.observable("Middleware Dashboards"),"description":ko.observable("first dashboard set"),"type":getNlsString("DBSSET_BUILDER_DASHBOARDSET")};
-            self.dashboardsetConfig={"isCreator":true,"refresh":ko.observable("off"),"share":ko.observable("on"),"addFavorite":ko.observable(true),"favoriteIcon":ko.observable("fa-star"),"favoriteLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD")),"setHome":ko.observable(true),"homeLabel":ko.observable(getNlsString("DBS_BUILDER_BTN_HOME_SET")),"homeIcon":ko.observable("dbd-toolbar-icon-home")};
+            
+            self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
+            
+            self.dashboardsetDescription = ko.observable(function () {
+                var fetchdescription = ko.unwrap(dashboardInst.description);
+                if (typeof (fetchdescription) === 'undefined') {
+                    fetchdescription = '';
+                } else {
+                    fetchdescription = dashboardInst.description();
+                }
+                return fetchdescription;
+            });
 
+
+            self.dashboardsetConfig = {"refresh": ko.observable("off"), "share": ko.observable("on"), "favoriteIcon": ko.observable("fa-star"), "favoriteLabel": ko.observable(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD")), "setHome": ko.observable(true), "homeLabel": ko.observable(getNlsString("DBS_BUILDER_BTN_HOME_SET")), "homeIcon": ko.observable("dbd-toolbar-icon-home")};
+            self.dashboardsetConfig.addFavorite = ko.observable(function () {
+                var fetchFavorite = ko.unwrap(dashboardInst.favorite);
+                if (typeof (fetchFavorite) === 'undefined') {
+                    fetchFavorite = true;
+                } else {
+                    fetchFavorite = false;
+                }
+                return fetchFavorite;
+            });
+
+            var dashboardsetEditDisabled = function () {
+                var _currentUser = dfu.getUserName();
+                return _currentUser === dashboardInst.owner();
+            };
+
+            self.dashboardsetConfig.isCreator = ko.observable(dashboardsetEditDisabled());
+            
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             
             self.dashboardsetConfigMenu =function(event,data){
@@ -112,7 +142,7 @@ define(['knockout',
              */
             self.pickDashboard = function(dashboardPickerId, selectedDashboard) {
                 var removeResult=findRemoveTab(self.dashboardsetItems,dashboardPickerId);
-                var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId)
+                var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId);
                 
                 if (removeResult.removeIndex > -1) {  
                     removeTargetTab(removeResult.removeItem);
@@ -122,6 +152,7 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                    $('#globalBody').removeClass('newDashboard-scroll');
                 }
                 self.saveDashboardSet();
             };
@@ -234,7 +265,7 @@ define(['knockout',
                 }, 200);
                 
             };
-
+                        
             function dashboardItem(obj) {
 
                 var self = this;
@@ -283,11 +314,31 @@ define(['knockout',
                 var self=this;
                 self.saveDbsDescription=function(){
                     var self=this;
-                    var nameEdit=$('.dbs-name input').val();
-                    var descriptionEdit=$('.dbs-description textarea').val();
-                    self.dashboardsetInfo.name(nameEdit);
-                    self.dashboardsetInfo.description(descriptionEdit);
-                    $('#changeDashboardsetInfo').ojDialog("close");         
+                    var nameEdit=$('#nameDescription input').val();
+                    var descriptionEdit=$('#nameDescription textarea').val();
+                    self.dashboardsetName(nameEdit);
+                    self.dashboardsetDescription(descriptionEdit);
+                    $('#changeDashboardsetInfo').ojDialog("close"); 
+
+                    var url = "/sso.static/dashboards.service/";
+                    if (dfu.isDevMode()) {
+                        url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
+                    }
+                    dfu.ajaxWithRetry(url + self.dashboardsetId + "/quickUpdate", {
+                        type: 'PUT',
+                        dataType: "json",
+                        contentType: 'application/json',
+                        data: JSON.stringify({name: nameEdit, description: descriptionEdit}),
+                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        success: function (result) {
+                            self.dashboardsetName(nameEdit);
+                            self.dashboardsetDescription(descriptionEdit);
+                            $('#changeDashboardsetInfo').ojDialog("close"); 
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});
+                        }
+                    });                  
                 }; 
                 self.cancelSaveDbsetInfo = function(){
                      $('#changeDashboardsetInfo').ojDialog("close"); 
@@ -300,7 +351,7 @@ define(['knockout',
                     } else {
                         dbsToolBar.dashboardsetConfig.favoriteIcon("fa-star-o");
                         dbsToolBar.dashboardsetConfig.favoriteLabel(getNlsString("DBS_BUILDER_BTN_FAVORITES_REMOVE"));
-                    }
+                    }                               
                 };
                 self.homeDbs = function(dbsToolBar){
                      dbsToolBar.dashboardsetConfig.setHome(!dbsToolBar.dashboardsetConfig.setHome());
@@ -312,10 +363,22 @@ define(['knockout',
                            dbsToolBar.dashboardsetConfig.homeLabel(getNlsString("DBS_BUILDER_BTN_HOME_REMOVE")); 
                         }
                 };             
-                self.deleteDbs = function(){
+                self.deleteDbs = function(dbsToolBar){
                     //TODO:ajax to delete
-                     window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
-                     $('#deleteDashboardset').ojDialog("close");  
+                    var _url = "/sso.static/dashboards.service/";
+                    if (dfu.isDevMode()) {
+                        _url = dfu.buildFullUrl(dfu.getDevData().dfRestApiEndPoint, "dashboards/");
+                    }
+                    dfu.ajaxWithRetry(_url + dbsToolBar.dashboardsetId, {
+                        type: 'DELETE',
+                        headers: dfu.getDashboardsRequestHeader(), //{"X-USER-IDENTITY-DOMAIN-NAME": getSecurityHeader()},
+                        success: function (result) {
+                            window.location = document.location.protocol + '//' + document.location.host + '/emsaasui/emcpdfui/home.html';
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                        }
+                    });
+                    $('#deleteDashboardset').ojDialog("close");  
                 };
                 self.cancelDeleteDbs= function(){
                      $('#deleteDashboardset').ojDialog("close");   
@@ -345,7 +408,7 @@ define(['knockout',
                         return showOnViewer;                 
                 }
             };
-        
+                               
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                 var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1])||(ui.tab.attr('id').split(/dashboardTab-/)[1])
                 
@@ -375,14 +438,20 @@ define(['knockout',
             
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
                 if (typeof (event.originalEvent) !== 'undefined') {
+                   // $('#globalBody').removeClass('newDashboard-scroll');
                     var selectedDashboardId=Number(event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1])||event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
                     ko.utils.arrayForEach(self.dashboardsetItems, function (item, index) {
                         if (item.dashboardId === selectedDashboardId) {
                             self.selectedDashboardItem(item);
                         }
                     });
+                    if(typeof(selectedDashboardId)==='number'){
+                       $('#globalBody').removeClass('newDashboard-scroll'); 
+                    }else{
+                       $('#globalBody').addClass('newDashboard-scroll');
+                    }
                     self.saveDashboardSet();
-                }
+                }             
             });
             
             $( "#dbd-tabs-container" ).on( "ojreorder", function( event, ui ) {

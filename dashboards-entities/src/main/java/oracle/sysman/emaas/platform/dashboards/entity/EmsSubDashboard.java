@@ -31,13 +31,6 @@ public class EmsSubDashboard implements Serializable {
     @Column(name = "POSITION", nullable = false)
     private Integer position;
 
-    @OneToOne
-    @JoinColumns(value = {
-            @JoinColumn(name = "SUB_DASHBOARD_ID", referencedColumnName = "DASHBOARD_ID",insertable = false,updatable = false),
-            @JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID",insertable = false,updatable = false)
-    })
-    private EmsDashboard subDashboard;
-
     @ManyToOne
     @JoinColumns(value = {
             @JoinColumn(name = "DASHBOARD_SET_ID", referencedColumnName = "DASHBOARD_ID",insertable = false,updatable = false),
@@ -78,14 +71,6 @@ public class EmsSubDashboard implements Serializable {
 
     public Long getDashboardSetId() {
         return dashboardSetId;
-    }
-
-    public EmsDashboard getSubDashboard() {
-        return subDashboard;
-    }
-
-    public void setSubDashboard(EmsDashboard subDashboard) {
-        this.subDashboard = subDashboard;
     }
 
     public EmsDashboard getDashboardSet() {
