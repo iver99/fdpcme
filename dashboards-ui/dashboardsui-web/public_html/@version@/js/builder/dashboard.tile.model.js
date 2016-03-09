@@ -147,6 +147,7 @@ define(['knockout',
             self.showPullRightBtn = function(clientGuid, data, event) {
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
+                $("#tile"+clientGuid+" .dbd-btn-maxminToggle").css("display", "flex");
             };
             
             self.hidePullRightBtn = function (clientGuid, data, event) {
@@ -154,11 +155,26 @@ define(['knockout',
                     $("#tile" + clientGuid + " .dbd-btn-group").css("display", "none");
                 }
                 $("#tile" + clientGuid + " .dbd-btn-editor").css("display", "none");
+                $("#tile" + clientGuid + " .dbd-btn-maxminToggle").css("display", "none");
             };
             self.openInDataExplorer = function (event, ui) {
                 var tile = ko.dataFor(ui.currentTarget);
                 self.editor.configure(tile);
             };
+            
+            self.maxMinToggle = function (event, ui) {
+                var tile = ko.dataFor(ui.currentTarget);
+                if (event.maximizeEnabled()) {
+                    self.maximize(tile);
+                    self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
+                    $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
+                } else {
+                    self.restore(tile);
+                    self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
+                    $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
+                }
+            };
+            
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
                 if (!tile) {
@@ -198,17 +214,7 @@ define(['knockout',
                         self.editor.shorterTile(tile);
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
-                        break;
-                    case "maximize":
-                        self.maximize(tile);
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
-                        $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
-                        break;
-                    case "restore":
-                        self.restore(tile);
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
-                        $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
-                        break;
+                        break;                
                 }
                 
                 $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
