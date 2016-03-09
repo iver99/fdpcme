@@ -91,7 +91,7 @@ define(['knockout',
              */
             self.pickDashboard = function(dashboardPickerId, selectedDashboard) {
                 var removeResult=findRemoveTab(self.dashboardsetItems,dashboardPickerId);
-                var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId)
+                var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId);
                 
                 if (removeResult.removeIndex > -1) {  
                     removeTargetTab(removeResult.removeItem);
@@ -101,6 +101,7 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                    $('#globalBody').removeClass('newDashboard-scroll');
                 }
                 self.saveDashboardSet();
             };
@@ -354,14 +355,20 @@ define(['knockout',
             
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
                 if (typeof (event.originalEvent) !== 'undefined') {
+                   // $('#globalBody').removeClass('newDashboard-scroll');
                     var selectedDashboardId=Number(event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1])||event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
                     ko.utils.arrayForEach(self.dashboardsetItems, function (item, index) {
                         if (item.dashboardId === selectedDashboardId) {
                             self.selectedDashboardItem(item);
                         }
                     });
+                    if(typeof(selectedDashboardId)==='number'){
+                       $('#globalBody').removeClass('newDashboard-scroll'); 
+                    }else{
+                       $('#globalBody').addClass('newDashboard-scroll');
+                    }
                     self.saveDashboardSet();
-                }
+                }             
             });
             
             $( "#dbd-tabs-container" ).on( "ojreorder", function( event, ui ) {

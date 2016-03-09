@@ -60,7 +60,8 @@ define([
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
-                            $($('#'+'dashboard-'+dashboardId).find('#homettbtns')).css({"float":"none","margin-left":"282px"});                            
+                            $('#globalBody').addClass('newDashboard-scroll');
+                            $($('#'+'dashboard-'+dashboardId).find('#homettbtns')).css({"float":"none","margin-left":"284px"});                            
                     }, 2000);
                     } else {
                         self.loadDashboard(dashboardId);
