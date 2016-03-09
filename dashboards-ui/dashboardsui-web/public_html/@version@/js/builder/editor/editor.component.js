@@ -362,11 +362,11 @@ define(['knockout',
                     if (url){
                         tile.configure = function(){
                             if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id());
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name());
                             }else{
                                 var start = timeSelectorModel.viewStart().getTime();
                                 var end = timeSelectorModel.viewEnd().getTime();
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&startTime="+start+"&endTime="+end);
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name()+"&startTime="+start+"&endTime="+end);
                             }
                         };
                     }
