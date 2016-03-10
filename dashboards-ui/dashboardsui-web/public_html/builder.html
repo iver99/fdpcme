@@ -108,9 +108,10 @@
                                         <span class="oj-choice-row">
                                             <input id="share-on" type="radio" name="sharesettings" value="on">
                                             <label data-bind="text:getNlsString('DBSSET_BUILDER_SHARED')"></label>
-                                        </span>
-                                    </div>
-                                    <form id="dashboardset-refresh">
+                                        </span>                              
+                                    </div>   
+                                    <!--TODO: In Later version-->
+<!--                                    <form id="dashboardset-refresh">
                                         <label for="dbs-set-refresh" data-bind="text:getNlsString('DBSSET_BUILDER_DEFAULT_REFRESH')"></label>
                                         <span data-bind="text:getNlsString('DBSSET_BUILDER_REFRESH_TIPS')"></span>
                                         <select id="dbs-set-refresh" data-bind="ojComponent: {component: 'ojSelect',value: dashboardsetConfig.refresh,
@@ -118,8 +119,8 @@
                                             <option value="off" data-bind="text:getNlsString('DBS_BUILDER_AUTOREFRESH_OFF')"></option>
                                             <option value="on" data-bind="text:getNlsString('DBS_BUILDER_AUTOREFRESH_ON')"></option>
                                         </select>
-                                    </form>
-                                </div>
+                                    </form>-->
+                                </div>      
                             </div>
                         </div>
                     </div>
@@ -515,7 +516,7 @@
                             <div class="tile-dragging-placeholder"></div>
                             <div class="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">
                                 <!-- ko if: type() === 'DEFAULT' -->
-                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass(), 
+                                <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
                                     <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 5px;">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
@@ -730,7 +731,7 @@
                             <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                 <div class="dbd-left-panel-widget-text"
                                             data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress}"></span>
+                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress},attr:{'data-rightpanel-items':WIDGET_NAME}"></span>
                                 </div>
                                 <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(),
                                                 ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
