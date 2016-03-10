@@ -513,6 +513,10 @@ body, html {
     display: none;
 }
 
+.dbd-widget[ismobile="false"] .dbd-btn-maxminToggle {
+    display: none;
+}
+
 .dbd-widget[ismobile="false"] .dbd-btn-group {
     display: none;
 }
@@ -554,6 +558,24 @@ body, html {
   border-radius: 0;
 }
 .dbd-tile-header{
+    .dbd-btn-maxminToggle{
+        button{
+            float: right;
+            display: block;
+            width: 18px;
+            height: 30px;
+            min-width: 36px;
+            min-height: 32px;
+            border-radius: 0;
+            margin-left: 2px;  
+        }
+        .dbd-title-edit{
+            margin-top: -1px;
+        }
+        .oj-button-text{
+            margin-left: -6px;
+        }
+    }
     .dbd-btn-editor{
         button{
             float: right;
@@ -1068,6 +1090,12 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 }
 .dbd-tile-icon-option:before{
      content:"\f013";
+}
+.dbd-tile-icon-expand:before{
+     content:"\f065";
+}
+.dbd-tile-icon-compress:before{
+     content:"\f066";
 }
  
 @media print {

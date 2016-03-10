@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
- 
+
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -32,25 +32,25 @@
                     <div id="dbd-set-name" class="oj-tabs-facet">
                             <span data-bind="text:dashboardsetName()"></span>
                             <button id="tabs-gear" class="no-print"
-                                    data-bind="ojComponent: {component: 'ojButton', 
-                                            icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'}, 
+                                    data-bind="ojComponent: {component: 'ojButton',
+                                            icons: {start:'fa-icon-font fa-icon-font-14 dbd-icon-gear'},
                                     menu: '#dbd-set-option'
                                 }, attr: {title: getNlsString('DBSSET_BUILDER_DASHBOARDSET_OPTIONS')}">
                             </button>
-                    </div>  
-                    
+                    </div>
+
                     <!-- tab bar -->
-                    <ul class="dbd-tabs-nav">                              
-                    </ul> 
-                    
+                    <ul class="dbd-tabs-nav">
+                    </ul>
+
                     <div class="oj-tabs-facet demo-tabs-facet-flex">
                          <span id="add-nav" data-bind="click:addNewDashboard">
                              <i class="fa-icon-font fa-icon-font-14 dbd-icon-add"></i>
-                         </span> 
-                    </div>                                    
-                </div> 
+                         </span>
+                    </div>
+                </div>
 
-                <ul id="dbd-set-option" style="display:none" 
+                <ul id="dbd-set-option" style="display:none"
                     data-bind="ojComponent: {component: 'ojMenu',select:$root.dashboardsetConfigMenu}">
                     <!--ko foreach:dashboardsetMenu-->
                     <li data-bind="attr:{'id':id},visible: visibility">
@@ -85,9 +85,9 @@
                         <div data-bind="ojComponent: {component: 'ojAccordion'}">
                             <div id="nameDescription" data-bind="ojComponent: {component: 'ojCollapsible', expanded:true}">
                                 <span class="edit-dbsset-title" data-bind="text:getNlsString('DBSSET_BUILDER_NAME_DESCRIPTION')"></span>
-                                <div>      
+                                <div>
                                      <h4 data-bind="text:getNlsString('DBS_HOME_CREATE_DLG_NAME')"></h4>
-                                     <input id="dbsInfoName" 
+                                     <input id="dbsInfoName"
                                            data-bind="ojComponent: { component: 'ojInputText',rootAttributes: {style:'max-width:420px;'},value:dashboardsetName()}">
                                      <h4 data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></h4>
                                      <textarea maxlength="256" rows="5"
@@ -108,8 +108,8 @@
                                         <span class="oj-choice-row">
                                             <input id="share-on" type="radio" name="sharesettings" value="on">
                                             <label data-bind="text:getNlsString('DBSSET_BUILDER_SHARED')"></label>
-                                        </span>                              
-                                    </div>      
+                                        </span>
+                                    </div>
                                     <form id="dashboardset-refresh">
                                         <label for="dbs-set-refresh" data-bind="text:getNlsString('DBSSET_BUILDER_DEFAULT_REFRESH')"></label>
                                         <span data-bind="text:getNlsString('DBSSET_BUILDER_REFRESH_TIPS')"></span>
@@ -119,19 +119,19 @@
                                             <option value="on" data-bind="text:getNlsString('DBS_BUILDER_AUTOREFRESH_ON')"></option>
                                         </select>
                                     </form>
-                                </div>      
+                                </div>
                             </div>
-                        </div>             
+                        </div>
                     </div>
-                    <div class="oj-dialog-footer">  
-                        <button id="saveDsbInfo" data-bind="ojComponent: { 
-                                             component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE'), 
+                    <div class="oj-dialog-footer">
+                        <button id="saveDsbInfo" data-bind="ojComponent: {
+                                             component: 'ojButton',label: getNlsString('COMMON_BTN_SAVE'),
                                              rootAttributes: {style:'margin-right:10px'}},click:dbConfigMenuClick.saveDbsDescription"></button>
-                        <button id="cancelSaveDsbInfo" data-bind="ojComponent: { 
-                                             component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),                                      
+                        <button id="cancelSaveDsbInfo" data-bind="ojComponent: {
+                                             component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),
                                              rootAttributes: {style:'margin-right:30px'}},click:dbConfigMenuClick.cancelSaveDbsetInfo"></button>
                     </div>
-                </div> 
+                </div>
                     <div style="display:none" id="deleteDashboardset"
                          data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:200px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
@@ -140,13 +140,13 @@
                         <div class="oj-dialog-body">
                             <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetName())"></p>
                             <p data-bind="html: getNlsString('DBSSET_BUILDER_DELETE_WARNING')"></p>
-                        </div>     
+                        </div>
                         <div class="oj-dialog-footer">
-                            <button data-bind="ojComponent: { 
-                                                 component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'), 
+                            <button data-bind="ojComponent: {
+                                                 component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'),
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.deleteDbs"></button>
-                            <button data-bind="ojComponent: { 
-                                                 component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'), 
+                            <button data-bind="ojComponent: {
+                                                 component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'),
                                                  rootAttributes: {style:'margin-right:20px'}},click:dbConfigMenuClick.cancelDeleteDbs"></button>
                         </div>
                     </div>
@@ -159,27 +159,27 @@
                             <div class="oj-dialog-body">
                                 <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG',dashboardsetInfo.name)"></p>
                                 <p data-bind="html: getNlsString('DBSSET_BUILDER_DELETE_WARNING')"></p>
-                            </div>     
+                            </div>
                             <div class="oj-dialog-footer">
-                                <button data-bind="ojComponent: { 
-                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'), 
+                                <button data-bind="ojComponent: {
+                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_DELETE'),
                                                      rootAttributes: {style:'margin-right:20px'}}"></button>
-                                <button data-bind="ojComponent: { 
-                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'), 
+                                <button data-bind="ojComponent: {
+                                                     component: 'ojButton',label: getNlsString('COMMON_BTN_CANCEL'),
                                                      rootAttributes: {style:'margin-right:20px'}}"></button>
                             </div>
                      </div>-->
-            </div>     
-            
+            </div>
+
             <!-- /ko -->
             <div id="dashboards-tabs-contents">
-                
+
             </div>
-            
-            <script id="dashboard-content-template" type="text/html">    
+
+            <script id="dashboard-content-template" type="text/html">
             <div class="dashboard-content" style="visibility: hidden">
             <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left: 30px;">
-                <div class="builder-toolbar" aria-label="Builder toolbar" 
+                <div class="builder-toolbar" aria-label="Builder toolbar"
                        class="oj-component oj-component-initnode">
                     <div class="builder-toolbar-left dbd-pull-left">
                         <div class="builder-dbd-name">
@@ -304,7 +304,7 @@
                             <div class="oj-dialog-footer">
                                 <button data-bind="click: setAsHomeConfirmed, 
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                                <button class="btnCancelSetAsHome" data-bind="click: setAsHomeCancelled, 
+                                <button class="btnCancelSetAsHome" data-bind="click: setAsHomeCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>
                             </div>
                         </div>
@@ -327,12 +327,12 @@
                                     menu: '#dashboardOptsMenu'+toolBarGuid},
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
-                        
+
                         <ul class="no-print" data-bind="ojComponent: {component: 'ojMenu'},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
-                        </ul> 
-                      
+                        </ul>
+
                         <!--span  tabindex="0" data-bind="click: handleSettingsDialogOpen, enterpress: handleSettingsDialogOpen, visible: editDisabled() !== true">
                           <button class="dashboard-settings oj-button oj-default oj-button-half-chrome dbd-gray"
                                   data-bind="ojComponent: {
@@ -353,7 +353,7 @@
                           </button>
                         </span-->
                     </div>
-<!--                    <div style="display:none; min-width:100px; min-height:50px;" class="add-widget-tooltip" 
+<!--                    <div style="display:none; min-width:100px; min-height:50px;" class="add-widget-tooltip"
                          data-bind="ojComponent: {component: 'ojPopup',
                                               tail: 'simple',
                                               position: {'my': 'right top', 'at': 'start bottom', 'of': '#add-widget-button'}}">
@@ -362,10 +362,10 @@
                     </div>-->
                 </div>
                     <!-- edit Dashboard dilog start -->
-                    
+
                     <!-- edit Dashboard dilog end -->
                     <!-- delete dilog start -->
-                    
+
                     <!-- delete dilog end -->
                      <!-- confirm leave dilog start ->
                     <div style="display:none" class="cfmleaveDialog"
@@ -378,7 +378,7 @@
                             <p data-bind="html: getNlsString('DBS_BUILDER_CONFIRM_LEAVE_DIALOG_CONTENT')"></p>
                         </div>
                         <div class="oj-dialog-footer">
-                            <button class="cfmleavecbtn" data-bind="click: handleDashboardSave, 
+                            <button class="cfmleavecbtn" data-bind="click: handleDashboardSave,
                                                ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), rootAttributes: {style:'margin-right:5px'}}"></button>
                             <button data-bind="click: handleDashboardNotSave, 
                                                ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DISCARD'), rootAttributes: {style:'margin-right:5px'}}"></button>
@@ -403,7 +403,7 @@
                                     <label for="urlInput">Message</label>
                                 </div>
                                 <div class="oj-col">
-                                    <input id="urlInput" class="urlInput" required 
+                                    <input id="urlInput" class="urlInput" required
                                            data-bind="ojComponent: {
                                                     component: 'ojInputText', 
                                                     value: messageToParent, rootAttributes: {style: 'max-width: 30em;'}}">
@@ -412,7 +412,7 @@
                         </form>                   
                     </div>
                     <div class="oj-dialog-footer">
-                        <button id="okButton" class="okButton" data-bind="click: handleMessageDialogOKClose, 
+                        <button id="okButton" class="okButton" data-bind="click: handleMessageDialogOKClose,
                                 ojComponent: {component: 'ojButton', label: 'OK'}"> 
                         </button>
                     </div>
@@ -444,7 +444,7 @@
                                             <div class="oj-col">
                                                 <label for="checkboxsetTimeRangeFilter"></label>
                                             </div>
-                                            <div id="checkboxsetTimeRangeFilter" class="checkboxsetTimeRangeFilter oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
+                                            <div id="checkboxsetTimeRangeFilter" class="checkboxsetTimeRangeFilter oj-col" data-bind="ojComponent: {component: 'ojCheckboxset',
                                                         value: includeTimeRangeFilter}" >
                                                 <input id="ckbxTimeRangeFilter" class="ckbxTimeRangeFilter" type="checkbox" value="ON">
                                                 <label for="ckbxTimeRangeFilter" data-bind="text: getNlsString('DBS_BUILDER_INCLUDE_TIME_CONTROL')"></label>
@@ -454,12 +454,12 @@
                                             <div class="oj-col">
                                                 <label for="checkboxsetTargetFilter"></label>
                                             </div>
-                                            <div id='checkboxsetTargetFilter' class="checkboxsetTargetFilter oj-col" data-bind="ojComponent: {component: 'ojCheckboxset', 
+                                            <div id='checkboxsetTargetFilter' class="checkboxsetTargetFilter oj-col" data-bind="ojComponent: {component: 'ojCheckboxset',
                                                         value: 'targetFilterValue'}" >
                                                 <input id="ckbxTargetFilter" class="ckbxTargetFilter" type="checkbox" value="ON">
                                                 <label for="ckbxTargetFilter">Include a target selector</label>
                                             </div>
-                                        </div                                 
+                                        </div
                                     </div>
                                 </div>
                             </div>
@@ -475,7 +475,7 @@
                         </div>                        
                     </div>
                     <div class="oj-dialog-footer">
-                        <button class="okSettingsButton" data-bind="click: handleSettingsDialogOKClose, 
+                        <button class="okSettingsButton" data-bind="click: handleSettingsDialogOKClose,
                                 ojComponent: {component: 'ojButton', label: getNlsString('COMMON_BTN_OK')}"> 
                         </button>
                     </div>
@@ -486,10 +486,10 @@
                     }">
                 </div>-->
             </div>
-            
+
             <div class="oj-col stretch-height builder-main dashboard-content-main" role="main">
                     <div class="tiles-col-container oj-col oj-sm-12 oj-md-12 oj-lg-12 oj-xl-12 stretch-height fit-size">
-                        <div class="oj-row fit-size-vertical-sibling df-computed-content-width" 
+                        <div class="oj-row fit-size-vertical-sibling df-computed-content-width"
                              style="max-width: none; padding-left: 10px;padding-top: 6px; padding-bottom: 10px; display: none; margin-left: 0"
                              data-bind="visible: dashboard.enableTimeRange && dashboard.enableTimeRange() === 'TRUE' || dashboard.enableRefresh()">
                             <div class="oj-col oj-sm-12 oj-md-7">
@@ -513,7 +513,7 @@
                         <div style="padding-left: 10px;">
                         <div class="tiles-wrapper fit-size df-computed-content-width" style="width: 80%; float: left; position: relative; height: auto;">
                             <div class="tile-dragging-placeholder"></div>
-                            <div class="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">                  
+                            <div class="widget-area" data-bind="foreach: editor.tiles" style="margin-top: 50px; margin-left: 5px; margin-right: 5px; height: auto;">
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
@@ -534,6 +534,17 @@
                                                              ojComponent: {
                                                                 component:'ojButton', chroming: 'half',
                                                                 icons: {start:'fa-icon-font fa-icon-font-16 dbd-title-edit'},    
+                                                                label: ''
+                                                        }"></button>
+                                              </div>
+                                              <div class="dbd-btn-maxminToggle">
+                                                  <button class="oj-button-half-chrome" tabindex="0"
+                                                          data-bind="
+                                                             attr:{'id': 'maxMinButton' + clientGuid,title: maximizeEnabled()?getNlsString('DBS_BUILDER_TILE_MAXIMIZE'):getNlsString('DBS_BUILDER_TILE_RESTORE')},
+                                                             click:$root.maxMinToggle,
+                                                             ojComponent: {
+                                                                component:'ojButton', chroming: 'half',
+                                                                icons: {start:maximizeEnabled()?'fa-icon-font fa-icon-font-16 dbd-title-edit dbd-tile-icon-expand':'fa-icon-font fa-icon-font-16 dbd-title-edit dbd-tile-icon-compress'},
                                                                 label: ''
                                                         }"></button>
                                               </div>
@@ -568,7 +579,7 @@
                                                             </a>
                                                             <ul>
                                                         -->
-                                                        <li data-option="divider"></li> 
+                                                        <li data-option="divider"></li>
                                                                 <li data-option="wider" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': (!widerEnabled() || !maximizeEnabled() || editDisabled())}">
                                                                     <a href="#">
                                                                         <span class="oj-menu-item-icon demo-icon-font">
@@ -600,18 +611,6 @@
                                                                         </span>
                                                                         <span data-bind="text: getNlsString('DBS_BUILDER_TILE_SHORTER')"></span>
                                                                     </a>
-                                                                </li>
-                                                                <li data-option="maximize" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !maximizeEnabled() || editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_maxmize_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')}"/></span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_MAXIMIZE')"></span></a>
-                                                                </li>
-                                                                <li data-option="restore" data-bind="visible: editDisabled() !== true, css: { 'oj-disabled': !restoreEnabled() || editDisabled()}">
-                                                                    <a href="#">
-                                                                        <span class="oj-menu-item-icon demo-icon-font">
-                                                                            <img src="@version@/images/func_restore_16_ena.png" data-bind="attr: {alt: getNlsString('DBS_BUILDER_TILE_RESTORE')}"/></span>
-                                                                        <span data-bind="text: getNlsString('DBS_BUILDER_TILE_RESTORE')"></span></a>
                                                                 </li>
                                                             <!--
                                                             </ul>
@@ -719,7 +718,7 @@
                                         text-align: center;
                                         float: left;"> 
                                 </button>-->
-                                <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
+                                <button class="dbd-left-panel-header-search-btn oj-button-half-chrome" data-bind="click: searchWidgetsClicked,
                                         ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
                                         icons: {start:'left-panel-dbd-search-icon'}}"> 
                                 </button> 
@@ -731,9 +730,9 @@
                             <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                 <div class="dbd-left-panel-widget-text"
                                             data-bind="event: {mouseover: $root.widgetMouseOverHandler, mouseout: $root.widgetMouseOutHandler}">
-                                    <span data-bind="text:WIDGET_NAME"></span>
+                                    <span tabindex="0" data-bind="text:WIDGET_NAME, event: {keypress: $root.widgetKeyPress}"></span>
                                 </div>
-                                <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(), 
+                                <div data-bind="css:'widget-'+WIDGET_UNIQUE_ID(),
                                                 ojComponent:{component: 'ojPopup'}" class="dbd-left-panel-img-pop">
                                     <div class="oj-row">
                                         <div class="oj-col oj-sm-12 oj-md-12">
@@ -777,7 +776,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!--
                         <div class="right-container-pop" data-bind="ojComponent:{component: 'ojPopup', rootAttributes: {'style': 'width: 430px; height: 240px;'}}">
                             <div class="oj-row">
@@ -794,7 +793,7 @@
                                             <div style="white-space: nowrap;color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_LABEL1')"></div>
                                         </div>
                                         <div class="oj-col oj-sm-6">
-                                            <div 
+                                            <div
                                                     data-bind="ojComponent: {
                                                       component: 'ojStatusMeterGauge', 
                                                       min: 0, 
@@ -855,7 +854,7 @@
                                     <span style="color: #9e9e9e;" data-bind="text: getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_DESC')"></span>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         -->
                     </div>
                 </div>
@@ -863,10 +862,10 @@
             </div>
             </div>
             </script>
-            
+
             <script id="dashboard-include-template" type="text/html">
                 <div class="dashboard-content">
-                    <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" 
+                    <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container"
                          style="padding-left: 30px; background-color: white;">
                         <div class="builder-toolbar" aria-label="Builder toolbar">
                             <div class="builder-toolbar-left dbd-pull-left">
@@ -879,7 +878,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;"
                          data-bind="component: {
                             name: 'df-oracle-dashboard-list',
@@ -889,7 +888,7 @@
                     </div>
                 </div>
             </script>
-            
+
             <script type="text/html" id="dsbOptsMenuItemTemplate">
                 <!-- ko if: !disabled  -->
                 <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
@@ -906,7 +905,7 @@
                     <!-- /ko -->
                 <!-- /ko -->
             </script>
-            
+
             <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
                 <!--ko if: $data.type === 'included'-->
                  <div style="display:none" id="edit-dashboard"
@@ -925,11 +924,11 @@
                                     </div>
                                     <div class="oj-col">
                                         <input class="dbsHNameIn" id="dbsHNameIn" maxlength="64" required
-                                               data-bind="ojComponent: { component: 'ojInputText', value: toolBarModel.editDashboardDialogModel.name, 
+                                               data-bind="ojComponent: { component: 'ojInputText', value: toolBarModel.editDashboardDialogModel.name,
                                                rawValue: toolBarModel.editDashboardDialogModel.nameInputed,
                                                validators : [{
                                                        type: 'regExp', options : {
-                                                       pattern: '.{1,64}', 
+                                                       pattern: '.{1,64}',
                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}
                                                     },
@@ -937,7 +936,7 @@
                                                rootAttributes: {style:'max-width:420px;'},
                                                translations: {'required': {
                                                         hint: '',
-                                                        messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'), 
+                                                        messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'),
                                                         messageDetail: ''
                                                }
                                              }}">
@@ -951,18 +950,18 @@
                                         <textarea class="dbsHDpIn" id="dbsHDpIn" maxlength="256" rows="6"
                                                   data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.editDashboardDialogModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
-                                                                       pattern: '(.|\\b|\\s){0,256}', 
+                                                                       pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                             }"></textarea>
                                     </div>
-                                </div>             
+                                </div>
                             </div>
                         </div>
                         <div class="createDialogFooter-2 oj-dialog-footer">
-                            <button class="createDsb-2" data-bind="click: toolBarModel.editDashboardDialogModel.save, ojComponent: { 
-                                             component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), 
-                                             disabled: toolBarModel.editDashboardDialogModel.isDisabled, 
+                            <button class="createDsb-2" data-bind="click: toolBarModel.editDashboardDialogModel.save, ojComponent: {
+                                             component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'),
+                                             disabled: toolBarModel.editDashboardDialogModel.isDisabled,
                                              rootAttributes: {style:'margin-right:5px'} }"></button>
                         </div>
                     </div>
@@ -976,20 +975,20 @@
                             <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG', toolBarModel.dashboardName())"></p>
                         </div>
                         <div class="oj-dialog-footer">
-                            <button data-bind="click: toolBarModel.handleDeleteDashboardClicked, 
+                            <button data-bind="click: toolBarModel.handleDeleteDashboardClicked,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                            <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleDeleteDashboardCancelled, 
+                            <button class="dbs_dcbtn" data-bind="click: toolBarModel.handleDeleteDashboardCancelled,
                                                    ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                        </div>    
+                        </div>
                     </div>
                     <!-- Duplicate Dashboard dialog start -->
                     <div style="display:none" id="duplicateDsbDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', 
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon',
                                          beforeOpen: toolBarModel.duplicateDashboardModel.beforeOpenDialog,
                                          rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_DUPLICATE_DIALOG_TITLE')"></span>
-                        </div> 
+                        </div>
                         <div class="oj-dialog-body">
                             <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
                                 <div class="oj-row">
@@ -999,16 +998,16 @@
                                     <div class="oj-col">
                                         <input id="dupDsbNameIn" class="dupDsbNameIn" required
                                                data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: toolBarModel.duplicateDashboardModel.tracker,
-                                                       messagesCustom: toolBarModel.duplicateDashboardModel.errorMessages, value: toolBarModel.duplicateDashboardModel.name, 
+                                                       messagesCustom: toolBarModel.duplicateDashboardModel.errorMessages, value: toolBarModel.duplicateDashboardModel.name,
                                                        optionChange: toolBarModel.duplicateDashboardModel.nameOptionChanged,
                                                        validators : [{type: 'regExp', options : {
-                                                            pattern: '.{1,64}', 
+                                                            pattern: '.{1,64}',
                                                             messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
                                                             messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}}],
                                                        rootAttributes: {style:'max-width:420px;'},
                                                        translations: {'required': {
                                                                 hint: '',
-                                                                messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'), 
+                                                                messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'),
                                                                 messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')
                                                        }
                                                      }}">
@@ -1021,9 +1020,9 @@
                                     <div class="oj-col">
                                         <textarea id="dupDsbDescIn" class="dupDsbDescIn" rows="6"
                                                   data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.duplicateDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
-                                                                        invalidComponentTracker: toolBarModel.duplicateDashboardModel.tracker,  
+                                                                        invalidComponentTracker: toolBarModel.duplicateDashboardModel.tracker,
                                                                         validators : [{type: 'regExp', options : {
-                                                                               pattern: '(.|\\b|\\s){0,256}', 
+                                                                               pattern: '(.|\\b|\\s){0,256}',
                                                                                messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                                messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                                     }"></textarea>
@@ -1032,15 +1031,15 @@
                             </div>
                         </div>
                         <div class="createDialogFooter-1 oj-dialog-footer">
-                            <button class="createDsb-1" data-bind="click: toolBarModel.duplicateDashboardModel.duplicateDashboardConfirmed, ojComponent: { 
-                                                     component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'), 
-                                                     disabled: toolBarModel.duplicateDashboardModel.saveBtnDisabled, 
+                            <button class="createDsb-1" data-bind="click: toolBarModel.duplicateDashboardModel.duplicateDashboardConfirmed, ojComponent: {
+                                                     component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'),
+                                                     disabled: toolBarModel.duplicateDashboardModel.saveBtnDisabled,
                                                      rootAttributes: {style:'margin-right:5px'} }"></button>
                         </div>
                     </div>
-                    <!-- Duplicate Dashboard dialog end -->     
+                    <!-- Duplicate Dashboard dialog end -->
                 <!--/ko-->
-            </div> 
-</div>               
+            </div>
+</div>
     </body>
 </html>

@@ -11,6 +11,8 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,6 +30,8 @@ import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -110,7 +114,14 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getAdminLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+		List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(), UserContext.getCurrentUser());
+		if (!PrivilegeChecker.isAdminUser(userRoles)) {
+			return null;
+		}
+
+		List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+		List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
+		return sortServiceLinks(filteredAdminLinks);
 	}
 
 	/**
@@ -156,7 +167,7 @@ public class RegistrationEntity
 				_logger.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
-		return list;
+		return sortServiceLinks(list);
 	}
 
 	//	private String ssfServiceName;
@@ -179,7 +190,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getHomeLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_HOME_LINK);
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
 	}
 
 	public String getSessionExpiryTime()
@@ -251,7 +262,7 @@ public class RegistrationEntity
 	 */
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
+		return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
@@ -271,6 +282,29 @@ public class RegistrationEntity
 				linksMap.put(key, le);
 			}
 		}
+	}
+
+	private List<LinkEntity> filterAdminLinksByUserRoles(List<LinkEntity> origLinks, List<String> roleNames)
+	{
+		List<LinkEntity> resultLinks = new ArrayList<LinkEntity>();
+		if (origLinks != null && origLinks.size() != 0 && roleNames != null) {
+			for (LinkEntity le : origLinks) {
+				if (le.getServiceName().equals(APM_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_APM)) {
+					resultLinks.add(le);
+				}
+				else if ((le.getServiceName().equals(ITA_SERVICENAME) || le.getServiceName().equals(TA_SERVICENAME))
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_ITA)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(LA_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_LA)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
+					resultLinks.add(le);
+				}
+			}
+		}
+		return resultLinks;
 	}
 
 	//	/**
@@ -427,5 +461,19 @@ public class RegistrationEntity
 		String href = RegistryLookupUtil.replaceWithVanityUrl(lk.getHref(), tenantName, serviceName);
 		lk.setHref(href);
 		return lk;
+	}
+
+	private List<LinkEntity> sortServiceLinks(List<LinkEntity> origLinks)
+	{
+		if (origLinks != null && origLinks.size() > 0) {
+			Collections.sort(origLinks, new Comparator<LinkEntity>() {
+				@Override
+				public int compare(LinkEntity linkOne, LinkEntity linkTwo)
+				{
+					return linkOne.getName().compareToIgnoreCase(linkTwo.getName());
+				}
+			});
+		}
+		return origLinks;
 	}
 }

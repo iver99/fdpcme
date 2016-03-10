@@ -148,6 +148,7 @@ define(['knockout',
             self.showPullRightBtn = function(clientGuid, data, event) {
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
+                $("#tile"+clientGuid+" .dbd-btn-maxminToggle").css("display", "flex");
             };
             
             self.hidePullRightBtn = function (clientGuid, data, event) {
@@ -155,11 +156,26 @@ define(['knockout',
                     $("#tile" + clientGuid + " .dbd-btn-group").css("display", "none");
                 }
                 $("#tile" + clientGuid + " .dbd-btn-editor").css("display", "none");
+                $("#tile" + clientGuid + " .dbd-btn-maxminToggle").css("display", "none");
             };
             self.openInDataExplorer = function (event, ui) {
                 var tile = ko.dataFor(ui.currentTarget);
                 self.editor.configure(tile);
             };
+            
+            self.maxMinToggle = function (event, ui) {
+                var tile = ko.dataFor(ui.currentTarget);
+                if (event.maximizeEnabled()) {
+                    self.maximize(tile);
+                    self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
+                    $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
+                } else {
+                    self.restore(tile);
+                    self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
+                    $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
+                }
+            };
+            
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
                 if (!tile) {
@@ -199,17 +215,7 @@ define(['knockout',
                         self.editor.shorterTile(tile);
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
-                        break;
-                    case "maximize":
-                        self.maximize(tile);
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
-                        $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
-                        break;
-                    case "restore":
-                        self.restore(tile);
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
-                        $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
-                        break;
+                        break;                
                 }
                 
                 $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
@@ -360,7 +366,7 @@ define(['knockout',
                 if (change instanceof Builder.TileChange){
                     tChange = change;
                 }
-                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null,tChange);
+                var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()), self.targetContext, null,tChange, self.dashboard.enableTimeRange());
                 Builder.fireDashboardItemChangeEventTo(tile, dashboardItemChangeEvent); 
             };
             
@@ -848,7 +854,7 @@ define(['knockout',
                 
             timeSelectorChangelistener.subscribe(function (value) {
                 if (value.timeRangeChange){
-                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null);
+                    var dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(self.timeSelectorModel.viewStart(),self.timeSelectorModel.viewEnd()),self.targetContext, null, null, self.dashboard.enableTimeRange());
                     Builder.fireDashboardItemChangeEvent(self.dashboard.tiles(), dashboardItemChangeEvent);
                     self.timeSelectorModel.timeRangeChange(false);
                 }

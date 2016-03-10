@@ -78,8 +78,8 @@ define({
       "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY":"Not connected.",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service now...",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Cloud services is not reachable at this time.",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later or contact Oracle Support Services if it persists.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Oracle Management Cloud is unreachable.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later.",
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
        "DATETIME_PICKER_DROP_DOWN": "Drop Down",
@@ -93,6 +93,7 @@ define({
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS": "Last 7 days",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS": "Last 30 days",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS": "Last 90 days",
+      "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR": "Last 1 year",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_CUSTOM": "Custom",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LATEST": "Latest",
       "DATETIME_PICKER_BUTTONS_APPLY_BUTTON": "Apply",
@@ -119,6 +120,10 @@ define({
       "DATETIME_PICKER_WINDOW_SIZE_WITH_MINUTES": "{0} minute(s).",
       "DATETIME_PICKER_SHOW_TODAY": "Today",
       "DATETIME_PICKER_SHOW_YESTERDAY": "Yesterday",
+      "DATETIME_PICKER_TIME_FILTER_INFO_HOURS_EXCLUDED": "Hours excluded: ",
+      "DATETIME_PICKER_TIME_FILTER_INFO_DAYS_EXCLUDED": "Days excluded: ",
+      "DATETIME_PICKER_TIME_FILTER_INFO_MONTHS_EXCLUDED": "Months excluded: ",
+      
       
       //time filter
       "TIME_FILTER_TIME_LABEL": "Time",

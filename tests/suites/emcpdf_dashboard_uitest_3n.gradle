@@ -30,7 +30,8 @@ buildscript {
         }
     }
     dependencies {
-   	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true  
+   	classpath group: 'com.oracle.emaas.emdi', name: 'TestInfraPlugin', version: "${testinfraVersion}", transitive: true 
+        classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_taskprocessor", version: "${omctfVersion}" 
 	classpath group: "com.oracle.omc.omctf.testsdk", name: "omctf_commontasks", version: "${omctfVersion}"
   }
 
@@ -57,6 +58,7 @@ def getAbsoluteFilePath(artifactNameToSearch) {
     return absPath
 }
 apply from: getAbsoluteFilePath("omctf_commontasks")
+apply from: getAbsoluteFilePath("omctf_taskprocessor")
 /** End of WA for EMDI-6096 */
 import com.oracle.emdi.gradle.testinfra.tasks.EMTest;
 
@@ -91,6 +93,7 @@ options.suiteXmlBuilder().suite('name': 'emcpdf_dashboard_uitest_3n') {
         test('name': 'DashboardUITest') {
             classes([:]) {
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestHomePage')
+		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestWelcomePage')
                 'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestDashBoard')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.TestBrandingBar')
 		'class'('name': 'oracle.sysman.emaas.platform.dashboards.test.ui.BugVerification')

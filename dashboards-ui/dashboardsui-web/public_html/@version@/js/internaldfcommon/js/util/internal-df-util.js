@@ -250,7 +250,8 @@ define(['knockout',
             self.df_util_widget_lookup_assetRootUrl = function(providerName, providerVersion, providerAssetRoot, relUrlExpected){
                 var regInfo = self.getRegistrationInfo();
                 if (regInfo){
-                    var assetRoot = dfu.discoverUrl(providerName, providerVersion, providerAssetRoot);
+                    var providerVersionPlus = encodeURIComponent(providerVersion+'+');
+                    var assetRoot = dfu.discoverUrl(providerName, providerVersionPlus, providerAssetRoot);
                     if (assetRoot){
                         if (relUrlExpected)
                             assetRoot = self.getRelUrlFromFullUrl(assetRoot);

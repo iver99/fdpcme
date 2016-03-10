@@ -32,14 +32,23 @@
     </head>
     <body>
         <div id="dateTimePicker">
-            <div id="timeRange" style="font-size: 16px; font-weight: bold; padding: 10px;">
+            <div id="timeRange" style="font-size: 16px; font-weight: bold; padding: 10px; display: inline-block;">
                 <span id="start" data-bind="text: start"></span> ~ 
                 <span id="end" data-bind="text: end"></span>
             </div>
+            <div id="timeRangeInCompact" style="font-size: 16px; font-weight: bold; padding-top: 10px; display: inline-block; float: right; padding-right:10px;">
+                <span id="startInCompact" data-bind="text: start3"></span> ~ 
+                <span id="endInCompact" data-bind="text: end3">
+            </div>
+            <br/>
+            <span id="filterInfo" style="font-size: 16px; font-weight: bold; padding: 10px; display: inline-block;" data-bind="text: filterInfo"></span>
+            <span id="filterInfoInCompact" style="font-size: 16px; font-weight: bold; padding-top: 10px; display: inline-block; float: right; padding-right:10px;" data-bind="text: filterInfo3"></span>
+            
             <div id="timeFilterValue" style="padding: 15px;"></div>
             <!--<div data-bind="component: {name: 'date-time-picker', params: timeParams1}"></div>-->
-            <div data-bind="component: {name: 'date-time-picker', params: timeParams1}, style: {'float': floatPosition, 'padding-right': '10px', 'padding-left': '10px'}"></div>
+            <div data-bind="component: {name: 'date-time-picker', params: timeParams1}, style: {'float': floatPosition1, 'padding-right': '10px', 'padding-left': '10px'}"></div>
             <!--<button data-bind="click: changeOption">click</button>-->
+            <div data-bind="component: {name: 'date-time-picker', params: timeParams3}, style: {'float': floatPosition3, 'padding-right': '10px', 'padding-left': '10px'}"></div>
 
             <div id="chartContainer">
                 <div id="lineChart" data-bind="ojComponent: {
