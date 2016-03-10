@@ -78,8 +78,8 @@ define({
       "WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE": "Description",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_SUMMARY":"Not connected.",
       "BRANDING_BAR_MESSAGE_AJAX_RETRYING_DETAIL":"Retrying to connect to your cloud service now...",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Cloud services is not reachable at this time.",
-      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later or contact Oracle Support Services if it persists.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_SUMMARY":"Oracle Management Cloud is unreachable.",
+      "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later.",
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
        "DATETIME_PICKER_DROP_DOWN": "Drop Down",
