@@ -43,10 +43,13 @@ define([
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 
                 // Initialize widget group and widget data
-                self.categoryValue=ko.observableArray(["all|all|All"]);
+                var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
+                var groupValueAll = 'all|all|All';
+                var groupAll = {value: groupValueAll, label: labelAll};
+                self.categoryValue=ko.observableArray([groupValueAll]);
                 self.widgetGroup=ko.observable();
                 self.widgetGroupValue=ko.observable({providerName:"all", providerVersion:"all", name:"all"});
-                self.widgetGroups=ko.observableArray([{value: "all|all|All", label: "All"}]);
+                self.widgetGroups=ko.observableArray([{value: groupValueAll, label: labelAll}]);
                 var widgetArray = [];
                 var curGroupWidgets = [];
                 var widgetGroupList = [];
@@ -378,7 +381,6 @@ define([
                     self.categoryValue([selectedGroup]);
                     self.widgetList(widgetArray);
                     self.curPageWidgetList(curPageWidgets);
-                    self.searchText("");
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
                 }
@@ -391,17 +393,27 @@ define([
                     searchResultArray = [];
                     index=0;
                     widgetIndex = 0;
-                    widgetGroupList = [];
+                    widgetGroupList = [groupAll];
                     availableWidgetGroups = [];
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
+                    self.searchText("");
                     refreshPageData();
                     
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
                         oj.Logger.info("Finished loading widget groups. Start to load widgets.");
                         getWidgets().done(function(data, textStatus, jqXHR){
                             oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
-                            refreshPageData();
+                            //If already has search text input during widgets loading, then do a search after widgets loading finished
+                            if (self.searchText() && $.trim(self.searchText()) !== "") {
+                                self.widgetGroups(widgetGroupList);
+                                var selectedGroup = widgetGroupList.length > 0 ? widgetGroupList[0].value : "";
+                                self.categoryValue([selectedGroup]);
+                                self.searchWidgets();
+                            }
+                            else {
+                                refreshPageData();
+                            }
                         })
                         .fail(function(xhr, textStatus, errorThrown){
                             oj.Logger.error("Failed to fetch widgets.");
@@ -484,8 +496,6 @@ define([
                 // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
                     var targetWidgetGroupArray = [];
-                    var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
-                    var groupAll = {value:'all|all|All', label: labelAll};
                     var pname = null; 
                     var pversion = null; 
                     var gname = null; 
