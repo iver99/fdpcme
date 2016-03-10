@@ -329,7 +329,7 @@
                                 attr: {title: getNlsString('DBS_BUILDER_BTN_OPTIONS')}">
                         </button>
 
-                        <ul class="no-print" data-bind="ojComponent: {component: 'ojMenu'},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
+                        <ul class="no-print dropdown-menu" data-bind="ojComponent: {component: 'ojMenu'},attr:{id:'dashboardOptsMenu'+toolBarGuid}" style="display: none;">
                           <!-- ko template: {name: 'dsbOptsMenuItemTemplate', foreach: dashboardOptsMenuItems, as: 'item'} -->
                           <!-- /ko -->
                         </ul>
@@ -892,7 +892,7 @@
 
             <script type="text/html" id="dsbOptsMenuItemTemplate">
                 <!-- ko if: !disabled  -->
-                <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
+                <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile,attr:{'data-singledb-option':label}">
                         <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
                             <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                             <span data-bind="text: label"></span>
