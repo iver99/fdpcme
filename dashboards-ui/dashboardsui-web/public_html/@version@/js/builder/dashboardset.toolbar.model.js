@@ -154,7 +154,7 @@ define(['knockout',
                     }
                 });
                 $.extend(newDashboardJs, fieldsToUpdate);
-                ssu.getBase64ScreenShot("#globalBody", 314, 165, 0.8, function (data) {
+                ssu.getBase64ScreenShot($(".tiles-wrapper:visible"), 314, 165, 0.8, function (data) {
                     newDashboardJs.screenShot = data;
                     Builder.updateDashboard(
                             ko.unwrap(dashboardInst.id),
