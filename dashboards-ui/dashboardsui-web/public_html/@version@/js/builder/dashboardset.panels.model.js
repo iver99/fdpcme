@@ -205,17 +205,16 @@ define([
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
                     if(dashboardsetToolBarModel.isDashboardSet()){
-                       $b.findEl('.head-bar-container').css("background-color","white");
+                        $b.findEl('.head-bar-container').css("background-color","white");
                        
                        //hide some drop-down menu options
                         $b.findEl('.dropdown-menu li').each(function (index, element) {
-                            if (!($(element).attr('data-singledb-option') === 'Edit' || $(element).attr('data-singledb-option') === 'Print' || $(element).attr('data-singledb-option') === 'Delete')) {
+                            if (!($(element).attr('data-singledb-option') === 'Edit')) {
                                 $(element).css({display: "none"});
                             }
                         });                        
                        if(!dashboardsetToolBarModel.dashboardsetConfig.isCreator()){
-                          $($b.findEl('.dropdown-menu')).find('[data-singledb-option="Edit"]').css({display: "none"});
-                          $($b.findEl('.dropdown-menu')).find('[data-singledb-option="Delete"]').css({display: "none"});
+                          $($b.findEl('.builder-toolbar-right')).css({display: "none"});
                        }
                     }
 

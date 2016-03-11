@@ -349,6 +349,7 @@ define(['knockout',
                            "content" : $("<div class='dbd-info other-nav-info' id='dashboardTabInfo-"+dashboardId+"'></div>"),
                            "index":insertIndex
                          } );
+                $("#dbd-tabs-container").ojTabs("refresh");         
             }
             
             function findRemoveTab(dashboardsetItems,dashboardPickerId){
