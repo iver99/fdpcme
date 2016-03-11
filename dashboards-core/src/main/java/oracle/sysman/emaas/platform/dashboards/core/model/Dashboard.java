@@ -585,28 +585,32 @@ public class Dashboard
         if (subDashboardList != null) {
             for (int i = subDashboardList.size() - 1; i >= 0; i--) {
                 EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
-//                for (Dashboard dashboard : dashboards) {
-//                    if (dashboard.getDashboardId() != null && dashboard.getDashboardId().equals(emsSubDashboard.getSubDashboardId())) {
-//                        rows.put(dashboard, emsSubDashboard);
-//                    }
-//                }
                 ed.removeEmsSubDashboard(emsSubDashboard);
             }
         }
 
         for (int index = 0; index < dashboards.size(); index++) {
             Dashboard subDashboard = dashboards.get(index);
-            if(subDashboard.getDashboardId() != null) {
-                EmsSubDashboard emsSubDashboard;
+
+			Long tenantId = ed.getTenantId();
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+
+			Long subDashboardId = subDashboard.getDashboardId();
+			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);
+
+            if(subbed != null) {
+                // remove duplicated entity
                 if (!rows.containsKey(subDashboard)) {
-                    emsSubDashboard = new EmsSubDashboard(dashboardId, subDashboard.getDashboardId(), index);
+                    EmsSubDashboard emsSubDashboard = new EmsSubDashboard(dashboardId, subDashboard.getDashboardId(), index);
                     ed.addEmsSubDashboard(emsSubDashboard);
                     rows.put(subDashboard, emsSubDashboard);
-                } else {
-                    emsSubDashboard = rows.get(subDashboard);
-                    ed.removeEmsSubDashboard(emsSubDashboard);
-                    ed.addEmsSubDashboard(emsSubDashboard);
-                    rows.put(subDashboard, emsSubDashboard);
+
+                    // update share public property
+                    if(ed.getSharePublic().equals(1)){
+                        subbed.setSharePublic(1);
+                        dsf.mergeEmsDashboard(subbed);
+                    }
+
                 }
             }
         }
