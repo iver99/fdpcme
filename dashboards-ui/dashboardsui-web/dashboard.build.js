@@ -32,6 +32,7 @@
         'dashboards': '.',
         'dfutil':'empty:',
         'mobileutil':'empty:',
+        'uiutil':'empty:',
         //'uifwk/js/util/df-util':'empty:',
 	'uifwk':'empty:',
         'loggingutil':'empty:',

@@ -11,7 +11,7 @@ define(['knockout',
         'builder/dashboard.tile.model',
         'builder/editor/editor.tiles'
     ], 
-    function(ko, $, oj, dfu, dtm) {
+    function(ko, $, oj, dfu) {
         function Cell(row, column) {
             var self = this;
             
@@ -84,11 +84,20 @@ define(['knockout',
         }
         Builder.registerModule(TileChange, 'TileChange');
 
-        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange){
+        function DashboardItemChangeEvent(timeRangeChange, targetContext, customChanges, tileChange, timeRangeEnabled){
             var self = this;
             self.timeRangeChange = null;
             self.targetContext = null;
             self.customChanges = null;
+            self.enableTimeRange = null;
+            self.timeRangeEnabled = null;
+//            if(enableTimeRange === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
+//                self.timeRangeChange = null;
+//            }else{
+//                if (timeRangeChange instanceof DashboardTimeRangeChange){
+//                    self.timeRangeChange = timeRangeChange;
+//                }
+//            }
             if (timeRangeChange instanceof DashboardTimeRangeChange){
                 self.timeRangeChange = timeRangeChange;
             }
@@ -112,10 +121,15 @@ define(['knockout',
             }
             if (tileChange instanceof TileChange){
                 self.tileChange = tileChange;
-            }            
+            }
+            if(timeRangeEnabled === "TRUE") {
+                self.timeRangeEnabled = true;
+            }else {
+                self.timeRangeEnabled = false;
+            }
         }
         Builder.registerModule(DashboardItemChangeEvent, 'DashboardItemChangeEvent');
-
+        
         function DashboardTextTile(mode, $b, widget, funcShow, deleteTextCallback) {
             var self = this;
             self.dashboard = $b.dashboard;
@@ -175,7 +189,7 @@ define(['knockout',
         }
         Builder.registerModule(DashboardTile, 'DashboardTile');
 
-        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback, isContentLengthValid) {
+        function initializeTextTileAfterLoad(mode, $b, tile, funcShow, deleteTextCallback) {
             if(!tile) {
                 return;
             }
@@ -193,7 +207,7 @@ define(['knockout',
     //                reorder: funcReorder,
                 tiles: dashboard.tiles,
                 tile: tile,
-                validator: isContentLengthValid,
+                validator: Builder.isContentLengthValid,
                 builder: $b
             };
 
@@ -217,13 +231,13 @@ define(['knockout',
                 return dashboard.type() === "SINGLEPAGE" || dashboard.systemDashboard() || _currentUser !== dashboard.owner();
             });
             tile.widerEnabled = ko.computed(function() {
-                return tile.width() < mode.MODE_MAX_COLUMNS;
+                return mode.getModeWidth(tile) < mode.MODE_MAX_COLUMNS;
             });
             tile.narrowerEnabled = ko.computed(function() {
-                return tile.width() > 1;
+                return mode.getModeWidth(tile) > 1;
             });
             tile.shorterEnabled = ko.computed(function() {
-                return tile.height() > 1;
+                return mode.getModeHeight(tile) > 1;
             });
             tile.maximizeEnabled = ko.computed(function() {
                 return !tile.isMaximized();
@@ -236,25 +250,24 @@ define(['knockout',
                 return typeof(tile.configure)==="function";
             });
             tile.tileDisplayClass = ko.computed(function() {
-                var css = 'oj-md-'+(tile.width()*3) + ' oj-sm-'+(tile.width()*3) + ' oj-lg-'+(tile.width()*3);
+                var css = 'oj-md-'+(mode.getModeWidth(tile)*3) + ' oj-sm-'+(mode.getModeWidth(tile)*3) + ' oj-lg-'+(mode.getModeWidth(tile)*3);
                 css += tile.isMaximized() ? ' dbd-tile-maximized ' : '';
                 css += tile.shouldHide() ? ' dbd-tile-no-display' : '';
                 css += tile.editDisabled() ? ' dbd-tile-edit-disabled' : '';
                 css += tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD() ? ' dbd-tile-linked-dashboard' : '';
-                css += tile.toBeOccupied() ? ' dbd-tile-to-be-occupuied' : '';
+//                css += tile.toBeOccupied() ? ' dbd-tile-to-be-occupuied' : '';
                 return css;
             });
             tile.linkedDashboard = ko.computed(function() {
                 if (tile.WIDGET_LINKED_DASHBOARD && tile.WIDGET_LINKED_DASHBOARD()) {
                     var link = '/emsaasui/emcpdfui/builder.html?dashboardId=' + tile.WIDGET_LINKED_DASHBOARD();
                     targetContext && targetContext.target && (link += '&target='+targetContext.target+'&type='+targetContext.type+'&emsite='+targetContext.emsite);
-                    timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
+                    (dashboard.enableTimeRange()==="TRUE" || Builder.isTimeRangeAvailInUrl()===true)&& timeSelectorModel && timeSelectorModel.viewStart() && (link += '&startTime='+timeSelectorModel.viewStart().getTime()+'&endTime='+timeSelectorModel.viewEnd().getTime());
                     return link;
                 } else
                     return "#";
             });
-            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext);
-
+            tile.dashboardItemChangeEvent = new Builder.DashboardItemChangeEvent(new Builder.DashboardTimeRangeChange(timeSelectorModel.viewStart(), timeSelectorModel.viewEnd()), targetContext, null, null, dashboard.enableTimeRange());
             /**
              * Integrator needs to override below FUNCTION to respond to DashboardItemChangeEvent
              * e.g.
@@ -344,12 +357,17 @@ define(['knockout',
                 Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
 
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                    var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
+                    var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
+                    var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
                     if (url){
                         tile.configure = function(){
-                            var start = timeSelectorModel.viewStart().getTime();
-                            var end = timeSelectorModel.viewEnd().getTime();
-                            window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                            if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                            }else{
+                                var start = timeSelectorModel.viewStart().getTime();
+                                var end = timeSelectorModel.viewEnd().getTime();
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                            }
                         };
                     }
                 }         

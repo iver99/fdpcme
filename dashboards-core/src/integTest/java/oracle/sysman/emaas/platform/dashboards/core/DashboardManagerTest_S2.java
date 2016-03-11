@@ -1,15 +1,19 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
+import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
@@ -44,6 +48,216 @@ public class DashboardManagerTest_S2
 	{
 		new MockDashboardServiceFacade();
 		TenantContext.setCurrentTenant("TenantOPC1");
+	}
+
+	@Test(groups = "s2")
+	public void testCC(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+			@Mocked final EntityManager anyEntityManager, @Mocked final TenantContext anyTC,
+			@Mocked final TenantSubscriptionUtil anyTSU) throws DashboardException, InterruptedException
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.getDashboardByName(null, 0L);
+		dm.getLastAccessDate(null, 0L);
+		try {
+			dm.isDashboardFavorite(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.saveNewDashboard(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(null, true, 0L);
+		dm.updateDashboard(null, 0L);
+		dm.updateLastAccessDate(null, 0L);
+
+		final EmsDashboard ed = new EmsDashboard();
+		ed.setDashboardId(1L);
+		ed.setDeleted(1L);
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = ed;
+			}
+		};
+		dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.deleteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+
+		dm.getLastAccessDate(1L, 0L);
+		try {
+			dm.isDashboardFavorite(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(1L, true, 0L);
+		dm.updateLastAccessDate(1L, 0L);
+
+		ed.setApplicationType(3); //LA dashboard
+		ed.setDeleted(0L);
+		ed.setSharePublic(0);
+		ed.setOwner("unknown");
+		ed.setIsSystem(0);
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = ed;
+			}
+		};
+		dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.deleteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+
+		dm.getLastAccessDate(1L, 0L);
+		try {
+			dm.isDashboardFavorite(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(1L, true, 0L);
+		dm.updateLastAccessDate(1L, 0L);
+		Dashboard d = new Dashboard();
+		d.setDashboardId(1L);
+		try {
+			dm.saveNewDashboard(d, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		//dm.getDashboardByName("ss", 0L);
+		//dm.saveNewDashboard(null, 0L);
+		//dm.updateDashboard(null, 0L);
+
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = null;
+			}
+		};
+		try {
+			dm.deleteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardByName(anyString, anyString);
+				result = new NoResultException("");
+			}
+		};
+		dm.getDashboardByName("ss", 0L);
+
+		ed.setOwner("Oracle");
+		ed.setIsSystem(1);
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = ed;
+				TenantContext.getCurrentTenant();
+				result = "opcTenantId";
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				result = Arrays.asList(new String[] { "APM", "ITAnalytics" });
+			}
+		};
+		dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+
+		dm.getLastAccessDate(1L, 0L);
+		try {
+			dm.isDashboardFavorite(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(1L, true, 0L);
+		dm.updateLastAccessDate(1L, 0L);
+		//dm.getDashboardByName("ss", 0L);
+		//dm.saveNewDashboard(null, 0L);
+		//dm.updateDashboard(null, 0L);
 	}
 
 	@Test(groups = { "s2" })
@@ -523,6 +737,33 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
+	public void testGetDashboardBase64ScreenShotById() throws DashboardException
+	{
+		loadMockBeforeMethod();
+		Dashboard dbd1 = new Dashboard();
+		dbd1.setName("test");
+		dbd1.setScreenShot("shot");
+		dbd1.setHref("");
+		dbd1.setLastModifiedBy("sysman");
+		dbd1.setLastModificationDate(new Date());
+		DashboardManager dm = DashboardManager.getInstance();
+		Long tenantId1 = 11L;
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
+
+		String shot = dm.getDashboardBase64ScreenShotById(dbd1.getDashboardId(), tenantId1);
+		Assert.assertEquals(shot, "shot");
+
+		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
+		Assert.assertEquals(ds.size() > 0, true);
+		Assert.assertEquals(ds.get(0).getName(), dbd1.getName());
+		Assert.assertEquals(ds.get(0).getLastModifiedBy(), dbd1.getLastModifiedBy());
+		Assert.assertEquals(ds.get(0).getLastModificationDate(), dbd1.getLastModificationDate());
+
+		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		Assert.assertEquals(dm.isDashboardFavorite(dbd1.getDashboardId(), tenantId1), true);
+	}
+
+	@Test(groups = { "s2" })
 	public void testGetDashboardByName_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -677,9 +918,43 @@ public class DashboardManagerTest_S2
 
 		DashboardManager dm = DashboardManager.getInstance();
 		DashboardsFilter filter = new DashboardsFilter();
+		filter.setIncludedFavorites(true);
+		filter.setIncludedAppsFromString("APM,ITAnalytics");
 		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
-		filter.setIncludedOwnersFromString("Oracle,Others");
+		filter.setIncludedOwnersFromString("Oracle,Others,Me,Share");
+		dm.listDashboards(null, null, 11L, false);
 		dm.listDashboards("key", null, null, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		dm.listDashboards("key", 3, 50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		try {
+			dm.listDashboards("key", -3, 50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		}
+		catch (CommonFunctionalException cfe) {
+		}
+		try {
+			dm.listDashboards("key", 3, -50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
+		}
+		catch (CommonFunctionalException cfe) {
+		}
+
+		filter = new DashboardsFilter();
+		filter.initializeFilters("apm,ita,oracle,share,me,favorites");
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_APP_TYPE, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_CREATE_TIME_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_DEFAULT, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_LAST_MODIFEID_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_ASC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_NAME_DSC, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER, filter);
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_ASC, filter);
+
+		dm.listDashboards("key", 3, 50, 11L, true, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_OWNER_DSC, filter);
 	}
 
 	@Test(groups = { "s2" })

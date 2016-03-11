@@ -8,15 +8,15 @@ requirejs.config({
 //    },
     // Path mappings for the logical module names
     paths: {
-        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.3.0',
+        'knockout': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout-3.4.0',
         'knockout.mapping': '../../libs/@version@/js/oraclejet/js/libs/knockout/knockout.mapping-latest',
         'jquery': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-2.1.3.min',
         'jqueryui': '../../libs/@version@/js/oraclejet/js/libs/jquery/jquery-ui-1.11.4.custom.min',
         'jqueryui-amd':'../../libs/@version@/js/oraclejet/js/libs/jquery/jqueryui-amd-1.11.4.min',
         'hammerjs': '../../libs/@version@/js/oraclejet/js/libs/hammer/hammer-2.0.4.min',
-        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/debug',
-        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/ojL10n',
-        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.1.2/resources',
+        'ojs': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/debug',
+        'ojL10n': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/ojL10n',
+        'ojtranslations': '../../libs/@version@/js/oraclejet/js/libs/oj/v1.2.0/resources',
         'signals': '../../libs/@version@/js/oraclejet/js/libs/js-signals/signals.min',
         'crossroads': '../../libs/@version@/js/oraclejet/js/libs/crossroads/crossroads.min',
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
@@ -47,9 +47,7 @@ requirejs.config({
             merge: {
 //                'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
-        }
-        ,
-        text: {
+        },text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
               // remote server allows CORS
@@ -121,9 +119,10 @@ require(['knockout',
             * @returns {parameter value}
             */
             function getUrlParam(name){
+                /* globals location */
                 var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec(location.search);
                 return results === null ? "" : results[1];                
-            };
+            }
             
             function HeaderViewModel() {
                 var self = this;
@@ -136,13 +135,14 @@ require(['knockout',
 //                    relNotificationShow: "warnings",
                     isAdmin: isAdmin
                 };
-            };
+            }
             
             function MainViewModel() {
                 var self = this;
                 //Add widget dialog
                 var widgetSelectorDialogId = 'sampleWidgetSelectorDialog';
                 var widgetArray = [];
+                 /* globals screen */
                 var screenWidth = screen.availWidth;
                 var widgetBoxWidth = 362;
                 var widgetsContainerPaddingWidth = (screenWidth - widgetBoxWidth*4)/2;
@@ -220,7 +220,7 @@ require(['knockout',
                 self.openWidgetSelectorDialog = function() {
                     $('#'+widgetSelectorDialogId).ojDialog('open');
                 };
-            };
+            }
             
             $(document).ready(function() {
                 ko.applyBindings(new HeaderViewModel(), $('#headerWrapper')[0]); 

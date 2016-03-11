@@ -1,15 +1,13 @@
 package oracle.sysman.emaas.platform.dashboards.core.persistence;
 
-import java.util.List;
+import oracle.sysman.emaas.platform.dashboards.entity.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 import javax.persistence.Query;
 
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 //import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
 //import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavoritePK;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
@@ -107,6 +105,22 @@ public class DashboardServiceFacade
 				.getResultList();
 	}
 
+	public EmsUserOptions getEmsUserOptions(String username, Long dashboardId) {
+		return em.find(EmsUserOptions.class, new EmsUserOptionsPK(username,dashboardId));
+	}
+
+	public EmsUserOptions persistEmsUserOptions(EmsUserOptions emsUserOptions) {
+        em.persist(emsUserOptions);
+        commitTransaction();
+        return emsUserOptions;
+	}
+
+	public EmsUserOptions mergeEmsUserOptions(EmsUserOptions emsUserOptions) {
+        EmsUserOptions entity = null;
+        entity = em.merge(emsUserOptions);
+        commitTransaction();
+        return entity;
+	}
 	public EntityManager getEntityManager()
 	{
 		return em;
@@ -168,7 +182,7 @@ public class DashboardServiceFacade
                 {
                     emsDashboard.setSharePublic(0);
                 }
-                
+
 		em.persist(emsDashboard);
 		commitTransaction();
 		return emsDashboard;

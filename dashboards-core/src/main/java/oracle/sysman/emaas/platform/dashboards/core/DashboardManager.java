@@ -566,23 +566,23 @@ public class DashboardManager
 		int index = 1;
 		String currentUser = UserContext.getCurrentUser();
 		List<Object> paramList = new ArrayList<Object>();
+		sb = new StringBuilder(" from Ems_Dashboard p  ");
+		if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
+			sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
+					+ index++ + " and p.tenant_Id = le.tenant_Id) ");
+			paramList.add(currentUser);
+		}
+		if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
+			sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id = df.dashboard_Id and df.user_name = ?" + index++
+					+ " and p.tenant_Id = df.tenant_Id) ");
+			paramList.add(currentUser);
+		}
 		if (apps.isEmpty()) {
 			// no subscribe apps
 			//			sb = new StringBuilder(
 			//					" from Ems_Dashboard p left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?1 and p.tenant_Id = le.tenant_Id) "
 			//							+ "where p.deleted = 0 and p.tenant_Id = ?2 and (p.share_public = 1 or p.owner = ?3) ");
 			//			index = 4;
-			sb = new StringBuilder(" from Ems_Dashboard p  ");
-			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
-				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
-						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
-				paramList.add(currentUser);
-			}
-			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
-				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id =df.dashboard_Id and df.user_name = ?"
-						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
-				paramList.add(currentUser);
-			}
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ ") ");
 			paramList.add(tenantId);
@@ -604,17 +604,7 @@ public class DashboardManager
 			//							+ sbApps.toString() + "))) ");
 
 			//			index = 4;
-			sb = new StringBuilder(" from Ems_Dashboard p  ");
-			if (getListDashboardsOrderBy(orderBy).toLowerCase().contains("access_date")) {
-				sb.append("left join Ems_Dashboard_Last_Access le on (p.dashboard_Id =le.dashboard_Id and le.accessed_By = ?"
-						+ index++ + " and p.tenant_Id = le.tenant_Id) ");
-				paramList.add(currentUser);
-			}
-			if (filter != null && filter.getIncludedFavorites() != null && filter.getIncludedFavorites().booleanValue() == true) {
-				sb.append("left join Ems_Dashboard_Favorite df on (p.dashboard_Id = df.dashboard_Id and df.user_name = ?"
-						+ index++ + " and p.tenant_Id = df.tenant_Id) ");
-				paramList.add(currentUser);
-			}
+
 			sb.append("where p.deleted = 0 and p.tenant_Id = ?" + index++ + " and (p.share_public = 1 or p.owner = ?" + index++
 					+ " or (p.is_system = 1 and p.application_type in (" + sbApps.toString() + "))) ");
 			paramList.add(tenantId);
@@ -780,8 +770,8 @@ public class DashboardManager
 			}
 			em = dsf.getEntityManager();
 			String currentUser = UserContext.getCurrentUser();
-//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
-//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
+			//			EmsDashboardFavoritePK edfpk = new EmsDashboardFavoritePK(currentUser, dashboardId);
+			//			EmsDashboardFavorite edf = em.find(EmsDashboardFavorite.class, edfpk);
 			EmsDashboardFavorite edf = dsf.getEmsDashboardFavoriteByPK(dashboardId, currentUser);
 			if (edf != null) {
 				dsf.removeEmsDashboardFavorite(edf);

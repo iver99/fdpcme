@@ -8,12 +8,6 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -24,6 +18,12 @@ import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.registration.R
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
 import oracle.sysman.emaas.platform.dashboards.core.restclient.DomainsEntity;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil.RestClient;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 /**
  * @author guobaochen
@@ -134,7 +134,8 @@ public class TenantSubscriptionUtilTest
 			+ "            \"uuid\": \"86a7a003-ce0a-4b1a-8fc4-aa2496b6189f\","
 			+ "            \"domainName\": \"InternalTenantIdMap\","
 			+ "            \"canonicalUrl\": \"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains/86a7a003-ce0a-4b1a-8fc4-aa2496b6189f\","
-			+ "            \"keys\": [" + "                {"
+			+ "            \"keys\": ["
+			+ "                {"
 			+ "                    \"name\": \"opcTenantId\""
 			+ "                },"
 			+ "                {"
@@ -156,14 +157,8 @@ public class TenantSubscriptionUtilTest
 			+ "            \"uuid\": \"b1f390b3-c2e1-4c1b-9977-5cf133e44a47\","
 			+ "            \"domainName\": \"HAHDFSClusterDomain\","
 			+ "            \"canonicalUrl\": \"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains/b1f390b3-c2e1-4c1b-9977-5cf133e44a47\","
-			+ "            \"keys\": [" + "                {"
-			+ "                    \"name\": \"NodeFqhn\""
-			+ "                }"
-			+ "            ]"
-			+ "        }"
-			+ "    ],"
-			+ "    \"count\": 12"
-			+ "}";
+			+ "            \"keys\": [" + "                {" + "                    \"name\": \"NodeFqhn\""
+			+ "                }" + "            ]" + "        }" + "    ]," + "    \"count\": 12" + "}";
 
 	// @formatter:off
 	private final static String TENANT_LOOKUP_RESULT = "{"
@@ -174,22 +169,11 @@ public class TenantSubscriptionUtilTest
 			+ "            \"domainName\": \"TenantApplicationMapping\","
 			+ "            \"uuid\": \"ea395485-3981-4fc3-94c0-900523f3ebd0\","
 			+ "            \"canonicalUrl\": \"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains/58bfe535-7134-4cae-be4a-d6d3dcfdb4d8/lookups/ea395485-3981-4fc3-94c0-900523f3ebd0\","
-			+ "            \"keys\": ["
-			+ "                {"
-			+ "                    \"name\": \"opcTenantId\","
-			+ "                    \"value\": \"emaastesttenant1\""
-			+ "                }" + "            ],"
-			+ "            \"values\": ["
-			+ "                {"
-			+ "                    \"opcTenantId\": \"emaastesttenant1\","
-			+ "                    \"applicationNames\": \"APM,LogAnalytics,ITAnalytics\""
-			+ "                }"
-			+ "            ],"
-			+ "            \"hash\": -2083815310"
-			+ "        }"
-			+ "    ],"
-			+ "    \"count\": 1"
-			+ "}";
+			+ "            \"keys\": [" + "                {" + "                    \"name\": \"opcTenantId\","
+			+ "                    \"value\": \"emaastesttenant1\"" + "                }" + "            ],"
+			+ "            \"values\": [" + "                {" + "                    \"opcTenantId\": \"emaastesttenant1\","
+			+ "                    \"applicationNames\": \"APM,LogAnalytics,ITAnalytics\"" + "                }"
+			+ "            ]," + "            \"hash\": -2083815310" + "        }" + "    ]," + "    \"count\": 1" + "}";
 	// @formatter:on
 	// @formatter:off
 	private static final String ENTITY_NAMING_DOMAIN_EMPTY_TENANT_APP_URL = "{"
@@ -295,7 +279,8 @@ public class TenantSubscriptionUtilTest
 			+ "            \"uuid\": \"86a7a003-ce0a-4b1a-8fc4-aa2496b6189f\","
 			+ "            \"domainName\": \"InternalTenantIdMap\","
 			+ "            \"canonicalUrl\": \"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains/86a7a003-ce0a-4b1a-8fc4-aa2496b6189f\","
-			+ "            \"keys\": [" + "                {"
+			+ "            \"keys\": ["
+			+ "                {"
 			+ "                    \"name\": \"opcTenantId\""
 			+ "                },"
 			+ "                {"
@@ -317,21 +302,11 @@ public class TenantSubscriptionUtilTest
 			+ "            \"uuid\": \"b1f390b3-c2e1-4c1b-9977-5cf133e44a47\","
 			+ "            \"domainName\": \"HAHDFSClusterDomain\","
 			+ "            \"canonicalUrl\": \"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains/b1f390b3-c2e1-4c1b-9977-5cf133e44a47\","
-			+ "            \"keys\": [" + "                {"
-			+ "                    \"name\": \"NodeFqhn\""
-			+ "                }"
-			+ "            ]"
-			+ "        }"
-			+ "    ],"
-			+ "    \"count\": 12"
-			+ "}";
+			+ "            \"keys\": [" + "                {" + "                    \"name\": \"NodeFqhn\""
+			+ "                }" + "            ]" + "        }" + "    ]," + "    \"count\": 12" + "}";
 
-	private final static String TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS = "{"
-			+ "    \"total\": 0,"
-			+ "    \"items\": ["
-			+ "    ],"
-			+ "    \"count\": 0"
-			+ "}";
+	private final static String TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPINGS = "{" + "    \"total\": 0," + "    \"items\": ["
+			+ "    ]," + "    \"count\": 0" + "}";
 
 	private final static String TENANT_LOOKUP_RESULT_EMPTY_APP_MAPPING_ENTITY = "{"
 			+ "    \"total\": 1,"
@@ -341,25 +316,16 @@ public class TenantSubscriptionUtilTest
 			+ "            \"domainName\": \"TenantApplicationMapping\","
 			+ "            \"uuid\": \"ea395485-3981-4fc3-94c0-900523f3ebd0\","
 			+ "            \"canonicalUrl\": \"http://den00zyr.us.oracle.com:7007/naming/entitynaming/v1/domains/58bfe535-7134-4cae-be4a-d6d3dcfdb4d8/lookups/ea395485-3981-4fc3-94c0-900523f3ebd0\","
-			+ "            \"keys\": ["
-			+ "                {"
-			+ "                    \"name\": \"opcTenantId\","
-			+ "                    \"value\": \"emaastesttenant1\""
-			+ "                }" + "            ],"
-			+ "            \"values\": ["
-			+ "            ],"
-			+ "            \"hash\": -2083815310"
-			+ "        }"
-			+ "    ],"
-			+ "    \"count\": 1"
-			+ "}";
+			+ "            \"keys\": [" + "                {" + "                    \"name\": \"opcTenantId\","
+			+ "                    \"value\": \"emaastesttenant1\"" + "                }" + "            ],"
+			+ "            \"values\": [" + "            ]," + "            \"hash\": -2083815310" + "        }" + "    ],"
+			+ "    \"count\": 1" + "}";
 
 	// @formatter:off
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices_EmptyAppMappingEntity_S2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient)
-					throws IOException
+			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
 
@@ -378,12 +344,12 @@ public class TenantSubscriptionUtilTest
 		};
 		List<String> services = TenantSubscriptionUtil.getTenantSubscribedServices("emaastesttenant1");
 		Assert.assertNull(services);
+		Assert.assertEquals(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { "APM" })), true);
 	}
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices_EmptyAppMappingJson_S2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient)
-					throws IOException
+			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
 
@@ -406,8 +372,7 @@ public class TenantSubscriptionUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices_EmptyAppMappings_S2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient)
-					throws IOException
+			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
 
@@ -451,7 +416,7 @@ public class TenantSubscriptionUtilTest
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices_EmptyDomainsEntity_S2(@Mocked RegistryLookupUtil anyUtil,
 			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil, @Mocked final DomainsEntity anyDomainsEntity)
-					throws IOException
+			throws IOException
 	{
 		final Link link = new Link();
 
@@ -479,8 +444,7 @@ public class TenantSubscriptionUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices_EmptyTenantAppUrl_S2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient)
-					throws IOException
+			@Mocked final RestClient anyClient) throws IOException
 	{
 		final Link link = new Link();
 
@@ -503,8 +467,7 @@ public class TenantSubscriptionUtilTest
 
 	@Test(groups = { "s2" })
 	public void testGetTenantSubscribedServices_IOException_S2(@Mocked RegistryLookupUtil anyUtil,
-			@Mocked final RestClient anyClient,@Mocked final JsonUtil anyJsonUtil)
-					throws IOException
+			@Mocked final RestClient anyClient, @Mocked final JsonUtil anyJsonUtil) throws IOException
 	{
 		final Link link = new Link();
 
@@ -564,8 +527,8 @@ public class TenantSubscriptionUtilTest
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList("APM", "ITA")));
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList(new String[] { null })));
 		Assert.assertFalse(TenantSubscriptionUtil.isAPMServiceOnly(Arrays.asList("test")));
-		Assert.assertTrue(TenantSubscriptionUtil
-				.isAPMServiceOnly(Arrays.asList(ApplicationEditionConverter.ApplicationOPCName.APM.toString())));
+		Assert.assertTrue(TenantSubscriptionUtil.isAPMServiceOnly(Arrays
+				.asList(ApplicationEditionConverter.ApplicationOPCName.APM.toString())));
 	}
 
 	@Test(groups = { "s2" })
@@ -580,7 +543,7 @@ public class TenantSubscriptionUtilTest
 			@Mocked final RegistrationManager anyRegistrationManager, @Mocked final URI anyUri,
 			@Mocked final UriBuilder anyUriBuilder, @Mocked final MediaType anyMediaType,
 			@Mocked final com.sun.jersey.api.client.WebResource.Builder anyBuilder, @Mocked final StringUtil anyStringUtil)
-					throws Exception
+			throws Exception
 	{
 		new NonStrictExpectations() {
 			{

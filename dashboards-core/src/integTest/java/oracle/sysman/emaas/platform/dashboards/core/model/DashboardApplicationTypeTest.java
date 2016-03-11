@@ -1,4 +1,3 @@
-
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import org.testng.Assert;
@@ -9,7 +8,7 @@ import org.testng.annotations.Test;
  */
 public class DashboardApplicationTypeTest
 {
-	@Test (groups = {"s1"})
+	@Test(groups = { "s2" })
 	public void testFromJsonValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM, DashboardApplicationType.fromJsonValue("APM"));
@@ -24,7 +23,7 @@ public class DashboardApplicationTypeTest
 		}
 	}
 
-	@Test (groups = {"s1"})
+	@Test(groups = { "s2" })
 	public void testFromValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM, DashboardApplicationType.fromValue(1));
@@ -39,7 +38,7 @@ public class DashboardApplicationTypeTest
 		}
 	}
 
-	@Test (groups = {"s1"})
+	@Test(groups = { "s2" })
 	public void testGetJsonValue()
 	{
 		Assert.assertEquals(DashboardApplicationType.APM_STRING, DashboardApplicationType.APM.getJsonValue());

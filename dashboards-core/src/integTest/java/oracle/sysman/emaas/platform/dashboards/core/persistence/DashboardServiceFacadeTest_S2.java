@@ -6,7 +6,11 @@ package oracle.sysman.emaas.platform.dashboards.core.persistence;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
@@ -23,6 +27,10 @@ import org.testng.annotations.Test;
  */
 public class DashboardServiceFacadeTest_S2
 {
+	private static int testSeq = 1;
+
+	//private static final String CURRENT_USER = "SYSMAN";
+	private static final long TENANT_ID = 100L;
 
 	private static void assertEmsDashboard(EmsDashboard emsdashboard)
 	{
@@ -219,8 +227,6 @@ public class DashboardServiceFacadeTest_S2
 
 	private EmsDashboardFavorite f;
 
-	private EmsDashboardLastAccess a;
-
 	//	/**
 	//	 * @throws java.lang.Exception
 	//	 */
@@ -236,9 +242,7 @@ public class DashboardServiceFacadeTest_S2
 	//	public static void tearDownAfterClass() throws Exception {
 	//	}
 
-	private static int testSeq = 1;
-	//private static final String CURRENT_USER = "SYSMAN";
-	private static final long TENANT_ID = 100L;
+	private EmsDashboardLastAccess a;
 
 	/**
 	 * @throws java.lang.Exception
@@ -324,6 +328,68 @@ public class DashboardServiceFacadeTest_S2
 		testGetEmsDashboardLastAccessByPK();
 		testPrefecence();
 		tearDown();
+	}
+
+	@Test(groups = { "s2" })
+	public void testCC(@Mocked final PersistenceManager mockpm, @Mocked final EntityManager mockem,
+			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket)
+	{
+		new NonStrictExpectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = mockem;
+				mockem.getTransaction();
+				result = mocket;
+				mocket.isActive();
+				result = false;
+				mockem.find((Class<?>) any, any);
+				result = null;
+				mockem.persist(any);
+				result = null;
+				mockem.merge(any);
+				result = null;
+			}
+		};
+
+		DashboardServiceFacade dsf = new DashboardServiceFacade(1L);
+		dsf.commitTransaction();
+		dsf.getEmsDashboardById(0L);
+		dsf.getEmsDashboardFavoriteByPK(0L, "test");
+		dsf.getEmsDashboardFindAll();
+		dsf.getEmsDashboardByName("ss", "test");
+		dsf.getEmsDashboardLastAccessByPK(0L, "test");
+		dsf.getEmsPreference("ss", "ss");
+		dsf.getEntityManager();
+		dsf.getEmsPreferenceFindAll("test");
+		dsf.getFavoriteEmsDashboards("");
+		dsf.mergeEmsDashboard(new EmsDashboard());
+		dsf.mergeEmsDashboardFavorite(new EmsDashboardFavorite());
+		dsf.mergeEmsDashboardLastAccess(new EmsDashboardLastAccess());
+		dsf.mergeEmsPreference(new EmsPreference());
+		dsf.persistEmsDashboard(new EmsDashboard());
+		dsf.persistEmsDashboardFavorite(new EmsDashboardFavorite());
+		dsf.persistEmsDashboardLastAccess(new EmsDashboardLastAccess());
+		dsf.persistEmsPreference(new EmsPreference());
+		dsf.removeAllEmsPreferences("");
+		EmsDashboard rd = new EmsDashboard();
+		rd.setDashboardId(0L);
+		dsf.removeEmsDashboard(rd);
+		EmsDashboardFavorite rdf = new EmsDashboardFavorite();
+		rdf.setDashboard(rd);
+		rdf.setUserName("");
+		dsf.removeEmsDashboardFavorite(rdf);
+		EmsDashboardLastAccess dla = new EmsDashboardLastAccess();
+		dla.setDashboardId(0L);
+		dla.setAccessedBy("");
+		dsf.removeEmsDashboardLastAccess(dla);
+		EmsPreference rp = new EmsPreference();
+		rp.setPrefKey("");
+		rp.setUserName("");
+		dsf.removeEmsPreference(rp);
 	}
 
 	/**

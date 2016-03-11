@@ -8,7 +8,7 @@ define(['dfutil', 'ojs/ojcore', 'jquery', 'knockout', 'ojs/ojpagingcontrol', 'oj
  */
 
 
- DashboardPaging = function(collection)
+ var DashboardPaging = function(collection)
 {
     this.collection = collection;
     this.current = 0;
@@ -211,7 +211,7 @@ DashboardPaging.prototype.getPageCount = function()
 
 DashboardPaging.prototype.refreshModel = function(modelId, options)
 {
-    var opts = options || {};
+//    var opts = options || {};
     var self = this;
     self.collection.get(modelId).then(
                 function (model){
@@ -258,7 +258,7 @@ DashboardPaging.prototype.create = function(attributes, options)
     catch (e) {
         var _e = e;
         self._refreshDataWindow().then(function() {
-            self._processError(opts, null, null, _e)});
+            self._processError(opts, null, null, _e);});
     }
 };
 
@@ -406,7 +406,7 @@ DashboardPaging.prototype.next = function()
     this.current += this.pageSize;
     var self = this;
     return this._refreshDataWindow().then(function() {
-                self._processSuccess(null)});
+                self._processSuccess(null);});
 };
 
 
@@ -421,7 +421,7 @@ DashboardPaging.prototype.previous = function()
     }
     var self = this;
     return this._refreshDataWindow().then(function() {
-                self._processSuccess(null)});
+                self._processSuccess(null);});
 };
 
 
@@ -470,6 +470,18 @@ DashboardPaging.prototype.getModelFromWindow = function(id)
     }
         
     return null;
+};
+
+/**
+ * Returns the confidence for the totalSize value. 
+ * @return {string} "actual" if the totalSize is the time of the fetch is an exact number 
+ *                  "estimate" if the totalSize is an estimate 
+ *                  "atLeast" if the totalSize is at least a certain number 
+ *                  "unknown" if the totalSize is unknown
+ */
+DashboardPaging.prototype.totalSizeConfidence = function()
+{ 
+  return "actual";
 };
 
 return {'DashboardPaging': DashboardPaging};

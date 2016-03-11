@@ -27,7 +27,7 @@ public class PersistenceManagerTest_S2
 		PersistenceManager.setTestEnv(true);
 	}
 
-	@Test
+	@Test(groups = { "s2" })
 	public void testPersistenceManager(@Mocked final Properties mockProperties, @Mocked final EntityManagerFactory memf,
 			@Mocked final EntityManager mem, @Mocked final SchemaUtil msu, @Mocked final Persistence mp, @Mocked final System ms,
 			@Mocked final Utils mu) throws Exception

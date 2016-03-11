@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-define(['builder/core/builder.event.dispatcher'], function(dsp) {
+define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function(dsp, ko, $) {
     var Builder = {
         _modules: {},
         _funcs: {},
@@ -46,7 +46,7 @@ define(['builder/core/builder.event.dispatcher'], function(dsp) {
     Builder.LINK_NAME_MAX_LENGTH = 4000;
     Builder.LINK_URL_MAX_LENGTH = 4000;
     Builder.BUILDER_DEFAULT_TILE_WIDTH = 4;
-    Builder.BUILDER_DEFAULT_TILE_HEIGHT = 1;
+    Builder.BUILDER_DEFAULT_TILE_HEIGHT = 2;
     Builder.DEFAULT_HEIGHT = 161;
     Builder.EDITOR_POS_BASED_ON_ROW_COLUMN = "BASED_ON_ROW_COLUMN";
     Builder.EDITOR_POS_FIND_SUITABLE_SPACE = "FIND_SUITABLE_SPACE";
@@ -57,6 +57,7 @@ define(['builder/core/builder.event.dispatcher'], function(dsp) {
         var self = this;
         
         self.dashboard = dashboard;
+        self.isDashboardUpdated = ko.observable(false);
         
         // module objects registration
         self._objects = {};
@@ -98,6 +99,9 @@ define(['builder/core/builder.event.dispatcher'], function(dsp) {
         self.EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL = "EVENT_EXISTS_TILE_SUPPORT_TIMECONTROL";
 
         self.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA = "EVENT_DISPLAY_CONTENT_IN_EDIT_AREA";
+        
+        self.EVENT_TILE_MOVE_STOPED = "EVENT_TILE_MOVE_STOPED";
+        self.EVENT_TILE_RESIZED = "EVENT_TILE_RESIZED";
 
         self.dispatcher = new dsp.Dispatcher();
         self.addEventListener = function(event, listener) {
@@ -150,7 +154,9 @@ define(['builder/core/builder.event.dispatcher'], function(dsp) {
             var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
-            var leftWidth = $('#dbd-left-panel').width();
+            var panelWidth = $('#dbd-left-panel').is(":visible") ? $('#dbd-left-panel').width() : 0;
+            var togglerWidth = $('#right-panel-toggler').is(":visible") ? $('#right-panel-toggler').outerWidth() : 0;
+            var leftWidth = panelWidth + togglerWidth;
             var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
             if (previousWidth && width >= NORMAL_MIN_WIDTH && previousWidth < NORMAL_MIN_WIDTH)
@@ -163,6 +169,17 @@ define(['builder/core/builder.event.dispatcher'], function(dsp) {
         self.addBuilderResizeListener = function(listener) {
             self.addEventListener(self.EVENT_BUILDER_RESIZE, listener);
         };
+        
+        function dashboardUpdatedListener(event) {
+            //console.log("Dahsbaord updated. Data: " + JSON.stringify(event));
+            self.isDashboardUpdated(true);
+        };
+        self.addEventListener(self.EVENT_TILE_ADDED, dashboardUpdatedListener);
+        self.addEventListener(self.EVENT_TILE_DELETED, dashboardUpdatedListener);
+        self.addEventListener(self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED, dashboardUpdatedListener);
+        //self.addEventListener(self.EVENT_BUILDER_RESIZE, dashboardUpdatedListener);
+        self.addEventListener(self.EVENT_TILE_MOVE_STOPED, dashboardUpdatedListener);
+        self.addEventListener(self.EVENT_TILE_RESIZED, dashboardUpdatedListener);
     }
     
     Builder.registerModule(DashboardBuilder, 'DashboardBuilder');

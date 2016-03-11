@@ -36,8 +36,7 @@ ko.bindingHandlers.dbsDashboardPanel = {
     }
 };
 
-var TITLE_MAX_LENGTH = 34, 
-    TAB_INDEX_ATTR = "tabindex";
+var TITLE_MAX_LENGTH = 34;
 
 $.widget('dbs.dbsDashboardPanel',
 {
@@ -69,7 +68,7 @@ $.widget('dbs.dbsDashboardPanel',
         
         active: false,
         
-        _activate: function(event, callback) {
+        _activate: function(event) {
             var self = this;
             if (self.active === false)
             {
@@ -95,7 +94,7 @@ $.widget('dbs.dbsDashboardPanel',
             }
         },
         
-        _deactivate: function(event, callback) {
+        _deactivate: function(event) {
             var self = this;
             if (self.active === true)
             {
@@ -186,7 +185,7 @@ $.widget('dbs.dbsDashboardPanel',
                                   .addClass(self.classNames['headerTitle'])
                                   .text(_title);
             self.headerElement.append(self.titleElement); 
-            var _name = self.options['dashboard'].name;
+            _name = self.options['dashboard'].name;
             if ( _name &&  _name.length > TITLE_MAX_LENGTH)
             {
                 //self.headerElement.attr("dbstooltip", self.options['dashboard'].name);
@@ -196,7 +195,7 @@ $.widget('dbs.dbsDashboardPanel',
             // add toolbar
             self.toolbarElement = $("<div></div>").addClass(self.classNames['headerToolbar']);
             
-            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
+            self.infoElement = $("<button data-bind=\"ojComponent: { component:'ojButton', chroming: 'half', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon dbs-icon-size-16'}}\"></button>")
                     .addClass("oj-button-half-chrome oj-sm-float-end")
                     .on('click.'+_name, function(event) {
                         //prevent event bubble

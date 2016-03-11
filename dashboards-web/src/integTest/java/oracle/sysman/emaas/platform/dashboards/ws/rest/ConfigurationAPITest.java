@@ -30,16 +30,16 @@ public class ConfigurationAPITest {
         Assert.assertNotNull(discoveryConfigurations2);
     }
 
-    @Test
-    public void testGetDiscoveryConfigurations1(){
-        Deencapsulation.setField(ConfigurationAPI.class, "responseError", null);
-        Assert.assertNotNull(configurationAPI.getDiscoveryConfigurations("", null, null, null));
-    }
+    //@Test
+    //public void testGetDiscoveryConfigurations1(){
+        //Deencapsulation.setField(ConfigurationAPI.class, "responseError", null);
+        //Assert.assertNotNull(configurationAPI.getDiscoveryConfigurations("", null, null, null));
+    //}
 
-    @Test
-    public void testGetDiscoveryConfigurations2(){
-        Deencapsulation.setField(ConfigurationAPI.class, "responseError", null);
-        Assert.assertNotNull(configurationAPI.getDiscoveryConfigurations("tenantIdParam", "userTenant", "referer", "sessionExpiryTime"));
-    }
+    //@Test
+    //public void testGetDiscoveryConfigurations2(){
+        //Deencapsulation.setField(ConfigurationAPI.class, "responseError", null);
+        //Assert.assertNotNull(configurationAPI.getDiscoveryConfigurations("tenantIdParam", "userTenant", "referer", "sessionExpiryTime"));
+    //}
 
 }
