@@ -77,7 +77,7 @@ define([
                 var predataModel = new model.PredataModel();
                 
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel, {owners: ['Me', 'Others'],types:['NORMAL']});
+                    var dashboardsViewModle = new model.ViewModel(predataModel, ['Me', 'Others','NORMAL','sharePublic']);
                     
                     dashboardsViewModle.showExploreDataBtn(false);
                     

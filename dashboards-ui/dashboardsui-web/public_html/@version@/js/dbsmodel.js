@@ -200,8 +200,13 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), self.filter.toFilterString()
-                                                   /*filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']*/);
+        
+        var filterString = self.filter.toFilterString()||"";
+        if(defaultFilters && Array.isArray(defaultFilters)){
+           filterString = filterString +","+ defaultFilters.join(",");
+        }
+        
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
                     if (_event['data'])
