@@ -53,21 +53,40 @@ define(['knockout',
                 "refresh":ko.observable(dashboardInst.enableRefresh()),
                 "refreshOffIcon":ko.observable("dbd-icon-check"),
                 "refreshOnIcon":ko.observable("dbd-noselected"),
-                "share": ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off"), 
-                "favoriteIcon": ko.observable("fa-star"), 
-                "favoriteLabel": ko.observable(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD")), 
-                "setHome": ko.observable(true), 
-                "homeLabel": ko.observable(getNlsString("DBS_BUILDER_BTN_HOME_SET")), 
-                "homeIcon": ko.observable("dbd-toolbar-icon-home")
-            };            
-            self.dashboardsetConfig.addFavorite = ko.observable(function () {
-                var fetchFavorite = ko.unwrap(dashboardInst.favorite);
-                if (typeof (fetchFavorite) === 'undefined') {
-                    fetchFavorite = true;
-                } else {
-                    fetchFavorite = false;
+                "share": ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off")
+            };
+            
+            self.dashboardsetConfig.setHome = ko.observable(true);
+            var prefUtil = new pfu(dfu.getPreferencesUrl(), dfu.getDashboardsRequestHeader());
+            var prefKeyHomeDashboardId = "Dashboards.homeDashboardId";
+            prefUtil.getAllPreferences({
+                async: false,
+                success: function(resp) {
+                    var value = prefUtil.getPreferenceValue(resp, prefKeyHomeDashboardId);
+                    if (value == ko.unwrap(dashboardInst.id)) {
+                        self.dashboardsetConfig.setHome = ko.observable(false);
+                    }
                 }
-                return fetchFavorite;
+            });
+           
+            self.dashboardsetConfig.homeIcon = ko.observable("dbd-toolbar-icon-home");
+            self.dashboardsetConfig.homeLabel = ko.pureComputed(function () {
+                return getNlsString(self.dashboardsetConfig.setHome() ?
+                        "DBS_BUILDER_BTN_HOME_SET" :
+                        "DBS_BUILDER_BTN_HOME_REMOVE");
+            });
+             
+            self.dashboardsetConfig.addFavorite = ko.observable(true);
+            Builder.checkDashboardFavorites(ko.unwrap(dashboardInst.id), function (resp) {
+                self.dashboardsetConfig.addFavorite(!(resp && resp.isFavorite));
+            });
+            self.dashboardsetConfig.favoriteIcon = ko.pureComputed(function () {
+                return self.dashboardsetConfig.addFavorite() ? "fa-star" : "fa-star-o";
+            });
+            self.dashboardsetConfig.favoriteLabel = ko.pureComputed(function () {
+                return getNlsString(self.dashboardsetConfig.addFavorite() ?
+                        "DBS_BUILDER_BTN_FAVORITES_ADD" :
+                        "DBS_BUILDER_BTN_FAVORITES_REMOVE");
             });
 
             var dashboardsetEditDisabled = function () {
@@ -400,24 +419,92 @@ define(['knockout',
                      $('#changeDashboardsetInfo').ojDialog("close"); 
                 };
                 this.favoriteDbs = function (dbsToolBar) {
-                    dbsToolBar.dashboardsetConfig.addFavorite(!dbsToolBar.dashboardsetConfig.addFavorite());
-                    if (dbsToolBar.dashboardsetConfig.addFavorite()) {
-                        dbsToolBar.dashboardsetConfig.favoriteIcon("fa-star");
-                        dbsToolBar.dashboardsetConfig.favoriteLabel(getNlsString("DBS_BUILDER_BTN_FAVORITES_ADD"));
+                    var addFavorite = dbsToolBar.dashboardsetConfig.addFavorite();
+                    
+                    if (addFavorite) {
+                        Builder.addDashboardToFavorites(
+                                ko.unwrap(dashboardInst.id),
+                                function () {
+                                    dbsToolBar.dashboardsetConfig.addFavorite(false);
+                                    dfu.showMessage({
+                                        type: 'confirm',
+                                        summary: getNlsString('DBS_BUILDER_MSG_ADD_FAVORITE_SUCC'),
+                                        detail: '',
+                                        removeDelayTime: 5000
+                                    });
+                                },
+                                function () {
+                                    dfu.showMessage({
+                                        type: 'error',
+                                        summary: getNlsString('DBS_BUILDER_MSG_ADD_FAVORITE_FAIL'),
+                                        detail: ''
+                                    });
+                                });
                     } else {
-                        dbsToolBar.dashboardsetConfig.favoriteIcon("fa-star-o");
-                        dbsToolBar.dashboardsetConfig.favoriteLabel(getNlsString("DBS_BUILDER_BTN_FAVORITES_REMOVE"));
-                    }                               
+                        Builder.removeDashboardFromFavorites(
+                                ko.unwrap(dashboardInst.id),
+                                function () {
+                                    dbsToolBar.dashboardsetConfig.addFavorite(true);
+                                    dfu.showMessage({
+                                        type: 'confirm',
+                                        summary: getNlsString('DBS_BUILDER_MSG_REMOVE_FAVORITE_SUCC'),
+                                        detail: '',
+                                        removeDelayTime: 5000
+                                    });
+                                },
+                                function () {
+                                    dfu.showMessage({
+                                        type: 'error',
+                                        summary: getNlsString('DBS_BUILDER_MSG_REMOVE_FAVORITE_FAIL'),
+                                        detail: ''
+                                    });
+                                });
+                    }
                 };
-                this.homeDbs = function(dbsToolBar){
-                     dbsToolBar.dashboardsetConfig.setHome(!dbsToolBar.dashboardsetConfig.setHome());
-                        if(dbsToolBar.dashboardsetConfig.setHome()){
-                           dbsToolBar.dashboardsetConfig.homeIcon("dbd-toolbar-icon-home"); 
-                           dbsToolBar.dashboardsetConfig.homeLabel(getNlsString("DBS_BUILDER_BTN_HOME_SET")); 
-                        }else{
-                           dbsToolBar.dashboardsetConfig.homeIcon("dbd-toolbar-icon-home");  
-                           dbsToolBar.dashboardsetConfig.homeLabel(getNlsString("DBS_BUILDER_BTN_HOME_REMOVE")); 
-                        }
+                this.homeDbs = function (dbsToolBar) {
+                    var setHome = dbsToolBar.dashboardsetConfig.setHome();
+
+                    if (setHome) {
+                        prefUtil.setPreference(prefKeyHomeDashboardId, ko.unwrap(dashboardInst.id), {
+                            async: false,
+                            success: function() {
+                                dbsToolBar.dashboardsetConfig.setHome(false);                    
+                                dfu.showMessage({
+                                    type: 'confirm',
+                                    summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_SUCC'),
+                                    detail: '',
+                                    removeDelayTime: 5000
+                                });
+                            },
+                            error: function() {
+                                dfu.showMessage({
+                                    type: 'error',
+                                    summary: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_FAIL'),
+                                    detail: ''
+                                });
+                            }
+                        });
+                    } else {
+                        prefUtil.removePreference(prefKeyHomeDashboardId, {
+                            async: false,
+                            success: function () {
+                                dbsToolBar.dashboardsetConfig.setHome(true);
+                                dfu.showMessage({
+                                        type: 'confirm',
+                                        summary: getNlsString('DBS_BUILDER_MSG_REMOVE_AS_HOME_SUCC'),
+                                        detail: '',
+                                        removeDelayTime: 5000
+                                });
+                            },
+                            error: function() {
+                                dfu.showMessage({
+                                    type: 'error',
+                                    summary: getNlsString('DBS_BUILDER_MSG_REMOVE_AS_HOME_FAIL'),
+                                    detail: ''
+                                });
+                            }
+                        });
+                    }
                 };  
                  this.refreshDbs= function(dbsToolBar){
                     dbsToolBar.dashboardsetConfig.refresh(!dbsToolBar.dashboardsetConfig.refresh());
