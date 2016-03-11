@@ -35,6 +35,7 @@ define([
                 self.affirmativeButtonLabel = affirmativeTxt ? affirmativeTxt : nls.WIDGET_SELECTOR_DEFAULT_AFFIRMATIVE_BTN_LABEL;
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
+                self.widgetsLoadingHints = nls.WIDGET_SELECTOR_WIDGETS_LOADING_HINT;
                         
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
@@ -69,6 +70,7 @@ define([
                 self.naviNextBtnEnabled=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
+                self.widgetOnLoading = ko.observable(true);
                 
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
@@ -398,6 +400,7 @@ define([
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
                     self.searchText("");
+                    self.widgetOnLoading(true);
                     refreshPageData();
                     
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
@@ -414,6 +417,7 @@ define([
                             else {
                                 refreshPageData();
                             }
+                            self.widgetOnLoading(false);
                         })
                         .fail(function(xhr, textStatus, errorThrown){
                             oj.Logger.error("Failed to fetch widgets.");
