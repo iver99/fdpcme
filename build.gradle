@@ -150,6 +150,8 @@ configurations {
 	prebuild_testng { transitive = false }
 	prebuild_wlfullc { transitive = false }
 	prebuild_tenant { transitive = false }
+	prebuild_groovy { transitive = false }
+	prebuild_integtest { transitive = false }
 compile.exclude group: "com.google.code.findbugs", module: "annotations"
 }
 
@@ -168,6 +170,7 @@ dependencies {
 				'javax.servlet:servlet-api:2.5',
 				'javax.ws.rs:javax.ws.rs-api:2.0',
 				'commons-codec:commons-codec:1.6',
+				'org.apache.commons:commons-lang3:3.1',
 				'commons-logging:commons-logging:1.1.1'
 	prebuild_junit 'org.hamcrest:hamcrest-core:1.3', 'junit:junit:3.8.1'
 	prebuild_apacheHttp 'org.apache.httpcomponents:httpclient:4.3.1',
@@ -180,11 +183,19 @@ dependencies {
 			'com.sun.jersey:jersey-core:1.17.1',
 			'com.sun.jersey:jersey-json:1.17.1', 
 			'com.sun.jersey:jersey-server:1.17.1', 
+			'com.sun.jersey:jersey-client:1.17.1', 
 			'com.sun.jersey:jersey-servlet:1.17.1',
-			'org.codehaus.jettison:jettison:1.3.4'
+			'com.sun.jersey.contribs:jersey-multipart:1.17.1',
+			'org.codehaus.jettison:jettison:1.3.4',
+			'com.jayway.restassured:json-path:2.3.1'
 	prebuild_wlfullc 'com.oracle.weblogic:wlfullclient:12.1.2-0-0'
 	prebuild_tenant 'com.oracle.emaas:emaas-platform-tenant-sdk:0.2',
 			 "${regClientLookupResolver}"
+	prebuild_groovy 'org.codehaus.groovy:groovy-all:2.2.1'
+	prebuild_integtest 'com.jayway.restassured:xml-path:2.3.1',
+	                   'com.jayway.restassured:rest-assured:2.3.1',
+	                   'com.jayway.restassured:rest-assured-common:2.3.1',
+	                   'org.jmockit:jmockit:1.19'
 }
 
 task runS1Tests(type: Exec) {
@@ -223,9 +234,12 @@ task preBuildCompile(type: Copy) {
    from configurations.testNG
    from configurations.prebuild_wlfullc
    from configurations.prebuild_tenant
+   from configurations.prebuild_groovy
+   from configurations.prebuild_integtest
    into "$afDir"
    rename(/registry-client-1.\d+.\d+-\d+.jar/, 'registry-client-1.x.jar')
    rename(/registry-lookup-client-1.\d+.\d+-\d+.jar/, 'registry-lookup-client-1.x.jar')
+   rename(/em-qatool-os-webdriver-2.0.0-\d+.jar/, 'em-qatool-os-webdriver-2.0.0.jar')
 }
 
 compileJava.dependsOn preBuildCompile

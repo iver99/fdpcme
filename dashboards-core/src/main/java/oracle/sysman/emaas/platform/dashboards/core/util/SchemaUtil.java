@@ -417,7 +417,7 @@ public class SchemaUtil
 			}
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			logger.error("an error occureed while getting schema user by software name", e);
 		}
 		return null;
 	}
