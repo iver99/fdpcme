@@ -1,14 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import mockit.Expectations;
 import mockit.Mocked;
+import mockit.NonStrictExpectations;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
@@ -45,6 +48,216 @@ public class DashboardManagerTest_S2
 	{
 		new MockDashboardServiceFacade();
 		TenantContext.setCurrentTenant("TenantOPC1");
+	}
+
+	@Test(groups = "s2")
+	public void testCC(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
+			@Mocked final EntityManager anyEntityManager, @Mocked final TenantContext anyTC,
+			@Mocked final TenantSubscriptionUtil anyTSU) throws DashboardException, InterruptedException
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.getDashboardByName(null, 0L);
+		dm.getLastAccessDate(null, 0L);
+		try {
+			dm.isDashboardFavorite(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.saveNewDashboard(null, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(null, true, 0L);
+		dm.updateDashboard(null, 0L);
+		dm.updateLastAccessDate(null, 0L);
+
+		final EmsDashboard ed = new EmsDashboard();
+		ed.setDashboardId(1L);
+		ed.setDeleted(1L);
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = ed;
+			}
+		};
+		dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.deleteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+
+		dm.getLastAccessDate(1L, 0L);
+		try {
+			dm.isDashboardFavorite(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(1L, true, 0L);
+		dm.updateLastAccessDate(1L, 0L);
+
+		ed.setApplicationType(3); //LA dashboard
+		ed.setDeleted(0L);
+		ed.setSharePublic(0);
+		ed.setOwner("unknown");
+		ed.setIsSystem(0);
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = ed;
+			}
+		};
+		dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.deleteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+
+		dm.getLastAccessDate(1L, 0L);
+		try {
+			dm.isDashboardFavorite(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(1L, true, 0L);
+		dm.updateLastAccessDate(1L, 0L);
+		Dashboard d = new Dashboard();
+		d.setDashboardId(1L);
+		try {
+			dm.saveNewDashboard(d, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		//dm.getDashboardByName("ss", 0L);
+		//dm.saveNewDashboard(null, 0L);
+		//dm.updateDashboard(null, 0L);
+
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = null;
+			}
+		};
+		try {
+			dm.deleteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardByName(anyString, anyString);
+				result = new NoResultException("");
+			}
+		};
+		dm.getDashboardByName("ss", 0L);
+
+		ed.setOwner("Oracle");
+		ed.setIsSystem(1);
+		new NonStrictExpectations() {
+			{
+				anyDashboardServiceFacade.getEmsDashboardById(anyLong);
+				result = ed;
+				TenantContext.getCurrentTenant();
+				result = "opcTenantId";
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				result = Arrays.asList(new String[] { "APM", "ITAnalytics" });
+			}
+		};
+		dm = DashboardManager.getInstance();
+		try {
+			dm.addFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardBase64ScreenShotById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.getDashboardById(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+
+		dm.getLastAccessDate(1L, 0L);
+		try {
+			dm.isDashboardFavorite(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		try {
+			dm.removeFavoriteDashboard(1L, 0L);
+		}
+		catch (DashboardException e) {
+		}
+		dm.setDashboardIncludeTimeControl(1L, true, 0L);
+		dm.updateLastAccessDate(1L, 0L);
+		//dm.getDashboardByName("ss", 0L);
+		//dm.saveNewDashboard(null, 0L);
+		//dm.updateDashboard(null, 0L);
 	}
 
 	@Test(groups = { "s2" })
@@ -687,8 +900,8 @@ public class DashboardManagerTest_S2
 
 	@Test(groups = "s2")
 	public void testListDashboard_S2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
-			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery, @Mocked final ArrayList<?> mockList)
-			throws DashboardException, InterruptedException
+			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery) throws DashboardException,
+			InterruptedException
 	{
 		final List<EmsDashboard> emsDashboards = new ArrayList<EmsDashboard>();
 

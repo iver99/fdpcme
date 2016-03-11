@@ -30,6 +30,35 @@ import org.testng.annotations.Test;
 public class DBConnectionManagerTest
 {
 	@Test(groups = { "s2" })
+	public void tesIsDatabaseConnectionAvailableException(@Mocked final PersistenceManager mockpm,
+			@Mocked final EntityManager mockem, @Mocked final EntityManagerFactory mockemf,
+			@Mocked final EntityTransaction mocket, @Mocked final Query mockquery)
+	{
+		new NonStrictExpectations() {
+			{
+				PersistenceManager.getInstance();
+				result = mockpm;
+				mockpm.getEntityManagerFactory();
+				result = mockemf;
+				mockemf.createEntityManager();
+				result = mockem;
+				mockem.getTransaction();
+				result = mocket;
+				mockem.find((Class<?>) any, any);
+				result = null;
+				mockem.createNativeQuery(anyString);
+				result = mockquery;
+				mockquery.getSingleResult();
+				result = new Exception();
+			}
+		};
+
+		DBConnectionManager dbcm = DBConnectionManager.getInstance();
+		boolean isException = false;
+		Assert.assertEquals(dbcm.isDatabaseConnectionAvailable(), false);
+	}
+
+	@Test(groups = { "s2" })
 	public void testIsDatabaseConnectionAvailable(@Mocked final PersistenceManager mockpm, @Mocked final EntityManager mockem,
 			@Mocked final EntityManagerFactory mockemf, @Mocked final EntityTransaction mocket, @Mocked final Query mockquery)
 	{
@@ -55,34 +84,5 @@ public class DBConnectionManagerTest
 		DBConnectionManager dbcm = DBConnectionManager.getInstance();
 		Assert.assertEquals(dbcm.isDatabaseConnectionAvailable(), true);
 	}
-
-	//	@Test(groups = { "s2" })
-	//	public void tesIsDatabaseConnectionAvailableException(@Mocked final PersistenceManager mockpm,
-	//			@Mocked final EntityManager mockem, @Mocked final EntityManagerFactory mockemf,
-	//			@Mocked final EntityTransaction mocket, @Mocked final Query mockquery)
-	//	{
-	//		new NonStrictExpectations() {
-	//			{
-	//				PersistenceManager.getInstance();
-	//				result = mockpm;
-	//				mockpm.getEntityManagerFactory();
-	//				result = mockemf;
-	//				mockemf.createEntityManager();
-	//				result = mockem;
-	//				mockem.getTransaction();
-	//				result = mocket;
-	//				mockem.find((Class<?>) any, any);
-	//				result = null;
-	//				mockem.createNativeQuery(anyString);
-	//				result = mockquery;
-	//				mockquery.getSingleResult();
-	//				result = new Exception();
-	//			}
-	//		};
-	//
-	//		DBConnectionManager dbcm = DBConnectionManager.getInstance();
-	//		boolean isException = false;
-	//		Assert.assertEquals(dbcm.isDatabaseConnectionAvailable(), false);
-	//	}
 
 }
