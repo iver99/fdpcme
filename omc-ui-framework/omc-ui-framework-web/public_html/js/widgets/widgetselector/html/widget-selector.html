@@ -48,6 +48,10 @@
                     <!-- /ko -->
                 </div>
                 <div id="widget-selector-widgets">
+                    <!-- ko if: widgetOnLoading -->
+                    <div id="widget-selector-loading" data-bind="text: widgetsLoadingHints"></div>
+                    <!-- /ko -->
+                    <!-- ko if not: widgetOnLoading -->
                     <ul style="text-align: left; padding: 0px; margin-left: 5px; margin-top: 5px;">
                         <!-- ko foreach: curPageWidgetList -->
                         <li class="widget-selector-li">
@@ -78,6 +82,7 @@
                         </li>
                         <!-- /ko -->
                     </ul>
+                    <!-- /ko -->
                 </div>
                 <div style="width:840px;height:24px;">
                     <div style="float:right;height:24px;">
