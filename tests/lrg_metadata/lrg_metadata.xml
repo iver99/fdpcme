@@ -1,10 +1,6 @@
 <?xml version="1.0" ?>
 <lrg-metadata>
-     <lrg name="emcpdf_qa_test" launcher="tests/suites/emcpdf_qa_test.gradle" description="lrg for QATest">
-         <pipelines>
-            <pipeline name="COMPONENT"/>
-         </pipelines>
-     </lrg>
+
 <lrg name="emcpdf_qa_test_3n" launcher="tests/suites/emcpdf_qa_test_3n.gradle" description="product lrg for QATest">
          <pipelines>
             <pipeline name="PRODUCT"/>

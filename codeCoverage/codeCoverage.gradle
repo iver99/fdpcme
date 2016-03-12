@@ -351,6 +351,9 @@ else {
     afterEvaluate {
         // some tasks apply only to projects with java plugin applied.
         if (project.plugins.hasPlugin('java')) {
+	jacoco { 
+   	 toolVersion = '0.7.2.201409121644' 
+  	} 
 
             jacocoTestReport {
                 executionData = fileTree(dir: "${buildDir}/jacoco", include: '**/*.exec')
@@ -365,10 +368,6 @@ else {
             // Iterate on tasks of type test for this project
             project.tasks.withType(Test) { task ->
                 def execName = 'test.exec'
-
-        if ((task.name != 'test') && !task.name.toLowerCase().contains("s1") && !task.name.toLowerCase().contains("s2")) {
-          execName = 'integTest.exec'
-        }
 
                 task.jacoco {
                     destinationFile = file("${buildDir}/jacoco/" + execName)

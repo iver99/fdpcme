@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/integTest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-client-1.x.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/registry-lookup-client-1.x.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/log4j-api-2.0.1.jar"/>
-	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.system">
-		<attributes>
-			<attribute name="owner.project.facets" value="jst.utility"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="oracle.eclipse.tools.weblogic.lib.application/dashboards-ee"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dashboards-core"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-core-1.17.1.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jersey-client-1.17.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jmockit-1.19.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/testng-6.8.8.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-core-asl-1.9.13.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-jaxrs-1.9.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-mapper-asl-1.9.13.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jackson-xc-1.9.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/wlfullclient-12.1.2-0-0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

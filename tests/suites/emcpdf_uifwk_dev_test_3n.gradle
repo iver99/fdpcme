@@ -80,6 +80,7 @@ dependencies {
 	testConfig(group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13') { transitive = false }
 	testConfig(group: 'org.codehaus.jackson', name: 'jackson-xc', version: '1.9.2') { transitive = false }
 	testConfig(group: 'com.oracle.emaas.emcpdf.test', name: 'omc-ui-framework-webutils', version:"${REPO_BID}")
+	testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 configurations {
 restAssured.exclude module: 'groovy'
 }

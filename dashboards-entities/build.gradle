@@ -1,5 +1,5 @@
 apply plugin: 'eclipse'
-
+apply from: 'test.gradle'
 jar {
 	from('src/main/java/META-INF')
 	{ 
@@ -19,7 +19,26 @@ artifactoryPublish {
         publications('thisJarPublication')
 }
 
+test {
+	useTestNG()
+			{
+				//We explicity include only tests annotate as s1 or s2 - they are "short-running" tests,
+				//if you wish to run ALL tests within this projet - remove following.
+				includeGroups 's1' ,'s2'
+			}
+}
+
 dependencies {
 	compile(group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.0.5') { transitive = false }
 	compile(group: 'org.eclipse.persistence', name: 'eclipselink', version: '2.4.2')  { transitive = false }
+	compile configurations.testNG
+}
+
+sourceSets {
+	test{
+		java {
+			srcDirs = ['src/integTest/java']
+		}
+		resources.srcDirs = ['src/integTest/java']
+	}
 }

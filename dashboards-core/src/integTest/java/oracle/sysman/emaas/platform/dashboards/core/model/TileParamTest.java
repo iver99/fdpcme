@@ -1,7 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
 import java.math.BigDecimal;
-import java.util.logging.Logger;
 
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 
@@ -14,7 +13,7 @@ import org.testng.annotations.Test;
 public class TileParamTest
 {
 
-	@Test (groups = {"s1"})
+	@Test(groups = { "s2" })
 	public void testGetValue()
 	{
 		//Logger logger = EMTestLogger.getLogger("testGetValue");
@@ -42,7 +41,7 @@ public class TileParamTest
 		Assert.assertNull(tp.getValue());
 	}
 
-	@Test (groups = {"s1"})
+	@Test(groups = { "s2" })
 	public void testSetValue() throws CommonFunctionalException
 	{
 		//Logger logger = EMTestLogger.getLogger("testSetValue");
