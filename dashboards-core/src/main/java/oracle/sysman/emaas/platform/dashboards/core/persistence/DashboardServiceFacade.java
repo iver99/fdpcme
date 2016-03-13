@@ -288,4 +288,11 @@ public class DashboardServiceFacade
 		em.remove(emsPreference);
 		commitTransaction();
 	}
+
+	public int removeEmsSubDashboardById(long subDashboardId) {
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeDashboardSets",EmsSubDashboard.class).setParameter("p",subDashboardId).executeUpdate();
+		commitTransaction();
+		return deleteCout;
+	}
+
 }

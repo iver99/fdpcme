@@ -378,6 +378,7 @@ public class Dashboard
                 updateEmsSubDashboards(subDashboards,ed);
             }else{
                 updateEmsDashboardTiles(tileList, ed);
+				removeUnsharedDashboards(ed);
             }
 
 		}
@@ -613,6 +614,14 @@ public class Dashboard
 
                 }
             }
+        }
+    }
+
+    private void removeUnsharedDashboards(EmsDashboard ed) {
+        if (ed.getSharePublic() == 0) {
+            Long tenantId = ed.getTenantId();
+            DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+            dsf.removeEmsSubDashboardById(ed.getDashboardId());
         }
     }
 }
