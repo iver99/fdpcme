@@ -30,6 +30,9 @@ public class EmsUserOptions implements Serializable {
     @Column(name = "AUTO_REFRESH_INTERVAL", nullable = false, length = 256)
     Long autoRefreshInterval;
 
+    @Column(name = "EXTENDED_OPTIONS", length = 128)
+    String extendedOptions;
+
     public EmsUserOptions() {
 
     }
@@ -56,5 +59,13 @@ public class EmsUserOptions implements Serializable {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getExtendedOptions() {
+        return extendedOptions;
+    }
+
+    public void setExtendedOptions(String extendedOptions) {
+        this.extendedOptions = extendedOptions;
     }
 }

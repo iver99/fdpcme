@@ -13,6 +13,7 @@ public class UserOptions {
     private String userName;
     private Long dashboardId;
     private Long autoRefreshInterval;
+    private String extendedOptions;
 
     public String getUserName() {
         return userName;
@@ -38,6 +39,14 @@ public class UserOptions {
         this.autoRefreshInterval = autoRefreshInterval;
     }
 
+    public String getExtendedOptions() {
+        return extendedOptions;
+    }
+
+    public void setExtendedOptions(String extendedOptions) {
+        this.extendedOptions = extendedOptions;
+    }
+
     public static UserOptions valueOf(EmsUserOptions emsUserOptions) {
         if (emsUserOptions == null) {
             return null;
@@ -46,6 +55,7 @@ public class UserOptions {
         userOptions.setAutoRefreshInterval(Long.valueOf(emsUserOptions.getAutoRefreshInterval()));
         userOptions.setUserName(emsUserOptions.getUserName());
         userOptions.setDashboardId(Long.valueOf(emsUserOptions.getDashboardId()));
+        userOptions.setExtendedOptions(emsUserOptions.getExtendedOptions());
         return userOptions;
     }
 
@@ -69,6 +79,7 @@ public class UserOptions {
         euo.setAutoRefreshInterval(autoRefreshInterval);
         euo.setDashboardId(dashboardId);
         euo.setUserName(userName);
+        euo.setExtendedOptions(extendedOptions);
 
         return euo;
     }
