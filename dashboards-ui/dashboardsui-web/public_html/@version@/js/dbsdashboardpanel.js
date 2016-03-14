@@ -250,16 +250,17 @@ $.widget('dbs.dbsDashboardPanel',
                 self._setBase64ScreenShot(_ss);
             }
             else {
-                if (_dashboard['systemDashboard'] === true || (_dashboard['tiles'] && _dashboard['tiles'].length > 0))
-                {
-                   
-              var url =  _dashboard['screenShotHref'];
-              url = dfu.getRelUrlFromFullUrl(url);
-              if (dfu.isDevMode()){
-                  url = dfu.buildFullUrl(dfu.getDashboardsUrl(),'/'+ self.options['dashboard']['id'] + '/screenshot');
-              } 
+                if (_dashboard['systemDashboard'] === true
+                        || (_dashboard['tiles'] && _dashboard['tiles'].length > 0)
+                        || (_dashboard['subDashboards'] && _dashboard['subDashboards'].length > 0)) {
+
+                    var url = _dashboard['screenShotHref'];
+                    url = dfu.getRelUrlFromFullUrl(url);
+                    if (dfu.isDevMode()) {
+                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), '/' + self.options['dashboard']['id'] + '/screenshot');
+                    } 
               
-                   dfu.ajaxWithRetry({
+                    dfu.ajaxWithRetry({
                             //This will be a page which will return the base64 encoded string
                         //url: '/sso.static/dashboards.service/' + self.options['dashboard']['id'] + '/screenshot',//self.options['dashboard']['screenShotHref'], 
                         url: url,                   
