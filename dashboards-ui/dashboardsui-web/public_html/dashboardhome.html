@@ -68,7 +68,7 @@
     <!-- Home toolbar end -->
     <!-- tiles panel start -->
     <!-- ko if: $component.isTilesView() === 'gridtview' -->
-    <div id="dtabhomesc" class="dbs-summaries-container">
+    <div id="dtabhomesc" class="dbs-summaries-container" style="margin-bottom: 2%">
         <!-- ko foreach: dashboards -->
         <div tabindex="0" class="oj-panel dbs-summary-container" 
              data-tag data-bind="dbsDashboardPanel: {
@@ -143,3 +143,25 @@
     </div>   
 </div>
 <!-- dashboard info popup end-->
+
+<!-- Confirmation dilog start -->
+<div style="display:none" id="dbs_cfmDialog"
+     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+    <div class="oj-dialog-header oj-helper-clearfix">
+        <!--div class="oj-dialog-header-close-wrapper" >
+            <a class="df-dialog-header-close" tabindex="0" data-bind="click: confirmDialogModel.close, event: { keydown: confirmDialogModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
+        </div-->
+        <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
+    </div>
+    <div class="oj-dialog-body">
+        <p data-bind="text: confirmDialogModel.message"></p>
+    </div>
+    <div class="oj-dialog-footer">
+        <button data-bind="click: confirmDialogModel.okFunction, 
+                                               ojComponent: { component: 'ojButton', label: confirmDialogModel.okLabel, rootAttributes: {style:'margin-right:5px'}}"></button>
+        <button data-bind="visible: confirmDialogModel.showCancel, click: confirmDialogModel.close, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
+    </div>
+</div>
+<!-- Confirmation dilog end -->

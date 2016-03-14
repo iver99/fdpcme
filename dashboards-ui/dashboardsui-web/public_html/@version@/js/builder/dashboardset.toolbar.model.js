@@ -206,7 +206,6 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
-                    $('#globalBody').removeClass('newDashboard-scroll');
                 }
                 self.saveDashboardSet();
             };
@@ -549,17 +548,24 @@ define(['knockout',
                 this.cancelDeleteDbs= function(){
                      $('#deleteDashboardset').ojDialog("close");   
                 };       
-                this.printAllDbs = function(dbsToolBar){  
-                      window.print();
-//                    myWindow = window.open("newWindow", "_blank");
-//                    var docStr;
-//                    $(".dashboard-content div").each(function () {
-//                        docStr = docStr + $(this);
-//                    });
-////                    var docStr = $("#dashboard-1003 div").html();
-//                    myWindow.document.write(docStr);
-//                    myWindow.document.close();
-//                    myWindow.print();
+                this.printAllDbs = function(dbsToolBar){                      
+                    var hiddenArray = [];
+                    $('.dashboard-content').each(function (index, element) {
+                        var tempDashboardId = $(element).attr('id');
+                        var stringSpilt = tempDashboardId.split('-');
+                        if (stringSpilt.length <3 && !($(element).is(':visible'))) {
+                            hiddenArray.push(tempDashboardId);
+                            $(element).show();
+                        }
+                        else if(stringSpilt.length>3){
+                            $(element).hide();
+                        }
+                    });
+                    window.print();
+                    hiddenArray.forEach(function (Item, index) {
+                        $('#'+Item).hide();
+                    });
+                    $('#dashboard-'+self.selectedDashboardItem().dashboardId).show();
             };
         }
             
@@ -604,19 +610,16 @@ define(['knockout',
             
             $("#dbd-tabs-container").on("ojdeselect", function (event, ui) {
                 if (typeof (event.originalEvent) !== 'undefined') {
-                   // $('#globalBody').removeClass('newDashboard-scroll');
+
                     var selectedDashboardId=Number(event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1])||event.originalEvent.currentTarget.id.split(/dashboardTab-/)[1];
                     ko.utils.arrayForEach(self.dashboardsetItems, function (item, index) {
                         if (item.dashboardId === selectedDashboardId) {
                             self.selectedDashboardItem(item);
                         }
-                    });
-                    if(typeof(selectedDashboardId)==='number'){
-                       $('#globalBody').removeClass('newDashboard-scroll'); 
-                    }else{
-                       $('#globalBody').addClass('newDashboard-scroll');
-                    }
+                    });           
                     self.saveDashboardSet();
+                    //scroll-bar reset
+                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});
                 }             
             });
             

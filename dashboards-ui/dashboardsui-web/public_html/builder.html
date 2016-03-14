@@ -667,7 +667,7 @@
                         </div>
                 </div>                
                 
-                <div class="right-panel-toggler" data-bind="
+                <div class="right-panel-toggler no-print" data-bind="
                         visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler(),
                         style: {
                             right: rightPanelShown() ? 
@@ -693,7 +693,7 @@
                         label: getNlsString('DBS_BUILDER_LEFT_PANEL_BTN_HELP_LABEL')}"></button>
                 </div>
                 <!-- ko stopBinding: true -->
-                <div class="dbd-left-panel dbd-left-panel-show"
+                <div class="dbd-left-panel dbd-left-panel-show no-print"
                         data-bind="css: {'dbd-no-left-panel': maximized() || completelyHidden()},
                                         style: {right: $root.scrollbarWidth + 'px'}">
                     <div class="dbd-left-panel-header fit-size-vertical-sibling">
@@ -866,10 +866,10 @@
 
             <script id="dashboard-include-template" type="text/html">
                 <div class="dashboard-content">
-                    <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container"
+                    <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" 
                          style="padding-left: 30px; background-color: white;">
-                        <div class="builder-toolbar" aria-label="Builder toolbar">
-                            <div class="builder-toolbar-left dbd-pull-left">
+                        <div class="builder-toolbar page-break" aria-label="Builder toolbar">
+                            <div class="builder-toolbar-left dbd-pull-left page-break">
                                 <div class="builder-dbd-name">
                                     <div class="builder-dbd-name-display-area dbd-display-area">
                                         <span class="builder-dbd-name-display-hover-area dbd-display-hover-area">
@@ -880,7 +880,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;"
+                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;width:100%;overflow-y: scroll"
                          data-bind="component: {
                             name: 'df-oracle-dashboard-list',
                             params: $data
