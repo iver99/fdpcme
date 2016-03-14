@@ -49,12 +49,11 @@ body, html {
   width: 100%;
   padding: 0;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden!important;
   height: 100%;
 }
 
 .globalBody {
-    width: 100%;
     position: absolute;
     left: 0px;
     top: 0px;
@@ -1102,6 +1101,9 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     .no-print {
         display:none !important;
     }
+    #globalBody{
+         overflow-y: visible !important;
+    }
     
     .tiles-col-container{
         /*width: auto !important;*/
@@ -1111,6 +1113,8 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     .dbd-widget {
         page-break-before: always;
     }
+
+    .page-break	{ display: block; page-break-before: always; }
     @page {
         size: A3 landscape;
         /*margin: 23cm;*/
@@ -1276,11 +1280,6 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     }
 }
 
-.newDashboard-scroll{
-    height:100%;
-    overflow-x:hidden;
-    overflow-y:auto;    
-}
 .dbd-noselected{
     padding-left: 14px;
 }

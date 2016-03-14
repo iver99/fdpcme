@@ -47,6 +47,7 @@ define([
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
             self.showDashboard = function (dashboardItem) {
+                $('#globalBody').css({'width':"100%"});
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
                 if ($("#" + divId).length > 0) {
@@ -60,8 +61,11 @@ define([
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
-                            $('#globalBody').addClass('newDashboard-scroll');
-                            $($('#'+'dashboard-'+dashboardId).find('#homettbtns')).css({"float":"none","margin-left":"284px"});                            
+                            var bodyHeight=$(window).height();  
+                            var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-tiles-panel-sm').position().top;
+                            var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
+                            $('.dbs-tiles-panel-sm').css({'height':newHeight});
+                            $('#globalBody').css({'width':"100%"});
                     }, 2000);
                     } else {
                         self.loadDashboard(dashboardId);
@@ -203,6 +207,7 @@ define([
 
                     $("#loading").hide();
                     $('#globalBody').show();
+                    $('#globalBody').css({'width':""});
                     $dashboardEl.css("visibility", "visible");
                     if(dashboardsetToolBarModel.isDashboardSet()){
                         $b.findEl('.head-bar-container').css("background-color","white");
@@ -257,6 +262,16 @@ define([
             dashboardsetToolBarModel.selectedDashboardItem.subscribe(initDashboard);
 
             initDashboard();
+
+            //new-dashboard home resize function   
+            $(window).resize(function () {
+                if ($('.dbs-tiles-panel-sm').length!==0) {
+                    var bodyHeight = $(window).height();  ;
+                    var titleToolbarHeight = $($('.dbs-tiles-panel-sm')[0]).position().top;
+                    var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
+                    $('.dbs-tiles-panel-sm').css({'height': newHeight});
+                }
+            });
         }
 
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');
