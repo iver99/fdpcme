@@ -51,7 +51,8 @@ public class EmsDashboardTest {
     public void testAddEmsDashboardTile() throws Exception {
         emsDashboard = new EmsDashboard();
         EmsDashboardTile emsDashboardTile = new EmsDashboardTile();
-        assertEquals(emsDashboard.addEmsDashboardTile(emsDashboardTile),emsDashboardTile);
+        emsDashboard.addEmsDashboardTile(emsDashboardTile);
+        assertEquals(emsDashboard.getDashboardTileList().get(0),emsDashboardTile);
     }
 
     @Test
@@ -63,8 +64,9 @@ public class EmsDashboardTest {
 
     @Test
     public void testGetCreationDate() throws Exception {
-        emsDashboard.setCreationDate(new Date());
-        assertEquals(emsDashboard.getCreationDate(),new Date());
+        Date date = new Date();
+        emsDashboard.setCreationDate(date);
+        assertEquals(emsDashboard.getCreationDate(),date);
     }
 
     @Test
@@ -117,8 +119,9 @@ public class EmsDashboardTest {
 
     @Test
     public void testGetLastModificationDate() throws Exception {
-        emsDashboard.setLastModificationDate(new Date());
-        assertEquals(emsDashboard.getLastModificationDate(),new Date());
+        Date date = new Date();
+        emsDashboard.setLastModificationDate(date);
+        assertEquals(emsDashboard.getLastModificationDate(),date);
     }
 
     @Test
