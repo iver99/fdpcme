@@ -154,15 +154,28 @@ define(['knockout',
                     }
                 });
                 $.extend(newDashboardJs, fieldsToUpdate);
-                ssu.getBase64ScreenShot($(".tiles-wrapper:visible"), 314, 165, 0.8, function (data) {
-                    newDashboardJs.screenShot = data;
-                    Builder.updateDashboard(
-                            ko.unwrap(dashboardInst.id),
-                            JSON.stringify(newDashboardJs),
-                            successCallback,
-                            failureCallback
-                            );
-                });
+                
+                Builder.updateDashboard(
+                        ko.unwrap(dashboardInst.id),
+                        JSON.stringify(newDashboardJs),
+                        successCallback,
+                        failureCallback
+                        );
+
+                // add delay for updating screenshots because 
+                // a tab may take some time to render the tiles.
+                setTimeout(function () {
+                    var $tilesWrapper = $(".tiles-wrapper:visible");
+                    if ($tilesWrapper && $tilesWrapper.length > 0) {
+                        ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
+                            newDashboardJs.screenShot = data;
+                            Builder.updateDashboard(
+                                    ko.unwrap(dashboardInst.id),
+                                    JSON.stringify(newDashboardJs));
+                        });
+                    }
+                }, 5000);
+
             };
 
             self.addNewDashboard = function (data, event) {
