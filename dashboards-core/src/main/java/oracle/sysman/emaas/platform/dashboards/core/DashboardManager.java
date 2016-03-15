@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -308,7 +309,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			updateLastAccessDate(dashboardId, tenantId, dsf);
-			return Dashboard.valueOf(ed);
+			return Dashboard.valueOf(ed, null, true, true);
 		}
 		finally {
 			if (em != null) {
@@ -479,7 +480,7 @@ public class DashboardManager
 		List<EmsDashboard> edList = dsf.getEmsDashboardFindAll();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 		for (EmsDashboard ed : edList) {
-			dbdList.add(Dashboard.valueOf(ed));
+			dbdList.add(Dashboard.valueOf(ed, null, false, false));
 		}
 		return dbdList;
 	}
@@ -734,7 +735,9 @@ public class DashboardManager
 
 		//query
 		StringBuilder sbQuery = new StringBuilder(sb);
-		sbQuery.insert(0, "select p.* ");
+		sbQuery.insert(0,
+				"select p.DASHBOARD_ID,p.DELETED,p.DESCRIPTION,p.ENABLE_TIME_RANGE,p.ENABLE_REFRESH,p.IS_SYSTEM,p.SHARE_PUBLIC,"
+						+ "p.APPLICATION_TYPE,p.CREATION_DATE,p.LAST_MODIFICATION_DATE,p.NAME,p.OWNER,p.TENANT_ID,p.TYPE ");
 		String jpqlQuery = sbQuery.toString();
 		//System.out.println("sql: " + jpqlQuery);
 		logger.debug(jpqlQuery);
@@ -742,36 +745,32 @@ public class DashboardManager
 		EntityManager em = dsf.getEntityManager();
 		Query listQuery = em.createNativeQuery(jpqlQuery, EmsDashboard.class);
 		initializeQueryParams(listQuery, paramList);
-		//listQuery.setFirstResult(firstResult);
-		//listQuery.setMaxResults(maxResults);
+		listQuery.setFirstResult(firstResult);
+		listQuery.setMaxResults(maxResults);
 		@SuppressWarnings("unchecked")
 		List<EmsDashboard> edList = listQuery.getResultList();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 
 		if (edList != null && !edList.isEmpty()) {
-			for (int i = 0; i < maxResults && i + firstResult < edList.size(); i++) {
-				//				int idx = i + firstResult;
-				//				if (idx >= edList.size()) {
-				//					break;
-				//				}
-				dbdList.add(Dashboard.valueOf(edList.get(i + firstResult)));
+			for (int i = 0; i < edList.size(); i++) {
+				dbdList.add(Dashboard.valueOf(edList.get(i), null, false, false));
 			}
 		}
-		Long totalResults = edList == null ? 0L : Long.valueOf(edList.size());
+		//		Long totalResults = edList == null ? 0L : Long.valueOf(edList.size());
+		//		PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
+		//				maxResults, dbdList);
+		//		return pd;
+
+		StringBuilder sbCount = new StringBuilder(sb);
+		sbCount.insert(0, "select count(*) ");
+		String jpqlCount = sbCount.toString();
+		logger.debug(jpqlCount);
+		Query countQuery = em.createNativeQuery(jpqlCount);
+		initializeQueryParams(countQuery, paramList);
+		Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
 		PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
 				maxResults, dbdList);
 		return pd;
-		/*
-				StringBuilder sbCount = new StringBuilder(sb);
-				sbCount.insert(0, "select count(*) ");
-				String jpqlCount = sbCount.toString();
-				logger.debug(jpqlCount);
-				Query countQuery = em.createNativeQuery(jpqlCount);
-				initializeQueryParams(countQuery, paramList);
-				Long totalResults = ((BigDecimal) countQuery.getSingleResult()).longValue();
-				PaginatedDashboards pd = new PaginatedDashboards(totalResults, firstResult, dbdList == null ? 0 : dbdList.size(),
-						maxResults, dbdList);
-				return pd;*/
 	}
 
 	/**
@@ -866,7 +865,7 @@ public class DashboardManager
 			ed.setOwner(currentUser);
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
-			return Dashboard.valueOf(ed, dbd);
+			return Dashboard.valueOf(ed, dbd, true, true);
 		}
 		finally {
 			if (em != null) {
@@ -992,7 +991,7 @@ public class DashboardManager
 				ed.setOwner(dbd.getOwner());
 			}
 			dsf.mergeEmsDashboard(ed);
-			return Dashboard.valueOf(ed, dbd);
+			return Dashboard.valueOf(ed, dbd, true, true);
 		}
 		finally {
 			if (em != null) {

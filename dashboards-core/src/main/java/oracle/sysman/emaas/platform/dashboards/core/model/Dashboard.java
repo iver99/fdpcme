@@ -1,5 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonValue;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -7,13 +19,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.DataFormatUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonValue;
-
-import java.util.*;
 
 public class Dashboard
 {
@@ -77,9 +82,15 @@ public class Dashboard
 
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
+	/**
+	 * Create a new dashboard instance from giving EmsDashboard instance
+	 *
+	 * @param ed
+	 * @return
+	 */
 	public static Dashboard valueOf(EmsDashboard ed)
 	{
-		return Dashboard.valueOf(ed, null);
+		return Dashboard.valueOf(ed, null, true, true);
 	}
 
 	/**
@@ -90,9 +101,11 @@ public class Dashboard
 	 * @param to
 	 *            prototype Dashboard object, and it's values will be covered by value from EmsDashboard instance, or a new
 	 *            Dashboard instance will be created if it's null
+	 * @param alwaysLoadTiles
+	 *            false: just load single page tiles, true: load tiles data for the dashboard without considering its types
 	 * @return
 	 */
-	public static Dashboard valueOf(EmsDashboard from, Dashboard to)
+	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean alwaysLoadTiles, boolean loadTileParams)
 	{
 		if (from == null) {
 			return null;
@@ -115,15 +128,17 @@ public class Dashboard
 		// by default, we'll not load screenshot for query
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
-		List<EmsDashboardTile> edtList = from.getDashboardTileList();
-		if (edtList != null) {
-			List<Tile> tileList = new ArrayList<Tile>();
-			for (EmsDashboardTile edt : edtList) {
-				Tile tile = Tile.valueOf(edt);
-				tile.setDashboard(to);
-				tileList.add(tile);
+		if (alwaysLoadTiles || Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(to.getType())) {
+			List<EmsDashboardTile> edtList = from.getDashboardTileList();
+			if (edtList != null) {
+				List<Tile> tileList = new ArrayList<Tile>();
+				for (EmsDashboardTile edt : edtList) {
+					Tile tile = Tile.valueOf(edt, loadTileParams);
+					tile.setDashboard(to);
+					tileList.add(tile);
+				}
+				to.setTileList(tileList);
 			}
-			to.setTileList(tileList);
 		}
 		return to;
 	}
@@ -254,6 +269,11 @@ public class Dashboard
 	public String getName()
 	{
 		return name;
+	}
+
+	public String getOptionsHref()
+	{
+		return optionsHref;
 	}
 
 	public String getOwner()
@@ -417,6 +437,11 @@ public class Dashboard
 		this.name = name;
 	}
 
+	public void setOptionsHref(String optionsHref)
+	{
+		this.optionsHref = optionsHref;
+	}
+
 	public void setOwner(String owner)
 	{
 		this.owner = owner;
@@ -431,14 +456,6 @@ public class Dashboard
 	public void setScreenShotHref(String screenShotHref)
 	{
 		this.screenShotHref = screenShotHref;
-	}
-
-	public String getOptionsHref() {
-		return optionsHref;
-	}
-
-	public void setOptionsHref(String optionsHref) {
-		this.optionsHref = optionsHref;
 	}
 
 	/**

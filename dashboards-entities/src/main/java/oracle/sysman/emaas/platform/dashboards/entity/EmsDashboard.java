@@ -78,7 +78,7 @@ public class EmsDashboard implements Serializable
 	private Long tenantId;
 	@Column(nullable = false)
 	private Integer type;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboard", orphanRemoval = true)
 	@OrderBy("row, column")
 	private List<EmsDashboardTile> dashboardTileList;
 
