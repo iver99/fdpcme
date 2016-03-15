@@ -43,6 +43,7 @@ define([
             var self = this;
             
             var dashboardInstMap = {};
+            var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
@@ -121,7 +122,7 @@ define([
                 
                 $("#loading").show();
                 Builder.loadDashboard(dsbId, function (dashboard) {
-
+                    
                     var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
                     $dashboardEl.attr("id", "dashboard-" + dsbId);
@@ -129,7 +130,7 @@ define([
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
-                    var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
+                    var toolBarModel = new Builder.ToolBarModel($b, options);
                     
                     //change dashboard name
                     toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
