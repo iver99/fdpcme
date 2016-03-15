@@ -168,8 +168,10 @@ DashboardPaging.prototype.setPage = function(v, opts)
   
   return new Promise(function(resolve, reject)
   {
+    $("#loading").show();
     self.fetch({'startIndex': self._startIndex, 'silent': options['silent'],
             'success': function() {
+                $("#loading").hide();
                 DashboardPaging.superclass.handleEvent.call(self, oj.PagingModel.EventType['PAGE'], {'page' : self._page, 'previousPage' : previousPage});
                 if ($.isFunction(_successCallback))
                 {
@@ -178,6 +180,7 @@ DashboardPaging.prototype.setPage = function(v, opts)
                 resolve(null);
             },
             'error': function(jqXHR, textStatus, errorThrown) {
+                $("#loading").hide();
                 oj.Logger.error("Error when fetching data for paginge data source. " + (jqXHR ? jqXHR.responseText : ""));
                 // restore old page
                 self._page = previousPage;

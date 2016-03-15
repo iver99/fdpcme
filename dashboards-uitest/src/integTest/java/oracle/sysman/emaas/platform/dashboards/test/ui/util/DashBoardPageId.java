@@ -136,9 +136,9 @@ public class DashBoardPageId {
 	
 	//Explore Data
 	public static final String ExploreDataBtnID = "exploreDataBtn";
-	public static final String ExploreDataMenu_Log_ID = "ui-id-3";
-	public static final String ExploreDataMenu_Analyze_ID = "ui-id-4";
-	public static final String ExploreDataMenu_Search_ID = "ui-id-5";
+	public static final String ExploreDataMenu_Log = "/html/body/div[1]/div/ul/li[1]/a";//"ui-id-3";
+	public static final String ExploreDataMenu_Analyze = "/html/body/div[1]/div/ul/li[2]/a";//"ui-id-4";
+	public static final String ExploreDataMenu_Search = "/html/body/div[1]/div/ul/li[3]/a";//"ui-id-5";
 	
 	//help id and about id
 	public static final String MenuBtnID = "menubutton";

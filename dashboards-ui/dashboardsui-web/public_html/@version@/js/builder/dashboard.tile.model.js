@@ -26,20 +26,21 @@ define(['knockout',
     function(ko, oj, km, dfu, uiutil, dfumodel, mbu, $)
     {
         ko.mapping = km;
-        
         var draggingTileClass = 'dbd-tile-in-dragging';
-        var widgetAreaWidth = 0;
-        var widgetAreaContainer = null;
         
-        var dragStartRow = null;
+        function DashboardTilesViewModel($b) {        
         
-        function DashboardTilesViewModel($b) {
+            var widgetAreaWidth = 0;
+            var widgetAreaContainer = null;
+
+            var dragStartRow = null;
+        
             var self = this;
             $b.registerObject(self, 'DashboardTilesViewModel');
             self.isMobileDevice = ((new mbu()).isMobile === true ? 'true' : 'false');
             self.scrollbarWidth = uiutil.getScrollbarWidth();
             
-            widgetAreaContainer = $('#widget-area');
+            widgetAreaContainer = $b.findEl('.widget-area');
             
             self.normalMode = new Builder.NormalEditorMode();
             self.tabletMode = new Builder.TabletEditorMode();
@@ -139,7 +140,7 @@ define(['knockout',
             };
             
             self.onBuilderResize = function(width, height, leftWidth, topHeight) {
-                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $("#tiles-col-container").width()-25);
+                widgetAreaWidth = Math.min(widgetAreaContainer.width(), $b.findEl(".tiles-col-container").width()-25);
                 window.DEV_MODE && console.debug('widget area width is ' + widgetAreaWidth);
                 self.show();
             };
@@ -147,6 +148,7 @@ define(['knockout',
             self.showPullRightBtn = function(clientGuid, data, event) {
                 $("#tile"+clientGuid+" .dbd-btn-group").css("display", "inline-block");
                 $("#tile"+clientGuid+" .dbd-btn-editor").css("display", "flex");
+                $("#tile"+clientGuid+" .dbd-btn-maxminToggle").css("display", "flex");
             };
             
             self.hidePullRightBtn = function (clientGuid, data, event) {
@@ -154,18 +156,33 @@ define(['knockout',
                     $("#tile" + clientGuid + " .dbd-btn-group").css("display", "none");
                 }
                 $("#tile" + clientGuid + " .dbd-btn-editor").css("display", "none");
+                $("#tile" + clientGuid + " .dbd-btn-maxminToggle").css("display", "none");
             };
             self.openInDataExplorer = function (event, ui) {
                 var tile = ko.dataFor(ui.currentTarget);
                 self.editor.configure(tile);
             };
+            
+            self.maxMinToggle = function (event, ui) {
+                var tile = ko.dataFor(ui.currentTarget);
+                if (event.maximizeEnabled()) {
+                    self.maximize(tile);
+                    self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
+                    $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
+                } else {
+                    self.restore(tile);
+                    self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
+                    $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
+                }
+            };
+            
             self.menuItemSelect = function (event, ui) {
                 var tile = ko.dataFor(ui.item[0]);
                 if (!tile) {
                     oj.Logger.error("Error: could not find tile from the ui data");
                     return;
                 }
-                switch (ui.item.attr("id")) {
+                switch (ui.item.data("option")) {
                     case "showhide-title":
                         self.editor.showHideTitle(tile);
                         self.show();
@@ -198,17 +215,7 @@ define(['knockout',
                         self.editor.shorterTile(tile);
                         self.show();
                         self.notifyTileChange(tile, new Builder.TileChange("POST_SHORTER"));
-                        break;
-                    case "maximize":
-                        self.maximize(tile);
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_MAXIMIZE"));
-                        $b.triggerEvent($b.EVENT_TILE_MAXIMIZED, null, tile);
-                        break;
-                    case "restore":
-                        self.restore(tile);
-                        self.notifyTileChange(tile, new Builder.TileChange("POST_RESTORE"));
-                        $b.triggerEvent($b.EVENT_TILE_RESTORED, null, tile);
-                        break;
+                        break;                
                 }
                 
                 $b.triggerEvent($b.EVENT_TILE_RESIZED, null, tile);
@@ -291,7 +298,7 @@ define(['knockout',
             };
             
             self.calculateTilesRowHeight = function() {
-                var tilesRow = $('#widget-area');
+                var tilesRow = $b.findEl('.widget-area');
                 var tilesRowSpace = parseInt(tilesRow.css('margin-top'), 0) +  
                         parseInt(tilesRow.css('margin-bottom'), 0) + 
                         parseInt(tilesRow.css('padding-top'), 0) + 
@@ -300,7 +307,7 @@ define(['knockout',
                         parseInt($('.dbd-tile-maximized').css('padding-bottom'), 0) + 
                         parseInt($('.dbd-tile-maximized').css('padding-top'), 0);
                 return $(window).height() - $('#headerWrapper').outerHeight() - 
-                       $('#head-bar-container').outerHeight() - $('#global-time-slider').outerHeight() - 
+                       $b.findEl('.head-bar-container').outerHeight() - $('#global-time-slider').outerHeight() - 
                        (isNaN(tilesRowSpace) ? 0 : tilesRowSpace) - (isNaN(tileSpace) ? 0 : tileSpace);
             };
             
@@ -317,7 +324,7 @@ define(['knockout',
                 tile.left(baseLeft);
                 tile.top(top);
                 self.tilesView.disableDraggable();
-                $('#tiles-wrapper').height(tileHeight);
+                $b.findEl('.tiles-wrapper').height(tileHeight);
             };
             
             self.maximize = function(tile) {
@@ -455,7 +462,7 @@ define(['knockout',
                 }
                 self.tilesView.enableDraggable();
                 var height = self.editor.tilesGrid.getHeight();
-                $('#tiles-wrapper').height(height);
+                $b.findEl('.tiles-wrapper').height(height);
             };
 
 //            self.detectTextTileRender = function(textTile) {
@@ -527,11 +534,11 @@ define(['knockout',
                     cell.column = 0;
                 }
 
-                $('#tile-dragging-placeholder').css({
-                    left: tile.left(),
-                    top: tile.top(),
-                    width: ui.helper.width() -20,
-                    height: ui.helper.height() - 20
+                $b.findEl('.tile-dragging-placeholder').css({
+                    left: tile.left() - 5,
+                    top: tile.top() - 5,
+                    width: ui.helper.width() - 10,
+                    height: ui.helper.height() - 10
                 }).show();
 
                 var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
@@ -562,12 +569,12 @@ define(['knockout',
                     $(ui.helper).css("opacity", 0.6);
                 
                     if(originalRow !== cell.row || originalCol !== cell.column) {
-                        $('#tile-dragging-placeholder').hide();
-                        $('#tile-dragging-placeholder').css({
-                            left: tile.left(),
-                            top: tile.top(),
-                            width: ui.helper.width() -20,
-                            height: ui.helper.height() - 20
+                        $b.findEl('.tile-dragging-placeholder').hide();
+                        $b.findEl('.tile-dragging-placeholder').css({
+                            left: tile.left() - 5,
+                            top: tile.top() - 5,
+                            width: ui.helper.width() - 10,
+                            height: ui.helper.height() - 10
                         }).show();
                     }
                 }
@@ -592,7 +599,7 @@ define(['knockout',
                 self.showTiles();
                 $(ui.helper).css("opacity", 1);
                 
-                $('#tile-dragging-placeholder').hide();
+                $b.findEl('.tile-dragging-placeholder').hide();
                 if ($(ui.helper).hasClass(draggingTileClass)) {
                     $(ui.helper).removeClass(draggingTileClass);
                 }
@@ -603,10 +610,10 @@ define(['knockout',
             };
            
             self.onNewWidgetDragging = function(e, u) {
-                var tcc = $("#tiles-col-container");
-                var rpt = $("#right-panel-toggler");
+                var tcc = $b.findEl(".tiles-col-container");
+                var rpt = $b.findEl(".right-panel-toggler");
                 var tile = null;
-                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+                var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
 
                 tile = u.helper.tile;
                 //use newly created tile to simulate helper attached to mouse
@@ -620,10 +627,10 @@ define(['knockout',
                     }
                 if (e.clientY <= tcc.offset().top || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= rpt.offset().left) {
                     if (self.isEmpty()) {
-                        $('#tile-dragging-placeholder').hide();
+                        $b.findEl('.tile-dragging-placeholder').hide();
                         $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging out of edit area", false);
                     }
-                    $('#tile-dragging-placeholder').hide();
+                    $b.findEl('.tile-dragging-placeholder').hide();
                     return;
                 }else {
                     if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (default) widget dragging into edit area (stopped dragging)", true);
@@ -669,14 +676,14 @@ define(['knockout',
                         $('#tile'+tile.clientGuid).addClass(draggingTileClass);
                     }
                     
-                    //move show() out of setTimeout to fix the issue that $('#tile-dragging-placeholder').hide();doesn't work in onNewWidgetStopDragging
-                    $('#tile-dragging-placeholder').show();
+                    //move show() out of setTimeout to fix the issue that $b.findEl('.tile-dragging-placeholder').hide();doesn't work in onNewWidgetStopDragging
+                    $b.findEl('.tile-dragging-placeholder').show();
                     setTimeout(function() {
-                        $('#tile-dragging-placeholder').css({
-                            left: self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)),
-                            top: self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)),
-                            width: self.getDisplayWidthForTile(width)-20,
-                            height: self.getDisplayHeightForTile(height)-20
+                        $b.findEl('.tile-dragging-placeholder').css({
+                            left: self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)) - 5,
+                            top: self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)) - 5,
+                            width: self.getDisplayWidthForTile(width) - 10,
+                            height: self.getDisplayHeightForTile(height) - 10
                         });
                     }, 200);
                     self.previousDragCell = cell;
@@ -686,8 +693,8 @@ define(['knockout',
             };
             
             self.onNewWidgetStopDragging = function(e, u) {
-                var tcc = $("#tiles-col-container");
-                var rpt = $("#right-panel-toggler");
+                var tcc = $b.findEl(".tiles-col-container");
+                var rpt = $b.findEl(".right-panel-toggler");
                 var tile = null; 
                 
                 if(u.helper.tile) {
@@ -708,7 +715,7 @@ define(['knockout',
                 self.editor.tilesReorder();
                 self.show();
                 
-                $('#tile-dragging-placeholder').hide();              
+                $b.findEl('.tile-dragging-placeholder').hide();              
                 self.editor.draggingTile = null;
                 u.helper.tile = null;
                 self.previousDragCell = null;
@@ -719,18 +726,18 @@ define(['knockout',
 //                var tcc = $("#tiles-col-container");
 //                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
 //                    if (self.isEmpty()) {
-//                        $('#tile-dragging-placeholder').hide();
+//                        $b.findEl('.tile-dragging-placeholder').hide();
 //                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new text widget dragging out of edit area", false);
 //                    }
 //                    return;
 //                }
 //                if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new text widget dragging into edit area", true);
-//                var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+//                var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
 //                var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos); 
 //                if (!cell) return;
 //                cell.column = 0;
 //
-//                $('#tile-dragging-placeholder').hide();
+//                $b.findEl('.tile-dragging-placeholder').hide();
 //                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
 //                tilesToBeOccupied = self.editor.getTilesToBeOccupied(cell, 8, 1);
 //                tilesToBeOccupied && self.editor.highlightTiles(tilesToBeOccupied);
@@ -742,7 +749,7 @@ define(['knockout',
 //                var tile = null;
 //                if (e.clientY <= tcc.offset().top || e.clientX <= tcc.offset().left || e.clientY >= tcc.offset().top + tcc.height() || e.clientX >= tcc.offset().left + tcc.width()) {
 //                    if (self.isEmpty()) {
-//                        $('#tile-dragging-placeholder').hide();
+//                        $b.findEl('.tile-dragging-placeholder').hide();
 //                        $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (text) widget dragging out of edit area (stopped dragging)", false);
 //                    }
 //                    if (u.helper.tile) {
@@ -752,7 +759,7 @@ define(['knockout',
 //                }
 //                else {
 //                    if (self.isEmpty()) $b.triggerEvent($b.EVENT_DISPLAY_CONTENT_IN_EDIT_AREA, "new (text) widget dragging out of edit area (stopped dragging)", true);
-//                    var pos = {top: u.helper.offset().top - $("#tiles-wrapper").offset().top, left: u.helper.offset().left - $("#tiles-wrapper").offset().left};
+//                    var pos = {top: u.helper.offset().top - $b.findEl('.tiles-wrapper').offset().top, left: u.helper.offset().left - $b.findEl('.tiles-wrapper').offset().left};
 //                    var cell = self.editor.getCellFromPosition(widgetAreaWidth, pos); 
 //                    if (!cell) return;
 //                    cell.column = 0;
@@ -781,7 +788,7 @@ define(['knockout',
 //                    self.show();
 //                }                
 //                
-//                $('#tile-dragging-placeholder').hide();
+//                $b.findEl('.tile-dragging-placeholder').hide();
 //                self.previousDragCell = null;
 //                tilesToBeOccupied && self.editor.unhighlightTiles(tilesToBeOccupied);
 //                if (tile) {

@@ -45,6 +45,8 @@ public class TenantSubscriptionUtil
 {
 	public static class RestClient
 	{
+		public static final String HTTP_HEADER_OAM_REMOTE_USER = "OAM_REMOTE_USER";
+
 		public RestClient()
 		{
 		}
@@ -67,9 +69,47 @@ public class TenantSubscriptionUtil
 				itrLogger.info(
 						"RestClient is connecting to get response after getting authorization token from registration manager.");
 			}
-			Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
-					.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
-			return builder.get(String.class);
+			try {
+				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON);
+				return builder.get(String.class);
+			}
+			catch (Exception e) {
+				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
+						+ e.getLocalizedMessage());
+				return null;
+			}
+		}
+
+		public String get(String url, String tenantName, String userName)
+		{
+			if (url == null || "".equals(url)) {
+				return null;
+			}
+
+			ClientConfig cc = new DefaultClientConfig();
+			Client client = Client.create(cc);
+			char[] authToken = RegistrationManager.getInstance().getAuthorizationToken();
+			String auth = String.copyValueOf(authToken);
+			if (StringUtil.isEmpty(auth)) {
+				logger.warn("Warning: RestClient get an empty auth token when connection to url {}", url);
+			}
+			else {
+				LogUtil.setInteractionLogThreadContext(tenantName, url, InteractionLogDirection.OUT);
+				itrLogger.info(
+						"RestClient is connecting to get response after getting authorization token from registration manager.");
+			}
+			try {
+				Builder builder = client.resource(UriBuilder.fromUri(url).build()).header(HttpHeaders.AUTHORIZATION, auth)
+						.header(HTTP_HEADER_OAM_REMOTE_USER, tenantName + "." + userName);
+				return builder.get(String.class);
+			}
+			catch (Exception e) {
+				itrLogger.error("Exception when RestClient trying to get response from specified service. Message:"
+						+ e.getLocalizedMessage());
+				return null;
+			}
+
 		}
 	}
 

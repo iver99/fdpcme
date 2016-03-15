@@ -309,7 +309,7 @@ public class DashboardAPI extends APIBase
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response queryDashboardById(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-			@PathParam("id") long dashboardId) throws DashboardException
+			@PathParam("id") long dashboardId)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [GET] /v1/dashboards/{}", dashboardId);
 		DashboardManager dm = DashboardManager.getInstance();
@@ -341,12 +341,13 @@ public class DashboardAPI extends APIBase
 			@QueryParam("queryString") String queryString, @DefaultValue("") @QueryParam("limit") Integer limit,
 			@DefaultValue("0") @QueryParam("offset") Integer offset,
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
-			@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
-			@QueryParam("onlyFavorites") Boolean onlyFavorites)
+			@QueryParam("filter") String filterString
+	/*@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
+	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&types={}&appTypes={}&owners={}",
-				queryString, limit, offset, orderBy, types, appTypes, owners);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString, limit,
+				offset, orderBy, filterString);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -361,10 +362,11 @@ public class DashboardAPI extends APIBase
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
 			DashboardsFilter filter = new DashboardsFilter();
-			filter.setIncludedAppsFromString(appTypes);
-			filter.setIncludedOwnersFromString(owners);
-			filter.setIncludedTypesFromString(types);
-			filter.setIncludedFavorites(onlyFavorites);
+			//filter.setIncludedAppsFromString(appTypes);
+			//filter.setIncludedOwnersFromString(owners);
+			//filter.setIncludedTypesFromString(types);
+			//filter.setIncludedFavorites(onlyFavorites);
+			filter.initializeFilters(filterString);
 			PaginatedDashboards pd = manager.listDashboards(qs, offset, limit, tenantId, true, orderBy, filter);
 			if (pd != null && pd.getDashboards() != null) {
 				for (Dashboard d : pd.getDashboards()) {

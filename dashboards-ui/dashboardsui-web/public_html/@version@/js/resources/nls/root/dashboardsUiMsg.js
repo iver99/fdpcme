@@ -7,6 +7,9 @@
 define({
 //      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
 //      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
+      "DBS_HOME_CREATE_TYPE_DASHBOARDS":"Dashboard (a single dashboard)",
+      "DBS_HOME_CREATE_TYPE_DASHBOARDSET":"Dashboard Set (two or more dasboards displayed together)",
+      "DBS_HOME_DASHBOARDS_SET_CREATE_TYPE":"Type",
       "DBS_HOME_TITLE_HOME": "Home",
       "DBS_HOME_TITLE_DASHBOARDS": "Dashboards",
       "COMMON_BTN_OK": "OK",
@@ -117,6 +120,8 @@ define({
       "DBS_HOME_DSB_PAGE_INFO_ISSYS": "System Dashboard: ",
       "DBS_HOME_DSB_PAGE_INFO_LABEL": "Dashboard Information",
       "DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL": "Delete",
+      "DBS_HOME_SHOWHIDE_DESCRIPTION":"Show dashboard description",
+      "DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD": "{0} is already a member of this dashboard set. Select another dashboard.",
       "DBS_BUILDER_LOADING": "Loading...",
       "DBS_BUILDER_NAME_EDIT": "Double click to edit name",
       "DBS_BUILDER_SAME_NAME_EXISTS_ERROR": "Dashboard with the same name exists already",
@@ -320,6 +325,22 @@ define({
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_REQUIRED": "URL is required",
       "DBS_BUILDER_EDIT_WIDGET_LINK_NAME_VALIDATE_ERROR": "Enter a non-empty name and its length should be less than 4000 characters.",
       "DBS_BUILDER_EDIT_WIDGET_LINK_URL_LENGTH_VALIDATE_ERROR": "Enter a non-empty URL and its length should be less than 4000 characters.",
-      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect."
+      "DBS_BUILDER_EDIT_WIDGET_LINK_URL_VALIDATE_ERROR": "The format of URL is incorrect.",
+      
+      //dashoard set message
+      "DBSSET_BUILDER_DASHBOARDSET":"Dashboard Set",
+      "DBSSET_BUILDER_EDIT_DASHBOARDSET":"Edit Dashboard Set",
+      "DBSSET_BUILDER_DELETE_WARNING":"<b>Note:</b> Deleting the dashboard set does not delete any of the individual dashboards you created and included in the set",
+      "DBSSET_BUILDER_DASHBOARDSET_OPTIONS":"Dashboard Set options",
+      "DBSSET_BUILDER_REMOVE_DASHBOARD":"Remove dashboard",
+      "DBSSET_BUILDER_DELETE_DASHBOARDSET":"Delete Dashboardset",
+      "DBSSET_BUILDER_SELECT_TIP":"Select a dashboard to display on this tab",
+      "DBSSET_BUILDER_NAME_DESCRIPTION":"Name and Description",
+      "DBSSET_BUILDER_VISIBILITY":"Dashboard Visibility",
+      "DBSSET_BUILDER_SHARE_SETTINGS":"Share Settings",
+      "DBSSET_BUILDER_NOT_SHARED":"Not Shared (visible only to me)",
+      "DBSSET_BUILDER_SHARED":"Shared with others",
+      "DBSSET_BUILDER_DEFAULT_REFRESH":"Default Auto-refresh Value",
+      "DBSSET_BUILDER_REFRESH_TIPS":"Specify whether this dashboard refreshes automatically by default for other users.User changes to this setting are saved"
 });
 

@@ -17,7 +17,8 @@ requirejs.config({
               'emcsutl/message-util': 'uifwk/js/util/message-util',
               'ajax-util': 'uifwk/js/util/ajax-util',
               'message-util': 'uifwk/js/util/message-util',
-              'df-util': 'uifwk/js/util/df-util'
+              'df-util': 'uifwk/js/util/df-util',
+              'prefutil':'uifwk/js/util/preference-util'
              }        
     },
     // Path mappings for the logical module names
@@ -40,6 +41,7 @@ requirejs.config({
         'dashboards': '.',
         'builder': './builder',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
+        'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
         'mobileutil':'/emsaasui/uifwk/js/util/mobile-util',
         'uiutil':'internaldfcommon/js/util/ui-util',
@@ -93,9 +95,7 @@ require(['knockout',
     'jquery',
     'dfutil',
     'loggingutil',
-    'idfbcutil',
     'ojs/ojcore',
-    'ojs/ojchart',
     'ojs/ojcomponents',
     'ojs/ojvalidation',    
     'ojs/ojdatetimepicker',
@@ -106,24 +106,14 @@ require(['knockout',
     'ojs/ojbutton',
     'ojs/ojtoolbar',
     'ojs/ojmenu',
-    'ojs/ojpagingcontrol',
     'ojs/ojeditablevalue',
-    'ojs/internal-deps/dvt/DvtChart',
-    'ojs/ojdvt-base',
-    'ojs/ojtree',
-    'ojs/ojcheckboxset',
     'ojs/ojpopup',
-    'ojs/ojgauge',
     'builder/builder.core',
-    'builder/right.panel.model',
-    'builder/builder.functions',
-    'builder/dashboard.tile.model',
-    'builder/dashboard.tile.view',
-    'builder/tool.bar.model',
-    'builder/integrate/builder.integrate',
-    'dashboards/dbstypeahead'
+    'dashboards/dbstypeahead',
+    'builder/dashboardset.toolbar.model',
+    'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, _emJETCustomLogger,idfbcutil, oj) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, _emJETCustomLogger, oj) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
@@ -156,8 +146,15 @@ require(['knockout',
             viewModel: {require: './widgets/textwidget/js/textwidget'},
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });
+            
+        if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+            ko.components.register("df-oracle-dashboard-list",{
+                viewModel:{require:'/emsaasui/emcpdfui/@version@/js/dashboardhome-impl.js'},
+                template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+            });
+        }
 
-        function HeaderViewModel($b) {
+        function DashboardsetHeaderViewModel() {
             var self = this;
             self.userName = dfu.getUserName();
             self.tenantName = dfu.getTenantName();
@@ -175,98 +172,41 @@ require(['knockout',
                     self.headerHeight = height;
                 if (self.headerHeight === height)
                     return;
-                $b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                var $visibleHeaderBar = $(".dashboard-content:visible .head-bar-container");
+                if ($visibleHeaderBar.length > 0) {
+                    var $b = ko.dataFor($visibleHeaderBar[0]) && ko.dataFor($visibleHeaderBar[0]).$b;
+                    $b && $b.triggerBuilderResizeEvent('header wrapper bar height changed');
+                }
                 self.headerHeight = height;
             });
-        }
-
+        };
+         
         var dsbId = dfu.getUrlParam("dashboardId");
-        if (dsbId) {
-            dsbId = decodeURIComponent(dsbId);
-        }    
-        var isInteger = /^([0-9]+)$/.test(dsbId);
-        if (!isInteger){
-           oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
-           window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href)+"&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";                   
-        }            
+        console.warn("TODO: validate valid dashboard id format");
+//                oj.Logger.error("dashboardId is not specified or invalid. Redirect to dashboard error page", true);
+//                window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href) + "&msg=DBS_ERROR_DASHBOARD_ID_NOT_FOUND_MSG";
+       
 
         Builder.initializeFromCookie();
 
-        $(document).ready(function() {
-            Builder.loadDashboard(dsbId, function(dashboard) {
-                var $b = new Builder.DashboardBuilder(dashboard);
-                var tilesView = new Builder.DashboardTilesView($b);
-                var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/); 
-                var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
-                var headerViewModel = new HeaderViewModel($b);
+        $(document).ready(function () {
 
-                if (dashboard.tiles && dashboard.tiles()) {
-                    for (var i = 0; i < dashboard.tiles().length; i++) {
-                        var tile = dashboard.tiles()[i];
-                        if(tile.type() === "TEXT_WIDGET") {
-                            Builder.initializeTextTileAfterLoad(tilesViewModel.editor.mode, $b, tile, tilesViewModel.show, tilesViewModel.editor.tiles.deleteTile, Builder.isContentLengthValid);
-                        }else {
-                            Builder.initializeTileAfterLoad(tilesViewModel.editor.mode, dashboard, tile, tilesViewModel.timeSelectorModel, tilesViewModel.targetContext, true);
-                        }
-                    }
-                }
+            var headerViewModel = new DashboardsetHeaderViewModel();
+            ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
-                 ko.bindingHandlers.sortableList = {
-                    init: function(element, valueAccessor) {
-                        var list = valueAccessor();
-                        tilesView.enableSortable(element, list);
-                    }
-                };
-                ko.bindingHandlers.stopBinding = {
-                    init: function() {
-                        return { controlsDescendantBindings: true};
-                    }
-                };
-                ko.bindingHandlers.enterpress = {
-                    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
-                        var allBindings = allBindingsAccessor();
-                        $(element).keypress(function (event) {
-                            var keyCode = (event.which ? event.which : event.keyCode);
-                            if (keyCode === 13) {
-                                allBindings.enterpress.call(viewModel);
-                                return false;
-                            }
-                            return true;
-                        });
-                    }
-                };
-                ko.virtualElements.allowedBindings.stopBinding = true;
-
-                ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);                    
-                ko.applyBindings(toolBarModel, $('#head-bar-container')[0]);                    
-                tilesViewModel.initialize();
-                ko.applyBindings(tilesViewModel, $('#global-html')[0]);      
-                var rightPanelModel = new Builder.RightPanelModel($b, tilesViewModel);
-                ko.applyBindings(rightPanelModel, $('#dbd-left-panel')[0]);
-                rightPanelModel.initialize();
-                new Builder.ResizableView($b);
-
+            Builder.loadDashboard(dsbId, function (dashboard) {
+                var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
+                var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
+                ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
+                ko.applyBindings(dashboardsetPanelsModel, document.getElementById('popUp-dialog'));
+                dashboardsetToolBarModel.initializeDashboardset();
                 $("#loading").hide();
                 $('#globalBody').show();
-                tilesView.enableDraggable();
-                tilesViewModel.show();
-
-                toolBarModel.handleAddWidgetTooltip();
-                $b.triggerEvent($b.EVENT_POST_DOCUMENT_SHOW);
-                tilesView.enableMovingTransition();
-                idfbcutil.hookupBrowserCloseEvent(function(){
-                   oj.Logger.info("Dashboard: [id="+dashboard.id()+", name="+dashboard.name()+"] is closed",true); 
-                });
-                /*
-                 * Code to test df_util_widget_lookup_assetRootUrl
-                var testvalue = df_util_widget_lookup_assetRootUrl('SavedSearch','0.1','search');
-                console.log('value for asetRootUrl(search) is ' + testvalue + ', and the expected value is + http://slc08upg.us.oracle.com:7001/savedsearch/v1/search');
-                */
             }, function(e) {
                 console.log(e.errorMessage());
                 if (e.errorCode && e.errorCode() === 20001) {
                     oj.Logger.error("Dashboard not found. Redirect to dashboard error page", true);
-                    window.location.href = "./error.html?invalidUrl=" + encodeURIComponent(window.location.href);
+                    location.href = "./error.html?invalidUrl=" + encodeURIComponent(location.href);
                 }
             });
         });
@@ -282,7 +222,35 @@ function updateOnePageHeight(event) {
     }
 }
 
+            
+function truncateString(str, length) {
+    if (str && length > 0 && str.length > length)
+    {
+        var _tlocation = str.indexOf(' ', length);
+        if ( _tlocation <= 0 )
+            _tlocation = length;
+        return str.substring(0, _tlocation) + "...";
+    }
+    return str;
+}
+
+
 function getNlsString(key, args) {
     return oj.Translations.getTranslatedString(key, args);
 }
+
+function getDateString(isoString) {
+    //console.log(isoString);
+    if (isoString && isoString.length > 0)
+    {
+        var s = isoString.split(/[\-\.\+: TZ]/g);
+        //console.log(s);
+        if (s.length > 1)
+        {
+            return new Date(s[0], parseInt(s[1], 10) - 1, s[2], s[3], s[4], s[5], s[6]).toLocaleDateString();
+        }
+    }
+    return "";
+}
+
 window.addEventListener("message", updateOnePageHeight, false);

@@ -111,7 +111,7 @@ public class LoggingServiceManager implements ApplicationServiceManager
 			}
 			unregisterMBean(MBEAN_NAME);
 		}
-		catch (Throwable e) {
+		catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 		}
 	}

@@ -37,7 +37,7 @@ define(['knockout',
             };
             
             self.rebuildElementSet = function() {
-                self.$list = $(".fit-size");
+                self.$list = $b.findEl(".fit-size");
             };
             
             self.initialize();
@@ -108,13 +108,13 @@ define(['knockout',
                     self.loadWidgets();
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
-                    $("#dbd-left-panel-widgets-page-input").keyup(function(e) {
+                    $b.findEl(".dbd-left-panel-widgets-page-input").keyup(function(e) {
                         var replacedValue = this.value.replace(/[^0-9\.]/g, '');
                         if (this.value !== replacedValue) {
                             this.value = replacedValue;
                         }
                     });
-                    $('#widget-search-input').autocomplete({
+                    $b.findEl('.widget-search-input').autocomplete({
                         source: self.autoSearchWidgets,
                         delay: 700,
                         minLength: 0
@@ -138,7 +138,7 @@ define(['knockout',
             };
 
             self.initWidgetDraggable = function() {
-                $(".dbd-left-panel-widget-text").draggable({
+                $b.findEl(".dbd-left-panel-widget-text").draggable({
                     helper: "clone",
                     scroll: false,
                     start: function(e, t) {
@@ -215,17 +215,18 @@ define(['knockout',
             var pageSizeLastTime = 0;
             // try using MutationObserver to detect widget list height change.
             // if MutationObserver is not availbe, register builder resize listener.
+            var $dbdLeftPanelWidgets = $b.findEl(".dbd-left-panel-widgets");
             if (typeof window.MutationObserver !== 'undefined') {
                 var widgetListHeightChangeObserver = new MutationObserver(function () {
-                    widgetListHeight($("#dbd-left-panel-widgets").height());
+                    widgetListHeight($dbdLeftPanelWidgets.height());
                 });
-                widgetListHeightChangeObserver.observe($("#dbd-left-panel-widgets")[0], {
+                widgetListHeightChangeObserver.observe($dbdLeftPanelWidgets[0], {
                     attributes: true,
                     attributeFilter: ['style']
                 });
             } else {
                 $b.addBuilderResizeListener(function () {
-                    widgetListHeight($("#dbd-left-panel-widgets").height());
+                    widgetListHeight($dbdLeftPanelWidgets.height());
                 });
             }
             // for delay notification.
@@ -360,20 +361,22 @@ define(['knockout',
                 }
             };
 
-            self.widgetMouseOverHandler = function(widget) {
+            self.widgetMouseOverHandler = function(widget,event) {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
-                if (!$('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
-                   $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("open", $('#widget-item-'+widget.WIDGET_UNIQUE_ID()), 
+                var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
+                var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
+                if (!popupContent.ojPopup("isOpen")) {
+                   $(popupContent).ojPopup("open", $(widgetItem), 
                    {
                        my : "end center", at : "start-10 center"
                    });
                }
             };
 
-            self.widgetMouseOutHandler = function(widget) {
-                if ($('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
-                    $('#widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
+            self.widgetMouseOutHandler = function(widget) {              
+                if ($('.widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("isOpen")) {
+                    $('.widget-'+widget.WIDGET_UNIQUE_ID()).ojPopup("close");
                 }
             };
             
@@ -386,8 +389,8 @@ define(['knockout',
             self.containerMouseOverHandler = function() {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
-                if (!$('#right-container-pop').ojPopup("isOpen")) {
-                   $('#right-container-pop').ojPopup("open", $('#dbd-left-panel-footer-contain'), 
+                if (!$b.findEl('.right-container-pop').ojPopup("isOpen")) {
+                   $b.findEl('.right-container-pop').ojPopup("open", $b.findEl('.dbd-left-panel-footer-contain'), 
                    {
                        my : "end bottom", at : "start-25 bottom"
                    });
@@ -395,8 +398,8 @@ define(['knockout',
             };
 
             self.containerMouseOutHandler = function() {
-                if ($('#right-container-pop').ojPopup("isOpen")) {
-                    $('#right-container-pop').ojPopup("close");
+                if ($b.findEl('.right-container-pop').ojPopup("isOpen")) {
+                    $b.findEl('.right-container-pop').ojPopup("close");
                 }
             };
 

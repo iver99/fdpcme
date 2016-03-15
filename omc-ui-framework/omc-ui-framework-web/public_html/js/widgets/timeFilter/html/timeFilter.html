@@ -37,20 +37,15 @@
         <div class="oj-col oj-sm-8 oj-md-8">
             <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: daysOptionAllChecked}">
                <div style="padding-left: 0px;">
-                    <input type="checkbox" data-bind="attr: {id: 'daysOptionAll'}, value: 'all'">
-                    <label data-bind="text: timeFilterOptionAll, attr: {for: 'daysOptionAll'}"></label>
+                    <input type="checkbox" data-bind="attr: {id: 'daysOptionAll_'+randomId}, value: 'all'">
+                    <label data-bind="text: timeFilterOptionAll, attr: {for: 'daysOptionAll_'+randomId}"></label>
                 </div>
             </div>
             <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: daysChecked}">
                 <div data-bind="foreach: daysFilterOptions">
                     <div class="oj-col oj-sm-6 oj-md-6" style="padding-left: 0px;">
-                    <!-- ko if: $index() === 0 -->
-                    <input type="checkbox" data-bind="attr: {id: $data}, value: $index()+7">
-                    <!-- /ko -->
-                    <!-- ko if: $index() !== 0 -->
-                    <input type="checkbox" data-bind="attr: {id: $data}, value: $index()">
-                    <!-- /ko -->
-                    <label data-bind="text: $data, attr: {for: $data}"></label>
+                    <input type="checkbox" data-bind="attr: {id: $data+$parent.randomId}, value: $index() + 1">
+                    <label data-bind="text: $data, attr: {for: $data+$parent.randomId}"></label>
                     </div>
                 </div>
             </div>
@@ -64,15 +59,15 @@
         <div class="oj-col oj-sm-10 oj-md-10">            
             <div class="oj-row"  data-bind="ojComponent: {component: 'ojCheckboxset', value: monthsOptionAllChecked}">
                 <div style="padding-left: 0px;">
-                    <input type="checkbox" data-bind="attr: {id: 'monthCheckAll'}, value: 'all'">
-                    <label data-bind="text: timeFilterOptionAll, attr: {for: 'monthCheckAll'}"></label>
+                    <input type="checkbox" data-bind="attr: {id: 'monthCheckAll_'+randomId}, value: 'all'">
+                    <label data-bind="text: timeFilterOptionAll, attr: {for: 'monthCheckAll_'+randomId}"></label>
                 </div>
             </div>
             <div class="oj-row" data-bind="ojComponent: {component: 'ojCheckboxset', value: monthsChecked}">
                 <div data-bind="foreach: monthsFilterOptions">
                     <div class="oj-col oj-sm-4 oj-md-4" style="padding-left: 0px;">
-                        <input type="checkbox" data-bind="attr: {id: $data}, value: ($index()+1)">
-                        <label data-bind="text: $data, attr: {for: $data}"></label>
+                        <input type="checkbox" data-bind="attr: {id: $data+$parent.randomId}, value: ($index()+1)">
+                        <label data-bind="text: $data, attr: {for: $data+$parent.randomId}"></label>
                     </div>
                 </div>
            </div>

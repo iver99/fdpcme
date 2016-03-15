@@ -357,15 +357,16 @@ define(['knockout',
                 Builder.registerComponent(tile.WIDGET_KOC_NAME(), kocVM, kocTemplate);
 
                 if (tile.WIDGET_SOURCE() !== Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK){
-                    var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), tile.PROVIDER_VERSION());
+                    var versionPlus = encodeURIComponent(tile.PROVIDER_VERSION()+'+');
+                    var url = Builder.getVisualAnalyzerUrl(tile.PROVIDER_NAME(), versionPlus);
                     if (url){
                         tile.configure = function(){
                             if(dashboard.enableTimeRange() === "FALSE" && Builder.isTimeRangeAvailInUrl() === false) {
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID());
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name());
                             }else{
                                 var start = timeSelectorModel.viewStart().getTime();
                                 var end = timeSelectorModel.viewEnd().getTime();
-                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&startTime="+start+"&endTime="+end);
+                                window.open(url+"?widgetId="+tile.WIDGET_UNIQUE_ID()+"&dashboardId="+dashboard.id()+"&dashboardName="+dashboard.name()+"&startTime="+start+"&endTime="+end);
                             }
                         };
                     }

@@ -10,8 +10,9 @@
  */
 
 define([
-    'dbs/datasourcefactory',
-    'dbs/dbstablesource',
+    'dashboards/datasourcefactory',
+    'dashboards/dbstablesource',
+    'dashboards/dbsfilter',
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
@@ -22,7 +23,7 @@ define([
     'ojs/ojpagingcontrol',
     'ojs/ojpagingcontrol-model'
 ],
-function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
+function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 {
     var SHOW_WELCOME_PREF_KEY = "Dashboards.showWelcomeDialog",
             DASHBOARDS_FILTER_PREF_KEY = "Dashboards.dashboardsFilter",
@@ -38,6 +39,22 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);
+        self.selectType =  ko.observable("NORMAL");
+        self.showHideDescription=ko.observable(false);
+        self.singleVisible = ko.observable(true);
+        self.setVisible=ko.observable(false);
+
+        self.dashboardtypeSelectFuc=function(){
+            if(self.selectType()==="NORMAL"){
+                self.singleVisible(true);
+                self.setVisible(false);
+            }else{
+                self.singleVisible(false);
+                self.setVisible(true);
+            }
+            return true;
+        };
+
         self.isDisabled = ko.computed(function() { 
             if (self.nameInputed() && self.nameInputed().length > 0)
             {
@@ -62,12 +79,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             }
             return false;
         };
-        
-//        self.keydown = function (d, e) {
-//           if (e.keyCode === 13) {
-//              $( "#cDsbDialog" ).ojDialog( "close" );
-//           }
-//        };
+
     }
         
     function confirmDialogModel(title, okLabel, message, okFunction) {
@@ -102,14 +114,6 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
              self.close();
            }
         };
-    } 
-
-    function comingsoonDialogModel() {
-        var self = this;
-       
-        self.close = function () {
-            $( "#dbs_comingsoonDialog" ).ojDialog( "close" );
-        };
     }
     
     function welcomeDialogModel(prefUtil, showWel) {
@@ -142,9 +146,9 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata) {
+    function ViewModel(predata, defaultFilters) {
         
-        var self = this, showWelcome = predata.getShowWelcomePref(), filter = predata.getDashboardsFilter();
+        var self = this, showWelcome = predata.getShowWelcomePref();
         
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
         
@@ -155,15 +159,18 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         //dashboards
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
-        self.typeFilter = ko.observable(filter['types']);
-        self.serviceFilter = ko.observable(filter['appTypes']);
-        self.creatorFilter = ko.observable(filter['owners']);
-        self.favoritesFilter = ko.observable(filter['favoritesOnly']===true ? ['favoritesOnly'] : null);
-        self.showServiceFilter = ko.observable(predata.getShowServiceFilter());
-        self.showLaServiceFilter = ko.observable(predata.getShowLaService());
-        self.showApmSrviceFilter = ko.observable(predata.getShowApmService());
-        self.showItaServiceFilter = ko.observable(predata.getShowItaService());
-        
+
+        self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
+            'filterPrefKey': DASHBOARDS_FILTER_PREF_KEY,
+            'filterChange': function(event) {
+                if (self.dsFactory)
+                {
+                   self.dsFactory.filter = self.filter.toFilterString();
+                   self._forceSearch();
+                }
+            }
+        });
+        self.showExploreDataBtn= ko.observable(true);
         self.showSeachClear = ko.observable(false);
         self.tilesViewGrid = 'gridtview';
         self.tilesViewList = 'listview';
@@ -174,7 +181,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
         self.confirmDialogModel = new confirmDialogModel();
-        self.comingsoonDialogModel = new comingsoonDialogModel();
+        //self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);
         
@@ -193,8 +200,13 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), 
-                                                   filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']);
+        
+        var filterString = self.filter.toFilterString()||"";
+        if(defaultFilters && Array.isArray(defaultFilters)){
+           filterString = filterString +","+ defaultFilters.join(",");
+        }
+        
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
                     if (_event['data'])
@@ -281,14 +293,6 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             self.selectedDashboard(data);
             if (data.element)
             {
-//                if (data.dashboard.systemDashboard == true)
-//                {
-//                    popup.ojPopup( "option", "initialFocus", "none" );
-//                }
-//                else
-//                {
-//                    popup.ojPopup( "option", "initialFocus", "firstFocusable" );
-//                }
                 popup.ojPopup('open', data.element, {'at': 'right center', 'my': 'start center'});
             }
         };
@@ -357,6 +361,10 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
+        self.cancelDashboardCreate = function(){
+            $( "#cDsbDialog" ).ojDialog( "open" );
+        };
+
         self.confirmDashboardCreate = function()
         {
             var _trackObj = ko.utils.unwrapObservable(self.tracker), 
@@ -373,11 +381,12 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             //self.tracker(undefined);
             self.createMessages.removeAll();
             
-            var _addeddb = {"name": self.createDashboardModel.name(), 
+            var _addeddb = { "type":self.createDashboardModel.selectType(),
+                            "name": self.createDashboardModel.name(),
                             "description": self.createDashboardModel.description(),
+//                            "showhidedescription":self.showHideDescription(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
-            
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
                 //_trackObj = new oj.InvalidComponentTracker();
@@ -546,69 +555,7 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             
             return null;
         };
-        
-        self.handleTypeFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.types = _value;
-                self._forceSearch();
-                self.saveDashbordsFilter(_value, self.serviceFilter(), self.creatorFilter(), self.favoritesFilter());
-            }
-        };
-        
-        self.handleServiceFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.appTypes = _value;
-                self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), _value, self.creatorFilter(), self.favoritesFilter());
-            }
-        };
-        
-        self.handleOwnerFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.owners = _value;
-                self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), _value, self.favoritesFilter());
-            }
-        };
-        
-        self.handleFavoritesFilterChanged = function (event, data) {
-            var _option = data.option, _value = data.value;
-            if ( _option === "value" )
-            {
-                self.dsFactory.favoritesOnly = _value && _value.length > 0 ? true : false;
-                self._forceSearch();
-                self.saveDashbordsFilter(self.typeFilter(), self.serviceFilter(), self.creatorFilter(), _value);
-            }
-        };
-        
-        self.saveDashbordsFilter = function (typeFilter, serviceFilter, creatorFilter, favoritesFilter)
-        {
-            var _filter = {};
-            if (typeFilter !== undefined && typeFilter.length > 0)
-            {
-                _filter.types = typeFilter;
-            }
-            if (serviceFilter !== undefined && serviceFilter.length > 0)
-            {
-                _filter.appTypes = serviceFilter;
-            }
-            if (creatorFilter !== undefined && creatorFilter.length > 0)
-            {
-                _filter.owners = creatorFilter;
-            }
-            if (favoritesFilter !== undefined && favoritesFilter !== null && favoritesFilter.length > 0)
-            {
-                _filter.favoritesOnly = true;
-            }
-            self.prefUtil.setPreference(DASHBOARDS_FILTER_PREF_KEY, JSON.stringify(_filter));
-        };
-        
+
         self.typeaheadSearchStart = function (event, data)
         {
             var  _ts = self.dashboardsTS();
@@ -717,63 +664,29 @@ function(dsf, dts, oj, ko, $, dfu, pfu, mbu)
             return results === null ? "" : results[1];//decodeURIComponent(results[1].replace(/\+/g, " "));
         };
         
-        self.getIsIta = function () {
-            return (getUrlParam("filter") === "ita" ? true : false);
-        };
-        
-        self.showFavoritesOnly = function () {
-            return (getUrlParam("filter") === "favorites" ? true : false);
-        };
-                    
-        self.getShowLaService = function() {
-            if (self.sApplications !== undefined && $.inArray("LogAnalytics", self.sApplications['applications']) >= 0) return true;
-            return false;
-        };
-        
-        self.getShowApmService = function() {
-            if (self.sApplications !== undefined && $.inArray("APM", self.sApplications['applications']) >= 0) return true;
-            return false;
-        };
-        
-        self.getShowItaService = function() {
-            if (self.sApplications !== undefined && $.inArray("ITAnalytics", self.sApplications['applications']) >= 0) return true;
-            return false;
-        };
-        
-        self.getShowServiceFilter = function() {
-            if (self.getShowLaService() === true || 
-                    self.getShowApmService() === true || 
-                    self.getShowItaService() === true)
+        self.getDashboardsFilter = function (options) {
+            var _options = options || {}, _filterPref = self.getDashboardsFilterPref(), _filterUrlParam=getUrlParam("filter");
+            if (_filterUrlParam && _filterUrlParam.trim().length > 0)
             {
-                return true;
+                _options['saveFilterPref'] = false;
+                _filterPref = _filterUrlParam.toLowerCase();
             }
-            return false;
-        };
-        
-        self.getDashboardsFilter = function () {
-            var filter = self.getDashboardsFilterPref();
-            var _appTypes = (filter['appTypes'] === undefined ? [] : filter['appTypes']);
-            if (self.getIsIta() === true)
+            else
             {
-                if ($.inArray("ITAnalytics", _appTypes) < 0)
-                {
-                    _appTypes.push("ITAnalytics");
-                }
+                _options['saveFilterPref'] = true;
             }
-            if (self.showFavoritesOnly() === true) {
-                filter['favoritesOnly'] = true;
+            if (_filterPref && _filterPref.trim().slice(0, 1) === '{')
+            {
+                _filterPref = null;
             }
-            return {types: (filter['types'] === undefined ? [] : filter['types']), 
-                appTypes: _appTypes, 
-                owners: (filter['owners'] === undefined ? [] : filter['owners']),
-                favoritesOnly: (filter['favoritesOnly'] === undefined ? false : filter['favoritesOnly'])};
+            return new dft.DashboardsFilter(_filterPref, self.sApplications ? self.sApplications['applications'] : [], _options);
         };
         
         self.getDashboardsFilterPref = function () {
             var filter = self.getPreferenceValue(DASHBOARDS_FILTER_PREF_KEY);
-            if (filter === undefined || filter.length === 0) return {};
+            if (filter === undefined || filter.length === 0) return undefined;
             filter = $("<div/>").html(filter).text();
-            return JSON.parse(filter);
+            return filter;
         };
         
         self.getShowWelcomePref = function () {

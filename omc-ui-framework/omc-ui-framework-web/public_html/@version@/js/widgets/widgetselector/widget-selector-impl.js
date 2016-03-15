@@ -35,6 +35,7 @@ define([
                 self.affirmativeButtonLabel = affirmativeTxt ? affirmativeTxt : nls.WIDGET_SELECTOR_DEFAULT_AFFIRMATIVE_BTN_LABEL;
                 self.widgetScreenShotPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_SCREENSHOT_TITLE;
                 self.widgetDescPageTitle = nls.WIDGET_SELECTOR_WIDGET_NAVI_DESC_TITLE;
+                self.widgetsLoadingHints = nls.WIDGET_SELECTOR_WIDGETS_LOADING_HINT;
                         
                 self.widgetGroupFilterVisible = ko.observable(widgetProviderName && widgetProviderVersion ? false : true);
                 self.searchText = ko.observable("");
@@ -43,10 +44,13 @@ define([
                 var dfu = new dfumodel(self.userName, self.tenantName);
                 
                 // Initialize widget group and widget data
-                self.categoryValue=ko.observableArray(["all|all|All"]);
+                var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
+                var groupValueAll = 'all|all|All';
+                var groupAll = {value: groupValueAll, label: labelAll};
+                self.categoryValue=ko.observableArray([groupValueAll]);
                 self.widgetGroup=ko.observable();
                 self.widgetGroupValue=ko.observable({providerName:"all", providerVersion:"all", name:"all"});
-                self.widgetGroups=ko.observableArray([{value: "all|all|All", label: "All"}]);
+                self.widgetGroups=ko.observableArray([{value: groupValueAll, label: labelAll}]);
                 var widgetArray = [];
                 var curGroupWidgets = [];
                 var widgetGroupList = [];
@@ -66,6 +70,7 @@ define([
                 self.naviNextBtnEnabled=ko.observable(totalPage > 1 && curPage!== totalPage ? true:false);
                 self.currentWidget = ko.observable();
                 self.confirmBtnDisabled = ko.observable(true);
+                self.widgetOnLoading = ko.observable(true);
                 
                 // Initialize data and refresh
                 self.beforeOpenDialog = function(event, ui) {
@@ -212,7 +217,7 @@ define([
                         for (var i = 0; i < widgetArray.length; i++) {
                             var widget = widgetArray[i];
                             if (widget.PROVIDER_NAME === providerName &&
-                                    widget.PROVIDER_VERSION === providerVersion &&
+                    //                widget.PROVIDER_VERSION === providerVersion &&
                                     widget.WIDGET_GROUP_NAME === groupName) {
                                 availWidgets.push(widget);
                             }
@@ -252,7 +257,7 @@ define([
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
                     if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME || 
-                            curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION || 
+                            /*curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION ||*/ 
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
                         widgetArray[curWidget.index].isSelected(false);
                         data.isSelected(true);
@@ -378,7 +383,6 @@ define([
                     self.categoryValue([selectedGroup]);
                     self.widgetList(widgetArray);
                     self.curPageWidgetList(curPageWidgets);
-                    self.searchText("");
                     self.naviPreBtnEnabled(curPage === 1 ? false : true);
                     self.naviNextBtnEnabled(totalPage > 1 && curPage!== totalPage ? true:false);
                 }
@@ -391,17 +395,29 @@ define([
                     searchResultArray = [];
                     index=0;
                     widgetIndex = 0;
-                    widgetGroupList = [];
+                    widgetGroupList = [groupAll];
                     availableWidgetGroups = [];
                     self.currentWidget(null);
                     self.confirmBtnDisabled(true);
+                    self.searchText("");
+                    self.widgetOnLoading(true);
                     refreshPageData();
                     
                     getWidgetGroups().done(function(data, textStatus, jqXHR){
                         oj.Logger.info("Finished loading widget groups. Start to load widgets.");
                         getWidgets().done(function(data, textStatus, jqXHR){
                             oj.Logger.info("Finished loading widget groups and widgets. Start to load page display data.");
-                            refreshPageData();
+                            //If already has search text input during widgets loading, then do a search after widgets loading finished
+                            if (self.searchText() && $.trim(self.searchText()) !== "") {
+                                self.widgetGroups(widgetGroupList);
+                                var selectedGroup = widgetGroupList.length > 0 ? widgetGroupList[0].value : "";
+                                self.categoryValue([selectedGroup]);
+                                self.searchWidgets();
+                            }
+                            else {
+                                refreshPageData();
+                            }
+                            self.widgetOnLoading(false);
                         })
                         .fail(function(xhr, textStatus, errorThrown){
                             oj.Logger.error("Failed to fetch widgets.");
@@ -416,8 +432,8 @@ define([
                 function loadWidgets(data) {
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion*/) || 
+                                    (widgetProviderName === data[i].PROVIDER_NAME /*&& widgetProviderVersion === data[i].PROVIDER_VERSION*/)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 widget.WIDGET_VISUAL = ko.observable();
@@ -514,8 +530,6 @@ define([
                 // Load widget groups from ajax call result data
                 function loadWidgetGroups(data) {
                     var targetWidgetGroupArray = [];
-                    var labelAll = nls.WIDGET_SELECTOR_WIDGET_GROUP_ALL;
-                    var groupAll = {value:'all|all|All', label: labelAll};
                     var pname = null; 
                     var pversion = null; 
                     var gname = null; 
@@ -525,8 +539,9 @@ define([
                             pname = data[i].PROVIDER_NAME;
                             pversion = data[i].PROVIDER_VERSION;
                             gname = data[i].WIDGET_GROUP_NAME;
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    widgetProviderName === pname && widgetProviderVersion === pversion) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion */) || 
+                                    widgetProviderName === pname 
+                                /*    && widgetProviderVersion === pversion */) {
                                 //Enable ITA widget group since ITA widgets are enabled now.
 //                                if (!(pname === 'EmcitasApplications' && pversion === '0.1' && data[i].WIDGET_GROUP_ID === 3)) {
                                     var widgetGroup = {value:pname+'|'+pversion+'|'+gname, label:gname};

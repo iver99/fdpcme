@@ -160,6 +160,51 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
 
+	public static String getServiceInternalEndpoint(String serviceName, String version, String tenantName)
+	{
+		logger.debug(
+				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", tenant: \"{}\"",
+				serviceName, version, tenantName);
+		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
+		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		String endpoint = null;
+		try {
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
+			if (result != null && result.size() > 0) {
+				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
+				//https link is not found, then find http link
+				for (InstanceInfo internalInstance : result) {
+					endpoint = RegistryLookupUtil.getHttpInternalEndPoint(internalInstance);
+					if (endpoint != null) {
+						break;
+					}
+				}
+			}
+			return endpoint;
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return endpoint;
+		}
+	}
+
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
@@ -230,6 +275,32 @@ public class RegistryLookupUtil
 		return endPoint;
 	}
 
+	private static String getHttpInternalEndPoint(InstanceInfo instance)
+	{
+		if (instance == null) {
+			return null;
+		}
+		List<String> endpoints = new ArrayList<String>();
+		/**
+		 * canonicalEndpoints and virtualEndpoints are the service endpoints Canonical endpoints contains the URLs to the service
+		 * that is reachable internally Virtual end points contains the URLs to the service that may be reached from outside the
+		 * cloud
+		 **/
+		List<String> canonicalEndpoints = instance.getCanonicalEndpoints();
+		endpoints.addAll(canonicalEndpoints);
+		List<String> virtualEndpoints = instance.getVirtualEndpoints();
+		endpoints.addAll(virtualEndpoints);
+		if (endpoints != null && endpoints.size() > 0) {
+			for (String ep : endpoints) {
+				if (ep.startsWith("http://")) {
+					return ep;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	private static String getInternalEndPoint(InstanceInfo instance)
 	{
 		if (instance == null) {
@@ -272,7 +343,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
@@ -300,7 +371,7 @@ public class RegistryLookupUtil
 					protocoledLinks.add(link);
 				}
 			}
-			catch (Throwable thr) {
+			catch (Exception thr) {
 				logger.error(thr.getLocalizedMessage(), thr);
 				return protocoledLinks;
 			}
