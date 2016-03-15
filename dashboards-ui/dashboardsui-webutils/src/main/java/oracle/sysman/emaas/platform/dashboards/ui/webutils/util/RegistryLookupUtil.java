@@ -35,7 +35,7 @@ public class RegistryLookupUtil
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
 	public static final String ITA_SERVICE = "EmcitasApplications";
-	public static final String LA_SERVICE = "LoganService";
+	public static final String LA_SERVICE = "LogAnalyticsUI";
 	public static final String TA_SERVICE = "TargetAnalytics";
 
 	public static Link getServiceExternalLink(String serviceName, String version, String rel, String tenantName)

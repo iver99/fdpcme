@@ -36,7 +36,7 @@ public class RegistryLookupUtil
 	// keep the following the same with service name
 	public static final String APM_SERVICE = "ApmUI";
 	public static final String ITA_SERVICE = "EmcitasApplications";
-	public static final String LA_SERVICE = "LoganService";
+	public static final String LA_SERVICE = "LogAnalyticsUI";
 	public static final String TA_SERVICE = "TargetAnalytics";
 
 	public static List<Link> getLinksWithRelPrefix(String relPrefix, SanitizedInstanceInfo instance)
@@ -66,7 +66,7 @@ public class RegistryLookupUtil
 			if (!StringUtil.isEmpty(tenantName)) {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
 				itrLogger
-				.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+						.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
 				if (internalInstance == null) {
 					logger.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -288,7 +288,8 @@ public class RegistryLookupUtil
 		List<Link> protocoledLinks = new ArrayList<Link>();
 		for (Link link : links) {
 			try {
-				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})", protocol, relPrefix, link.getRel(), link.getHref());
+				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})",
+						protocol, relPrefix, link.getRel(), link.getHref());
 				URI uri = URI.create(link.getHref());
 				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null && link.getRel().indexOf(relPrefix) == 0) {
 					protocoledLinks.add(link);
@@ -310,8 +311,9 @@ public class RegistryLookupUtil
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
 		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
-		if (!StringUtil.isEmpty(version))
+		if (!StringUtil.isEmpty(version)) {
 			builder = builder.withVersion(version);
+		}
 		InstanceInfo info = builder.build();
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
@@ -326,7 +328,8 @@ public class RegistryLookupUtil
 							"retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
 					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-					itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
+					itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result,
+							info);
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
