@@ -33,9 +33,9 @@ define(['knockout',
 
             self.isDashboardSet = ko.observable(ko.unwrap(dashboardInst.type)  === "SET");
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
-            
+            self.hasUserOptionInDB = false;
+            self.extendedOptions = {};
 
-            
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
             
             self.dashboardsetDescription = ko.observable(function () {
@@ -176,6 +176,17 @@ define(['knockout',
                     }
                 }, 5000);
 
+                var options = {
+                    dashboardId: self.dashboardsetId,
+                    extendedOptions: JSON.stringify(self.extendedOptions),
+                    autoRefreshInterval: 0
+                };
+                if (self.hasUserOptionInDB) {
+                    Builder.updateDashboardOptions(options);
+                } else {
+                    Builder.saveDashboardOptions(options);
+                    self.hasUserOptionInDB = true;
+                }
             };
 
             self.addNewDashboard = function (data, event) {
@@ -194,13 +205,14 @@ define(['knockout',
              * @param {type} selectedDashboard the dashboard user picked
              * @returns {undefined}
              */
-            self.pickDashboard = function(dashboardPickerId, selectedDashboard) {
+            self.pickDashboard = function(dashboardPickerId, dashboardNameId) {
+                var selectedDashboard = new dashboardItem(dashboardNameId);
                 var removeResult=findRemoveTab(self.dashboardsetItems,dashboardPickerId);
                 var reorderedResult=findRemoveTab(self.reorderedDbsSetItems(),dashboardPickerId);
                 
                 if (removeResult.removeIndex > -1) {  
                     removeTargetTab(removeResult.removeItem);
-                    addNewTab(selectedDashboard.name,selectedDashboard.dashboardId,reorderedResult.removeIndex); 
+                    addNewTab(selectedDashboard.name(),selectedDashboard.dashboardId,reorderedResult.removeIndex); 
                     self.dashboardsetItems.splice(removeResult.removeIndex, 1, selectedDashboard);
                     self.reorderedDbsSetItems.splice(reorderedResult.removeIndex, 1, selectedDashboard);
                     self.selectedDashboardItem(selectedDashboard);
@@ -322,25 +334,48 @@ define(['knockout',
                 
                 var subDashboards = ko.unwrap(dashboardInst.subDashboards);
                 if (self.isDashboardSet()) {
-                    if ( subDashboards.length === 0) {
-                        subDashboards = [
-                            null
-                        ];
-                    }
-                    $.each(subDashboards, function (index, simpleDashboardInst) {
-                        singleDashboardItem = new dashboardItem(simpleDashboardInst);
-
-                        self.dashboardsetItems.push(singleDashboardItem);
-                        self.reorderedDbsSetItems.push(singleDashboardItem);
-                        addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1);
-
-                        // TODO temprorary pick first dashboard;
-                        if (index === 0) {
-                            self.selectedDashboardItem(singleDashboardItem);
-                            $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
+                    
+                    Builder.fetchDashboardOptions(
+                            self.dashboardsetId,
+                            resolveLoadOptions.bind(this, "success"),
+                            resolveLoadOptions.bind(this, "error"));
+                    
+                    function resolveLoadOptions (status, resp) {
+                        if (status === "error") {
+                            self.extendedOptions = {};
+                        } else {
+                            self.extendedOptions = JSON.parse(resp.extendedOptions);
+                            if (typeof self.extendedOptions !== "object") {
+                                self.extendedOptions = {};
+                            }
+                            self.hasUserOptionInDB = true;
                         }
-                        $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
-                    });
+                    
+                        if ( subDashboards.length === 0) {
+                            subDashboards = [
+                                null
+                            ];
+                        }
+                        
+                        var indexOfSelectedTabInUserOption = 0;
+                        $.each(subDashboards, function (index, simpleDashboardInst) {
+                            singleDashboardItem = new dashboardItem(simpleDashboardInst);
+
+                            self.dashboardsetItems.push(singleDashboardItem);
+                            self.reorderedDbsSetItems.push(singleDashboardItem);
+                            addNewTab(singleDashboardItem.name(), singleDashboardItem.dashboardId, -1);
+
+                            if (self.extendedOptions && self.extendedOptions.selectedTab === singleDashboardItem.dashboardId) {
+                                indexOfSelectedTabInUserOption = index;
+                            }
+                            $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                        });
+                        
+                        singleDashboardItem = self.dashboardsetItems[indexOfSelectedTabInUserOption];
+                        self.selectedDashboardItem(singleDashboardItem);
+                        $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
+                    
+                    }
 
                 } else {
                     singleDashboardItem = new dashboardItem(dashboardInst);
@@ -615,6 +650,7 @@ define(['knockout',
                     ko.utils.arrayForEach(self.dashboardsetItems, function (item, index) {
                         if (item.dashboardId === selectedDashboardId) {
                             self.selectedDashboardItem(item);
+                            self.extendedOptions.selectedTab = selectedDashboardId;
                         }
                     });           
                     self.saveDashboardSet();

@@ -101,8 +101,8 @@ define([
                         
                         if (!hasDuplicatedDashboard) {
                             dashboardsetToolBarModel.pickDashboard(guid, {
-                                dashboardId: data.dashboard.id,
-                                name: data.dashboard.name
+                                id: ko.observable(data.dashboard.id),
+                                name: ko.observable(data.dashboard.name)
                             });
                         }
                     };
