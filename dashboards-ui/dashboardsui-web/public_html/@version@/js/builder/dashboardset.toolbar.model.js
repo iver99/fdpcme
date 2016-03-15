@@ -335,11 +335,6 @@ define(['knockout',
                 var subDashboards = ko.unwrap(dashboardInst.subDashboards);
                 if (self.isDashboardSet()) {
                     
-                    Builder.fetchDashboardOptions(
-                            self.dashboardsetId,
-                            resolveLoadOptions.bind(this, "success"),
-                            resolveLoadOptions.bind(this, "error"));
-                    
                     function resolveLoadOptions (status, resp) {
                         if (status === "error") {
                             self.extendedOptions = {};
@@ -376,6 +371,11 @@ define(['knockout',
                         $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
                     
                     }
+                    
+                    Builder.fetchDashboardOptions(
+                            self.dashboardsetId,
+                            resolveLoadOptions.bind(this, "success"),
+                            resolveLoadOptions.bind(this, "error"));
 
                 } else {
                     singleDashboardItem = new dashboardItem(dashboardInst);
