@@ -213,7 +213,9 @@ public class EmsDashboard implements Serializable
 	}
 
     public EmsDashboardTile removeEmsDashboardTile(EmsDashboardTile emsDashboardTile) {
-        return null;
+		getDashboardTileList().remove(emsDashboardTile);
+		emsDashboardTile.setDashboard(null);
+		return emsDashboardTile;
     }
 
 	public void setApplicationType(Integer applicationType)
