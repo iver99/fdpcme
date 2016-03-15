@@ -3,6 +3,11 @@ package oracle.sysman.emaas.platform.dashboards.core;
 import java.util.Date;
 import java.util.List;
 
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
@@ -16,11 +21,6 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.PersistenceManag
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
-
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 /**
  * @author guobaochen
@@ -36,7 +36,7 @@ public class DashboardManagerTest
 	@BeforeMethod
 	public void beforeMethod()
 	{
-		TenantContext.setCurrentTenant("TenantOPC1");
+		TenantContext.setCurrentTenant("emaastesttenant1");
 	}
 
 	@Test
@@ -452,60 +452,60 @@ public class DashboardManagerTest
 		}
 	}
 
-		@Test
-		public void testFavoriteDashboards() throws DashboardException
-		{
-			DashboardManager dm = DashboardManager.getInstance();
-			String name1 = "name1" + System.currentTimeMillis();
-			Long tenantId1 = 11L;
-			Dashboard dbd1 = new Dashboard();
-			dbd1.setName(name1);
-			dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
-	
-			List<Dashboard> dbList = dm.getFavoriteDashboards(tenantId1);
-			int originSize = dbList == null ? 0 : dbList.size();
-			// add+check
-			dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-			dbList = dm.getFavoriteDashboards(tenantId1);
-			Assert.assertEquals(dbList.size(), originSize + 1);
-			// silent operation: re-add+check
-			dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-			dbList = dm.getFavoriteDashboards(tenantId1);
-			Assert.assertEquals(dbList.size(), originSize + 1);
-			// remove+check
-			dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-			dbList = dm.getFavoriteDashboards(tenantId1);
-			Assert.assertEquals(dbList.size(), originSize);
-			// silent operation: re-remove+check
-			dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
-			dbList = dm.getFavoriteDashboards(tenantId1);
-			Assert.assertEquals(dbList.size(), originSize);
-	
-			// create & delete dashboard check
-			dm = DashboardManager.getInstance();
-			String name2 = "name2" + System.currentTimeMillis();
-			Dashboard dbd2 = new Dashboard();
-			dbd2.setName(name2);
-			dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
-			dm.addFavoriteDashboard(dbd2.getDashboardId(), tenantId1);
-			dbList = dm.getFavoriteDashboards(tenantId1);
-			originSize = dbList == null ? 0 : dbList.size();
-			dm.deleteDashboard(dbd2.getDashboardId(), tenantId1);
-			dbList = dm.getFavoriteDashboards(tenantId1);
-			Assert.assertEquals(dbList.size(), originSize - 1);
-	
-			// post test
-			try {
-				dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
-			}
-			catch (DashboardNotFoundException e) {
-			}
-			try {
-				dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
-			}
-			catch (DashboardNotFoundException e) {
-			}
+	@Test
+	public void testFavoriteDashboards() throws DashboardException
+	{
+		DashboardManager dm = DashboardManager.getInstance();
+		String name1 = "name1" + System.currentTimeMillis();
+		Long tenantId1 = 11L;
+		Dashboard dbd1 = new Dashboard();
+		dbd1.setName(name1);
+		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
+
+		List<Dashboard> dbList = dm.getFavoriteDashboards(tenantId1);
+		int originSize = dbList == null ? 0 : dbList.size();
+		// add+check
+		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		Assert.assertEquals(dbList.size(), originSize + 1);
+		// silent operation: re-add+check
+		dm.addFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		Assert.assertEquals(dbList.size(), originSize + 1);
+		// remove+check
+		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		Assert.assertEquals(dbList.size(), originSize);
+		// silent operation: re-remove+check
+		dm.removeFavoriteDashboard(dbd1.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		Assert.assertEquals(dbList.size(), originSize);
+
+		// create & delete dashboard check
+		dm = DashboardManager.getInstance();
+		String name2 = "name2" + System.currentTimeMillis();
+		Dashboard dbd2 = new Dashboard();
+		dbd2.setName(name2);
+		dbd2 = dm.saveNewDashboard(dbd2, tenantId1);
+		dm.addFavoriteDashboard(dbd2.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		originSize = dbList == null ? 0 : dbList.size();
+		dm.deleteDashboard(dbd2.getDashboardId(), tenantId1);
+		dbList = dm.getFavoriteDashboards(tenantId1);
+		Assert.assertEquals(dbList.size(), originSize - 1);
+
+		// post test
+		try {
+			dm.deleteDashboard(dbd1.getDashboardId(), true, tenantId1);
 		}
+		catch (DashboardNotFoundException e) {
+		}
+		try {
+			dm.deleteDashboard(dbd2.getDashboardId(), true, tenantId1);
+		}
+		catch (DashboardNotFoundException e) {
+		}
+	}
 
 	@Test
 	public void testGetDashboardByName() throws DashboardException
@@ -650,9 +650,12 @@ public class DashboardManagerTest
 		Assert.assertEquals(0, pd.getOffset());
 		Assert.assertEquals(Integer.valueOf(DashboardConstants.DASHBOARD_QUERY_DEFAULT_LIMIT), pd.getLimit());
 		long originSize = pd.getTotalResults();
+		pd = dm.listDashboards("key", null, null, tenant1, false);
+		long caseSensitiveOriginSize = pd.getTotalResults();
 
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName("key1" + System.currentTimeMillis());
+		dbd1.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		dbd1 = dm.saveNewDashboard(dbd1, tenant1);
 
 		Dashboard dbd2 = new Dashboard();
@@ -670,7 +673,7 @@ public class DashboardManagerTest
 		// query by key word, case sensitive
 		pd = dm.listDashboards("key", null, null, tenant1, false);
 		long caseSensitiveSize = pd.getTotalResults();
-		Assert.assertEquals(caseSensitiveSize, originSize + 3);
+		Assert.assertEquals(caseSensitiveSize, caseSensitiveOriginSize + 3);
 
 		Dashboard dbd4 = new Dashboard();
 		dbd4.setName("KEY1" + System.currentTimeMillis());
@@ -692,12 +695,14 @@ public class DashboardManagerTest
 		dbd7.setName("name" + System.currentTimeMillis());
 		Tile db7tile1 = createTileForDashboard(dbd7);
 		db7tile1.setTitle("key" + System.currentTimeMillis());
+		dbd7.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		dbd7 = dm.saveNewDashboard(dbd7, tenant1);
 
 		Dashboard dbd8 = new Dashboard();
 		dbd8.setName("name" + System.currentTimeMillis());
 		Tile db8tile1 = createTileForDashboard(dbd8);
 		db8tile1.setTitle("KEY" + System.currentTimeMillis());
+		dbd8.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		dbd8 = dm.saveNewDashboard(dbd8, tenant1);
 
 		// a dashboard in different tenant. shouldn't be queried
@@ -708,6 +713,7 @@ public class DashboardManagerTest
 		// test deleted dashboards shouldn't be queried
 		Dashboard dbd10 = new Dashboard();
 		dbd10.setName("name " + System.currentTimeMillis());
+		dbd10.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		Tile db10tile1 = createTileForDashboard(dbd10);
 		db10tile1.setTitle("KEY" + System.currentTimeMillis());
 		dbd10 = dm.saveNewDashboard(dbd10, tenant1);
@@ -719,6 +725,8 @@ public class DashboardManagerTest
 		dbd11.setName("key11" + System.currentTimeMillis());
 		dbd11.setIsSystem(true);
 		dbd11.setAppicationType(DashboardApplicationType.APM);
+		dbd11.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
+		dbd11.setType(Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		Tile tile1 = createTileForDashboard(dbd11);
 		tile1.setRow(0);
 		tile1.setColumn(0);
@@ -764,8 +772,8 @@ public class DashboardManagerTest
 				AssertJUnit.fail("Failed: unexpected dashboard returned: deleted");
 			}
 			if (dbd.getName().equals(dbd12.getName())) {
-				AssertJUnit
-				.fail("Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
+				AssertJUnit.fail(
+						"Failed: unexpected dashboard returned: system dashboard owned by other, but from different tenant");
 			}
 			if (dbd.getName().equals(dbd13.getName())) {
 				AssertJUnit.fail("Failed: unexpected dashboard returned: system dashboard from unsubscribed service");
@@ -783,8 +791,8 @@ public class DashboardManagerTest
 		// query by page size/offset. ===Need to consider that last accessed one comes first===
 		pd = dm.listDashboards("key", 0, 3, tenant1, true);
 		Assert.assertEquals(pd.getDashboards().get(0).getDashboardId(), dbd11.getDashboardId());
-		// check that tiles are retrieved successfully
-		Assert.assertNotNull(pd.getDashboards().get(0).getTileList().get(0));
+		// check that tiles are retrieved successfully for single page dashboard
+		//		Assert.assertNotNull(pd.getDashboards().get(0).getTileList().get(0));
 		Tile dbd11tile1 = pd.getDashboards().get(0).getTileList().get(0);
 		Assert.assertEquals(dbd11.getTileList().get(0).getTileId(), dbd11tile1.getTileId());
 		Assert.assertEquals(3, pd.getDashboards().size());

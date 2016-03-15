@@ -105,7 +105,7 @@ require(['dbs/dbsmodel',
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
-                logger.setLogLevel(oj.Logger.LEVEL_LOG);
+                logger.setLogLevel(oj.Logger.LEVEL_WARN);
 //            }
 
            
