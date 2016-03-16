@@ -409,6 +409,9 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		if (emsDashboard.getCreationDate() == null) {
 			emsDashboard.setCreationDate(new Date());
 		}
+		if (emsDashboard.getTenantId() == null) {
+			emsDashboard.setTenantId(currentTenant);
+		}
 		return localPersist(emsDashboard);
 	}
 
@@ -498,6 +501,12 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 		//		st.removeAll(removed);
 		this.localRemove(emsPreference.getClass(),
 				new EmsPreferenceSelector(emsPreference.getUserName(), emsPreference.getPrefKey()));
+	}
+
+	@Mock
+	public int removeEmsSubDashboardById(long subDashboardId)
+	{
+		return 0;
 	}
 
 	@SuppressWarnings("unchecked")
