@@ -583,7 +583,8 @@ define(['knockout',
                 this.cancelDeleteDbs= function(){
                      $('#deleteDashboardset').ojDialog("close");   
                 };       
-                this.printAllDbs = function(dbsToolBar){                      
+                this.printAllDbs = function(dbsToolBar){
+                    $('#globalBody').css({'width':""});
                     var hiddenArray = [];
                     $('.dashboard-content').each(function (index, element) {
                         var tempDashboardId = $(element).attr('id');

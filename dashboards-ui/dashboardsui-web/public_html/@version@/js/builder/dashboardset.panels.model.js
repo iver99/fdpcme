@@ -207,7 +207,6 @@ define([
 
                     $("#loading").hide();
                     $('#globalBody').show();
-                    $('#globalBody').css({'width':""});
                     $dashboardEl.css("visibility", "visible");
                     if(dashboardsetToolBarModel.isDashboardSet()){
                         $b.findEl('.head-bar-container').css("background-color","white");
