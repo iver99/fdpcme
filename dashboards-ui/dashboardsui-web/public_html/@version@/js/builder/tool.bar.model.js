@@ -759,6 +759,14 @@ define(['knockout',
                         interval = 3000;
                     }
                     self.intervalID = setInterval(function () {
+                        Builder.loadDashboard(
+                                $b.dashboard.id(),
+                                function (dashboardInst) {
+                                    self.dashboardName(dashboardInst.name());
+                                    self.dashboardDescription((dashboardInst.description && dashboardInst.description()) || "");
+                                }, function () {
+                                    console.log("update dashboard name && description  failed !");
+                        });
                         $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
                     }, interval);
                 }
