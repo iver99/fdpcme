@@ -62,9 +62,12 @@ define([
                         //new dashboard home css change:align
                         setTimeout(function () {
                             var bodyHeight=$(window).height();  
-                            var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-tiles-panel-sm').position().top;
+                            //var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-tiles-panel-sm').position().top;
+                            //var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
+                            //$('.dbs-tiles-panel-sm').css({'height':newHeight});
+                            var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container').position().top;
                             var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
-                            $('.dbs-tiles-panel-sm').css({'height':newHeight});
+                            $('.dbs-list-container').css({'height':newHeight});
                             $('#globalBody').css({'width':"100%"});
                     }, 2000);
                     } else {
