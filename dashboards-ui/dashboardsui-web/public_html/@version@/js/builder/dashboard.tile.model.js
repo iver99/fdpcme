@@ -64,6 +64,7 @@ define(['knockout',
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
 //            self.linkName = ko.observable();
 //            self.linkUrl = ko.observable();
+            self.isCreator =  dfu.getUserName() === self.dashboard.owner();
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);

@@ -669,7 +669,7 @@
                 </div>                
                 
                 <div class="right-panel-toggler no-print" data-bind="
-                        visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler(),
+                        visible: $root.isMobileDevice !== 'true' && !dashboard.systemDashboard() && showRightPanelToggler() && isCreator === true,
                         style: {
                             right: rightPanelShown() ? 
                                 (282 + $root.scrollbarWidth) + 'px' : 
