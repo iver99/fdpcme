@@ -355,3 +355,45 @@ a:hover {
 }
 
 
+// for dashboard set home seletor layout
+@media print, screen {
+    
+    .dbs-tiles-container-full-sm {
+        margin-left: auto;
+        margin-right: auto;
+        float: none;
+       
+        width: 670px;
+        min-width: 670px;
+        max-width: 670px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1010px) {
+   .dbs-tiles-container-full-md {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1002px;
+    min-width: 1002px;
+    max-width: 1002px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1345px) {
+    .dbs-tiles-container-full-lg {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1337px;
+    min-width: 1337px;
+    max-width: 1337px;}
+}
+
+@media print and (orientation: landscape), screen and (min-width: 1680px) {
+    .dbs-tiles-container-full-xl {
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+    width: 1670px;
+    min-width: 1670px;
+    max-width: 1670px;}
+}
