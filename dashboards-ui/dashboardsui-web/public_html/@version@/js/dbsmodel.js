@@ -102,11 +102,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 _okfunc();
                 //self.close();
             };
-            $( ".dashboard-content:visible .dbs_cfmDialog" ).ojDialog( "open" );
+            $( ".dbs_cfmDialog" ).ojDialog( "open" );
         };
         
         self.close = function () {
-            $( ".dashboard-content:visible .dbs_cfmDialog" ).ojDialog( "close" );
+            $( ".dbs_cfmDialog" ).ojDialog( "close" );
         };
         
         self.keydown = function (d, e) {
@@ -276,7 +276,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleShowDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $(".dashboard-content:visible .dsbinfopop");
+            var popup = $(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
@@ -299,7 +299,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleCloseDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $(".dashboard-content:visible .dsbinfopop");
+            var popup = $(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
