@@ -52,6 +52,7 @@ define(['knockout',
             self.previousDragCell = null;
                         
             self.dashboard = $b.dashboard;
+            self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             self.builderTitle = dfu_model.generateWindowTitle(self.dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.target = dfu_model.getUrlParam("target");
