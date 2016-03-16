@@ -330,13 +330,13 @@ public class TenantSubscriptionUtilTest
 
 	// @formatter:off
 
-	@AfterMethod
+	@AfterMethod(groups = { "s2" })
 	public void afterMethod() throws Exception
 	{
 		cleanCache();
 	}
 
-	@BeforeMethod
+	@BeforeMethod(groups = { "s2" })
 	public void beforeMethod() throws Exception
 	{
 		cleanCache();
