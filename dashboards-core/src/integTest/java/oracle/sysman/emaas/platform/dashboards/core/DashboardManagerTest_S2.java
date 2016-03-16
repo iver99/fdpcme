@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -743,7 +744,8 @@ public class DashboardManagerTest_S2
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName("test");
-		dbd1.setScreenShot("shot");
+		String testScreenshotDate = "data:image/png;base64,shot";
+		dbd1.setScreenShot(testScreenshotDate);
 		dbd1.setHref("");
 		dbd1.setLastModifiedBy("sysman");
 		dbd1.setLastModificationDate(new Date());
@@ -752,7 +754,7 @@ public class DashboardManagerTest_S2
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 
 		ScreenshotData shot = dm.getDashboardBase64ScreenShotById(dbd1.getDashboardId(), tenantId1);
-		Assert.assertEquals(shot.getScreenshot(), "shot");
+		Assert.assertEquals(shot.getScreenshot(), testScreenshotDate);
 
 		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
 		Assert.assertEquals(ds.size() > 0, true);
@@ -901,7 +903,7 @@ public class DashboardManagerTest_S2
 
 	@Test(groups = "s2")
 	public void testListDashboard_S2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
-			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery)
+			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
 					throws DashboardException, InterruptedException
 	{
 		final List<EmsDashboard> emsDashboards = new ArrayList<EmsDashboard>();
@@ -914,6 +916,10 @@ public class DashboardManagerTest_S2
 				result = anyQuery;
 				anyQuery.getResultList();
 				result = emsDashboards;
+				anyQuery.getSingleResult();
+				result = anyNumber;
+				anyNumber.longValue();
+				result = 50;
 			}
 		};
 
@@ -923,6 +929,7 @@ public class DashboardManagerTest_S2
 		filter.setIncludedAppsFromString("APM,ITAnalytics");
 		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		filter.setIncludedOwnersFromString("Oracle,Others,Me,Share");
+		TenantContext.setCurrentTenant("TenantOPC1");
 		dm.listDashboards(null, null, 11L, false);
 		dm.listDashboards("key", null, null, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
 		dm.listDashboards("key", 3, 50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);

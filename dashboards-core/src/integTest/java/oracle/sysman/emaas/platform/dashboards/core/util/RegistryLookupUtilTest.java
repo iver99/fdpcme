@@ -352,11 +352,11 @@ public class RegistryLookupUtilTest
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 
 		Link lk = new Link();
-		lk.withHref("https://tenant1.la.original.link/somepage.html");
-		Link replacedLink = RegistryLookupUtil.replaceWithVanityUrl(lk, "tenant1", RegistryLookupUtil.LA_SERVICE);
-		Assert.assertEquals(replacedLink.getHref(), "https://tenant1.la.replaced.link/somepage.html");
+		lk.withHref("https://tenant2.la.original.link/somepage.html");
+		Link replacedLink = RegistryLookupUtil.replaceWithVanityUrl(lk, "tenant2", RegistryLookupUtil.LA_SERVICE);
+		Assert.assertEquals(replacedLink.getHref(), "https://tenant2.la.replaced.link/somepage.html");
 
-		replacedLink = RegistryLookupUtil.replaceWithVanityUrl(lk, "tenant1", "");
+		replacedLink = RegistryLookupUtil.replaceWithVanityUrl(lk, "tenant2", "");
 		Assert.assertEquals(replacedLink, lk);
 	}
 
@@ -367,9 +367,9 @@ public class RegistryLookupUtilTest
 	{
 		testReplaceWithVanityUrlExpectations(anyBuilder, anyInstanceInfo, anyLockupManager, anyClient, anyInstanceQuery);
 
-		String href = "https://tenant1.ita.original.link/somepage.html";
-		String replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant1", RegistryLookupUtil.ITA_SERVICE);
-		Assert.assertEquals(replacedHref, "https://tenant1.ita.replaced.link/somepage.html");
+		String href = "https://tenant3.ita.original.link/somepage.html";
+		String replacedHref = RegistryLookupUtil.replaceWithVanityUrl(href, "tenant3", RegistryLookupUtil.ITA_SERVICE);
+		Assert.assertEquals(replacedHref, "https://tenant3.ita.replaced.link/somepage.html");
 	}
 
 	private void testReplaceWithVanityUrlExpectations(final Builder anyBuilder, final InstanceInfo anyInstanceInfo,
