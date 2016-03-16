@@ -102,11 +102,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 _okfunc();
                 //self.close();
             };
-            $( "#dbs_cfmDialog" ).ojDialog( "open" );
+            $( ".dashboard-content:visible .dbs_cfmDialog" ).ojDialog( "open" );
         };
         
         self.close = function () {
-            $( "#dbs_cfmDialog" ).ojDialog( "close" );
+            $( ".dashboard-content:visible .dbs_cfmDialog" ).ojDialog( "close" );
         };
         
         self.keydown = function (d, e) {
