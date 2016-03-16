@@ -43,6 +43,7 @@ define([
             var self = this;
             
             var dashboardInstMap = {};
+            var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
@@ -62,9 +63,12 @@ define([
                         //new dashboard home css change:align
                         setTimeout(function () {
                             var bodyHeight=$(window).height();  
-                            var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-tiles-panel-sm').position().top;
+                            //var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-tiles-panel-sm').position().top;
+                            //var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
+                            //$('.dbs-tiles-panel-sm').css({'height':newHeight});
+                            var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container').position().top;
                             var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
-                            $('.dbs-tiles-panel-sm').css({'height':newHeight});
+                            $('.dbs-list-container').css({'height':newHeight});
                             $('#globalBody').css({'width':"100%"});
                     }, 2000);
                     } else {
@@ -121,7 +125,7 @@ define([
                 
                 $("#loading").show();
                 Builder.loadDashboard(dsbId, function (dashboard) {
-
+                    
                     var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
                     $dashboardEl.attr("id", "dashboard-" + dsbId);
@@ -129,7 +133,7 @@ define([
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
-                    var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
+                    var toolBarModel = new Builder.ToolBarModel($b, options);
                     
                     //change dashboard name
                     toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
@@ -264,11 +268,11 @@ define([
 
             //new-dashboard home resize function   
             $(window).resize(function () {
-                if ($('.dbs-tiles-panel-sm').length!==0) {
+                if ($('.dbs-list-container').length!==0) {
                     var bodyHeight = $(window).height();  ;
-                    var titleToolbarHeight = $($('.dbs-tiles-panel-sm')[0]).position().top;
+                    var titleToolbarHeight = $($('.dbs-list-container')[0]).position().top;
                     var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                    $('.dbs-tiles-panel-sm').css({'height': newHeight});
+                    $('.dbs-list-container').css({'height': newHeight});
                 }
             });
         }
