@@ -134,9 +134,9 @@ define([
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
-                    
+
                     //change dashboard name
-                    toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
+                    toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
                         dashboardsetToolBarModel.dashboardsetItems.filter(function isIdMatch(value) {
                             if(value.dashboardId===currentDashboardId){
