@@ -268,11 +268,11 @@ define([
 
             //new-dashboard home resize function   
             $(window).resize(function () {
-                if ($('.dbs-tiles-panel-sm').length!==0) {
+                if ($('.dbs-list-container').length!==0) {
                     var bodyHeight = $(window).height();  ;
-                    var titleToolbarHeight = $($('.dbs-tiles-panel-sm')[0]).position().top;
+                    var titleToolbarHeight = $($('.dbs-list-container')[0]).position().top;
                     var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                    $('.dbs-tiles-panel-sm').css({'height': newHeight});
+                    $('.dbs-list-container').css({'height': newHeight});
                 }
             });
         }
