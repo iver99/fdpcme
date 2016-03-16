@@ -53,8 +53,8 @@ define(['knockout',
 
             self.dashboardsetConfig = {
                 "refresh":ko.observable(dashboardInst.enableRefresh()),
-                "refreshOffIcon":ko.observable("dbd-icon-check"),
-                "refreshOnIcon":ko.observable("dbd-noselected"),
+                "refreshOffIcon":ko.observable("dbd-noselected"),
+                "refreshOnIcon":ko.observable("dbd-icon-check"),
                 "share": ko.observable(ko.unwrap(dashboardInst.sharePublic) ? "on" : "off")
             };
             
@@ -128,6 +128,20 @@ define(['knockout',
                         break;
                 }
             };
+            
+            self.saveUserOptions = function(){
+                 var options = {
+                    dashboardId: self.dashboardsetId,
+                    extendedOptions: JSON.stringify(self.extendedOptions),
+                    autoRefreshInterval: self.autoRefreshInterval()
+                };
+                if (self.hasUserOptionInDB) {
+                    Builder.updateDashboardOptions(options);
+                } else {
+                    Builder.saveDashboardOptions(options);
+                    self.hasUserOptionInDB = true;
+                }
+            };
 
             self.saveDashboardSet = function (fieldsToUpdate, successCallback, failureCallback) {
                 var newDashboardJs = ko.mapping.toJS(dashboardInst, {
@@ -178,17 +192,7 @@ define(['knockout',
                     }
                 }, 12000);
 
-                var options = {
-                    dashboardId: self.dashboardsetId,
-                    extendedOptions: JSON.stringify(self.extendedOptions),
-                    autoRefreshInterval: self.autoRefreshInterval()
-                };
-                if (self.hasUserOptionInDB) {
-                    Builder.updateDashboardOptions(options);
-                } else {
-                    Builder.saveDashboardOptions(options);
-                    self.hasUserOptionInDB = true;
-                }
+                self.saveUserOptions();
             };
 
             self.addNewDashboard = function (data, event) {
@@ -294,7 +298,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_OFF"),
                             "url": "#",
                             "id": "refresh-off",
-                            "icon": self.dashboardsetConfig.refreshOnIcon,
+                            "icon": self.dashboardsetConfig.refreshOffIcon,
                             "title": "",
                             "disabled": "",
                             "endOfGroup": false,    
@@ -306,7 +310,7 @@ define(['knockout',
                             "label": getNlsString("DBS_BUILDER_AUTOREFRESH_ON"),
                             "url": "#",
                             "id": "refresh-time",
-                            "icon": self.dashboardsetConfig.refreshOffIcon,
+                            "icon": self.dashboardsetConfig.refreshOnIcon,
                             "title": "",
                             "disabled": "",
                             "endOfGroup": false,
@@ -351,6 +355,14 @@ define(['knockout',
                                 self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                             }
                             self.hasUserOptionInDB = true;
+                        }
+                        
+                        if(self.autoRefreshInterval() === DEFAULT_AUTO_REFRESH_INTERVAL){
+                            self.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
+                            self.dashboardsetConfig.refreshOffIcon("dbd-noselected");
+                        }else{
+                            self.dashboardsetConfig.refreshOnIcon("dbd-noselected");
+                            self.dashboardsetConfig.refreshOffIcon("dbd-icon-check");
                         }
                         
                         if ( subDashboards.length === 0) {
@@ -565,12 +577,15 @@ define(['knockout',
                         if (option === 'on') {
                             dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
                             dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-noselected");
+                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                         }
                         if(option === 'off'){
                             dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-noselected");
                             dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-icon-check");
+                            self.autoRefreshInterval(0);
                         }
                     }
+                    self.saveUserOptions();
                 };
                 this.deleteDbs = function(dbsToolBar){
                     //TODO:ajax to delete
