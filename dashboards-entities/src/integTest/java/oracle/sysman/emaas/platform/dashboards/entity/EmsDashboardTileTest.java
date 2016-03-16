@@ -72,8 +72,9 @@ public class EmsDashboardTileTest {
 
     @Test
     public void testGetCreationDate() throws Exception {
-        emsDashboardTile.setCreationDate(new Date());
-        assertEquals(emsDashboardTile.getCreationDate(),new Date());
+        Date date = new Date();
+        emsDashboardTile.setCreationDate(date);
+        assertEquals(emsDashboardTile.getCreationDate(),date);
     }
 
     @Test

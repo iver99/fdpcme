@@ -100,6 +100,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timePeriodLast6hours = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_6_HOURS;
                 self.timePeriodLast1day = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_DAY;
                 self.timePeriodLast7days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_7_DAYS;
+                self.timePeriodLast14days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_14_DAYS;
                 self.timePeriodLast30days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_DAYS;
                 self.timePeriodLast90days = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_90_DAYS;
                 self.timePeriodLast1year = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_1_YEAR;
@@ -120,6 +121,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     "Last 6 hours" : self.timePeriodLast6hours,
                     "Last 1 day" : self.timePeriodLast1day,
                     "Last 7 days" : self.timePeriodLast7days,
+                    "Last 14 days" : self.timePeriodLast14days,
                     "Last 30 days" : self.timePeriodLast30days,
                     "Last 90 days" : self.timePeriodLast90days,
                     "Last 1 year": self.timePeriodLast1year,
@@ -135,6 +137,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last6hoursNotToShow = ko.observable(false);
                 self.last1dayNotToShow = ko.observable(false);
                 self.last7daysNotToShow = ko.observable(false);
+                self.last14daysNotToShow = ko.observable(false);
                 self.last30daysNotToShow = ko.observable(false);
                 self.last90daysNotToShow = ko.observable(false);
                 self.last1yearNotToShow = ko.observable(false);
@@ -148,6 +151,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.last6hoursChosen = ko.observable(false);
                 self.last1dayChosen = ko.observable(false);
                 self.last7daysChosen = ko.observable(false);
+                self.last14daysChosen = ko.observable(false);
                 self.last30daysChosen = ko.observable(false);
                 self.last90daysChosen = ko.observable(false);
                 self.last1yearChosen = ko.observable(false);
@@ -197,6 +201,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     var css = "drawer";
                     css += self.last7daysNotToShow() ? " drawerNotToShow": "";
                     css += self.last7daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    return css;
+                }, self);
+                self.last14daysCss = ko.computed(function() {
+                    var css = "drawer";
+                    css += self.last14daysNotToShow() ? " drawerNotToShow": "";
+                    css += self.last14daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last30daysCss = ko.computed(function() {
@@ -353,6 +363,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.last6hoursChosen(false);
                     self.last1dayChosen(false);
                     self.last7daysChosen(false);
+                    self.last14daysChosen(false);
                     self.last30daysChosen(false);
                     self.last90daysChosen(false);
                     self.last1yearChosen(false);
@@ -386,6 +397,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         case self.timePeriodLast7days:
                             self.last7daysChosen(true);
                             break;
+                         case self.timePeriodLast14days:
+                            self.last14daysChosen(true);
+                            break;
                         case self.timePeriodLast30days:
                             self.last30daysChosen(true);
                             break;
@@ -415,6 +429,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.last6hoursNotToShow(false);
                     self.last1dayNotToShow(false);
                     self.last7daysNotToShow(false);
+                    self.last14daysNotToShow(false);
                     self.last30daysNotToShow(false);
                     self.last90daysNotToShow(false);
                     self.last1yearNotToShow(false);
@@ -444,6 +459,9 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             break;
                         case self.timePeriodLast7days:
                             self.last7daysNotToShow(true);
+                            break;
+                        case self.timePeriodLast14days:
+                            self.last14daysNotToShow(true);
                             break;
                         case self.timePeriodLast30days:
                             self.last30daysNotToShow(true);
@@ -525,7 +543,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                             for(var i=0; i<l; i++) {
                                 var tp = params.timePeriodsNotToShow()[i];
                                 tmp.push(self.timePeriodsNlsObject[tp]);
-                                self.setTimePeriodNotToShow(tp);
+                                self.setTimePeriodNotToShow(self.timePeriodsNlsObject[tp]);
                             }
                             return tmp;
                         }, self);
@@ -677,9 +695,10 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     tmp[self.timePeriodLast6hours] = [4, 6 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast1day] = [5, 24 * 60 * 60 * 1000];
                     tmp[self.timePeriodLast7days] = [6, 7 * 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast30days] = [7, 30 * 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast90days] = [8, 90 * 24 * 60 * 60 * 1000];
-                    tmp[self.timePeriodLast1year] = [9, 365 * 24 * 60 * 60 * 1000]; //do not use this to calculate last a year
+                    tmp[self.timePeriodLast14days] = [7, 14 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast30days] = [8, 30 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast90days] = [9, 90 * 24 * 60 * 60 * 1000];
+                    tmp[self.timePeriodLast1year] = [10, 365 * 24 * 60 * 60 * 1000]; //do not use this to calculate last a year
                     return tmp;
                 }, self);
                 

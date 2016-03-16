@@ -14,9 +14,10 @@ public class EmsDashboardLastAccessTest {
     private EmsDashboardLastAccess emsDashboardLastAccess = new EmsDashboardLastAccess(new Date(),"elephant",10L);
     @Test
     public void testGetAccessDate() throws Exception {
+        Date date = new Date();
         EmsDashboardLastAccess emsDashboardLastAccess = new EmsDashboardLastAccess();
-        emsDashboardLastAccess.setAccessDate(new Date());
-        assertEquals(emsDashboardLastAccess.getAccessDate(),new Date());
+        emsDashboardLastAccess.setAccessDate(date);
+        assertEquals(emsDashboardLastAccess.getAccessDate(),date);
     }
 
     @Test

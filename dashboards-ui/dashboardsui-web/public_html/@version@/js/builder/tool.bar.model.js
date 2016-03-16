@@ -19,7 +19,7 @@ define(['knockout',
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
         
-        function ToolBarModel($b) {
+        function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
             self.$b = $b;
             self.dashboard = $b.dashboard;
@@ -745,7 +745,11 @@ define(['knockout',
             
             self.intervalID = null;
             self.setAutoRefreshOptoin = function (interval) {
-                self.autoRefreshInterval(interval);
+                if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
+                        interval = dashboardSetOptions.autoRefreshInterval();
+                }else{
+                    self.autoRefreshInterval(interval);
+                }
                 if (null !== self.intervalID) {
                     clearInterval(self.intervalID);
                 }
@@ -793,7 +797,9 @@ define(['knockout',
                             }),
                             "title": "",
                             "onclick": function(data,event){
-                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
+                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").removeClass("fa-check");
+                                $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
+
                                 event.stopPropagation();
                                 self.setAutoRefreshOptoin(0);
                             },
@@ -810,7 +816,8 @@ define(['knockout',
                             }),
                             "title": "",
                             "onclick": function (data, event) {
-                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
+                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").removeClass("fa-check");
+                                $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
                                 event.stopPropagation();
                                 self.setAutoRefreshOptoin(300000);// 5 minutes
                             },

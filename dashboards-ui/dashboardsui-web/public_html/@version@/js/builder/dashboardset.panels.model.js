@@ -43,6 +43,7 @@ define([
             var self = this;
             
             var dashboardInstMap = {};
+            var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
@@ -104,8 +105,8 @@ define([
                         
                         if (!hasDuplicatedDashboard) {
                             dashboardsetToolBarModel.pickDashboard(guid, {
-                                dashboardId: data.dashboard.id,
-                                name: data.dashboard.name
+                                id: ko.observable(data.dashboard.id),
+                                name: ko.observable(data.dashboard.name)
                             });
                         }
                     };
@@ -124,7 +125,7 @@ define([
                 
                 $("#loading").show();
                 Builder.loadDashboard(dsbId, function (dashboard) {
-
+                    
                     var $dashboardEl = $($("#dashboard-content-template").text());
                     $("#dashboards-tabs-contents").append($dashboardEl);
                     $dashboardEl.attr("id", "dashboard-" + dsbId);
@@ -132,7 +133,7 @@ define([
                     var $b = new Builder.DashboardBuilder(dashboard, $dashboardEl);
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
-                    var toolBarModel = new Builder.ToolBarModel($b, tilesViewModel);
+                    var toolBarModel = new Builder.ToolBarModel($b, options);
                     
                     //change dashboard name
                     toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
@@ -210,7 +211,6 @@ define([
 
                     $("#loading").hide();
                     $('#globalBody').show();
-                    $('#globalBody').css({'width':""});
                     $dashboardEl.css("visibility", "visible");
                     if(dashboardsetToolBarModel.isDashboardSet()){
                         $b.findEl('.head-bar-container').css("background-color","white");
