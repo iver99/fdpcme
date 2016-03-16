@@ -176,7 +176,7 @@ define(['knockout',
                                     JSON.stringify(newDashboardJs));
                         });
                     }
-                }, 5000);
+                }, 12000);
 
                 var options = {
                     dashboardId: self.dashboardsetId,
@@ -591,26 +591,57 @@ define(['knockout',
                 };
                 this.cancelDeleteDbs= function(){
                      $('#deleteDashboardset').ojDialog("close");   
-                };       
+                };  
+                
                 this.printAllDbs = function(dbsToolBar){
-                    $('#globalBody').css({'width':""});
-                    var hiddenArray = [];
-                    $('.dashboard-content').each(function (index, element) {
-                        var tempDashboardId = $(element).attr('id');
-                        var stringSpilt = tempDashboardId.split('-');
-                        if (stringSpilt.length <3 && !($(element).is(':visible'))) {
-                            hiddenArray.push(tempDashboardId);
-                            $(element).show();
-                        }
-                        else if(stringSpilt.length>3){
-                            $(element).hide();
-                        }
+                    
+                    var showDashboardContent = function (dashboardTabItem) {
+                        var promise = new Promise(function (resolve) {
+                            var $loadedContent = $("#dashboard-" + dashboardTabItem.dashboardId);
+                            if ($loadedContent.length === 0) {
+                                $("#dashboardTab-" + dashboardTabItem.dashboardId).click();
+                                setTimeout(function () {
+                                    console.warn("Loaded: " + dashboardTabItem.dashboardId);
+                                    resolve();
+                                }, 12000);
+                            } else {
+                                resolve();
+                            }
+                        });
+                        return promise;
+                    };
+
+                    var $printMask = $('<div style="position:absolute; text-align:center; color: white; font-weight: bold; font-size: 3rem; left:0; top:0; z-index:9999; background-color:black; opacity: 0.4; display: inline">Loading dashboards for print...</div>');
+                    $printMask.width($(window).width());
+                    $printMask.height($(window).height());
+                    $printMask.css("line-height" , $printMask.height() + "px");
+                    $("body").append($printMask);
+
+                    var lastPromise = Promise.resolve();
+                    self.reorderedDbsSetItems().forEach(function (dashboardTabItem) {
+                          lastPromise = lastPromise.then(showDashboardContent.bind(this, dashboardTabItem));
                     });
-                    window.print();
-                    hiddenArray.forEach(function (Item, index) {
-                        $('#'+Item).hide();
+                    
+                    lastPromise.then(function() {
+                        $printMask.remove();
+                        $('#globalBody').css({'width':""});
+                        var hiddenArray = [];
+                        $('.dashboard-content').each(function (index, element) {
+                            var tempDashboardId = $(element).attr('id');
+                            if (!$(element).hasClass("dashboard-picker-container") && !($(element).is(':visible'))) {
+                                hiddenArray.push(tempDashboardId);
+                                $(element).show();
+                            }
+                            else if($(element).hasClass("dashboard-picker-container")){
+                                $(element).hide();
+                            }
+                        });
+                        window.print();
+                        hiddenArray.forEach(function (Item, index) {
+                            $('#'+Item).hide();
+                        });
+                        $('#dashboard-'+self.selectedDashboardItem().dashboardId).show();
                     });
-                    $('#dashboard-'+self.selectedDashboardItem().dashboardId).show();
             };
         }
             
@@ -628,6 +659,7 @@ define(['knockout',
                                
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
                 var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1])||(ui.tab.attr('id').split(/dashboardTab-/)[1]);
+                $("#dashboard-" + removeDashboardId).remove();
                 
                 var removeResult=findRemoveTab(self.dashboardsetItems,removeDashboardId);
                 var reorderResult=findRemoveTab(self.reorderedDbsSetItems(),removeDashboardId);
