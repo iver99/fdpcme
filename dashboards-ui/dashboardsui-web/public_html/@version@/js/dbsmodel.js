@@ -276,7 +276,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleShowDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $("#dsbinfopop");
+            var popup = $(".dashboard-content:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
@@ -299,7 +299,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleCloseDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $("#dsbinfopop");
+            var popup = $(".dashboard-content:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
