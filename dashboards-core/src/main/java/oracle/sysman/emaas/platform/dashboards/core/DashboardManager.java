@@ -198,6 +198,7 @@ public class DashboardManager
 		if (!permanent) {
 			ed.setDeleted(dashboardId);
 			dsf.mergeEmsDashboard(ed);
+			dsf.removeEmsSubDashboardById(dashboardId);
 		}
 		else {
 			EmsDashboardLastAccess edla = getLastAccess(dashboardId, tenantId);

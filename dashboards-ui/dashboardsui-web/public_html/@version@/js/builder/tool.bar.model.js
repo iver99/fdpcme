@@ -19,7 +19,7 @@ define(['knockout',
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
         var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
         
-        function ToolBarModel($b) {
+        function ToolBarModel($b,dashboardSetOptions) {
             var self = this;
             self.$b = $b;
             self.dashboard = $b.dashboard;
@@ -745,7 +745,11 @@ define(['knockout',
             
             self.intervalID = null;
             self.setAutoRefreshOptoin = function (interval) {
-                self.autoRefreshInterval(interval);
+                if(dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)){
+                        interval = dashboardSetOptions.autoRefreshInterval();
+                }else{
+                    self.autoRefreshInterval(interval);
+                }
                 if (null !== self.intervalID) {
                     clearInterval(self.intervalID);
                 }
@@ -755,6 +759,14 @@ define(['knockout',
                         interval = 3000;
                     }
                     self.intervalID = setInterval(function () {
+                        Builder.loadDashboard(
+                                $b.dashboard.id(),
+                                function (dashboardInst) {
+                                    self.dashboardName(dashboardInst.name());
+                                    self.dashboardDescription((dashboardInst.description && dashboardInst.description()) || "");
+                                }, function () {
+                                    console.log("update dashboard name && description  failed !");
+                        });
                         $b.getDashboardTilesViewModel().timeSelectorModel.timeRangeChange(true);
                     }, interval);
                 }

@@ -15,7 +15,7 @@
             </button> 
         </span>
 
-        <span id="homettbtns" class="oj-md-float-end dbs-rbtns-panel-md dbs-rbtns-panel-lg dbs-rbtns-panel-xsl dbs-rbtns-panel-xl">
+        <span id="homettbtns" class="oj-md-float-end" style=" padding-right: 10px;">
             <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
             <select id="sortcb" aria-controls="dtabhomesc" data-bind="ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: $component.handleSortByChanged, 
                                                    rootAttributes: {style:'width: 14em; max-width:20em'}}">
@@ -93,7 +93,7 @@
                                                    sort: handleListColumnSort,
                                                    verticalGridVisible: 'none',
                                                    columnsDefault: {  headerStyle: 'border-left: none; border-right: none;' },
-                                                   rootAttributes: { 'style': 'width: 100%; margin: 5px; border: none; background: #ffffff;' },
+                                                   rootAttributes: { 'style': 'width: 99%; margin: 5px; border: none; background: #ffffff;' },
                                                    columns: [{sortProperty: 'name', renderer: listNameRender, headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 60%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
                                                              {sortProperty: 'owner', field: 'owner', headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
                                                              {sortProperty: 'last_modification_date', field: 'lastModifiedOnStr', headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
@@ -122,7 +122,7 @@
     <!-- paging end -->
 
 <!-- dashboard info popup start-->
-<div id="dsbinfopop"  style="display:none; width:260px;" 
+<div class="dsbinfopop"  style="display:none; width:260px;" 
      data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', autoDismiss: 'focusLoss', initialFocus: 'none', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
     <div data-bind="with: selectedDashboard">
         <!-- ko if:  $component.isTilesView() === 'gridtview' -->
@@ -145,7 +145,7 @@
 <!-- dashboard info popup end-->
 
 <!-- Confirmation dilog start -->
-<div style="display:none" id="dbs_cfmDialog"
+<div style="display:none" class="dbs_cfmDialog"
      data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
                                     cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
     <div class="oj-dialog-header oj-helper-clearfix">
