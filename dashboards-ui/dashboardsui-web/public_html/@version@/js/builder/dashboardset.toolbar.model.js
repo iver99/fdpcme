@@ -18,6 +18,7 @@ define(['knockout',
     function (ko, $, dfu, idfbcutil, ssu, oj, ed, dd, pfu,mbu) {
         // dashboard type to keep the same with return data from REST API
         var SINGLEPAGE_TYPE = "SINGLEPAGE";
+        var DEFAULT_AUTO_REFRESH_INTERVAL = 300000;
 
         function DashboardsetToolBarModel(dashboardInst) {                     
             var self = this;
@@ -35,7 +36,8 @@ define(['knockout',
             self.dashboardsetId=ko.unwrap(dashboardInst.id());
             self.hasUserOptionInDB = false;
             self.extendedOptions = {};
-
+            self.autoRefreshInterval = ko.observable(DEFAULT_AUTO_REFRESH_INTERVAL);
+            
             self.dashboardsetName =ko.observable(ko.unwrap(dashboardInst.name()));
             
             self.dashboardsetDescription = ko.observable(function () {
@@ -105,10 +107,10 @@ define(['knockout',
                         $('#changeDashboardsetInfo').ojDialog("open");
                         break;
                     case 'refresh-off':
-                        self.dbConfigMenuClick.refreshDbs(self);       
+                        self.dbConfigMenuClick.refreshDbs(self,'off');       
                         break;
                     case 'refresh-time':
-                        self.dbConfigMenuClick.refreshDbs(self);
+                        self.dbConfigMenuClick.refreshDbs(self,'on');
                         break;    
                     case 'dbs-print':
                         self.dbConfigMenuClick.printAllDbs(self);
@@ -179,7 +181,7 @@ define(['knockout',
                 var options = {
                     dashboardId: self.dashboardsetId,
                     extendedOptions: JSON.stringify(self.extendedOptions),
-                    autoRefreshInterval: 0
+                    autoRefreshInterval: self.autoRefreshInterval()
                 };
                 if (self.hasUserOptionInDB) {
                     Builder.updateDashboardOptions(options);
@@ -335,22 +337,22 @@ define(['knockout',
                 var subDashboards = ko.unwrap(dashboardInst.subDashboards);
                 if (self.isDashboardSet()) {
                     
-                    Builder.fetchDashboardOptions(
-                            self.dashboardsetId,
-                            resolveLoadOptions.bind(this, "success"),
-                            resolveLoadOptions.bind(this, "error"));
-                    
                     function resolveLoadOptions (status, resp) {
                         if (status === "error") {
                             self.extendedOptions = {};
+                            self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                         } else {
                             self.extendedOptions = JSON.parse(resp.extendedOptions);
                             if (typeof self.extendedOptions !== "object") {
                                 self.extendedOptions = {};
                             }
+                            self.autoRefreshInterval(parseInt(resp.autoRefreshInterval));
+                            if( isNaN(self.autoRefreshInterval())){
+                                self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
+                            }
                             self.hasUserOptionInDB = true;
                         }
-                    
+                        
                         if ( subDashboards.length === 0) {
                             subDashboards = [
                                 null
@@ -376,6 +378,11 @@ define(['knockout',
                         $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
                     
                     }
+                    
+                    Builder.fetchDashboardOptions(
+                            self.dashboardsetId,
+                            resolveLoadOptions.bind(this, "success"),
+                            resolveLoadOptions.bind(this, "error"));
 
                 } else {
                     singleDashboardItem = new dashboardItem(dashboardInst);
@@ -553,14 +560,16 @@ define(['knockout',
                         });
                     }
                 };  
-                 this.refreshDbs= function(dbsToolBar){
-                    dbsToolBar.dashboardsetConfig.refresh(!dbsToolBar.dashboardsetConfig.refresh());
+                this.refreshDbs = function (dbsToolBar, option) {
                     if (dbsToolBar.dashboardsetConfig.refresh()) {
-                        dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
-                        dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-noselected");
-                    } else {
-                        dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-noselected");
-                        dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-icon-check");
+                        if (option === 'on') {
+                            dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-icon-check");
+                            dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-noselected");
+                        }
+                        if(option === 'off'){
+                            dbsToolBar.dashboardsetConfig.refreshOnIcon("dbd-noselected");
+                            dbsToolBar.dashboardsetConfig.refreshOffIcon("dbd-icon-check");
+                        }
                     }
                 };
                 this.deleteDbs = function(dbsToolBar){
