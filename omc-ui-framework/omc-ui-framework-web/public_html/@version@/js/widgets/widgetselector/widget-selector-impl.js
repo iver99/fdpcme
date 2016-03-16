@@ -252,7 +252,7 @@ define([
                 self.widgetBoxClicked = function(data, event) {
                     var curWidget = self.currentWidget();
                     if (curWidget && (curWidget.PROVIDER_NAME !== data.PROVIDER_NAME || 
-                            curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION || 
+                            /*curWidget.PROVIDER_VERSION !== data.PROVIDER_VERSION ||*/ 
                             curWidget.WIDGET_UNIQUE_ID !== data.WIDGET_UNIQUE_ID)) {
                         widgetArray[curWidget.index].isSelected(false);
                         data.isSelected(true);
@@ -416,8 +416,8 @@ define([
                 function loadWidgets(data) {
                     if (data && data.length > 0) {
                         for (var i = 0; i < data.length; i++) {
-                            if ((!widgetProviderName && !widgetProviderVersion) || 
-                                    (widgetProviderName === data[i].PROVIDER_NAME && widgetProviderVersion === data[i].PROVIDER_VERSION)) {
+                            if ((!widgetProviderName /*&& !widgetProviderVersion*/) || 
+                                    (widgetProviderName === data[i].PROVIDER_NAME /*&& widgetProviderVersion === data[i].PROVIDER_VERSION*/)) {
                                 var widget = data[i];
                                 widget.index = widgetIndex;
                                 widget.WIDGET_VISUAL = ko.observable();
