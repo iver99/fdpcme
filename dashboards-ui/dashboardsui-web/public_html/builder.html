@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-
+        
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -873,19 +873,20 @@
                                 <div class="builder-dbd-name">
                                     <div class="builder-dbd-name-display-area dbd-display-area">
                                         <span class="builder-dbd-name-display-hover-area dbd-display-hover-area">
-                                            <div class="builder-dbd-select-tip" style="font-weight: normal;font-size: 14px;" data-bind="text:getNlsString('DBS_BUILDER_LEFT_PANEL_CONTAINER_POP_DESC')"></div>
+                                            <div class="builder-dbd-select-tip" style="font-weight: normal;font-size: 14px;" data-bind="text:getNlsString('DBSSET_BUILDER_SELECT_TIP')"></div>
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;width:100%;overflow-y: scroll"
-                         data-bind="component: {
-                            name: 'df-oracle-dashboard-list',
-                            params: $data
-                         }">
-
+                    <!--div class="dbs-tiles-panel-sm oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;width:100%;overflow-y: scroll"-->
+                    <div class="dbs-list-container oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; width: 100%; overflow-y: scroll">
+                        <div class="dashboard-picker dbs-tiles-container-full-sm dbs-tiles-container-full-md dbs-tiles-container-full-lg dbs-tiles-container-full-xl" style="margin-bottom: 100px;"
+                             data-bind="component: {
+                             name: 'df-oracle-dashboard-list',
+                             params: $data}"> 
+                        </div>
                     </div>
                 </div>
             </script>

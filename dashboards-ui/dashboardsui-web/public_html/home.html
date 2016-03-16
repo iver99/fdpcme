@@ -81,7 +81,7 @@
                                             </div>
                                             <!-- filter panel end-->
                                     </div>
-                                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;"
+                                    <div class="dashboard-picker dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;"
                                          data-bind="component: {
                                             name: 'df-oracle-dashboard-list',
                                             params: $data
@@ -118,7 +118,7 @@
                     
                     <!-- Create Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 580px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <!--div class="oj-dialog-header-close-wrapper" >
                                 <a class="df-dialog-header-close" tabindex="0" data-bind="click: cancelDashboardCreate, event: { keydown: createDashboardModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
@@ -126,7 +126,7 @@
                             <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TITLE')"></span>
                         </div>
                         <div class="oj-dialog-body">
-                             <div class="oj-form oj-md-odd-cols-2" >
+                            <div class="oj-form oj-md-odd-cols-2" style="margin-left: 4%;">
                                 <div class="oj-row">
     <!--                                    TO DO:After the visiual design complete the image design-->
     <!--                                       <div class="oj-col" style="margin-top: 10px;margin-bottom:10px;">
@@ -203,7 +203,7 @@
                                              rootAttributes: {style:'margin-right:10px'} }"></button>
                             <button id="cancelCreateDsb" data-bind="click: cancelDashboardCreate,ojComponent: {
                                              component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),
-                                             rootAttributes: {style:'margin-right:30px'} }"></button>
+                                             rootAttributes: {style:'margin-right:19px'} }"></button>
                         </div>
                     </div>                      
                     </div>
