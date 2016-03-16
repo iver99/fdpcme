@@ -627,10 +627,10 @@ define(['knockout',
             };
                                
             $( "#dbd-tabs-container" ).on( "ojbeforeremove", function( event, ui ) {
-                var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1])||(ui.tab.attr('id').split(/dashboardTab-/)[1])
+                var removeDashboardId = Number(ui.tab.attr('id').split(/dashboardTab-/)[1])||(ui.tab.attr('id').split(/dashboardTab-/)[1]);
                 
                 var removeResult=findRemoveTab(self.dashboardsetItems,removeDashboardId);
-                var reorderResult=findRemoveTab(self.reorderedDbsSetItems(),removeDashboardId)
+                var reorderResult=findRemoveTab(self.reorderedDbsSetItems(),removeDashboardId);
                 
                 if (removeResult.removeIndex > -1) {
                      var currentShowIndex=$('.other-nav').index(ui.tab); 
