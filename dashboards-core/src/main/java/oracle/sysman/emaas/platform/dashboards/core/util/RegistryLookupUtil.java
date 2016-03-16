@@ -556,7 +556,6 @@ public class RegistryLookupUtil
 		logger.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
 		Tenant cacheTenant = new Tenant(tenantName);
 		Map<String, String> map = null;
-		;
 		try {
 			map = (Map<String, String>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
 					CacheManager.LOOKUP_CACHE_KEY_VANITY_BASE_URL);
