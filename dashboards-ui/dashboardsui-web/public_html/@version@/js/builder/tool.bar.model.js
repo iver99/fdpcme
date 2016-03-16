@@ -771,6 +771,12 @@ define(['knockout',
                     }, interval);
                 }
             };
+            
+            if (dashboardSetOptions && ko.isObservable(dashboardSetOptions.autoRefreshInterval)) {
+                dashboardSetOptions.autoRefreshInterval.subscribe(function(value){
+                    self.setAutoRefreshOptoin(value);
+                });
+            }
 
             //self.isSystemDashboard = self.dashboard.systemDashboard();
             self.dashboardOptsMenuItems = [
