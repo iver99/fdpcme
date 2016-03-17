@@ -47,28 +47,6 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     self.tfInstance = newValue;
                 }, null, "tfChanged");
                 
-                //set the position of drawers and pickerPanel according to date/time picker's position
-                if(params.dtpickerPosition && params.dtpickerPosition === "right") {
-                    self.drawerChosen = "rightDrawerChosen";
-                    self.drawerHover = "rightDrawerHover";
-                    self.timeFilterIconCss = "float-left";
-                    self.pickerPanelCss = "picker-panel-padding-left";
-                    //the position of panel popup relative to dropdown button
-                    self.panelPosition = {"my": "end top+16", "at": "end  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
-                    self.pickerPanelPosition = {"my": "end top", "at": "start top", "collision": "none", "of": "#drawers_"+self.randomId};
-                    self.timeFilterPosition = {"my": "end center", "at": "start center", "collision": "none"};
-                }else {     
-                    self.drawerChosen = "leftDrawerChosen";
-                    self.drawerHover = "leftDrawerHover";
-                    self.timeFilterIconCss = "float-right";
-                    self.pickerPanelCss = "picker-panel-padding-right";
-                    //the position of panel popup relative to dropdown button
-                    self.panelPosition = {"my": "start top+16", "at": "start  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
-                    self.pickerPanelPosition = {"my": "start top", "at": "end top", "collision": "none", "of": "#drawers_"+self.randomId};
-                    self.timeFilterPosition = {"my": "start center", "at": "end center", "collision": "none"};
-                }
-
-
                 self.enableTimeFilter = ko.observable(false);
                 self.tfInfoIndicatorVisible = ko.observable(false);
                 self.timeFilterInfo = ko.observable();
@@ -159,89 +137,94 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.latestChosen = ko.observable(false);
                 self.customChosen = ko.observable(false);
                 
+                //initialize class assuming that dtpicker is on the left of page
+                self.drawerChosen = ko.observable("letDrawerChosen");
+                self.timeFilterIconCss = ko.observable("float-right");
+                self.pickerPanelCss = ko.observable("picker-panel-padding-right");
+                
                 self.hideTimeSelection = ko.observable(false);
                 
                 self.last15minsCss = ko.computed(function() {
                     var css = "drawer"; 
                     css += self.last15minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last15minsChosen() ? (" "+self.drawerChosen) : "";
+                    css += self.last15minsChosen() ? (" "+self.drawerChosen()) : "";
                     return css;
                 }, self);
                 self.last30minsCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last30minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last30minsChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last30minsChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last60minsCss = ko.computed(function() {
                     var css = "drawer"; 
                     css += self.last60minsNotToShow() ? " drawerNotToShow": "";
-                    css += self.last60minsChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last60minsChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last4hoursCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last4hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last4hoursChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last4hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last6hoursCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last6hoursNotToShow() ? " drawerNotToShow": "";
-                    css += self.last6hoursChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last6hoursChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);                
                 self.last1dayCss = ko.computed(function() {
                     var css = "drawer";
                     css  += self.last1dayNotToShow() ? " drawerNotToShow": "";
-                    css += self.last1dayChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last1dayChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last7daysCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last7daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last7daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last7daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last14daysCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last14daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last14daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last14daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last30daysCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last30daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last30daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last30daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last90daysCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last90daysNotToShow() ? " drawerNotToShow": "";
-                    css += self.last90daysChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last90daysChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.last1yearCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.last1yearNotToShow() ? " drawerNotToShow": "";
-                    css += self.last1yearChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.last1yearChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.todayCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.todayNotToShow() ? " drawerNotToShow": "";
-                    css += self.todayChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.todayChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.latestCss = ko.computed(function() {
                     var css = "drawer";
                     css += self.latestNotToShow() ? " drawerNotToShow" : "";
-                    css += self.latestChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.latestChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 self.customCss = ko.computed(function() {
                     var css = "drawer";
-                    css += self.customChosen() ? (" "+self.drawerChosen) : " drawerNotChosen";
+                    css += self.customChosen() ? (" "+self.drawerChosen()) : " drawerNotChosen";
                     return css;
                 }, self);
                 
@@ -354,6 +337,47 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.timeRangeMsg = nls.DATETIME_PICKER_TIME_RANGE;
                 self.applyButton = nls.DATETIME_PICKER_BUTTONS_APPLY_BUTTON;
                 self.cancelButton = nls.DATETIME_PICKER_BUTTONS_CANCEL_BUTTON;
+                
+                //calculate dtpicker position automatically
+                self.calDtpickerPosition = function() {
+                    var eleOffset = $("#dateTimePicker_"+self.randomId).offset(); //get element position(top & left) relative to the document
+                    var bodyWidth = $("body").width();
+                    var dropdownLabelWidth = $("#dateTimePicker_"+self.randomId).width();
+                    var leftDrawerWidth = $("#panel_"+self.randomId).width() ? $("#panel_"+self.randomId).width() : 104;
+                    var calendarPanelWidth = $("#pickerPanel_"+self.randomId).width() ? $("#pickerPanel_"+self.randomId).width() : 562;
+                    var tfPanelWidth = $("#timeFilter_"+self.randomId).width() ? $("#timeFilter_"+self.randomId).width() : 562;
+                    var panelWidth = leftDrawerWidth + calendarPanelWidth;
+                    if(params.enableTimeFilter && params.enableTimeFilter === true) {
+                        panelWidth += tfPanelWidth;
+                    }
+                    if((bodyWidth-eleOffset.left) < panelWidth) {
+                        return "right";
+                    }else {
+                        return "left";
+                    }
+                };
+                
+                self.setDtpickerPositionToLeft = function() {
+                    self.drawerChosen("leftDrawerChosen");
+                    self.drawerHover = "leftDrawerHover";
+                    self.timeFilterIconCss("float-right");
+                    self.pickerPanelCss("picker-panel-padding-right");
+                    //the position of panel popup relative to dropdown button
+                    self.panelPosition = {"my": "start top+16", "at": "start  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
+                    self.pickerPanelPosition = {"my": "start top", "at": "end top", "collision": "none", "of": "#drawers_"+self.randomId};
+                    self.timeFilterPosition = {"my": "start center", "at": "end center", "collision": "none"};
+                }
+                
+                self.setDtpickerPositionToRight = function() {
+                    self.drawerChosen("rightDrawerChosen");
+                    self.drawerHover = "rightDrawerHover";
+                    self.timeFilterIconCss("float-left");
+                    self.pickerPanelCss("picker-panel-padding-left");
+                    //the position of panel popup relative to dropdown button
+                    self.panelPosition = {"my": "end top+16", "at": "end  bottom", "collision": "none", "of": "#dropDown_"+self.randomId};
+                    self.pickerPanelPosition = {"my": "end top", "at": "start top", "collision": "none", "of": "#drawers_"+self.randomId};
+                    self.timeFilterPosition = {"my": "end center", "at": "start center", "collision": "none"};
+                }
                 
                 self.setAllTimePeriodsNotChosen = function() {
                     self.last15minsChosen(false);
@@ -1273,6 +1297,24 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
 
                 //contol whether the panel should popup or not
                 self.panelControl = function () {
+                    if(!self.dtpickerPosition) {
+                        if(params.dtpickerPosition) {
+                            if(params.dtpickerPosition === "right") {
+                                self.setDtpickerPositionToRight();
+                            }else{
+                                self.setDtpickerPositionToLeft();
+                            }
+                            self.dtpickerPosition = params.dtpickerPosition;
+                        }else{
+                            if(self.calDtpickerPosition() === "right") {
+                                self.setDtpickerPositionToRight();
+                            }else{
+                                self.setDtpickerPositionToLeft();
+                            }
+                            self.dtpickerPosition = self.calDtpickerPosition();
+                        }
+                    }
+                    
                     if(self.init === true) {
                         self.init = false;
                     }
@@ -1338,7 +1380,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 self.hoverOnDrawer = function(data, event) {
-                    if(!$(event.target).hasClass(self.drawerChosen)) {
+                    if(!$(event.target).hasClass(self.drawerChosen())) {
                         $(event.target).addClass(self.drawerHover);
                     }
                 }
