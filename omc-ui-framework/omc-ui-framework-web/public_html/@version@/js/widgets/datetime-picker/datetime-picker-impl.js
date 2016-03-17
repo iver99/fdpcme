@@ -340,12 +340,11 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 
                 //calculate dtpicker position automatically
                 self.calDtpickerPosition = function() {
-                    var eleOffset = $("#dateTimePicker_"+self.randomId).offset(); //get element position(top & left) relative to the document
+                    var eleOffset = $(self.wrapperId).offset(); //get element position(top & left) relative to the document
                     var bodyWidth = $("body").width();
-                    var dropdownLabelWidth = $("#dateTimePicker_"+self.randomId).width();
-                    var leftDrawerWidth = $("#panel_"+self.randomId).width() ? $("#panel_"+self.randomId).width() : 104;
-                    var calendarPanelWidth = $("#pickerPanel_"+self.randomId).width() ? $("#pickerPanel_"+self.randomId).width() : 562;
-                    var tfPanelWidth = $("#timeFilter_"+self.randomId).width() ? $("#timeFilter_"+self.randomId).width() : 562;
+                    var leftDrawerWidth = $(self.panelId).width() ? $(self.panelId).width() : 104;
+                    var calendarPanelWidth = $(self.pickerPanelId).width() ? $(self.pickerPanelId).width() : 562;
+                    var tfPanelWidth = $(self.timeFilterId).width() ? $(self.timeFilterId).width() : 562;
                     var panelWidth = leftDrawerWidth + calendarPanelWidth;
                     if(params.enableTimeFilter && params.enableTimeFilter === true) {
                         panelWidth += tfPanelWidth;
@@ -1532,7 +1531,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     return false;
                 };
 
-                self.cancelClick = function () {                    
+                self.cancelClick = function () {
                     $(self.panelId).ojPopup("close");
                     return;
                 };
