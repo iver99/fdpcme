@@ -8,7 +8,7 @@ define({
 //      "DBS_HOME_TITLE":"Dashboard Home - Oracle Enterprise Manager Cloud Service",
 //      "DBS_BUILDER_TITLE":"{0} - Oracle Enterprise Manager Cloud Service",
       "DBS_HOME_CREATE_TYPE_DASHBOARDS":"Dashboard (a single dashboard)",
-      "DBS_HOME_CREATE_TYPE_DASHBOARDSET":"Dashboard Set (two or more dasboards displayed together)",
+      "DBS_HOME_CREATE_TYPE_DASHBOARDSET":"Dashboard Set (two or more dashboards displayed together)",
       "DBS_HOME_DASHBOARDS_SET_CREATE_TYPE":"Type",
       "DBS_HOME_TITLE_HOME": "Home",
       "DBS_HOME_TITLE_DASHBOARDS": "Dashboards",
