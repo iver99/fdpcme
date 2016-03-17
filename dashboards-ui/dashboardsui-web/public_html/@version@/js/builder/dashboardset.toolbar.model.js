@@ -630,7 +630,10 @@ define(['knockout',
                                     resolve();
                                 }, 12000);
                             } else {
-                                resolve();
+                                $("#dashboardTab-" + dashboardTabItem.dashboardId).click();
+                                setTimeout(function () {                           
+                                    resolve();
+                                }, 1200);
                             }
                         });
                         return promise;
