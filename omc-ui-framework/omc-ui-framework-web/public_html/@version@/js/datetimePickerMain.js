@@ -61,11 +61,11 @@ requirejs.config({
 require(['ojs/ojcore',
     'knockout',
     'jquery',
-    'uifwk/js/widgets/timeFilter/js/timeFilter',
+//    'uifwk/js/widgets/timeFilter/js/timeFilter',
     'ojs/ojknockout',
     'ojs/ojchart'
 ],
-        function (oj, ko, $, timeFilter) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $/*, timeFilter*/) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("date-time-picker", {
                 viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
@@ -77,12 +77,16 @@ require(['ojs/ojcore',
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
                 var end = new Date();
                 var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
-                self.floatPosition = "left";
-                var tf = new timeFilter();
+                self.floatPosition1 = "left";
+                self.floatPosition3 = "right";
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
                 
                 self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
                 self.end = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
+                self.filterInfo = ko.observable();
+                self.filterInfo3 = ko.observable();
+                self.start3 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
+                self.end3 = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(end)));
                 self.initStart = ko.observable(start);
                 self.initEnd = ko.observable(end);
                 self.timePeriodsNotToShow = ko.observableArray([]);
@@ -101,8 +105,8 @@ require(['ojs/ojcore',
 //                    KOCadvanced: {KOCname: 'time-filter', 
 //                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
 //                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
-                    dtpickerPosition: self.floatPosition,
-                    timePeriod: "Last 7 days", //self.timePeriodPre,
+                    dtpickerPosition: self.floatPosition1,
+                    timePeriod: "Last 1 day", //self.timePeriodPre,
                     callbackAfterApply: function (start, end, tp, tf) {
                         console.log(start);
                         console.log(end);
@@ -113,16 +117,36 @@ require(['ojs/ojcore',
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         self.start(self.dateTimeConverter1.format(appliedStart));
                         self.end(self.dateTimeConverter1.format(appliedEnd));
+                        var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
+                        self.filterInfo($(eles[0]).find("span").text());
                         self.generateData(start, end);
                     }
                 };
                 
-                self.changeOption = function() {
-                    console.log(tf.timeFilterValue());
-                    console.log(tf.daysChecked());
-                    console.log(tf.monthsChecked());
-                    return;
-        
+                self.timeParams3 = {
+                    startDateTime: start,
+                    endDateTime: end,
+                    enableTimeFilter: true,
+                    hideMainLabel: true,
+                    timeDisplay: self.timeDisplay,
+                    dtpickerPosition: self.floatPosition3,
+                    timePeriod: "Last 1 day", //self.timePeriodPre,
+                    callbackAfterApply: function (start, end, tp, tf) {
+                        console.log(start);
+                        console.log(end);
+                        console.log(tp);
+                        console.log(tf);
+                        var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
+                        var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
+                        self.start3(self.dateTimeConverter1.format(appliedStart));
+                        self.end3(self.dateTimeConverter1.format(appliedEnd));
+                        var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
+                        console.log($(eles[1]).find("span").text());
+                        self.filterInfo3($(eles[1]).find("span").text());
+                    }
+                };
+                
+                self.changeOption = function() {        
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);

@@ -5,11 +5,21 @@
     </head>
     <body>
         <div data-bind="attr: {id: 'dateTimePicker_' + randomId}" style="display: table">
-            <label for="dropdown" id="dropdownLabel" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
+            <label for="dropdown" data-bind="attr: {id: 'dropdownLabel_'+randomId}" style="font-weight: bold; font-size: 14px; vertical-align: middle; padding-right: 5px;" data-bind="text: timeRangeMsg, style: {display: hideMainLabel}"></label>
             <span class="oj-select-choice" tabindex="0"  style="width: auto; display: inline-block" data-bind="attr: {id: 'dropDown_'+randomId}, click: panelControl, event: {keypress: function(data, event) {if(isEnterPressed(data, event)) {panelControl();}}}" aria-label="Pick datetime"> 
                 <span class="oj-select-chosen" style="padding-right: 24px;" data-bind="html: dateTimeInfo"></span>
+                <span class="time-filter-indicator fa-icon-font" tabindex ="0" 
+                  data-bind="event: {mouseover: showTimeFilterInfo, mouseout: hideTimeFilterInfo, 
+                              keypress: function(data, event) {event.stopPropagation(); if(isEnterPressed(data, event)) {toggleTimeFilterInfo();}}},
+                              click: toggleTimeFilterInfo, clickBubble: false,
+                             visible: tfInfoIndicatorVisible, attr: {id: 'tfInfoIndicator_'+randomId}"></span>
                 <a class="oj-select-arrow oj-component-icon oj-clickable-icon-nocontext oj-select-open-icon"></a>
             </span>
+           
+            <!-- popup for time filter info -->
+            <div style="display: none;" data-bind="ojComponent: {component: 'ojPopup'}, attr: {id: 'tfInfo_'+randomId}">
+                <span data-bind="html: timeFilterInfo"></span>
+            </div>
 
             <div class="panel" style="display:inline-block" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none', beforeClose: setLastDatas}, attr: {id: 'panel_'+randomId}"> 
                 <!-- left of panel -->
@@ -22,8 +32,10 @@
                     <a href="#" data-bind="attr: {id: 'drawer4_'+randomId}, text: timePeriodLast6hours, css: last6hoursCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                     <a href="#" data-bind="attr: {id: 'drawer5_'+randomId}, text: timePeriodLast1day, css: last1dayCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                     <a href="#" data-bind="attr: {id: 'drawer6_'+randomId}, text: timePeriodLast7days, css: last7daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <!--<a href="#" data-bind="attr: {id: 'drawer13_'+randomId}, text: timePeriodLast14days, css: last14daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>-->
                     <a href="#" data-bind="attr: {id: 'drawer7_'+randomId}, text: timePeriodLast30days, css: last30daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                     <a href="#" data-bind="attr: {id: 'drawer8_'+randomId}, text: timePeriodLast90days, css: last90daysCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
+                    <a href="#" data-bind="attr: {id: 'drawer12_'+randomId}, text: timePeriodLast1year, css: last1yearCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                     <!--<a href="#" data-bind="attr: {id: 'drawer11_'+randomId}, text: timePeriodToday, css: todayCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>-->
                     <a href="#" data-bind="attr: {id: 'drawer10_'+randomId}, text: timePeriodLatest, css: latestCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
                     <a href="#" data-bind="attr: {id: 'drawer9_'+randomId}, text: timePeriodCustom, css: customCss, event: {mouseover: hoverOnDrawer, mouseout: hoverOutDrawer}"></a>
@@ -86,9 +98,9 @@
                     
                     <!-- Apply & Cancel button -->
                     <div class="buttons">
-                        <button data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton}, attr: {id: 'applyButton'}">
+                        <button data-bind="click: applyClick, ojComponent:{component: 'ojButton', label: applyButton}, attr: {id: 'applyButton_'+randomId}">
                         </button>
-                        <button data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton'}"> 
+                        <button data-bind="click: cancelClick, ojComponent:{component: 'ojButton', label: cancelButton}, attr: {id: 'cancelButton_'+randomId}"> 
                         </button>
                     </div>
                     <!-- ko if: showErrorMsg -->
@@ -104,7 +116,7 @@
                     <!-- pop up for time filter-->
                     <div style="display: none; width: 560px; height: 412px; margin: auto; border: 1px solid #f0f0f0; background: #FFFFFF;" data-bind="ojComponent: {component: 'ojPopup', chrome: 'none'}, attr: {id: 'timeFilter_'+randomId}">
                         <!-- ko if: enableTimeFilter -->
-                        <div style="padding-top: 50px;" data-bind="component: {name: 'time-filter'}"></div>
+                        <div style="padding-top: 50px;" data-bind="component: {name: 'time-filter', params: tfParams}"></div>
                         <!-- /ko -->
                     </div>
                 </div>

@@ -10,6 +10,11 @@
 
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import javax.persistence.EntityManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.UserOptionsNotFoundException;
@@ -18,10 +23,6 @@ import oracle.sysman.emaas.platform.dashboards.core.persistence.DashboardService
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javax.persistence.EntityManager;
 
 /**
  * @author jishshi
@@ -93,7 +94,7 @@ public class UserOptionsManager {
                 // create or update if exists
                 EmsUserOptions emsUserOptions = dsf.getEmsUserOptions(currentUser, userOptions.getDashboardId());
                 if(null == emsUserOptions){
-                    dsf.persistEmsUserOptions(emsUserOptions);
+                    dsf.persistEmsUserOptions(userOptions.toEntity(null, currentUser));
                 }else{
                     emsUserOptions = userOptions.toEntity(emsUserOptions, currentUser);
                     dsf.mergeEmsUserOptions(emsUserOptions);

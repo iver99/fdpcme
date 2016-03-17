@@ -5,7 +5,8 @@ define(['knockout',
         'dfutil'
     ], 
     function(ko, $, oj, dfu) {
-        function EditDashboardDialogModel(dsb, tbModel) {
+        function EditDashboardDialogModel($b, tbModel) {
+            var dsb = $b.dashboard;
             var self = this;
             self.dashboard = dsb;
             self.tbModel = tbModel;
@@ -42,7 +43,7 @@ define(['knockout',
 
             self.open = function() {
                 self.clear();
-                $( "#cDsbDialog" ).ojDialog( "open" );    
+                $b.findEl(".cDsbDialog").ojDialog( "open" );    
             };
 
             self.save = function() {
@@ -71,7 +72,7 @@ define(['knockout',
                                 self.dashboard.description = ko.observable(self.description());
                             }
                             self.tbModel.dashboardDescription(self.description());
-                            $("#cDsbDialog").ojDialog("close"); 
+                            $('#edit-dashboard').ojDialog("close"); 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             dfu.showMessage({type: 'error', summary: getNlsString('DBS_BUILDER_MSG_ERROR_IN_SAVING'), detail: '', removeDelayTime: 5000});

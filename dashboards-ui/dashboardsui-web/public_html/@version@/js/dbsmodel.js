@@ -10,9 +10,9 @@
  */
 
 define([
-    'dbs/datasourcefactory',
-    'dbs/dbstablesource',
-    'dbs/dbsfilter',
+    'dashboards/datasourcefactory',
+    'dashboards/dbstablesource',
+    'dashboards/dbsfilter',
     'ojs/ojcore', 
     'knockout', 
     'jquery', 
@@ -39,6 +39,22 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.description = ko.observable('');
         self.timeRangeFilterValue = ko.observable(["ON"]);//for now ON always and hide option in UI
         self.targetFilterValue = ko.observable(["OFF"]);
+        self.selectType =  ko.observable("NORMAL");
+        self.showHideDescription=ko.observable(false);
+        self.singleVisible = ko.observable(true);
+        self.setVisible=ko.observable(false);
+
+        self.dashboardtypeSelectFuc=function(){
+            if(self.selectType()==="NORMAL"){
+                self.singleVisible(true);
+                self.setVisible(false);
+            }else{
+                self.singleVisible(false);
+                self.setVisible(true);
+            }
+            return true;
+        };
+
         self.isDisabled = ko.computed(function() { 
             if (self.nameInputed() && self.nameInputed().length > 0)
             {
@@ -63,7 +79,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             }
             return false;
         };
-        
+
     }
         
     function confirmDialogModel(title, okLabel, message, okFunction) {
@@ -86,11 +102,11 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 _okfunc();
                 //self.close();
             };
-            $( "#dbs_cfmDialog" ).ojDialog( "open" );
+            $( ".dbs_cfmDialog" ).ojDialog( "open" );
         };
         
         self.close = function () {
-            $( "#dbs_cfmDialog" ).ojDialog( "close" );
+            $( ".dbs_cfmDialog" ).ojDialog( "close" );
         };
         
         self.keydown = function (d, e) {
@@ -98,7 +114,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
              self.close();
            }
         };
-    } 
+    }
     
     function welcomeDialogModel(prefUtil, showWel) {
         var self = this;
@@ -130,7 +146,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata) {
+    function ViewModel(predata, defaultFilters) {
         
         var self = this, showWelcome = predata.getShowWelcomePref();
         
@@ -144,7 +160,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         self.userName = dfu.getUserName();
         self.isMobileDevice = ko.observable( (new mbu()).isMobile );
 
-        self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil, 
+        self.filter = predata.getDashboardsFilter({'prefUtil' : self.prefUtil,
             'filterPrefKey': DASHBOARDS_FILTER_PREF_KEY,
             'filterChange': function(event) {
                 if (self.dsFactory)
@@ -154,7 +170,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 }
             }
         });
-        
+        self.showExploreDataBtn= ko.observable(true);
         self.showSeachClear = ko.observable(false);
         self.tilesViewGrid = 'gridtview';
         self.tilesViewList = 'listview';
@@ -184,8 +200,13 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             return _spo;
         });
         
-        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), self.filter.toFilterString()
-                                                   /*filter['types'], filter['appTypes'], filter['owners'], filter['favoritesOnly']*/);
+        
+        var filterString = self.filter.toFilterString()||"";
+        if(defaultFilters && Array.isArray(defaultFilters)){
+           filterString = filterString +","+ defaultFilters.join(",");
+        }
+        
+        self.dsFactory = new dsf.DatasourceFactory(self.serviceURL, self.sortBy(), filterString);
         self.datasourceCallback = function (_event) {
                     var _i = 0, _rawdbs = [];
                     if (_event['data'])
@@ -255,7 +276,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleShowDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $("#dsbinfopop");
+            var popup = $(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
@@ -278,7 +299,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleCloseDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $("#dsbinfopop");
+            var popup = $(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
@@ -340,6 +361,10 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             $( "#cDsbDialog" ).ojDialog( "open" );
         };
         
+        self.cancelDashboardCreate = function(){
+            $( "#cDsbDialog" ).ojDialog( "open" );
+        };
+
         self.confirmDashboardCreate = function()
         {
             var _trackObj = ko.utils.unwrapObservable(self.tracker), 
@@ -356,11 +381,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             //self.tracker(undefined);
             self.createMessages.removeAll();
             
-            var _addeddb = {"name": self.createDashboardModel.name(), 
+            var _addeddb = { "type":self.createDashboardModel.selectType(),
+                            "name": self.createDashboardModel.name(),
                             "description": self.createDashboardModel.description(),
+//                            "showhidedescription":self.showHideDescription(),
                             "enableTimeRange": self.createDashboardModel.isEnableTimeRange() ? "TRUE" : "FALSE",
                             "enableRefresh": self.createDashboardModel.isEnableTimeRange()};
-            
             if (!_addeddb['name'] || _addeddb['name'] === "" || _addeddb['name'].length > 64)
             {
                 //_trackObj = new oj.InvalidComponentTracker();
@@ -529,7 +555,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             
             return null;
         };
-        
+
         self.typeaheadSearchStart = function (event, data)
         {
             var  _ts = self.dashboardsTS();

@@ -32,7 +32,7 @@ requirejs.config({
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
-        'dbs': '.',
+        'dashboards': '.',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
         'prefutil':'/emsaasui/uifwk/js/util/preference-util',
         'loggingutil':'/emsaasui/uifwk/js/util/logging-util',
@@ -74,7 +74,7 @@ requirejs.config({
  * by the modules themselves), we are listing them explicitly to get the references to the 'oj' and 'ko'
  * objects in the callback
  */
-require(['dbs/dbsmodel',
+require(['dashboards/dbsmodel',
     'knockout',
     'jquery',
     'ojs/ojcore',
@@ -90,8 +90,8 @@ require(['dbs/dbsmodel',
     'ojs/ojinputtext',
     'ojs/ojknockout-validation',
     'ojs/ojpopup',
-    'dbs/dbstypeahead',
-    'dbs/dbsdashboardpanel',
+    'dashboards/dbstypeahead',
+    'dashboards/dbsdashboardpanel',
     'ojs/ojselectcombobox',
     'ojs/ojmenu',
     'ojs/ojtable'
@@ -105,7 +105,7 @@ require(['dbs/dbsmodel',
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
-                logger.setLogLevel(oj.Logger.LEVEL_LOG);
+                logger.setLogLevel(oj.Logger.LEVEL_WARN);
 //            }
 
            
@@ -115,6 +115,19 @@ require(['dbs/dbsmodel',
                     template:{require:'text!/emsaasui/uifwk/js/widgets/brandingbar/html/brandingbar.html'}
                 });
             }
+            
+            if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
+                ko.components.register("df-oracle-dashboard-list",{
+                    viewModel:{require:'/emsaasui/emcpdfui/@version@/js/dashboardhome-impl.js'},
+                    template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
+                });
+            }
+            ko.bindingHandlers.stopBinding = {
+                init: function () {
+                    return {controlsDescendantBindings: true};
+                }
+            };
+            ko.virtualElements.allowedBindings.stopBinding = true;
             
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             

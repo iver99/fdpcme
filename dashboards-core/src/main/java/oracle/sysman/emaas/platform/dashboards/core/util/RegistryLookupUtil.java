@@ -16,14 +16,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CachedLink;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Keys;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 
 /**
  * @author miao
@@ -65,8 +69,8 @@ public class RegistryLookupUtil
 		try {
 			if (!StringUtil.isEmpty(tenantName)) {
 				internalInstance = LookupManager.getInstance().getLookupClient().getInstanceForTenant(queryInfo, tenantName);
-				itrLogger
-				.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance, tenantName);
+				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", internalInstance,
+						tenantName);
 				if (internalInstance == null) {
 					logger.error(
 							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
@@ -156,6 +160,51 @@ public class RegistryLookupUtil
 		return RegistryLookupUtil.getServiceExternalLink(serviceName, version, rel, true, tenantName);
 	}
 
+	public static String getServiceInternalEndpoint(String serviceName, String version, String tenantName)
+	{
+		logger.debug(
+				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", tenant: \"{}\"",
+				serviceName, version, tenantName);
+		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
+		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
+		String endpoint = null;
+		try {
+			List<InstanceInfo> result = null;
+			if (!StringUtil.isEmpty(tenantName)) {
+				InstanceInfo ins = LookupManager.getInstance().getLookupClient().getInstanceForTenant(info, tenantName);
+				itrLogger.debug("Retrieved instance {} by using getInstanceForTenant for tenant {}", ins, tenantName);
+				if (ins == null) {
+					logger.error(
+							"Error: retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
+							serviceName, version, tenantName);
+				}
+				else {
+					result = new ArrayList<InstanceInfo>();
+					result.add(ins);
+				}
+
+			}
+			else {
+				result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
+			}
+			if (result != null && result.size() > 0) {
+				// [EMCPDF-733] Rest client can't handle https currently, so http protocol is enough for internal use
+				//https link is not found, then find http link
+				for (InstanceInfo internalInstance : result) {
+					endpoint = RegistryLookupUtil.getHttpInternalEndPoint(internalInstance);
+					if (endpoint != null) {
+						break;
+					}
+				}
+			}
+			return endpoint;
+		}
+		catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return endpoint;
+		}
+	}
+
 	public static Link getServiceInternalLink(String serviceName, String version, String rel, String tenantName)
 	{
 		return RegistryLookupUtil.getServiceInternalLink(serviceName, version, rel, false, tenantName);
@@ -226,6 +275,32 @@ public class RegistryLookupUtil
 		return endPoint;
 	}
 
+	private static String getHttpInternalEndPoint(InstanceInfo instance)
+	{
+		if (instance == null) {
+			return null;
+		}
+		List<String> endpoints = new ArrayList<String>();
+		/**
+		 * canonicalEndpoints and virtualEndpoints are the service endpoints Canonical endpoints contains the URLs to the service
+		 * that is reachable internally Virtual end points contains the URLs to the service that may be reached from outside the
+		 * cloud
+		 **/
+		List<String> canonicalEndpoints = instance.getCanonicalEndpoints();
+		endpoints.addAll(canonicalEndpoints);
+		List<String> virtualEndpoints = instance.getVirtualEndpoints();
+		endpoints.addAll(virtualEndpoints);
+		if (endpoints != null && endpoints.size() > 0) {
+			for (String ep : endpoints) {
+				if (ep.startsWith("http://")) {
+					return ep;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	private static String getInternalEndPoint(InstanceInfo instance)
 	{
 		if (instance == null) {
@@ -288,9 +363,11 @@ public class RegistryLookupUtil
 		List<Link> protocoledLinks = new ArrayList<Link>();
 		for (Link link : links) {
 			try {
-				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})", protocol, relPrefix, link.getRel(), link.getHref());
+				logger.debug("Checks link on protocol {} with expected rel prefix {} against retrieved link (rel={}, href={})",
+						protocol, relPrefix, link.getRel(), link.getHref());
 				URI uri = URI.create(link.getHref());
-				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null && link.getRel().indexOf(relPrefix) == 0) {
+				if (protocol.equalsIgnoreCase(uri.getScheme()) && link.getRel() != null
+						&& link.getRel().indexOf(relPrefix) == 0) {
 					protocoledLinks.add(link);
 				}
 			}
@@ -309,9 +386,26 @@ public class RegistryLookupUtil
 		logger.debug(
 				"/getServiceExternalLink/ Trying to retrieve service external link for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, tenantName);
+
+		Tenant cacheTenant = new Tenant(tenantName);
+		try {
+			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch));
+			if (cl != null) {
+				logger.debug(
+						"Retrieved exteral link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
+						cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
+				return cl.getLink();
+			}
+		}
+		catch (Exception e) {
+			logger.error("Error to retrieve external link from cache. Try to lookup the link", e);
+		}
+
 		InstanceInfo.Builder builder = InstanceInfo.Builder.newBuilder().withServiceName(serviceName);
-		if (!StringUtil.isEmpty(version))
+		if (!StringUtil.isEmpty(version)) {
 			builder = builder.withVersion(version);
+		}
 		InstanceInfo info = builder.build();
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		Link lk = null;
@@ -326,7 +420,8 @@ public class RegistryLookupUtil
 							"retrieved null instance info with getInstanceForTenant. Details: serviceName={}, version={}, tenantName={}",
 							serviceName, version, tenantName);
 					result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
-					itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result, info);
+					itrLogger.debug("Retrieved InstanceInfo list {} by using LookupClient.lookup for InstanceInfo {}", result,
+							info);
 				}
 				else {
 					result = new ArrayList<InstanceInfo>();
@@ -359,7 +454,8 @@ public class RegistryLookupUtil
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug(
+									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
 							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
@@ -388,6 +484,9 @@ public class RegistryLookupUtil
 					logger.debug(
 							"[branch 1] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 							lk.getHref(), serviceName, version, rel, tenantName);
+					CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+							new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
+							new CachedLink(lk));
 					return lk;
 				}
 
@@ -409,7 +508,8 @@ public class RegistryLookupUtil
 									sanitizedInstance, tenantName);
 						}
 						else {
-							logger.debug("Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
+							logger.debug(
+									"Failed to retrieve tenant when getting external link. Using tenant non-specific APIs to get sanitized instance");
 							sanitizedInstance = LookupManager.getInstance().getLookupClient()
 									.getSanitizedInstanceInfo(internalInstance);
 							itrLogger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo without tenant id",
@@ -434,7 +534,9 @@ public class RegistryLookupUtil
 						logger.debug(
 								"[branch 2] Retrieved link: \"{}\" for service: \"{}\", version: \"{}\", rel: \"{}\", tenant: \"{}\"",
 								lk == null ? null : lk.getHref(), serviceName, version, rel, tenantName);
-
+						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+								new Keys(CacheManager.LOOKUP_CACHE_KEY_EXTERNAL_LINK, serviceName, version, rel, prefixMatch),
+								new CachedLink(lk));
 						return lk;
 					}
 				}
@@ -455,6 +557,20 @@ public class RegistryLookupUtil
 		logger.debug(
 				"/getServiceInternalLink/ Trying to retrieve service internal link for service: \"{}\", version: \"{}\", rel: \"{}\", prefixMatch: \"{}\", tenant: \"{}\"",
 				serviceName, version, rel, prefixMatch, tenantName);
+		Tenant cacheTenant = new Tenant(tenantName);
+		try {
+			CachedLink cl = (CachedLink) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					new Keys(CacheManager.LOOKUP_CACHE_KEY_INTERNAL_LINK, serviceName, version, rel, prefixMatch));
+			if (cl != null) {
+				logger.debug(
+						"Retrieved internal link {} from cache, serviceName={}, version={}, rel={}, prefixMatch={}, tenantName={}",
+						cl.getHref(), serviceName, version, rel, prefixMatch, tenantName);
+				return cl.getLink();
+			}
+		}
+		catch (Exception e) {
+			logger.error("Error to retrieve internal link from cache. Try to lookup the link", e);
+		}
 		LogUtil.setInteractionLogThreadContext(tenantName, "Retristry lookup client", LogUtil.InteractionLogDirection.OUT);
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName(serviceName).withVersion(version).build();
 		Link lk = null;
@@ -491,6 +607,8 @@ public class RegistryLookupUtil
 					if (links != null && links.size() > 0) {
 						lk = links.get(0);
 						itrLogger.debug("Retrieved link {}", lk == null ? null : lk.getHref());
+						CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+								new Keys(serviceName, version, rel, prefixMatch), new CachedLink(lk));
 						return lk;
 					}
 				}
@@ -503,12 +621,25 @@ public class RegistryLookupUtil
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Map<String, String> getVanityBaseURLs(String tenantName)
 	{
 		logger.debug("/getVanityBaseURLs/ Trying to retrieve service internal link for tenant: \"{}\"", tenantName);
+		Tenant cacheTenant = new Tenant(tenantName);
+		Map<String, String> map = null;
+		try {
+			map = (Map<String, String>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_VANITY_BASE_URL);
+			if (map != null) {
+				return map;
+			}
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
 		InstanceInfo info = InstanceInfo.Builder.newBuilder().withServiceName("OHS").build();
 		Link lk = null;
-		Map<String, String> map = new HashMap<String, String>();
+		map = new HashMap<String, String>();
 		try {
 			List<InstanceInfo> result = LookupManager.getInstance().getLookupClient().lookup(new InstanceQuery(info));
 			if (result != null && result.size() > 0) {
@@ -568,6 +699,8 @@ public class RegistryLookupUtil
 				logger.debug("service name is {}, and url is {}", service, url);
 			}
 		}
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_VANITY_BASE_URL, map);
 		return map;
 	}
 
@@ -614,8 +747,8 @@ public class RegistryLookupUtil
 
 	private static Link replaceVanityUrlDomainForLink(String domainPort, Link lk, String tenantName)
 	{
-		logger.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"", lk != null ? lk.getHref()
-				: null, domainPort);
+		logger.debug("/replaceDomainForLink/ Trying to replace link url \"{}\" with domain \"{}\"",
+				lk != null ? lk.getHref() : null, domainPort);
 		if (StringUtil.isEmpty(domainPort) || lk == null || StringUtil.isEmpty(lk.getHref())) {
 			return lk;
 		}

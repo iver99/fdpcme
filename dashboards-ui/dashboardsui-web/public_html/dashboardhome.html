@@ -1,0 +1,167 @@
+    <!-- Home toolbar start -->
+    <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
+        <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
+            <input id="sinput" type="text" name="searchInput"
+               data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                          ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
+                          ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
+            <button class="oj-button-half-chrome" data-bind="click: clearSearch, visible: showSeachClear,
+                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
+                    icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
+            </button>
+            <button class="oj-button-half-chrome" data-bind="click: forceSearch,
+                    ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
+                    icons: {start:'dbs-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
+            </button> 
+        </span>
+
+        <span id="homettbtns" class="oj-md-float-end" style=" padding-right: 10px;">
+            <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
+            <select id="sortcb" aria-controls="dtabhomesc" data-bind="ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: $component.handleSortByChanged, 
+                                                   rootAttributes: {style:'width: 14em; max-width:20em'}}">
+            <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
+            <option value="name_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
+            <option value="name_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
+            <option value="owner_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_ASC')"></option>
+            <option value="owner_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_DSC')"></option>
+            <option value="creation_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_ASC')"></option>
+            <option value="creation_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_DSC')"></option>
+            <option value="last_modification_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC')"></option>
+            <option value="last_modification_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC')"></option>
+            <option value="access_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC')"></option>
+            <option value="access_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC')"></option>
+            </select>
+
+            <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
+                    data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
+            <button id="exploreDataBtn"
+                    data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
+                                                                             menu: '#exploreDataMenu', rootAttributes: {'style': 'margin-left: 8px;'}}, 
+                                                               attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
+            </button>
+            <ul id="exploreDataMenu" style="display:none"
+                data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
+                <!-- ko foreach: exploreDataLinkList -->
+                <li>
+                    <a href="#" data-bind="text:name,value:href"></a>
+                </li>
+                <!-- /ko -->
+            </ul>
+            <span role="separator" class=" oj-toolbar-separator" style="margin-bottom: 4px;"></span>
+            <div id="viewbtnset" aria-label="Choose one view"
+                 data-bind="ojComponent: {component: 'ojButtonset', checked: $component.isTilesView, optionChange: handleViewChanged}" >
+                <label for="gridviewbtn"></label>
+                <input id="gridviewbtn" type="radio" name="view" data-bind="value: tilesViewGrid, 
+                                                                           ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_GRID_LABEL'), icons: {start: 'icon-gridview-16 oj-fwk-icon dbs-icon-size-16'}}" />
+                <label for="listviewbtn"></label>
+                <input id="listviewbtn" type="radio" name="view" title="List" data-bind="value: tilesViewList, 
+                                                                           ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_LIST_LABEL'), icons: {start: 'icon-listview-16 oj-fwk-icon dbs-icon-size-16'}}" />
+            </div>
+        </span>
+        <div style="display:none; min-width:100px; min-height:50px;" id="cbtn-tooltip" 
+             data-bind="ojComponent: {component: 'ojPopup', tail: 'simple',
+                                                        position: {'my': 'right top', 'at': 'start bottom', 'of': '#cbtn'}}">
+            <H1 data-bind="text: getNlsString('DBS_HOME_CREATE_BTN_TT_TITLE')"></h1>
+            <br/><span data-bind="text: getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT')"></span><br/>
+        </div>
+    </div>
+    <!-- Home toolbar end -->
+    <!-- tiles panel start -->
+    <!-- ko if: $component.isTilesView() === 'gridtview' -->
+    <div id="dtabhomesc" class="dbs-summaries-container" style="margin-bottom: 2%">
+        <!-- ko foreach: dashboards -->
+        <div tabindex="0" class="oj-panel dbs-summary-container" 
+             data-tag data-bind="dbsDashboardPanel: {
+                                                activated: null,
+                                                deactivated: null,
+                                                showInfoClicked: $component.handleShowDashboardPop,
+                                                deleteClicked: $component.handleDashboardDeleted,
+                                                navigated: $component.handleDashboardClicked,
+                                                data: $data
+                                                       },attr:{'data-home-name':name}">    
+        </div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+    <!-- tiles panel end -->
+
+    <!-- dashboards table start -->
+    <!-- ko if: $component.isTilesView() === 'listview' -->
+    <table id="dbstable" summary="Dashboard List" aria-label="Dashboards Table"
+           data-bind="ojComponent: {component: 'ojTable', 
+                                                   data: dashboardsTS,
+                                                   sort: handleListColumnSort,
+                                                   verticalGridVisible: 'none',
+                                                   columnsDefault: {  headerStyle: 'border-left: none; border-right: none;' },
+                                                   rootAttributes: { 'style': 'width: 99%; margin: 5px; border: none; background: #ffffff;' },
+                                                   columns: [{sortProperty: 'name', renderer: listNameRender, headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 60%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {sortProperty: 'owner', field: 'owner', headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {sortProperty: 'last_modification_date', field: 'lastModifiedOnStr', headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
+                                                             {renderer: listInfoRender, headerText: '',  style: 'width: 5%; padding: 0px;', sortable: 'none' }] 
+                                                     }"></table>
+    <!--script type="text/html" id="dbstablerow_tmpl">
+    <tr style="height: 1rem; min-height: 1rem;   ">
+              <td><a data-bind="click: function(data, event){$component.handleDashboardClicked(event, {'id': $data.id, 'element': $element})}, 
+                                    text: $data.name" /></td>
+              <td><div style=" display: inline-block" data-bind="text: $data.owner"></div></td>
+              <td><div style=" display: inline-block" data-bind="text: getDateString($data.lastModifiedOn)"></td>
+              <td>
+              <button class="oj-button-half-chrome oj-sm-float-end" 
+                              data-bind="click: function(data, event){$component.handleShowDashboardPop(event, {'id': $data.id, 'element': $element})}, 
+                                         ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}"></button>
+              </td>
+    </tr>
+    </script-->
+    <!-- /ko -->
+    <!-- dashboards table end -->
+
+    <!-- paging start -->
+    <div id="toolbar3" aria-label="Pagination toolbar" style="margin-left: 5px;">
+        <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
+    </div>
+    <!-- paging end -->
+
+<!-- dashboard info popup start-->
+<div class="dsbinfopop"  style="display:none; width:260px;" 
+     data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', autoDismiss: 'focusLoss', initialFocus: 'none', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
+    <div data-bind="with: selectedDashboard">
+        <!-- ko if:  $component.isTilesView() === 'gridtview' -->
+        <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
+        <!-- /ko -->
+        <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
+        <!-- ko if:  $component.isTilesView() === 'gridtview' -->
+        <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
+        <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
+        <!-- /ko -->
+        <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
+            <button class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL'), 
+                                                                                                       icons: {start:'oj-fwk-icon icon-trashcan-ena-16 dbs-icon-size-16'}, 
+                                                                                                       disabled: (dashboard.systemDashboard || $component.userName !== dashboard.owner)}, 
+                                                                                         click: $component.handleDashboardDeleted"></button>
+            <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $component.handleCloseDashboardPop"></button-->
+        </div>
+    </div>   
+</div>
+<!-- dashboard info popup end-->
+
+<!-- Confirmation dilog start -->
+<div style="display:none" class="dbs_cfmDialog"
+     data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+    <div class="oj-dialog-header oj-helper-clearfix">
+        <!--div class="oj-dialog-header-close-wrapper" >
+            <a class="df-dialog-header-close" tabindex="0" data-bind="click: confirmDialogModel.close, event: { keydown: confirmDialogModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
+        </div-->
+        <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
+    </div>
+    <div class="oj-dialog-body">
+        <p data-bind="text: confirmDialogModel.message"></p>
+    </div>
+    <div class="oj-dialog-footer">
+        <button data-bind="click: confirmDialogModel.okFunction, 
+                                               ojComponent: { component: 'ojButton', label: confirmDialogModel.okLabel, rootAttributes: {style:'margin-right:5px'}}"></button>
+        <button data-bind="visible: confirmDialogModel.showCancel, click: confirmDialogModel.close, 
+                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
+    </div>
+</div>
+<!-- Confirmation dilog end -->

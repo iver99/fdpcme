@@ -79,9 +79,13 @@ public class EmsDashboard implements Serializable
 	private Long tenantId;
 	@Column(nullable = false)
 	private Integer type;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboard", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboard", orphanRemoval = true)
 	@OrderBy("row, column")
 	private List<EmsDashboardTile> dashboardTileList;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboardSet", orphanRemoval = true)
+	@OrderBy("position ASC")
+	private List<EmsSubDashboard> subDashboardList;
 
 	public EmsDashboard()
 	{
@@ -116,6 +120,16 @@ public class EmsDashboard implements Serializable
 		dashboardTileList.add(emsDashboardTile);
 		emsDashboardTile.setDashboard(this);
 		return emsDashboardTile;
+	}
+
+	public EmsSubDashboard addEmsSubDashboard(EmsSubDashboard emsSubDashboard)
+	{
+		if (subDashboardList == null) {
+			subDashboardList = new ArrayList<>();
+		}
+		subDashboardList.add(emsSubDashboard);
+		emsSubDashboard.setDashboardSet(this);
+		return emsSubDashboard;
 	}
 
 	public Integer getApplicationType()
@@ -199,6 +213,11 @@ public class EmsDashboard implements Serializable
 		return sharePublic;
 	}
 
+	public List<EmsSubDashboard> getSubDashboardList()
+	{
+		return subDashboardList;
+	}
+
 	public Long getTenantId()
 	{
 		return tenantId;
@@ -214,6 +233,13 @@ public class EmsDashboard implements Serializable
 		getDashboardTileList().remove(emsDashboardTile);
 		emsDashboardTile.setDashboard(null);
 		return emsDashboardTile;
+	}
+
+	public EmsSubDashboard removeEmsSubDashboard(EmsSubDashboard emsSubDashboard)
+	{
+		subDashboardList.remove(emsSubDashboard);
+		emsSubDashboard.setDashboardSet(null);
+		return emsSubDashboard;
 	}
 
 	public void setApplicationType(Integer applicationType)
@@ -301,6 +327,11 @@ public class EmsDashboard implements Serializable
 	public void setSharePublic(Integer sharePublic)
 	{
 		this.sharePublic = sharePublic;
+	}
+
+	public void setSubDashboardList(List<EmsSubDashboard> subDashboardList)
+	{
+		this.subDashboardList = subDashboardList;
 	}
 
 	public void setTenantId(Long tenantId)

@@ -81,130 +81,12 @@
                                             </div>
                                             <!-- filter panel end-->
                                     </div>
-                                    <div class="dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;">
-                                            <!-- Home toolbar start -->
-                                            <div id="dtabhomettb" aria-label="Searching toolbar" class="oj-toolbar-row" style="min-height: 50px;padding-left: 5px">
-                                                <span class="dbs-search-box oj-sm-1 oj-md-3 oj-lg-3 oj-xl-6">
-                                                    <input id="sinput" type="text" name="searchInput"
-                                                       data-bind="ojComponent:{component:'ojInputText', value: null, placeholder: getNlsString('DBS_HOME_SEARCH_PLACE_HODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
-                                                                  ,dbsTypeAhead: {response: searchResponse, acceptInput: acceptInput, selfSearchStart: typeaheadSearchStart, busyElement: '#dhometab', busyClassName: 'busy', source: { 'dsFactory' : dsFactory, 'fetchSize': pageSize}}
-                                                                  ,attr: { 'aria-label': getNlsString('DBS_HOME_SEARCH_ARIA_LABEL') }"/>
-                                                    <button class="oj-button-half-chrome" data-bind="click: clearSearch, visible: showSeachClear,
-                                                            ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_CLEAN_BTN_LABEL'), display: 'icons', 
-                                                            icons: {start:'dbs-clear-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
-                                                    </button>
-                                                    <button class="oj-button-half-chrome" data-bind="click: forceSearch,
-                                                            ojComponent: {component: 'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_SEARCH_BTN_LABEL'), display: 'icons', 
-                                                            icons: {start:'dbs-search-icon'}, rootAttributes: {'style': 'width: 30px;'}}"> 
-                                                    </button> 
-                                                </span>
-                                                
-                                                <span id="homettbtns" class="oj-md-float-end dbs-rbtns-panel-md dbs-rbtns-panel-lg dbs-rbtns-panel-xsl dbs-rbtns-panel-xl">
-                                                <label for="sortcb" class="oj-label-inline" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_BY_LABEL')"></label>
-                                                <select id="sortcb" aria-controls="dtabhomesc" data-bind="ojComponent: {component: 'ojSelect', minimumResultsForSearch: 20, value: sortBy, optionChange: handleSortByChanged, 
-                                                   rootAttributes: {style:'width: 14em; max-width:20em'}}"/>
-                                                        <option value="default" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_DEFAULT')"></option>
-                                                        <option value="name_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_ASC')"></option>
-                                                        <option value="name_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_NAME_DSC')"></option>
-                                                        <option value="owner_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_ASC')"></option>
-                                                        <option value="owner_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_OWNER_DSC')"></option>
-                                                        <option value="creation_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_ASC')"></option>
-                                                        <option value="creation_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_CREATION_TIME_DSC')"></option>
-                                                        <option value="last_modification_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_ASC')"></option>
-                                                        <option value="last_modification_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_LAST_MODIFIED_DSC')"></option>
-                                                        <option value="access_date_asc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_ASC')"></option>
-                                                        <option value="access_date_dsc" data-bind="text: getNlsString('DBS_HOME_SELECT_SORT_ACCESS_DATE_DSC')"></option>
-                                                </select>
-                                                
-                                                <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
-                                                        data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
-                                                <button id="exploreDataBtn"
-                                                    data-bind="ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
-                                                                             menu: '#exploreDataMenu', rootAttributes: {'style': 'margin-left: 8px;'}}, 
-                                                               attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
-                                                </button>
-                                                <ul id="exploreDataMenu" style="display:none"
-                                                    data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
-                                                    <!-- ko foreach: exploreDataLinkList -->
-                                                    <li>
-                                                        <a href="#" data-bind="text:name,value:href"></a>
-                                                    </li>
-                                                    <!-- /ko -->
-                                                </ul>
-                                                <span role="separator" class=" oj-toolbar-separator" style="margin-bottom: 4px;"></span>
-                                                <div id="viewbtnset" aria-label="Choose one view"
-                                                     data-bind="ojComponent: {component: 'ojButtonset', checked: isTilesView, optionChange: handleViewChanged}" >
-                                                    <label for="gridviewbtn"></label>
-                                                    <input id="gridviewbtn" type="radio" name="view" data-bind="value: tilesViewGrid, 
-                                                                           ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_GRID_LABEL'), icons: {start: 'icon-gridview-16 oj-fwk-icon dbs-icon-size-16'}}" />
-                                                    <label for="listviewbtn"></label>
-                                                    <input id="listviewbtn" type="radio" name="view" title="List" data-bind="value: tilesViewList, 
-                                                                           ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_VIEW_LIST_LABEL'), icons: {start: 'icon-listview-16 oj-fwk-icon dbs-icon-size-16'}}" />
-                                                </div>
-                                                </span>
-                                                <div style="display:none; min-width:100px; min-height:50px;" id="cbtn-tooltip" 
-                                                    data-bind="ojComponent: {component: 'ojPopup', tail: 'simple',
-                                                        position: {'my': 'right top', 'at': 'start bottom', 'of': '#cbtn'}}">
-                                                    <H1 data-bind="text: getNlsString('DBS_HOME_CREATE_BTN_TT_TITLE')"></h1>
-                                                    <br/><span data-bind="text: getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT')"></span><br/>
-                                                </div>
-                                            </div>
-                                            <!-- Home toolbar end -->
-                                            
-                                            <!-- tiles panel start -->
-                                            <!-- ko if: isTilesView() === 'gridtview' -->
-                                            <div id="dtabhomesc" class="dbs-summaries-container">
-                                                <!-- ko foreach: dashboards -->
-                                                <div tabindex="0" class="oj-panel dbs-summary-container" 
-                                                    data-tag data-bind="dbsDashboardPanel: {
-                                                                   activated: null,
-                                                                   deactivated: null,
-                                                                   showInfoClicked: $root.handleShowDashboardPop,
-                                                                   deleteClicked: $root.handleDashboardDeleted,
-                                                                   navigated: $root.handleDashboardClicked,
-                                                                   data: $data
-                                                       }">    
-                                                </div>
-                                                <!-- /ko -->
-                                            </div>
-                                            <!-- /ko -->
-                                            <!-- tiles panel end -->
-                                            
-                                            <!-- dashboards table start -->
-                                            <!-- ko if: isTilesView() === 'listview' -->
-                                            <table id="dbstable" summary="Dashboard List" aria-label="Dashboards Table"
-                                                   data-bind="ojComponent: {component: 'ojTable', 
-                                                   data: dashboardsTS,
-                                                   sort: handleListColumnSort,
-                                                   verticalGridVisible: 'none',
-                                                   columnsDefault: {  headerStyle: 'border-left: none; border-right: none;' },
-                                                   rootAttributes: { 'style': 'width: 100%; margin: 5px; border: none; background: #ffffff;' },
-                                                   columns: [{sortProperty: 'name', renderer: listNameRender, headerText: getNlsString('DBS_HOME_VIEW_LIST_NAME'),  style: 'width: 60%; white-space: normal; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {sortProperty: 'owner', field: 'owner', headerText: getNlsString('DBS_HOME_VIEW_LIST_CREATOR'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {sortProperty: 'last_modification_date', field: 'lastModifiedOnStr', headerText: getNlsString('DBS_HOME_VIEW_LIST_MODIFIEDDATE'),  style: 'width: 17.5%; padding-top: 0px; padding-bottom: 0px; padding-left:0.5rem;'},
-                                                             {renderer: listInfoRender, headerText: '',  style: 'width: 5%; padding: 0px;', sortable: 'none' }] 
-                                                     }"></table>
-                                            <!--script type="text/html" id="dbstablerow_tmpl">
-                                                <tr style="height: 1rem; min-height: 1rem;   ">
-                                                    <td><a data-bind="click: function(data, event){$root.handleDashboardClicked(event, {'id': $data.id, 'element': $element})}, 
-                                                                      text: $data.name" /></td>
-                                                    <td><div style=" display: inline-block" data-bind="text: $data.owner"></div></td>
-                                                   <td><div style=" display: inline-block" data-bind="text: getDateString($data.lastModifiedOn)"></td>
-                                                    <td>
-                                                        <button class="oj-button-half-chrome oj-sm-float-end" 
-                                                                data-bind="click: function(data, event){$root.handleShowDashboardPop(event, {'id': $data.id, 'element': $element})}, 
-                                                                           ojComponent: { component:'ojButton', display: 'icons', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_LABEL'), icons: {start: 'icon-locationinfo-16 oj-fwk-icon'}}"></button>
-                                                    </td>
-                                                </tr>
-                                            </script-->
-                                            <!-- /ko -->
-                                            <!-- dashboards table end -->
-                                            
-                                            <!-- paging start -->
-                                            <div id="toolbar3" aria-label="Pagination toolbar" style="margin-left: 5px;">
-                                                <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
-                                            </div>
-                                            <!-- paging end -->
+                                    <div class="dashboard-picker dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;"
+                                         data-bind="component: {
+                                            name: 'df-oracle-dashboard-list',
+                                            params: $data
+                                         }">
+
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +118,7 @@
                     
                     <!-- Create Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 580px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <!--div class="oj-dialog-header-close-wrapper" >
                                 <a class="df-dialog-header-close" tabindex="0" data-bind="click: cancelDashboardCreate, event: { keydown: createDashboardModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
@@ -244,12 +126,36 @@
                             <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TITLE')"></span>
                         </div>
                         <div class="oj-dialog-body">
-                            <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
+                            <div class="oj-form oj-md-odd-cols-2" style="margin-left: 4%;">
                                 <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
+    <!--                                    TO DO:After the visiual design complete the image design-->
+    <!--                                       <div class="oj-col" style="margin-top: 10px;margin-bottom:10px;">
+                                               <div id="sigle-dashboard-image" class="dbs-create-type-image" data-bind="visible:createDashboardModel.singleVisible">
+                                                   <img height="110" width="110" src="" alt="single dashboard" >
+                                               </div>
+                                                <div id="dashboardset-image" class="dbs-create-type-image" data-bind="visible:createDashboardModel.setVisible" >
+                                                   <img height="110" width="110" src="" alt="dashboard  set" >
+                                               </div>
+                                           </div>-->
+                                <form id="dashboardtype-select" class="oj-form">
+                                    <label id="mainlabelid" data-bind="text:getNlsString('DBS_HOME_DASHBOARDS_SET_CREATE_TYPE')"></label>
+                                    <div id="radiosetBasicDemoId" aria-labelledby="mainlabelid"
+                                         data-bind="ojComponent: {
+                                      component: 'ojRadioset',
+                                      value: createDashboardModel.selectType}" >
+                                        <span class="oj-choice-row">
+                                            <input id="dashboardtype-single" type="radio" name="dashboardtype" value="NORMAL">
+                                            <label for="dashboardtype-single" data-bind="text: getNlsString('DBS_HOME_CREATE_TYPE_DASHBOARDS')"></label>
+                                        </span>
+                                        <span class="oj-choice-row" style="margin-top: 18px">
+                                            <input id="dashboardtype-set" type="radio" name="dashboardtype" value="SET">
+                                            <label for="dashboardtype-set" data-bind="text: getNlsString('DBS_HOME_CREATE_TYPE_DASHBOARDSET')"></label>
+                                        </span>
                                     </div>
-                                    <div class="oj-col">
+                                </form>
+                                </div>
+                                 <div class="oj-row  oj-md-odd-cols-12" style="margin-top: 10px">
+                                        <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
                                         <input id="dbsHNameIn" maxlength="64" required
                                                data-bind="ojComponent: { component: 'ojInputText', invalidComponentTracker: tracker, 
                                                messagesCustom: createMessages, value: createDashboardModel.name, 
@@ -258,7 +164,7 @@
                                                     pattern: '.{1,64}', 
                                                     messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME_SUM'),
                                                     messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_NAME')}}],
-                                               rootAttributes: {style:'max-width:420px;'},
+                                               rootAttributes: {style:'max-width:95%;'},
                                                translations: {'required': {
                                                         hint: '',
                                                         messageSummary: getNlsString('COMMON_REQUIRE_ERROR', '{label}'), 
@@ -266,23 +172,19 @@
                                                }
                                              }}">
                                     </div>
-                                </div>
-                                <div class="oj-row">
-                                    <div class="oj-col">
+                                    <div class="oj-row" style="margin-top: 10px">
                                         <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <textarea id="dbsHDpIn" maxlength="256" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:420px;'},
+                                        <textarea id="dbsHDpIn" maxlength="95%" rows="6"
+                                                  data-bind="ojComponent: {component: 'ojTextArea', value: createDashboardModel.description, rootAttributes: {style:'max-width:95%;'},
                                                                 invalidComponentTracker: tracker,  
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}', 
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
-                                                                       messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
+                                                                       messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}],
+
                                             }"></textarea>
-                                    </div>
-                                </div>
-                                <div class="oj-row">
+                                    </div>                                                       
+<!--                                <div class="oj-row">
                                     <div class="oj-col">
                                         <label for="checkboxsetTimeRangeFilter"></label>
                                     </div>
@@ -291,16 +193,19 @@
                                         <input id="ckbxTimeRangeFilter" type="checkbox" value="ON">
                                         <label for="ckbxTimeRangeFilter" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_TIME_RANGE')"></label>
                                     </div>
-                                </div> 
-                                                         
+                                </div>                                                         -->
                             </div>
-                        </div>
+
                         <div id="createDialogFooter" class="oj-dialog-footer">
-                            <button id="createDsb" data-bind="click: confirmDashboardCreate, ojComponent: { 
-                                             component: 'ojButton', label: getNlsString('COMMON_TEXT_CREATE'), 
-                                             disabled: createDashboardModel.isDisabled, 
-                                             rootAttributes: {style:'margin-right:5px'} }"></button>
+                            <button id="createDsb" data-bind="click: confirmDashboardCreate, ojComponent: {
+                                             component: 'ojButton', label: getNlsString('COMMON_TEXT_CREATE'),
+                                             disabled: createDashboardModel.isDisabled,
+                                             rootAttributes: {style:'margin-right:10px'} }"></button>
+                            <button id="cancelCreateDsb" data-bind="click: cancelDashboardCreate,ojComponent: {
+                                             component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),
+                                             rootAttributes: {style:'margin-right:19px'} }"></button>
                         </div>
+                    </div>                      
                     </div>
                     <!-- Create Dashboard dilog end -->
                     
@@ -398,7 +303,7 @@
                     </div>
                     </div>
                     <!-- welcome dialog end -->
-                                
+
             </div>            
         </div>
     </body>

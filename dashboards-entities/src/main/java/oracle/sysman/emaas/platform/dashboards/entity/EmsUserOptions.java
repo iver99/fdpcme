@@ -47,6 +47,9 @@ public class EmsUserOptions implements Serializable
 	@Column(name = "ACCESS_DATE")
 	private Date accessDate;
 
+	@Column(name = "EXTENDED_OPTIONS", length = 128)
+	String extendedOptions;
+
 	public EmsUserOptions()
 	{
 
@@ -68,6 +71,11 @@ public class EmsUserOptions implements Serializable
 	public Long getDashboardId()
 	{
 		return dashboardId;
+	}
+
+	public String getExtendedOptions()
+	{
+		return extendedOptions;
 	}
 
 	/**
@@ -100,6 +108,11 @@ public class EmsUserOptions implements Serializable
 	public void setDashboardId(Long dashboardId)
 	{
 		this.dashboardId = dashboardId;
+	}
+
+	public void setExtendedOptions(String extendedOptions)
+	{
+		this.extendedOptions = extendedOptions;
 	}
 
 	/**

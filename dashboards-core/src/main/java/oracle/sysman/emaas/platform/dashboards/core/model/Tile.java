@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -15,10 +19,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Tile
 {
@@ -55,7 +55,7 @@ public class Tile
 	private static final Integer TEXT_WIDGET_MAX_LINK_TEXT_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
 	private static final Integer TEXT_WIDGET_MAX_LINK_URL_LEN = TILE_PARAM_STR_VALUE_MAX_LEN;
 
-	public static Tile valueOf(EmsDashboardTile edt)
+	public static Tile valueOf(EmsDashboardTile edt, boolean loadTileParams)
 	{
 		if (edt == null) {
 			return null;
@@ -91,33 +91,35 @@ public class Tile
 		tile.setWidgetSupportTimeControl(DataFormatUtils.integer2Boolean(edt.getWidgetSupportTimeControl()));
 		tile.setWidgetLinkedDashboard(edt.getWidgetLinkedDashboard());
 		tile.setWidth(edt.getWidth());
-		List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
-		if (edtpList != null) {
-			List<TileParam> paras = new ArrayList<TileParam>(edtpList.size());
-			for (EmsDashboardTileParams edtp : edtpList) {
-				TileParam tp = TileParam.valueOf(edtp);
-				tp.setTile(tile);
-				if (Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
-						&& tp.getName().equals(Tile.TEXT_WIDGET_PARAM_NAME_CONTENT)
-						&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
-					tile.setContent(tp.getStringValue());
-					continue;
+		if (loadTileParams) {
+			List<EmsDashboardTileParams> edtpList = edt.getDashboardTileParamsList();
+			if (edtpList != null) {
+				List<TileParam> paras = new ArrayList<TileParam>(edtpList.size());
+				for (EmsDashboardTileParams edtp : edtpList) {
+					TileParam tp = TileParam.valueOf(edtp);
+					tp.setTile(tile);
+					if (Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
+							&& tp.getName().equals(Tile.TEXT_WIDGET_PARAM_NAME_CONTENT)
+							&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
+						tile.setContent(tp.getStringValue());
+						continue;
+					}
+					if (!Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
+							&& tp.getName().equals(Tile.DF_BUILTIN_WIDGET_LINK_TEXT)
+							&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
+						tile.setLinkText(tp.getStringValue());
+						continue;
+					}
+					if (!Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
+							&& tp.getName().equals(Tile.DF_BUILTIN_WIDGET_LINK_URL)
+							&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
+						tile.setLinkUrl(tp.getStringValue());
+						continue;
+					}
+					paras.add(tp);
 				}
-				if (!Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
-						&& tp.getName().equals(Tile.DF_BUILTIN_WIDGET_LINK_TEXT)
-						&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
-					tile.setLinkText(tp.getStringValue());
-					continue;
-				}
-				if (!Tile.TILE_TYPE_CODE_TEXT_WIDGET.equals(edt.getType())
-						&& tp.getName().equals(Tile.DF_BUILTIN_WIDGET_LINK_URL)
-						&& TileParam.PARAM_TYPE_STRING.equals(tp.getType())) {
-					tile.setLinkUrl(tp.getStringValue());
-					continue;
-				}
-				paras.add(tp);
+				tile.setParameters(paras);
 			}
-			tile.setParameters(paras);
 		}
 		return tile;
 	}
@@ -813,10 +815,9 @@ public class Tile
 		title = TEXT_WIDGET_TITLE;
 		if (to == null) { // newly created tile
 			to = new EmsDashboardTile(creationDate, null, tileType, row, column, height, 0, lastModificationDate, lastModifiedBy,
-					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime,
-					widgetDescription, widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner,
-					widgetSource, widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width,
-					widgetLinkedDashboard);
+					owner, providerAssetRoot, providerName, providerVersion, tileId, title, widgetCreationTime, widgetDescription,
+					widgetGroupName, widgetHistogram, widgetIcon, widgetKocName, widgetName, widgetOwner, widgetSource,
+					widgetTemplate, widgetUniqueId, widgetViewmode, supportTimeControl, width, widgetLinkedDashboard);
 			if (parameters != null) {
 				for (TileParam param : parameters) {
 					EmsDashboardTileParams edtp = param.getPersistentEntity(to, null);

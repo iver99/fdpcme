@@ -10,26 +10,43 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter.ApplicationOPCName;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.ICacheFetchFactory;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.*;
+import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
+import oracle.sysman.emaas.platform.dashboards.ws.rest.util.PrivilegeChecker;
 
 /**
  * @author miao
  */
-public class RegistrationEntity
+public class RegistrationEntity implements Serializable
 {
+	private static final long serialVersionUID = 7632586542760891331L;
+
 	private static final Logger logger = LogManager.getLogger(RegistrationEntity.class);
 
 	public static final String NAME_REGISTRYUTILS = "registryUrls";
@@ -68,6 +85,7 @@ public class RegistrationEntity
 	//	private String registryUrls;
 
 	static boolean successfullyInitialized = false;
+
 	static {
 		try {
 			//.initComponent() reads the default "looup-client.properties" file in class path
@@ -101,9 +119,32 @@ public class RegistrationEntity
 	/**
 	 * @return Administration links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getAdminLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_ADMIN_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							List<String> userRoles = PrivilegeChecker.getUserRoles(TenantContext.getCurrentTenant(),
+									UserContext.getCurrentUser());
+							if (!PrivilegeChecker.isAdminUser(userRoles)) {
+								return null;
+							}
+
+							List<LinkEntity> registeredAdminLinks = lookupLinksWithRelPrefix(NAME_ADMIN_LINK, true);
+							List<LinkEntity> filteredAdminLinks = filterAdminLinksByUserRoles(registeredAdminLinks, userRoles);
+							return sortServiceLinks(filteredAdminLinks);
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 	}
 
 	/**
@@ -114,11 +155,24 @@ public class RegistrationEntity
 	//		return new String(LookupManager.getInstance().getAuthorizationToken());
 	//	}
 
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getCloudServices()
 	{
-		List<LinkEntity> list = new ArrayList<LinkEntity>();
-		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		String tenantName = TenantContext.getCurrentTenant();
+		Tenant cacheTenant = new Tenant(tenantName);
+		List<LinkEntity> list = null;
+		try {
+			list = (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS);
+			if (list != null) {
+				return list;
+			}
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		list = new ArrayList<LinkEntity>();
+		Set<String> subscribedApps = getTenantSubscribedApplicationSet(false);
 		for (String app : subscribedApps) {
 			try {
 				if (APM_SERVICENAME.equals(app)) {
@@ -149,6 +203,9 @@ public class RegistrationEntity
 				_logger.error("Failed to discover link of cloud service: " + app, e);
 			}
 		}
+		list = sortServiceLinks(list);
+		CacheManager.getInstance().putCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_CLOUD_SERVICE_LINKS, list);
 		return list;
 	}
 
@@ -170,9 +227,24 @@ public class RegistrationEntity
 	/**
 	 * @return Home links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getHomeLinks()
 	{
-		return lookupLinksWithRelPrefix(NAME_HOME_LINK);
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_HOME_LINK));
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
 	}
 
 	public String getSessionExpiryTime()
@@ -242,9 +314,24 @@ public class RegistrationEntity
 	/**
 	 * @return Visual analyzer links discovered from service manager
 	 */
+	@SuppressWarnings("unchecked")
 	public List<LinkEntity> getVisualAnalyzers()
 	{
-		return lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER);
+		Tenant cacheTenant = new Tenant(TenantContext.getCurrentTenant());
+		try {
+			return (List<LinkEntity>) CacheManager.getInstance().getCacheable(cacheTenant, CacheManager.CACHES_LOOKUP_CACHE,
+					CacheManager.LOOKUP_CACHE_KEY_VISUAL_ANALYZER, new ICacheFetchFactory() {
+						@Override
+						public Object fetchCachable(Object key) throws Exception
+						{
+							return sortServiceLinks(lookupLinksWithRelPrefix(NAME_VISUAL_ANALYZER));
+						}
+					});
+		}
+		catch (Exception e) {
+			logger.error(e);
+			return null;
+		}
 	}
 
 	private void addToLinksMap(Map<String, LinkEntity> linksMap, List<Link> links, String serviceName, String version)
@@ -264,6 +351,29 @@ public class RegistrationEntity
 				linksMap.put(key, le);
 			}
 		}
+	}
+
+	private List<LinkEntity> filterAdminLinksByUserRoles(List<LinkEntity> origLinks, List<String> roleNames)
+	{
+		List<LinkEntity> resultLinks = new ArrayList<LinkEntity>();
+		if (origLinks != null && origLinks.size() != 0 && roleNames != null) {
+			for (LinkEntity le : origLinks) {
+				if (le.getServiceName().equals(APM_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_APM)) {
+					resultLinks.add(le);
+				}
+				else if ((le.getServiceName().equals(ITA_SERVICENAME) || le.getServiceName().equals(TA_SERVICENAME))
+						&& roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_ITA)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(LA_SERVICENAME) && roleNames.contains(PrivilegeChecker.ADMIN_ROLE_NAME_LA)) {
+					resultLinks.add(le);
+				}
+				else if (le.getServiceName().equals(EVENTUI_SERVICENAME) || le.getServiceName().equals(TMUI_SERVICENAME)) {
+					resultLinks.add(le);
+				}
+			}
+		}
+		return resultLinks;
 	}
 
 	//	/**
@@ -364,8 +474,8 @@ public class RegistrationEntity
 			try {
 				SanitizedInstanceInfo sanitizedInstance = null;
 				if (!StringUtil.isEmpty(tenantName)) {
-					sanitizedInstance = LookupManager.getInstance().getLookupClient()
-							.getSanitizedInstanceInfo(internalInstance, tenantName);
+					sanitizedInstance = LookupManager.getInstance().getLookupClient().getSanitizedInstanceInfo(internalInstance,
+							tenantName);
 					logger.debug("Retrieved sanitizedInstance {} by using getSanitizedInstanceInfo for tenant {}",
 							sanitizedInstance, tenantName);
 				}
@@ -420,5 +530,19 @@ public class RegistrationEntity
 		String href = RegistryLookupUtil.replaceWithVanityUrl(lk.getHref(), tenantName, serviceName);
 		lk.setHref(href);
 		return lk;
+	}
+
+	private List<LinkEntity> sortServiceLinks(List<LinkEntity> origLinks)
+	{
+		if (origLinks != null && origLinks.size() > 0) {
+			Collections.sort(origLinks, new Comparator<LinkEntity>() {
+				@Override
+				public int compare(LinkEntity linkOne, LinkEntity linkTwo)
+				{
+					return linkOne.getName().compareToIgnoreCase(linkTwo.getName());
+				}
+			});
+		}
+		return origLinks;
 	}
 }

@@ -313,6 +313,15 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
+	public int removeEmsSubDashboardById(long subDashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeDashboardSets").setParameter("p", subDashboardId)
+				.executeUpdate();
+		commitTransaction();
+		return deleteCout;
+	}
+
 	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)
 	{
 		emsUserOptions = em.find(EmsUserOptions.class,
@@ -320,4 +329,5 @@ public class DashboardServiceFacade
 		em.remove(emsUserOptions);
 		commitTransaction();
 	}
+
 }

@@ -16,9 +16,10 @@ public class EmsDashboardFavoriteTest {
             (new Date(),emsDashboard,"elephant");
     @Test
     public void testGetCreationDate() throws Exception {
+        Date date = new Date();
         EmsDashboardFavorite emsDashboardFavorite = new EmsDashboardFavorite();
-        emsDashboardFavorite.setCreationDate(new Date());
-        assertEquals(emsDashboardFavorite.getCreationDate(),new Date());
+        emsDashboardFavorite.setCreationDate(date);
+        assertEquals(emsDashboardFavorite.getCreationDate(),date);
     }
 
     @Test
