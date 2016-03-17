@@ -113,7 +113,7 @@ public class RegistrationEntity implements Serializable
 	//Constructor with session expiration time
 	public RegistrationEntity(String sessionExpirationTime)
 	{
-		sessionExpirationTime = sessionExpirationTime;
+		this.sessionExpirationTime = sessionExpirationTime;
 	}
 
 	/**
