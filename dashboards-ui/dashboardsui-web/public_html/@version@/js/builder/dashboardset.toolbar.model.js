@@ -471,6 +471,16 @@ define(['knockout',
                     self.saveDashboardSet(
                             fieldsToUpdate,
                             function (result) {
+                                if (sharePublic !== ko.unwrap(dashboardInst.sharePublic)) {
+                                    var shareMsgKey = sharePublic ? 'DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS' : 'DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR';
+                                    dfu.showMessage({
+                                        type: 'confirm',
+                                        summary: getNlsString(shareMsgKey),
+                                        detail: '',
+                                        removeDelayTime: 5000
+                                    });                                    
+                                }
+                                dashboardInst.sharePublic(sharePublic);
                                 me.dashboardsetName(nameEdit);
                                 me.dashboardsetDescription(descriptionEdit);
                                 $('#changeDashboardsetInfo').ojDialog("close");
@@ -620,13 +630,17 @@ define(['knockout',
                                     resolve();
                                 }, 12000);
                             } else {
-                                resolve();
+                                $("#dashboardTab-" + dashboardTabItem.dashboardId).click();
+                                setTimeout(function () {                           
+                                    resolve();
+                                }, 1200);
                             }
                         });
                         return promise;
                     };
 
-                    var $printMask = $('<div style="position:absolute; text-align:center; color: white; font-weight: bold; font-size: 3rem; left:0; top:0; z-index:9999; background-color:black; opacity: 0.4; display: inline">Loading dashboards for print...</div>');
+                    var $printMask = $($("#dashboardset-print-mask-template").text());
+                    $printMask.text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
                     $printMask.width($(window).width());
                     $printMask.height($(window).height());
                     $printMask.css("line-height" , $printMask.height() + "px");

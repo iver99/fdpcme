@@ -1,10 +1,23 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
-import org.testng.annotations.Test;
+import java.util.ArrayList;
 
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.testng.collections.CollectionUtils;
+
+import mockit.Expectations;
 import mockit.Mocked;
+import mockit.NonStrictExpectations;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.SanitizedInstanceInfo;
+import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupClient;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.model.metadata.ApplicationEditionConverter;
+import oracle.sysman.emaas.platform.dashboards.core.cache.CacheManager;
+import oracle.sysman.emaas.platform.dashboards.core.cache.Tenant;
 import oracle.sysman.emaas.platform.dashboards.core.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
@@ -33,115 +46,112 @@ public class RegistrationEntityTest
 	@Mocked
 	RegistryLookupUtil registryLookupUtil;
 
-	// TODO: recover the cases
-	/*
-		@BeforeMethod
-		public void setUp() throws Exception
-		{
-			registrationEntity = new RegistrationEntity();
-	
-			new NonStrictExpectations() {
-				{
-					TenantContext.getCurrentTenant();
-					returns("tenantName", "tenantName");
-	
-					final String APM_SERVICENAME = "APM";
-					final String LA_SERVICENAME = "LogAnalytics";
-					final String ITA_SERVICENAME = "ITAnalytics";
-					ArrayList<String> apps = new ArrayList<>();
-					apps.add(APM_SERVICENAME);
-					apps.add(LA_SERVICENAME);
-					apps.add(ITA_SERVICENAME);
-	
-					TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
-					result = apps;
-				}
-			};
-		}
-	
-		@Test
-		public void testGetAdminLinks() throws Exception
-		{
-			Assert.assertFalse(CollectionUtils.hasElements(registrationEntity.getAdminLinks()));
-		}
-	
-		@Test
-		public void testGetCloudServices() throws Exception
-		{
-			Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getCloudServices()));
-		}
-	
-		@Test
-		public void testGetHomeLinks(@Mocked final NamedCache anyNamedCache, @Mocked final LookupClient lookupClient,
-				@Mocked final InstanceInfo instanceInfo, @Mocked final Link link, @Mocked final LinkEntity linkEntity)
-						throws Exception
-		{
-			new Expectations() {
-				{
-					anyNamedCache.get(any);
-					result = null;
-	
-					instanceInfo.getVersion();
-					returns(RegistrationEntity.NAME_DASHBOARD_UI_VERSION, RegistrationEntity.NAME_DASHBOARD_UI_VERSION);
-	
-					instanceInfo.getServiceName();
-					returns(RegistrationEntity.NAME_DASHBOARD_UI_SERVICENAME, RegistrationEntity.APM_SERVICENAME);
-	
-					link.getRel();
-					returns("relPrefix/sampleHostName", "relPrefix/sampleHostName");
-	
-					link.getHref();
-					returns("https://sampleHost:port", "https://sampleHost:port");
-	
-					linkEntity.getHref();
-					result = "http://sampleHost:port";
-	
-					ArrayList<Link> linkArrayList = new ArrayList<>();
-					linkArrayList.add(link);
-					linkArrayList.add(link);
-					instanceInfo.getLinksWithRelPrefix(anyString);
-					result = linkArrayList;
-	
-					RegistryLookupUtil.getLinksWithRelPrefix(anyString, withAny(new SanitizedInstanceInfo()));
-					result = linkArrayList;
-	
-					ArrayList<InstanceInfo> infoArrayList = new ArrayList<>();
-					infoArrayList.add(instanceInfo);
-					lookupClient.getInstancesWithLinkRelPrefix(anyString);
-					result = infoArrayList;
-				}
-			};
-			Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
-	
-			CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_LOOKUP_CACHE,
-					CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS);
-			new Expectations() {
-				{
-					instanceInfo.getServiceName();
-					result = "ApmUI";
-	
-					TenantContext.getCurrentTenant();
-					returns("tenantName", withNull());
-	
-				}
-			};
-			Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
-	
-		}
-	
-		@Test(groups = { "s1" })
-		public void testGetSessionExpiryTime() throws Exception
-		{
-			Assert.assertNull(registrationEntity.getSessionExpiryTime());
-			registrationEntity = new RegistrationEntity("201217");
-	
-			Assert.assertEquals(registrationEntity.getSessionExpiryTime(), "201217");
-		}
-	
-		@Test
-		public void testGetVisualAnalyzers() throws Exception
-		{
-			Assert.assertNotNull(registrationEntity.getVisualAnalyzers());
-		}*/
+	@BeforeMethod
+	public void setUp() throws Exception
+	{
+		registrationEntity = new RegistrationEntity();
+
+		new NonStrictExpectations() {
+			{
+				TenantContext.getCurrentTenant();
+				returns("tenantName", "tenantName");
+
+				final String APM_SERVICENAME = "APM";
+				final String LA_SERVICENAME = "LogAnalytics";
+				final String ITA_SERVICENAME = "ITAnalytics";
+				ArrayList<String> apps = new ArrayList<>();
+				apps.add(APM_SERVICENAME);
+				apps.add(LA_SERVICENAME);
+				apps.add(ITA_SERVICENAME);
+
+				TenantSubscriptionUtil.getTenantSubscribedServices(anyString);
+				result = apps;
+			}
+		};
+	}
+
+	@Test
+	public void testGetAdminLinks() throws Exception
+	{
+		Assert.assertFalse(CollectionUtils.hasElements(registrationEntity.getAdminLinks()));
+	}
+
+	@Test
+	public void testGetCloudServices() throws Exception
+	{
+		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getCloudServices()));
+	}
+
+	@Test
+	public void testGetHomeLinks(@Mocked final LookupClient lookupClient, @Mocked final InstanceInfo instanceInfo,
+			@Mocked final Link link, @Mocked final LinkEntity linkEntity) throws Exception
+	{
+		new Expectations() {
+			{
+				LookupManager.getInstance().getLookupClient();
+				result = lookupClient;
+
+				instanceInfo.getVersion();
+				returns(RegistrationEntity.NAME_DASHBOARD_UI_VERSION, RegistrationEntity.NAME_DASHBOARD_UI_VERSION);
+
+				instanceInfo.getServiceName();
+				returns(RegistrationEntity.NAME_DASHBOARD_UI_SERVICENAME, RegistrationEntity.APM_SERVICENAME);
+
+				link.getRel();
+				returns("relPrefix/sampleHostName", "relPrefix/sampleHostName");
+
+				link.getHref();
+				returns("https://sampleHost:port", "https://sampleHost:port");
+
+				linkEntity.getHref();
+				result = "http://sampleHost:port";
+
+				ArrayList<Link> linkArrayList = new ArrayList<>();
+				linkArrayList.add(link);
+				linkArrayList.add(link);
+				instanceInfo.getLinksWithRelPrefix(anyString);
+				result = linkArrayList;
+
+				RegistryLookupUtil.getLinksWithRelPrefix(anyString, withAny(new SanitizedInstanceInfo()));
+				result = linkArrayList;
+
+				ArrayList<InstanceInfo> infoArrayList = new ArrayList<>();
+				infoArrayList.add(instanceInfo);
+				lookupClient.getInstancesWithLinkRelPrefix(anyString);
+				result = infoArrayList;
+			}
+		};
+		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
+
+		new Expectations() {
+			{
+				instanceInfo.getServiceName();
+				result = "ApmUI";
+
+				TenantContext.getCurrentTenant();
+				returns("tenantName", "tenantName", "tenantName", withNull());
+
+			}
+		};
+		CacheManager.getInstance().removeCacheable(new Tenant(TenantContext.getCurrentTenant()), CacheManager.CACHES_LOOKUP_CACHE,
+				CacheManager.LOOKUP_CACHE_KEY_HOME_LINKS);
+		Assert.assertTrue(CollectionUtils.hasElements(registrationEntity.getHomeLinks()));
+
+	}
+
+	@Test(groups = { "s1" })
+	public void testGetSessionExpiryTime() throws Exception
+	{
+		Assert.assertNull(registrationEntity.getSessionExpiryTime());
+		registrationEntity = new RegistrationEntity("201217");
+
+		Assert.assertEquals(registrationEntity.getSessionExpiryTime(), "201217");
+	}
+
+	@Test
+	public void testGetVisualAnalyzers() throws Exception
+	{
+		Assert.assertNotNull(registrationEntity.getVisualAnalyzers());
+	}
 
 }
