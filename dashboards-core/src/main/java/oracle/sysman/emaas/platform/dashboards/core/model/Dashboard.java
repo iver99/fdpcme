@@ -96,7 +96,7 @@ public class Dashboard
 	 */
 	public static Dashboard valueOf(EmsDashboard ed)
 	{
-		return Dashboard.valueOf(ed, null, true, true);
+		return Dashboard.valueOf(ed, null, true, true, true);
 	}
 
 	/**
@@ -111,7 +111,8 @@ public class Dashboard
 	 *            false: just load single page tiles, true: load tiles data for the dashboard without considering its types
 	 * @return
 	 */
-	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean alwaysLoadTiles, boolean loadTileParams)
+	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean loadSubDashboards, boolean alwaysLoadTiles,
+			boolean loadTileParams)
 	{
 		if (from == null) {
 			return null;
@@ -136,30 +137,32 @@ public class Dashboard
 		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
 			to.setIsSystem(null);
-			List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
-			if (emsSubDashboards != null) {
-				List<Dashboard> subDashboardList = new ArrayList<>();
-				for (EmsSubDashboard esd : emsSubDashboards) {
-					Dashboard dbd = new Dashboard();
-					dbd.setEnableTimeRange(null);
-					dbd.setEnableRefresh(null);
-					dbd.setIsSystem(null);
-					dbd.setSharePublic(null);
-					dbd.setType(null);
+			if (loadSubDashboards) {
+				List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
+				if (emsSubDashboards != null) {
+					List<Dashboard> subDashboardList = new ArrayList<>();
+					for (EmsSubDashboard esd : emsSubDashboards) {
+						Dashboard dbd = new Dashboard();
+						dbd.setEnableTimeRange(null);
+						dbd.setEnableRefresh(null);
+						dbd.setIsSystem(null);
+						dbd.setSharePublic(null);
+						dbd.setType(null);
 
-					Long subDashboardId = esd.getSubDashboardId();
-					Long tenantId = from.getTenantId();
-					DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-					EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
+						Long subDashboardId = esd.getSubDashboardId();
+						Long tenantId = from.getTenantId();
+						DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+						EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
 
-					dbd.setDashboardId(ed.getDashboardId());
-					dbd.setName(ed.getName());
+						dbd.setDashboardId(ed.getDashboardId());
+						dbd.setName(ed.getName());
 
-					// // TODO: 2016/3/7
-					// updateDashboardHref(dbd, tenantName);
-					subDashboardList.add(dbd);
+						// // TODO: 2016/3/7
+						// updateDashboardHref(dbd, tenantName);
+						subDashboardList.add(dbd);
+					}
+					to.setSubDashboards(subDashboardList);
 				}
-				to.setSubDashboards(subDashboardList);
 			}
 		}
 		else {

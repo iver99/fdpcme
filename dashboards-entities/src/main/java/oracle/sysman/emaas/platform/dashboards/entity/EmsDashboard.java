@@ -5,7 +5,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.eclipse.persistence.annotations.Multitenant;
 import org.eclipse.persistence.annotations.MultitenantType;
@@ -67,11 +83,11 @@ public class EmsDashboard implements Serializable
 	@OrderBy("row, column")
 	private List<EmsDashboardTile> dashboardTileList;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardSet", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboardSet", orphanRemoval = true)
 	@OrderBy("position ASC")
 	private List<EmsSubDashboard> subDashboardList;
 
-    public EmsDashboard()
+	public EmsDashboard()
 	{
 	}
 
@@ -106,20 +122,15 @@ public class EmsDashboard implements Serializable
 		return emsDashboardTile;
 	}
 
-    public EmsSubDashboard addEmsSubDashboard(EmsSubDashboard emsSubDashboard) {
-        if(subDashboardList == null){
-            subDashboardList = new ArrayList<>();
-        }
-        subDashboardList.add(emsSubDashboard);
-        emsSubDashboard.setDashboardSet(this);
-        return emsSubDashboard;
-    }
-
-    public EmsSubDashboard removeEmsSubDashboard(EmsSubDashboard emsSubDashboard) {
-        subDashboardList.remove(emsSubDashboard);
-        emsSubDashboard.setDashboardSet(null);
-        return emsSubDashboard;
-    }
+	public EmsSubDashboard addEmsSubDashboard(EmsSubDashboard emsSubDashboard)
+	{
+		if (subDashboardList == null) {
+			subDashboardList = new ArrayList<>();
+		}
+		subDashboardList.add(emsSubDashboard);
+		emsSubDashboard.setDashboardSet(this);
+		return emsSubDashboard;
+	}
 
 	public Integer getApplicationType()
 	{
@@ -202,6 +213,11 @@ public class EmsDashboard implements Serializable
 		return sharePublic;
 	}
 
+	public List<EmsSubDashboard> getSubDashboardList()
+	{
+		return subDashboardList;
+	}
+
 	public Long getTenantId()
 	{
 		return tenantId;
@@ -212,11 +228,19 @@ public class EmsDashboard implements Serializable
 		return type;
 	}
 
-    public EmsDashboardTile removeEmsDashboardTile(EmsDashboardTile emsDashboardTile) {
+	public EmsDashboardTile removeEmsDashboardTile(EmsDashboardTile emsDashboardTile)
+	{
 		getDashboardTileList().remove(emsDashboardTile);
 		emsDashboardTile.setDashboard(null);
 		return emsDashboardTile;
-    }
+	}
+
+	public EmsSubDashboard removeEmsSubDashboard(EmsSubDashboard emsSubDashboard)
+	{
+		subDashboardList.remove(emsSubDashboard);
+		emsSubDashboard.setDashboardSet(null);
+		return emsSubDashboard;
+	}
 
 	public void setApplicationType(Integer applicationType)
 	{
@@ -305,6 +329,11 @@ public class EmsDashboard implements Serializable
 		this.sharePublic = sharePublic;
 	}
 
+	public void setSubDashboardList(List<EmsSubDashboard> subDashboardList)
+	{
+		this.subDashboardList = subDashboardList;
+	}
+
 	public void setTenantId(Long tenantId)
 	{
 		this.tenantId = tenantId;
@@ -313,14 +342,6 @@ public class EmsDashboard implements Serializable
 	public void setType(Integer type)
 	{
 		this.type = type;
-	}
-
-	public List<EmsSubDashboard> getSubDashboardList() {
-		return subDashboardList;
-	}
-
-	public void setSubDashboardList(List<EmsSubDashboard> subDashboardList) {
-		this.subDashboardList = subDashboardList;
 	}
 
 }
