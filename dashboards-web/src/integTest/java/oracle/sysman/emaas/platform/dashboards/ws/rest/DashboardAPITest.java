@@ -8,6 +8,11 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -20,11 +25,6 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 /**
  * @author danfjian
@@ -149,12 +149,12 @@ public class DashboardAPITest
 	public void testGetDashboardBase64ScreenShot(@SuppressWarnings("unused") @Mocked DashboardAPIUtil dashboardAPIUtil)
 			throws Exception
 	{
-		new Expectations() {
-			{
-				DashboardAPIUtil.getExternalDashboardAPIBase(anyString);
-				result = "http://external/";
-			}
-		};
+		//		new Expectations() {
+		//			{
+		//				DashboardAPIUtil.getExternalDashboardAPIBase(anyString);
+		//				result = "http://external/";
+		//			}
+		//		};
 		assertGetDashboardBase64ScreenShot();
 	}
 
@@ -423,8 +423,8 @@ public class DashboardAPITest
 
 	private void assertGetDashboardBase64ScreenShot()
 	{
-		Assert.assertNotNull(dashboardAPI.getDashboardBase64ScreenShot("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L));
+		Assert.assertNotNull(dashboardAPI.getDashboardScreenShot("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, "1.0", "test.png"));
 	}
 
 	private void assertQueryDashboardById()
@@ -436,22 +436,22 @@ public class DashboardAPITest
 	private void assertQueryDashboards()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboards("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5,
-				"name", null));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5, "name",
+				null));
 	}
 
 	private void assertQuickUpdateDashboard() throws JSONException
 	{
 		Assert.assertNotNull(dashboardAPI.quickUpdateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, new JSONObject(
-						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L,
+				new JSONObject("{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
 	}
 
 	private void assertUpdateDashboard() throws JSONException
 	{
 		Assert.assertNotNull(dashboardAPI.updateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, new JSONObject(
-						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L,
+				new JSONObject("{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
 	}
 
 }

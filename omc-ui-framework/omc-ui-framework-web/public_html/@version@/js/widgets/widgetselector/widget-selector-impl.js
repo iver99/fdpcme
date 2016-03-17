@@ -457,6 +457,36 @@ define([
                 }
                 
                 function loadWidgetScreenshot(widget) {
+                    var url = null;
+                    widget.WIDGET_SCREENSHOT_HREF && (url = widget.WIDGET_SCREENSHOT_HREF());
+                    if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
+                        loadWidgetBase64Screenshot(widget);
+                        return;
+                    }
+                    if (!dfu.isDevMode()){
+                        url = dfu.getRelUrlFromFullUrl(url);
+                    } 
+                    widget && !widget.WIDGET_VISUAL && (widget.WIDGET_VISUAL = ko.observable(''));
+                    url && widget.WIDGET_VISUAL(url);
+                    if (!widget.WIDGET_VISUAL()) {
+                        var laImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        var taImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        var itaImagePath = "/emsaasui/uifwk/@version@/images/widgets/sample-widget-histogram.png";
+                        if ('LoganService' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(laImagePath);
+                        }
+                        else if ('TargetAnalytics' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(taImagePath);
+                        }
+                        else if ('EmcitasApplications' === widget.PROVIDER_NAME) {
+                            widget.WIDGET_VISUAL(itaImagePath);
+                        }else{
+                            widget.WIDGET_VISUAL(itaImagePath); //default image
+                        }
+                    }
+                }
+                
+                function loadWidgetBase64Screenshot(widget) {
                     if (!widget.isScreenshotLoaded) {
                         var widgetsUrl = '/sso.static/savedsearch.widgets';
                         if (dfu.isDevMode()){

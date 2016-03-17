@@ -1,5 +1,17 @@
 package oracle.sysman.emaas.platform.dashboards.core.model;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonValue;
+
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.CommonResourceException;
@@ -10,13 +22,6 @@ import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonValue;
-
-import java.util.*;
 
 public class Dashboard
 {
@@ -83,9 +88,15 @@ public class Dashboard
 
 	public static final boolean DASHBOARD_DELETED_DEFAULT = Boolean.FALSE;
 
+	/**
+	 * Create a new dashboard instance from giving EmsDashboard instance
+	 *
+	 * @param ed
+	 * @return
+	 */
 	public static Dashboard valueOf(EmsDashboard ed)
 	{
-		return Dashboard.valueOf(ed, null);
+		return Dashboard.valueOf(ed, null, true, true);
 	}
 
 	/**
@@ -96,9 +107,11 @@ public class Dashboard
 	 * @param to
 	 *            prototype Dashboard object, and it's values will be covered by value from EmsDashboard instance, or a new
 	 *            Dashboard instance will be created if it's null
+	 * @param alwaysLoadTiles
+	 *            false: just load single page tiles, true: load tiles data for the dashboard without considering its types
 	 * @return
 	 */
-	public static Dashboard valueOf(EmsDashboard from, Dashboard to)
+	public static Dashboard valueOf(EmsDashboard from, Dashboard to, boolean alwaysLoadTiles, boolean loadTileParams)
 	{
 		if (from == null) {
 			return null;
@@ -120,48 +133,51 @@ public class Dashboard
 		// by default, we'll not load screenshot for query
 		//		to.setScreenShot(from.getScreenShot());
 		to.setType(DataFormatUtils.dashboardTypeInteger2String(from.getType()));
-        if(from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
+		if (from.getType().equals(DASHBOARD_TYPE_CODE_SET)) {
 			to.setEnableTimeRange(null);
-            to.setIsSystem(null);
-            List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
+			to.setIsSystem(null);
+			List<EmsSubDashboard> emsSubDashboards = from.getSubDashboardList();
 			if (emsSubDashboards != null) {
 				List<Dashboard> subDashboardList = new ArrayList<>();
-                for (EmsSubDashboard esd : emsSubDashboards) {
-                    Dashboard dbd = new Dashboard();
-                    dbd.setEnableTimeRange(null);
-                    dbd.setEnableRefresh(null);
-                    dbd.setIsSystem(null);
-                    dbd.setSharePublic(null);
-                    dbd.setType(null);
+				for (EmsSubDashboard esd : emsSubDashboards) {
+					Dashboard dbd = new Dashboard();
+					dbd.setEnableTimeRange(null);
+					dbd.setEnableRefresh(null);
+					dbd.setIsSystem(null);
+					dbd.setSharePublic(null);
+					dbd.setType(null);
 
-                    Long subDashboardId = esd.getSubDashboardId();
-                    Long tenantId = from.getTenantId();
-                    DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-                    EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
+					Long subDashboardId = esd.getSubDashboardId();
+					Long tenantId = from.getTenantId();
+					DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+					EmsDashboard ed = dsf.getEmsDashboardById(subDashboardId);
 
-                    dbd.setDashboardId(ed.getDashboardId());
-                    dbd.setName(ed.getName());
+					dbd.setDashboardId(ed.getDashboardId());
+					dbd.setName(ed.getName());
 
-                    // // TODO: 2016/3/7
-                    // updateDashboardHref(dbd, tenantName);
-                    subDashboardList.add(dbd);
-                }
-                to.setSubDashboards(subDashboardList);
+					// // TODO: 2016/3/7
+					// updateDashboardHref(dbd, tenantName);
+					subDashboardList.add(dbd);
+				}
+				to.setSubDashboards(subDashboardList);
 			}
-        }else{
-            to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
+		}
+		else {
+			to.setEnableTimeRange(EnableTimeRangeState.fromValue(from.getEnableTimeRange()));
 
-            List<EmsDashboardTile> edtList = from.getDashboardTileList();
-            if (edtList != null) {
-                List<Tile> tileList = new ArrayList<Tile>();
-                for (EmsDashboardTile edt : edtList) {
-                    Tile tile = Tile.valueOf(edt);
-                    tile.setDashboard(to);
-                    tileList.add(tile);
-                }
-                to.setTileList(tileList);
-            }
-        }
+			if (alwaysLoadTiles || Dashboard.DASHBOARD_TYPE_SINGLEPAGE.equals(to.getType())) {
+				List<EmsDashboardTile> edtList = from.getDashboardTileList();
+				if (edtList != null) {
+					List<Tile> tileList = new ArrayList<Tile>();
+					for (EmsDashboardTile edt : edtList) {
+						Tile tile = Tile.valueOf(edt, loadTileParams);
+						tile.setDashboard(to);
+						tileList.add(tile);
+					}
+					to.setTileList(tileList);
+				}
+			}
+		}
 
 		return to;
 	}
@@ -212,14 +228,6 @@ public class Dashboard
 
 	@JsonProperty("subDashboards")
 	private List<Dashboard> subDashboards;
-
-	public List<Dashboard> getSubDashboards() {
-		return subDashboards;
-	}
-
-    public void setSubDashboards(List<Dashboard> subDashboards) {
-		this.subDashboards = subDashboards;
-	}
 
 	public Dashboard()
 	{
@@ -305,6 +313,11 @@ public class Dashboard
 		return name;
 	}
 
+	public String getOptionsHref()
+	{
+		return optionsHref;
+	}
+
 	public String getOwner()
 	{
 		return owner;
@@ -335,24 +348,25 @@ public class Dashboard
 			ed = new EmsDashboard(creationDate, dashboardId, 0L, htmlEcodedDesc, isEnableTimeRange, isEnableRefresh, isIsSystem,
 					isShare, lastModificationDate, lastModifiedBy, htmlEcodedName, owner, screenShot, dashboardType, appType);
 
-            if (type.equals(Dashboard.DASHBOARD_TYPE_SET)){
-                // support create subDashboards
-    //                if (subDashboards != null) {
-    //                    for (int index=0;index < subDashboards.size() ;index++ ) {
-    //                        Dashboard dbd = subDashboards.get(index);
-    //                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
-    //                        ed.addEmsSubDashboard(esdbd);
-    //                    }
-    //                }
-            }else{
-                if (tileList != null) {
-                    for (Tile tile : tileList) {
-                        EmsDashboardTile edt = tile.getPersistenceEntity(null);
-                        //					edt.setPosition(i++);
-                        ed.addEmsDashboardTile(edt);
-                    }
-                }
-            }
+			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
+				// support create subDashboards
+				//                if (subDashboards != null) {
+				//                    for (int index=0;index < subDashboards.size() ;index++ ) {
+				//                        Dashboard dbd = subDashboards.get(index);
+				//                        EmsSubDashboard esdbd = new EmsSubDashboard(dashboardId,dbd.getDashboardId(),index);
+				//                        ed.addEmsSubDashboard(esdbd);
+				//                    }
+				//                }
+			}
+			else {
+				if (tileList != null) {
+					for (Tile tile : tileList) {
+						EmsDashboardTile edt = tile.getPersistenceEntity(null);
+						//					edt.setPosition(i++);
+						ed.addEmsDashboardTile(edt);
+					}
+				}
+			}
 		}
 		else {
 			ed.getScreenShot();
@@ -374,12 +388,13 @@ public class Dashboard
 				throw new CommonResourceException(
 						MessageUtils.getDefaultBundleString(CommonResourceException.NOT_SUPPORT_UPDATE_TYPE_FIELD));
 			}
-            if (type.equals(Dashboard.DASHBOARD_TYPE_SET)){
-                updateEmsSubDashboards(subDashboards,ed);
-            }else{
-                updateEmsDashboardTiles(tileList, ed);
+			if (type.equals(Dashboard.DASHBOARD_TYPE_SET)) {
+				updateEmsSubDashboards(subDashboards, ed);
+			}
+			else {
+				updateEmsDashboardTiles(tileList, ed);
 				removeUnsharedDashboards(ed);
-            }
+			}
 
 		}
 		return ed;
@@ -402,6 +417,11 @@ public class Dashboard
 	public Boolean getSharePublic()
 	{
 		return sharePublic;
+	}
+
+	public List<Dashboard> getSubDashboards()
+	{
+		return subDashboards;
 	}
 
 	public List<Tile> getTileList()
@@ -484,6 +504,11 @@ public class Dashboard
 		this.name = name;
 	}
 
+	public void setOptionsHref(String optionsHref)
+	{
+		this.optionsHref = optionsHref;
+	}
+
 	public void setOwner(String owner)
 	{
 		this.owner = owner;
@@ -500,14 +525,6 @@ public class Dashboard
 		this.screenShotHref = screenShotHref;
 	}
 
-	public String getOptionsHref() {
-		return optionsHref;
-	}
-
-	public void setOptionsHref(String optionsHref) {
-		this.optionsHref = optionsHref;
-	}
-
 	/**
 	 * @param sharePublic
 	 *            the sharePublic to set
@@ -515,6 +532,11 @@ public class Dashboard
 	public void setSharePublic(Boolean sharePublic)
 	{
 		this.sharePublic = sharePublic;
+	}
+
+	public void setSubDashboards(List<Dashboard> subDashboards)
+	{
+		this.subDashboards = subDashboards;
 	}
 
 	public void setTileList(List<Tile> emsDashboardTileList)
@@ -525,6 +547,15 @@ public class Dashboard
 	public void setType(String type)
 	{
 		this.type = type;
+	}
+
+	private void removeUnsharedDashboards(EmsDashboard ed)
+	{
+		if (ed.getSharePublic() == 0) {
+			Long tenantId = ed.getTenantId();
+			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
+			dsf.removeEmsSubDashboardById(ed.getDashboardId());
+		}
 	}
 
 	private void updateEmsDashboardTiles(List<Tile> tiles, EmsDashboard ed) throws DashboardException
@@ -576,22 +607,23 @@ public class Dashboard
 		}
 	}
 
-    private void updateEmsSubDashboards(List<Dashboard> dashboards, EmsDashboard ed) throws DashboardException {
-        if (dashboards == null) {
-            throw new CommonSecurityException("sub dashboard is null");
-        }
+	private void updateEmsSubDashboards(List<Dashboard> dashboards, EmsDashboard ed) throws DashboardException
+	{
+		if (dashboards == null) {
+			throw new CommonSecurityException("sub dashboard is null");
+		}
 
-        Map<Dashboard, EmsSubDashboard> rows = new HashMap();
-        List<EmsSubDashboard> subDashboardList = ed.getSubDashboardList();
-        if (subDashboardList != null) {
-            for (int i = subDashboardList.size() - 1; i >= 0; i--) {
-                EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
-                ed.removeEmsSubDashboard(emsSubDashboard);
-            }
-        }
+		Map<Dashboard, EmsSubDashboard> rows = new HashMap();
+		List<EmsSubDashboard> subDashboardList = ed.getSubDashboardList();
+		if (subDashboardList != null) {
+			for (int i = subDashboardList.size() - 1; i >= 0; i--) {
+				EmsSubDashboard emsSubDashboard = subDashboardList.get(i);
+				ed.removeEmsSubDashboard(emsSubDashboard);
+			}
+		}
 
-        for (int index = 0; index < dashboards.size(); index++) {
-            Dashboard subDashboard = dashboards.get(index);
+		for (int index = 0; index < dashboards.size(); index++) {
+			Dashboard subDashboard = dashboards.get(index);
 
 			Long tenantId = ed.getTenantId();
 			DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
@@ -599,29 +631,21 @@ public class Dashboard
 			Long subDashboardId = subDashboard.getDashboardId();
 			EmsDashboard subbed = dsf.getEmsDashboardById(subDashboardId);
 
-            if(subbed != null) {
-                // remove duplicated entity
-                if (!rows.containsKey(subDashboard)) {
-                    EmsSubDashboard emsSubDashboard = new EmsSubDashboard(dashboardId, subDashboard.getDashboardId(), index);
-                    ed.addEmsSubDashboard(emsSubDashboard);
-                    rows.put(subDashboard, emsSubDashboard);
+			if (subbed != null) {
+				// remove duplicated entity
+				if (!rows.containsKey(subDashboard)) {
+					EmsSubDashboard emsSubDashboard = new EmsSubDashboard(dashboardId, subDashboard.getDashboardId(), index);
+					ed.addEmsSubDashboard(emsSubDashboard);
+					rows.put(subDashboard, emsSubDashboard);
 
-                    // update share public property
-                    if(ed.getSharePublic().equals(1)){
-                        subbed.setSharePublic(1);
-                        dsf.mergeEmsDashboard(subbed);
-                    }
+					// update share public property
+					if (ed.getSharePublic().equals(1)) {
+						subbed.setSharePublic(1);
+						dsf.mergeEmsDashboard(subbed);
+					}
 
-                }
-            }
-        }
-    }
-
-    private void removeUnsharedDashboards(EmsDashboard ed) {
-        if (ed.getSharePublic() == 0) {
-            Long tenantId = ed.getTenantId();
-            DashboardServiceFacade dsf = new DashboardServiceFacade(tenantId);
-            dsf.removeEmsSubDashboardById(ed.getDashboardId());
-        }
-    }
+				}
+			}
+		}
+	}
 }

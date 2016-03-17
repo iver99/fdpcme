@@ -110,7 +110,7 @@ public class EmsDashboardTile implements Serializable
 			@JoinColumn(name = "TENANT_ID", referencedColumnName = "TENANT_ID", insertable = false, updatable = false) })
 	private EmsDashboard dashboard;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "dashboardTile", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "dashboardTile", orphanRemoval = true)
 	private List<EmsDashboardTileParams> dashboardTileParamsList;
 
 	public EmsDashboardTile()
@@ -118,7 +118,8 @@ public class EmsDashboardTile implements Serializable
 	}
 
 	public EmsDashboardTile(Date creationDate, EmsDashboard emsDashboard1, Integer type, Integer row, Integer column,
-			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy, String owner, /*Integer position, */
+			Integer height, Integer isMaximized, Date lastModificationDate, String lastModifiedBy,
+			String owner, /*Integer position, */
 			String providerAssetRoot, String providerName, String providerVersion, Long tileId, String title,
 			String widgetCreationTime, String widgetDescription, String widgetGroupName, String widgetHistogram,
 			String widgetIcon, String widgetKocName, String widgetName, String widgetOwner, Integer widgetSource,

@@ -70,7 +70,7 @@ require(['ojs/ojcore',
             var logReceiver = dfu.getLogUrl();
            
             logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
-            logger.setLogLevel(oj.Logger.LEVEL_LOG);
+            logger.setLogLevel(oj.Logger.LEVEL_WARN);
             
             if (!ko.components.isRegistered('df-oracle-branding-bar')) {
                 ko.components.register("df-oracle-branding-bar", {

@@ -52,6 +52,7 @@ define(['knockout',
             self.previousDragCell = null;
                         
             self.dashboard = $b.dashboard;
+            self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
             self.builderTitle = dfu_model.generateWindowTitle(self.dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.target = dfu_model.getUrlParam("target");
@@ -63,6 +64,7 @@ define(['knockout',
             self.isOnePageType = (self.dashboard.type() === Builder.SINGLEPAGE_TYPE);
 //            self.linkName = ko.observable();
 //            self.linkUrl = ko.observable();
+            self.isCreator =  dfu.getUserName() === self.dashboard.owner();
             
             self.disableTilesOperateMenu = ko.observable(self.isOnePageType);
             self.showTimeRange = ko.observable(false);

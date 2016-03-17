@@ -284,6 +284,21 @@ define(['knockout',
             };
 
             self.getWidgetScreenshot = function(wgt) {
+                var url = null;
+                wgt.WIDGET_SCREENSHOT_HREF && (url = wgt.WIDGET_SCREENSHOT_HREF());
+                if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
+                    loadWidgetBase64Screenshot(wgt);
+                    return;
+                }
+                if (!dfu.isDevMode()){
+                    url = dfu.getRelUrlFromFullUrl(url);
+                } 
+                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+                url && wgt.WIDGET_VISUAL(url);
+                !wgt.WIDGET_VISUAL() && (wgt.WIDGET_VISUAL('@version@/images/sample-widget-histogram.png'));
+            };
+            
+            self.getWidgetBase64Screenshot = function(wgt) {
                 var url = '/sso.static/savedsearch.widgets';
                 dfu.isDevMode() && (url = dfu.buildFullUrl(dfu.getDevData().ssfRestApiEndPoint,'/widgets'));
                 url += '/'+wgt.WIDGET_UNIQUE_ID()+'/screenshot';
