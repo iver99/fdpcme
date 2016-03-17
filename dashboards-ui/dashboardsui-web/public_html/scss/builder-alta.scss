@@ -1298,3 +1298,17 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
 .dbd-icon-check:before{
     content: "\f00c";
 }
+
+#dashboardset-print-mask {
+    position:absolute; 
+    text-align:center; 
+    color: white; 
+    font-weight: bold; 
+    font-size: 3rem; 
+    left:0; 
+    top:0; 
+    z-index:9999; 
+    background-color:black; 
+    opacity: 0.4; 
+    display: inline
+}
