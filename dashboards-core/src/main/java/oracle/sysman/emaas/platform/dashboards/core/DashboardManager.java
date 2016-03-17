@@ -309,7 +309,7 @@ public class DashboardManager
 				throw new DashboardNotFoundException();
 			}
 			updateLastAccessDate(dashboardId, tenantId, dsf);
-			return Dashboard.valueOf(ed, null, true, true);
+			return Dashboard.valueOf(ed, null, true, true, true);
 		}
 		finally {
 			if (em != null) {
@@ -484,7 +484,7 @@ public class DashboardManager
 		List<EmsDashboard> edList = dsf.getEmsDashboardFindAll();
 		List<Dashboard> dbdList = new ArrayList<Dashboard>(edList.size());
 		for (EmsDashboard ed : edList) {
-			dbdList.add(Dashboard.valueOf(ed, null, false, false));
+			dbdList.add(Dashboard.valueOf(ed, null, false, false, false));
 		}
 		return dbdList;
 	}
@@ -574,7 +574,7 @@ public class DashboardManager
 						filteredTypes.add(type);
 					}
 				}
-		
+
 				for (DashboardApplicationType type : filteredTypes) {
 					apps.remove(type);
 				}
@@ -747,7 +747,7 @@ public class DashboardManager
 
 		if (edList != null && !edList.isEmpty()) {
 			for (int i = 0; i < edList.size(); i++) {
-				dbdList.add(Dashboard.valueOf(edList.get(i), null, false, false));
+				dbdList.add(Dashboard.valueOf(edList.get(i), null, false, false, false));
 			}
 		}
 		//		Long totalResults = edList == null ? 0L : Long.valueOf(edList.size());
@@ -845,9 +845,10 @@ public class DashboardManager
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
-			if(dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
-//				dbd.setEnableTimeRange(null);
-			}else{
+			if (dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
+				//				dbd.setEnableTimeRange(null);
+			}
+			else {
 				if (dbd.getTileList() != null) {
 					for (Tile tile : dbd.getTileList()) {
 						if (tile.getCreationDate() == null) {
@@ -865,7 +866,7 @@ public class DashboardManager
 			ed.setOwner(currentUser);
 			dsf.persistEmsDashboard(ed);
 			updateLastAccessDate(ed.getDashboardId(), tenantId);
-			return Dashboard.valueOf(ed, dbd, true, true);
+			return Dashboard.valueOf(ed, dbd, true, true, true);
 		}
 		finally {
 			if (em != null) {
@@ -961,21 +962,21 @@ public class DashboardManager
 			if (dbd.getOwner() == null) {
 				dbd.setOwner(currentUser);
 			}
-            if(dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
+			if (dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET)) {
 
-
-            }else {
-                if (dbd.getTileList() != null) {
-                    for (Tile tile : dbd.getTileList()) {
-                        if (tile.getCreationDate() == null) {
-                            tile.setCreationDate(created);
-                        }
-                        if (tile.getOwner() == null) {
-                            tile.setOwner(currentUser);
-                        }
-                    }
-                }
-            }
+			}
+			else {
+				if (dbd.getTileList() != null) {
+					for (Tile tile : dbd.getTileList()) {
+						if (tile.getCreationDate() == null) {
+							tile.setCreationDate(created);
+						}
+						if (tile.getOwner() == null) {
+							tile.setOwner(currentUser);
+						}
+					}
+				}
+			}
 
 			ed = dsf.getEmsDashboardById(dbd.getDashboardId());
 			if (ed == null) {
@@ -996,7 +997,7 @@ public class DashboardManager
 				ed.setOwner(dbd.getOwner());
 			}
 			dsf.mergeEmsDashboard(ed);
-			return Dashboard.valueOf(ed, dbd, true, true);
+			return Dashboard.valueOf(ed, dbd, true, true, true);
 		}
 		finally {
 			if (em != null) {
