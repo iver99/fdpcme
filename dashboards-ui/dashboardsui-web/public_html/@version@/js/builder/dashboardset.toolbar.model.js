@@ -653,23 +653,7 @@ define(['knockout',
                     
                     lastPromise.then(function() {
                         $printMask.remove();
-                        $('#globalBody').css({'width':""});
-                        var hiddenArray = [];
-                        $('.dashboard-content').each(function (index, element) {
-                            var tempDashboardId = $(element).attr('id');
-                            if (!$(element).hasClass("dashboard-picker-container") && !($(element).is(':visible'))) {
-                                hiddenArray.push(tempDashboardId);
-                                $(element).show();
-                            }
-                            else if($(element).hasClass("dashboard-picker-container")){
-                                $(element).hide();
-                            }
-                        });
                         window.print();
-                        hiddenArray.forEach(function (Item, index) {
-                            $('#'+Item).hide();
-                        });
-                        $('#dashboard-'+self.selectedDashboardItem().dashboardId).show();
                     });
             };
         }
