@@ -63,10 +63,12 @@ define(['jquery',
                 !lcKeyword && (widget = data[i]);
                 widget && self.widget.push(widget);
             }
+            /** to remove paging
             self.widget.length && (self.totalPages = Math.ceil(self.widget.length / self.widgetPageSize));
             self.page > self.totalPages && (self.page = self.totalPages);
             self.page < 1 && (self.page = 1);
             self.widget = self.widget.slice((self.page - 1) * self.widgetPageSize, self.page * self.widgetPageSize);
+            **/
         }
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
