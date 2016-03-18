@@ -388,7 +388,7 @@ define(['knockout',
                         singleDashboardItem = self.dashboardsetItems[indexOfSelectedTabInUserOption];
                         self.selectedDashboardItem(singleDashboardItem);
                         $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + singleDashboardItem.dashboardId});
-                    
+                        $("#dbd-tabs-container").ojTabs("refresh");                  
                     }
                     
                     Builder.fetchDashboardOptions(
@@ -684,14 +684,14 @@ define(['knockout',
                      removeTargetTab(removeResult.removeItem);
                     if (ui.tab.hasClass('oj-selected')) {
                         if (self.dashboardsetItems.length === currentShowIndex && self.dashboardsetItems.length !== 0) {
-                            $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.dashboardsetItems[currentShowIndex - 1].dashboardId});
-                            self.selectedDashboardItem(self.dashboardsetItems[currentShowIndex - 1]);
+                            $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.reorderedDbsSetItems()[currentShowIndex - 1].dashboardId});
+                            self.selectedDashboardItem(self.reorderedDbsSetItems()[currentShowIndex - 1]);
                         } else if (self.dashboardsetItems.length === 0) {                          
                             self.addNewDashboard();
                         }
                         else {   
-                            $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.dashboardsetItems[currentShowIndex].dashboardId});
-                            self.selectedDashboardItem(self.dashboardsetItems[currentShowIndex]);
+                            $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + self.reorderedDbsSetItems()[currentShowIndex].dashboardId});
+                            self.selectedDashboardItem(self.reorderedDbsSetItems()[currentShowIndex]);
                         }
                     } 
                     self.saveDashboardSet();

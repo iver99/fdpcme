@@ -618,10 +618,10 @@ define(['knockout',
             };
             self.setAsHomeConfirmed = function() {
                 self.setDashboardAsHome();
-                $b.findEl(".setAsHomeCfmDialog").ojDialog("close"); 
+                $("#setAsHomeCfmDialog").ojDialog("close"); 
             };
             self.setAsHomeCancelled = function() {
-                $b.findEl(".setAsHomeCfmDialog").ojDialog("close"); 
+                $("#setAsHomeCfmDialog").ojDialog("close"); 
             };
             self.setDashboardAsHome = function() {
                 function succCallback(data) {
@@ -681,8 +681,8 @@ define(['knockout',
                 }
                 else {
                     if (self.hasAnotherDashboardSetAsHome) {
-                        $b.findEl(".setAsHomeCfmDialog").ojDialog("open"); 
-                        $b.fineEl(".btnCancelSetAsHome").focus();
+                        $("#setAsHomeCfmDialog").ojDialog("open"); 
+                        $("#btnCancelSetAsHome").focus();
                     }
                     else {
                         self.setDashboardAsHome();

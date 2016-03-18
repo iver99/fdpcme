@@ -292,25 +292,7 @@
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
                         </button>-->
-                        <!-- set as home confirm dilog start -->
-                        <div style="display:none" class="setAsHomeCfmDialog"
-                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
-                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
-                            <div class="oj-dialog-header oj-helper-clearfix">
-                                <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_SET_AS_HOME_DIALOG_TITLE')"></span>
-                            </div>
-                            <div class="oj-dialog-body">
-                                <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
-                            </div>
-                            <div class="oj-dialog-footer">
-                                <button data-bind="click: setAsHomeConfirmed, 
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                                <button class="btnCancelSetAsHome" data-bind="click: setAsHomeCancelled,
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                            </div>
-                        </div>
-                        <!-- set as home confirm dilog end -->
-
+                        
                         <div style="position: absolute;overflow: hidden;left: -9999px;top: -9999px;height: 1px;width: 1px;">
                             <span class="dbd-toolbar-icon-duplicate"></span>
                             <span class="dbd-toolbar-icon-home"></span>
@@ -1058,6 +1040,24 @@
                         </div>
                     </div>
                     <!-- Duplicate Dashboard dialog end -->
+                    <!-- set as home confirm dilog start -->
+                        <div style="display:none" id="setAsHomeCfmDialog"
+                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                            <div class="oj-dialog-header oj-helper-clearfix">
+                                <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_SET_AS_HOME_DIALOG_TITLE')"></span>
+                            </div>
+                            <div class="oj-dialog-body">
+                                <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
+                            </div>
+                            <div class="oj-dialog-footer">
+                                <button data-bind="click: toolBarModel.setAsHomeConfirmed, 
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                                <button id="btnCancelSetAsHome" data-bind="click: toolBarModel.setAsHomeCancelled,
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                            </div>
+                        </div>
+                        <!-- set as home confirm dilog end -->                   
                 <!--/ko-->
             </div>
 </div>
