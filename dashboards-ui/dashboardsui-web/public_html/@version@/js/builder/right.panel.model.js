@@ -54,9 +54,7 @@ define(['knockout',
             self.emptyDashboard = tilesViewModel && tilesViewModel.isEmpty();
             
             self.keyword = ko.observable('');
-            self.page = ko.observable(1);
             self.widgets = ko.observableArray([]);
-            self.totalPages = ko.observable(1);
 
             self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
             self.maximized = ko.observable(false);
@@ -108,14 +106,7 @@ define(['knockout',
                     self.loadWidgets();
                     self.initDraggable();
 //                    self.checkAndDisableLinkDraggable();
-//to remove the page switcher
-//
-//                    $b.findEl(".dbd-left-panel-widgets-page-input").keyup(function(e) {
-//                        var replacedValue = this.value.replace(/[^0-9\.]/g, '');
-//                        if (this.value !== replacedValue) {
-//                            this.value = replacedValue;
-//                        }
-//                    });
+
                     $b.findEl('.widget-search-input').autocomplete({
                         source: self.autoSearchWidgets,
                         delay: 700,
@@ -212,68 +203,14 @@ define(['knockout',
 //                    return;
 //                self.checkAndDisableLinkDraggable();
 //            };
-            
-//            var AUTO_PAGE_NAV = 1;
-//            var widgetListHeight = ko.observable(0);
-//            var pageSizeLastTime = 0;
-//to remove left panel widgets reloading from window resizing
-//            // try using MutationObserver to detect widget list height change.
-//            // if MutationObserver is not availbe, register builder resize listener.
-//            var $dbdLeftPanelWidgets = $b.findEl(".dbd-left-panel-widgets");
-//            if (typeof window.MutationObserver !== 'undefined') {
-//                var widgetListHeightChangeObserver = new MutationObserver(function () {
-//                    widgetListHeight($dbdLeftPanelWidgets.height());
-//                });
-//                widgetListHeightChangeObserver.observe($dbdLeftPanelWidgets[0], {
-//                    attributes: true,
-//                    attributeFilter: ['style']
-//                });
-//            } else {
-//                $b.addBuilderResizeListener(function () {
-//                    widgetListHeight($dbdLeftPanelWidgets.height());
-//                });
-//            }
-//            // for delay notification.
-//            widgetListHeight.extend({rateLimit: 500, method: 'notifyWhenChangesStop '});
-//            widgetListHeight.subscribe(function () {
-//                console.log("loaded");
-//                self.loadWidgets(null, AUTO_PAGE_NAV);
-//            });
 
-            self.loadWidgets = function(req, behavior) {
-//to remove left panel widgets reloading from window resizing
-//                        
-//                // page size is calculated by widget list container height
-//                // so that scroll bar will never display in the drawer panel
-//                var pageSize = Math.floor(widgetListHeight() / 30);
-//                // widget list won't be loaded if the panel height is even not
-//                // enough for 1 item to display.
-//                if (pageSize < 1) {
-//                    return;
-//                }
-                
-                var pageIndex = self.page();
-//to remove left panel widgets reloading from window resizing
-//                
-//                // in order to keep the items a user sees in the new page size
-//                // when he or she resize the widget list panel, 
-//                // set behavior with the value of AUTO_PAGE_NAV.
-//                if ((behavior & AUTO_PAGE_NAV) && pageSizeLastTime > 0) {
-//                    pageIndex = Math.ceil(((self.page() - 1) * pageSizeLastTime + 1) / pageSize);
-//                }
-//                self.page(pageIndex);
-//                
-//                pageSizeLastTime = pageSize;
-                
+
+            self.loadWidgets = function(req) {                
                 var widgetDS = new Builder.WidgetDataSource();
-//to remove left panel widgets reloading from window resizing
-//                
-//                widgetDS.widgetPageSize = pageSize;
                 
                 widgetDS.loadWidgetData(
-                    pageIndex,
                     req && (typeof req.term === "string") ? req.term : self.keyword(),
-                    function (page, widgets, totalPages) {
+                    function (widgets) {
                         self.widgets([]);
                         if (widgets && widgets.length > 0) {
                             for (var i = 0; i < widgets.length; i++) {
@@ -284,7 +221,6 @@ define(['knockout',
                                 self.widgets.push(wgt);
                             }
                         }
-                        totalPages !== self.totalPages() && self.totalPages(totalPages);
                         self.initWidgetDraggable();
                     }
                 );
@@ -340,12 +276,10 @@ define(['knockout',
             };
 
             self.searchWidgetsClicked = function() {
-                self.page(1);
                 self.loadWidgets();
             };
             
             self.autoSearchWidgets = function(req) {
-                self.page(1);
                 self.loadWidgets(req);
             };
 

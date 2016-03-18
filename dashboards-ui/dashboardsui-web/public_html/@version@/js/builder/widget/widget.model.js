@@ -10,20 +10,15 @@ define(['jquery',
         'builder/builder.core'], function($, oj, dfu) {
     function WidgetDataSource() {
         var self = this;
-        var DEFAULT_WIDGET_PAGE_SIZE = 20;
-
-        self.widgetPageSize = DEFAULT_WIDGET_PAGE_SIZE;
         
-        self.loadWidgetData = function(page, keyword, successCallback) {
-            initialize(page);
+        self.loadWidgetData = function(keyword, successCallback) {
+            initialize();
             loadWidgets(keyword);
-            successCallback && successCallback(self.page, self.widget, self.totalPages);
+            successCallback && successCallback(self.widget);
         };
 
-        function initialize(page) {
+        function initialize() {
             self.widget = [];
-            self.totalPages = 1;
-            self.page = page;
         }
 
         function loadWidgets(keyword) {
@@ -63,12 +58,6 @@ define(['jquery',
                 !lcKeyword && (widget = data[i]);
                 widget && self.widget.push(widget);
             }
-            /** to remove paging
-            self.widget.length && (self.totalPages = Math.ceil(self.widget.length / self.widgetPageSize));
-            self.page > self.totalPages && (self.page = self.totalPages);
-            self.page < 1 && (self.page = 1);
-            self.widget = self.widget.slice((self.page - 1) * self.widgetPageSize, self.page * self.widgetPageSize);
-            **/
         }
     }
     Builder.registerModule(WidgetDataSource, "WidgetDataSource");
