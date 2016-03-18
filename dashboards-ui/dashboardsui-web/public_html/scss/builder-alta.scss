@@ -1131,7 +1131,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         overflow: visible !important;
     }
 
-    .dbd-widget div {
+    .dbd-widget > div {
         position:relative !important;
         page-break-inside: avoid;
     }
