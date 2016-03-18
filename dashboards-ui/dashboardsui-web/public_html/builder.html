@@ -235,7 +235,7 @@
                                   </button>
                               </div>
                         </div>
-                        <div class="builder-dbd-description">
+                        <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                             <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
                                 <span class="builder-dbd-description-display-hover-area dbd-display-hover-area">
 <!--                                    <span data-bind="text: dashboardDescription, 
@@ -912,22 +912,18 @@
             <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
                 <!--ko if: $data.type === 'included'-->
                  <div style="display:none" id="edit-dashboard"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <!--div class="oj-dialog-header-close-wrapper" >
                                 <a class="df-dialog-header-close" tabindex="0" data-bind="click: cancelDashboardCreate, event: { keydown: editDashboardDialogModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div-->
                             <span class="oj-dialog-title" data-bind="text: getNlsString('COMMON_EDIT_DASHBOARD_DIALOG_TITLE')"></span>
                         </div>
-                        <div class="oj-dialog-body">
-                            <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <input class="dbsHNameIn" id="dbsHNameIn" maxlength="64" required
-                                               data-bind="ojComponent: { component: 'ojInputText', value: toolBarModel.editDashboardDialogModel.name,
+                     <div class="oj-dialog-body">
+                         <div style="padding-top: 20px">
+                             <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_BUILDER_EDIT_DSB_NAME')"></label>
+                             <input class="dbsHNameIn" id="dbsHNameIn" maxlength="64" required
+                                    data-bind="ojComponent: { component: 'ojInputText', value: toolBarModel.editDashboardDialogModel.name,
                                                rawValue: toolBarModel.editDashboardDialogModel.nameInputed,
                                                validators : [{
                                                        type: 'regExp', options : {
@@ -943,28 +939,49 @@
                                                         messageDetail: ''
                                                }
                                              }}">
-                                    </div>
-                                </div>
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <textarea class="dbsHDpIn" id="dbsHDpIn" maxlength="256" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.editDashboardDialogModel.description, rootAttributes: {style:'max-width:420px;'},
+                         </div>
+                         <div style="padding-top: 20px;">
+                             <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
+                             <textarea class="dbsHDpIn" id="dbsHDpIn" maxlength="256" rows="6"
+                                       data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.editDashboardDialogModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                             }"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                         </div>
+                         <div style="padding-top: 10px;">
+                             <div id="checkboxsetDsbDesc" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.descriptionValue}">
+                                 <span class="oj-choice-row">
+                                     <input id="ckbxDsbDesc" type="checkbox" value="ON">
+                                     <label for="ckbxDsbDesc"  data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_DSB_DESC')"></label>
+                                 </span>
+                             </div>
+                         </div>
+<!--                         <div style="padding-top: 10px;">
+                             <div id="checkboxsetEntityFilter" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.entityFilterValue}">
+                                 <span class="oj-choice-row">
+                                     <input id="ckbxEntityFilter" type="checkbox" value="ON">
+                                     <label for="ckbxEntityFilter"  data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER')"></label>
+                                 </span>
+                             </div>
+                         </div>-->
+                         <div style="padding-top: 10px;">
+                             <div id="checkboxsetTimeFilter" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.timeRangeFilterValue}">
+                                 <span class="oj-choice-row">
+                                     <input id="ckbxTimeFilter" type="checkbox" value="ON">
+                                     <label for="ckbxTimeFilter" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_TIME_FILTER')"></label>
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
                         <div class="createDialogFooter-2 oj-dialog-footer">
                             <button class="createDsb-2" data-bind="click: toolBarModel.editDashboardDialogModel.save, ojComponent: {
                                              component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'),
                                              disabled: toolBarModel.editDashboardDialogModel.isDisabled,
+                                             rootAttributes: {style:'margin-right:5px'} }"></button>
+                            <button id="cancelDsbEdit" data-bind="click: toolBarModel.editDashboardDialogModel.cancel, ojComponent: {
+                                             component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),
                                              rootAttributes: {style:'margin-right:5px'} }"></button>
                         </div>
                     </div>
