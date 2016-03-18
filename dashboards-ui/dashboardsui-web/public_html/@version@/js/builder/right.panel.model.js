@@ -212,9 +212,10 @@ define(['knockout',
 //                    return;
 //                self.checkAndDisableLinkDraggable();
 //            };
-            var AUTO_PAGE_NAV = 1;
-            var widgetListHeight = ko.observable(0);
-            var pageSizeLastTime = 0;
+            
+//            var AUTO_PAGE_NAV = 1;
+//            var widgetListHeight = ko.observable(0);
+//            var pageSizeLastTime = 0;
 //to remove left panel widgets reloading from window resizing
 //            // try using MutationObserver to detect widget list height change.
 //            // if MutationObserver is not availbe, register builder resize listener.
