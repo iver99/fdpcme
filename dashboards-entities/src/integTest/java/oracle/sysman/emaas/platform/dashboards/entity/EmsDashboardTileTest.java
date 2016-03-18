@@ -13,7 +13,7 @@ import static org.testng.Assert.*;
  */
 @Test(groups={"s1"})
 public class EmsDashboardTileTest {
-    private EmsDashboard emsDashboard = new EmsDashboard(new Date(),10L,10L,"elephant",10,10,10,10,new Date(),
+    private EmsDashboard emsDashboard = new EmsDashboard(new Date(),10L,10L,"elephant",10,10,10,10,10,new Date(),
             "elephant","elephant","elephant","elephant",10,10);
 
     private EmsDashboardTile emsDashboardTile = new EmsDashboardTile(

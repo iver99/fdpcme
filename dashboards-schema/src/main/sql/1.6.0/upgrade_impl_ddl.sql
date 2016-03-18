@@ -59,6 +59,22 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD_SET table exists already');
   END IF;
 
+ --add new column 'ENABLE_ENTITY_FILTER'
+  --SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='ENABLE_ENTITY_FILTER';
+  --IF v_count=0 THEN
+    --EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD ADD "ENABLE_ENTITY_FILTER" NUMBER(1, 0) DEFAULT(0) NOT NULL';
+  --ELSE
+    --DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.ENABLE_ENTITY_FILTER exists already, no change is needed');
+  --END IF;
+
+ --add new column 'ENABLE_DESCRIPTION'
+  SELECT count(*) into v_count from user_tab_columns WHERE table_name='EMS_DASHBOARD' AND column_name='ENABLE_DESCRIPTION';
+  IF v_count=0 THEN
+    EXECUTE IMMEDIATE 'ALTER TABLE EMS_DASHBOARD ADD "ENABLE_DESCRIPTION" NUMBER(1, 0) DEFAULT(0) NOT NULL';
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Schema object: EMS_DASHBOARD.ENABLE_DESCRIPTION exists already, no change is needed');
+  END IF;
+
 END;
 /
 

@@ -10,9 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
@@ -22,6 +19,7 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonF
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
@@ -33,6 +31,9 @@ import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantSubscriptionUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author guobaochen
@@ -680,6 +681,79 @@ public class DashboardManagerTest_S2
 		}
 		catch (DashboardNotFoundException e) {
 		}
+	}
+
+	@Test(groups = { "s2" })
+	public void testEnableDescriptionState() throws DashboardException
+	{
+		EnableDescriptionState eds = EnableDescriptionState.fromName(null);
+		Assert.assertNull(eds);
+
+		eds = EnableDescriptionState.fromName("TRUE");
+		Assert.assertEquals(EnableDescriptionState.TRUE, eds);
+
+		eds = EnableDescriptionState.fromName("ANYSTRING");
+		Assert.assertNull(eds);
+
+		eds = EnableDescriptionState.fromValue(0);
+		Assert.assertEquals(EnableDescriptionState.FALSE, eds);
+
+		eds = EnableDescriptionState.fromValue(null);
+		Assert.assertNull(eds);
+
+		Dashboard dsb = new Dashboard();
+		dsb.setEnableDescription(EnableDescriptionState.FALSE);
+		eds = dsb.getEnableDescription();
+		Assert.assertEquals(EnableDescriptionState.FALSE, eds);
+
+	}
+
+	//	@Test(groups = { "s2" })
+	//	public void testEnableEntityFilterState() throws DashboardException
+	//	{
+	//		EnableEntityFilterState eef = EnableEntityFilterState.fromName(null);
+	//		Assert.assertNull(eef);
+	//
+	//		eef = EnableEntityFilterState.fromName("TRUE");
+	//		Assert.assertEquals(EnableEntityFilterState.TRUE, eef);
+	//
+	//		eef = EnableEntityFilterState.fromName("ANYSTRING");
+	//		Assert.assertNull(eef);
+	//
+	//		eef = EnableEntityFilterState.fromValue(0);
+	//		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
+	//
+	//		eef = EnableEntityFilterState.fromValue(null);
+	//		Assert.assertNull(eef);
+	//
+	//		Dashboard dsb = new Dashboard();
+	//		dsb.setEnableEntityFilter(EnableEntityFilterState.FALSE);
+	//		eef = dsb.getEnableEntityFilter();
+	//		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
+	//	}
+
+	@Test(groups = { "s2" })
+	public void testEnableTimeRangeState() throws DashboardException
+	{
+		EnableTimeRangeState etr = EnableTimeRangeState.fromName(null);
+		Assert.assertNull(etr);
+
+		etr = EnableTimeRangeState.fromName("TRUE");
+		Assert.assertEquals(EnableTimeRangeState.TRUE, etr);
+
+		etr = EnableTimeRangeState.fromName("ANYSTRING");
+		Assert.assertNull(etr);
+
+		etr = EnableTimeRangeState.fromValue(0);
+		Assert.assertEquals(EnableTimeRangeState.FALSE, etr);
+
+		etr = EnableTimeRangeState.fromValue(null);
+		Assert.assertNull(etr);
+
+		Dashboard dsb = new Dashboard();
+		dsb.setEnableTimeRange(EnableTimeRangeState.FALSE);
+		etr = dsb.getEnableTimeRange();
+		Assert.assertEquals(EnableTimeRangeState.FALSE, etr);
 	}
 
 	@Test(groups = { "s2" })
