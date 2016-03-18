@@ -149,12 +149,12 @@ public class DashboardAPITest
 	public void testGetDashboardBase64ScreenShot(@SuppressWarnings("unused") @Mocked DashboardAPIUtil dashboardAPIUtil)
 			throws Exception
 	{
-		new Expectations() {
-			{
-				DashboardAPIUtil.getExternalDashboardAPIBase(anyString);
-				result = "http://external/";
-			}
-		};
+		//		new Expectations() {
+		//			{
+		//				DashboardAPIUtil.getExternalDashboardAPIBase(anyString);
+		//				result = "http://external/";
+		//			}
+		//		};
 		assertGetDashboardBase64ScreenShot();
 	}
 
@@ -423,8 +423,8 @@ public class DashboardAPITest
 
 	private void assertGetDashboardBase64ScreenShot()
 	{
-		Assert.assertNotNull(dashboardAPI.getDashboardBase64ScreenShot("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L));
+		Assert.assertNotNull(dashboardAPI.getDashboardScreenShot("tenant01", "tenant01.emcsadmin",
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, "1.0", "test.png"));
 	}
 
 	private void assertQueryDashboardById()
@@ -442,9 +442,14 @@ public class DashboardAPITest
 
 	private void assertQuickUpdateDashboard() throws JSONException
 	{
-		Assert.assertNotNull(dashboardAPI.quickUpdateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, new JSONObject(
-						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
+		Assert.assertNotNull(dashboardAPI
+				.quickUpdateDashboard(
+						"tenant01",
+						"tenant01.emcsadmin",
+						"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",
+						123L,
+						new JSONObject(
+								"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false, \"enableDescription\": false, \"enableEntityFilter\": true, \"enableTimeRange\": true}")));
 	}
 
 	private void assertUpdateDashboard() throws JSONException

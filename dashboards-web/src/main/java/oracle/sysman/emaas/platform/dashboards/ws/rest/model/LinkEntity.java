@@ -10,11 +10,15 @@
 
 package oracle.sysman.emaas.platform.dashboards.ws.rest.model;
 
+import java.io.Serializable;
+
 /**
  * @author aduan
  */
-public class LinkEntity
+public class LinkEntity implements Serializable
 {
+	private static final long serialVersionUID = 4486286542760891627L;
+
 	private String name;
 	private String href;
 	private String serviceName;

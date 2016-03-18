@@ -48,7 +48,6 @@ define([
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
             self.showDashboard = function (dashboardItem) {
-                $('#globalBody').css({'width':"100%"});
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
                 if ($("#" + divId).length > 0) {
@@ -68,12 +67,11 @@ define([
                             //$('.dbs-tiles-panel-sm').css({'height':newHeight});
                             var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container').position().top;
                             var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
-                            $('.dbs-list-container').css({'height':newHeight});
-                            $('#globalBody').css({'width':"100%"});
+                            $('.dbs-list-container').css({'height':newHeight});                    
                     }, 2000);
                     } else {
                         self.loadDashboard(dashboardId);
-                    }
+                        }
                 }
             };
             
@@ -134,9 +132,9 @@ define([
                     var tilesView = new Builder.DashboardTilesView($b);
                     var tilesViewModel = new Builder.DashboardTilesViewModel($b/*, tilesView, urlChangeView*/);
                     var toolBarModel = new Builder.ToolBarModel($b, options);
-                    
+
                     //change dashboard name
-                    toolBarModel.editDashboardDialogModel.dashboard.name.subscribe(function (dashboardName) {
+                    toolBarModel.dashboardName.subscribe(function (dashboardName) {
                         var currentDashboardId = self.selectedDashboardInst().toolBarModel.dashboardId;
                         dashboardsetToolBarModel.dashboardsetItems.filter(function isIdMatch(value) {
                             if(value.dashboardId===currentDashboardId){

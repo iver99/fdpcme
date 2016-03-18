@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.core;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -12,11 +13,13 @@ import javax.persistence.Query;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.NonStrictExpectations;
+import oracle.sysman.emaas.platform.dashboards.core.cache.screenshot.ScreenshotData;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.functional.CommonFunctionalException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.resource.DashboardNotFoundException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.DashboardApplicationType;
 import oracle.sysman.emaas.platform.dashboards.core.model.Tile;
@@ -681,6 +684,79 @@ public class DashboardManagerTest_S2
 	}
 
 	@Test(groups = { "s2" })
+	public void testEnableDescriptionState() throws DashboardException
+	{
+		EnableDescriptionState eds = EnableDescriptionState.fromName(null);
+		Assert.assertNull(eds);
+
+		eds = EnableDescriptionState.fromName("TRUE");
+		Assert.assertEquals(EnableDescriptionState.TRUE, eds);
+
+		eds = EnableDescriptionState.fromName("ANYSTRING");
+		Assert.assertNull(eds);
+
+		eds = EnableDescriptionState.fromValue(0);
+		Assert.assertEquals(EnableDescriptionState.FALSE, eds);
+
+		eds = EnableDescriptionState.fromValue(null);
+		Assert.assertNull(eds);
+
+		Dashboard dsb = new Dashboard();
+		dsb.setEnableDescription(EnableDescriptionState.FALSE);
+		eds = dsb.getEnableDescription();
+		Assert.assertEquals(EnableDescriptionState.FALSE, eds);
+
+	}
+
+	//	@Test(groups = { "s2" })
+	//	public void testEnableEntityFilterState() throws DashboardException
+	//	{
+	//		EnableEntityFilterState eef = EnableEntityFilterState.fromName(null);
+	//		Assert.assertNull(eef);
+	//
+	//		eef = EnableEntityFilterState.fromName("TRUE");
+	//		Assert.assertEquals(EnableEntityFilterState.TRUE, eef);
+	//
+	//		eef = EnableEntityFilterState.fromName("ANYSTRING");
+	//		Assert.assertNull(eef);
+	//
+	//		eef = EnableEntityFilterState.fromValue(0);
+	//		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
+	//
+	//		eef = EnableEntityFilterState.fromValue(null);
+	//		Assert.assertNull(eef);
+	//
+	//		Dashboard dsb = new Dashboard();
+	//		dsb.setEnableEntityFilter(EnableEntityFilterState.FALSE);
+	//		eef = dsb.getEnableEntityFilter();
+	//		Assert.assertEquals(EnableEntityFilterState.FALSE, eef);
+	//	}
+
+	@Test(groups = { "s2" })
+	public void testEnableTimeRangeState() throws DashboardException
+	{
+		EnableTimeRangeState etr = EnableTimeRangeState.fromName(null);
+		Assert.assertNull(etr);
+
+		etr = EnableTimeRangeState.fromName("TRUE");
+		Assert.assertEquals(EnableTimeRangeState.TRUE, etr);
+
+		etr = EnableTimeRangeState.fromName("ANYSTRING");
+		Assert.assertNull(etr);
+
+		etr = EnableTimeRangeState.fromValue(0);
+		Assert.assertEquals(EnableTimeRangeState.FALSE, etr);
+
+		etr = EnableTimeRangeState.fromValue(null);
+		Assert.assertNull(etr);
+
+		Dashboard dsb = new Dashboard();
+		dsb.setEnableTimeRange(EnableTimeRangeState.FALSE);
+		etr = dsb.getEnableTimeRange();
+		Assert.assertEquals(EnableTimeRangeState.FALSE, etr);
+	}
+
+	@Test(groups = { "s2" })
 	public void testFavoriteDashboards_S2() throws DashboardException
 	{
 		loadMockBeforeMethod();
@@ -742,7 +818,8 @@ public class DashboardManagerTest_S2
 		loadMockBeforeMethod();
 		Dashboard dbd1 = new Dashboard();
 		dbd1.setName("test");
-		dbd1.setScreenShot("shot");
+		String testScreenshotDate = "data:image/png;base64,shot";
+		dbd1.setScreenShot(testScreenshotDate);
 		dbd1.setHref("");
 		dbd1.setLastModifiedBy("sysman");
 		dbd1.setLastModificationDate(new Date());
@@ -750,8 +827,8 @@ public class DashboardManagerTest_S2
 		Long tenantId1 = 11L;
 		dbd1 = dm.saveNewDashboard(dbd1, tenantId1);
 
-		String shot = dm.getDashboardBase64ScreenShotById(dbd1.getDashboardId(), tenantId1);
-		Assert.assertEquals(shot, "shot");
+		ScreenshotData shot = dm.getDashboardBase64ScreenShotById(dbd1.getDashboardId(), tenantId1);
+		Assert.assertEquals(shot.getScreenshot(), testScreenshotDate);
 
 		List<Dashboard> ds = dm.listAllDashboards(tenantId1);
 		Assert.assertEquals(ds.size() > 0, true);
@@ -900,8 +977,8 @@ public class DashboardManagerTest_S2
 
 	@Test(groups = "s2")
 	public void testListDashboard_S2(@Mocked final DashboardServiceFacade anyDashboardServiceFacade,
-			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery) throws DashboardException,
-			InterruptedException
+			@Mocked final EntityManager anyEntityManager, @Mocked final Query anyQuery, @Mocked final BigDecimal anyNumber)
+					throws DashboardException, InterruptedException
 	{
 		final List<EmsDashboard> emsDashboards = new ArrayList<EmsDashboard>();
 
@@ -913,6 +990,10 @@ public class DashboardManagerTest_S2
 				result = anyQuery;
 				anyQuery.getResultList();
 				result = emsDashboards;
+				anyQuery.getSingleResult();
+				result = anyNumber;
+				anyNumber.longValue();
+				result = 50;
 			}
 		};
 
@@ -922,6 +1003,7 @@ public class DashboardManagerTest_S2
 		filter.setIncludedAppsFromString("APM,ITAnalytics");
 		filter.setIncludedTypesFromString(Dashboard.DASHBOARD_TYPE_NORMAL + "," + Dashboard.DASHBOARD_TYPE_SINGLEPAGE);
 		filter.setIncludedOwnersFromString("Oracle,Others,Me,Share");
+		TenantContext.setCurrentTenant("TenantOPC1");
 		dm.listDashboards(null, null, 11L, false);
 		dm.listDashboards("key", null, null, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
 		dm.listDashboards("key", 3, 50, 11L, false, DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME, filter);
