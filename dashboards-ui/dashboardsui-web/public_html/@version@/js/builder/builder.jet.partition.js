@@ -20,6 +20,7 @@ define([
     'ojs/ojtoolbar',
     'ojs/ojpagingcontrol',
     'ojs/ojeditablevalue',
+    'ojs/ojdatetimepicker',
     'ojs/internal-deps/dvt/DvtChart',
     'ojs/ojdvt-base',
     'ojs/ojcheckboxset',
