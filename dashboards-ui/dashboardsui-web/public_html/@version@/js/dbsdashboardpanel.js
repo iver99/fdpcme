@@ -253,10 +253,12 @@ $.widget('dbs.dbsDashboardPanel',
                 if (_dashboard['screenShotHref']) {
 
                     var url = _dashboard['screenShotHref'];
-                    url = dfu.getRelUrlFromFullUrl(url);
-                    if (dfu.isDevMode()) {
-                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), '/' + self.options['dashboard']['id'] + '/screenshot');
-                    } 
+                    if (!dfu.isDevMode()) {
+                        url = dfu.getRelUrlFromFullUrl(url);
+                    }
+//                    if (dfu.isDevMode()) {
+//                        url = dfu.buildFullUrl(dfu.getDashboardsUrl(), '/' + self.options['dashboard']['id'] + '/screenshot');
+//                    } 
                     
                     // don't use base64 image data, but use the URL retrieved from dashboard directly as screenshot url
                     self._setBase64ScreenShot(url);

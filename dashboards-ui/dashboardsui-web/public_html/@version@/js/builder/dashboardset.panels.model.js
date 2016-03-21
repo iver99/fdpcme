@@ -31,7 +31,6 @@ define([
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
 
             self.showDashboard = function (dashboardItem) {
-                $('#globalBody').css({'width':"100%"});
                 var dashboardId = dashboardItem.dashboardId;
                 var divId = "dashboard-" + dashboardId;
                 if ($("#" + divId).length > 0) {
@@ -51,12 +50,11 @@ define([
                             //$('.dbs-tiles-panel-sm').css({'height':newHeight});
                             var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container').position().top;
                             var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
-                            $('.dbs-list-container').css({'height':newHeight});
-                            $('#globalBody').css({'width':"100%"});
+                            $('.dbs-list-container').css({'height':newHeight});                    
                     }, 2000);
                     } else {
                         self.loadDashboard(dashboardId);
-                    }
+                        }
                 }
             };
             
