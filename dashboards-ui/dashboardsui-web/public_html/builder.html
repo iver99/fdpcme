@@ -704,7 +704,7 @@
                             <div  class="dbd-left-panel-header-search-input">
                                 <input id="widget-search-input" type="text" name="searchInput"
                                    data-bind="event: { keypress: searchWidgetsInputKeypressed }, ojComponent:{component:'ojInputText', value: keyword, 
-                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE'), rootAttributes: {'class': 'dbs-search-box-input'}}
+                                              placeholder: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_PLACEHODE_CONTENT'), rootAttributes: {'class': 'dbs-search-box-input'}}
                                               ,attr: { 'aria-label': getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_ARIA_LABEL') }"/>
                             </div>
                             <div>
@@ -718,7 +718,7 @@
                                         float: left;"> 
                                 </button>-->
                                 <button id="dbd-left-panel-header-search-btn" class="oj-button-half-chrome" data-bind="click: searchWidgetsClicked, 
-                                        ojComponent: {component: 'ojButton', label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
+                                        ojComponent: {component: 'ojButton', chroming: 'half',label: getNlsString('DBS_BUILDER_LEFT_PANEL_SEARCH_BTN_LABEL'), display: 'icons', 
                                         icons: {start:'left-panel-dbd-search-icon'}}"> 
                                 </button> 
                             </div>
