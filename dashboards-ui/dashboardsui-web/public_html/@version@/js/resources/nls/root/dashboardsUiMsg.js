@@ -135,7 +135,7 @@ define({
       "DBS_BUILDER_DUPLICATE_DIALOG_TITLE": "Duplicate Dashboard",
       "DBS_BUILDER_BTN_EDIT_TITLE": "Edit dashboard",
        "DBS_BUILDER_EDIT_DSB_NAME": "Dashboard Name",
-      "DBS_BUILDER_EDIT_SHOW_DSB_DESC": "show dashboard description",
+      "DBS_BUILDER_EDIT_SHOW_DSB_DESC": "Show dashboard description",
 //      "DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER": "Show Entity filter",
       "DBS_BUILDER_EDIT_SHOW_TIME_FILTER": "Show Time Range filter",
       "DBS_BUILDER_BTN_DELETE_TITLE": "Delete dashboard",
