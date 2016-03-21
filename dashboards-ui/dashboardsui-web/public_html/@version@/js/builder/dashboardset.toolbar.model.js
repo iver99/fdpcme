@@ -284,7 +284,7 @@ define(['knockout',
                     "subMenu": []
                 },
                 {
-                    "label":  getNlsString("DBS_BUILDER_TILE_REFRESH"),
+                    "label":  getNlsString("DBS_BUILDER_AUTOREFRESH_REFRESH"),
                     "url": "#",
                     "id": "dbs-refresh",
                     "icon": "dbd-icon-refresh",
