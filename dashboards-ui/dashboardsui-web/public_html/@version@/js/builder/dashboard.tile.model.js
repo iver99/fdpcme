@@ -826,12 +826,7 @@ define(['knockout',
             var globalTimer = null;
             self.postDocumentShow = function() {
                 $b.triggerBuilderResizeEvent('resize builder after document show');
-                self.initializeMaximization();
-                $(window).resize(function() {
-                    clearTimeout(globalTimer);
-                    globalTimer = setTimeout(self.notifyWindowResize, 200);                                        
-                    $b.triggerBuilderResizeEvent('resize builder after window resized');
-                });
+                self.initializeMaximization();               
                 $b.triggerEvent($b.EVENT_TILE_EXISTS_CHANGED, null, self.editor.tiles().length > 0);
                 self.triggerTileTimeControlSupportEvent();
                 //avoid brandingbar disappear when set font-size of text

@@ -224,6 +224,7 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                    $("#dbd-tabs-container").ojTabs("refresh");   
                 }
                 self.saveDashboardSet();
             };
@@ -630,10 +631,7 @@ define(['knockout',
                                     resolve();
                                 }, 2000, 30000);
                             } else {
-                                $("#dashboardTab-" + dashboardTabItem.dashboardId).click();
-                                dfu.getAjaxUtil().actionAfterAjaxStop(function () {
-                                    resolve();
-                                }, 1000, 3000);
+                                resolve();
                             }
                         });
                         return promise;
@@ -709,8 +707,9 @@ define(['knockout',
                         }
                     });           
                     self.saveDashboardSet();
+                    $("#dbd-tabs-container").ojTabs("refresh"); 
                     //scroll-bar reset
-                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});
+                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});               
                 }             
             });
             
