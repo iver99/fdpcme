@@ -8,11 +8,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
@@ -25,6 +20,11 @@ import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author danfjian
@@ -436,22 +436,27 @@ public class DashboardAPITest
 	private void assertQueryDashboards()
 	{
 		Assert.assertNotNull(dashboardAPI.queryDashboards("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5, "name",
-				null));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", "query str", 10, 5,
+				"name", null));
 	}
 
 	private void assertQuickUpdateDashboard() throws JSONException
 	{
-		Assert.assertNotNull(dashboardAPI.quickUpdateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L,
-				new JSONObject("{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
+		Assert.assertNotNull(dashboardAPI
+				.quickUpdateDashboard(
+						"tenant01",
+						"tenant01.emcsadmin",
+						"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101",
+						123L,
+						new JSONObject(
+								"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false, \"enableDescription\": false, \"enableEntityFilter\": true, \"enableTimeRange\": true}")));
 	}
 
 	private void assertUpdateDashboard() throws JSONException
 	{
 		Assert.assertNotNull(dashboardAPI.updateDashboard("tenant01", "tenant01.emcsadmin",
-				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L,
-				new JSONObject("{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
+				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, new JSONObject(
+						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
 	}
 
 }

@@ -239,6 +239,22 @@
   box-sizing: content-box; 
 }
 
+//hack default 'create name validation' css style
+#cDsbDialog{
+    .oj-dialog-body{
+            .oj-inputtext{
+                .oj-message-content{
+                    .oj-message-summary{
+                        display: inline;
+                    }
+                    .oj-message-detail{
+                        display: inline;
+                    }
+                }
+            }
+    }
+}
+
 .oj-label-required:before{content:'*'}
 
 .oj-button.oj-button-full-chrome.dbs-home-blue-button {

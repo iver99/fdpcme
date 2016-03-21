@@ -309,6 +309,10 @@ define(['knockout',
              */
             self.discoverLogoutUrl = function() {
                 return dfu.discoverLogoutUrl();
+            };            
+            
+            self.getAjaxUtil = function() {
+                return ajaxUtil;
             };
             
         }

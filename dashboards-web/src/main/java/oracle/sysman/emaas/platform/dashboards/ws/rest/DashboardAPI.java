@@ -32,10 +32,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
-
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardConstants;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
@@ -50,6 +46,8 @@ import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.DeleteSystemDashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableDescriptionState;
+import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard.EnableTimeRangeState;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
 import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.MessageUtils;
@@ -57,6 +55,10 @@ import oracle.sysman.emaas.platform.dashboards.core.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.TenantContext;
 import oracle.sysman.emaas.platform.dashboards.ws.ErrorEntity;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
  * @author wenjzhu
@@ -346,8 +348,8 @@ public class DashboardAPI extends APIBase
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString, limit,
-				offset, orderBy, filterString);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString,
+				limit, offset, orderBy, filterString);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -400,6 +402,9 @@ public class DashboardAPI extends APIBase
 		logkeyHeaders("quickUpdateDashboard()", userTenant, tenantIdParam);
 		String name = null;
 		String description = null;
+		String enableDescription = null;
+		//		String enableEntityFilter = null;
+		String enableTimeRange = null;
 		Boolean share = null;
 		try {
 			if (inputJson.has("name")) {
@@ -408,6 +413,16 @@ public class DashboardAPI extends APIBase
 			if (inputJson.has("description")) {
 				description = inputJson.getString("description");
 			}
+			if (inputJson.has("enableDescription")) {
+				enableDescription = inputJson.getString("enableDescription");
+			}
+			//			if (inputJson.has("enableEntityFilter")) {
+			//				enableEntityFilter = inputJson.getString("enableEntityFilter");
+			//			}
+			if (inputJson.has("enableTimeRange")) {
+				enableTimeRange = inputJson.getString("enableTimeRange");
+			}
+
 			if (inputJson.has("sharePublic")) {
 				share = inputJson.getBoolean("sharePublic");
 			}
@@ -433,6 +448,19 @@ public class DashboardAPI extends APIBase
 			if (description != null) {
 				input.setDescription(description);
 			}
+
+			if (enableDescription != null) {
+				input.setEnableDescription(EnableDescriptionState.fromName(enableDescription));
+			}
+
+			//			if (enableEntityFilter != null) {
+			//				input.setEnableEntityFilter(EnableEntityFilterState.fromName(enableEntityFilter));
+			//			}
+
+			if (enableTimeRange != null) {
+				input.setEnableTimeRange(EnableTimeRangeState.fromName(enableTimeRange));
+			}
+
 			if (share != null) {
 				input.setSharePublic(share);
 			}
@@ -547,8 +575,7 @@ public class DashboardAPI extends APIBase
 			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
 			@PathParam("id") Long dashboardId, JSONObject inputJson)
 	{
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/",
-				dashboardId);
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);

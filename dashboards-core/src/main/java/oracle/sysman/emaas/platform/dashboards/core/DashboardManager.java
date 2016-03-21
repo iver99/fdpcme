@@ -206,6 +206,7 @@ public class DashboardManager
 				dsf.removeEmsDashboardLastAccess(edla);
 			}
 			dsf.removeEmsDashboard(ed);
+			dsf.removeEmsSubDashboardById(dashboardId);
 		}
 	}
 

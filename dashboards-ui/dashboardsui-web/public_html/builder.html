@@ -178,7 +178,7 @@
             </div>
 
             <script id="dashboard-content-template" type="text/html">
-            <div class="dashboard-content" style="visibility: hidden">
+            <div class="dashboard-content page-break" style="visibility: hidden">
             <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" style="padding-left: 30px;">
                 <div class="builder-toolbar" aria-label="Builder toolbar"
                        class="oj-component oj-component-initnode">
@@ -235,7 +235,7 @@
                                   </button>
                               </div>
                         </div>
-                        <div class="builder-dbd-description">
+                        <div class="builder-dbd-description" data-bind="visible: dashboardDescriptionEnabled()==='TRUE'">
                             <div class="builder-dbd-description-display-area dbd-display-area" data-bind="css: {'dbd-edit-disabled': editDisabled()}">
                                 <span class="builder-dbd-description-display-hover-area dbd-display-hover-area">
 <!--                                    <span data-bind="text: dashboardDescription, 
@@ -292,25 +292,7 @@
                                       icons: {start: 'dbd-toolbar-icon-add-widget'},
                           }, attr: {title: getNlsString('DBS_BUILDER_BTN_ADD_WIDGET')}, visible: editDisabled() !== true">
                         </button>-->
-                        <!-- set as home confirm dilog start -->
-                        <div style="display:none" class="setAsHomeCfmDialog"
-                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
-                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
-                            <div class="oj-dialog-header oj-helper-clearfix">
-                                <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_SET_AS_HOME_DIALOG_TITLE')"></span>
-                            </div>
-                            <div class="oj-dialog-body">
-                                <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
-                            </div>
-                            <div class="oj-dialog-footer">
-                                <button data-bind="click: setAsHomeConfirmed, 
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                                <button class="btnCancelSetAsHome" data-bind="click: setAsHomeCancelled,
-                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                            </div>
-                        </div>
-                        <!-- set as home confirm dilog end -->
-
+                        
                         <div style="position: absolute;overflow: hidden;left: -9999px;top: -9999px;height: 1px;width: 1px;">
                             <span class="dbd-toolbar-icon-duplicate"></span>
                             <span class="dbd-toolbar-icon-home"></span>
@@ -869,8 +851,8 @@
                 <div class="dashboard-content dashboard-picker-container">
                     <div class="oj-col oj-sm-12 oj-toolbars oj-toolbar-bottom-border oj-btton-half-chrome head-bar-container" 
                          style="padding-left: 30px; background-color: white;">
-                        <div class="builder-toolbar page-break" aria-label="Builder toolbar">
-                            <div class="builder-toolbar-left dbd-pull-left page-break">
+                        <div class="builder-toolbar" aria-label="Builder toolbar">
+                            <div class="builder-toolbar-left dbd-pull-left">
                                 <div class="builder-dbd-name">
                                     <div class="builder-dbd-name-display-area dbd-display-area">
                                         <span class="builder-dbd-name-display-hover-area dbd-display-hover-area">
@@ -912,22 +894,18 @@
             <div id="popUp-dialog" data-bind="with:selectedDashboardInst">
                 <!--ko if: $data.type === 'included'-->
                  <div style="display:none" id="edit-dashboard"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 600px; min-height:280px;'}}">
+                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 480px; min-height:280px;'}}">
                         <div class="oj-dialog-header oj-helper-clearfix">
                             <!--div class="oj-dialog-header-close-wrapper" >
                                 <a class="df-dialog-header-close" tabindex="0" data-bind="click: cancelDashboardCreate, event: { keydown: editDashboardDialogModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
                             </div-->
                             <span class="oj-dialog-title" data-bind="text: getNlsString('COMMON_EDIT_DASHBOARD_DIALOG_TITLE')"></span>
                         </div>
-                        <div class="oj-dialog-body">
-                            <div class="oj-form oj-md-odd-cols-2 oj-md-labels-inline" >
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_NAME')"></label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <input class="dbsHNameIn" id="dbsHNameIn" maxlength="64" required
-                                               data-bind="ojComponent: { component: 'ojInputText', value: toolBarModel.editDashboardDialogModel.name,
+                     <div class="oj-dialog-body">
+                         <div style="padding-top: 20px">
+                             <label for="dbsHNameIn" data-bind="text: getNlsString('DBS_BUILDER_EDIT_DSB_NAME')"></label>
+                             <input class="dbsHNameIn" id="dbsHNameIn" maxlength="64" required
+                                    data-bind="ojComponent: { component: 'ojInputText', value: toolBarModel.editDashboardDialogModel.name,
                                                rawValue: toolBarModel.editDashboardDialogModel.nameInputed,
                                                validators : [{
                                                        type: 'regExp', options : {
@@ -943,28 +921,49 @@
                                                         messageDetail: ''
                                                }
                                              }}">
-                                    </div>
-                                </div>
-                                <div class="oj-row">
-                                    <div class="oj-col">
-                                        <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
-                                    </div>
-                                    <div class="oj-col">
-                                        <textarea class="dbsHDpIn" id="dbsHDpIn" maxlength="256" rows="6"
-                                                  data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.editDashboardDialogModel.description, rootAttributes: {style:'max-width:420px;'},
+                         </div>
+                         <div style="padding-top: 20px;">
+                             <label for="dbsHDpIn" data-bind="text: getNlsString('DBS_HOME_CREATE_DLG_DES')"></label>
+                             <textarea class="dbsHDpIn" id="dbsHDpIn" maxlength="256" rows="6"
+                                       data-bind="ojComponent: {component: 'ojTextArea', value: toolBarModel.editDashboardDialogModel.description, rootAttributes: {style:'max-width:420px;'},
                                                                 validators : [{type: 'regExp', options : {
                                                                        pattern: '(.|\\b|\\s){0,256}',
                                                                        messageSummary: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES_SUM'),
                                                                        messageDetail: getNlsString('DBS_HOME_CREATE_DLG_INVALID_DES')}}]
                                             }"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                         </div>
+                         <div style="padding-top: 10px;">
+                             <div id="checkboxsetDsbDesc" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.descriptionValue}">
+                                 <span class="oj-choice-row">
+                                     <input id="ckbxDsbDesc" type="checkbox" value="ON">
+                                     <label for="ckbxDsbDesc"  data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_DSB_DESC')"></label>
+                                 </span>
+                             </div>
+                         </div>
+<!--                         <div style="padding-top: 10px;">
+                             <div id="checkboxsetEntityFilter" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.entityFilterValue}">
+                                 <span class="oj-choice-row">
+                                     <input id="ckbxEntityFilter" type="checkbox" value="ON">
+                                     <label for="ckbxEntityFilter"  data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_ENTITY_FILTER')"></label>
+                                 </span>
+                             </div>
+                         </div>-->
+                         <div style="padding-top: 10px;">
+                             <div id="checkboxsetTimeFilter" data-bind="ojComponent: {component: 'ojCheckboxset', value: toolBarModel.editDashboardDialogModel.timeRangeFilterValue}">
+                                 <span class="oj-choice-row">
+                                     <input id="ckbxTimeFilter" type="checkbox" value="ON">
+                                     <label for="ckbxTimeFilter" data-bind="text: getNlsString('DBS_BUILDER_EDIT_SHOW_TIME_FILTER')"></label>
+                                 </span>
+                             </div>
+                         </div>
+                     </div>
                         <div class="createDialogFooter-2 oj-dialog-footer">
                             <button class="createDsb-2" data-bind="click: toolBarModel.editDashboardDialogModel.save, ojComponent: {
                                              component: 'ojButton', label: getNlsString('COMMON_BTN_SAVE'),
                                              disabled: toolBarModel.editDashboardDialogModel.isDisabled,
+                                             rootAttributes: {style:'margin-right:5px'} }"></button>
+                            <button id="cancelDsbEdit" data-bind="click: toolBarModel.editDashboardDialogModel.cancel, ojComponent: {
+                                             component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'),
                                              rootAttributes: {style:'margin-right:5px'} }"></button>
                         </div>
                     </div>
@@ -1041,6 +1040,24 @@
                         </div>
                     </div>
                     <!-- Duplicate Dashboard dialog end -->
+                    <!-- set as home confirm dilog start -->
+                        <div style="display:none" id="setAsHomeCfmDialog"
+                             data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
+                                        cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
+                            <div class="oj-dialog-header oj-helper-clearfix">
+                                <span class="oj-dialog-title" data-bind="text: getNlsString('DBS_BUILDER_SET_AS_HOME_DIALOG_TITLE')"></span>
+                            </div>
+                            <div class="oj-dialog-body">
+                                <p data-bind="html: getNlsString('DBS_BUILDER_MSG_SET_AS_HOME_CONFIRM')"></p>
+                            </div>
+                            <div class="oj-dialog-footer">
+                                <button data-bind="click: toolBarModel.setAsHomeConfirmed, 
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_YES'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                                <button id="btnCancelSetAsHome" data-bind="click: toolBarModel.setAsHomeCancelled,
+                                                   ojComponent: { component: 'ojButton', label: getNlsString('COMMON_TEXT_NO'), rootAttributes: {style:'margin-right:5px'}}"></button>
+                            </div>
+                        </div>
+                        <!-- set as home confirm dilog end -->                   
                 <!--/ko-->
             </div>
 </div>
