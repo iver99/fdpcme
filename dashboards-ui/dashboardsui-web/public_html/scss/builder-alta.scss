@@ -54,6 +54,7 @@ body, html {
 }
 
 .globalBody {
+    width: 100%;
     position: absolute;
     left: 0px;
     top: 0px;
@@ -1101,20 +1102,40 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
     .no-print {
         display:none !important;
     }
-    #globalBody{
-         overflow-y: visible !important;
+    
+    html,body,div,table {
+        float: none !important;
     }
     
-    .tiles-col-container{
-        /*width: auto !important;*/
-        height: auto !important;
-        overflow-y: visible !important;
+    #globalBody{
+        width: auto !important;
     }
-    .dbd-widget {
-        page-break-before: always;
+    
+    html,body,#globalBody,#dashboards-tabs-contents,.dashboard-content {
+        position:relative !important;
+        overflow: visible !important;
+    }
+    
+    .page-break,.dashboard-content{
+        display:block !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+    
+    .dashboard-picker-container{
+        display:none !important;
     }
 
-    .page-break	{ display: block; page-break-before: always; }
+    .tiles-col-container{
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    .dbd-widget > div {
+        position:relative !important;
+        page-break-inside: avoid;
+    }
+    
     @page {
         size: A3 landscape;
         /*margin: 23cm;*/
