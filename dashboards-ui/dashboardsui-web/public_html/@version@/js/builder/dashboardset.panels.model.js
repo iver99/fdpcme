@@ -54,7 +54,9 @@ define([
                     $("#" + divId).show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
                     if (self.selectedDashboardInst().type === "included") {
-                        self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
+                        setTimeout(function() {
+                            $(window).trigger("resize");
+                        }, 200);
                     }
                 } else {
                     if (dashboardItem.type === "new") {
