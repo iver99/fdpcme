@@ -61,7 +61,8 @@ require(['ojs/ojcore',
     'uifwk/js/util/df-util',
     'loggingutil',
     'ojs/ojknockout',
-    'ojs/ojselectcombobox'
+    'ojs/ojselectcombobox',
+    'common.uifwk'
 ],
         function (oj, ko, $, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
