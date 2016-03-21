@@ -46,6 +46,9 @@ define([
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
+            
+            self.windowWidth=ko.observable($(window).width());
+            self.windowHeight=ko.observable($(window).height());
 
             self.showDashboard = function (dashboardItem) {
                 var dashboardId = dashboardItem.dashboardId;
@@ -63,10 +66,7 @@ define([
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
-                            var bodyHeight=$(window).height();  
-                            //var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-tiles-panel-sm').position().top;
-                            //var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
-                            //$('.dbs-tiles-panel-sm').css({'height':newHeight});
+                            var bodyHeight=$(window).height();                 
                             var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container').position().top;
                             var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
                             $('.dbs-list-container').css({'height':newHeight});                    
@@ -266,17 +266,38 @@ define([
 
             initDashboard();
 
-            //new-dashboard home resize function   
+            //resize function   
             $(window).resize(function () {
-                if ($('.dbs-list-container').length!==0) {
-                    var bodyHeight = $(window).height();  ;
+                if (self.windowWidth() === $(window).width()) {
+                    self.windowHeight($(window).height());
+                } else {
+                    self.windowWidth($(window).width());
+                }
+            });
+
+            self.windowWidth.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
+            self.windowHeight.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
+            
+            self.windowHeight.subscribe(function () {
+                windowResizeProcess();
+            });
+            self.windowWidth.subscribe(function () {
+                windowResizeProcess();
+            });
+            
+            function windowResizeProcess(){
+                if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
+                    var bodyHeight = $(window).height();       
                     var titleToolbarHeight = $($('.dbs-list-container')[0]).position().top;
                     var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
                     $('.dbs-list-container').css({'height': newHeight});
+                } 
+                else if (self.selectedDashboardInst().type === 'included') {              
+                    self.selectedDashboardInst().tilesViewModel.notifyWindowResize();
+                    self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
                 }
-            });
+            };         
         }
-
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');
         return DashboardsetPanelsModel;
     }
