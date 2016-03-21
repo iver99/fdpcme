@@ -180,7 +180,7 @@ define(['knockout',
 
                 // add delay for updating screenshots because 
                 // a tab may take some time to render the tiles.
-                setTimeout(function () {
+                dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if ($tilesWrapper && $tilesWrapper.length > 0) {
                         ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
@@ -190,8 +190,8 @@ define(['knockout',
                                     JSON.stringify(newDashboardJs));
                         });
                     }
-                }, 12000);
-
+                }, 2000, 30000);
+                    
                 self.saveUserOptions();
             };
 
