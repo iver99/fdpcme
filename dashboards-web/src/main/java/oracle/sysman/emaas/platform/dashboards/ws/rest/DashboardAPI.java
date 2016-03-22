@@ -619,7 +619,7 @@ public class DashboardAPI extends APIBase
 		updateDashboardHref(dbd, tenantName);
 		updateDashboardScreenshotHref(dbd, tenantName);
 		updateDashboardOptionsHref(dbd, tenantName);
-		if(dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET) && dbd.getSubDashboards() != null){
+		if(dbd != null && dbd.getType()!= null && dbd.getType().equals(Dashboard.DASHBOARD_TYPE_SET) && dbd.getSubDashboards() != null){
 			for(Dashboard subDbd :dbd.getSubDashboards()){
 				updateDashboardHref(subDbd,tenantName);
 			}
