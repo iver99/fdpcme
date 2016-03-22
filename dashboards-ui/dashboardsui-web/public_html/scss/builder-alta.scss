@@ -1214,6 +1214,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
             border-top-color: #3caf85;
             border-left: solid 1px #c4ced7;
             border-right:solid 1px #c4ced7;
+            margin-top:7px;
             .oj-tabs-gen-div{
                 border-color: transparent;
             }
@@ -1225,7 +1226,7 @@ html:not([dir="rtl"]) .oj-tabs-vertical.dbd-builder-tabs>.oj-tabs-nav-root .oj-t
         }
         //hack default sortable css
         .other-nav.oj-tabs-tab.oj-selected.ui-sortable-handle.oj-active.ui-sortable-helper{
-            height: 51px!important;
+            height: 44px!important;
         }   
     }
     .dbd-tabs-nav.ui-sortable{
