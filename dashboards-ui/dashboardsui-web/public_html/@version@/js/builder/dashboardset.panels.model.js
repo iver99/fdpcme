@@ -212,18 +212,30 @@ define([
                     $("#loading").hide();
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
-                    if(dashboardsetToolBarModel.isDashboardSet()){
-                        $b.findEl('.head-bar-container').css("background-color","white");
-                       
-                       //hide some drop-down menu options
+                    if (dashboardsetToolBarModel.isDashboardSet()) {
+                        $b.findEl('.head-bar-container').css("background-color", "white");
+
+                        //hide some drop-down menu options
                         $b.findEl('.dropdown-menu li').each(function (index, element) {
                             if (!($(element).attr('data-singledb-option') === 'Edit')) {
                                 $(element).css({display: "none"});
                             }
-                        });                        
-                       if(!dashboardsetToolBarModel.dashboardsetConfig.isCreator()){
-                          $($b.findEl('.builder-toolbar-right')).css({display: "none"});
-                       }
+                        });
+                        
+                        // hide the options button if there are no menu items in the menu.
+                        var allMenusHidden = true;
+                        $b.findEl('.dropdown-menu li').each(function () {
+                            if ($(this).css("display") !== 'none') {
+                                allMenusHidden = false;
+                            }
+                        });
+                        if (allMenusHidden) {
+                            $b.findEl(".dashboardOptsBtn").hide();
+                        }
+                        
+                        if (!dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
+                            $($b.findEl('.builder-toolbar-right')).css({display: "none"});
+                        }
                     }
 
                     tilesView.enableDraggable();
