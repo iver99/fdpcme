@@ -38,6 +38,7 @@ requirejs.config({
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'dashboards': '.',
         'builder': './builder',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
@@ -102,7 +103,8 @@ require(['knockout',
     'builder/builder.core',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
-    'builder/dashboardset.panels.model'
+    'builder/dashboardset.panels.model',
+    'dashboards/dashboardhome-impl'
 ],
     function(ko, $, dfu, _emJETCustomLogger, oj) // this callback gets executed when all required modules are loaded
     {
@@ -111,7 +113,7 @@ require(['knockout',
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
-        logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        logger.setLogLevel(oj.Logger.LEVEL_LOG);
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
             ko.components.register("df-oracle-branding-bar",{

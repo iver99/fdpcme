@@ -25,6 +25,7 @@ define([
     'ojs/ojdvt-base',
     'ojs/ojcheckboxset',
     'ojs/ojpopup',
+    'ojs/ojaccordion',
     'ojs/ojgauge'
 ], function (oj)
 {
