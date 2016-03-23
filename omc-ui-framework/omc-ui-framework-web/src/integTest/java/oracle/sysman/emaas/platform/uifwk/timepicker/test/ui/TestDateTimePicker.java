@@ -125,7 +125,15 @@ public class TestDateTimePicker extends CommonUIUtils
 		if(current.after(today)){
 			return "Today";
 		}
+		else if(current.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                current.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)&&current.get(Calendar.SECOND)==today.get(Calendar.SECOND)&&current.get(Calendar.MINUTE)==today.get(Calendar.MINUTE)&&current.get(Calendar.HOUR_OF_DAY)==today.get(Calendar.HOUR_OF_DAY)){
+			return "Today";
+		}
 		else if(current.before(today) && current.after(yesterday)){
+			return "Yesterday";
+		}
+		else if(current.get(Calendar.YEAR) == yesterday.get(Calendar.YEAR) &&
+                current.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)&&current.get(Calendar.SECOND)==yesterday.get(Calendar.SECOND)&&current.get(Calendar.MINUTE)==yesterday.get(Calendar.MINUTE)&&current.get(Calendar.HOUR_OF_DAY)==yesterday.get(Calendar.HOUR_OF_DAY)){
 			return "Yesterday";
 		}
 		else{
