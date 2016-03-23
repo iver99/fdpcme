@@ -709,7 +709,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dbd-left-panel-widgets fit-size" style="overflow-y: scroll">
+                    <div class="dbd-left-panel-widgets fit-size" data-bind="event:{scroll: widgetListScroll}" style="overflow-y: scroll">
                         <div class="oj-col stretch-width" data-bind="foreach: widgets">
                             <div class="dbd-left-panel-widget" data-bind="css: 'widget-item-'+WIDGET_UNIQUE_ID()">
                                 <div class="dbd-left-panel-widget-text"

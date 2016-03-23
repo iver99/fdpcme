@@ -58,6 +58,32 @@ define(['knockout',
 
             self.completelyHidden = ko.observable(self.isMobileDevice === 'true' || !self.emptyDashboard);
             self.maximized = ko.observable(false);
+            
+            var scrollInstantStore = ko.observable();
+            var scrollDelay = ko.computed(function() { 
+                return scrollInstantStore();
+            });
+            scrollDelay.extend({ rateLimit: { method: "notifyWhenChangesStop", timeout: 400 } }); 
+            
+            self.widgetListScroll = function(data, event) {
+                scrollInstantStore(event.target.scrollTop);
+            };
+            
+            scrollDelay.subscribe(function(val){
+                console.log("scroll~~~~");
+                var fromWidgetIndex = Math.floor(val/30);
+                var toWidgetIndex = Math.ceil(600/30)+1+fromWidgetIndex;
+                if (self.widgets && self.widgets().length > 0) {
+                    for (var i = fromWidgetIndex; i < toWidgetIndex; i++) {
+                        var temp = self.widgets()[i].WIDGET_VISUAL();
+                        console.log(temp);
+                        if (!self.widgets()[i].WIDGET_VISUAL()){
+                            self.getWidgetScreenshot(self.widgets()[i]);
+                        }
+                    }
+                }
+            });
+            
 
 //            self.showTimeControl = ko.observable(false);
             // observable variable possibly updated by other events
@@ -217,7 +243,8 @@ define(['knockout',
                                 if (!widgets[i].WIDGET_DESCRIPTION)
                                     widgets[i].WIDGET_DESCRIPTION = null;
                                 var wgt = ko.mapping.fromJS(widgets[i]);
-                                self.getWidgetScreenshot(wgt);
+                                wgt && !wgt.WIDGET_VISUAL && (wgt.WIDGET_VISUAL = ko.observable(''));
+//                                self.getWidgetScreenshot(wgt);
                                 self.widgets.push(wgt);
                             }
                         }
