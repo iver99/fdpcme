@@ -180,7 +180,7 @@ define(['knockout',
 
                 // add delay for updating screenshots because 
                 // a tab may take some time to render the tiles.
-                setTimeout(function () {
+                dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if ($tilesWrapper && $tilesWrapper.length > 0) {
                         ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
@@ -190,8 +190,8 @@ define(['knockout',
                                     JSON.stringify(newDashboardJs));
                         });
                     }
-                }, 12000);
-
+                }, 2000, 30000);
+                    
                 self.saveUserOptions();
             };
 
@@ -224,6 +224,7 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                    $("#dbd-tabs-container").ojTabs("refresh");   
                 }
                 self.saveDashboardSet();
             };
@@ -625,15 +626,12 @@ define(['knockout',
                             var $loadedContent = $("#dashboard-" + dashboardTabItem.dashboardId);
                             if ($loadedContent.length === 0) {
                                 $("#dashboardTab-" + dashboardTabItem.dashboardId).click();
-                                setTimeout(function () {
+                                dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                                     console.warn("Loaded: " + dashboardTabItem.dashboardId);
                                     resolve();
-                                }, 12000);
+                                }, 2000, 30000);
                             } else {
-                                $("#dashboardTab-" + dashboardTabItem.dashboardId).click();
-                                setTimeout(function () {                           
-                                    resolve();
-                                }, 1200);
+                                resolve();
                             }
                         });
                         return promise;
@@ -709,8 +707,9 @@ define(['knockout',
                         }
                     });           
                     self.saveDashboardSet();
+                    $("#dbd-tabs-container").ojTabs("refresh"); 
                     //scroll-bar reset
-                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});
+                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});               
                 }             
             });
             
