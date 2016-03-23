@@ -286,10 +286,10 @@ define(['knockout',
             self.getWidgetScreenshot = function(wgt) {
                 var url = null;
                 wgt.WIDGET_SCREENSHOT_HREF && (url = wgt.WIDGET_SCREENSHOT_HREF());
-                if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
-                    loadWidgetBase64Screenshot(wgt);
-                    return;
-                }
+//                if (!url) { // backward compility if SSF doesn't support .png screenshot. to be removed once SSF changes are merged
+//                    loadWidgetBase64Screenshot(wgt);
+//                    return;
+//                }
                 if (!dfu.isDevMode()){
                     url = dfu.getRelUrlFromFullUrl(url);
                 } 
