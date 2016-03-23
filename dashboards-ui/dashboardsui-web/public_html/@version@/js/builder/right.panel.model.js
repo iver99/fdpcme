@@ -69,10 +69,28 @@ define(['knockout',
                 scrollInstantStore(event.target.scrollTop);
             };
             
-            scrollDelay.subscribe(function(val){
-                console.log("scroll~~~~");
-                var fromWidgetIndex = Math.floor(val/30);
-                var toWidgetIndex = Math.ceil(600/30)+1+fromWidgetIndex;
+            var widgetListHeight = ko.observable(0);
+            var $dbdLeftPanelWidgets = $b.findEl(".dbd-left-panel-widgets");
+            if(typeof window.MutationObserver !== 'undefined'){
+                var widgetListHeightChangeObserver = new MutationObserver(function(){
+                    widgetListHeight($dbdLeftPanelWidgets.height());
+                });
+                widgetListHeightChangeObserver.observe($dbdLeftPanelWidgets[0],{
+                    attributes: true,
+                    attrbuteFilter: ['style']
+                });
+            }else{
+                $b.addBuilderResizeListener(function(){
+                    widgetListHeight($dbdLeftPanelWidgets.height());
+                });
+            }
+            widgetListHeight.subscribe(function(){
+                loadSeeableWidgetScreenshots();
+            });
+            
+            var loadSeeableWidgetScreenshots = function(startPosition){
+                var fromWidgetIndex = startPosition?(Math.floor(startPosition/30)):0;
+                var toWidgetIndex = Math.ceil(widgetListHeight()/30)+fromWidgetIndex;
                 if (self.widgets && self.widgets().length > 0) {
                     for (var i = fromWidgetIndex; i < toWidgetIndex; i++) {
                         var temp = self.widgets()[i].WIDGET_VISUAL();
@@ -82,6 +100,9 @@ define(['knockout',
                         }
                     }
                 }
+            };
+            scrollDelay.subscribe(function(val){
+                loadSeeableWidgetScreenshots(val);
             });
             
 
@@ -332,6 +353,8 @@ define(['knockout',
             self.widgetMouseOverHandler = function(widget,event) {
                 if($('.ui-draggable-dragging') && $('.ui-draggable-dragging').length > 0)
                     return;
+                if(!widget.WIDGET_VISUAL())
+                    self.getWidgetScreenshot(widget);
                 var widgetItem=$(event.currentTarget).closest('.widget-item-'+widget.WIDGET_UNIQUE_ID());
                 var popupContent=$(widgetItem).find('.dbd-left-panel-img-pop');
                 if (!popupContent.ojPopup("isOpen")) {
