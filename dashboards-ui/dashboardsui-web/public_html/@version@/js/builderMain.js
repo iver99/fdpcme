@@ -97,16 +97,18 @@ require(['knockout',
     'dfutil',
     'loggingutil',
     'ojs/ojcore',
+    'dashboards/widgets/autorefresh/js/auto-refresh',
+    'dashboards/widgets/textwidget/js/textwidget',
+    'dashboards/dashboardhome-impl',
     'jqueryui',
-    'builder/builder.jet.partition',
     'common.uifwk',
+    'builder/builder.jet.dvt.partition',
     'builder/builder.core',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
-    'builder/dashboardset.panels.model',
-    'dashboards/dashboardhome-impl'
+    'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, _emJETCustomLogger, oj) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, _emJETCustomLogger, oj, auto_refresh, textwidget, dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
@@ -132,17 +134,17 @@ require(['knockout',
             template: {require: 'text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
         });
         ko.components.register("df-auto-refresh",{
-            viewModel:{require:'./widgets/autorefresh/js/auto-refresh'},
+            viewModel:auto_refresh,
             template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
         ko.components.register("DF_V1_WIDGET_TEXT", {
-            viewModel: {require: './widgets/textwidget/js/textwidget'},
+            viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });
             
         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
             ko.components.register("df-oracle-dashboard-list",{
-                viewModel:{require:'/emsaasui/emcpdfui/@version@/js/dashboardhome-impl.js'},
+                viewModel:dashboardhome_impl,
                 template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
             });
         }

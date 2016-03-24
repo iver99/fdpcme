@@ -18,7 +18,7 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/widget/widget.model',
         'jqueryui',
-        'builder/builder.jet.partition',
+        'builder/builder.jet.dvt.partition',
         'ckeditor'
     ],
     
