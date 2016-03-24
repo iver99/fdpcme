@@ -180,7 +180,7 @@ define(['knockout',
 
                 // add delay for updating screenshots because 
                 // a tab may take some time to render the tiles.
-                setTimeout(function () {
+                dfu.getAjaxUtil().actionAfterAjaxStop(function () {
                     var $tilesWrapper = $(".tiles-wrapper:visible");
                     if ($tilesWrapper && $tilesWrapper.length > 0) {
                         ssu.getBase64ScreenShot($tilesWrapper, 314, 165, 0.8, function (data) {
@@ -190,8 +190,8 @@ define(['knockout',
                                     JSON.stringify(newDashboardJs));
                         });
                     }
-                }, 12000);
-
+                }, 2000, 30000);
+                    
                 self.saveUserOptions();
             };
 
@@ -224,6 +224,7 @@ define(['knockout',
                     self.selectedDashboardItem(selectedDashboard);
                     $("#dbd-tabs-container").ojTabs({"selected": 'dashboardTab-' + selectedDashboard.dashboardId});
                     $($('.other-nav').find(".oj-tabs-close-icon")).attr("title", getNlsString('DBSSET_BUILDER_REMOVE_DASHBOARD'));
+                    $("#dbd-tabs-container").ojTabs("refresh");   
                 }
                 self.saveDashboardSet();
             };
@@ -290,7 +291,7 @@ define(['knockout',
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": visibilityOnDifDevice(true, false),    
+                    "endOfGroup": self.isMobileDevice==='true'?false:visibilityOnDifDevice(true, false),    
                     "showOnMobile": true,
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
@@ -630,22 +631,21 @@ define(['knockout',
                                     resolve();
                                 }, 2000, 30000);
                             } else {
-                                $("#dashboardTab-" + dashboardTabItem.dashboardId).click();
-                                dfu.getAjaxUtil().actionAfterAjaxStop(function () {
-                                    resolve();
-                                }, 1000, 3000);
+                                resolve();
                             }
                         });
                         return promise;
                     };
 
                     var $printMask = $($("#dashboardset-print-mask-template").text());
-                    $printMask.text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
                     $printMask.width($(window).width());
                     $printMask.height($(window).height());
                     $printMask.css("line-height" , $printMask.height() + "px");
                     $("body").append($printMask);
-
+                    var previousLoadingText = $("#loading").text();
+                    $("#loading").text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
+                    $("#loading").show();
+                    
                     var lastPromise = Promise.resolve();
                     self.reorderedDbsSetItems().forEach(function (dashboardTabItem) {
                           lastPromise = lastPromise.then(showDashboardContent.bind(this, dashboardTabItem));
@@ -653,6 +653,8 @@ define(['knockout',
                     
                     lastPromise.then(function() {
                         $printMask.remove();
+                        $("#loading").hide();
+                        $("#loading").text(previousLoadingText);
                         window.print();
                     });
             };
@@ -709,8 +711,9 @@ define(['knockout',
                         }
                     });           
                     self.saveDashboardSet();
+                    $("#dbd-tabs-container").ojTabs("refresh"); 
                     //scroll-bar reset
-                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});
+                    $('#dashboard-'+selectedDashboardId).find('.tiles-col-container').css({"overflow":"auto"});               
                 }             
             });
             

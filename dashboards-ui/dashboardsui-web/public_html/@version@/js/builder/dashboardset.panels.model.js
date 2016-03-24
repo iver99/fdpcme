@@ -46,6 +46,9 @@ define([
             var options = {"autoRefreshInterval":dashboardsetToolBarModel.autoRefreshInterval};
             
             window.selectedDashboardInst = self.selectedDashboardInst = ko.observable(null);
+            
+            self.windowWidth=ko.observable($(window).width());
+            self.windowHeight=ko.observable($(window).height());
 
             self.showDashboard = function (dashboardItem) {
                 var dashboardId = dashboardItem.dashboardId;
@@ -54,17 +57,16 @@ define([
                     $("#" + divId).show();
                     self.selectedDashboardInst(dashboardInstMap[dashboardId]);
                     if (self.selectedDashboardInst().type === "included") {
-                        self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
+                        setTimeout(function() {
+                            $(window).trigger("resize");
+                        }, 200);
                     }
                 } else {
                     if (dashboardItem.type === "new") {
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
-                            var bodyHeight=$(window).height();  
-                            //var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-tiles-panel-sm').position().top;
-                            //var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
-                            //$('.dbs-tiles-panel-sm').css({'height':newHeight});
+                            var bodyHeight=$(window).height();                 
                             var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container').position().top;
                             var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
                             $('.dbs-list-container').css({'height':newHeight});                    
@@ -210,18 +212,30 @@ define([
                     $("#loading").hide();
                     $('#globalBody').show();
                     $dashboardEl.css("visibility", "visible");
-                    if(dashboardsetToolBarModel.isDashboardSet()){
-                        $b.findEl('.head-bar-container').css("background-color","white");
-                       
-                       //hide some drop-down menu options
+                    if (dashboardsetToolBarModel.isDashboardSet()) {
+                        $b.findEl('.head-bar-container').css("background-color", "white");
+
+                        //hide some drop-down menu options
                         $b.findEl('.dropdown-menu li').each(function (index, element) {
                             if (!($(element).attr('data-singledb-option') === 'Edit')) {
                                 $(element).css({display: "none"});
                             }
-                        });                        
-                       if(!dashboardsetToolBarModel.dashboardsetConfig.isCreator()){
-                          $($b.findEl('.builder-toolbar-right')).css({display: "none"});
-                       }
+                        });
+                        
+                        // hide the options button if there are no menu items in the menu.
+                        var allMenusHidden = true;
+                        $b.findEl('.dropdown-menu li').each(function () {
+                            if ($(this).css("display") !== 'none') {
+                                allMenusHidden = false;
+                            }
+                        });
+                        if (allMenusHidden) {
+                            $b.findEl(".dashboardOptsBtn").hide();
+                        }
+                        
+                        if (!dashboardsetToolBarModel.dashboardsetConfig.isCreator()) {
+                            $($b.findEl('.builder-toolbar-right')).css({display: "none"});
+                        }
                     }
 
                     tilesView.enableDraggable();
@@ -264,17 +278,38 @@ define([
 
             initDashboard();
 
-            //new-dashboard home resize function   
+            //resize function   
             $(window).resize(function () {
-                if ($('.dbs-list-container').length!==0) {
-                    var bodyHeight = $(window).height();  ;
+                if (self.windowWidth() === $(window).width()) {
+                    self.windowHeight($(window).height());
+                } else {
+                    self.windowWidth($(window).width());
+                }
+            });
+
+            self.windowWidth.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
+            self.windowHeight.extend({rateLimit: 200, method: 'notifyWhenChangesStop '});
+            
+            self.windowHeight.subscribe(function () {
+                windowResizeProcess();
+            });
+            self.windowWidth.subscribe(function () {
+                windowResizeProcess();
+            });
+            
+            function windowResizeProcess(){
+                if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
+                    var bodyHeight = $(window).height();       
                     var titleToolbarHeight = $($('.dbs-list-container')[0]).position().top;
                     var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
                     $('.dbs-list-container').css({'height': newHeight});
+                } 
+                else if (self.selectedDashboardInst().type === 'included') {              
+                    self.selectedDashboardInst().tilesViewModel.notifyWindowResize();
+                    self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
                 }
-            });
+            };         
         }
-
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');
         return DashboardsetPanelsModel;
     }

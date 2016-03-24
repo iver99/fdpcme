@@ -54,7 +54,6 @@ define(['knockout',
             self.dashboard = $b.dashboard;
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            self.builderTitle = dfu_model.generateWindowTitle(self.dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.target = dfu_model.getUrlParam("target");
             self.type = dfu_model.getUrlParam("type");
             self.emsite = dfu_model.getUrlParam("emsite");
@@ -649,7 +648,7 @@ define(['knockout',
                     }
                     if (!tile) {
                         tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targetContext, false);                        
-                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targetContext);
+                        Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targetContext, true);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);
                         $b.triggerEvent($b.EVENT_TILE_ADDED, null, tile);
@@ -826,12 +825,7 @@ define(['knockout',
             var globalTimer = null;
             self.postDocumentShow = function() {
                 $b.triggerBuilderResizeEvent('resize builder after document show');
-                self.initializeMaximization();
-                $(window).resize(function() {
-                    clearTimeout(globalTimer);
-                    globalTimer = setTimeout(self.notifyWindowResize, 200);                                        
-                    $b.triggerBuilderResizeEvent('resize builder after window resized');
-                });
+                self.initializeMaximization();               
                 $b.triggerEvent($b.EVENT_TILE_EXISTS_CHANGED, null, self.editor.tiles().length > 0);
                 self.triggerTileTimeControlSupportEvent();
                 //avoid brandingbar disappear when set font-size of text

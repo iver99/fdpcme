@@ -265,8 +265,6 @@ public class Dashboard
 						dbd.setDashboardId(ed.getDashboardId());
 						dbd.setName(ed.getName());
 
-						// // TODO: 2016/3/7
-						// updateDashboardHref(dbd, tenantName);
 						subDashboardList.add(dbd);
 					}
 					to.setSubDashboards(subDashboardList);
