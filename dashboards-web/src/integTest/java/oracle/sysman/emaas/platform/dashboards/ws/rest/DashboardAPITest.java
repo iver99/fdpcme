@@ -1,30 +1,30 @@
 package oracle.sysman.emaas.platform.dashboards.ws.rest;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-
 import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import oracle.sysman.emSDK.emaas.platform.tenantmanager.BasicServiceMalfunctionException;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardManager;
 import oracle.sysman.emaas.platform.dashboards.core.DashboardsFilter;
+import oracle.sysman.emaas.platform.dashboards.core.UserOptionsManager;
 import oracle.sysman.emaas.platform.dashboards.core.exception.DashboardException;
 import oracle.sysman.emaas.platform.dashboards.core.exception.security.CommonSecurityException;
 import oracle.sysman.emaas.platform.dashboards.core.model.Dashboard;
 import oracle.sysman.emaas.platform.dashboards.core.model.PaginatedDashboards;
+import oracle.sysman.emaas.platform.dashboards.core.model.UserOptions;
 import oracle.sysman.emaas.platform.dashboards.core.util.JsonUtil;
 import oracle.sysman.emaas.platform.dashboards.ws.rest.util.DashboardAPIUtil;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author danfjian
@@ -407,6 +407,50 @@ public class DashboardAPITest
 		assertUpdateDashboard();
 	}
 
+	@Test
+	public void testSaveUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
+        new Expectations() {
+            {
+                mockedAPIBase.initializeUserContext(anyString, anyString);
+                result = null;
+
+                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+                result = any;
+            }
+        };
+        assertSaveUserOptions();
+
+	}
+
+	@Test
+	public void testUpdateUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
+        new Expectations() {
+            {
+                mockedAPIBase.initializeUserContext(anyString, anyString);
+                result = null;
+
+                mockedUserOptionsManager.saveOrUpdateUserOptions(withAny(new UserOptions()), anyLong);
+                result = any;
+            }
+        };
+
+        assertUpdateUserOptions();
+	}
+
+    @Test
+    public void testGetUserOptions(@Mocked final UserOptionsManager mockedUserOptionsManager) throws Exception {
+        new Expectations() {
+            {
+                mockedAPIBase.initializeUserContext(anyString, anyString);
+                result = null;
+
+                mockedUserOptionsManager.getOptionsById(anyLong,anyLong);
+                result = any;
+            }
+        };
+        assertGetUserOptions();
+    }
+
 	private void assertCreateDashboard()
 	{
 		JSONObject dashboard = new JSONObject();
@@ -458,5 +502,22 @@ public class DashboardAPITest
 				"https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101", 123L, new JSONObject(
 						"{\"name\":\"daniel\",\"description\":\"DN\",\"sharePublic\":false}")));
 	}
+
+    private void assertGetUserOptions(){
+        Assert.assertNotNull(dashboardAPI.getDashboardUserOptions("tenant01", "tenant01.emcsadmin",
+                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L));
+    }
+
+    private void assertSaveUserOptions() throws JSONException {
+        Assert.assertNotNull(dashboardAPI.saveUserOptions("tenant01", "tenant01.emcsadmin",
+                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L,new JSONObject(
+                        "{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
+    }
+
+    private void assertUpdateUserOptions() throws JSONException {
+        Assert.assertNotNull(dashboardAPI.updateUserOptions("tenant01", "tenant01.emcsadmin",
+                "https://slc09csb.us.oracle.com:4443/emsaasui/emcpdfui/builder.html?dashboardId=1101/options", 1101L,new JSONObject(
+                        "{ \"dashboardId\": 1127, \"autoRefreshInterval\": 600000, \"extendedOptions\":\"2000\" }")));
+    }
 
 }
