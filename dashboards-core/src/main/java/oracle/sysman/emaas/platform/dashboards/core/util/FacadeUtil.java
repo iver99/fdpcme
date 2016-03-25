@@ -11,11 +11,10 @@
 package oracle.sysman.emaas.platform.dashboards.core.util;
 
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
 /**
  * @author wenjzhu
@@ -53,34 +52,6 @@ public class FacadeUtil
 		result.setSharePublic(dsb.getSharePublic());
 		result.setTenantId(dsb.getTenantId());
 		result.setType(dsb.getType());
-
-		return result;
-	}
-
-	public static EmsDashboardFavorite cloneEmsDashboardFavorite(EmsDashboardFavorite df)
-	{
-		if (df == null) {
-			return null;
-		}
-
-		EmsDashboardFavorite result = new EmsDashboardFavorite();
-		result.setCreationDate(df.getCreationDate());
-		result.setDashboard(FacadeUtil.cloneEmsDashboard(df.getDashboard()));
-		result.setUserName(df.getUserName());
-
-		return result;
-	}
-
-	public static EmsDashboardLastAccess cloneEmsDashboardLastAccess(EmsDashboardLastAccess dla)
-	{
-		if (dla == null) {
-			return null;
-		}
-
-		EmsDashboardLastAccess result = new EmsDashboardLastAccess();
-		result.setAccessDate(dla.getAccessDate());
-		result.setAccessedBy(dla.getAccessedBy());
-		result.setDashboardId(dla.getDashboardId());
 
 		return result;
 	}
@@ -134,6 +105,34 @@ public class FacadeUtil
 		return result;
 	}
 
+	//	public static EmsDashboardFavorite cloneEmsDashboardFavorite(EmsDashboardFavorite df)
+	//	{
+	//		if (df == null) {
+	//			return null;
+	//		}
+	//
+	//		EmsDashboardFavorite result = new EmsDashboardFavorite();
+	//		result.setCreationDate(df.getCreationDate());
+	//		result.setDashboard(FacadeUtil.cloneEmsDashboard(df.getDashboard()));
+	//		result.setUserName(df.getUserName());
+	//
+	//		return result;
+	//	}
+
+	//	public static EmsDashboardLastAccess cloneEmsDashboardLastAccess(EmsDashboardLastAccess dla)
+	//	{
+	//		if (dla == null) {
+	//			return null;
+	//		}
+	//
+	//		EmsDashboardLastAccess result = new EmsDashboardLastAccess();
+	//		result.setAccessDate(dla.getAccessDate());
+	//		result.setAccessedBy(dla.getAccessedBy());
+	//		result.setDashboardId(dla.getDashboardId());
+	//
+	//		return result;
+	//	}
+
 	public static EmsDashboardTileParams cloneEmsDashboardTileParams(EmsDashboardTileParams tp)
 	{
 		if (tp == null) {
@@ -162,6 +161,23 @@ public class FacadeUtil
 		result.setUserName(p.getUserName());
 
 		return result;
+	}
+
+	public static EmsUserOptions cloneEmsUserOptions(EmsUserOptions df)
+	{
+		if (df == null) {
+			return null;
+		}
+
+		EmsUserOptions result = new EmsUserOptions();
+		result.setAccessDate(df.getAccessDate());
+		result.setDashboardId(df.getDashboardId());
+		result.setUserName(df.getUserName());
+		result.setAutoRefreshInterval(df.getAutoRefreshInterval());
+		result.setIsFavorite(df.getIsFavorite());
+
+		return result;
+
 	}
 
 	private FacadeUtil()

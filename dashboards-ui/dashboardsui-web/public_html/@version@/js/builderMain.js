@@ -95,6 +95,7 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
+    'uifwk/js/util/df-util',
     'loggingutil',
     'ojs/ojcore',
     'dashboards/widgets/autorefresh/js/auto-refresh',
@@ -108,7 +109,7 @@ require(['knockout',
     'builder/dashboardset.toolbar.model',
     'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, _emJETCustomLogger, oj, auto_refresh, textwidget, dashboardhome_impl) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, textwidget, dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
@@ -147,6 +148,12 @@ require(['knockout',
                 viewModel:dashboardhome_impl,
                 template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
             });
+        }
+        
+        function DashboardTitleModel(dashboard) {
+            var self = this;
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
         }
 
         function DashboardsetHeaderViewModel() {
@@ -190,6 +197,9 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             Builder.loadDashboard(dsbId, function (dashboard) {
+                
+                var dashboardTitleModel = new DashboardTitleModel(dashboard);
+                ko.applyBindings(dashboardTitleModel, $("title")[0]);
                 var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
                 var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
                 ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
