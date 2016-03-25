@@ -18,8 +18,7 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/widget/widget.model',
         'jqueryui',
-        'ojs/ojknockout',
-        'ojs/ojmenu',
+        'builder/builder.jet.dvt.partition',
         'ckeditor'
     ],
     
