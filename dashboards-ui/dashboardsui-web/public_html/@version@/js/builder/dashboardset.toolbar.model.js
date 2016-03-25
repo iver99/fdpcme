@@ -642,9 +642,8 @@ define(['knockout',
                     $printMask.height($(window).height());
                     $printMask.css("line-height" , $printMask.height() + "px");
                     $("body").append($printMask);
-                    var previousLoadingText = $("#loading").text();
-                    $("#loading").text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
-                    $("#loading").show();
+                    $("#printLoading").text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
+                    $("#printLoading").show();
                     
                     var lastPromise = Promise.resolve();
                     self.reorderedDbsSetItems().forEach(function (dashboardTabItem) {
@@ -653,8 +652,7 @@ define(['knockout',
                     
                     lastPromise.then(function() {
                         $printMask.remove();
-                        $("#loading").hide();
-                        $("#loading").text(previousLoadingText);
+                        $("#printLoading").hide();
                         window.print();
                     });
             };
