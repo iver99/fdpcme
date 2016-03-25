@@ -124,7 +124,7 @@ define({
       "DBS_BUILDER_DASHBOARD_SET_DUPLICATED_DASHBOARD": "{0} is already a member of this dashboard set. Select another dashboard.",
       "DBS_BUILDER_DASHBOARD_SET_SHARE_SUCCESS": "The dashboard set and all of its memeber dashboards can now be viewed by others.",
       "DBS_BUILDER_DASHBOARD_SET_SHARE_ERROR": "The dashboard set cannot be viewed by others; individual dashboard members are still shared.",
-      "DBS_BUILDER_DASHBOARD_SET_PRINT_MASK": "Loading content of individual dashboards for print...",
+      "DBS_BUILDER_DASHBOARD_SET_PRINT_MASK": "Loading Content",
       "DBS_BUILDER_LOADING": "Loading...",
       "DBS_BUILDER_NAME_EDIT": "Double click to edit name",
       "DBS_BUILDER_SAME_NAME_EXISTS_ERROR": "Dashboard with the same name exists already",

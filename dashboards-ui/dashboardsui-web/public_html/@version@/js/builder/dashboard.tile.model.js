@@ -18,8 +18,7 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/widget/widget.model',
         'jqueryui',
-        'ojs/ojknockout',
-        'ojs/ojmenu',
+        'builder/builder.jet.dvt.partition',
         'ckeditor'
     ],
     
@@ -54,7 +53,6 @@ define(['knockout',
             self.dashboard = $b.dashboard;
             self.loginUser = ko.observable(dfu.getUserName());
             var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
-            self.builderTitle = dfu_model.generateWindowTitle(self.dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
             self.target = dfu_model.getUrlParam("target");
             self.type = dfu_model.getUrlParam("type");
             self.emsite = dfu_model.getUrlParam("emsite");

@@ -1,5 +1,5 @@
 define([
-    'text!/emsaasui/emcpdfui/dashboardhome.html',
+    'text!../../dashboardhome.html',
     'jquery',
     'ojs/ojcore',
     'dfutil',

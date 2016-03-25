@@ -17,6 +17,7 @@
     </head>
     <body>
         <div class="loadingIndicator" id="loading">Loading</div>
+        <div class="loadingIndicator" id="printLoading" style="display: none; z-index:1000">Loading Content</div>
         <div id="globalBody" style="display: none;">
             <!-- ko stopBinding: true -->
             <header id="headerWrapper" role="banner" class="no-print">
@@ -1044,7 +1045,8 @@
             </div>
 </div>
         <script id="dashboardset-print-mask-template" type="text/html">
-            <div id="dashboardset-print-mask"></div>
+            <div id="dashboardset-print-mask" >
+            </div>
         </script>
     </body>
 </html>
