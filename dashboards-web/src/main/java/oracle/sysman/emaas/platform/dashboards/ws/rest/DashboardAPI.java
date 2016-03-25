@@ -342,12 +342,12 @@ public class DashboardAPI extends APIBase
 			@DefaultValue("0") @QueryParam("offset") Integer offset,
 			@DefaultValue(DashboardConstants.DASHBOARD_QUERY_ORDER_BY_ACCESS_TIME) @QueryParam("orderBy") String orderBy,
 			@QueryParam("filter") String filterString
-			/*@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
+	/*@QueryParam("types") String types, @QueryParam("appTypes") String appTypes, @QueryParam("owners") String owners,
 	@QueryParam("onlyFavorites") Boolean onlyFavorites*/)
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer,
-				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString,
-				limit, offset, orderBy, filterString);
+				"Service call to [GET] /v1/dashboards?queryString={}&limit={}&offset={}&orderBy={}&filter={}", queryString, limit,
+				offset, orderBy, filterString);
 		logkeyHeaders("queryDashboards()", userTenant, tenantIdParam);
 		String qs = null;
 		try {
@@ -454,72 +454,46 @@ public class DashboardAPI extends APIBase
 			clearUserContext();
 		}
 	}
-    @PUT
-    @Path("{id: [1-9][0-9]*}/options")
-    @Produces(MediaType.APPLICATION_JSON)
-	public Response updateUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-									  @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-									  @PathParam("id") Long dashboardId, JSONObject inputJson) {
-		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/", dashboardId);
+
+	@POST
+	@Path("{id: [1-9][0-9]*}/options")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
+			@HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
+			@PathParam("id") Long dashboardId, JSONObject inputJson)
+	{
+		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/{}/options/",
+				dashboardId);
 		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
-			userOption.setDashboardId(dashboardId);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);
 			ErrorEntity error = new ErrorEntity(e);
 			return buildErrorResponse(error);
 		}
 
-        UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        try {
-            Long tenantId = getTenantId(tenantIdParam);
-            initializeUserContext(tenantIdParam, userTenant);
-            userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
-            return Response.ok(getJsonUtil().toJson(userOption)).build();
-        } catch (DashboardException e) {
-            return buildErrorResponse(new ErrorEntity(e));
-        } catch (BasicServiceMalfunctionException e) {
-            logger.error(e.getLocalizedMessage(), e);
-            return buildErrorResponse(new ErrorEntity(e));
-        } finally {
-            clearUserContext();
-        }
-    }
-
-    @POST
-    @Path("{id: [1-9][0-9]*}/options")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response saveUserOptions(@HeaderParam(value = "X-USER-IDENTITY-DOMAIN-NAME") String tenantIdParam,
-                                      @HeaderParam(value = "X-REMOTE-USER") String userTenant, @HeaderParam(value = "Referer") String referer,
-                                      @PathParam("id") Long dashboardId, JSONObject inputJson) {
-        infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [POST] /v1/dashboards/{}/options/", dashboardId);
-        UserOptions userOption;
-        try {
-            userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
-        } catch (IOException e) {
-            logger.error(e.getLocalizedMessage(), e);
-            ErrorEntity error = new ErrorEntity(e);
-            return buildErrorResponse(error);
-        }
-
-        UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
-        try {
-            Long tenantId = getTenantId(tenantIdParam);
-            initializeUserContext(tenantIdParam, userTenant);
-            userOption.setDashboardId(dashboardId);//override id in consumed json if exist;
-            userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
-            return Response.ok(getJsonUtil().toJson(userOption)).build();
-        } catch (DashboardException e) {
-            return buildErrorResponse(new ErrorEntity(e));
-        } catch (BasicServiceMalfunctionException e) {
-            logger.error(e.getLocalizedMessage(), e);
-            return buildErrorResponse(new ErrorEntity(e));
-        } finally {
-            clearUserContext();
-        }
-    }
+		UserOptionsManager userOptionsManager = UserOptionsManager.getInstance();
+		try {
+			Long tenantId = getTenantId(tenantIdParam);
+			initializeUserContext(tenantIdParam, userTenant);
+			userOption.setDashboardId(dashboardId);//override id in consumed json if exist;
+			userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
+			return Response.ok(getJsonUtil().toJson(userOption)).build();
+		}
+		catch (DashboardException e) {
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		catch (BasicServiceMalfunctionException e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return buildErrorResponse(new ErrorEntity(e));
+		}
+		finally {
+			clearUserContext();
+		}
+	}
 
 	@PUT
 	@Path("{id: [1-9][0-9]*}")
@@ -575,12 +549,10 @@ public class DashboardAPI extends APIBase
 	{
 		infoInteractionLogAPIIncomingCall(tenantIdParam, referer, "Service call to [PUT] /v1/dashboards/{}/options/",
 				dashboardId);
-		UserOptions userOption = null;
+		UserOptions userOption;
 		try {
 			userOption = getJsonUtil().fromJson(inputJson.toString(), UserOptions.class);
-			if (userOption != null && userOption.getAutoRefreshInterval() != null) {
-				userOption.setAutoRefreshInterval(userOption.getAutoRefreshInterval());
-			}
+			userOption.setDashboardId(dashboardId);
 		}
 		catch (IOException e) {
 			logger.error(e.getLocalizedMessage(), e);
@@ -592,8 +564,7 @@ public class DashboardAPI extends APIBase
 		try {
 			Long tenantId = getTenantId(tenantIdParam);
 			initializeUserContext(tenantIdParam, userTenant);
-			userOption.setDashboardId(dashboardId);//override id in comsumned json if exist;
-			userOptionsManager.updateUserOptions(userOption, tenantId);
+			userOptionsManager.saveOrUpdateUserOptions(userOption, tenantId);
 			return Response.ok(getJsonUtil().toJson(userOption)).build();
 		}
 		catch (DashboardException e) {
