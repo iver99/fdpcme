@@ -534,10 +534,10 @@ define(['knockout',
                 }
 
                 $('#tile-dragging-placeholder').css({
-                    left: tile.left(),
-                    top: tile.top(),
-                    width: ui.helper.width() -20,
-                    height: ui.helper.height() - 20
+                    left: tile.left() - 5,
+                    top: tile.top() - 5,
+                    width: ui.helper.width() - 10,
+                    height: ui.helper.height() - 10
                 }).show();
 
                 var tileInCell = self.editor.tilesGrid.tileGrid[cell.row] ? self.editor.tilesGrid.tileGrid[cell.row][cell.column] : null;
@@ -570,10 +570,10 @@ define(['knockout',
                     if(originalRow !== cell.row || originalCol !== cell.column) {
                         $('#tile-dragging-placeholder').hide();
                         $('#tile-dragging-placeholder').css({
-                            left: tile.left(),
-                            top: tile.top(),
-                            width: ui.helper.width() -20,
-                            height: ui.helper.height() - 20
+                            left: tile.left() - 5,
+                            top: tile.top() - 5,
+                            width: ui.helper.width() - 10,
+                            height: ui.helper.height() - 10
                         }).show();
                     }
                 }
@@ -679,10 +679,10 @@ define(['knockout',
                     $('#tile-dragging-placeholder').show();
                     setTimeout(function() {
                         $('#tile-dragging-placeholder').css({
-                            left: self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)),
-                            top: self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)),
-                            width: self.getDisplayWidthForTile(width)-20,
-                            height: self.getDisplayHeightForTile(height)-20
+                            left: self.getDisplayLeftForTile(self.editor.mode.getModeColumn(tile)) - 5,
+                            top: self.getDisplayTopForTile(self.editor.mode.getModeRow(tile)) - 5,
+                            width: self.getDisplayWidthForTile(width) - 10,
+                            height: self.getDisplayHeightForTile(height) - 10
                         });
                     }, 200);
                     self.previousDragCell = cell;
