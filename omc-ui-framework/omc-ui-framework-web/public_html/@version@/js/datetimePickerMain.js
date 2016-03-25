@@ -102,7 +102,7 @@ require(['ojs/ojcore',
 //                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
 //                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
                     dtpickerPosition: self.floatPosition,
-                    timePeriod: "Last 7 days", //self.timePeriodPre,
+                    timePeriod: "Last 1 day", //self.timePeriodPre,
                     callbackAfterApply: function (start, end, tp, tf) {
                         console.log(start);
                         console.log(end);
