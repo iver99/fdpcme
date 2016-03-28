@@ -17,39 +17,39 @@ import javax.management.InstanceNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceInfo;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.InstanceQuery;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.info.Link;
 import oracle.sysman.emSDK.emaas.platform.servicemanager.registry.lookup.LookupManager;
+import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.RegistryLookupUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.util.StringUtil;
 import oracle.sysman.emaas.platform.dashboards.ui.webutils.wls.lifecycle.ApplicationServiceManager;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import weblogic.application.ApplicationLifecycleEvent;
 import weblogic.management.timer.Timer;
-import oracle.sysman.emaas.platform.dashboards.ui.targetmodel.services.GlobalStatus;
+
 /**
  * @author guobaochen
  */
 public class AvailabilityServiceManager implements ApplicationServiceManager, NotificationListener
 {
-	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
-
 	private static final long PERIOD = Timer.ONE_MINUTE;
 
 	private static final String DASHBOARD_API_SERVICE_NAME = "Dashboard-API";
+
 	private static final String DASHBOARD_API_SERVICE_VERSION = "1.0+";
 	private static final String DASHBOARD_API_SERVICE_REL = "base";
-
 	private static final String DASHBOARD_COMMON_UI_SERVICE_NAME = "OMC-UI-Framework";
-	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "1.0+";
 
+	private static final String DASHBOARD_COMMON_UI_SERVICE_VERSION = "1.0+";
 	private static final String SAVED_SEARCH_SERVICE_NAME = "SavedSearch";
+
 	private static final String SAVED_SEARCH_SERVICE_VERSION = "1.0+";
 	private static final String SAVED_SEARCH_SERVICE_REL = "search";
+	private final Logger logger = LogManager.getLogger(AvailabilityServiceManager.class);
 
 	private Timer timer;
 	private Integer notificationId;
@@ -130,6 +130,7 @@ public class AvailabilityServiceManager implements ApplicationServiceManager, No
 		}
 		if (!isCommonUIAvailable) {
 			rsm.markOutOfService();
+			GlobalStatus.setDashboardUIDownStatus();
 			logger.info("Dashboards UI service is out of service because OMC UI Framework service is unavailable");
 			return;
 		}
