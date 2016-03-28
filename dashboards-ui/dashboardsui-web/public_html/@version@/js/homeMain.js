@@ -162,7 +162,7 @@ require(['dashboards/dbsmodel',
 
                 var predataModel = new model.PredataModel();
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel);
+                    var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
                     

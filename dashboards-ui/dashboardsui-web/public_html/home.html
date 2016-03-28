@@ -14,7 +14,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/dashboards-home-alta.css" type="text/css"/>
-        
+      
         <!-- RequireJS bootstrap file -->
         <script data-main="@version@/js/homeMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
     </head>
@@ -44,6 +44,12 @@
                                                     <button id="cbtn" 
                                                             data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, 
                                                                 ojComponent: { component:'ojButton', rootAttributes: {'class': 'dbs-home-blue-button'}, label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button>
+                                                </div>
+                                                <div style="display:none; min-width:100px; min-height:50px;" id="cbtn-tooltip" 
+                                                         data-bind="ojComponent: {component: 'ojPopup', tail: 'simple',
+                                                               position: {'my': 'left top', 'at': 'end center', 'of': '#cbtn'}}">
+                                                    <H1 data-bind="text: getNlsString('DBS_HOME_CREATE_BTN_TT_TITLE')"></h1>
+                                                    <br/><span data-bind="text: getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT')"></span><br/>
                                                 </div>
                                                 <div data-bind="visible: filter.showServiceFilter">
                                                     <label id="servicecblabel" data-bind="text: getNlsString('DBS_HOME_FILTER_SERVICE_LABEL')" ></label>
@@ -81,7 +87,7 @@
                                             </div>
                                             <!-- filter panel end-->
                                     </div>
-                                    <div class="dashboard-picker dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px;"
+                                    <div class="dashboard-picker dbs-tiles-panel-sm dbs-tiles-panel-md dbs-tiles-panel-lg dbs-tiles-panel-xsl dbs-tiles-panel-xl oj-col" style="padding-top: 10px; border-left: 1px solid #d6dfe6; min-height: 600px; padding-left: 10px; margin-bottom: 50px;"
                                          data-bind="component: {
                                             name: 'df-oracle-dashboard-list',
                                             params: $data
@@ -92,29 +98,6 @@
                             </div>
                             <!-- Home tab end -->
                         </div>
-
-                    <!-- dashboard info popup start-->
-                    <div id="dsbinfopop"  style="display:none; width:260px;" 
-                                              data-bind="ojComponent: {component: 'ojPopup', tail: 'simple', autoDismiss: 'focusLoss', initialFocus: 'none', rootAttributes: {'style': 'padding: 5px;', 'class': 'dbs-summary-page-info-pop'}}">
-                        <div data-bind="with: selectedDashboard">
-                            <!-- ko if: $root.isTilesView() === 'gridtview' -->
-                            <div data-bind="text: dashboard.name" style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; text-align: center"></div>
-                            <!-- /ko -->
-                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_DESC')"></span><span data-bind="text: dashboard.description"></span><br/>
-                            <!-- ko if: $root.isTilesView() === 'gridtview' -->
-                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CREATE')"></span><span data-bind="text: dashboard.owner"></span><br/>
-                            <span style="font-weight: bold;" data-bind="text: getNlsString('DBS_HOME_DSB_PAGE_INFO_CDATE')"></span><span data-bind="text: getDateString(dashboard.createdOn)"></span><br/>
-                            <!-- /ko -->
-                            <div  style="border-top: 1px solid #d6dfe6; margin-top: 10px; padding-top: 5px; "> 
-                                <button class="oj-button-half-chrome" data-bind="ojComponent: {component:'ojButton', chroming: 'half', label: getNlsString('DBS_HOME_DSB_PAGE_INFO_DELETE_LABEL'), 
-                                                                                               icons: {start:'oj-fwk-icon icon-trashcan-ena-16 dbs-icon-size-16'}, 
-                                                                                               disabled: (dashboard.systemDashboard || $root.userName !== dashboard.owner)}, 
-                                                                                 click: $root.handleDashboardDeleted"></button>
-                                <!--button class="oj-button-half-chrome oj-sm-float-end" data-bind="ojComponent: {component:'ojButton', label: 'Close'}, click: $root.handleCloseDashboardPop"></button-->
-                            </div>
-                        </div>   
-                    </div>
-                    <!-- dashboard info popup end-->
                     
                     <!-- Create Dashboard dilog start -->
                     <div style="display:none" id="cDsbDialog"
@@ -208,28 +191,6 @@
                     </div>                      
                     </div>
                     <!-- Create Dashboard dilog end -->
-                    
-                    <!-- Confirmation dilog start -->
-                    <div style="display:none" id="dbs_cfmDialog"
-                         data-bind="ojComponent:{component: 'ojDialog', initialVisibility: 'hide',
-                                    cancelBehavior: 'icon', rootAttributes: { style: 'min-width: 450px; min-height:150px;'}}">
-                        <div class="oj-dialog-header oj-helper-clearfix">
-                            <!--div class="oj-dialog-header-close-wrapper" >
-                                <a class="df-dialog-header-close" tabindex="0" data-bind="click: confirmDialogModel.close, event: { keydown: confirmDialogModel.keydown }, text: getNlsString('COMMON_TEXT_CLOSE')"></a>
-                            </div-->
-                            <span class="oj-dialog-title" data-bind="text: confirmDialogModel.title"></span>
-                        </div>
-                        <div class="oj-dialog-body">
-                            <p data-bind="text: confirmDialogModel.message"></p>
-                        </div>
-                        <div class="oj-dialog-footer">
-                            <button data-bind="click: confirmDialogModel.okFunction, 
-                                               ojComponent: { component: 'ojButton', label: confirmDialogModel.okLabel, rootAttributes: {style:'margin-right:5px'}}"></button>
-                            <button data-bind="visible: confirmDialogModel.showCancel, click: confirmDialogModel.close, 
-                                               ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                        </div>
-                    </div>
-                    <!-- Confirmation dilog end -->
                     
                     <!-- welcome dialog start -->
                     <div id="overviewDialog" 
