@@ -590,6 +590,8 @@ define([
                     else if (self.appId === 'Error')
                         subscribedApps = [];
                     if (subscribedApps && subscribedApps.length > 0) {
+                        //Alphabetically sort the subscribed application names
+                        subscribedApps.sort();
                         for (var i = 0; i < subscribedApps.length; i++) {
                             var servicename = nls[appMap[subscribedApps[i]]['appName']] ? nls[appMap[subscribedApps[i]]['appName']] : "";
                             if (i === 0)
