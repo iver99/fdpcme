@@ -1293,6 +1293,13 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 };
 
+                self.closeAllPopups = function() {
+                    // The flag "shouldSetLastDatas" is used to solve popup closing issues in Safari. It is set to true only when popups are to be closed. And at this time, self.setLastDatas should be called.
+                    // Not sure why self.setLastDatas is called when popup is not closed.
+                    self.shouldSetLastDatas = true;
+                    $(self.pickerPanelId).ojPopup('close');
+                    $(self.panelId).ojPopup('close');
+                }
 
                 //contol whether the panel should popup or not
                 self.panelControl = function () {
@@ -1318,7 +1325,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         self.init = false;
                     }
                     if ($(self.panelId).ojPopup('isOpen')) {
-                        $(self.panelId).ojPopup('close');
+                        self.closeAllPopups();
                     } else {                                                
                         if(self.timePeriod() === self.timePeriodCustom) {
                             self.showRightPanel(true);
@@ -1349,7 +1356,12 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                  * set everyting to original state if not applied
                  * @returns {undefined}
                  */
-                self.setLastDatas = function () {
+                self.setLastDatas = function (event, ui) {
+                    if(self.shouldSetLastDatas !== true) {
+                        event.preventDefault();
+                        self.shouldSetLastDatas = false;
+                        return;
+                    }
                     self.startDate(self.lastStartDate());
                     self.endDate(self.lastEndDate());
                     self.startTime(self.lastStartTime());
@@ -1376,6 +1388,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
 
                     $(self.wrapperId + ' #panelArrow_' + self.randomId).attr('src', '/emsaasui/uifwk/@version@/images/widgets/drop-down.jpg');
+                    self.shouldSetLastDatas = false;
                 };
 
                 self.hoverOnDrawer = function(data, event) {
@@ -1482,8 +1495,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                                                           
                     self.dateTimeInfo(self.getDateTimeInfo(self.startDateISO().slice(0, 10), self.endDateISO().slice(0, 10), self.startTime(), self.endTime()));
-                    
-                    $(self.panelId).ojPopup("close");
+                    self.closeAllPopups();
                     var timePeriod = self.getTimePeriodString(self.timePeriod());
                     
                     //if time filter is enabled, pass time info in JSON format.
@@ -1532,7 +1544,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 };
 
                 self.cancelClick = function () {
-                    $(self.panelId).ojPopup("close");
+                    self.closeAllPopups();
                     return;
                 };
                 
@@ -1629,8 +1641,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 
                 self.showTimeFilterInfo = function() {
                     $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoIndicator_"+self.randomId);
-                    if ($(self.panelId).ojPopup('isOpen')) {
-                        $(self.panelId).ojPopup('close');
+                    if ($(self.panelId).ojPopup('isOpen')) {                        
+                        self.closeAllPopups();
                     }
                 }
                 
@@ -1643,8 +1655,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         $("#tfInfo_"+self.randomId).ojPopup("close");
                     }else {
                         $("#tfInfo_"+self.randomId).ojPopup("open", "#tfInfoIndicator_"+self.randomId);
-                        if ($(self.panelId).ojPopup('isOpen')) {
-                            $(self.panelId).ojPopup('close');
+                        if ($(self.panelId).ojPopup('isOpen')) {                            
+                            self.closeAllPopups();
                         }
                     }
                 }
