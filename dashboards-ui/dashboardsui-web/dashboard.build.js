@@ -58,7 +58,7 @@
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
         'dbs': '../js',
         'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
-        'prefutil':'empty:',
-	'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+        'prefutil':'empty:'
+	//'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
     }
 })
