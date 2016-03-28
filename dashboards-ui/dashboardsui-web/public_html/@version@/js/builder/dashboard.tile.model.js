@@ -18,8 +18,7 @@ define(['knockout',
         'builder/editor/editor.mode',
         'builder/widget/widget.model',
         'jqueryui',
-        'ojs/ojknockout',
-        'ojs/ojmenu',
+        'builder/builder.jet.dvt.partition',
         'ckeditor'
     ],
     
@@ -647,7 +646,7 @@ define(['knockout',
                         cell.column = self.editor.mode.MODE_MAX_COLUMNS-width;
                     }
                     if (!tile) {
-                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targetContext, false);                        
+                        tile = self.editor.createNewTile(widget.WIDGET_NAME, null, width, height, widget, self.timeSelectorModel, self.targetContext, true);                        
                         Builder.initializeTileAfterLoad(self.editor.mode, self.dashboard, tile, self.timeSelectorModel, self.targetContext, true);
                         u.helper.tile = tile;
                         self.editor.tiles.push(tile);

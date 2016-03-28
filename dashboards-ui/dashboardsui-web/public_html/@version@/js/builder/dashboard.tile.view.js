@@ -10,12 +10,7 @@ define(['knockout',
         'uiutil',
         'uifwk/js/util/screenshot-util',
         'ojs/ojcore',
-        'ojs/ojtree',
-        'ojs/ojvalidation',
-        'ojs/ojknockout-validation',
-        'ojs/ojbutton',
-        'ojs/ojselectcombobox',
-        'ojs/ojpopup',
+        'builder/builder.jet.dvt.partition',
         'builder/builder.core'
     ],
     

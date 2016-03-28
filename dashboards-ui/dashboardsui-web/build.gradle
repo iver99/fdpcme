@@ -88,6 +88,7 @@ javascript.source {
         js {
         srcDir 'public_html/@version@/js'
         include "**/*.js"
+	exclude "**/builder.jet.dvt.partition.js"
         exclude "*.js"
         exclude "**/*.orig.js"
         }

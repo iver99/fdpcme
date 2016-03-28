@@ -80,7 +80,9 @@ require(['dashboards/dbsmodel',
     'ojs/ojcore',
     'dfutil',
     'uifwk/js/util/df-util',
+    'dashboards/dashboardhome-impl',
     'loggingutil',
+    'common.uifwk',
     'ojs/ojmodel',
     'ojs/ojknockout',
     'ojs/ojknockout-model',
@@ -96,7 +98,7 @@ require(['dashboards/dbsmodel',
     'ojs/ojmenu',
     'ojs/ojtable'
 ],
-        function(model, ko, $, oj, dfu, dfumodel, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
+        function(model, ko, $, oj, dfu, dfumodel, dashboardhome_impl, _emJETCustomLogger) // this callback gets executed when all required modules are loaded
         {
             var logger = new _emJETCustomLogger();
 //            var dfRestApi = dfu.discoverDFRestApiUrl();
@@ -105,7 +107,7 @@ require(['dashboards/dbsmodel',
                 logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
                 // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
                 // If you comment the line below, our current log calls will not be output!
-                logger.setLogLevel(oj.Logger.LEVEL_WARN);
+                logger.setLogLevel(oj.Logger.LEVEL_LOG);
 //            }
 
            
@@ -118,7 +120,7 @@ require(['dashboards/dbsmodel',
             
             if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
                 ko.components.register("df-oracle-dashboard-list",{
-                    viewModel:{require:'/emsaasui/emcpdfui/@version@/js/dashboardhome-impl.js'},
+                    viewModel:dashboardhome_impl,
                     template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
                 });
             }
@@ -162,7 +164,7 @@ require(['dashboards/dbsmodel',
 
                 var predataModel = new model.PredataModel();
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel);
+                    var dashboardsViewModle = new model.ViewModel(predataModel, "mainContent");
                     ko.applyBindings(dashboardsViewModle, document.getElementById('mainContent'));
                     $('#mainContent').show();
                     

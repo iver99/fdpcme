@@ -82,9 +82,22 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
 
     }
         
-    function confirmDialogModel(title, okLabel, message, okFunction) {
+    function confirmDialogModel(parentElementId, title, okLabel, message, okFunction) {
         var self = this;
         //self.style = ko.observable('min-width: 450px; min-height:150px;');
+        self.parentElementId = parentElementId;
+        self.getElementByCss = function(cssSelector) {
+            if (cssSelector && cssSelector !== null)
+            {
+                if (self.parentElementId && self.parentElementId.trim().length > 0)
+                {
+                    var y = $("#"+self.parentElementId+" "+cssSelector);
+                    return $("#"+self.parentElementId+" "+cssSelector);
+                }
+                return $(cssSelector);
+            }
+            return null;
+        };
         self.title = ko.observable(title || '');
         self.okLabel = ko.observable(okLabel || '');
         self.message = ko.observable(message || '');
@@ -102,7 +115,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 _okfunc();
                 //self.close();
             };
-            $( ".dbs_cfmDialog" ).ojDialog( "open" );
+            self.getElementByCss( ".dbs_cfmDialog" ).ojDialog( "open" );
         };
         
         self.close = function () {
@@ -146,10 +159,22 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
     }
     
-    function ViewModel(predata, defaultFilters) {
+    function ViewModel(predata, parentElementId, defaultFilters) {
         
         var self = this, showWelcome = predata.getShowWelcomePref();
         
+        self.parentElementId = parentElementId;
+        self.getElementByCss = function(cssSelector) {
+            if (cssSelector && cssSelector !== null)
+            {
+                if (self.parentElementId && self.parentElementId.trim().length > 0)
+                {
+                    return $("#"+self.parentElementId+" "+cssSelector);
+                }
+                return $(cssSelector);
+            }
+            return null;
+        };
         self.exploreDataLinkList = ko.observableArray(dfu.discoverVisualAnalyzerLinks());
         
         //welcome
@@ -172,15 +197,18 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         });
         self.showExploreDataBtn= ko.observable(true);
         self.showSeachClear = ko.observable(false);
+        self.tilesViewGridId = self.parentElementId+'gridtview';
+        self.tilesViewListId = self.parentElementId+'listview';
         self.tilesViewGrid = 'gridtview';
         self.tilesViewList = 'listview';
         self.isTilesView = ko.observable(predata.getDashboardsViewPref());
         self.tracker = ko.observable();
         self.createMessages = ko.observableArray([]);
         self.selectedDashboard = ko.observable(null);
+        self.sortById = self.parentElementId+'sortcb';
         self.sortBy = ko.observable(['default']);
         self.createDashboardModel = new createDashboardDialogModel();
-        self.confirmDialogModel = new confirmDialogModel();
+        self.confirmDialogModel = new confirmDialogModel(parentElementId);
         //self.comingsoonDialogModel = new comingsoonDialogModel();
         
         self.pageSize = ko.observable(120);
@@ -276,7 +304,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
         
         self.handleShowDashboardPop = function(event, data) {
             //console.log(data);
-            var popup = $(".dashboard-picker:visible .dsbinfopop");
+            var popup = self.getElementByCss(".dashboard-picker:visible .dsbinfopop");
             var isOpen = !popup.ojPopup("isOpen");
             if (!isOpen)
             {
@@ -462,7 +490,7 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
             if ( _option === "checked" )
             {
                 self.prefUtil.setPreference(DASHBOARDS_VIEW_PREF_KEY, _value);
-                if (data.value == 'listview')
+                if (data.value === 'listview')
                 {
                     var __sortui = self._getListTableSortUi(self.sortBy()),  _ts = self.dashboardsTS();
                     if ( _ts && _ts !== null && __sortui !== null )
@@ -490,7 +518,8 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                 if (valueParam.optionMetadata.writeback == 'shouldNotWrite')
                 {
                     // change by set self.sortBy triggered by list table sort
-                    $("#sinput").dbsTypeAhead("forceSearch");                 
+                    //self.getElementByCss(".sinput").dbsTypeAhead("forceSearch");   
+                    self.forceSearch();
                 }
                 else
                 {
@@ -501,12 +530,13 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                             if (__sortui === null)
                             {
                                 //sort column not in table, clear the table header sorting icon
-                                var _headercolumns = $("#dbstable").find('.oj-table-column-header-cell');
+                                //$("#dbstable")
+                                var _headercolumns = self.getElementByCss('.oj-table-column-header-cell');
                                 _headercolumns.data('sorted', null);
-                                var headerColumnAscLink =  $("#dbstable").find('.oj-table-column-header-asc-link.oj-enabled');
+                                var headerColumnAscLink =  self.getElementByCss('.oj-table-column-header-asc-link.oj-enabled');
                                 headerColumnAscLink.addClass('oj-disabled');
                                 headerColumnAscLink.removeClass('oj-enabled');
-                                var headerColumnDscLink =  $("#dbstable").find('.oj-table-column-header-dsc-link.oj-enabled');
+                                var headerColumnDscLink =  self.getElementByCss('.oj-table-column-header-dsc-link.oj-enabled');
                                 headerColumnDscLink.addClass('oj-disabled');
                                 headerColumnDscLink.removeClass('oj-enabled');
                             }
@@ -600,12 +630,12 @@ function(dsf, dts, dft, oj, ko, $, dfu, pfu, mbu)
                     _ts.handleEvent(oj.TableDataSource.EventType['REQUEST']);
                 }
             }
-            $("#sinput").dbsTypeAhead("forceSearch", endcallback);
+            self.getElementByCss(".dbs-sinput").dbsTypeAhead("forceSearch", endcallback);
         };
         
         self.clearSearch = function (event, data)
         {
-            $("#sinput").dbsTypeAhead("clearInput");
+            self.getElementByCss(".dbs-sinput").dbsTypeAhead("clearInput");
         };
         
         self.listNameRender = function (context) 

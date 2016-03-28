@@ -6,25 +6,8 @@ define([
     'loggingutil',
     'idfbcutil',
     'ojs/ojcore',
-    'ojs/ojchart',
-    'ojs/ojcomponents',
-    'ojs/ojvalidation',    
-    'ojs/ojdatetimepicker',
     'jqueryui',
-    'ojs/ojmodel',
-    'ojs/ojknockout',
-    'ojs/ojknockout-model',
-    'ojs/ojbutton',
-    'ojs/ojtoolbar',
-    'ojs/ojmenu',
-    'ojs/ojpagingcontrol',
-    'ojs/ojeditablevalue',
-    'ojs/internal-deps/dvt/DvtChart',
-    'ojs/ojdvt-base',
-    'ojs/ojtree',
-    'ojs/ojcheckboxset',
-    'ojs/ojpopup',
-    'ojs/ojgauge',    
+    'builder/builder.jet.dvt.partition', 
     'builder/builder.core',
     'builder/right.panel.model',
     'builder/builder.functions',
@@ -85,7 +68,7 @@ define([
                 var predataModel = new model.PredataModel();
                 
                 function init() {
-                    var dashboardsViewModle = new model.ViewModel(predataModel, ['Me','Oracle','NORMAL','Share']);
+                    var dashboardsViewModle = new model.ViewModel(predataModel, "dashboard-" + guid ,['Me','Oracle','NORMAL','Share']);
                     
                     dashboardsViewModle.showExploreDataBtn(false);
                     
