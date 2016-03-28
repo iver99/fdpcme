@@ -42,7 +42,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
     // dashboard type to keep the same with return data from REST API
     Builder.SINGLEPAGE_TYPE = "SINGLEPAGE";
     Builder.WIDGET_SOURCE_DASHBOARD_FRAMEWORK = 0;
-    Builder.TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
+    //Builder.TEXT_WIDGET_CONTENT_MAX_LENGTH = 4000;
     Builder.LINK_NAME_MAX_LENGTH = 4000;
     Builder.LINK_URL_MAX_LENGTH = 4000;
     Builder.BUILDER_DEFAULT_TILE_WIDTH = 4;
@@ -73,13 +73,13 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         self.EVENT_DSB_ENABLE_TIMERANGE_CHANGED = "EVENT_DSB_ENABLE_TIMERANGE_CHANGED";
 
-        self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
+        /*self.EVENT_NEW_TEXT_START_DRAGGING = "EVENT_NEW_TEXT_START_DRAGGING";
         self.EVENT_NEW_TEXT_DRAGGING = "EVENT_NEW_TEXT_DRAGGING";
         self.EVENT_NEW_TEXT_STOP_DRAGGING = "EVENT_NEW_TEXT_STOP_DRAGGING";
 
         self.EVENT_NEW_LINK_START_DRAGGING = "EVENT_NEW_LINK_START_DRAGGING";
         self.EVENT_NEW_LINK_DRAGGING = "EVENT_NEW_LINK_DRAGGING";
-        self.EVENT_NEW_LINK_STOP_DRAGGING = "EVENT_NEW_LINK_STOP_DRAGGING";
+        self.EVENT_NEW_LINK_STOP_DRAGGING = "EVENT_NEW_LINK_STOP_DRAGGING";*/
 
         self.EVENT_NEW_WIDGET_START_DRAGGING = "EVENT_NEW_WIDGET_START_DRAGGING";
         self.EVENT_NEW_WIDGET_DRAGGING = "EVENT_NEW_WIDGET_DRAGGING";
@@ -91,8 +91,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
         self.EVENT_TILE_ADDED = "EVENT_TILE_ADDED";
         self.EVENT_TILE_DELETED = "EVENT_TILE_DELETED";
 
-        self.EVENT_TEXT_START_EDITING = "EVENT_TEXT_START_EDITING";
-        self.EVENT_TEXT_STOP_EDITING = "EVENT_TEXT_STOP_EDITING";
+        /*self.EVENT_TEXT_START_EDITING = "EVENT_TEXT_START_EDITING";
+        self.EVENT_TEXT_STOP_EDITING = "EVENT_TEXT_STOP_EDITING";*/
 
         // an addition bool parameter to indicate at least one tile exists in dashboard, false to indicate no tiles in dashboard
         self.EVENT_TILE_EXISTS_CHANGED = "EVENT_TILE_EXISTS_CHANGED";
@@ -113,7 +113,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             self.dispatcher.triggerEvent(event, p1, p2, p3, p4);
         };
 
-        self.addNewTextStartDraggingListener = function(listener) {
+        /*self.addNewTextStartDraggingListener = function(listener) {
             self.addEventListener(self.EVENT_NEW_TEXT_START_DRAGGING, listener);
         };
 
@@ -135,7 +135,7 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
 
         self.addNewLinkStopDraggingListener = function(listener) {
             self.addEventListener(self.EVENT_NEW_LINK_STOP_DRAGGING, listener);
-        };
+        };*/
 
         self.addNewWidgetStartDraggingListener = function(listener) {
             self.addEventListener(self.EVENT_NEW_WIDGET_START_DRAGGING, listener);

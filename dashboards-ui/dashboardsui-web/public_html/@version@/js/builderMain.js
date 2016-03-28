@@ -49,7 +49,7 @@ requirejs.config({
         'emcta':'/emsaasui/emcta/ta/js',
         'emcla':'/emsaasui/emlacore/js',
         'emcsutl': '/emsaasui/uifwk/emcsDependencies/uifwk/js/util',
-        'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
+        //'ckeditor': '../../libs/@version@/js/ckeditor/ckeditor',
         'uifwk': '/emsaasui/uifwk'
     },
     // Shim configurations for modules that do not expose AMD
@@ -136,10 +136,10 @@ require(['knockout',
             viewModel:{require:'./widgets/autorefresh/js/auto-refresh'},
             template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
-        ko.components.register("DF_V1_WIDGET_TEXT", {
+        /*ko.components.register("DF_V1_WIDGET_TEXT", {
             viewModel: {require: './widgets/textwidget/js/textwidget'},
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
-        });
+        });*/
 
         function HeaderViewModel($b) {
             var self = this;

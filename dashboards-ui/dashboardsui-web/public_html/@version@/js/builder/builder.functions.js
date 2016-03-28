@@ -133,11 +133,11 @@ define(['knockout',
                     var mapping = {
                        "tiles": {
                            "create" : function(options) {
-                                if(options.data.type === "TEXT_WIDGET") {
-                                    return new Builder.TextTileItem(options.data);
-                                }else {
+//                                if(options.data.type === "TEXT_WIDGET") {
+//                                    return new Builder.TextTileItem(options.data);
+//                                }else {
                                     return new Builder.TileItem(options.data);
-                                }
+//                                }
                            }
                        } 
                     };
