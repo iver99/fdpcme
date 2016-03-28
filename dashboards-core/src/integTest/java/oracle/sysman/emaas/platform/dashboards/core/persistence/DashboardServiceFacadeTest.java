@@ -10,8 +10,6 @@ import javax.persistence.EntityManager;
 import oracle.sysman.emaas.platform.dashboards.core.util.DateUtil;
 import oracle.sysman.emaas.platform.dashboards.core.util.UserContext;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardFavorite;
-import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardLastAccess;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTile;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboardTileParams;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
@@ -44,22 +42,6 @@ public class DashboardServiceFacadeTest
 		Assert.assertNotNull(emsdashboard.getType());
 
 		Assert.assertNotNull(emsdashboard.getDashboardTileList());
-	}
-
-	private static void assertEmsDashboardFavorite(EmsDashboardFavorite emsdashboardfavorite)
-	{
-		Assert.assertNotNull(emsdashboardfavorite.getCreationDate());
-		//Assert.assertNotNull("tenantId = " + emsdashboardfavorite.getTenantId());
-		Assert.assertNotNull(emsdashboardfavorite.getUserName());
-		Assert.assertNotNull(emsdashboardfavorite.getDashboard());
-	}
-
-	private static void assertEmsDashboardLastAccess(EmsDashboardLastAccess emsdashboardlastaccess)
-	{
-		Assert.assertNotNull(emsdashboardlastaccess.getAccessedBy());
-		Assert.assertNotNull(emsdashboardlastaccess.getAccessDate());
-		Assert.assertNotNull(emsdashboardlastaccess.getDashboardId());
-		//Assert.assertNotNull("tenantId = " + emsdashboardlastaccess.getTenantId());
 	}
 
 	private static void assertEmsDashboardTile(EmsDashboardTile emsdashboardtile)
@@ -139,26 +121,6 @@ public class DashboardServiceFacadeTest
 		return d;
 	}
 
-	private static EmsDashboardFavorite newFavorite(EmsDashboard d)
-	{
-		EmsDashboardFavorite f = new EmsDashboardFavorite();
-		f.setCreationDate(DateUtil.getCurrentUTCTime());
-		//f.setTenantId("tenantId");
-		f.setUserName("userName");
-		f.setDashboard(d);
-		return f;
-	}
-
-	private static EmsDashboardLastAccess newLastAccess(Long dashboardId)
-	{
-		EmsDashboardLastAccess a = new EmsDashboardLastAccess();
-		a.setAccessDate(DateUtil.getCurrentUTCTime());
-		a.setDashboardId(dashboardId);
-		a.setAccessedBy("accessedBy");
-		//a.setTenantId("tenantId");
-		return a;
-	}
-
 	private static EmsDashboardTile newTile()
 	{
 		EmsDashboardTile tile = new EmsDashboardTile();
@@ -220,10 +182,6 @@ public class DashboardServiceFacadeTest
 
 	private EmsDashboardTileParams p;
 
-	private EmsDashboardFavorite f;
-
-	private EmsDashboardLastAccess a;
-
 	//	/**
 	//	 * @throws java.lang.Exception
 	//	 */
@@ -260,16 +218,16 @@ public class DashboardServiceFacadeTest
 			p = DashboardServiceFacadeTest.newTileParams(testSeq++ % 3 + 1);
 			t.addEmsDashboardTileParams(p);
 			d.addEmsDashboardTile(t);
-			f = DashboardServiceFacadeTest.newFavorite(d);
+			//			f = DashboardServiceFacadeTest.newFavorite(d);
 
 			dashboardServiceFacade.persistEmsDashboard(d);
-			dashboardServiceFacade.persistEmsDashboardFavorite(f);
+			//			dashboardServiceFacade.persistEmsDashboardFavorite(f);
 			dashboardServiceFacade.commitTransaction();
 			dashboardServiceFacade.getEntityManager().refresh(d);
 
-			a = DashboardServiceFacadeTest.newLastAccess(d.getDashboardId());
-			dashboardServiceFacade.persistEmsDashboardLastAccess(a);
-			dashboardServiceFacade.commitTransaction();
+			//			a = DashboardServiceFacadeTest.newLastAccess(d.getDashboardId());
+			//			dashboardServiceFacade.persistEmsDashboardLastAccess(a);
+			//			dashboardServiceFacade.commitTransaction();
 		}
 		finally {
 			if (em != null) {
@@ -288,12 +246,6 @@ public class DashboardServiceFacadeTest
 		try {
 			dashboardServiceFacade = new DashboardServiceFacade(TENANT_ID);
 			em = dashboardServiceFacade.getEntityManager();
-			if (a != null) {
-				dashboardServiceFacade.removeEmsDashboardLastAccess(a);
-			}
-			if (f != null) {
-				dashboardServiceFacade.removeEmsDashboardFavorite(f);
-			}
 			if (d != null) {
 				dashboardServiceFacade.removeEmsDashboard(d);
 			}

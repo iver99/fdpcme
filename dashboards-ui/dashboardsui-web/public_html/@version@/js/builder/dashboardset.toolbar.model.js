@@ -291,7 +291,7 @@ define(['knockout',
                     "icon": "dbd-icon-refresh",
                     "title": "",
                     "disabled": "",
-                    "endOfGroup": visibilityOnDifDevice(true, false),    
+                    "endOfGroup": self.isMobileDevice==='true'?false:visibilityOnDifDevice(true, false),    
                     "showOnMobile": true,
                     "showOnViewer":true,
                     "visibility":visibilityOnDifDevice(true,true),
@@ -638,12 +638,13 @@ define(['knockout',
                     };
 
                     var $printMask = $($("#dashboardset-print-mask-template").text());
-                    $printMask.text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
                     $printMask.width($(window).width());
                     $printMask.height($(window).height());
                     $printMask.css("line-height" , $printMask.height() + "px");
                     $("body").append($printMask);
-
+                    $("#printLoading").text(getNlsString("DBS_BUILDER_DASHBOARD_SET_PRINT_MASK"));
+                    $("#printLoading").show();
+                    
                     var lastPromise = Promise.resolve();
                     self.reorderedDbsSetItems().forEach(function (dashboardTabItem) {
                           lastPromise = lastPromise.then(showDashboardContent.bind(this, dashboardTabItem));
@@ -651,6 +652,7 @@ define(['knockout',
                     
                     lastPromise.then(function() {
                         $printMask.remove();
+                        $("#printLoading").hide();
                         window.print();
                     });
             };

@@ -38,6 +38,7 @@ requirejs.config({
         'history': '../../libs/@version@/js/oraclejet/js/libs/history/history.iegte8.min',
         'text': '../../libs/@version@/js/oraclejet/js/libs/require/text',
         'promise': '../../libs/@version@/js/oraclejet/js/libs/es6-promise/promise-1.0.0.min',
+        'require':'../../libs/@version@/js/oraclejet/js/libs/require/require',
         'dashboards': '.',
         'builder': './builder',
         'dfutil':'internaldfcommon/js/util/internal-df-util',
@@ -94,33 +95,28 @@ requirejs.config({
 require(['knockout',
     'jquery',
     'dfutil',
+    'uifwk/js/util/df-util',
     'loggingutil',
     'ojs/ojcore',
-    'ojs/ojcomponents',
-    'ojs/ojvalidation',    
-    'ojs/ojdatetimepicker',
+    'dashboards/widgets/autorefresh/js/auto-refresh',
+    'dashboards/widgets/textwidget/js/textwidget',
+    'dashboards/dashboardhome-impl',
     'jqueryui',
-    'ojs/ojmodel',
-    'ojs/ojknockout',
-    'ojs/ojknockout-model',
-    'ojs/ojbutton',
-    'ojs/ojtoolbar',
-    'ojs/ojmenu',
-    'ojs/ojeditablevalue',
-    'ojs/ojpopup',
+    'common.uifwk',
+    'builder/builder.jet.dvt.partition',
     'builder/builder.core',
     'dashboards/dbstypeahead',
     'builder/dashboardset.toolbar.model',
     'builder/dashboardset.panels.model'
 ],
-    function(ko, $, dfu, _emJETCustomLogger, oj) // this callback gets executed when all required modules are loaded
+    function(ko, $, dfu, dfumodel, _emJETCustomLogger, oj, auto_refresh, textwidget, dashboardhome_impl) // this callback gets executed when all required modules are loaded
     {
         var logger = new _emJETCustomLogger();
         var logReceiver = dfu.getLogUrl();
         logger.initialize(logReceiver, 60000, 20000, 8, dfu.getUserTenant().tenantUser);
         // TODO: Will need to change this to warning, once we figure out the level of our current log calls.
         // If you comment the line below, our current log calls will not be output!
-        logger.setLogLevel(oj.Logger.LEVEL_WARN);
+        logger.setLogLevel(oj.Logger.LEVEL_LOG);
 
         if (!ko.components.isRegistered('df-oracle-branding-bar')) {
             ko.components.register("df-oracle-branding-bar",{
@@ -139,19 +135,25 @@ require(['knockout',
             template: {require: 'text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html'}
         });
         ko.components.register("df-auto-refresh",{
-            viewModel:{require:'./widgets/autorefresh/js/auto-refresh'},
+            viewModel:auto_refresh,
             template:{require:'text!./widgets/autorefresh/auto-refresh.html'}
         });
         ko.components.register("DF_V1_WIDGET_TEXT", {
-            viewModel: {require: './widgets/textwidget/js/textwidget'},
+            viewModel: textwidget,
             template: {require: 'text!./widgets/textwidget/textwidget.html'}
         });
             
         if (!ko.components.isRegistered('df-oracle-dashboard-list')) {
             ko.components.register("df-oracle-dashboard-list",{
-                viewModel:{require:'/emsaasui/emcpdfui/@version@/js/dashboardhome-impl.js'},
+                viewModel:dashboardhome_impl,
                 template:{require:'text!/emsaasui/emcpdfui/dashboardhome.html'}
             });
+        }
+        
+        function DashboardTitleModel(dashboard) {
+            var self = this;
+            var dfu_model = new dfumodel(dfu.getUserName(), dfu.getTenantName());
+            self.builderTitle = dfu_model.generateWindowTitle(dashboard.name(), null, null, getNlsString("DBS_HOME_TITLE_DASHBOARDS"));
         }
 
         function DashboardsetHeaderViewModel() {
@@ -195,6 +197,9 @@ require(['knockout',
             ko.applyBindings(headerViewModel, $('#headerWrapper')[0]);
 
             Builder.loadDashboard(dsbId, function (dashboard) {
+                
+                var dashboardTitleModel = new DashboardTitleModel(dashboard);
+                ko.applyBindings(dashboardTitleModel, $("title")[0]);
                 var dashboardsetToolBarModel = new Builder.DashboardsetToolBarModel(dashboard);
                 var dashboardsetPanelsModel = new Builder.DashboardsetPanelsModel(dashboardsetToolBarModel);
                 ko.applyBindings(dashboardsetToolBarModel, document.getElementById('dbd-set-tabs'));
