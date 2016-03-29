@@ -71,6 +71,7 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                 self.longDaysOfWeek = oj.LocaleData.getDayNames("wide");
                 self.dropDownAlt = nls.DATETIME_PICKER_DROP_DOWN;
                 self.timeFilterAlt = nls.DATETIME_PICKER_TIME_FILTER;
+                self.timeFilterIconTitle = nls.DATETIME_FILTER_TIME_FILTER_ICON_TITLE;
                 self.timePeriodLast15mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS;
                 self.timePeriodLast30mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS;
                 self.timePeriodLast60mins = nls.DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS;
@@ -1673,6 +1674,8 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         //get hours excluded
                         var hoursExcludedInfo = "";
                         var hoursExcluded = [];
+                        var hoursExcludedStart = [];
+                        var hoursExcludedEnd = [];
                         if(hoursOfDay.length < 24) {
                             hoursExcludedInfo += self.tfHoursExcludedMsg;
                             for(i=0; i<24; i++) {
@@ -1680,14 +1683,41 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                                     hoursExcluded.push(i);
                                 }
                             }
-                            for(i=0; i<hoursExcluded.length; i++) {
-                                hoursExcludedInfo += hoursExcluded[i];
+//                            for(i=0; i<hoursExcluded.length; i++) {
+//                                hoursExcludedInfo += hoursExcluded[i];
+//                                if(i === hoursExcluded.length-1) {
+//                                    hoursExcludedInfo += "";
+//                                }else {
+//                                    hoursExcludedInfo += ", ";
+//                                }
+//                            }
+                            hoursExcludedStart.push(hoursExcluded[0]);
+                            for(i=1; i<hoursExcluded.length; i++) {                                
                                 if(i === hoursExcluded.length-1) {
+                                    hoursExcludedEnd.push(hoursExcluded[i]);
+                                    break;
+                                }
+                                if(hoursExcluded[i] - hoursExcluded[i-1] === 1) {
+                                    continue;
+                                }else {
+                                    hoursExcludedEnd.push(hoursExcluded[i-1]);
+                                    hoursExcludedStart.push(hoursExcluded[i]);
+                                }
+                            }
+                            
+                            for(i=0; i<hoursExcludedStart.length; i++) {
+                                if(hoursExcludedStart[i] !== hoursExcludedEnd[i]) {
+                                    hoursExcludedInfo += hoursExcludedStart[i] + "-" +hoursExcludedEnd[i];
+                                }else {
+                                    hoursExcludedInfo += hoursExcludedStart[i];
+                                }
+                                if(i === hoursExcludedStart.length-1) {
                                     hoursExcludedInfo += "";
                                 }else {
                                     hoursExcludedInfo += ", ";
                                 }
-                            }   
+                            }
+                            
                         }
                         //get days excluded
                         var daysExcludedInfo = "";

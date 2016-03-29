@@ -83,8 +83,9 @@ define({
       "BRANDING_BAR_MESSAGE_AJAX_RETRY_FAIL_DETAIL":"Try again later.",
       "BRANDING_BAR_MESSAGE_AJAX_SESSION_TIMEOUT_REDIRECTING":"Session timeout. Redirecting to SSO login page now...",
        //datetime picker
-       "DATETIME_PICKER_DROP_DOWN": "Drop Down",
-       "DATETIME_PICKER_TIME_FILTER": "Time Filter",
+      "DATETIME_PICKER_DROP_DOWN": "Drop Down",
+      "DATETIME_PICKER_TIME_FILTER": "Time Filter",
+      "DATETIME_FILTER_TIME_FILTER_ICON_TITLE": "Click to show time filter settings",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_15_MINS": "Last 15 mins",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_30_MINS": "Last 30 mins",
       "DATETIME_PICKER_TIME_PERIOD_OPTION_LAST_60_MINS": "Last 60 mins",
@@ -128,8 +129,9 @@ define({
       
       
       //time filter
+      "TIME_FILTER_TITLE": "Filters",
       "TIME_FILTER_TIME_LABEL": "Time",
-      "TIME_FILTER_TIME_HINT": "Hint : Enter time ranges in 24 hr format. For multiple time ranges separate them with ',' Ex: 1-7,13-17",
+      "TIME_FILTER_TIME_HINT": "Hint : Enter time ranges you want to include in 24 hr format. For multiple time ranges separate them with ',' Ex: 1-7,13-17",
       "TIME_FILTER_DAYS_LABEL": "Days",
       "TIME_FILTER_MONTHS_LABEL": "Months",
       "TIME_FILTER_OPTION_ALL": "All"      

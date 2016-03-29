@@ -9,6 +9,7 @@ define([
         var self = this;
         var postbox = params ? params.postbox : null;
         self.randomId = params ? params.randomId : "";
+        self.timeFilterTitle = nls.TIME_FILTER_TITLE;
         self.timeFilterLabel = nls.TIME_FILTER_TIME_LABEL;
         self.hintForTimeFilter = nls.TIME_FILTER_TIME_HINT;
         self.daysFilterLabel = nls.TIME_FILTER_DAYS_LABEL;

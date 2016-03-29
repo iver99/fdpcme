@@ -7,8 +7,10 @@
     }
     
     .tf-hint {
-        background: #F0F0F0;
-        border: 1px dotted gray;
+/*        background: #F0F0F0;
+        border: 1px dotted gray;*/
+        font-style: italic;
+        color: black;
     }
     
     .tf-row {
@@ -20,6 +22,9 @@
     }
 </style>
 <div class="tf-wrapper">
+    <div class="oj-row" style="padding-bottom: 10px;">
+        <span class="oj-col oj-sm-12 oj-md-12" style="font-weight: bold; text-align: center;" data-bind="text: timeFilterTitle"></span>
+    </div>
     <!-- time filter start-->
     <div class="oj-row tf-row">
        <span class="oj-col oj-sm-2 oj-md-2 tf-label" style="padding-top: 8px; padding-bottom: 8px;" data-bind="text: timeFilterLabel"></span>
