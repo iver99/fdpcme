@@ -880,6 +880,25 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     }
                 };
                 
+                self.isTimePeriodLessThan1day = function(timePeriod) {
+                    if(timePeriod===self.timePeriodLast15mins || timePeriod===self.timePeriodLast30mins || timePeriod===self.timePeriodLast60mins ||
+                                timePeriod===self.timePeriodLast4hours || timePeriod===self.timePeriodLast6hours) {
+                        return true;
+                    }
+                    return false;
+                }
+                
+                /**
+                 * 
+                 * @param {type} date: Date object. The date to get timezone
+                 * @returns {String|Number} return timezone. The format is "GMT+X"/"GMT-X"
+                 */
+                self.getGMTTimezone = function(date) {
+                    var timezoneOffset = date.getTimezoneOffset()/60;
+                    timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
+                    return timezoneOffset;
+                }
+                
                 /**
                  * 
                  * @param {type} startDate
@@ -901,6 +920,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                     if(self.hideTimeSelection() === false) {
                         start = start + " " + self.timeConverter.format(startTime);
                         end = end + " " + self.timeConverter.format(endTime);
+                        
+                        //add timezone for time ranges less than 1 day if the start&end time are in different timezone due to daylight saving time.
+                        var tmpStart = oj.IntlConverterUtils.isoToLocalDate(startDate+startTime);
+                        var tmpEnd = oj.IntlConverterUtils.isoToLocalDate(endDate+endTime);
+                        if(tmpStart.getTimezoneOffset() !== tmpEnd.getTimezoneOffset() && self.isTimePeriodLessThan1day(self.timePeriod())) {
+                            start += " (" + self.getGMTTimezone(tmpStart) + ")";
+                            end += " (" + self.getGMTTimezone(tmpEnd) + ")";
+                        }
                     }else {
                         //hide hyphen when time range is "Today-Today"/"Yestarday-Yesterday"
                         hyphenDisplay = end ? hyphenDisplay : "display: none;";
@@ -1420,6 +1447,14 @@ define(["knockout", "jquery", "uifwk/js/util/message-util", "ojs/ojcore", "ojL10
                         }else if($(event.target).text() === self.timePeriodLast1year) {
                             start = new Date(curDate.getFullYear() - 1, curDate.getMonth(), curDate.getDate(), curDate.getHours(), curDate.getMinutes());                            
                             end = curDate;
+                        }else if(self.isTimePeriodLessThan1day($(event.target).text())) {  //if timerange is less than 1 day, do not adjust start and end during daylight saving time
+                            start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
+                            end = curDate;
+                            if(self.adjustLastX) {
+                                var adjustedTime = self.adjustLastX(start, end);
+                                start = adjustedTime.start;
+                                end = adjustedTime.end;
+                            }
                         }else {
                             start = new Date(curDate - self.timePeriodObject()[$(event.target).text()][1]);
                             //calculate timezone difference to solve issues caused by daylight saving.
