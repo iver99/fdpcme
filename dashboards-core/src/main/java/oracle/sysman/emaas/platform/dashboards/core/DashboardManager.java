@@ -201,12 +201,14 @@ public class DashboardManager
 			if (!permanent) {
 				ed.setDeleted(dashboardId);
 				dsf.mergeEmsDashboard(ed);
-				dsf.removeEmsSubDashboardById(dashboardId);
+				dsf.removeEmsSubDashboardBySubId(dashboardId);
+                dsf.removeEmsSubDashboardBySetId(dashboardId);
 			}
 			else {
 				dsf.removeAllEmsUserOptions(dashboardId);
-				dsf.removeEmsSubDashboardById(dashboardId);
-				dsf.removeEmsDashboard(ed);
+				dsf.removeEmsSubDashboardBySubId(dashboardId);
+                dsf.removeEmsSubDashboardBySetId(dashboardId);
+                dsf.removeEmsDashboard(ed);
 			}
 		}
 		finally {

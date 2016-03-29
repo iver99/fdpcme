@@ -23,6 +23,7 @@ import mockit.MockUp;
 import oracle.sysman.emaas.platform.dashboards.core.util.FacadeUtil;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsPreference;
+import oracle.sysman.emaas.platform.dashboards.entity.EmsSubDashboard;
 import oracle.sysman.emaas.platform.dashboards.entity.EmsUserOptions;
 
 /**
@@ -473,10 +474,15 @@ public class MockDashboardServiceFacade extends MockUp<DashboardServiceFacade>
 	}
 
 	@Mock
-	public int removeEmsSubDashboardById(long subDashboardId)
-	{
-		return 0;
+	public int removeEmsSubDashboardBySubId(long subDashboardId){
+        return 0;
+    }
+
+	@Mock
+	public int removeEmsSubDashboardBySetId(long dashboardSetId){
+        return 0;
 	}
+
 
 	@Mock
 	public void removeEmsUserOptions(EmsUserOptions emsUserOptions)

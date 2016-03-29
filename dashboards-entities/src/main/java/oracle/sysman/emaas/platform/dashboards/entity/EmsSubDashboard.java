@@ -13,7 +13,8 @@ import java.io.Serializable;
  */
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "EmsSubDashboard.removeDashboardSets", query = "delete from EmsSubDashboard o where o.subDashboardId = :p") })
+@NamedQueries({ @NamedQuery(name = "EmsSubDashboard.removeBySubDashboardID", query = "delete from EmsSubDashboard o where o.subDashboardId = :p"),
+                @NamedQuery(name = "EmsSubDashboard.removeByDashboardSetID", query = "delete from EmsSubDashboard o where o.dashboardSetId = :p")})
 @Table(name = "EMS_DASHBOARD_SET")
 @IdClass(EmsDashboardSetPK.class)
 @Multitenant(MultitenantType.SINGLE_TABLE)

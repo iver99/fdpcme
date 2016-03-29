@@ -313,10 +313,19 @@ public class DashboardServiceFacade
 		commitTransaction();
 	}
 
-	public int removeEmsSubDashboardById(long subDashboardId)
+	public int removeEmsSubDashboardBySubId(long subDashboardId)
 	{
 		getEntityManager().getTransaction().begin();
-		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeDashboardSets").setParameter("p", subDashboardId)
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeBySubDashboardID").setParameter("p", subDashboardId)
+				.executeUpdate();
+		commitTransaction();
+		return deleteCout;
+	}
+
+	public int removeEmsSubDashboardBySetId(long subDashboardId)
+	{
+		getEntityManager().getTransaction().begin();
+		int deleteCout = em.createNamedQuery("EmsSubDashboard.removeByDashboardSetID").setParameter("p", subDashboardId)
 				.executeUpdate();
 		commitTransaction();
 		return deleteCout;
