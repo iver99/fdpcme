@@ -43,16 +43,17 @@ define([
                         setTimeout(function() {
                             $(window).trigger("resize");
                         }, 200);
+                    }else{
+                        var $target =$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container');
+                        homeScrollbarReset($target);
                     }
                 } else {
                     if (dashboardItem.type === "new") {
                         self.includingDashboard(dashboardId);
                         //new dashboard home css change:align
                         setTimeout(function () {
-                            var bodyHeight=$(window).height();                 
-                            var titleToolbarHeight=$('#dashboard-'+dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container').position().top;
-                            var newHeight=Number(bodyHeight)-Number(titleToolbarHeight);
-                            $('.dbs-list-container').css({'height':newHeight});                    
+                            var $target = $('#dashboard-' + dashboardsetToolBarModel.selectedDashboardItem().dashboardId).find('.dbs-list-container');
+                            homeScrollbarReset($target);                   
                     }, 2000);
                     } else {
                         self.loadDashboard(dashboardId);
@@ -282,16 +283,20 @@ define([
             
             function windowResizeProcess(){
                 if ($('.dbs-list-container').length !== 0 && self.selectedDashboardInst().type === 'new') {
-                    var bodyHeight = $(window).height();       
-                    var titleToolbarHeight = $($('.dbs-list-container')[0]).position().top;
-                    var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
-                    $('.dbs-list-container').css({'height': newHeight});
+                    var $target=$($('.dbs-list-container')[0]);
+                    homeScrollbarReset($target);
                 } 
                 else if (self.selectedDashboardInst().type === 'included') {              
                     self.selectedDashboardInst().tilesViewModel.notifyWindowResize();
                     self.selectedDashboardInst().$b.triggerBuilderResizeEvent();
                 }
-            };         
+            }; 
+            function homeScrollbarReset(target){
+                    var bodyHeight = $(window).height();
+                    var titleToolbarHeight = target.position().top;
+                    var newHeight = Number(bodyHeight) - Number(titleToolbarHeight);
+                    $('.dbs-list-container').css({'height': newHeight}); 
+            }
         }
         Builder.registerModule(DashboardsetPanelsModel, 'DashboardsetPanelsModel');
         return DashboardsetPanelsModel;
