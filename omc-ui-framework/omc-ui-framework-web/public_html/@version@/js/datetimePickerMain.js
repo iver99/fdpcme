@@ -92,6 +92,21 @@ require(['ojs/ojcore',
                 self.timePeriodsNotToShow = ko.observableArray([]);
                 self.timeDisplay = ko.observable("short");
                 self.timePeriodPre = ko.observable("Last 7 days");
+                
+                self.isTimePeriodLessThan1day = function(timePeriod) {
+                    if(timePeriod==="Last 15 minutes" || timePeriod==="Last 30 minutes" || timePeriod==="Last 60 minutes" ||
+                                timePeriod==="Last 4 hours" || timePeriod==="Last 6 hours") {
+                        return true;
+                    }
+                    return false;
+                }
+                
+                self.getGMTTimezone = function(date) {
+                    var timezoneOffset = date.getTimezoneOffset()/60;
+                    timezoneOffset = timezoneOffset>0 ? ("GMT-"+timezoneOffset) : ("GMT+"+Math.abs(timezoneOffset));
+                    return timezoneOffset;
+                }
+                
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
@@ -115,8 +130,13 @@ require(['ojs/ojcore',
 //                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
-                        self.start(self.dateTimeConverter1.format(appliedStart));
-                        self.end(self.dateTimeConverter1.format(appliedEnd));
+                        if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                            self.start(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
+                            self.end(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
+                        }else {
+                            self.start(self.dateTimeConverter1.format(appliedStart));
+                            self.end(self.dateTimeConverter1.format(appliedEnd));
+                        }
                         var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
                         self.filterInfo($(eles[0]).find("span").text());
                         self.generateData(start, end);
@@ -138,8 +158,15 @@ require(['ojs/ojcore',
                         console.log(tf);
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
-                        self.start3(self.dateTimeConverter1.format(appliedStart));
-                        self.end3(self.dateTimeConverter1.format(appliedEnd));
+//                        self.start3(self.dateTimeConverter1.format(appliedStart));
+//                        self.end3(self.dateTimeConverter1.format(appliedEnd));
+                        if(self.isTimePeriodLessThan1day(tp) && (start.getTimezoneOffset() !== end.getTimezoneOffset())) {
+                            self.start3(self.dateTimeConverter1.format(appliedStart)+" ("+self.getGMTTimezone(start)+")");
+                            self.end3(self.dateTimeConverter1.format(appliedEnd)+" ("+self.getGMTTimezone(end)+")");
+                        }else {
+                            self.start3(self.dateTimeConverter1.format(appliedStart));
+                            self.end3(self.dateTimeConverter1.format(appliedEnd));
+                        }
                         var eles = $('div').filter(function(){return this.id.match(/tfInfo_.*\d$/);});
                         console.log($(eles[1]).find("span").text());
                         self.filterInfo3($(eles[1]).find("span").text());
