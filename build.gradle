@@ -240,6 +240,8 @@ task preBuildCompile(type: Copy) {
    from configurations.prebuild_cache
    from configurations.prebuild_groovy
    from configurations.prebuild_integtest
+   from configurations.webdriver
+   from configurations.testConfig
    into "$afDir"
    rename(/registry-client-1.\d+.\d+-\d+.jar/, 'registry-client-1.x.jar')
    rename(/registry-lookup-client-1.\d+.\d+-\d+.jar/, 'registry-lookup-client-1.x.jar')

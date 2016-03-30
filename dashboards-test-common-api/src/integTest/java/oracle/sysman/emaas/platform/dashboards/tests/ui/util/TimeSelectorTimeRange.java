@@ -14,4 +14,5 @@ public class TimeSelectorTimeRange
 	public static final String LAST_1_YEAR = "Last 1 year";
 	public static final String LATEST = "Latest";
 	public static final String CUSTOM = "Custom";
+	
 }

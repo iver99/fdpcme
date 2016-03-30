@@ -18,7 +18,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Keys;
 
-import  oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorTimeRange;
+import  oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
 
 import org.testng.Assert;
 
@@ -199,7 +200,8 @@ public class TimeSelectorUtil {
     	//click time filter icon
     	webd.getLogger().info("Click Time Filter Icon");
 		webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeFilterIcon)).click();
-		webd.takeScreenShot();	    	
+		webd.takeScreenShot();
+		
     	
     	//set exclude hours
 		webd.getLogger().info("Enter excluded time");

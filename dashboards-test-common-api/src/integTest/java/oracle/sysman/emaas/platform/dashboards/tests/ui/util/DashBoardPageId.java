@@ -1,4 +1,4 @@
-package oracle.sysman.emaas.platform.dashboards.test.ui.util;
+package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 
 import oracle.sysman.qatool.uifwk.webdriver.*;
 
