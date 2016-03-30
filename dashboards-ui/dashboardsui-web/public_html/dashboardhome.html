@@ -35,11 +35,11 @@
             <!--button id="cbtn" class="dbs-home-button-create-new-dashboard"
                     data-bind="attr: { 'title': getNlsString('DBS_HOME_CREATE_BTN_TT_CONTENT') }, click: createDashboardClicked, ojComponent: { component:'ojButton', label: getNlsString('DBS_HOME_CREATE_BTN_LABEL')}"></button-->
             <button data-bind="visible:showExploreDataBtn,ojComponent: {component: 'ojButton', label: getNlsString('DBS_HOME_EXPLORE_BTN_LABEL'), 
-                                                                             menu: '#exploreDataMenu', rootAttributes: {'style': 'margin-left: 8px;'}}, 
+                                                                             menu: '#exploreDataMenu-'+sortById, rootAttributes: {'style': 'margin-left: 8px;'}}, 
                                                                attr: { 'title': getNlsString('DBS_HOME_EXPLORE_BTN_TT') }">
             </button>
-            <ul id="exploreDataMenu" style="display:none"
-                data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect}">
+            <ul style="display:none"
+                data-bind="ojComponent: {component: 'ojMenu', select: exploreDataMenuItemSelect},attr:{id:'exploreDataMenu-'+sortById}">
                 <!-- ko foreach: exploreDataLinkList -->
                 <li>
                     <a href="#" data-bind="text:name,value:href"></a>
@@ -47,7 +47,7 @@
                 <!-- /ko -->
             </ul>
             <span role="separator" class=" oj-toolbar-separator" style="margin-bottom: 4px;"></span>
-            <div id="viewbtnset" aria-label="Choose one view"
+            <div class="viewbtnset" aria-label="Choose one view"
                  data-bind="ojComponent: {component: 'ojButtonset', checked: $component.isTilesView, optionChange: handleViewChanged}" >
                 <label data-bind="attr: { 'for': tilesViewGridId }"></label>
                 <input type="radio" name="view" data-bind="value: tilesViewGrid, attr: { 'id': tilesViewGridId },
@@ -96,8 +96,8 @@
     <!-- dashboards table end -->
 
     <!-- paging start -->
-    <div id="toolbar3" aria-label="Pagination toolbar" style="margin-left: 5px;">
-        <div id="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
+    <div class="toolbar3" aria-label="Pagination toolbar" style="margin-left: 5px;">
+        <div class="paging" data-bind="ojComponent: {component: 'ojPagingControl', data: pagingDatasource, pageSize: pageSize}, visible: showPaging"></div>
     </div>
     <!-- paging end -->
 
