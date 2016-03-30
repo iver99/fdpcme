@@ -347,10 +347,10 @@ define(['knockout',
                             self.extendedOptions = {};
                             self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
                         } else {
-                            self.extendedOptions = JSON.parse(resp.extendedOptions);
-                            if (typeof self.extendedOptions !== "object") {
-                                self.extendedOptions = {};
-                            }
+                            self.extendedOptions ={};                            
+                            if(typeof(resp.extendedOptions)!=="undefined"){
+                                self.extendedOptions = JSON.parse(resp.extendedOptions);
+                            };            
                             self.autoRefreshInterval(parseInt(resp.autoRefreshInterval));
                             if( isNaN(self.autoRefreshInterval())){
                                 self.autoRefreshInterval(DEFAULT_AUTO_REFRESH_INTERVAL);
