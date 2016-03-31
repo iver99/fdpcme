@@ -3,20 +3,21 @@
 	<classpathentry kind="src" path="src/integTest/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/qatools-standalone-2.0.0-20160328062559.zip"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-api-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-firefox-driver-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-chrome-driver-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-htmlunit-driver-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-ie-driver-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-java-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-remote-driver-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-safari-driver-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-server-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/selenium-support-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/emaas-qatool-jetuiautomation-utility-2.0.0-20160328062559.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/emaas-selenium-remote-driver-2.44.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/em-qatool-os-webdriver-2.0.0.jar"/>
-	<classpathentry kind="lib" path="/scratch/cawei/git/emcpdf/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-2.0.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-qatool-jetuiautomation-utility-2.0.0-20160330193649.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-selenium-remote-driver-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-api-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-firefox-driver-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-chrome-driver-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-htmlunit-driver-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-ie-driver-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-java-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-remote-driver-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-safari-driver-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-support-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-server-2.44.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/qatools-standalone-2.0.0-20160330193649.zip"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emsaas-qatool-jet-utility-3.0.0-20160330193649.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
