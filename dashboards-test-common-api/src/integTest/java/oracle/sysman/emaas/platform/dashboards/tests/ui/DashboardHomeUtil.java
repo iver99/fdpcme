@@ -20,7 +20,7 @@ import org.openqa.selenium.Keys;
 
 import org.testng.Assert;
 
-public class DsbHomeUtil {
+public class DashboardHomeUtil {
 
 	private static WebDriver driver;
 

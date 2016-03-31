@@ -20,7 +20,7 @@ import org.openqa.selenium.Keys;
 
 import org.testng.Assert;
 
-public class LandingHomeUtil {
+public class WelcomeUtil {
 
 	private static WebDriver driver;
 
