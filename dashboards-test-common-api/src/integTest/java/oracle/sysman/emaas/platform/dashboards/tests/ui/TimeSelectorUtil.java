@@ -1,7 +1,24 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorTimeRange;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.TimeSelectorUIControls;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import oracle.sysman.emsaas.login.LoginUtils;
+import oracle.sysman.emsaas.login.PageUtils;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
+import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
+
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.Keys;
+
+import  oracle.sysman.emaas.platform.dashboards.tests.ui.util.*;
 
 public class TimeSelectorUtil
 {
@@ -74,10 +91,10 @@ public class TimeSelectorUtil
 				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_6Hour)).click();
 				webd.takeScreenShot();
 				break;
-				//    		case TimeSelectorTimeRange.LAST_1_DAY:
-				//    			webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_1Day)).click();
-				//    			webd.takeScreenShot();
-				//    			break;
+			case TimeSelectorTimeRange.LAST_1_DAY:
+				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_1Day)).click();
+				webd.takeScreenShot();
+				break;
 			case TimeSelectorTimeRange.LAST_7_DAYS:
 				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_7Days)).click();
 				webd.takeScreenShot();
@@ -90,10 +107,10 @@ public class TimeSelectorUtil
 				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_90Days)).click();
 				webd.takeScreenShot();
 				break;
-			case TimeSelectorTimeRange.LAST_1_YEAR:
-				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_1Year)).click();
-				webd.takeScreenShot();
-				break;
+//			case TimeSelectorTimeRange.LAST_1_YEAR:
+//				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_1Year)).click();
+//				webd.takeScreenShot();
+//				break;
 			case TimeSelectorTimeRange.LATEST:
 				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_Latest)).click();
 				webd.takeScreenShot();
@@ -150,10 +167,10 @@ public class TimeSelectorUtil
 				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_90Days)).click();
 				webd.takeScreenShot();
 				break;
-			//			case TimeSelectorTimeRange.LAST_1_YEAR:
-			//				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_1Year)).click();
-			//				webd.takeScreenShot();
-			//				break;
+//			case TimeSelectorTimeRange.LAST_1_YEAR:
+//				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_1Year)).click();
+//				webd.takeScreenShot();
+//				break;
 			case TimeSelectorTimeRange.LATEST:
 				webd.getWebDriver().findElement(By.cssSelector(TimeSelectorUIControls.sTimeRange_Latest)).click();
 				webd.takeScreenShot();
