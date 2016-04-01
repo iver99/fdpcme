@@ -70,8 +70,17 @@ public class DashBoardPageId
 	public static final String Access_Date_ID = "/html/body/div/div/div/ul/li[2]/div";
 
 	//search
-	public static final String SearchDSBoxID = "sinput";
+	//public static final String SearchDSBoxID = "sinput";
 
+	public static final String SearchDashboardInputLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-sinput')]";
+	public static final String SearchDashboardSearchBtnLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dbs-search-icon')]";
+
+	//Dahobrd home Views
+	public static final String DashboardsGridViewLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'icon-gridview-16')]";
+	public static final String DashboardsListViewLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'icon-listview-16')]";
+
+	//Dashboard
+	public static final String DashboardLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'icon-listview-16')]";
 	//Branding Bar links
 	//Home Link
 	//public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
