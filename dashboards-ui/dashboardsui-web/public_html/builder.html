@@ -217,7 +217,7 @@
                         
                         <script type="text/html" id="dsbOptsMenuItemTemplate">
                             <!-- ko if: !disabled  -->
-                            <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile">
+                            <li data-bind="css: {'oj-disabled': disabled}, visible: showOnMobile,attr:{'data-singledb-option':label}">
                                     <a data-bind="attr:{'id':id, 'title': title}, href: url, click: onclick">
                                         <span class="oj-menu-item-icon oj-fwk-icon dbd-toolbar-fa-icon" data-bind="css: icon"></span>
                                         <span data-bind="text: label"></span>
@@ -242,7 +242,7 @@
                             <span class="dbd-toolbar-icon-delete"></span>
                         </div>
                         
-                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print"
+                        <button class="dashboard-screenshot oj-button oj-default oj-button-half-chrome no-print toolbar-save"
                                 data-bind="click: handleDashboardSave, ojComponent: {
                                         component:'ojButton', chroming: 'half', label: getNlsString('COMMON_BTN_SAVE'), disabled: disableSave, 
                                         icons: {start: 'fa-icon-font fa-icon-font-16 dbd-toolbar-icon-save'}
