@@ -1,5 +1,6 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class DashboardHomeUtil
@@ -37,12 +38,14 @@ public class DashboardHomeUtil
 
 	public static void gridView() throws Exception
 	{
-
+		driver.click(DashBoardPageId.DashboardsGridViewLocator);//("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
+		DashboardHomeUtil.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 	}
 
 	public static void listView() throws Exception
 	{
-
+		driver.click(DashBoardPageId.DashboardsListViewLocator);//("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
+		DashboardHomeUtil.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 	}
 
 	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
@@ -52,7 +55,16 @@ public class DashboardHomeUtil
 
 	public static void search(String searchString) throws Exception
 	{
-
+		if (searchString == null) {
+			return;
+		}
+		driver.getLogger().info("[DashboardHomeUtil] call search");
+		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
+		driver.getElement(DashBoardPageId.SearchDashboardInputLocator).clear();
+		driver.click(DashBoardPageId.SearchDashboardInputLocator);
+		DashboardHomeUtil.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		driver.sendKeys(DashBoardPageId.SearchDashboardInputLocator, searchString);
+		DashboardHomeUtil.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 	}
 
 	public static void selectOOB(String dashboardName) throws Exception
@@ -63,6 +75,11 @@ public class DashboardHomeUtil
 	public static void sortBy(String option) throws Exception
 	{
 
+	}
+
+	public static void waitForMilliSeconds(long millisSec) throws Exception
+	{
+		Thread.sleep(millisSec);
 	}
 
 }

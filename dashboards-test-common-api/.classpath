@@ -19,5 +19,11 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-server-2.44.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/qatools-standalone-2.0.0-20160330193649.zip"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emsaas-qatool-jet-utility-3.0.0-20160330193649.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/commons-codec-1.9.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/commons-exec-1.1.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/commons-io-2.4.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/gson-2.3.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/guava-18.0.jar"/>
+	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jmockit-1.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
