@@ -71,30 +71,34 @@ public class WelcomeUtil
 	public static void visitITA(WebDriver webd, String selection) throws Exception
 	{
 		webd.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
-		webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_SelectID)).click();
-		switch (selection) {
-			case "default":
-				webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITALinkID)).click();
-				break;
-			case "performanceAnalyticsDatabase":
-				webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_PADatabase)).click();
-				break;
-			case "performanceAnalyticsMiddleware":
-				webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_PAMiddleware)).click();
-				break;
-			case "resourceAnalyticsDatabase":
-				webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_RADatabase)).click();
-				break;
-			case "resourceAnalyticsMiddleware":
-				webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_RAMiddleware)).click();
-				break;
-			case "dataExplorerAnalyze":
-				webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_DEAnalyze)).click();
-				break;
-			case "dataExplorer":
-				webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_DE)).click();
-				break;
+
+		if (selection.equals("default")) {
+			webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITALinkID)).click();
 		}
+		else {
+			webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_SelectID)).click();
+			switch (selection) {
+				case "performanceAnalyticsDatabase":
+					webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_PADatabase)).click();
+					break;
+				case "performanceAnalyticsMiddleware":
+					webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_PAMiddleware)).click();
+					break;
+				case "resourceAnalyticsDatabase":
+					webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_RADatabase)).click();
+					break;
+				case "resourceAnalyticsMiddleware":
+					webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_RAMiddleware)).click();
+					break;
+				case "dataExplorerAnalyze":
+					webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_DEAnalyze)).click();
+					break;
+				case "dataExplorer":
+					webd.getWebDriver().findElement(By.cssSelector(DashBoardPageId.Welcome_ITA_DE)).click();
+					break;
+			}
+		}
+
 		webd.takeScreenShot();
 	}
 
