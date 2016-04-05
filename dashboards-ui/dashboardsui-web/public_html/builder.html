@@ -10,7 +10,7 @@
 
         <link rel="stylesheet" href="@version@/css/dashboards-common-alta.css" type="text/css"/>
         <link rel="stylesheet" href="@version@/css/builder-alta.css" type="text/css"/>
-   
+     
         <script data-main="@version@/js/builderMain" src="libs/@version@/js/oraclejet/js/libs/require/require.js"></script>
 
     </head>
@@ -351,9 +351,9 @@
                             <p data-bind="html: getNlsString('COMMON_DELETE_DASHBOARD_MSG', dashboardName())"></p>
                         </div>
                         <div class="oj-dialog-footer">
-                            <button data-bind="click: handleDeleteDashboardClicked, 
+                            <button data-delete-dialog="Delete" data-bind="click: handleDeleteDashboardClicked, 
                                                ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_DELETE'), rootAttributes: {style:'margin-right:5px'}}"></button>
-                            <button id="dbs_dcbtn" data-bind="click: handleDeleteDashboardCancelled, 
+                            <button id="dbs_dcbtn" data-delete-dialog="Cancel" data-bind="click: handleDeleteDashboardCancelled, 
                                                ojComponent: { component: 'ojButton', label: getNlsString('COMMON_BTN_CANCEL'), rootAttributes: {style:'margin-right:5px'}}"></button>
                         </div>
                     </div>
