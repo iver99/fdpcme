@@ -564,14 +564,21 @@ public class DashBoardUtils {
 		
 		driver.takeScreenShot();
 	}
-	public static void searchDashBoard(String board) throws Exception
+	public static void searchDashBoard(WebDriver wdriver, String board) throws Exception
 	{
-		driver.takeScreenShot();
-		driver.getLogger().info("go into search DashBoard");
-		driver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+		wdriver.takeScreenShot();
+		wdriver.getLogger().info("go into search DashBoard");		
+		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+		wdriver.click(DashBoardPageId.SearchDSBoxID);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		wdriver.getLogger().info("search dashboard: "+board);
+		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+
 		driver.click("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
-		driver.takeScreenShot();
-		
+		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
+		wdriver.takeScreenShot();
+	
 	}
 	public static void checkBrandingBarLink() throws Exception
 	{
