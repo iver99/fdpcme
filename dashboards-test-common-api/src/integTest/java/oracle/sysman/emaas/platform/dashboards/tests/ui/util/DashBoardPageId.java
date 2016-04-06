@@ -188,6 +188,23 @@ public class DashBoardPageId
 	public static final String NameEditOKID = "builder-dbd-name-ok";
 	public static final String DescEditOKID = "builder-dbd-description-ok";
 
+	//dashboard builder options
+	public static final String BuilderOptionsMenuLocator = "//button[contains(@class, 'dashboardOptsBtn')]";
+	public static final String BuilderOptionsAutoRefreshLocator = "id=emcpdf_dsbopts_refresh";
+	public static final String BuilderOptionsAutoRefreshOffLocator = "//li[@data-singledb-option='Off']/a";
+	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
+	public static final String BuilderOptionsDeleteLocator = "id=emcpdf_dsbopts_delete";
+	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
+
+	//dashboard delete dialog
+	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-dbs_cfmDialog";
+	public static final String BuilderDeleteDialogDeleteBtnLocator = "//button[@data-delete-dialog='Delete']";
+
+	// auto refresh menu items
+	public static final String BuilderAutoRefreshOffSelectedLocator = "//li[@data-singledb-option='Off']/a/span[contains(@class, 'fa-check')]";
+	public static final String BuilderAutoRefreshOn5MinSelectedLocator = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
+
+	// for R1.6, following ids are not used any more
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
 	public static final String AutoRefreshID = "//*[@id='ojChoiceId_autoRefreshSelect_selected']";
 	public static final String AutoRefreshBy_15_Secs_ID = "/html/body/div[*]/div/div/ul/li[2]/div";//"/html/body/div[1]/div/div/ul/li[2]/div";//oj-listbox-result-label-2";
@@ -232,27 +249,27 @@ public class DashBoardPageId
 	public static final String WelcomeID = "/html/body/div[2]/div/div[1]";//div[@class='welcome-slogan']";//"";
 
 	//welcome page verify
-	public static final String Welcome_APMLinkCSS = ".landing-home-box-content-head[data-bind='text: APM']";
-	public static final String Welcome_LALinkCSS = ".landing-home-box-content-head[data-bind='text: LA']";
-	public static final String Welcome_ITALinkID = ".landing-home-box-content-head[data-bind='text: ITA']";
-	public static final String Welcome_DashboardsLinkID = "/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
-	public static final String Welcome_DataExp = "/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
-	public static final String Welcome_ITA_SelectID = "ojChoiceId_ITA_options_selected";
-	public static final String Welcome_DataExp_SelectID = "ojChoiceId_autogen1_selected";
-	public static final String Welcome_LearnMore_getStarted = "//a[contains(text(),'How to get started')]";
-	public static final String Welcome_LearnMore_Videos = "//a[contains(text(),'Videos')]";
-	public static final String Welcome_LearnMore_ServiceOffering = "//a[contains(text(),'Service Offerings')]";
-	public static final String Welcome_ITA_PADatabase = "/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-8";//ITA Select Item : Performance Analytics - Database
-	public static final String Welcome_ITA_PAMiddleware = "/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-9";//ITA Select Item : Performance Analytics - Middleware
-	public static final String Welcome_ITA_RADatabase = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-10";//ITA Select Item : Resource Analytics - Database
-	public static final String Welcome_ITA_RAMiddleware = "/html/body/div[1]/div/div/ul/li[5]/div";//"oj-listbox-result-label-11";//ITA Select Item : Resource Analytics - Middleware
-	public static final String Welcome_ITA_DEAnalyze = "/html/body/div[1]/div/div/ul/li[6]/div";//"oj-listbox-result-label-12";//ITA Select Item : Data Explorer - Analyze
-	public static final String Welcome_ITA_DE = "/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
-	public static final String Welcome_DataExp_Log = "/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log
-	public static final String Welcome_DataExp_Analyze = "/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-5";//Data Explorers Select Item : Analyze
-	public static final String Welcome_DataExp_Search = "/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search
+	public static final String Welcome_APMLinkCSS = "APM_wrapper"; //".landing-home-box-content-head[data-bind='text: APM']";
+	public static final String Welcome_LALinkCSS = "LA_wrapper"; //".landing-home-box-content-head[data-bind='text: LA']";
+	public static final String Welcome_ITALinkID = "ITA_wrapper"; //".landing-home-box-content-head[data-bind='text: ITA']";
+	public static final String Welcome_DashboardsLinkID = "dashboards_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[4]/a/div/div[2]/div[1]";
+	public static final String Welcome_DataExp = "data_explore_wrapper"; //"/html/body/div[2]/div/div[2]/ul/li[5]/div/div/div[2]/div[1]";
+	public static final String Welcome_ITA_SelectID = "ITA_options"; //"ojChoiceId_ITA_options_selected";
+	public static final String Welcome_DataExp_SelectID = "dataExp_options";//"dataExp_Select"; //"ojChoiceId_autogen1_selected";
+	public static final String Welcome_LearnMore_getStarted = "getStarted"; //"//a[contains(text(),'How to get started')]";
+	public static final String Welcome_LearnMore_Videos = "videos"; //"//a[contains(text(),'Videos')]";
+	public static final String Welcome_LearnMore_ServiceOffering = "service_offerings"; //"//a[contains(text(),'Service Offerings')]";
+	public static final String Welcome_ITA_PADatabase = "ITA_DB_perf"; //"/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-8";//ITA Select Item : Performance Analytics - Database
+	public static final String Welcome_ITA_PAMiddleware = "ITA_mw_perf"; //"/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-9";//ITA Select Item : Performance Analytics - Middleware
+	public static final String Welcome_ITA_RADatabase = "ITA_DB_resource"; //"/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-10";//ITA Select Item : Resource Analytics - Database
+	public static final String Welcome_ITA_RAMiddleware = "ITA_mw_resource"; //"/html/body/div[1]/div/div/ul/li[5]/div";//"oj-listbox-result-label-11";//ITA Select Item : Resource Analytics - Middleware
+	public static final String Welcome_ITA_DEAnalyze = "ITA_Analyze"; //"/html/body/div[1]/div/div/ul/li[6]/div";//"oj-listbox-result-label-12";//ITA Select Item : Data Explorer - Analyze
+	public static final String Welcome_ITA_DE = "ITA_Search"; //"/html/body/div[1]/div/div/ul/li[7]/div";//"oj-listbox-result-label-13";//ITA Select Item : Data Explorer
+	public static final String Welcome_DataExp_Log = "dataExp_Log"; //"/html/body/div[1]/div/div/ul/li[2]/div";//"oj-listbox-result-label-4";//Data Explorers Select Item : Log
+	public static final String Welcome_DataExp_Analyze = "dataExp_Analyze"; //"/html/body/div[1]/div/div/ul/li[3]/div";//"oj-listbox-result-label-5";//Data Explorers Select Item : Analyze
+	public static final String Welcome_DataExp_Search = "dataExp_Search"; //"/html/body/div[1]/div/div/ul/li[4]/div";//"oj-listbox-result-label-6";//Data Explorers Select Item : Search
 
-	//Sharing and stoping dashbaord
+	//Sharing and stoping dashboard
 	public static final String option = "dashboardOptsBtn";
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
