@@ -69,6 +69,7 @@ public class DashBoardPageId
 	public static final String SortDropListID = "//*[@id='ojChoiceId_sortcb_selected']";//ojChoiceId_sortcb";//ojChoiceId_sortcb_selected";//sortcb";
 	public static final String Access_Date_ID = "/html/body/div/div/div/ul/li[2]/div";
 
+	public static final String BrandingBarDashboardLinkLocator = "//*[@id='links_menu']//*[contains(@data-bind, 'dashboardLinkLabel')]";
 	// filter check boxes
 	public static final String FilterApmLocator = "//*[@id='apmopt']";
 	public static final String FilterItaLocator = "//*[@id='itaopt']";
