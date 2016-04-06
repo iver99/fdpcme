@@ -1,92 +1,117 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.logging.Level;
 
-import oracle.sysman.emsaas.login.LoginUtils;
-import oracle.sysman.emsaas.login.PageUtils;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import oracle.sysman.qatool.uifwk.webdriver.WebDriverUtils;
 
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.Keys;
-
-import org.testng.Assert;
-
-public class DashboardBuilderUtil {
+public class DashboardBuilderUtil
+{
 
 	private static WebDriver driver;
 
-    public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	public static final String REFRESH_DASHBOARD_PARAM_OFF = "Off";
+	public static final String REFRESH_DASHBOARD_PARAM_5MIN = "On (Every 5 Minutes)";
+
+	public static void asHomeOption(Boolean home) throws Exception
+	{
+
+	}
+
+	public static void deleteDashboard() throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard started");
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsDeleteLocator);
+		driver.click(DashBoardPageId.BuilderOptionsDeleteMenuLocator);
+		driver.waitForElementPresent(DashBoardPageId.BuilderDeleteDialogLocator);
+		driver.click(DashBoardPageId.BuilderDeleteDialogDeleteBtnLocator);
+		driver.waitForElementPresent(DashBoardPageId.SearchDashboardInputLocator);
+
+		driver.getLogger().info("DashboardBuilderUtil.deleteDashboard completed");
+	}
+
+	public static void deleteDashboardSet() throws Exception
+	{
+
+	}
+
+	public static void duplicate(String name, String descriptions) throws Exception
+	{
+
+	}
+
+	public static void editDashboard(String name, String descriptions) throws Exception
+	{
+
+	}
+
+	public static void editDashboardSet(String name, String descriptions, Boolean shareOption) throws Exception
+	{
+
+	}
+
+	public static void favoriteOption(Boolean favorite) throws Exception
+	{
+
+	}
+
+	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
 	{
 		driver = webDriver;
 	}
-     	
-    public static void save() throws Exception
-    {
-    	
-    }
-    public static void editDashboard(String name, String descriptions) throws Exception
-    {
-    	
-    }
-    public static void shareDashboard() throws Exception
-    {
-    	
-    }
-    public static void unshareDashboard() throws Exception
-    {
-    	
-    }
-    public static void print() throws Exception
-    {
-    	
-    }
-    public static void duplicate(String name, String descriptions) throws Exception
-    {
-    	
-    }
-    
-    public static void editDashboardSet(String name, String descriptions, Boolean shareOption) throws Exception
-    {
-    	
-    }
-    public static void favoriteOption(Boolean favorite) throws Exception
-    {
-    	
-    }
-    public static void asHomeOption(Boolean home) throws Exception
-    {
-    	
-    }
-    public static void deleteDashboard() throws Exception
-    {
-    	
-    }
-    public static void deleteDashboardSet() throws Exception
-    {
-    	
-    }
-    public static void refreshDashboard(String refreshSettings) throws Exception
-    {
-    	
-    }
-    
-    public static void refreshDashboardSet(String refreshSettings) throws Exception
-    {
-    	
-    }
-    
-    
-    
-    
-    
+
+	public static void print() throws Exception
+	{
+
+	}
+
+	public static void refreshDashboard(String refreshSettings) throws Exception
+	{
+		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started");
+
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshLocator);
+		driver.click(DashBoardPageId.BuilderOptionsAutoRefreshLocator);
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
+		switch (refreshSettings) {
+			case REFRESH_DASHBOARD_PARAM_OFF:
+				driver.check(DashBoardPageId.BuilderOptionsAutoRefreshOffLocator);
+				driver.waitForElementPresent(DashBoardPageId.BuilderAutoRefreshOffSelectedLocator);
+				break;
+			case REFRESH_DASHBOARD_PARAM_5MIN:
+				driver.click(DashBoardPageId.BuilderOptionsAutoRefreshOn5MinLocator);
+				driver.waitForElementPresent(DashBoardPageId.BuilderAutoRefreshOn5MinSelectedLocator);
+				break;
+			default:
+				driver.getLogger().log(Level.SEVERE, "Input parameter " + refreshSettings + " is invalid. ");
+				return;
+		}
+		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard completed");
+
+	}
+
+	public static void refreshDashboardSet(String refreshSettings) throws Exception
+	{
+
+	}
+
+	public static void save() throws Exception
+	{
+
+	}
+
+	public static void shareDashboard() throws Exception
+	{
+
+	}
+
+	public static void unshareDashboard() throws Exception
+	{
+
+	}
 
 }

@@ -165,6 +165,23 @@ public class DashBoardPageId
 	public static final String NameEditOKID = "builder-dbd-name-ok";
 	public static final String DescEditOKID = "builder-dbd-description-ok";
 
+	//dashboard builder options
+	public static final String BuilderOptionsMenuLocator = "//button[contains(@class, 'dashboardOptsBtn')]";
+	public static final String BuilderOptionsAutoRefreshLocator = "id=emcpdf_dsbopts_refresh";
+	public static final String BuilderOptionsAutoRefreshOffLocator = "//li[@data-singledb-option='Off']/a";
+	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
+	public static final String BuilderOptionsDeleteLocator = "id=emcpdf_dsbopts_delete";
+	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
+
+	//dashboard delete dialog
+	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-dbs_cfmDialog";
+	public static final String BuilderDeleteDialogDeleteBtnLocator = "//button[@data-delete-dialog='Delete']";
+
+	// auto refresh menu items
+	public static final String BuilderAutoRefreshOffSelectedLocator = "//li[@data-singledb-option='Off']/a/span[contains(@class, 'fa-check')]";
+	public static final String BuilderAutoRefreshOn5MinSelectedLocator = "//li[@data-singledb-option='On (Every 5 Minutes)']/a/span[contains(@class, 'fa-check')]";
+
+	// for R1.6, following ids are not used any more
 	//refresh //*[@id='ojChoiceId_autoRefreshSelect_selected
 	public static final String AutoRefreshID = "//*[@id='ojChoiceId_autoRefreshSelect_selected']";
 	public static final String AutoRefreshBy_15_Secs_ID = "/html/body/div[*]/div/div/ul/li[2]/div";//"/html/body/div[1]/div/div/ul/li[2]/div";//oj-listbox-result-label-2";
