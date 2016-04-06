@@ -69,6 +69,28 @@ public class DashBoardPageId
 	public static final String SortDropListID = "//*[@id='ojChoiceId_sortcb_selected']";//ojChoiceId_sortcb";//ojChoiceId_sortcb_selected";//sortcb";
 	public static final String Access_Date_ID = "/html/body/div/div/div/ul/li[2]/div";
 
+	public static final String BrandingBarDashboardLinkLocator = "//*[@id='links_menu']//*[contains(@data-bind, 'dashboardLinkLabel')]";
+	// filter check boxes
+	public static final String FilterApmLocator = "//*[@id='apmopt']";
+	public static final String FilterItaLocator = "//*[@id='itaopt']";
+	public static final String FilterLaLocator = "//*[@id='laopt']";
+	public static final String FilterOracleLocator = "//*[@id='oracleopt']";
+	public static final String FilterShareLocator = "//*[@id='shareopt']";
+	public static final String FilterMeLocator = "//*[@id='otheropt']";
+	public static final String FilterFavoriteLocator = "//*[@id='myfavorites']";
+	// sort by
+	public static final String SortBySelectLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'dsb-sortcb')]//*[contains(@class, 'oj-select-chosen')]";
+	public static final String SortByDefaultLocator = "/html/body/div/div/div/ul/li[1]/div";
+	public static final String SortByNameASCLocator = "/html/body/div/div/div/ul/li[2]/div";
+	public static final String SortByNameDSCLocator = "/html/body/div/div/div/ul/li[3]/div";
+	public static final String SortByCreatedByASCLocator = "/html/body/div/div/div/ul/li[4]/div";
+	public static final String SortByCreatedByDSCLocator = "/html/body/div/div/div/ul/li[5]/div";
+	public static final String SortByCreateDateASCLocator = "/html/body/div/div/div/ul/li[6]/div";
+	public static final String SortByCreateDateDSCLocator = "/html/body/div/div/div/ul/li[7]/div";
+	public static final String SortByLastModifiedASCLocator = "/html/body/div/div/div/ul/li[8]/div";
+	public static final String SortByLastModifiedDSCLocator = "/html/body/div/div/div/ul/li[9]/div";
+	public static final String SortByLastAccessASCLocator = "/html/body/div/div/div/ul/li[10]/div";
+	public static final String SortByLastAccessDSCLocator = "/html/body/div/div/div/ul/li[11]/div";
 	//search
 	//public static final String SearchDSBoxID = "sinput";
 
@@ -80,7 +102,9 @@ public class DashBoardPageId
 	public static final String DashboardsListViewLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'icon-listview-16')]";
 
 	//Dashboard
-	public static final String DashboardLocator = "//div[not(contains(@style,'display:none'))]//*[contains(@class, 'icon-listview-16')]";
+	public static final String DashboardLocator = "//*[contains(@class, 'dbs-dsbnameele') and text() = '_name_']";//"//[contains(@class, 'dbs-dsbnameele')]//text()[. = '_name_']";//*[contains(@class, 'icon-listview-16')]";
+	public static final String OOBDashboardLocator = "//*[contains(@class, 'dbs-dsbsystem') and text() = '_name_']";
+
 	//Branding Bar links
 	//Home Link
 	//public static final String HomeLinkID = "/html/body/div[*]/header/div/div[1]/div[3]/div/div/div[1]/div[2]/div[1]/a";
@@ -202,6 +226,16 @@ public class DashBoardPageId
 	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
 	public static final String RemoveTileID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
 
+	//tile css locators -> css=<locator>
+    public static final String WidgetTitleCSS = ".dbd-widget";
+    public static final String TileTitleCSS = "h2.dbd-tile-title";
+    public static final String ConfigTileCSS = "button[id^=actionButton]";
+    public static final String WiderTileCSS = "li[data-option=wider]";
+    public static final String NarrowerTileCSS = "li[data-option=narrower]";
+    public static final String ShorterTileCSS = "li[data-option=shorter]";
+    public static final String TallerTileCSS = "li[data-option=taller]";
+    public static final String RemoveTileCSS = "li[data-option=remove]";
+
 	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[1]/div[1]/div/div[2]/div/span/span";//"/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
 	public static final String CustomDateTimeID = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[11]";
@@ -250,5 +284,12 @@ public class DashBoardPageId
 	public static final String option = "dashboardOptsBtn";
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
+
+    public static final String TILE_WIDER = "wider";
+    public static final String TILE_NARROWER = "narrower";
+    public static final String TILE_TALLER = "taller";
+    public static final String TILE_SHORTER = "shorter";
+
+
 
 }
