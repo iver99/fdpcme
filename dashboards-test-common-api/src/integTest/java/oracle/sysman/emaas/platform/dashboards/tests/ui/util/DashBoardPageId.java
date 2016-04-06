@@ -189,6 +189,14 @@ public class DashBoardPageId
 	public static final String NameEditOKID = "builder-dbd-name-ok";
 	public static final String DescEditOKID = "builder-dbd-description-ok";
 
+	//dashboard builder tile edit area
+	public static final String BuilderTilesEditArea = "//div[contains(@class, 'tiles-wrapper')]";
+	public static final String BuilderTileTitleLocator = "//h2[contains(@class, 'dbd-tile-title') and @data-tile-title='%s']";
+	public static final String BuilderTileConfigLocator = "following-sibling::*//button[contains(@class, 'dbd-tile-action')]";
+	public static final String BuilderTileDataExploreLocator = "following-sibling::*//button[contains(@class, 'dbd-data-explore')]";
+	public static final String BuilderTileShowLocator = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='show']";
+	public static final String BuilderTileHideLocator = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='hide']";
+
 	//dashboard builder options
 	public static final String BuilderOptionsMenuLocator = "//button[contains(@class, 'dashboardOptsBtn')]";
 	public static final String BuilderOptionsAutoRefreshLocator = "id=emcpdf_dsbopts_refresh";
