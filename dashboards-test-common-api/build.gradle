@@ -1,3 +1,4 @@
+version=1.6
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
@@ -34,4 +35,6 @@ artifactoryPublish {
 publications ('integTest')
 
     }
-
+dependencies {
+testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
+}
