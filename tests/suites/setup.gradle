@@ -95,7 +95,7 @@ String CLEANUP_SQL="cleanup.sql"
 
 String	db_usr="SYSEMS_T_3"
 String	db_pw="welcome1"
-String	db_url='jdbc:oracle:thin:@slc07her.us.oracle.com:1521:orcl12c'
+String	db_url='jdbc:oracle:thin:@den00ytp.us.oracle.com:1521:orcl12c'
 
 
 

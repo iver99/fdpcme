@@ -96,10 +96,10 @@ define(['knockout',
             self.initialize = function() {
                 self.initEventHandlers();
                 self.initUserOtions();
-                $('#builder-dbd-name-input').on('blur', function(evt) {
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-cancel")
+                $('.builder-dbd-name-input').on('blur', function(evt) {
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-cancel"))
                         self.cancelChangeDashboardName();
-                    if (evt && evt.relatedTarget && evt.relatedTarget.id && evt.relatedTarget.id === "builder-dbd-name-ok")
+                    if (evt && evt.relatedTarget && evt.relatedTarget.id && $(evt.relatedTarget).hasClass("builder-dbd-name-ok"))
                         self.okChangeDashboardName();
                 });
                 $('#'+addWidgetDialogId).ojDialog("beforeClose", function() {
@@ -145,9 +145,9 @@ define(['knockout',
             }, this);
 
             self.editDashboardName = function() {
-                if (!self.editDisabled() && !$('#builder-dbd-description').hasClass('editing')) {
-                    $('#builder-dbd-name').addClass('editing');
-                    $('#builder-dbd-name-input').focus();
+                if (!self.editDisabled() && !$('.builder-dbd-description').hasClass('editing')) {
+                    $('.builder-dbd-name').addClass('editing');
+                    $('.builder-dbd-name-input').focus();
                 }
             };
 
@@ -160,7 +160,7 @@ define(['knockout',
                     value = value + "";
 
                     if (value && Builder.isDashboardNameExisting(value)) {
-                        $('#builder-dbd-name-input').focus();
+                        $('.builder-dbd-name-input').focus();
                         self.nameValidated = false;
                         throw new oj.ValidatorError(oj.Translations.getTranslatedString("DBS_BUILDER_SAME_NAME_EXISTS_ERROR"));
                     }
@@ -199,31 +199,31 @@ define(['knockout',
                 nameInput('validate');
                 if (!self.nameValidated)
                     return false;
-                if (!$('#builder-dbd-name-input')[0].value) {
-                    $('#builder-dbd-name-input').focus();
+                if (!$('.builder-dbd-name-input')[0].value) {
+                    $('.builder-dbd-name-input').focus();
                     return false;
                 }
                 self.dashboardName(self.dashboardNameEditing());
-                if ($('#builder-dbd-name').hasClass('editing')) {
-                    $('#builder-dbd-name').removeClass('editing');
+                if ($('.builder-dbd-name').hasClass('editing')) {
+                    $('.builder-dbd-name').removeClass('editing');
                 }
                 self.dashboard.name(self.dashboardName());
                 return true;
             };
 
             self.cancelChangeDashboardName = function() {
-                var nameInput = oj.Components.getWidgetConstructor($('#builder-dbd-name-input')[0]);
+                var nameInput = oj.Components.getWidgetConstructor($('.builder-dbd-name-input')[0]);
                 nameInput('reset');
                 self.dashboardNameEditing(self.dashboardName());
-                if ($('#builder-dbd-name').hasClass('editing')) {
-                    $('#builder-dbd-name').removeClass('editing');
+                if ($('.builder-dbd-name').hasClass('editing')) {
+                    $('.builder-dbd-name').removeClass('editing');
                 }
             };
 
             self.editDashboardDescription = function() {
-                if (!self.editDisabled() && !$('#builder-dbd-name').hasClass('editing')) {
-                    $('#builder-dbd-description').addClass('editing');
-                    $('#builder-dbd-description-input').focus();
+                if (!self.editDisabled() && !$('.builder-dbd-name').hasClass('editing')) {
+                    $('.builder-dbd-description').addClass('editing');
+                    $('.builder-dbd-description-input').focus();
                 }
             };
 
@@ -235,8 +235,8 @@ define(['knockout',
             };
 
             self.okChangeDashboardDescription = function() {
-                if (!$('#builder-dbd-description-input')[0].value) {
-                    $('#builder-dbd-description-input').focus();
+                if (!$('.builder-dbd-description-input')[0].value) {
+                    $('.builder-dbd-description-input').focus();
                     return;
                 }
                 self.dashboardDescription(self.dashboardDescriptionEditing());
@@ -251,31 +251,31 @@ define(['knockout',
 
             self.cancelChangeDashboardDescription = function() {
                 self.dashboardDescriptionEditing(self.dashboardDescription());
-                if ($('#builder-dbd-description').hasClass('editing')) {
-                    $('#builder-dbd-description').removeClass('editing');
+                if ($('.builder-dbd-description').hasClass('editing')) {
+                    $('.builder-dbd-description').removeClass('editing');
                 }
             };
 
             self.isNameUnderEdit = function() {
-                return $('#builder-dbd-name').hasClass('editing');
+                return $('.builder-dbd-name').hasClass('editing');
             };
 
             self.isDescriptionUnderEdit = function() {
-                return $('#builder-dbd-description').hasClass('editing');
+                return $('.builder-dbd-description').hasClass('editing');
             };
 
             self.handleSettingsDialogOpen = function() {
-                $('#settings-dialog').ojDialog('open');
+                $('.settings-dialog').ojDialog('open');
             };
 
             self.handleSettingsDialogOKClose = function() {
-                $("#settings-dialog").ojDialog("close");
+                $(".settings-dialog").ojDialog("close");
             };
 
             self.messageToParent = ko.observable("Text message");
 
             self.handleMessageDialogOpen = function() {
-                $("#parent-message-dialog").ojDialog("open");
+                $(".parent-message-dialog").ojDialog("open");
             };
 
             /*self.handleStartEditText = function () {
@@ -348,7 +348,7 @@ define(['knockout',
                 outputData.eventType = "SAVE";
 
                 if (self.tilesViewModel.dashboard.tiles() && self.tilesViewModel.dashboard.tiles().length > 0) {
-                    ssu.getBase64ScreenShot('#tiles-wrapper', 314, 165, 0.8, function(data) {
+                    ssu.getBase64ScreenShot('.tiles-wrapper', 314, 165, 0.8, function(data) {
                         outputData.screenShot = data;
                         self.tilesViewModel.dashboard.screenShot = ko.observable(data);  
                         self.handleSaveUpdateDashboard(outputData);
@@ -463,13 +463,13 @@ define(['knockout',
 
             self.handleAddWidgetTooltip = function(hasContent) {
                 if (hasContent === true)
-                    $("#addWidgetToolTip").css("display", "none");
+                    $(".tooltip-add-widget").css("display", "none");
                 else if (hasContent === false)
-                    $("#addWidgetToolTip").css("display", "block");
+                    $(".tooltip-add-widget").css("display", "block");
                 else if (self.tilesViewModel.isEmpty() && self.dashboard && self.dashboard.systemDashboard && !self.dashboard.systemDashboard()) {
-                    $("#addWidgetToolTip").css("display", "block");
+                    $(".tooltip-add-widget").css("display", "block");
                 }else {
-                    $("#addWidgetToolTip").css("display", "none");
+                    $(".tooltip-add-widget").css("display", "none");
                 }  
             };
             
@@ -789,7 +789,9 @@ define(['knockout',
                             }),
                             "title": "",
                             "onclick": function(data,event){
-                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
+                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").removeClass("fa-check");
+                                $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
+
                                 event.stopPropagation();
                                 self.setAutoRefreshOptoin(0);
                             },
@@ -806,7 +808,8 @@ define(['knockout',
                             }),
                             "title": "",
                             "onclick": function (data, event) {
-                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").toggleClass("fa-check");
+                                $(event.currentTarget).closest("ul").find(".oj-menu-item-icon").removeClass("fa-check");
+                                $(event.currentTarget).find(".oj-menu-item-icon").addClass("fa-check");
                                 event.stopPropagation();
                                 self.setAutoRefreshOptoin(300000);// 5 minutes
                             },

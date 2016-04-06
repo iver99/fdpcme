@@ -154,8 +154,8 @@ define(['builder/core/builder.event.dispatcher', 'knockout', 'jquery'], function
             var height = $(window).height()/* - $('#headerWrapper').outerHeight() 
                     - $('#head-bar-container').outerHeight()*/;
             var width = $(window).width();//$('#main-container').width() - parseInt($('#main-container').css("marginLeft"), 0);
-            var panelWidth = $('#dbd-left-panel').is(":visible") ? $('#dbd-left-panel').width() : 0;
-            var togglerWidth = $('#right-panel-toggler').is(":visible") ? $('#right-panel-toggler').outerWidth() : 0;
+            var panelWidth = $('.dbd-left-panel').is(":visible") ? $('.dbd-left-panel').width() : 0;
+            var togglerWidth = $('.right-panel-toggler').is(":visible") ? $('.right-panel-toggler').outerWidth() : 0;
             var leftWidth = panelWidth + togglerWidth;
             var topHeight = $('#headerWrapper').outerHeight() + $('#head-bar-container').outerHeight();
             self.triggerEvent(self.EVENT_BUILDER_RESIZE, message, width, height, leftWidth, topHeight);
