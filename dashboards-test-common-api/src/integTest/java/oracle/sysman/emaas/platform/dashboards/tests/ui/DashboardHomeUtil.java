@@ -114,6 +114,7 @@ public class DashboardHomeUtil
 		driver.getElement(DashBoardPageId.SearchDashboardInputLocator).clear();
 		driver.click(DashBoardPageId.SearchDashboardInputLocator);
 		driver.sendKeys(DashBoardPageId.SearchDashboardInputLocator, searchString);
+		driver.click(DashBoardPageId.SearchDashboardSearchBtnLocator);
 	}
 
 	public static void selectDashboard(String dashboardName) throws Exception
@@ -189,10 +190,4 @@ public class DashboardHomeUtil
 		}
 
 	}
-
-	public static void waitForMilliSeconds(long millisSec) throws Exception
-	{
-		Thread.sleep(millisSec);
-	}
-
 }
