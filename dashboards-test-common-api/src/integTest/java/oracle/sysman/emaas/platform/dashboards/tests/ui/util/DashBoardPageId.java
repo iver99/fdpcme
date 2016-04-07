@@ -262,7 +262,16 @@ public class DashBoardPageId
     public static final String TallerTileCSS = "li[data-option=taller]";
     public static final String RemoveTileCSS = "li[data-option=remove]";
 
-	//time picker
+	//right drawer css locators
+    public static final String RightDrawerCSS = ".right-panel-toggler";
+    public static final String RightDrawerPanelCSS = ".dbd-left-panel";
+    public static final String RightDrawerToggleBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn";
+    public static final String RightDrawerSearchInputCSS = ".dbd-left-panel input.widget-search-input";
+    public static final String RightDrawerSearchButtonCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
+    public static final String RightDrawerWidgetToAreaCSS = ".tiles-wrapper";
+    public static final String RightDrawerWidgetCSS = ".dbd-left-panel .dbd-left-panel-widget";
+
+    //time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[1]/div[1]/div/div[2]/div/span/span";//"/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
 	public static final String CustomDateTimeID = "/html/body/div[1]/div/div/div[1]/div/div[1]/div/a[11]";
 	public static final String ApplyBtnID = "applyButton";
