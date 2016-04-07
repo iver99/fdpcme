@@ -70,7 +70,7 @@ public class DashboardBuilderUtil
 
 	public static void refreshDashboard(String refreshSettings) throws Exception
 	{
-		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started");
+		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started for refreshSettings=" + refreshSettings);
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
