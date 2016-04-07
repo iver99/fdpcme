@@ -198,8 +198,8 @@ public class DashboardBuilderUtil
 	public static void save() throws Exception
 	{
 		driver.getLogger().info("DashboardBuilderUtil.save started");
-		driver.waitForElementPresent(DashBoardPageId.DashboardSave);
-		driver.click(DashBoardPageId.DashboardSave);
+		driver.waitForElementPresent("css="+DashBoardPageId.DashboardSaveCSS);
+		driver.click("css="+DashBoardPageId.DashboardSaveCSS);
 		driver.getLogger().info("DashboardBuilderUtil.save compelted");
 	}
 
