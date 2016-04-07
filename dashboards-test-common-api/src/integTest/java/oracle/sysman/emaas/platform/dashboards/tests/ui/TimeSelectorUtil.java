@@ -19,40 +19,6 @@ public class TimeSelectorUtil
 
 	private static WebDriver driver;
 
-	public static void clickApplyButton(WebDriver webd) throws Exception
-	{
-		//click Apply button
-		webd.getLogger().info("Click Apply button");
-		webd.isElementPresent(TimeSelectorUIControls.sApplyBtn);
-
-		if (webd.getAttribute(TimeSelectorUIControls.sApplyBtn + "@disabled") != null) {
-			throw new Exception("the Apply Button is disabled, can't be clicked");
-		}
-		else {
-			webd.click(TimeSelectorUIControls.sApplyBtn);
-			webd.takeScreenShot();
-		}
-	}
-
-	public static void clickCancleButton(WebDriver webd) throws Exception
-	{
-		//click Apply button
-		webd.getLogger().info("Click Apply button");
-		webd.isElementPresent(TimeSelectorUIControls.sCancelBtn);
-		if (webd.getAttribute(TimeSelectorUIControls.sCancelBtn + "@disabled") != null) {
-			throw new Exception("the Cancel Button is disabled, can't be clicked");
-		}
-		else {
-			webd.click(TimeSelectorUIControls.sCancelBtn);
-			webd.takeScreenShot();
-		}
-	}
-
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
-	{
-		driver = webDriver;
-	}
-
 	public static String setCustomTime(WebDriver webd, int index, String startDateTime, String endDateTime) throws Exception
 	{
 
@@ -62,8 +28,8 @@ public class TimeSelectorUtil
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
 
 		TimeSelectorUtil.clickTimePicker(webd, index);
-		webd.isElementPresent(TimeSelectorUIControls.sTimeRange_Custom);
-		webd.click(TimeSelectorUIControls.sTimeRange_Custom);
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.takeScreenShot();
 
 		String regex = "(.*?)\\s+(.*)";
@@ -96,23 +62,23 @@ public class TimeSelectorUtil
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
 		WebDriverWait wdwait = new WebDriverWait(webd.getWebDriver(), 900L);
-		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel.substring(4))));
+		wdwait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(TimeSelectorUIControls.sPickPanel)));
 		//webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
 		webd.takeScreenShot();
 
 		webd.getLogger().info("Input the start date time and end date time...");
-		webd.click(TimeSelectorUIControls.sStartDateInput);
-		webd.clear(TimeSelectorUIControls.sStartDateInput);
-		webd.sendKeys(TimeSelectorUIControls.sStartDateInput, startDate);
-		webd.click(TimeSelectorUIControls.sStartTimeInput);
-		webd.clear(TimeSelectorUIControls.sStartTimeInput);
-		webd.sendKeys(TimeSelectorUIControls.sStartTimeInput, startTime);
-		webd.click(TimeSelectorUIControls.sEndDateInput);
-		webd.clear(TimeSelectorUIControls.sEndDateInput);
-		webd.sendKeys(TimeSelectorUIControls.sEndDateInput, endDate);
-		webd.click(TimeSelectorUIControls.sEndTimeInput);
-		webd.clear(TimeSelectorUIControls.sEndTimeInput);
-		webd.sendKeys(TimeSelectorUIControls.sEndTimeInput, endTime);
+		webd.click("css=" + TimeSelectorUIControls.sStartDateInput);
+		webd.clear("css=" + TimeSelectorUIControls.sStartDateInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sStartDateInput, startDate);
+		webd.click("css=" + TimeSelectorUIControls.sStartTimeInput);
+		webd.clear("css=" + TimeSelectorUIControls.sStartTimeInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sStartTimeInput, startTime);
+		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
+		webd.clear("css=" + TimeSelectorUIControls.sEndDateInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
+		webd.click("css=" + TimeSelectorUIControls.sEndTimeInput);
+		webd.clear("css=" + TimeSelectorUIControls.sEndTimeInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
 		webd.takeScreenShot();
 
 		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
@@ -120,14 +86,8 @@ public class TimeSelectorUtil
 		}
 		else {
 			TimeSelectorUtil.clickApplyButton(webd);
-			if (TimeSelectorUIControls.sTimeRangeBtn.startsWith("css=")) {
-				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn.substring(4)))
-						.get(index - 1).getText();
-			}
-			else {
-				return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1)
-						.getText();
-			}
+			return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(index - 1)
+					.getText();
 		}
 
 	}
@@ -142,8 +102,8 @@ public class TimeSelectorUtil
 		webd.getLogger().info("we are going to set the custom time in dashboard page");
 
 		TimeSelectorUtil.clickTimePicker(webd);
-		webd.isElementPresent(TimeSelectorUIControls.sTimeRange_Custom);
-		webd.click(TimeSelectorUIControls.sTimeRange_Custom);
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Custom);
+		webd.click("css=" + TimeSelectorUIControls.sTimeRange_Custom);
 		webd.takeScreenShot();
 
 		String regex = "(.*?)\\s+(.*)";
@@ -176,22 +136,22 @@ public class TimeSelectorUtil
 
 		//set start date time and end date time
 		webd.getLogger().info("Verify if custom panpel displayed...");
-		webd.isDisplayed(TimeSelectorUIControls.sPickPanel);
+		webd.isDisplayed("css=" + TimeSelectorUIControls.sPickPanel);
 		webd.takeScreenShot();
 
 		webd.getLogger().info("Input the start date time and end date time...");
-		webd.click(TimeSelectorUIControls.sStartDateInput);
-		webd.clear(TimeSelectorUIControls.sStartDateInput);
-		webd.sendKeys(TimeSelectorUIControls.sStartDateInput, startDate);
-		webd.click(TimeSelectorUIControls.sStartTimeInput);
-		webd.clear(TimeSelectorUIControls.sStartTimeInput);
-		webd.sendKeys(TimeSelectorUIControls.sStartTimeInput, startTime);
-		webd.click(TimeSelectorUIControls.sEndDateInput);
-		webd.clear(TimeSelectorUIControls.sEndDateInput);
-		webd.sendKeys(TimeSelectorUIControls.sEndDateInput, endDate);
-		webd.click(TimeSelectorUIControls.sEndTimeInput);
-		webd.clear(TimeSelectorUIControls.sEndTimeInput);
-		webd.sendKeys(TimeSelectorUIControls.sEndTimeInput, endTime);
+		webd.click("css=" + TimeSelectorUIControls.sStartDateInput);
+		webd.clear("css=" + TimeSelectorUIControls.sStartDateInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sStartDateInput, startDate);
+		webd.click("css=" + TimeSelectorUIControls.sStartTimeInput);
+		webd.clear("css=" + TimeSelectorUIControls.sStartTimeInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sStartTimeInput, startTime);
+		webd.click("css=" + TimeSelectorUIControls.sEndDateInput);
+		webd.clear("css=" + TimeSelectorUIControls.sEndDateInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sEndDateInput, endDate);
+		webd.click("css=" + TimeSelectorUIControls.sEndTimeInput);
+		webd.clear("css=" + TimeSelectorUIControls.sEndTimeInput);
+		webd.sendKeys("css=" + TimeSelectorUIControls.sEndTimeInput, endTime);
 		webd.takeScreenShot();
 
 		if (webd.isDisplayed(TimeSelectorUIControls.sErrorMsg)) {
@@ -199,7 +159,7 @@ public class TimeSelectorUtil
 		}
 		else {
 			TimeSelectorUtil.clickApplyButton(webd);
-			return webd.getText(TimeSelectorUIControls.sTimeRangeBtn);
+			return webd.getText("css=" + TimeSelectorUIControls.sTimeRangeBtn);
 		}
 	}
 
@@ -208,53 +168,53 @@ public class TimeSelectorUtil
 		TimeSelectorUtil.clickTimePicker(webd, Index);
 		switch (rangeoption) {
 			case Last15Mins:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_15Min);
-				webd.click(TimeSelectorUIControls.sTimeRange_15Min);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_15Min);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_15Min);
 				webd.takeScreenShot();
 				break;
 			case Last30Mins:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_30Min);
-				webd.click(TimeSelectorUIControls.sTimeRange_30Min);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_30Min);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_30Min);
 				webd.takeScreenShot();
 				break;
 			case Last60Mins:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_60Min);
-				webd.click(TimeSelectorUIControls.sTimeRange_60Min);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_60Min);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_60Min);
 				webd.takeScreenShot();
 				break;
 			case Last4Hours:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_4Hour);
-				webd.click(TimeSelectorUIControls.sTimeRange_4Hour);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
 				webd.takeScreenShot();
 				break;
 			case Last6Hours:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_6Hour);
-				webd.click(TimeSelectorUIControls.sTimeRange_6Hour);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_6Hour);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_6Hour);
 				webd.takeScreenShot();
 				break;
 			case Last1Day:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_1Day);
-				webd.click(TimeSelectorUIControls.sTimeRange_1Day);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_1Day);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_1Day);
 				webd.takeScreenShot();
 				break;
 			case Last7Days:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_7Days);
-				webd.click(TimeSelectorUIControls.sTimeRange_7Days);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_7Days);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_7Days);
 				webd.takeScreenShot();
 				break;
 			case Last30Days:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_30Days);
-				webd.click(TimeSelectorUIControls.sTimeRange_30Days);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_30Days);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_30Days);
 				webd.takeScreenShot();
 				break;
 			case Last90Days:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_90Days);
-				webd.click(TimeSelectorUIControls.sTimeRange_90Days);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_90Days);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_90Days);
 				webd.takeScreenShot();
 				break;
 			case Latest:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_Latest);
-				webd.click(TimeSelectorUIControls.sTimeRange_Latest);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 				webd.takeScreenShot();
 				break;
 			case Custom:
@@ -264,15 +224,8 @@ public class TimeSelectorUtil
 				break;
 
 		}
+		return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).getText();
 
-		if (TimeSelectorUIControls.sTimeRangeBtn.startsWith("css=")) {
-			return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn.substring(4)))
-					.get(Index - 1).getText();
-		}
-		else {
-			return webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1)
-					.getText();
-		}
 	}
 
 	public static String setTimeRange(WebDriver webd, TimeRange rangeoption) throws Exception
@@ -280,53 +233,53 @@ public class TimeSelectorUtil
 		TimeSelectorUtil.clickTimePicker(webd);
 		switch (rangeoption) {
 			case Last15Mins:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_15Min);
-				webd.click(TimeSelectorUIControls.sTimeRange_15Min);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_15Min);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_15Min);
 				webd.takeScreenShot();
 				break;
 			case Last30Mins:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_30Min);
-				webd.click(TimeSelectorUIControls.sTimeRange_30Min);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_30Min);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_30Min);
 				webd.takeScreenShot();
 				break;
 			case Last60Mins:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_60Min);
-				webd.click(TimeSelectorUIControls.sTimeRange_60Min);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_60Min);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_60Min);
 				webd.takeScreenShot();
 				break;
 			case Last4Hours:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_4Hour);
-				webd.click(TimeSelectorUIControls.sTimeRange_4Hour);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_4Hour);
 				webd.takeScreenShot();
 				break;
 			case Last6Hours:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_6Hour);
-				webd.click(TimeSelectorUIControls.sTimeRange_6Hour);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_6Hour);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_6Hour);
 				webd.takeScreenShot();
 				break;
 			case Last1Day:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_1Day);
-				webd.click(TimeSelectorUIControls.sTimeRange_1Day);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_1Day);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_1Day);
 				webd.takeScreenShot();
 				break;
 			case Last7Days:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_7Days);
-				webd.click(TimeSelectorUIControls.sTimeRange_7Days);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_7Days);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_7Days);
 				webd.takeScreenShot();
 				break;
 			case Last30Days:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_30Days);
-				webd.click(TimeSelectorUIControls.sTimeRange_30Days);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_30Days);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_30Days);
 				webd.takeScreenShot();
 				break;
 			case Last90Days:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_90Days);
-				webd.click(TimeSelectorUIControls.sTimeRange_90Days);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_90Days);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_90Days);
 				webd.takeScreenShot();
 				break;
 			case Latest:
-				webd.isElementPresent(TimeSelectorUIControls.sTimeRange_Latest);
-				webd.click(TimeSelectorUIControls.sTimeRange_Latest);
+				webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRange_Latest);
+				webd.click("css=" + TimeSelectorUIControls.sTimeRange_Latest);
 				webd.takeScreenShot();
 				break;
 			case Custom:
@@ -336,32 +289,58 @@ public class TimeSelectorUtil
 				break;
 
 		}
-		return webd.getText(TimeSelectorUIControls.sTimeRangeBtn);
+		return webd.getText("css=" + TimeSelectorUIControls.sTimeRangeBtn);
 	}
 
-	public static String timeFormatChange(String testTime, String inputDateFormat, String outputDateFormat) throws Exception
+	private static void clickApplyButton(WebDriver webd) throws Exception
 	{
-		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat);
-		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat);
-		Date date = null;
-		try {
-			date = inputFormat.parse(testTime);
-		}
-		catch (ParseException e) {
-			System.out.println("can't parse the time");
+		//click Apply button
+		webd.getLogger().info("Click Apply button");
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sApplyBtn);
 
+		if (webd.getAttribute("css=" + TimeSelectorUIControls.sApplyBtn + "@disabled") != null) {
+			throw new Exception("the Apply Button is disabled, can't be clicked");
 		}
+		else {
+			webd.click("css=" + TimeSelectorUIControls.sApplyBtn);
+			webd.takeScreenShot();
+		}
+	}
 
-		System.out.println("the output time is:" + outputFormat.format(date));
-		return outputFormat.format(date);
+	private static void clickCancleButton(WebDriver webd) throws Exception
+	{
+		//click Calcel button
+		webd.getLogger().info("Click Calcel button");
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sCancelBtn);
+		if (webd.getAttribute("css=" + TimeSelectorUIControls.sCancelBtn + "@disabled") != null) {
+			throw new Exception("the Cancel Button is disabled, can't be clicked");
+		}
+		else {
+			webd.click("css=" + TimeSelectorUIControls.sCancelBtn);
+			webd.takeScreenShot();
+		}
 	}
 
 	private static void clickTimePicker(WebDriver webd) throws Exception
 	{
 		//click the datetimepicker component
-		webd.isElementPresent(TimeSelectorUIControls.sTimeRangeBtn);
-		webd.click(TimeSelectorUIControls.sTimeRangeBtn);
+		webd.isElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
+		webd.click("css=" + TimeSelectorUIControls.sTimeRangeBtn);
 		webd.takeScreenShot();
+	}
+
+	private static void clickTimePicker(WebDriver webd, int Index) throws Exception
+	{
+		//click the datetimepicker component
+		webd.waitForElementPresent("css=" + TimeSelectorUIControls.sTimeRangeBtn);
+		webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).click();
+
+		webd.takeScreenShot();
+	}
+
+	private static void loadWebDriverOnly(WebDriver webDriver) throws Exception
+	{
+		driver = webDriver;
 	}
 
 	//    public static String setExcludeHour(WebDriver webd, int Index, String hours) throws Exception
@@ -459,17 +438,20 @@ public class TimeSelectorUtil
 	//		webd.takeScreenShot();
 	//    }
 
-	private static void clickTimePicker(WebDriver webd, int Index) throws Exception
+	private static String timeFormatChange(String testTime, String inputDateFormat, String outputDateFormat) throws Exception
 	{
-		//click the datetimepicker component
-		webd.waitForElementPresent(TimeSelectorUIControls.sTimeRangeBtn);
-		if (TimeSelectorUIControls.sTimeRangeBtn.startsWith("css=")) {
-			webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn.substring(4))).get(Index - 1)
-			.click();
+		SimpleDateFormat inputFormat = new SimpleDateFormat(inputDateFormat);
+		SimpleDateFormat outputFormat = new SimpleDateFormat(outputDateFormat);
+		Date date = null;
+		try {
+			date = inputFormat.parse(testTime);
 		}
-		else {
-			webd.getWebDriver().findElements(By.cssSelector(TimeSelectorUIControls.sTimeRangeBtn)).get(Index - 1).click();
+		catch (ParseException e) {
+			System.out.println("can't parse the time");
+
 		}
-		webd.takeScreenShot();
+
+		System.out.println("the output time is:" + outputFormat.format(date));
+		return outputFormat.format(date);
 	}
 }
