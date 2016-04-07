@@ -8,16 +8,16 @@
         <div class="headerMenuText">
             <!--<div class="oj-row" style="font-weight: bolder; font-size: medium;"></div>-->
             <div class="oj-row">
-                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openHome, text: homeLinkLabel"></a>
+                <a id="obbNavHome" data-bind="attr: {href: 'javascript: this.click()'}, click: openHome, text: homeLinkLabel"></a>
             </div>
             <div class="oj-row">
-                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboardHome, text: dashboardLinkLabel"></a>
+                <a id="obbNavDsbHome" data-bind="attr: {href: 'javascript: this.click()'}, click: openDashboardHome, text: dashboardLinkLabel"></a>
             </div>
             <div class="oj-row">
-                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openMyFavorites, text: favoritesLabel"></a>
+                <a id="obbNavFavor" data-bind="attr: {href: 'javascript: this.click()'}, click: openMyFavorites, text: favoritesLabel"></a>
             </div>
             <div class="oj-row">
-                <a data-bind="attr: {href: 'javascript: this.click()'}, click: openWelcomePage, text: welcomeLabel"></a>
+                <a id="obbNavWelcome" data-bind="attr: {href: 'javascript: this.click()'}, click: openWelcomePage, text: welcomeLabel"></a>
             </div>
             <!-- ko foreach: homeLinks -->
             <div class="oj-row">

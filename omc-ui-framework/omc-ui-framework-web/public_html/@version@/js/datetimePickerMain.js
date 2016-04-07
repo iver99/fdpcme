@@ -24,7 +24,8 @@ requirejs.config({
     shim: {
         'jquery': {
             exports: ['jQuery', '$']
-        },'crossroads': {
+        },
+        'crossroads': {
             deps: ['signals'],
             exports: 'crossroads'
         }
@@ -38,7 +39,9 @@ requirejs.config({
             merge: {
                // 'ojtranslations/nls/ojtranslations': 'resources/nls/dashboardsMsgBundle'
             }
-        },text: {
+        }
+	,
+        text: {
             useXhr: function (url, protocol, hostname, port) {
               // allow cross-domain requests
               // remote server allows CORS
@@ -61,24 +64,22 @@ requirejs.config({
 require(['ojs/ojcore',
     'knockout',
     'jquery',
-    'uifwk/js/widgets/timeFilter/js/timeFilter',
     'ojs/ojknockout',
     'ojs/ojchart'
 ],
-        function (oj, ko, $, timeFilter) // this callback gets executed when all required modules are loaded
+        function (oj, ko, $) // this callback gets executed when all required modules are loaded
         {
             ko.components.register("date-time-picker", {
                 viewModel: {require: "/emsaasui/uifwk/js/widgets/datetime-picker/js/datetime-picker.js"},
                 template: {require: "text!/emsaasui/uifwk/js/widgets/datetime-picker/html/datetime-picker.html"}
             });
-            
+
             function MyViewModel() {
                 var self = this;
                 var start = new Date(new Date() - 24 * 60 * 60 * 1000);
                 var end = new Date();
                 var dateTimeOption = {formatType: "datetime", dateFormat: "medium"};
-                self.floatPosition = "left";
-                var tf = new timeFilter();
+                
                 self.dateTimeConverter1 = oj.Validation.converterFactory("dateTime").createConverter(dateTimeOption);
                 
                 self.start = ko.observable(self.dateTimeConverter1.format(oj.IntlConverterUtils.dateToLocalIso(start)));
@@ -87,28 +88,18 @@ require(['ojs/ojcore',
                 self.initEnd = ko.observable(end);
                 self.timePeriodsNotToShow = ko.observableArray([]);
                 self.timeDisplay = ko.observable("short");
-                self.timePeriodPre = ko.observable("Last 7 days");
                 self.timeParams1 = {
                     startDateTime: /*self.initStart,*/ start,
                     endDateTime: self.initEnd, //end,
                     timePeriodsNotToShow: /*["Last 30 days", "Last 90 days"],*/ self.timePeriodsNotToShow,
-                    enableTimeFilter: true,
-                    hideMainLabel: true,
 //                    timeDisplay: self.timeDisplay,
 //                    customTimeBack: 90*24*60*60*1000,
 //                    appId: "APM",
 //                    hideTimeSelection: true,
-//                    KOCadvanced: {KOCname: 'time-filter', 
-//                        KOCtemplate: '/emsaasui/uifwk/js/widgets/timeFilter/html/timeFilter.html', 
-//                        KOCviewModel: /*{require: '/emsaasui/uifwk/js/widgets/timeFilter/js/timeFilter.js'}},*/ {instance: tf}},
-                    dtpickerPosition: self.floatPosition,
-                    timePeriod: "Last 1 day", //self.timePeriodPre,
-                    callbackAfterApply: function (start, end, tp, tf) {
+                    callbackAfterApply: function (start, end, tp) {
                         console.log(start);
                         console.log(end);
                         console.log(tp);
-                        console.log(tf);
-//                        $("#timeFilterValue").text("time filter value: " + JSON.stringify(tf));
                         var appliedStart = oj.IntlConverterUtils.dateToLocalIso(start);
                         var appliedEnd = oj.IntlConverterUtils.dateToLocalIso(end);
                         self.start(self.dateTimeConverter1.format(appliedStart));
@@ -118,16 +109,10 @@ require(['ojs/ojcore',
                 };
                 
                 self.changeOption = function() {
-                    console.log(tf.timeFilterValue());
-                    console.log(tf.daysChecked());
-                    console.log(tf.monthsChecked());
-                    return;
-        
                     self.initStart(new Date(new Date() - 48*60*60*1000));
                     self.initEnd(new Date(new Date() - 3*60*60*1000));
                     self.timePeriodsNotToShow(["Last 90 days", "Latest"]);
                     self.timeDisplay("long");
-                    self.timePeriodPre("Last 90 days");                    
                 }
                 
                 self.lineSeriesValues = ko.observableArray();

@@ -17,7 +17,7 @@ public class TimeSelectorUIControls
 {
 	// Begin: Text
 	public static final String sErrorMsg = "div.errorMsg";
-	public static final String sFilterInfoLabel = "//*[@id='filterInfo']";
+	//public static final String sFilterInfoLabel = "//*[@id='filterInfo']";
 	// End: Text
 
 	// Begin: InputText
@@ -33,7 +33,7 @@ public class TimeSelectorUIControls
 	public static final String sCancelBtn = "button[id^='cancelButton']";
 
 	public static final String sDateTimePick = "[id^='dateTimePicker_']";
-	public static final String sTimeRangeBtn = "[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
+	public static final String sTimeRangeBtn = ".dropdown[id^='dropDown']";//"[id^='dateTimePicker_'] .oj-select-choice .oj-select-arrow";
 	public static final String sDisplayDateTime = "[id^='dateTimePicker_'] .oj-select-choice .oj-select-chosen";
 	//	public static final String sFilterInfoIndicator = "[id^='tfInfoIndicator_'].time-filter-indicator";
 	//	public static final String sFilterInfo = "div[id^='tfInfo_'] [data-bind='html: timeFilterInfo']";
@@ -80,6 +80,6 @@ public class TimeSelectorUIControls
 	// End: Icon
 
 	// Begin: Components
-	public static final String sPickPanel = "[id^='pickerPanel_'].pickerPanel";
+	public static final String sPickPanel = ".pickerPanel";//"[id^='pickerPanel_'].pickerPanel";
 	// End: Components
 }

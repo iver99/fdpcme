@@ -189,6 +189,14 @@ public class DashBoardPageId
 	public static final String NameEditOKID = "builder-dbd-name-ok";
 	public static final String DescEditOKID = "builder-dbd-description-ok";
 
+	//dashboard builder tile edit area
+	public static final String BuilderTilesEditArea = "//div[contains(@class, 'tiles-wrapper')]";
+	public static final String BuilderTileTitleLocator = "//h2[contains(@class, 'dbd-tile-title') and @data-tile-title='%s']";
+	public static final String BuilderTileConfigLocator = "following-sibling::*//button[contains(@class, 'dbd-tile-action')]";
+	public static final String BuilderTileDataExploreLocator = "following-sibling::*//button[contains(@class, 'dbd-data-explore')]";
+	public static final String BuilderTileShowLocator = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='show']";
+	public static final String BuilderTileHideLocator = "//ul[not(contains(@style,'display:none'))]/li[@data-option='showhide-title']/a[@data-show-hide-title='hide']";
+
 	//dashboard builder options
 	public static final String BuilderOptionsMenuLocator = "//button[contains(@class, 'dashboardOptsBtn')]";
 	public static final String BuilderOptionsAutoRefreshLocator = "id=emcpdf_dsbopts_refresh";
@@ -196,6 +204,24 @@ public class DashBoardPageId
 	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
 	public static final String BuilderOptionsDeleteLocator = "id=emcpdf_dsbopts_delete";
 	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
+	public static final String BuilderOptionsPrintLocatorCSS ="[data-singledb-option=\"Print\"] a";
+	public static final String BuilderOptionsEditLocatorCSS ="[data-singledb-option=\"Edit\"] a";
+	public static final String BuilderOptionsEditNameCSS ="dbsHNameIn";
+	public static final String BuilderOptionsEditDescriptionCSS ="dbsHDpIn";
+	public static final String BuilderOptionsEditSaveCSS ="createDsb-2";
+	public static final String BuilderOptionsShareLocatorCSS ="[data-singledb-option=\"Share\"] a";
+	public static final String BuilderOptionsUnShareLocatorCSS ="[data-singledb-option=\"Stop Sharing\"] a";
+	public static final String BuilderOptionsFavoriteLocatorCSS ="[data-singledb-option=\"Add Favorite\"] a";
+	public static final String BuilderOptionsRemoveFavoriteLocatorCSS ="[data-singledb-option=\"Remove Favorite\"] a";
+	public static final String BuilderOptionsSetHomeLocatorCSS ="[data-singledb-option=\"Set as Home\"] a";
+	public static final String BuilderOptionsRemoveHomeLocatorCSS ="[data-singledb-option=\"Remove as Home\"] a";
+	public static final String BuilderOptionsSetHomeComfirmCSS="id=btnConfirmSetAsHome";
+	public static final String BuilderOptionsDuplicateLocatorCSS ="[data-singledb-option=\"Duplicate\"] a";
+	public static final String BuilderOptionsDuplicateNameCSS ="dupDsbNameIn";
+	public static final String BuilderOptionsDuplicateDescriptionCSS ="dupDsbDescIn";
+	public static final String BuilderOptionsDuplicateSaveCSS ="id=createDsb-1";
+	//dashboard tool bar
+	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
 
 	//dashboard delete dialog
 	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-dbs_cfmDialog";
@@ -225,6 +251,16 @@ public class DashBoardPageId
 	public static final String MaximizeTileID = "/html/body/div[1]/div/ul/li[7]/a/span[2]";
 	public static final String RestoreTileID = "/html/body/div[1]/div/ul/li[8]/a/span[2]";
 	public static final String RemoveTileID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
+
+	//tile css locators -> css=<locator>
+    public static final String WidgetTitleCSS = ".dbd-widget";
+    public static final String TileTitleCSS = "h2.dbd-tile-title";
+    public static final String ConfigTileCSS = "button[id^=actionButton]";
+    public static final String WiderTileCSS = "li[data-option=wider]";
+    public static final String NarrowerTileCSS = "li[data-option=narrower]";
+    public static final String ShorterTileCSS = "li[data-option=shorter]";
+    public static final String TallerTileCSS = "li[data-option=taller]";
+    public static final String RemoveTileCSS = "li[data-option=remove]";
 
 	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[1]/div[1]/div/div[2]/div/span/span";//"/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
@@ -274,5 +310,10 @@ public class DashBoardPageId
 	public static final String option = "dashboardOptsBtn";
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
+
+    public static final String TILE_WIDER = "wider";
+    public static final String TILE_NARROWER = "narrower";
+    public static final String TILE_TALLER = "taller";
+    public static final String TILE_SHORTER = "shorter";
 
 }

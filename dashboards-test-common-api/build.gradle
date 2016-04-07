@@ -1,4 +1,4 @@
-version=1.6
+version = "1.6.0" + "-$buildTimestamp"
 sourceSets {
 integTest {
         java.srcDir 'src/integTest/java'
@@ -20,6 +20,7 @@ task integTestJar (type:Jar) {
 
 check.dependsOn integTestJar
 
+
 publishing.publications {
     integTest(MavenPublication) {
                         setArtifactId(project.name)
@@ -30,11 +31,12 @@ publishing.publications {
 }
 
 
-
+if(project.hasProperty("publishCommonAPI")){
 artifactoryPublish {
 publications ('integTest')
 
     }
+}
 dependencies {
 testConfig(group: 'org.jmockit', name: 'jmockit', version: '1.19') { transitive = false }
 }

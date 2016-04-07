@@ -183,7 +183,16 @@ $.widget('dbs.dbsDashboardPanel',
             self.headerElement = $("<div></div>").addClass(self.classNames['headerContainer']);
             self.titleElement = $("<div/>")
                                   .addClass(self.classNames['headerTitle'])
+                                  .addClass("dbs-dsbnameele")
                                   .text(_title);
+            if (self.options['dashboard'].systemDashboard)
+            {
+                self.titleElement.addClass( "dbs-dsbsystem" );
+            }
+            else
+            {
+                self.titleElement.addClass( "dbs-dsbnormal" );
+            }
             self.headerElement.append(self.titleElement); 
             _name = self.options['dashboard'].name;
             if ( _name &&  _name.length > TITLE_MAX_LENGTH)

@@ -26,9 +26,9 @@ define(['knockout',
             
             self.resizeEventHandler = function(width, height, leftWidth, topHeight) {
 //                $('#tiles-col-container').css("right", leftWidth);
-                $('#tiles-col-container').width(width);
+                $('.tiles-col-container').width(width);
                 $('.df-computed-content-width').width(width - leftWidth - self.scrollbarWidth);
-                $('#tiles-col-container').height(height - topHeight);               
+                $('.tiles-col-container').height(height - topHeight);               
 //                window.DEV_MODE && console.debug('tiles-col-container rightright set to: ' + leftWidth + ', width set:' + (width - leftWidth) + ', height set to: ' + (height - topHeight));
             };
             
@@ -73,13 +73,13 @@ define(['knockout',
             };
                         
             self.enableMovingTransition = function() {
-                if (!$('#widget-area').hasClass('dbd-support-transition'))
-                    $('#widget-area').addClass('dbd-support-transition');
+                if (!$('.widget-area').hasClass('dbd-support-transition'))
+                    $('.widget-area').addClass('dbd-support-transition');
             };
             
             self.disableMovingTransition = function() {
-                if ($('#widget-area').hasClass('dbd-support-transition'))
-                    $('#widget-area').removeClass('dbd-support-transition');
+                if ($('.widget-area').hasClass('dbd-support-transition'))
+                    $('.widget-area').removeClass('dbd-support-transition');
             };
             
             self.postDocumentShow = function() {
@@ -89,7 +89,7 @@ define(['knockout',
                     if ($(e.currentTarget.lastChild).hasClass('cke_chrome')) {
                         var mo = new MutationObserver(self.onTargetAttributesChange);
                         mo.observe(e.currentTarget.lastChild, {'attributes': true, attributeOldValue: true});
-                        $(e.currentTarget.lastChild).prependTo('#tiles-col-container');
+                        $(e.currentTarget.lastChild).prependTo('.tiles-col-container');
                     }
                 });
             };
@@ -102,8 +102,8 @@ define(['knockout',
                     var top = parseInt(target.css("top")), left = parseInt(target.css("left"));
                     if (!isNaN(top) && !isNaN(left) && target.position() && target.position().left !== 0 && target.position().top !== 0) {
 //                        window.DEV_MODE && console.debug("old target position: top-" + target.css("top") + ", left-" + target.css("left"));
-                        target.css("top", top - $('#headerWrapper').outerHeight() - $('#head-bar-container').outerHeight() + $("#tiles-col-container").scrollTop());
-                        target.css("left", left - $("#dbd-left-panel").width());
+                        target.css("top", top - $('#headerWrapper').outerHeight() - $('.head-bar-container').outerHeight() + $(".tiles-col-container").scrollTop());
+                        target.css("left", left - $(".dbd-left-panel").width());
                         elem.cacheLeft = target.css("left");
 //                        window.DEV_MODE && console.debug("new target position: top-" + target.css("top") + ", left-" + target.css("left"));
                     }
