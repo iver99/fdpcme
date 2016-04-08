@@ -1,8 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.logging.Level;
+import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;

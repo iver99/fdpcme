@@ -9,11 +9,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
-import java.util.List;
 
 public class WidgetUtil
 {
