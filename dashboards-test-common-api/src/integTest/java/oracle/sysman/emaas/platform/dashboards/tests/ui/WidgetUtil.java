@@ -34,10 +34,13 @@ public class WidgetUtil
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);
+        driver.takeScreenShot();
 
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
 		driver.click("css=" + DashBoardPageId.RemoveTileCSS);
 		driver.getLogger().info("Remove the widget");
+        driver.takeScreenShot();
+        
 	}
 
 	public static void resizeOptions(String widgetName, int index, String resizeOptions) throws Exception
@@ -49,6 +52,7 @@ public class WidgetUtil
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);
+        driver.takeScreenShot();
 
 		String tileResizeCSS = null;
 		switch (resizeOptions) {
@@ -74,6 +78,7 @@ public class WidgetUtil
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
 		driver.click("css=" + tileResizeCSS);
 		driver.getLogger().info("Resize the widget");
+        driver.takeScreenShot();
 
 	}
 

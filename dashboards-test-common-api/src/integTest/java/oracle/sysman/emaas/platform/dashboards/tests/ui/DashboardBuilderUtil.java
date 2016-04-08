@@ -253,11 +253,13 @@ public class DashboardBuilderUtil
         searchInput.click();
         searchInput.clear();
         searchInput.sendKeys(searchString);
+		driver.takeScreenShot();
 
         WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
         searchButton.click();
         //wait for ajax resolved
         Thread.sleep(DashBoardPageId.Delaytime_short);
+		driver.takeScreenShot();
 
         driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
         List<WebElement> matchingWidgets = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
@@ -294,6 +296,7 @@ public class DashboardBuilderUtil
             driver.click("css="+DashBoardPageId.RightDrawerToggleBtnCSS);
             driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
         }
+		driver.takeScreenShot();
     }
 
     public static void hideRightDrawer( ) throws Exception
@@ -302,6 +305,7 @@ public class DashboardBuilderUtil
             driver.click("css="+DashBoardPageId.RightDrawerToggleBtnCSS);
             driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
         }
+		driver.takeScreenShot();
     }
 
 
