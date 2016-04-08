@@ -31,19 +31,23 @@ public class DashboardBuilderUtil
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
 		boolean homeElem=driver.isDisplayed("css="+DashBoardPageId.BuilderOptionsSetHomeLocatorCSS);
+        driver.takeScreenShot();
 
 		if(homeElem){
 			driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsSetHomeLocatorCSS);
 			driver.click("css="+DashBoardPageId.BuilderOptionsSetHomeLocatorCSS);
+			driver.takeScreenShot();
 			boolean comfirmDialog =driver.isDisplayed(DashBoardPageId.BuilderOptionsSetHomeComfirmCSS);
 			if(comfirmDialog){
 				driver.click(DashBoardPageId.BuilderOptionsSetHomeComfirmCSS);
-			}
+				driver.takeScreenShot();
+			};
 			driver.getLogger().info("DashboardBuilderUtil set home completed");
 			return true;
 		}else{
 			driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsRemoveHomeLocatorCSS);
 			driver.click("css="+DashBoardPageId.BuilderOptionsRemoveHomeLocatorCSS);
+			driver.takeScreenShot();
 			driver.getLogger().info("DashboardBuilderUtil remove home completed");
 			return false;
 		}
@@ -81,6 +85,7 @@ public class DashboardBuilderUtil
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
 		driver.click("css="+DashBoardPageId.BuilderOptionsDuplicateLocatorCSS);
+		driver.takeScreenShot();
 		driver.waitForElementPresent("id="+DashBoardPageId.BuilderOptionsDuplicateNameCSS);
 
 		//add name and description
@@ -99,10 +104,13 @@ public class DashboardBuilderUtil
 		}else {
 			driver.sendKeys("id="+DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, descriptions);
 		}
+		driver.takeScreenShot();
 
 		//press ok button
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.click(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil.duplicate completed");
 	}
 
 	public static void editDashboard(String name, String descriptions) throws Exception
@@ -115,6 +123,7 @@ public class DashboardBuilderUtil
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
 		driver.click("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
+		driver.takeScreenShot();
 		driver.waitForElementPresent("id="+DashBoardPageId.BuilderOptionsEditNameCSS);
 
 		//wait for 10l
@@ -134,10 +143,12 @@ public class DashboardBuilderUtil
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
 		driver.sendKeys("id="+DashBoardPageId.BuilderOptionsEditDescriptionCSS, descriptions);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
+		driver.takeScreenShot();
 
 		//press ok button
 		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
 		driver.click("id=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
+		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.edit complete");
 	}
 
@@ -152,15 +163,18 @@ public class DashboardBuilderUtil
 
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.takeScreenShot();
 		boolean favoriteElem=driver.isDisplayed("css="+DashBoardPageId.BuilderOptionsFavoriteLocatorCSS);
 		if(favoriteElem){
 			driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsFavoriteLocatorCSS);
 			driver.click("css="+DashBoardPageId.BuilderOptionsFavoriteLocatorCSS);
+			driver.takeScreenShot();
 			driver.getLogger().info("DashboardBuilderUtil add favorite completed");
 			return true;
 		}else{
 			driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsRemoveFavoriteLocatorCSS);
 			driver.click("css="+DashBoardPageId.BuilderOptionsRemoveFavoriteLocatorCSS);
+			driver.takeScreenShot();
 			driver.getLogger().info("DashboardBuilderUtil remove favorite completed");
 			return false;
 		}
@@ -173,13 +187,15 @@ public class DashboardBuilderUtil
 
 	public static void print() throws Exception
 	{
-		driver.getLogger().info("print dashboard");
+		driver.getLogger().info("DashboardBuilderUtil print dashboard started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsPrintLocatorCSS);
+		driver.takeScreenShot();
      	DelayedPressEnterThread thr = new DelayedPressEnterThread( "DelayedPressEnterThread",5000) ;
 		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.BuilderOptionsPrintLocatorCSS)).click();
-		driver.getLogger().info("print completed");
+		driver.takeScreenShot();
+		driver.getLogger().info("DashboardBuilderUtil print completed");
 	}
 
 	public static void refreshDashboard(String refreshSettings) throws Exception
@@ -218,6 +234,7 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.save started");
 		driver.waitForElementPresent("css="+DashBoardPageId.DashboardSaveCSS);
 		driver.click("css="+DashBoardPageId.DashboardSaveCSS);
+		driver.takeScreenShot();
 		driver.getLogger().info("DashboardBuilderUtil.save compelted");
 	}
 
@@ -226,15 +243,18 @@ public class DashboardBuilderUtil
 		driver.getLogger().info("DashboardBuilderUtil.favoriteOption started");
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.takeScreenShot();
 		boolean shareElem=driver.isDisplayed("css="+DashBoardPageId.BuilderOptionsShareLocatorCSS);
 		if(shareElem){
 			driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsShareLocatorCSS);
 			driver.click("css="+DashBoardPageId.BuilderOptionsShareLocatorCSS);
+			driver.takeScreenShot();
 			driver.getLogger().info("DashboardBuilderUtil share dashboard");
 			return true;
 		}else{
 			driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsUnShareLocatorCSS);
 			driver.click("css="+DashBoardPageId.BuilderOptionsUnShareLocatorCSS);
+			driver.takeScreenShot();
 			driver.getLogger().info("DashboardBuilderUtil unshare dashboard");
 			return false;
 		}
