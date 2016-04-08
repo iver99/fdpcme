@@ -235,14 +235,14 @@ public class DashBoardPageId
 	public static final String RemoveTileID = "/html/body/div[1]/div/ul/li[10]/a/span[2]";
 
 	//tile css locators -> css=<locator>
-    public static final String WidgetTitleCSS = ".dbd-widget";
-    public static final String TileTitleCSS = "h2.dbd-tile-title";
-    public static final String ConfigTileCSS = "button[id^=actionButton]";
-    public static final String WiderTileCSS = "li[data-option=wider]";
-    public static final String NarrowerTileCSS = "li[data-option=narrower]";
-    public static final String ShorterTileCSS = "li[data-option=shorter]";
-    public static final String TallerTileCSS = "li[data-option=taller]";
-    public static final String RemoveTileCSS = "li[data-option=remove]";
+	public static final String WidgetTitleCSS = ".dbd-widget";
+	public static final String TileTitleCSS = "h2.dbd-tile-title";
+	public static final String ConfigTileCSS = "button[id^=actionButton]";
+	public static final String WiderTileCSS = "li[data-option=wider]";
+	public static final String NarrowerTileCSS = "li[data-option=narrower]";
+	public static final String ShorterTileCSS = "li[data-option=shorter]";
+	public static final String TallerTileCSS = "li[data-option=taller]";
+	public static final String RemoveTileCSS = "li[data-option=remove]";
 
 	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[1]/div[1]/div/div[2]/div/span/span";//"/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
@@ -293,11 +293,19 @@ public class DashBoardPageId
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 
-    public static final String TILE_WIDER = "wider";
-    public static final String TILE_NARROWER = "narrower";
-    public static final String TILE_TALLER = "taller";
-    public static final String TILE_SHORTER = "shorter";
+	public static final String TILE_WIDER = "wider";
+	public static final String TILE_NARROWER = "narrower";
+	public static final String TILE_TALLER = "taller";
+	public static final String TILE_SHORTER = "shorter";
 
-
+	//Branding bar links id
+	public static final String BrandingBarMyHomeLinkID = "obbNavHome";
+	public static final String BrandingBarDashboardHomeLinkID = "obbNavDsbHome";
+	public static final String BrandingBarMyFavoritesLinkID = "obbNavFavor";
+	public static final String BrandingBarWelcomeLinkID = "obbNavWelcome";
+	public static final String BrandingBarHomeLinksID = "obbNavHomeLinks";
+	public static final String BrandingBarCloudServiceLinksID = "obbNavCsLinks";
+	public static final String BrandingBarVisualAnalyzerLinksID = "obbNavVaLinks";
+	public static final String BrandingBarAdminLinksID = "obbNavAdminLinks";
 
 }
