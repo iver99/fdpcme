@@ -13,7 +13,7 @@ package oracle.sysman.emaas.platform.dashboards.tests.ui.util;
 /**
  * @author guochen
  */
-public class ParameterValidators
+public class Validator
 {
 	public static void equalOrLargerThan(String name, int value, int lowest)
 	{
@@ -24,7 +24,7 @@ public class ParameterValidators
 
 	public static void equalOrLargerThan0(String name, int value)
 	{
-		ParameterValidators.equalOrLargerThan(name, value, 0);
+		Validator.equalOrLargerThan(name, value, 0);
 	}
 
 	public static void fromValidValues(String name, Object value, Object... validValues)
