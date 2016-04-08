@@ -1,11 +1,14 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 
 public class DashboardHomeUtil
 {
@@ -25,7 +28,20 @@ public class DashboardHomeUtil
 	public static void createDashboard(String name, String descriptions, Boolean displayDesc, Boolean selectorRefreshcontrol)
 			throws Exception
 	{
-
+		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
+		driver.click(convertID(DashBoardPageId.CreateDSButtonID));
+		
+		if(name != null && !name.isEmpty())
+			driver.sendKeys(convertID(DashBoardPageId.DashBoardNameBoxID), name);
+		if(descriptions != null && !descriptions.isEmpty())
+			driver.sendKeys(convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
+		if(selectorRefreshcontrol)
+			driver.check(convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		else
+			driver.uncheck(convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		
+		driver.takeScreenShot();
+		driver.click(convertID(DashBoardPageId.DashOKButtonID));
 	}
 
 	public static void createDashboardSet(String name, String descriptions, Boolean displayDesc, Boolean selectorRefreshcontrol)
@@ -33,15 +49,44 @@ public class DashboardHomeUtil
 	{
 
 	}
-
+	
+	/**
+	 * 
+	 * @param dashboardName
+	 * @param view DashboardsGridViewLocator | DashboardsListViewLocator
+	 * @throws Exception
+	 */
 	public static void delete(String dashboardName, String view) throws Exception
 	{
-
+		driver.getLogger().info("[DashboardHomeUtil] call delete dashboardName : " + dashboardName);
+		if(dashboardName == null || dashboardName.isEmpty()) {
+			return;
+		}
+		search(dashboardName);
+		if(DashBoardPageId.DashboardsGridViewLocator.equals(view)) {
+			gridView();
+			driver.takeScreenShot();
+			deleteDashboardInGrid(dashboardName);
+		}
+		
+		if(DashBoardPageId.DashboardsListViewLocator.equals(view)) {
+			listView();
+			driver.takeScreenShot();
+			deleteDashboardInList(dashboardName);
+		}
+		driver.takeScreenShot();
 	}
-
+	
+	/**
+	 * 
+	 * @param option ExploreDataMenu_Analyze | ExploreDataMenu_Log | ExploreDataMenu_Search
+	 * @throws Exception
+	 */
 	public static void exploreData(String option) throws Exception
 	{
-
+		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
+		driver.click(convertID(DashBoardPageId.ExploreDataBtnID));
+		driver.click(option);
 	}
 
 	public static void filterOptions(String filter) throws Exception
@@ -89,6 +134,7 @@ public class DashboardHomeUtil
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
 		driver.waitForElementPresent(DashBoardPageId.DashboardsGridViewLocator);
+		driver.takeScreenShot();
 		driver.click(DashBoardPageId.DashboardsGridViewLocator);
 	}
 
@@ -96,6 +142,7 @@ public class DashboardHomeUtil
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
 		driver.waitForElementPresent(DashBoardPageId.DashboardsListViewLocator);
+		driver.takeScreenShot();
 		driver.click(DashBoardPageId.DashboardsListViewLocator);
 	}
 
@@ -189,5 +236,50 @@ public class DashboardHomeUtil
 			throw new IllegalArgumentException("Unknow Sort by option: " + option);
 		}
 
+	}
+	
+	private static void deleteDashboardInGrid(String dashboardName) {
+		WebElement gridTable = driver.getElement(convertID(DashBoardPageId.DashboardTableID));
+		List<WebElement> dashboardList = gridTable.findElements(By.tagName("div"));
+		for(WebElement dashboard : dashboardList) {
+			if(dashboardName.equals(dashboard.getAttribute("aria-label"))) {
+				dashboard.findElement(By.cssSelector("button")).click();	// click "i" button
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON);	// click delete
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM);	// confirm to delete
+				break;
+			}
+		}
+	}
+	
+	private static void deleteDashboardInList(String dashboardName) {
+		// find table
+		WebElement listTable = driver.getElement(convertID(DashBoardPageId.DASHBOARD_LIST_TABLE));
+		// find the column index of both "Name" & button
+		WebElement headRow = listTable.findElement(By.tagName("thead")).findElement(By.tagName("tr"));
+		List<WebElement> headColList = headRow.findElements(By.tagName("th"));
+		int buttonColIndex = headColList.size() - 1;
+		int nameColIndex = 0;
+		for(int i = 0; i < headColList.size(); i++) {
+			WebElement headCol = headColList.get(i);
+			if("Name".equals(headCol.getAttribute("title"))) {
+				nameColIndex = i;
+				break;
+			}
+		}
+		// find the row whose name is equal with dashboardName and click the delete
+		List<WebElement> rowList = listTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
+		for(WebElement row : rowList) {
+			List<WebElement> rowColList = row.findElements(By.tagName("td"));
+			if(dashboardName.equals(rowColList.get(nameColIndex).getText())) {
+				rowColList.get(buttonColIndex).findElement(By.tagName("button")).click();	// click "i" button
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON);	// click delete
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM);	// confirm to delete
+				break;
+			}
+		}
+	}
+	
+	private static String convertID(String id) {
+		return "id=" + id;
 	}
 }
