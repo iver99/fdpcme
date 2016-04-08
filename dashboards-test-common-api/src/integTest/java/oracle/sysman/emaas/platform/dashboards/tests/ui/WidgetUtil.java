@@ -34,13 +34,13 @@ public class WidgetUtil
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);
-        driver.takeScreenShot();
+		driver.takeScreenShot();
 
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
 		driver.click("css=" + DashBoardPageId.RemoveTileCSS);
 		driver.getLogger().info("Remove the widget");
-        driver.takeScreenShot();
-        
+		driver.takeScreenShot();
+
 	}
 
 	public static void resizeOptions(String widgetName, int index, String resizeOptions) throws Exception
@@ -52,7 +52,7 @@ public class WidgetUtil
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);
-        driver.takeScreenShot();
+		driver.takeScreenShot();
 
 		String tileResizeCSS = null;
 		switch (resizeOptions) {
@@ -78,7 +78,7 @@ public class WidgetUtil
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
 		driver.click("css=" + tileResizeCSS);
 		driver.getLogger().info("Resize the widget");
-        driver.takeScreenShot();
+		driver.takeScreenShot();
 
 	}
 
@@ -100,19 +100,24 @@ public class WidgetUtil
 		Validator.notEmptyString("widgetName", widgetName);
 		Validator.equalOrLargerThan0("index", index);
 		WidgetUtil.clickTileConfigButton(widgetName, index);
+
 		if (visibility) {
 			if (driver.isDisplayed(DashBoardPageId.BuilderTileHideLocator)) {
+				driver.takeScreenShot();
 				driver.getLogger().info("WidgetUtil.title completed as title is shown already");
 				return;
 			}
 			driver.click(DashBoardPageId.BuilderTileShowLocator);
+			driver.takeScreenShot();
 		}
 		else {
 			if (driver.isDisplayed(DashBoardPageId.BuilderTileShowLocator)) {
+				driver.takeScreenShot();
 				driver.getLogger().info("WidgetUtil.title completed as title is hidden already");
 				return;
 			}
 			driver.click(DashBoardPageId.BuilderTileHideLocator);
+			driver.takeScreenShot();
 		}
 		driver.getLogger().info("WidgetUtil.title completed");
 	}
@@ -157,6 +162,7 @@ public class WidgetUtil
 		Actions builder = new Actions(driver.getWebDriver());
 		builder.moveToElement(tileTitle).perform();
 		builder.moveToElement(tileConfig).click().perform();
+		driver.takeScreenShot();
 	}
 
 	private static void focusOnWidgetHeader(WebElement widgetElement)
@@ -175,12 +181,15 @@ public class WidgetUtil
 	{
 		driver.waitForElementPresent(DashBoardPageId.BuilderTilesEditArea);
 		driver.click(DashBoardPageId.BuilderTilesEditArea);
+		driver.takeScreenShot();
+
 		String titleTitlesLocator = String.format(DashBoardPageId.BuilderTileTitleLocator, widgetName);
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(titleTitlesLocator));
 		if (tileTitles == null || tileTitles.size() <= index) {
 			throw new NoSuchElementException("Tile with title=" + widgetName + ", index=" + index + " is not found");
 		}
 		tileTitles.get(index).click();
+		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}
 

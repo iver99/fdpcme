@@ -25,6 +25,7 @@ public class WidgetSelectorUtil
 
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_OK_BTN_LOCATOR);
 		driver.click(DashBoardPageId.WIDGET_SELECTOR_OK_BTN_LOCATOR);
+		driver.takeScreenShot();
 
 		driver.getLogger().info("WidgetSelectorUtil.addWidget completed");
 	}
@@ -33,7 +34,9 @@ public class WidgetSelectorUtil
 	{
 		driver.getLogger().info("WidgetSelectorUtil.closeDialog started");
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
+		driver.takeScreenShot();
 		driver.click(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
+		driver.takeScreenShot();
 		driver.waitForNotElementPresent(DashBoardPageId.WIDGET_SELECTOR_CLOSE_BTN_LOCATOR);
 
 		driver.getLogger().info("WidgetSelectorUtil.closeDialog completed");
@@ -65,11 +68,14 @@ public class WidgetSelectorUtil
 		String widgetItemByNameLocator = String.format(DashBoardPageId.WIDGET_SELECTOR_WIDGET_ITEMS_BY_TITLE, xpath);
 		driver.waitForElementPresent(widgetItemByNameLocator);
 		driver.click(widgetItemByNameLocator);
+		driver.takeScreenShot();
+
 		List<WebElement> tileTitles = driver.getWebDriver().findElements(By.xpath(widgetItemByNameLocator));
 		if (tileTitles == null || tileTitles.size() <= index) {
 			throw new NoSuchElementException("Widget with widgetName=" + widgetName + ", index=" + index + " is not found");
 		}
 		tileTitles.get(index).click();
+		driver.takeScreenShot();
 		return tileTitles.get(index);
 	}
 
@@ -77,7 +83,10 @@ public class WidgetSelectorUtil
 	{
 		driver.waitForElementPresent(DashBoardPageId.WIDGET_SELECTOR_WIDGET_AREA);
 		driver.clear(DashBoardPageId.WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR);
+		driver.takeScreenShot();
+
 		driver.sendKeys(DashBoardPageId.WIDGET_SELECTOR_SEARCH_INPUT_LOCATOR, widgetName);
 		driver.click(DashBoardPageId.WIDGET_SELECTOR_SEARCH_BTN);
+		driver.takeScreenShot();
 	}
 }
