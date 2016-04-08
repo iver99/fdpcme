@@ -10,6 +10,10 @@ import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 public class DashboardBuilderUtil
 {
@@ -230,5 +234,71 @@ public class DashboardBuilderUtil
 			return false;
 		}
 	}
+
+    public static void addWidgetByRightDrawer(String searchString) throws Exception {
+        if (searchString == null) {
+            return;
+        }
+        driver.getLogger().info("[DashboardHomeUtil] call addWidgetByRightDrawer with search string as " + searchString);
+
+        //show right drawer if it is hidden
+        showRightDrawer();
+
+        WebElement searchInput = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchInputCSS);
+        searchInput.click();
+        searchInput.clear();
+        searchInput.sendKeys(searchString);
+
+        WebElement searchButton = driver.getElement("css=" + DashBoardPageId.RightDrawerSearchButtonCSS);
+        searchButton.click();
+        //wait for ajax resolved
+        Thread.sleep(DashBoardPageId.Delaytime_short);
+
+        driver.getLogger().info("[DashboardHomeUtil] start to add widget from right drawer");
+        List<WebElement> matchingWidgets = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.RightDrawerWidgetCSS));
+        if (matchingWidgets == null && matchingWidgets.size() == 0) {
+            throw new NoSuchElementException("Right drawer widget for search string =" + searchString + " is not found");
+        }
+
+        //drag and drop not working
+        //      WebElement tilesContainer = driver.getElement("css=" + DashBoardPageId.RightDrawerWidgetToAreaCSS);
+        //      CommonActions.dragAndDropElement(driver, matchingWidgets.get(0), tilesContainer);
+
+        // focus to  the first matching  widget
+        new Actions(driver.getWebDriver()).moveToElement(searchButton).build().perform();
+        searchButton.sendKeys(Keys.TAB);
+        driver.takeScreenShot();
+
+        // press enter to add widget
+        driver.getWebDriver().switchTo().activeElement().sendKeys(Keys.ENTER);
+        driver.takeScreenShot();
+
+        driver.getLogger().info("[DashboardHomeUtil] finish adding widget from right drawer");
+    }
+
+    private static boolean isRightDrawerVisible(){
+        WebElement rightDrawerPanel = driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.RightDrawerPanelCSS));
+        boolean isDisplayed = rightDrawerPanel.getCssValue("display").equals("none") != true;
+        boolean isWidthValid = rightDrawerPanel.getCssValue("width").equals("0px") != true;
+        return  isDisplayed && isWidthValid;
+    }
+
+    public static void showRightDrawer( ) throws Exception
+    {
+        if(DashboardBuilderUtil.isRightDrawerVisible() == false){
+            driver.click("css="+DashBoardPageId.RightDrawerToggleBtnCSS);
+            driver.getLogger().info("[DashboardBuilderUtil] triggered showRightDrawer.");
+        }
+    }
+
+    public static void hideRightDrawer( ) throws Exception
+    {
+        if(DashboardBuilderUtil.isRightDrawerVisible() == true){
+            driver.click("css="+DashBoardPageId.RightDrawerToggleBtnCSS);
+            driver.getLogger().info("[DashboardBuilderUtil] triggered hideRightDrawer.");
+        }
+    }
+
+
 
 }
