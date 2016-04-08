@@ -9,11 +9,6 @@ import org.openqa.selenium.interactions.Actions;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
-import java.util.List;
 
 public class WidgetUtil
 {
@@ -66,7 +61,7 @@ public class WidgetUtil
         WebElement widgetEl = getWidgetByName(widgetName,index);
         if(null == widgetEl) {
             driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-            return;
+            throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
         }
 
         focusOnWidgetHeader(widgetEl);
@@ -80,7 +75,7 @@ public class WidgetUtil
         WebElement widgetEl = getWidgetByName(widgetName,index);
         if(null == widgetEl) {
             driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-            return;
+            throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
         }
 
         focusOnWidgetHeader(widgetEl);
