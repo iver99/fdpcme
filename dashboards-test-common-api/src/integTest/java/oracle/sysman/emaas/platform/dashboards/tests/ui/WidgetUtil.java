@@ -30,7 +30,7 @@ public class WidgetUtil
 		WebElement widgetEl = WidgetUtil.getWidgetByName(widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-			return;
+			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);
@@ -45,7 +45,7 @@ public class WidgetUtil
 		WebElement widgetEl = WidgetUtil.getWidgetByName(widgetName, index);
 		if (null == widgetEl) {
 			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-			return;
+			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);

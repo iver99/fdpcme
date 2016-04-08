@@ -204,6 +204,24 @@ public class DashBoardPageId
 	public static final String BuilderOptionsAutoRefreshOn5MinLocator = "//li[@data-singledb-option=\"On (Every 5 Minutes)\"]/a";
 	public static final String BuilderOptionsDeleteLocator = "id=emcpdf_dsbopts_delete";
 	public static final String BuilderOptionsDeleteMenuLocator = "//a[@id='emcpdf_dsbopts_delete']";
+	public static final String BuilderOptionsPrintLocatorCSS = "[data-singledb-option=\"Print\"] a";
+	public static final String BuilderOptionsEditLocatorCSS = "[data-singledb-option=\"Edit\"] a";
+	public static final String BuilderOptionsEditNameCSS = "dbsHNameIn";
+	public static final String BuilderOptionsEditDescriptionCSS = "dbsHDpIn";
+	public static final String BuilderOptionsEditSaveCSS = "createDsb-2";
+	public static final String BuilderOptionsShareLocatorCSS = "[data-singledb-option=\"Share\"] a";
+	public static final String BuilderOptionsUnShareLocatorCSS = "[data-singledb-option=\"Stop Sharing\"] a";
+	public static final String BuilderOptionsFavoriteLocatorCSS = "[data-singledb-option=\"Add Favorite\"] a";
+	public static final String BuilderOptionsRemoveFavoriteLocatorCSS = "[data-singledb-option=\"Remove Favorite\"] a";
+	public static final String BuilderOptionsSetHomeLocatorCSS = "[data-singledb-option=\"Set as Home\"] a";
+	public static final String BuilderOptionsRemoveHomeLocatorCSS = "[data-singledb-option=\"Remove as Home\"] a";
+	public static final String BuilderOptionsSetHomeComfirmCSS = "id=btnConfirmSetAsHome";
+	public static final String BuilderOptionsDuplicateLocatorCSS = "[data-singledb-option=\"Duplicate\"] a";
+	public static final String BuilderOptionsDuplicateNameCSS = "dupDsbNameIn";
+	public static final String BuilderOptionsDuplicateDescriptionCSS = "dupDsbDescIn";
+	public static final String BuilderOptionsDuplicateSaveCSS = "id=createDsb-1";
+	//dashboard tool bar
+	public static final String DashboardSaveCSS = "button.dashboard-screenshot";
 
 	//dashboard delete dialog
 	public static final String BuilderDeleteDialogLocator = "id=ojDialogWrapper-dbs_cfmDialog";
@@ -243,6 +261,15 @@ public class DashBoardPageId
 	public static final String ShorterTileCSS = "li[data-option=shorter]";
 	public static final String TallerTileCSS = "li[data-option=taller]";
 	public static final String RemoveTileCSS = "li[data-option=remove]";
+
+	//right drawer css locators
+	public static final String RightDrawerCSS = ".right-panel-toggler";
+	public static final String RightDrawerPanelCSS = ".dbd-left-panel";
+	public static final String RightDrawerToggleBtnCSS = ".right-panel-toggler button.toggle-right-panel-btn";
+	public static final String RightDrawerSearchInputCSS = ".dbd-left-panel input.widget-search-input";
+	public static final String RightDrawerSearchButtonCSS = ".dbd-left-panel button.dbd-left-panel-header-search-btn";
+	public static final String RightDrawerWidgetToAreaCSS = ".tiles-wrapper";
+	public static final String RightDrawerWidgetCSS = ".dbd-left-panel .dbd-left-panel-widget";
 
 	//time picker
 	public static final String TimePickerID = "/html/body/div[*]/div[2]/div[1]/div[1]/div/div[2]/div/span/span";//"/html/body/div[*]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";//"/html/body/div[3]/div[2]/div[2]/div[2]/div[1]/div[2]/div/button";///html/body/div[*]/div[2]/div/div/div[1]/div[1]/div/div/button";//"
@@ -307,4 +334,13 @@ public class DashBoardPageId
 	public static final String WIDGET_SELECTOR_OK_BTN_LOCATOR = "//button[@id='widget-selector-okbtn' and not(contains(@class, 'oj-disabled'))]";
 	public static final String WIDGET_SELECTOR_CLOSE_BTN_LOCATOR = "//div[contains(@class, 'oj-dialog') and not(contains(@style, 'display: none'))]/div[contains(@class, 'widget-selector-main')]/preceding-sibling::div[contains(@class, 'oj-dialog-header')]/div[contains(@class, 'oj-dialog-header-close-wrapper')]";
 
+	//Brand Bar User Menu Option
+	public static final String Brand_Bar_User_Menu = "//button[contains(@id,'menubutton')]";
+	public static final String Brand_Bar_User_Menu_Help_Option = "help";
+	public static final String Brand_Bar_User_Menu_About_Option = "about";
+	public static final String Brand_Bar_User_Menu_Signout_Option = "signout";
+	public static final String Option_Help = "//a[contains(@id,'emcpdf_oba_help')]";
+	public static final String Option_About = "//*[@id='emcpdf_oba_about']";
+	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
+	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
 }
