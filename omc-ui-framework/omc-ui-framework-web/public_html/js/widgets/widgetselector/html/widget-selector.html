@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="/emsaasui/uifwk/@version@/css/widgets/widget-selector-alta.css" type="text/css"/>
     </head>
     <body>
-        <div style="display:none;" 
+        <div style="display:none;" class="widget-selector-main"
             data-bind="ojComponent:{component: 'ojDialog', beforeOpen: beforeOpenDialog,
                 initialVisibility: 'hide', title: widgetSelectorTitle, resizeBehavior: 'none',
                 rootAttributes: { style: 'width: 867px;'}}, attr: {id: dialogId}">   
@@ -55,7 +55,7 @@
                     <ul style="text-align: left; padding: 0px; margin-left: 5px; margin-top: 5px;">
                         <!-- ko foreach: curPageWidgetList -->
                         <li class="widget-selector-li">
-                            <a data-bind="click: $parent.widgetBoxClicked, attr: {href: 'javascript: this.click()'}">
+                            <a data-bind="click: $parent.widgetBoxClicked, attr: {href: 'javascript: this.click()', 'data-widget-title': WIDGET_NAME}">
                                 <div class="widget-selector-container" data-bind="attr:{title: name}, css: {'widget-selector-container-selected': isSelected}">
                                     <div class="widget-box-title" data-bind="attr: {title: WIDGET_NAME}">
                                         <span data-bind="text: WIDGET_NAME"></span>
