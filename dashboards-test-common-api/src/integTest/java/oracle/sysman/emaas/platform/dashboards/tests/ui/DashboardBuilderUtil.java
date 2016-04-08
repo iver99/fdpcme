@@ -1,5 +1,7 @@
 package oracle.sysman.emaas.platform.dashboards.tests.ui;
 
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ParameterValidators;
 import java.util.logging.Level;
 import java.util.List;
 
@@ -184,6 +186,9 @@ public class DashboardBuilderUtil
 	{
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard started for refreshSettings=" + refreshSettings);
 
+		ParameterValidators.fromValidValues("refreshSettings", refreshSettings, REFRESH_DASHBOARD_PARAM_OFF,
+				REFRESH_DASHBOARD_PARAM_5MIN);
+
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsAutoRefreshLocator);
@@ -198,9 +203,6 @@ public class DashboardBuilderUtil
 				driver.click(DashBoardPageId.BuilderOptionsAutoRefreshOn5MinLocator);
 				driver.waitForElementPresent(DashBoardPageId.BuilderAutoRefreshOn5MinSelectedLocator);
 				break;
-			default:
-				driver.getLogger().log(Level.SEVERE, "Input parameter " + refreshSettings + " is invalid. ");
-				return;
 		}
 		driver.getLogger().info("DashboardBuilderUtil.refreshDashboard completed");
 
