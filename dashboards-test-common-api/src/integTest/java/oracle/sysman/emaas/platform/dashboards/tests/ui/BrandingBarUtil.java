@@ -13,10 +13,31 @@ public class BrandingBarUtil
 		driver = webDriver;
 	}
 
-	public static void userMenuOptions(String option) throws Exception
-	{
-
-	}
+    public static void userMenuOptions(String option) throws Exception
+    {
+        if(option ==null){
+            return;
+        }
+        driver.getLogger().info("Click brand bar user menur option:"+option);
+        driver.waitForElementPresent(DashBoardPageId.Brand_Bar_User_Menu);
+        driver.click(DashBoardPageId.Brand_Bar_User_Menu);
+        switch(option){
+            case DashBoardPageId.Brand_Bar_User_Menu_Help_Option:
+                driver.takeScreenShot();
+                driver.click(DashBoardPageId.Option_Help);
+                break;
+            case DashBoardPageId.Brand_Bar_User_Menu_About_Option:
+                driver.takeScreenShot();
+                driver.click(DashBoardPageId.Option_About);
+                driver.takeScreenShot();
+                driver.click(DashBoardPageId.AboutDialogClose);
+                break;
+            case DashBoardPageId.Brand_Bar_User_Menu_Signout_Option:
+                driver.click(DashBoardPageId.Option_Logout);
+                break;
+        }
+        driver.takeScreenShot();
+    }
 
 	public static void visitApplicationAdministration(String AdministrationName) throws Exception
 	{
