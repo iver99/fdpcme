@@ -70,7 +70,8 @@ public class DashboardBuilderUtil
 
 	public static void duplicate(String name, String descriptions) throws Exception
 	{
-		if (name == null && descriptions==null) {
+		if (name == null || name.trim().length() == 0) {
+			driver.getLogger().info("DashboardBuilderUtil.duplicate name is null");
 			return;
 		}
 		driver.getLogger().info("DashboardBuilderUtil.duplicate started");
@@ -91,12 +92,15 @@ public class DashboardBuilderUtil
 		driver.getElement("id="+DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS).clear();
 		driver.click("id="+DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfDuplicateNameEl));
-		driver.sendKeys("id="+DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, descriptions);
+		if(descriptions==null){
+			driver.sendKeys("id="+DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, "");
+		}else {
+			driver.sendKeys("id="+DashBoardPageId.BuilderOptionsDuplicateDescriptionCSS, descriptions);
+		}
 
 		//press ok button
 		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
 		driver.click(DashBoardPageId.BuilderOptionsDuplicateSaveCSS);
-
 	}
 
 	public static void editDashboard(String name, String descriptions) throws Exception
@@ -130,9 +134,9 @@ public class DashboardBuilderUtil
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
 
 		//press ok button
-		driver.waitForElementPresent("id="+ DashBoardPageId.BuilderOptionsEditSaveCSS);
-		driver.click("id="+DashBoardPageId.BuilderOptionsEditSaveCSS);
-
+		driver.waitForElementPresent("id=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
+		driver.click("id=" + DashBoardPageId.BuilderOptionsEditSaveCSS);
+		driver.getLogger().info("DashboardBuilderUtil.edit complete");
 	}
 
 	public static void editDashboardSet(String name, String descriptions, Boolean shareOption) throws Exception
