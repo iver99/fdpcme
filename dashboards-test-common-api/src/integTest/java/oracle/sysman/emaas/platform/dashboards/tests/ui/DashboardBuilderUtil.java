@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DelayedPressEnterThread;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -107,18 +108,20 @@ public class DashboardBuilderUtil
 		driver.click("css="+DashBoardPageId.BuilderOptionsEditLocatorCSS);
 		driver.waitForElementPresent("id="+DashBoardPageId.BuilderOptionsEditNameCSS);
 
-		//add name and description
-		driver.getElement("id="+DashBoardPageId.BuilderOptionsEditNameCSS).clear();
-		driver.click("id="+DashBoardPageId.BuilderOptionsEditNameCSS);
-		DashboardHomeUtil.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
-		driver.sendKeys("id="+DashBoardPageId.BuilderOptionsEditNameCSS, name);
-
-		driver.getElement("id="+DashBoardPageId.BuilderOptionsEditDescriptionCSS).clear();
-		driver.click("id="+DashBoardPageId.BuilderOptionsEditDescriptionCSS);
 		//wait for 10l
 		Long timeOutInSecond = 10L;
 		By locatorOfEditDesEl = By.id(DashBoardPageId.BuilderOptionsEditDescriptionCSS);
 		WebDriverWait wait = new WebDriverWait (driver.getWebDriver(),timeOutInSecond);
+
+		//add name and description
+		driver.getElement("id="+DashBoardPageId.BuilderOptionsEditNameCSS).clear();
+		driver.click("id="+DashBoardPageId.BuilderOptionsEditNameCSS);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
+		driver.sendKeys("id="+DashBoardPageId.BuilderOptionsEditNameCSS, name);
+
+		driver.getElement("id="+DashBoardPageId.BuilderOptionsEditDescriptionCSS).clear();
+		driver.click("id="+DashBoardPageId.BuilderOptionsEditDescriptionCSS);
+
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
 		driver.sendKeys("id="+DashBoardPageId.BuilderOptionsEditDescriptionCSS, descriptions);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfEditDesEl));
@@ -161,7 +164,13 @@ public class DashboardBuilderUtil
 
 	public static void print() throws Exception
 	{
-
+		driver.getLogger().info("print dashboard");
+		driver.waitForElementPresent(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.click(DashBoardPageId.BuilderOptionsMenuLocator);
+		driver.waitForElementPresent("css="+DashBoardPageId.BuilderOptionsPrintLocatorCSS);
+     	DelayedPressEnterThread thr = new DelayedPressEnterThread( "DelayedPressEnterThread",5000) ;
+		driver.getWebDriver().findElement(By.cssSelector(DashBoardPageId.BuilderOptionsPrintLocatorCSS)).click();
+		driver.getLogger().info("print completed");
 	}
 
 	public static void refreshDashboard(String refreshSettings) throws Exception
