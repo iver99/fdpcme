@@ -8,44 +8,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ParameterValidators;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WidgetUtil
 {
 	private static WebDriver driver;
-
-    private static WebElement getWidgetByName(String widgetName, int index) throws InterruptedException {
-        if(widgetName == null) {
-            return null;
-        }
-
-        List<WebElement> widgets = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.WidgetTitleCSS));
-        WebElement widget = null;
-        int counter = 0;
-        for(WebElement widgetElement : widgets) {
-            WebElement widgetTitle = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
-            if(widgetTitle != null && widgetTitle.getText().trim().equals(widgetName)){
-                if(counter == index) {
-                    widget = widgetElement;
-                    break;
-                }
-                counter ++;
-            }
-        }
-
-        return widget;
-    }
-
-    private static void focusOnWidgetHeader(WebElement widgetElement) {
-        if( null == widgetElement) {
-            return;
-        }
-
-        WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
-        Actions actions = new Actions(driver.getWebDriver());
-        actions.moveToElement(widgetHeader).build().perform();
-        driver.getLogger().info("Focus to the widget");
-    }
 
 	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
 	{
@@ -57,74 +25,76 @@ public class WidgetUtil
 		WidgetUtil.remove(widgetName, 0);
 	}
 
-	public static void remove(String widgetName, int index) throws Exception {
-        WebElement widgetEl = getWidgetByName(widgetName,index);
-        if(null == widgetEl) {
-            driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-            throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
-        }
+	public static void remove(String widgetName, int index) throws Exception
+	{
+		WebElement widgetEl = WidgetUtil.getWidgetByName(widgetName, index);
+		if (null == widgetEl) {
+			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
+			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
+		}
 
-        focusOnWidgetHeader(widgetEl);
+		WidgetUtil.focusOnWidgetHeader(widgetEl);
 
-        widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
-        driver.click("css="+DashBoardPageId.RemoveTileCSS);
-        driver.getLogger().info("Remove the widget");
-    }
+		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
+		driver.click("css=" + DashBoardPageId.RemoveTileCSS);
+		driver.getLogger().info("Remove the widget");
+	}
 
-	public static void resizeOptions(String widgetName, int index, String resizeOptions) throws Exception{
-        WebElement widgetEl = getWidgetByName(widgetName,index);
-        if(null == widgetEl) {
-            driver.getLogger().info("Fail to find the widget titled with " + widgetName);
-            throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
-        }
+	public static void resizeOptions(String widgetName, int index, String resizeOptions) throws Exception
+	{
+		WebElement widgetEl = WidgetUtil.getWidgetByName(widgetName, index);
+		if (null == widgetEl) {
+			driver.getLogger().info("Fail to find the widget titled with " + widgetName);
+			throw new NoSuchElementException("Tile config menu for title=" + widgetName + ", index=" + index + " is not found");
+		}
 
-        focusOnWidgetHeader(widgetEl);
+		WidgetUtil.focusOnWidgetHeader(widgetEl);
 
-        String tileResizeCSS = null;
-        switch (resizeOptions){
-            case DashBoardPageId.TILE_WIDER:
-                tileResizeCSS = DashBoardPageId.WiderTileCSS;
-                break;
-            case DashBoardPageId.TILE_NARROWER:
-                tileResizeCSS = DashBoardPageId.NarrowerTileCSS;
-                break;
-            case DashBoardPageId.TILE_SHORTER:
-                tileResizeCSS = DashBoardPageId.ShorterTileCSS;
-                break;
-            case DashBoardPageId.TILE_TALLER:
-                tileResizeCSS = DashBoardPageId.TallerTileCSS;
-                break;
-            default:
-                break;
-        }
-        if( null == tileResizeCSS) {
-            return;
-        }
+		String tileResizeCSS = null;
+		switch (resizeOptions) {
+			case DashBoardPageId.TILE_WIDER:
+				tileResizeCSS = DashBoardPageId.WiderTileCSS;
+				break;
+			case DashBoardPageId.TILE_NARROWER:
+				tileResizeCSS = DashBoardPageId.NarrowerTileCSS;
+				break;
+			case DashBoardPageId.TILE_SHORTER:
+				tileResizeCSS = DashBoardPageId.ShorterTileCSS;
+				break;
+			case DashBoardPageId.TILE_TALLER:
+				tileResizeCSS = DashBoardPageId.TallerTileCSS;
+				break;
+			default:
+				break;
+		}
+		if (null == tileResizeCSS) {
+			return;
+		}
 
-        widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
-        driver.click("css="+tileResizeCSS);
-        driver.getLogger().info("Resize the widget");
+		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
+		driver.click("css=" + tileResizeCSS);
+		driver.getLogger().info("Resize the widget");
 
-    }
+	}
 
 	public static void resizeOptions(String widgetName, String resizeOptions) throws Exception
 	{
 		WidgetUtil.resizeOptions(widgetName, 0, resizeOptions);
 	}
 
-	public static void title(String widgetName, Boolean visibility) throws Exception
+	public static void title(String widgetName, boolean visibility) throws Exception
 	{
 		WidgetUtil.title(widgetName, 0, visibility);
 	}
 
-	public static void title(String widgetName, int index, Boolean visibility) throws Exception
+	public static void title(String widgetName, int index, boolean visibility) throws Exception
 	{
-		driver.getLogger().info("WidgetUtil.title started for widgetName=" + widgetName + ", index=" + index + ", visibility");
+		driver.getLogger().info(
+				"WidgetUtil.title started for widgetName=" + widgetName + ", index=" + index + ", visibility=" + visibility);
 
+		ParameterValidators.notEmptyString("widgetName", widgetName);
+		ParameterValidators.equalOrLargerThan0("index", index);
 		WidgetUtil.clickTileConfigButton(widgetName, index);
-		if (visibility == null) {
-			throw new IllegalArgumentException("Unexpected null value for input parameter visibility");
-		}
 		if (visibility) {
 			if (driver.isDisplayed(DashBoardPageId.BuilderTileHideLocator)) {
 				driver.getLogger().info("WidgetUtil.title completed as title is shown already");
@@ -149,9 +119,10 @@ public class WidgetUtil
 
 	public static void udeRedirect(String widgetName, int index) throws Exception
 	{
-		driver.getLogger()
-				.info("WidgetUtil.udeRedirect started for widgetName=" + widgetName + ", index=" + index + ", visibility");
+		driver.getLogger().info("WidgetUtil.udeRedirect started for widgetName=" + widgetName + ", index=" + index);
 
+		ParameterValidators.notEmptyString("widgetName", widgetName);
+		ParameterValidators.equalOrLargerThan0("index", index);
 		WidgetUtil.clickTileUDEExploreButton(widgetName, index);
 
 		driver.getLogger().info("WidgetUtil.udeRedirect completed");
@@ -183,6 +154,18 @@ public class WidgetUtil
 		builder.moveToElement(tileConfig).click().perform();
 	}
 
+	private static void focusOnWidgetHeader(WebElement widgetElement)
+	{
+		if (null == widgetElement) {
+			return;
+		}
+
+		WebElement widgetHeader = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
+		Actions actions = new Actions(driver.getWebDriver());
+		actions.moveToElement(widgetHeader).build().perform();
+		driver.getLogger().info("Focus to the widget");
+	}
+
 	private static WebElement getTileTitleElement(String widgetName, int index)
 	{
 		driver.waitForElementPresent(DashBoardPageId.BuilderTilesEditArea);
@@ -194,5 +177,28 @@ public class WidgetUtil
 		}
 		tileTitles.get(index).click();
 		return tileTitles.get(index);
+	}
+
+	private static WebElement getWidgetByName(String widgetName, int index) throws InterruptedException
+	{
+		if (widgetName == null) {
+			return null;
+		}
+
+		List<WebElement> widgets = driver.getWebDriver().findElements(By.cssSelector(DashBoardPageId.WidgetTitleCSS));
+		WebElement widget = null;
+		int counter = 0;
+		for (WebElement widgetElement : widgets) {
+			WebElement widgetTitle = widgetElement.findElement(By.cssSelector(DashBoardPageId.TileTitleCSS));
+			if (widgetTitle != null && widgetTitle.getText().trim().equals(widgetName)) {
+				if (counter == index) {
+					widget = widgetElement;
+					break;
+				}
+				counter++;
+			}
+		}
+
+		return widget;
 	}
 }
