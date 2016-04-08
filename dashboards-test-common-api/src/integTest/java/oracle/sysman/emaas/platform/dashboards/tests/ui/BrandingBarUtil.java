@@ -13,31 +13,31 @@ public class BrandingBarUtil
 		driver = webDriver;
 	}
 
-    public static void userMenuOptions(String option) throws Exception
-    {
-        if(option ==null){
-            return;
-        }
-        driver.getLogger().info("Click brand bar user menur option:"+option);
-        driver.waitForElementPresent(DashBoardPageId.Brand_Bar_User_Menu);
-        driver.click(DashBoardPageId.Brand_Bar_User_Menu);
-        switch(option){
-            case DashBoardPageId.Brand_Bar_User_Menu_Help_Option:
-                driver.takeScreenShot();
-                driver.click(DashBoardPageId.Option_Help);
-                break;
-            case DashBoardPageId.Brand_Bar_User_Menu_About_Option:
-                driver.takeScreenShot();
-                driver.click(DashBoardPageId.Option_About);
-                driver.takeScreenShot();
-                driver.click(DashBoardPageId.AboutDialogClose);
-                break;
-            case DashBoardPageId.Brand_Bar_User_Menu_Signout_Option:
-                driver.click(DashBoardPageId.Option_Logout);
-                break;
-        }
-        driver.takeScreenShot();
-    }
+	public static void userMenuOptions(String option) throws Exception
+	{
+		if (option == null) {
+			return;
+		}
+		driver.getLogger().info("Click brand bar user menur option:" + option);
+		driver.waitForElementPresent(DashBoardPageId.Brand_Bar_User_Menu);
+		driver.click(DashBoardPageId.Brand_Bar_User_Menu);
+		switch (option) {
+			case DashBoardPageId.Brand_Bar_User_Menu_Help_Option:
+				driver.takeScreenShot();
+				driver.click(DashBoardPageId.Option_Help);
+				break;
+			case DashBoardPageId.Brand_Bar_User_Menu_About_Option:
+				driver.takeScreenShot();
+				driver.click(DashBoardPageId.Option_About);
+				driver.takeScreenShot();
+				driver.click(DashBoardPageId.AboutDialogClose);
+				break;
+			case DashBoardPageId.Brand_Bar_User_Menu_Signout_Option:
+				driver.click(DashBoardPageId.Option_Logout);
+				break;
+		}
+		driver.takeScreenShot();
+	}
 
 	public static void visitApplicationAdministration(String adminLinkName) throws Exception
 	{
@@ -49,7 +49,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationAdministration] can not visit admin link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationAdministration] can not visit admin link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -63,7 +63,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationCloudService] can not visit cloud service link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationCloudService] can not visit cloud service link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -77,7 +77,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationHome] can not visit home link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationHome] can not visit home link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -91,7 +91,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationVisualAnalyzer] can not visit visual analyzer link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationVisualAnalyzer] can not visit visual analyzer link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -99,8 +99,10 @@ public class BrandingBarUtil
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitDashboardHome] start to visit 'Dashboards' link from branding bar.");
 		driver.click(DashBoardPageId.LinkID);
+		driver.takeScreenShot();
 		driver.waitForElementPresent(DashBoardPageId.BrandingBarDashboardLinkLocator);
 		driver.check(DashBoardPageId.BrandingBarDashboardLinkLocator);
+		driver.takeScreenShot();
 	}
 
 	public static void visitMyFavorites() throws Exception
@@ -115,16 +117,18 @@ public class BrandingBarUtil
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitMyHome] start to visit 'Home' link from branding bar.");
 		driver.click(DashBoardPageId.LinkID);
-		driver.waitForElementPresent(DashBoardPageId.BrandingBarMyHomeLinkID);
+		driver.takeScreenShot();
 		driver.click(DashBoardPageId.BrandingBarMyHomeLinkID);
+		driver.takeScreenShot();
 	}
 
 	public static void visitWelcome() throws Exception
 	{
 		driver.getLogger().info("[BrandingBarUtil.visitWelcome] start to visit 'Welcome' link from branding bar.");
 		driver.click(DashBoardPageId.LinkID);
-		driver.waitForElementPresent(DashBoardPageId.BrandingBarWelcomeLinkID);
+		driver.takeScreenShot();
 		driver.click(DashBoardPageId.BrandingBarWelcomeLinkID);
+		driver.takeScreenShot();
 	}
 
 	private static void visitApplicationLink(String linkType, String linkName)
@@ -147,7 +151,8 @@ public class BrandingBarUtil
 		//Find link element by parent id and link name
 		String xpath = "//div[@id='" + parentId + "']/descendant::a[text()='" + linkName + "']";
 		driver.click(DashBoardPageId.LinkID);
-		driver.waitForElementPresent(xpath);
+		driver.takeScreenShot();
 		driver.click(xpath);
+		driver.takeScreenShot();
 	}
 }

@@ -15,6 +15,7 @@ public class DashBoardPageId
 	public static final String CreateDSOfDialogID = "createDsb";
 	public static final String DashBoardNameBoxID = "dbsHNameIn";
 	public static final String DashBoardDescBoxID = "dbsHDpIn";
+	public static final String DashBoardTimeRangeChecker = "ckbxTimeRangeFilter";
 	public static final String DashOKButtonID = "createDsb";
 	public static final String DashSaveButtonID = "createDsb-2";
 	//public static final String WidgetAddButtonID = "add-widget-button";
@@ -167,8 +168,8 @@ public class DashBoardPageId
 
 	//Explore Data
 	public static final String ExploreDataBtnID = "exploreDataBtn";
-	public static final String ExploreDataMenu_Log = "/html/body/div[1]/div/ul/li[1]/a";//"ui-id-3";
-	public static final String ExploreDataMenu_Analyze = "/html/body/div[1]/div/ul/li[2]/a";//"ui-id-4";
+	public static final String ExploreDataMenu_Analyze = "/html/body/div[1]/div/ul/li[1]/a";//"ui-id-3";
+	public static final String ExploreDataMenu_Log = "/html/body/div[1]/div/ul/li[2]/a";//"ui-id-4";
 	public static final String ExploreDataMenu_Search = "/html/body/div[1]/div/ul/li[3]/a";//"ui-id-5";
 
 	//help id and about id
@@ -319,7 +320,7 @@ public class DashBoardPageId
 	public static final String option = "dashboardOptsBtn";
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
-
+	
 	public static final String TILE_WIDER = "wider";
 	public static final String TILE_NARROWER = "narrower";
 	public static final String TILE_TALLER = "taller";
@@ -353,4 +354,8 @@ public class DashBoardPageId
 	public static final String Option_About = "//*[@id='emcpdf_oba_about']";
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
 	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
+    
+    public static final String DASHBOARD_LIST_TABLE = "dbstable";
+    public static final String DASHBOARD_HOME_DELETE_BUTTON = "//*[@id=\"dsbinfopop\"]/div/div/button";
+    public static final String DASHBOARD_HOME_DELETE_CONFIRM = "//*[@id=\"ojDialogWrapper-dbs_cfmDialog\"]/div[3]/button[1]";
 }
