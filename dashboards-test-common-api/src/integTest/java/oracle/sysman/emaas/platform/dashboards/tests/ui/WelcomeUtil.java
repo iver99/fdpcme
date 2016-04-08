@@ -19,6 +19,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Visiting Data Explorer-" + selection + " from Welcome Page...");
 		driver.waitForElementPresent("oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
 		driver.click("oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
+		driver.takeScreenShot();
 		switch (selection) {
 			case "log":
 				eleXpath = WelcomeUtil.getOptionXpath(DashBoardPageId.Welcome_DataExp_SelectID,
@@ -34,6 +35,7 @@ public class WelcomeUtil
 				break;
 		}
 		driver.getWebDriver().findElement(By.xpath(eleXpath)).click();
+		driver.takeScreenShot();
 	}
 
 	public static String getOptionXpath(String selectId, String optionId) throws Exception
@@ -51,6 +53,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
 		driver.waitForElementPresent(DashBoardPageId.Welcome_LearnMore_getStarted);
 		driver.click(DashBoardPageId.Welcome_LearnMore_getStarted);
+		driver.takeScreenShot();
 	}
 
 	public static void learnMoreServiceOffering() throws Exception
@@ -58,6 +61,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
 		driver.waitForElementPresent(DashBoardPageId.Welcome_LearnMore_ServiceOffering);
 		driver.click(DashBoardPageId.Welcome_LearnMore_ServiceOffering);
+		driver.takeScreenShot();
 	}
 
 	public static void learnMoreVideo() throws Exception
@@ -65,6 +69,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
 		driver.waitForElementPresent(DashBoardPageId.Welcome_LearnMore_Videos);
 		driver.click(DashBoardPageId.Welcome_LearnMore_Videos);
+		driver.takeScreenShot();
 	}
 
 	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
@@ -77,6 +82,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Visit APM from Welcome Page...");
 		driver.waitForElementPresent(DashBoardPageId.Welcome_APMLinkCSS);
 		driver.click(DashBoardPageId.Welcome_APMLinkCSS);
+		driver.takeScreenShot();
 	}
 
 	public static void visitDashboards() throws Exception
@@ -84,6 +90,7 @@ public class WelcomeUtil
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
 		driver.waitForElementPresent(DashBoardPageId.Welcome_DashboardsLinkID);
 		driver.click(DashBoardPageId.Welcome_DashboardsLinkID);
+		driver.takeScreenShot();
 	}
 
 	public static void visitITA(String selection) throws Exception
@@ -93,11 +100,13 @@ public class WelcomeUtil
 		if (selection.equals("default")) {
 			driver.waitForElementPresent(DashBoardPageId.Welcome_ITALinkID);
 			driver.click(DashBoardPageId.Welcome_ITALinkID);
+			driver.takeScreenShot();
 		}
 		else {
 			String eleXpath = null;
 			driver.waitForElementPresent("oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
 			driver.click("oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
+			driver.takeScreenShot();
 			switch (selection) {
 				case "performanceAnalyticsDatabase":
 					eleXpath = WelcomeUtil.getOptionXpath(DashBoardPageId.Welcome_ITA_SelectID,
@@ -124,6 +133,7 @@ public class WelcomeUtil
 					break;
 			}
 			driver.click(eleXpath);
+			driver.takeScreenShot();
 		}
 	}
 
@@ -132,5 +142,6 @@ public class WelcomeUtil
 		driver.getLogger().info("Visiting LA from Welcome Page...");
 		driver.waitForElementPresent(DashBoardPageId.Welcome_LALinkCSS);
 		driver.click(DashBoardPageId.Welcome_LALinkCSS);
+		driver.takeScreenShot();
 	}
 }
