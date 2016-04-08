@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ParameterValidators;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
 public class WidgetUtil
@@ -34,10 +34,13 @@ public class WidgetUtil
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);
+        driver.takeScreenShot();
 
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
 		driver.click("css=" + DashBoardPageId.RemoveTileCSS);
 		driver.getLogger().info("Remove the widget");
+        driver.takeScreenShot();
+        
 	}
 
 	public static void resizeOptions(String widgetName, int index, String resizeOptions) throws Exception
@@ -49,6 +52,7 @@ public class WidgetUtil
 		}
 
 		WidgetUtil.focusOnWidgetHeader(widgetEl);
+        driver.takeScreenShot();
 
 		String tileResizeCSS = null;
 		switch (resizeOptions) {
@@ -74,6 +78,7 @@ public class WidgetUtil
 		widgetEl.findElement(By.cssSelector(DashBoardPageId.ConfigTileCSS)).click();
 		driver.click("css=" + tileResizeCSS);
 		driver.getLogger().info("Resize the widget");
+        driver.takeScreenShot();
 
 	}
 
@@ -92,8 +97,8 @@ public class WidgetUtil
 		driver.getLogger().info(
 				"WidgetUtil.title started for widgetName=" + widgetName + ", index=" + index + ", visibility=" + visibility);
 
-		ParameterValidators.notEmptyString("widgetName", widgetName);
-		ParameterValidators.equalOrLargerThan0("index", index);
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
 		WidgetUtil.clickTileConfigButton(widgetName, index);
 		if (visibility) {
 			if (driver.isDisplayed(DashBoardPageId.BuilderTileHideLocator)) {
@@ -121,8 +126,8 @@ public class WidgetUtil
 	{
 		driver.getLogger().info("WidgetUtil.udeRedirect started for widgetName=" + widgetName + ", index=" + index);
 
-		ParameterValidators.notEmptyString("widgetName", widgetName);
-		ParameterValidators.equalOrLargerThan0("index", index);
+		Validator.notEmptyString("widgetName", widgetName);
+		Validator.equalOrLargerThan0("index", index);
 		WidgetUtil.clickTileUDEExploreButton(widgetName, index);
 
 		driver.getLogger().info("WidgetUtil.udeRedirect completed");

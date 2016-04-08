@@ -334,6 +334,16 @@ public class DashBoardPageId
 	public static final String WIDGET_SELECTOR_OK_BTN_LOCATOR = "//button[@id='widget-selector-okbtn' and not(contains(@class, 'oj-disabled'))]";
 	public static final String WIDGET_SELECTOR_CLOSE_BTN_LOCATOR = "//div[contains(@class, 'oj-dialog') and not(contains(@style, 'display: none'))]/div[contains(@class, 'widget-selector-main')]/preceding-sibling::div[contains(@class, 'oj-dialog-header')]/div[contains(@class, 'oj-dialog-header-close-wrapper')]";
 
+        //Branding bar links id
+	public static final String BrandingBarMyHomeLinkID = "obbNavHome";
+	public static final String BrandingBarDashboardHomeLinkID = "obbNavDsbHome";
+	public static final String BrandingBarMyFavoritesLinkID = "obbNavFavor";
+	public static final String BrandingBarWelcomeLinkID = "obbNavWelcome";
+	public static final String BrandingBarHomeLinksID = "obbNavHomeLinks";
+	public static final String BrandingBarCloudServiceLinksID = "obbNavCsLinks";
+	public static final String BrandingBarVisualAnalyzerLinksID = "obbNavVaLinks";
+	public static final String BrandingBarAdminLinksID = "obbNavAdminLinks";
+
 	//Brand Bar User Menu Option
 	public static final String Brand_Bar_User_Menu = "//button[contains(@id,'menubutton')]";
 	public static final String Brand_Bar_User_Menu_Help_Option = "help";

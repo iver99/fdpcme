@@ -7,7 +7,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.DashBoardPageId;
-import oracle.sysman.emaas.platform.dashboards.tests.ui.util.ParameterValidators;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.util.Validator;
 import oracle.sysman.emaas.platform.dashboards.tests.ui.util.XPathLiteral;
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
 
@@ -18,7 +18,7 @@ public class WidgetSelectorUtil
 	public static void addWidget(String widgetName) throws Exception
 	{
 		driver.getLogger().info("WidgetSelectorUtil.addWidget started, widgetName=" + widgetName);
-		ParameterValidators.notEmptyString("widgetName", widgetName);
+		Validator.notEmptyString("widgetName", widgetName);
 
 		WidgetSelectorUtil.searchWidget(widgetName);
 		WidgetSelectorUtil.getWidgetElementByTitle(widgetName, 0);
