@@ -16,6 +16,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 import org.testng.Assert;
 
@@ -566,7 +569,8 @@ public class DashBoardUtils {
 	}
 	public static void searchDashBoard(WebDriver wdriver, String board) throws Exception
 	{
-		wdriver.takeScreenShot();
+		/*
+                wdriver.takeScreenShot();
 		wdriver.getLogger().info("go into search DashBoard");		
 		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
 		wdriver.click(DashBoardPageId.SearchDSBoxID);
@@ -578,7 +582,20 @@ public class DashBoardUtils {
 		driver.click("/html/body/div[*]/div/div[1]/div/div/div[2]/div[1]/span[1]/button[2]");
 		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_short);
 		wdriver.takeScreenShot();
-	
+	        */
+                wdriver.takeScreenShot();
+		wdriver.getLogger().info("searching dashboard ..."+board);
+		wdriver.getElement(DashBoardPageId.SearchDSBoxID).clear();
+                wdriver.sendKeys(DashBoardPageId.SearchDSBoxID,"InvalidLongNameInvalidLongNameInvalidLongNameInvalidLongNameInvalidLongName");//clear all dashboards
+		By locatorOfKeyEl =  By.xpath(DashBoardPageId.DashBoardID);
+		WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
+		wdriver.getElement(DashBoardPageId.DashBoardID).clear();
+		wdriver.sendKeys(DashBoardPageId.DashBoardID, board);
+		wdriver.click(DashBoardPageId.DashBoardID); //give focus to search box
+		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));	
+		wdriver.getLogger().info("searching dashboard: "+board +" done!");
+		wdriver.takeScreenShot(); 
 	}
 	public static void checkBrandingBarLink() throws Exception
 	{
