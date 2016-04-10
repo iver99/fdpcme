@@ -591,7 +591,8 @@ public class DashBoardUtils {
 		WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(locatorOfKeyEl));//ensure all dashboards are cleared
 		wdriver.getElement(DashBoardPageId.DashBoardID).clear();
-		wdriver.sendKeys(DashBoardPageId.DashBoardID, board);
+		wdriver.sendKeys(DashBoardPageId.SearchDSBoxID, board);
+		Assert.assertEquals(board, wdriver.getElement(DashBoardPageId.SearchDSBoxID).getAttribute("value"));
 		wdriver.click(DashBoardPageId.DashBoardID); //give focus to search box
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locatorOfKeyEl));	
 		wdriver.getLogger().info("searching dashboard: "+board +" done!");
