@@ -5,7 +5,6 @@
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/em-qatool-os-webdriver-2.0.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-platform-tenant-sdk-0.2.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-qatool-jetuiautomation-utility-2.0.0-20160330193649.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emaas-selenium-remote-driver-2.44.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-api-2.44.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-firefox-driver-2.44.0.jar"/>
@@ -17,13 +16,14 @@
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-safari-driver-2.44.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-support-2.44.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/selenium-server-2.44.0.jar"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/qatools-standalone-2.0.0-20160330193649.zip"/>
-	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/emsaas-qatool-jet-utility-3.0.0-20160330193649.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/commons-codec-1.9.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/commons-exec-1.1.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/commons-io-2.4.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/gson-2.3.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/guava-18.0.jar"/>
 	<classpathentry kind="var" path="DSB_HOME/dependencies/artifactory/jmockit-1.19.jar"/>
+	<classpathentry kind="lib" path="D:/git/emcpdf/dependencies/artifactory/emaas-qatool-jetuiautomation-utility-2.0.0-20160331114325.jar"/>
+	<classpathentry kind="lib" path="D:/git/emcpdf/dependencies/artifactory/emsaas-qatool-jet-utility-3.0.0-20160331114325.jar"/>
+	<classpathentry kind="lib" path="D:/git/emcpdf/dependencies/artifactory/qatools-standalone-2.0.0-20160331114325.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

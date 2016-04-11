@@ -7,10 +7,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 
 import oracle.sysman.qatool.uifwk.webdriver.WebDriver;
-
 import oracle.sysman.emaas.platform.dashboards.test.ui.util.*;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.BrandingBarUtil;
+import oracle.sysman.emaas.platform.dashboards.tests.ui.WelcomeUtil;
 
 import java.util.Set;
+
 import org.testng.Assert;
 
 /**
@@ -25,6 +27,16 @@ public class TestWelcomePage extends LoginAndLogout{
 	{
 		login(this.getClass().getName()+"."+testName);
 		DashBoardUtils.loadWebDriver(webd);
+	}
+	
+	public static WebDriver webd;
+	
+	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception{
+		webd = webDriver;
+	}
+	
+	public void urlVerification(String pageUrl, String expectedUrl) {
+		Assert.assertEquals(pageUrl.substring(pageUrl.indexOf("emsaasui")+9), expectedUrl);		
 	}
 	
 	public void pageVerification(WebDriver webDriver, String pageID, String url) throws Exception
@@ -65,19 +77,29 @@ public class TestWelcomePage extends LoginAndLogout{
 	@Test
 	public void testOpenAPMPage() throws Exception
 	{
-		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+//		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
+//		webd.getLogger().info("start to test in test Welcome Page");
+//		DashBoardUtils.clickNavigatorLink();
+//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+//		webd.takeScreenShot();
+//		//Home link
+//		webd.getLogger().info("Open Welcome Page");
+//		webd.click(DashBoardPageId.HomeLinkID);
+//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
+//		webd.takeScreenShot();
+//		
+//		//APM link		
+//		pageVerification(webd,DashBoardPageId.Welcome_APMLinkID,"apmUi/index.html");			
+	
+//		webd.getWebDriver().get("https://slc10uam.us.oracle.com:4443/emsaasui/emcpdfui/welcome.html");
 		webd.getLogger().info("start to test in test Welcome Page");
-		DashBoardUtils.clickNavigatorLink();
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		//Home link
-		webd.getLogger().info("Open Welcome Page");
-		webd.click(DashBoardPageId.HomeLinkID);
-		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-		webd.takeScreenShot();
-		
-		//APM link		
-		pageVerification(webd,DashBoardPageId.Welcome_APMLinkID,"apmUi/index.html");			
+		BrandingBarUtil.visitWelcome();
+		WelcomeUtil.visitAPM();
+		webd.waitForElementPresent("//title[contains(text(), 'Application Performance Monitoring')]");
+		String tmpUrl = webd.getWebDriver().getCurrentUrl();
+		webd.getLogger().info("Open APM by url: " + tmpUrl);
+		urlVerification(tmpUrl, "apmUi/index.html");
+		webd.getLogger().info("test APM finished !!!");
 	}
 	
 	@Test
