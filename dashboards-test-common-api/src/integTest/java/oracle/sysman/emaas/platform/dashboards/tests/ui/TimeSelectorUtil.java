@@ -365,6 +365,8 @@ public class TimeSelectorUtil
 		String returnStartDate = "";
 		String returnEndDate = "";
 
+		System.out.println(convertDate);
+
 		if (convertDate.startsWith(timeRange)) {
 			tmpDate = convertDate.substring(timeRange.length() + 1);
 		}
@@ -373,8 +375,8 @@ public class TimeSelectorUtil
 		}
 
 		String[] date = tmpDate.split("-");
-		String tmpStartDate = date[0].trim();
-		String tmpEndDate = date[1].trim();
+		String StartDate = date[0].trim();
+		String EndDate = date[1].trim();
 
 		Calendar current = Calendar.getInstance();
 		Calendar today = Calendar.getInstance(); //today
@@ -392,44 +394,58 @@ public class TimeSelectorUtil
 		int actualTodayMonth = today.get(Calendar.MONTH) + 1;
 		int actualYesterdayMonth = yesterday.get(Calendar.MONTH) + 1;
 
-		if (tmpStartDate.startsWith("Today")) {
-			tmpStartDate = tmpStartDate.replace("Today",
+		if (StartDate.startsWith("Today")) {
+			StartDate = StartDate.replace("Today",
 					actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
-			returnStartDate = TimeSelectorUtil.timeFormatChange(tmpStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			returnStartDate = TimeSelectorUtil.timeFormatChange(StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 
 		}
-		else if (tmpStartDate.startsWith("Yesterday")) {
-			tmpStartDate = tmpStartDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH)
-					+ "/" + yesterday.get(Calendar.YEAR));
-			returnStartDate = TimeSelectorUtil.timeFormatChange(tmpStartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
-		}
-		else {
-			returnStartDate = tmpStartDate;
-		}
-
-		if (tmpEndDate.startsWith("Today")) {
-			tmpEndDate = tmpEndDate.replace("Today",
-					actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
-			returnEndDate = TimeSelectorUtil.timeFormatChange(tmpEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
-
-		}
-		else if (tmpEndDate.startsWith("Yesterday")) {
-			tmpEndDate = tmpEndDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+		else if (StartDate.startsWith("Yesterday")) {
+			StartDate = StartDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
 					+ yesterday.get(Calendar.YEAR));
-			returnEndDate = TimeSelectorUtil.timeFormatChange(tmpEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+			returnStartDate = TimeSelectorUtil.timeFormatChange(StartDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 		}
-		else if (Character.isDigit(tmpEndDate.charAt(0))) {
-			tmpEndDate = actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR) + " "
-					+ tmpEndDate;
-			returnEndDate = TimeSelectorUtil.timeFormatChange(tmpEndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+		else {
+			returnStartDate = StartDate;
+		}
+
+		if (EndDate.startsWith("Today")) {
+			EndDate = EndDate.replace("Today",
+					actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR));
+			returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+
+		}
+		else if (EndDate.startsWith("Yesterday")) {
+			EndDate = EndDate.replace("Yesterday", actualYesterdayMonth + "/" + yesterday.get(Calendar.DAY_OF_MONTH) + "/"
+					+ yesterday.get(Calendar.YEAR));
+			returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
+		}
+		else if (Character.isDigit(EndDate.charAt(0))) {
+			EndDate = actualTodayMonth + "/" + today.get(Calendar.DAY_OF_MONTH) + "/" + today.get(Calendar.YEAR) + " " + EndDate;
+			returnEndDate = TimeSelectorUtil.timeFormatChange(EndDate, "MM/dd/yyyy hh:mm a", "MMM d, yyyy hh:mm a");
 
 		}
 		else {
-			returnEndDate = tmpEndDate;
+			returnEndDate = EndDate;
 
 		}
+		System.out.println(returnStartDate);
+		System.out.println(returnEndDate);
 
-		System.out.println(tmpEndDate);
+		String[] tmpReturnStartDate = returnStartDate.split(" ");
+		String[] tmpReturnEndDate = returnEndDate.split(" ");
+
+		if (tmpReturnEndDate[3].startsWith("0")) {
+			returnStartDate = tmpReturnStartDate[0] + " " + tmpReturnStartDate[1] + " " + tmpReturnStartDate[2] + " "
+					+ tmpReturnStartDate[3].substring(1) + " " + tmpReturnStartDate[4];
+		}
+		if (tmpReturnEndDate[3].startsWith("0")) {
+			returnEndDate = tmpReturnEndDate[0] + " " + tmpReturnEndDate[1] + " " + tmpReturnEndDate[2] + " "
+					+ tmpReturnEndDate[3].substring(1) + " " + tmpReturnEndDate[4];
+		}
+		System.out.println(returnStartDate);
+		System.out.println(returnEndDate);
+
 		return timeRange + ": " + returnStartDate + " - " + returnEndDate;
 
 	}
