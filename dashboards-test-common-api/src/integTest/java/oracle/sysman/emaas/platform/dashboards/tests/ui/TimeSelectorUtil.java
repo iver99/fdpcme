@@ -435,7 +435,7 @@ public class TimeSelectorUtil
 		String[] tmpReturnStartDate = returnStartDate.split(" ");
 		String[] tmpReturnEndDate = returnEndDate.split(" ");
 
-		if (tmpReturnEndDate[3].startsWith("0")) {
+		if (tmpReturnStartDate[3].startsWith("0")) {
 			returnStartDate = tmpReturnStartDate[0] + " " + tmpReturnStartDate[1] + " " + tmpReturnStartDate[2] + " "
 					+ tmpReturnStartDate[3].substring(1) + " " + tmpReturnStartDate[4];
 		}
