@@ -8,35 +8,35 @@ public class BrandingBarUtil
 
 	private static WebDriver driver;
 
-	public static boolean isAdminLinkExists(String adminLinkName)
+	public static boolean isAdminLinkExisted(String adminLinkName)
 	{
 		driver.getLogger().info(
-				"[BrandingBarUtil.isAdminLinkExists] start to check if admin link is existed in navigation bar. Link name: "
+				"[BrandingBarUtil.isAdminLinkExisted] start to check if admin link is existed in navigation bar. Link name: "
 						+ adminLinkName);
 		boolean isExisted = false;
-		isExisted = BrandingBarUtil.isApplicationLinkExists("admin", adminLinkName);
+		isExisted = BrandingBarUtil.isApplicationLinkExisted("admin", adminLinkName);
 		driver.getLogger().info(
-				"[BrandingBarUtil.isAdminLinkExists] existence check for admin link is completed. Result: " + isExisted);
+				"[BrandingBarUtil.isAdminLinkExisted] existence check for admin link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
-	public static boolean isCloudServiceLinkExists(String cloudServiceLinkName)
+	public static boolean isCloudServiceLinkExisted(String cloudServiceLinkName)
 	{
 		driver.getLogger().info(
-				"[BrandingBarUtil.isCloudServiceLinkExists] start to check if cloud service link is existed in navigation bar. Link name: "
+				"[BrandingBarUtil.isCloudServiceLinkExisted] start to check if cloud service link is existed in navigation bar. Link name: "
 						+ cloudServiceLinkName);
 		boolean isExisted = false;
-		isExisted = BrandingBarUtil.isApplicationLinkExists("cs", cloudServiceLinkName);
+		isExisted = BrandingBarUtil.isApplicationLinkExisted("cs", cloudServiceLinkName);
 		driver.getLogger().info(
-				"[BrandingBarUtil.isCloudServiceLinkExists] existence check for cloud service link is completed. Result: "
+				"[BrandingBarUtil.isCloudServiceLinkExisted] existence check for cloud service link is completed. Result: "
 						+ isExisted);
 		return isExisted;
 	}
 
-	public static boolean isDashboardHomeLinkExists()
+	public static boolean isDashboardHomeLinkExisted()
 	{
 		driver.getLogger().info(
-				"[BrandingBarUtil.isDashboardHomeLinkExists] start to check if 'Dashboards' link is existed in navigation bar.");
+				"[BrandingBarUtil.isDashboardHomeLinkExisted] start to check if 'Dashboards' link is existed in navigation bar.");
 		boolean isExisted = false;
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed();
 		if (!isNavBarDisplayed) {
@@ -49,27 +49,27 @@ public class BrandingBarUtil
 		}
 		driver.takeScreenShot();
 		driver.getLogger().info(
-				"[BrandingBarUtil.isDashboardHomeLinkExists] existence check for 'Dashboards' link is completed. Result: "
+				"[BrandingBarUtil.isDashboardHomeLinkExisted] existence check for 'Dashboards' link is completed. Result: "
 						+ isExisted);
 		return isExisted;
 	}
 
-	public static boolean isHomeLinkExists(String homeLinkName)
+	public static boolean isHomeLinkExisted(String homeLinkName)
 	{
 		driver.getLogger().info(
-				"[BrandingBarUtil.isHomeLinkExists] start to check if home link is existed in navigation bar. Link name: "
+				"[BrandingBarUtil.isHomeLinkExisted] start to check if home link is existed in navigation bar. Link name: "
 						+ homeLinkName);
 		boolean isExisted = false;
-		isExisted = BrandingBarUtil.isApplicationLinkExists("home", homeLinkName);
+		isExisted = BrandingBarUtil.isApplicationLinkExisted("home", homeLinkName);
 		driver.getLogger().info(
-				"[BrandingBarUtil.isHomeLinkExists] existence check for home link is completed. Result: " + isExisted);
+				"[BrandingBarUtil.isHomeLinkExisted] existence check for home link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
-	public static boolean isMyFavoritesLinkExists()
+	public static boolean isMyFavoritesLinkExisted()
 	{
 		driver.getLogger().info(
-				"[BrandingBarUtil.isMyFavoritesLinkExists] start to check if 'My Favorites' link is existed in navigation bar.");
+				"[BrandingBarUtil.isMyFavoritesLinkExisted] start to check if 'My Favorites' link is existed in navigation bar.");
 		boolean isExisted = false;
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed();
 		if (!isNavBarDisplayed) {
@@ -82,12 +82,12 @@ public class BrandingBarUtil
 		}
 		driver.takeScreenShot();
 		driver.getLogger().info(
-				"[BrandingBarUtil.isMyFavoritesLinkExists] existence check for 'My Favorites' link is completed. Result: "
+				"[BrandingBarUtil.isMyFavoritesLinkExisted] existence check for 'My Favorites' link is completed. Result: "
 						+ isExisted);
 		return isExisted;
 	}
 
-	public static boolean isMyHomeLinkExists()
+	public static boolean isMyHomeLinkExisted()
 	{
 		driver.getLogger().info(
 				"[BrandingBarUtil.isMyHomeLinkExisted] start to check if 'Home' link is existed in navigation bar.");
@@ -107,23 +107,23 @@ public class BrandingBarUtil
 		return isExisted;
 	}
 
-	public static boolean isVisualAnalyzerLinkExists(String visualAnalyzerLinkName)
+	public static boolean isVisualAnalyzerLinkExisted(String visualAnalyzerLinkName)
 	{
 		driver.getLogger().info(
-				"[BrandingBarUtil.isVisualAnalyzerLinkExists] start to check if visual analyzer link is existed in navigation bar. Link name: "
+				"[BrandingBarUtil.isVisualAnalyzerLinkExisted] start to check if visual analyzer link is existed in navigation bar. Link name: "
 						+ visualAnalyzerLinkName);
 		boolean isExisted = false;
-		isExisted = BrandingBarUtil.isApplicationLinkExists("va", visualAnalyzerLinkName);
+		isExisted = BrandingBarUtil.isApplicationLinkExisted("va", visualAnalyzerLinkName);
 		driver.getLogger().info(
-				"[BrandingBarUtil.isVisualAnalyzerLinkExists] existence check for visual analyzer link is completed. Result: "
+				"[BrandingBarUtil.isVisualAnalyzerLinkExisted] existence check for visual analyzer link is completed. Result: "
 						+ isExisted);
 		return isExisted;
 	}
 
-	public static boolean isWelcomeLinkExists()
+	public static boolean isWelcomeLinkExisted()
 	{
 		driver.getLogger().info(
-				"[BrandingBarUtil.isWelcomeLinkExists] start to check if 'Welcome' link is existed in navigation bar.");
+				"[BrandingBarUtil.isWelcomeLinkExisted] start to check if 'Welcome' link is existed in navigation bar.");
 		boolean isExisted = false;
 		boolean isNavBarDisplayed = BrandingBarUtil.isNavigationBarDisplayed();
 		if (!isNavBarDisplayed) {
@@ -136,7 +136,7 @@ public class BrandingBarUtil
 		}
 		driver.takeScreenShot();
 		driver.getLogger().info(
-				"[BrandingBarUtil.isWelcomeLinkExists] existence check for 'Welcome' link is completed. Result: " + isExisted);
+				"[BrandingBarUtil.isWelcomeLinkExisted] existence check for 'Welcome' link is completed. Result: " + isExisted);
 		return isExisted;
 	}
 
@@ -181,7 +181,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationAdministration] can not visit admin link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationAdministration] can not visit admin link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -195,7 +195,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationCloudService] can not visit cloud service link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationCloudService] can not visit cloud service link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -209,7 +209,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationHome] can not visit home link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationHome] can not visit home link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -223,7 +223,7 @@ public class BrandingBarUtil
 		}
 		else {
 			driver.getLogger()
-			.info("[BrandingBarUtil.visitApplicationVisualAnalyzer] can not visit visual analyzer link from branding bar because the given link name is null.");
+					.info("[BrandingBarUtil.visitApplicationVisualAnalyzer] can not visit visual analyzer link from branding bar because the given link name is null.");
 		}
 	}
 
@@ -291,7 +291,7 @@ public class BrandingBarUtil
 		return parentId;
 	}
 
-	private static boolean isApplicationLinkExists(String linkType, String linkName)
+	private static boolean isApplicationLinkExisted(String linkType, String linkName)
 	{
 		boolean isExisted = false;
 		String parentId = BrandingBarUtil.getApplicationLinkParentId(linkType);
