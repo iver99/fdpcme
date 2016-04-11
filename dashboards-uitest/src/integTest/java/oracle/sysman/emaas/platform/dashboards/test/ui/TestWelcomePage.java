@@ -77,25 +77,9 @@ public class TestWelcomePage extends LoginAndLogout{
 	@Test
 	public void testOpenAPMPage() throws Exception
 	{
-//		this.initTest(Thread.currentThread().getStackTrace()[1].getMethodName());
-//		webd.getLogger().info("start to test in test Welcome Page");
-//		DashBoardUtils.clickNavigatorLink();
-//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-//		webd.takeScreenShot();
-//		//Home link
-//		webd.getLogger().info("Open Welcome Page");
-//		webd.click(DashBoardPageId.HomeLinkID);
-//		DashBoardUtils.waitForMilliSeconds(DashBoardPageId.Delaytime_long);
-//		webd.takeScreenShot();
-//		
-//		//APM link		
-//		pageVerification(webd,DashBoardPageId.Welcome_APMLinkID,"apmUi/index.html");			
-	
-//		webd.getWebDriver().get("https://slc10uam.us.oracle.com:4443/emsaasui/emcpdfui/welcome.html");
 		webd.getLogger().info("start to test in test Welcome Page");
 		BrandingBarUtil.visitWelcome();
 		WelcomeUtil.visitAPM();
-		webd.waitForElementPresent("//title[contains(text(), 'Application Performance Monitoring')]");
 		String tmpUrl = webd.getWebDriver().getCurrentUrl();
 		webd.getLogger().info("Open APM by url: " + tmpUrl);
 		urlVerification(tmpUrl, "apmUi/index.html");

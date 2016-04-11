@@ -31,7 +31,7 @@ public class MyDashbaordTest extends LocalEmaasWebDriverLoader
 		runEmaasWebDriver();
 		WebDriver wd = myWebDriver();
 		
-//		wd.getWebDriver().get("http://localhost:8383/emsaasui/emcpdfui/welcome.html");
+		wd.getWebDriver().get("https://slc10uam.us.oracle.com:4443/emsaasui/emcpdfui/welcome.html");
 		WelcomeUtil.loadWebDriverOnly(wd);
 		TestWelcomePage.loadWebDriverOnly(wd);
 		BrandingBarUtil.loadWebDriverOnly(wd);
