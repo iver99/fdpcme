@@ -320,7 +320,7 @@ public class DashBoardPageId
 	public static final String option = "dashboardOptsBtn";
 	public static final String dashboardshare = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
 	public static final String stopshare_btn = "emcpdf_dsbopts_share";//"//*[@id='ui-id-5']/span[2]";
-	
+
 	public static final String TILE_WIDER = "wider";
 	public static final String TILE_NARROWER = "narrower";
 	public static final String TILE_TALLER = "taller";
@@ -335,7 +335,7 @@ public class DashBoardPageId
 	public static final String WIDGET_SELECTOR_OK_BTN_LOCATOR = "//button[@id='widget-selector-okbtn' and not(contains(@class, 'oj-disabled'))]";
 	public static final String WIDGET_SELECTOR_CLOSE_BTN_LOCATOR = "//div[contains(@class, 'oj-dialog') and not(contains(@style, 'display: none'))]/div[contains(@class, 'widget-selector-main')]/preceding-sibling::div[contains(@class, 'oj-dialog-header')]/div[contains(@class, 'oj-dialog-header-close-wrapper')]";
 
-        //Branding bar links id
+	//Branding bar links id
 	public static final String BrandingBarMyHomeLinkID = "obbNavHome";
 	public static final String BrandingBarDashboardHomeLinkID = "obbNavDsbHome";
 	public static final String BrandingBarMyFavoritesLinkID = "obbNavFavor";
@@ -344,6 +344,7 @@ public class DashBoardPageId
 	public static final String BrandingBarCloudServiceLinksID = "obbNavCsLinks";
 	public static final String BrandingBarVisualAnalyzerLinksID = "obbNavVaLinks";
 	public static final String BrandingBarAdminLinksID = "obbNavAdminLinks";
+	public static final String BrandingBarNavLinksId = "links_menu";
 
 	//Brand Bar User Menu Option
 	public static final String Brand_Bar_User_Menu = "//button[contains(@id,'menubutton')]";
@@ -354,8 +355,8 @@ public class DashBoardPageId
 	public static final String Option_About = "//*[@id='emcpdf_oba_about']";
 	public static final String Option_Logout = "//*[@id='emcpdf_oba_logout']";
 	public static final String AboutDialogClose = "//button[contains(@id,'okButton')]";
-    
-    public static final String DASHBOARD_LIST_TABLE = "dbstable";
-    public static final String DASHBOARD_HOME_DELETE_BUTTON = "//*[@id=\"dsbinfopop\"]/div/div/button";
-    public static final String DASHBOARD_HOME_DELETE_CONFIRM = "//*[@id=\"ojDialogWrapper-dbs_cfmDialog\"]/div[3]/button[1]";
+
+	public static final String DASHBOARD_LIST_TABLE = "dbstable";
+	public static final String DASHBOARD_HOME_DELETE_BUTTON = "//*[@id=\"dsbinfopop\"]/div/div/button";
+	public static final String DASHBOARD_HOME_DELETE_CONFIRM = "//*[@id=\"ojDialogWrapper-dbs_cfmDialog\"]/div[3]/button[1]";
 }
