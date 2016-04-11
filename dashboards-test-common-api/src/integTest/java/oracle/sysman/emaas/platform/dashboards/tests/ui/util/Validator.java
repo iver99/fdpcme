@@ -50,9 +50,7 @@ public class Validator
 
 	public static void notEmptyString(String name, String value)
 	{
-		if (value == null) {
-			throw new IllegalArgumentException("Invalid null string for input parameter " + name);
-		}
+		Validator.notNull(name, value);
 		if ("".equals(value)) {
 			throw new IllegalArgumentException("Invalid empty string for input parameter " + name);
 		}
