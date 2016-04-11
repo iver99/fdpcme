@@ -17,8 +17,8 @@ public class WelcomeUtil
 	{
 		String eleXpath = null;
 		driver.getLogger().info("Visiting Data Explorer-" + selection + " from Welcome Page...");
-		driver.waitForElementPresent("oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
-		driver.click("oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
+		driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
+		driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_DataExp_SelectID);
 		driver.takeScreenShot();
 		switch (selection) {
 			case "log":
@@ -51,24 +51,24 @@ public class WelcomeUtil
 	public static void learnMoreHow() throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-How to get started' from Welcome Page...");
-		driver.waitForElementPresent(DashBoardPageId.Welcome_LearnMore_getStarted);
-		driver.click(DashBoardPageId.Welcome_LearnMore_getStarted);
+		driver.waitForElementPresent("id="+DashBoardPageId.Welcome_LearnMore_getStarted);
+		driver.click("id="+DashBoardPageId.Welcome_LearnMore_getStarted);
 		driver.takeScreenShot();
 	}
 
 	public static void learnMoreServiceOffering() throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-Service Offerings' from Welcome Page...");
-		driver.waitForElementPresent(DashBoardPageId.Welcome_LearnMore_ServiceOffering);
-		driver.click(DashBoardPageId.Welcome_LearnMore_ServiceOffering);
+		driver.waitForElementPresent("id="+DashBoardPageId.Welcome_LearnMore_ServiceOffering);
+		driver.click("id="+DashBoardPageId.Welcome_LearnMore_ServiceOffering);
 		driver.takeScreenShot();
 	}
 
 	public static void learnMoreVideo() throws Exception
 	{
 		driver.getLogger().info("Visiting 'Learn More-Videos' from Welcome Page...");
-		driver.waitForElementPresent(DashBoardPageId.Welcome_LearnMore_Videos);
-		driver.click(DashBoardPageId.Welcome_LearnMore_Videos);
+		driver.waitForElementPresent("id="+DashBoardPageId.Welcome_LearnMore_Videos);
+		driver.click("id="+DashBoardPageId.Welcome_LearnMore_Videos);
 		driver.takeScreenShot();
 	}
 
@@ -80,16 +80,16 @@ public class WelcomeUtil
 	public static void visitAPM() throws Exception
 	{
 		driver.getLogger().info("Visit APM from Welcome Page...");
-		driver.waitForElementPresent(DashBoardPageId.Welcome_APMLinkCSS);
-		driver.click(DashBoardPageId.Welcome_APMLinkCSS);
+		driver.waitForElementPresent("id="+DashBoardPageId.Welcome_APMLinkCSS);
+		driver.click("id="+DashBoardPageId.Welcome_APMLinkCSS);
 		driver.takeScreenShot();
 	}
 
 	public static void visitDashboards() throws Exception
 	{
 		driver.getLogger().info("Visit Dashboards from Welcome Page...");
-		driver.waitForElementPresent(DashBoardPageId.Welcome_DashboardsLinkID);
-		driver.click(DashBoardPageId.Welcome_DashboardsLinkID);
+		driver.waitForElementPresent("id="+DashBoardPageId.Welcome_DashboardsLinkID);
+		driver.click("id="+DashBoardPageId.Welcome_DashboardsLinkID);
 		driver.takeScreenShot();
 	}
 
@@ -98,14 +98,14 @@ public class WelcomeUtil
 		driver.getLogger().info("Visiting ITA-" + selection + " from Welcome Page...");
 
 		if (selection.equals("default")) {
-			driver.waitForElementPresent(DashBoardPageId.Welcome_ITALinkID);
-			driver.click(DashBoardPageId.Welcome_ITALinkID);
+			driver.waitForElementPresent("id="+DashBoardPageId.Welcome_ITALinkID);
+			driver.click("id="+DashBoardPageId.Welcome_ITALinkID);
 			driver.takeScreenShot();
 		}
 		else {
 			String eleXpath = null;
-			driver.waitForElementPresent("oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
-			driver.click("oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
+			driver.waitForElementPresent("id=oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
+			driver.click("id=oj-select-choice-" + DashBoardPageId.Welcome_ITA_SelectID);
 			driver.takeScreenShot();
 			switch (selection) {
 				case "performanceAnalyticsDatabase":
@@ -140,8 +140,8 @@ public class WelcomeUtil
 	public static void visitLA() throws Exception
 	{
 		driver.getLogger().info("Visiting LA from Welcome Page...");
-		driver.waitForElementPresent(DashBoardPageId.Welcome_LALinkCSS);
-		driver.click(DashBoardPageId.Welcome_LALinkCSS);
+		driver.waitForElementPresent("id="+DashBoardPageId.Welcome_LALinkCSS);
+		driver.click("id="+DashBoardPageId.Welcome_LALinkCSS);
 		driver.takeScreenShot();
 	}
 }
