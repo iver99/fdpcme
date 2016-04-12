@@ -80,7 +80,10 @@ requirejs.config({
             'ojs/ojpopup',
             'ojs/ojpopupcore',
             'ojs/ojmessaging',
-            'ojs/ojgauge']
+            'ojs/ojgauge',
+            'knockout',
+            'jquery',
+            'ojL10n']
     },
     // Shim configurations for modules that do not expose AMD
     shim: {
