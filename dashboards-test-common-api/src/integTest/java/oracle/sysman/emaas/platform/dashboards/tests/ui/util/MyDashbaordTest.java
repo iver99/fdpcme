@@ -28,10 +28,10 @@ public class MyDashbaordTest extends LocalEmaasWebDriverLoader
 		WebDriver wd = myWebDriver();
 		wd.getWebDriver().get("http://localhost:8383/emsaasui/emcpdfui/home.html");
 
-		DashboardHomeUtil.loadWebDriverOnly(wd);
-		DashboardHomeUtil.search("Host");
-		DashboardHomeUtil.listView();
-		DashboardHomeUtil.gridView();
+		//DashboardHomeUtil.loadWebDriverOnly(wd);
+		DashboardHomeUtil.search(wd, "Host");
+		DashboardHomeUtil.listView(wd);
+		DashboardHomeUtil.gridView(wd);
 		// Now submit the form. WebDriver will find the form for us from the element
 		//element.submit();
 	}
