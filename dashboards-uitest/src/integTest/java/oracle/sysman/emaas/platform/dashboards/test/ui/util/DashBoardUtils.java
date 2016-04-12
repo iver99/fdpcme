@@ -16,6 +16,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.testng.Assert;
 
@@ -49,11 +51,14 @@ public class DashBoardUtils {
     public static void clickDelete() throws Exception
     {
     	driver.getLogger().info("before clicking Delete icon");
+
     	driver.click(DashBoardPageId.OptionsID);
-	driver.isDisplayed(DashBoardPageId.DashboardDelete);
+	WebDriverWait wait = new WebDriverWait(wdriver.getWebDriver(),900L);	
+	wait.until(ExpectedConditions.visibilityOfElementLocated(DashBoardPageId.DashboardDelete));
 	driver.takeScreenShot();//screenshot before click delete	
 	driver.click(DashBoardPageId.DashboardDelete);
         driver.getLogger().info("after clicking Delete icon");
+	driver.getWebDriver().getCurrentUrl().contains("home.html");
 	driver.takeScreenShot();
 		
     }
