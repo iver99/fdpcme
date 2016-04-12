@@ -501,7 +501,7 @@
                                 <!-- ko if: type() === 'DEFAULT' -->
                                 <div class="dbd-widget" data-bind="attr: {style: cssStyle, id: 'tile'+clientGuid, ismobile: $root.isMobileDevice,'data-tile-name':WIDGET_NAME}, css: tileDisplayClass(), 
                                                                     event: {mouseover: function(data, event) {$root.showPullRightBtn(clientGuid, data, event)}, mouseout: function(data, event) {$root.hidePullRightBtn(clientGuid, data, event)}}">
-                                    <div style="position: absolute; top: 0; left: 0px; right: 0; bottom: 0px; margin: 5px;">
+                                    <div class="dbd-tile-container">
                                         <div class="dbd-tile-header tile-drag-handle" style="display: flex">
                                           <!-- ko if: $root.dashboard.systemDashboard() && linkedDashboard && linkedDashboard() !== '#'-->
                                             <h2 class="dbd-tile-title"><a data-bind="text:hideTitle() === 'true' ? '': title, attr: {href: linkedDashboard}"></a></h2>
@@ -614,10 +614,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="dbd-tile-element" data-bind='attr: {style: widgetCssStyle}'>
+                                        <div class="dbd-tile-element">
                                             <div style="position: relative; width: 100%; height: 100%;">
                                                 <div data-bind="component:{name:WIDGET_KOC_NAME, params:{tile:$data }}" style="width: 100%; height: 100%;"></div>
                                             </div>
+                                        </div>
+                                        <div class="dbd-resize-handler dbd-resize-handler-right"></div>
+                                        <div class="dbd-resize-handler dbd-resize-handler-bottom"></div>
+                                            <div class="dbd-resize-handler dbd-resize-handler-right-bottom">
+                                            <span class="oj-fwk-icon-arrow-s-end oj-component-icon"></span>
                                         </div>
                                         <!-- <div class="dbd-tile-link-wrapper" data-bind="css: linkText()? '': 'dbd-tile-link-empty'">
                                             <a class="dbd-tile-link" data-bind="text: linkText, attr: {href: linkUrl, target: '_blank'}, css: linkText()? '': 'dbd-tile-link-empty'"></a>                                           
