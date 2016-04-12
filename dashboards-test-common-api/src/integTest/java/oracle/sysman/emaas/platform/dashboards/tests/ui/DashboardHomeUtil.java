@@ -23,73 +23,75 @@ public class DashboardHomeUtil
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_ASC = "owner_asc";
 	public static final String DASHBOARD_QUERY_ORDER_BY_OWNER_DSC = "owner_dsc";
 
-	private static WebDriver driver;
-
-	public static void createDashboard(String name, String descriptions, Boolean displayDesc, Boolean selectorRefreshcontrol)
-			throws Exception
+	public static void createDashboard(WebDriver driver, String name, String descriptions, Boolean displayDesc,
+			Boolean selectorRefreshcontrol) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call createDashboard : " + name);
-		driver.click(convertID(DashBoardPageId.CreateDSButtonID));
-		
-		if(name != null && !name.isEmpty())
-			driver.sendKeys(convertID(DashBoardPageId.DashBoardNameBoxID), name);
-		if(descriptions != null && !descriptions.isEmpty())
-			driver.sendKeys(convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
-		if(selectorRefreshcontrol)
-			driver.check(convertID(DashBoardPageId.DashBoardTimeRangeChecker));
-		else
-			driver.uncheck(convertID(DashBoardPageId.DashBoardTimeRangeChecker));
-		
+		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.CreateDSButtonID));
+
+		if (name != null && !name.isEmpty()) {
+			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardNameBoxID), name);
+		}
+		if (descriptions != null && !descriptions.isEmpty()) {
+			driver.sendKeys(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardDescBoxID), descriptions);
+		}
+		if (selectorRefreshcontrol) {
+			driver.check(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		}
+		else {
+			driver.uncheck(DashboardHomeUtil.convertID(DashBoardPageId.DashBoardTimeRangeChecker));
+		}
+
 		driver.takeScreenShot();
-		driver.click(convertID(DashBoardPageId.DashOKButtonID));
+		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.DashOKButtonID));
 	}
 
-	public static void createDashboardSet(String name, String descriptions, Boolean displayDesc, Boolean selectorRefreshcontrol)
-			throws Exception
+	public static void createDashboardSet(WebDriver driver, String name, String descriptions, Boolean displayDesc,
+			Boolean selectorRefreshcontrol) throws Exception
 	{
 
 	}
-	
+
 	/**
-	 * 
 	 * @param dashboardName
-	 * @param view DashboardsGridViewLocator | DashboardsListViewLocator
+	 * @param view
+	 *            DashboardsGridViewLocator | DashboardsListViewLocator
 	 * @throws Exception
 	 */
-	public static void delete(String dashboardName, String view) throws Exception
+	public static void delete(WebDriver driver, String dashboardName, String view) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call delete dashboardName : " + dashboardName);
-		if(dashboardName == null || dashboardName.isEmpty()) {
+		if (dashboardName == null || dashboardName.isEmpty()) {
 			return;
 		}
-		search(dashboardName);
-		if(DashBoardPageId.DashboardsGridViewLocator.equals(view)) {
-			gridView();
+		DashboardHomeUtil.search(driver, dashboardName);
+		if (DashBoardPageId.DashboardsGridViewLocator.equals(view)) {
+			DashboardHomeUtil.gridView(driver);
 			driver.takeScreenShot();
-			deleteDashboardInGrid(dashboardName);
+			DashboardHomeUtil.deleteDashboardInGrid(driver, dashboardName);
 		}
-		
-		if(DashBoardPageId.DashboardsListViewLocator.equals(view)) {
-			listView();
+
+		if (DashBoardPageId.DashboardsListViewLocator.equals(view)) {
+			DashboardHomeUtil.listView(driver);
 			driver.takeScreenShot();
-			deleteDashboardInList(dashboardName);
+			DashboardHomeUtil.deleteDashboardInList(driver, dashboardName);
 		}
 		driver.takeScreenShot();
 	}
-	
+
 	/**
-	 * 
-	 * @param option ExploreDataMenu_Analyze | ExploreDataMenu_Log | ExploreDataMenu_Search
+	 * @param option
+	 *            ExploreDataMenu_Analyze | ExploreDataMenu_Log | ExploreDataMenu_Search
 	 * @throws Exception
 	 */
-	public static void exploreData(String option) throws Exception
+	public static void exploreData(WebDriver driver, String option) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call exploreData -> " + option);
-		driver.click(convertID(DashBoardPageId.ExploreDataBtnID));
+		driver.click(DashboardHomeUtil.convertID(DashBoardPageId.ExploreDataBtnID));
 		driver.click(option);
 	}
 
-	public static void filterOptions(String filter) throws Exception
+	public static void filterOptions(WebDriver driver, String filter) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call filterOptions");
 		if (filter == null) {
@@ -130,7 +132,7 @@ public class DashboardHomeUtil
 		}
 	}
 
-	public static void gridView() throws Exception
+	public static void gridView(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call gridView");
 		driver.waitForElementPresent(DashBoardPageId.DashboardsGridViewLocator);
@@ -138,7 +140,7 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.DashboardsGridViewLocator);
 	}
 
-	public static void listView() throws Exception
+	public static void listView(WebDriver driver) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
 		driver.waitForElementPresent(DashBoardPageId.DashboardsListViewLocator);
@@ -146,12 +148,7 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.DashboardsListViewLocator);
 	}
 
-	public static void loadWebDriverOnly(WebDriver webDriver) throws Exception
-	{
-		driver = webDriver;
-	}
-
-	public static void search(String searchString) throws Exception
+	public static void search(WebDriver driver, String searchString) throws Exception
 	{
 		if (searchString == null) {
 			return;
@@ -164,7 +161,7 @@ public class DashboardHomeUtil
 		driver.click(DashBoardPageId.SearchDashboardSearchBtnLocator);
 	}
 
-	public static void selectDashboard(String dashboardName) throws Exception
+	public static void selectDashboard(WebDriver driver, String dashboardName) throws Exception
 	{
 		String indicator = DashBoardPageId.DashboardLocator.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
@@ -173,7 +170,7 @@ public class DashboardHomeUtil
 		driver.click(indicator);
 	}
 
-	public static void selectOOB(String dashboardName) throws Exception
+	public static void selectOOB(WebDriver driver, String dashboardName) throws Exception
 	{
 		String indicator = DashBoardPageId.OOBDashboardLocator.replace("_name_", dashboardName);
 		if (!driver.isElementPresent(indicator)) {
@@ -182,7 +179,7 @@ public class DashboardHomeUtil
 		driver.click(indicator);
 	}
 
-	public static void sortBy(String option) throws Exception
+	public static void sortBy(WebDriver driver, String option) throws Exception
 	{
 		driver.getLogger().info("[DashboardHomeUtil] call listView");
 		driver.waitForElementPresent(DashBoardPageId.SortBySelectLocator);
@@ -237,49 +234,52 @@ public class DashboardHomeUtil
 		}
 
 	}
-	
-	private static void deleteDashboardInGrid(String dashboardName) {
-		WebElement gridTable = driver.getElement(convertID(DashBoardPageId.DashboardTableID));
+
+	private static String convertID(String id)
+	{
+		return "id=" + id;
+	}
+
+	private static void deleteDashboardInGrid(WebDriver driver, String dashboardName)
+	{
+		WebElement gridTable = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.DashboardTableID));
 		List<WebElement> dashboardList = gridTable.findElements(By.tagName("div"));
-		for(WebElement dashboard : dashboardList) {
-			if(dashboardName.equals(dashboard.getAttribute("aria-label"))) {
-				dashboard.findElement(By.cssSelector("button")).click();	// click "i" button
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON);	// click delete
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM);	// confirm to delete
+		for (WebElement dashboard : dashboardList) {
+			if (dashboardName.equals(dashboard.getAttribute("aria-label"))) {
+				dashboard.findElement(By.cssSelector("button")).click(); // click "i" button
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
 				break;
 			}
 		}
 	}
-	
-	private static void deleteDashboardInList(String dashboardName) {
+
+	private static void deleteDashboardInList(WebDriver driver, String dashboardName)
+	{
 		// find table
-		WebElement listTable = driver.getElement(convertID(DashBoardPageId.DASHBOARD_LIST_TABLE));
+		WebElement listTable = driver.getElement(DashboardHomeUtil.convertID(DashBoardPageId.DASHBOARD_LIST_TABLE));
 		// find the column index of both "Name" & button
 		WebElement headRow = listTable.findElement(By.tagName("thead")).findElement(By.tagName("tr"));
 		List<WebElement> headColList = headRow.findElements(By.tagName("th"));
 		int buttonColIndex = headColList.size() - 1;
 		int nameColIndex = 0;
-		for(int i = 0; i < headColList.size(); i++) {
+		for (int i = 0; i < headColList.size(); i++) {
 			WebElement headCol = headColList.get(i);
-			if("Name".equals(headCol.getAttribute("title"))) {
+			if ("Name".equals(headCol.getAttribute("title"))) {
 				nameColIndex = i;
 				break;
 			}
 		}
 		// find the row whose name is equal with dashboardName and click the delete
 		List<WebElement> rowList = listTable.findElement(By.tagName("tbody")).findElements(By.tagName("tr"));
-		for(WebElement row : rowList) {
+		for (WebElement row : rowList) {
 			List<WebElement> rowColList = row.findElements(By.tagName("td"));
-			if(dashboardName.equals(rowColList.get(nameColIndex).getText())) {
-				rowColList.get(buttonColIndex).findElement(By.tagName("button")).click();	// click "i" button
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON);	// click delete
-				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM);	// confirm to delete
+			if (dashboardName.equals(rowColList.get(nameColIndex).getText())) {
+				rowColList.get(buttonColIndex).findElement(By.tagName("button")).click(); // click "i" button
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_BUTTON); // click delete
+				driver.click(DashBoardPageId.DASHBOARD_HOME_DELETE_CONFIRM); // confirm to delete
 				break;
 			}
 		}
-	}
-	
-	private static String convertID(String id) {
-		return "id=" + id;
 	}
 }
